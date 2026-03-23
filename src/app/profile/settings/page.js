@@ -1,4 +1,4 @@
-import { getCurrentUser, updateUser } from "../user-actions";
+import { getCurrentUser, updateUser } from "../../user-actions";
 import { redirect } from "next/navigation";
 import { User, ChevronLeft, Save } from "lucide-react";
 import Link from "next/link";
