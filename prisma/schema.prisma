@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String   // Hashed password
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PhotographyPackage {
+  id          String        @id @default(cuid())
+  name        String
+  description String
+  price       String
+  category    String        @default("STANDARD") // STANDARD, EXTERIOR, VIDEO
+  timeType    String        @default("FULL_DAY") // FULL_DAY, SLOT, MORNING, EVENING
+  maxCapacity Int           @default(1)
+  features    String[]
+  addons      Json?                         // Array of { id, title, price }
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  reservations Reservation[]
+}
+
+model Reservation {
+  id            String   @id @default(cuid())
+  brideName     String
+  bridePhone    String
+  brideEmail    String
+  groomName     String?
+  groomPhone    String?
+  groomEmail    String?
+  eventDate     DateTime
+  eventTime     String? // Format HH:mm
+  status        String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED, COMPLETED
+  contractLog   String?  // IP/Timestamp of contract approval
+  paymentStatus String   @default("UNPAID")  // UNPAID, DEPOSIT_PAID, PAID
+  totalAmount   String?  // Total price (packages + addons)
+  paidAmount    String?  // Amount paid in this transaction
+  selectedAddons Json?   // [{ title, price }]
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  packages      PhotographyPackage[]
+  user          User?    @relation(fields: [userId], references: [id])
+  userId        String?
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  password      String?   // Hashed for email/password login
+  emailVerified DateTime?
+  image         String?
+  gender        String?
+  age           Int?
+  phone         String?
+  role          String    @default("MEMBER")
+  accounts      Account[]
+  sessions      Session[]
+  reservations  Reservation[]
+  purchases     Purchase[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Purchase {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productName   String
+  productType   String   // GUIDE, TOOL, COURSE
+  price         String
+  purchaseDate  DateTime @default(now())
+  status        String   @default("COMPLETED") // COMPLETED, FAILED, REFUNDED
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
