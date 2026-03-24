@@ -92,8 +92,13 @@ export default function GalleryManagementPage() {
             
             <CldUploadWidget 
               uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""} 
+              signatureEndpoint="" // Not needed for unsigned
               onSuccess={handleUploadSuccess}
-              options={{ multiple: true, maxFiles: 100 }}
+              options={{ 
+                multiple: true, 
+                maxFiles: 100,
+                cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+              }}
             >
               {({ open }) => {
                 return (
