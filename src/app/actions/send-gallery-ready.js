@@ -2,14 +2,15 @@
 
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function sendGalleryReadyEmail(email, name, galleryUrl) {
   try {
-    if (!process.env.RESEND_API_KEY) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
       console.warn("RESEND_API_KEY bulunamadı, e-posta gönderilemiyor.");
       return { success: false, error: "API Key missing" };
     }
+
+    const resend = new Resend(apiKey);
 
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
@@ -44,8 +45,8 @@ export async function sendGalleryReadyEmail(email, name, galleryUrl) {
     `;
 
     const data = await resend.emails.send({
-      from: "Pinowed CRM <onboarding@resend.dev>", // Productionda verify edilmiş domain ile değişmeli (örn: noreply@pinowed.com)
-      to: email, // Resend free tier'da sadece verify edilmiş emailine gider
+      from: "Pinowed CRM <bilgi@withnazligunes.com>", 
+      to: email, 
       subject: "Fotoğraflarınız Seçim İçin Hazır! 📸 - Pinowed",
       html: htmlContent,
     });
