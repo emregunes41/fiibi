@@ -246,6 +246,25 @@ export async function updateReservationStatus(id, status) {
       data: { status }
     });
     revalidatePath('/admin/reservations');
+    revalidatePath('/admin/dashboard');
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function updateReservationWorkflow(id, data) {
+  try {
+    const { workflowStatus, deliveryLink } = data;
+    await prisma.reservation.update({
+      where: { id },
+      data: { 
+        workflowStatus,
+        deliveryLink 
+      }
+    });
+    revalidatePath('/admin/reservations');
+    revalidatePath('/admin/dashboard');
     return { success: true };
   } catch (error) {
     return { error: error.message };

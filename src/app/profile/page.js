@@ -167,7 +167,7 @@ export default async function ProfilePage() {
                         </div>
                         
                         {/* Call to action if selection pending */}
-                        {res.workflowStatus === "SELECTION_PENDING" && (
+                        {res.workflowStatus === "SELECTION_PENDING" && !res.deliveryLink && (
                           <div className="mt-8 bg-green-500/10 border border-green-500/20 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4">
                             <div>
                               <h5 className="font-bold text-green-400 text-lg">Fotoğraflarınız Hazır! 🎉</h5>
@@ -176,6 +176,19 @@ export default async function ProfilePage() {
                             <Link href="/profile/gallery" className="bg-green-500 text-black px-6 py-3 rounded-xl font-bold tracking-tight hover:bg-green-400 transition-colors whitespace-nowrap">
                               Seçimi Başlat
                             </Link>
+                          </div>
+                        )}
+
+                        {/* Direct Delivery Link Call to Action */}
+                        {res.deliveryLink && (
+                          <div className="mt-8 bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                            <div>
+                              <h5 className="font-bold text-white text-lg">Teslimatınız Hazır! 📸</h5>
+                              <p className="text-white/60 text-sm">Tüm fotoğraflarınıza, videolarınıza ve içeriklerinize aşağıdaki bağlantıdan dışarıdan ulaşabilirsiniz.</p>
+                            </div>
+                            <a href={res.deliveryLink} target="_blank" rel="noopener noreferrer" className="bg-white text-black px-6 py-3 rounded-xl font-bold tracking-tight hover:bg-white/90 transition-colors whitespace-nowrap flex items-center gap-2">
+                              Teslimat Klasörü
+                            </a>
                           </div>
                         )}
                       </div>

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Calendar, User, Phone, Mail, FileText, CheckCircle, Clock } from "lucide-react";
-import { getReservations, getPackages, createManualReservation, updateReservationStatus } from "../core-actions";
+import { Plus, Calendar, User, Phone, Mail, FileText, CheckCircle, Clock, Settings2, Image as ImageIcon } from "lucide-react";
+import { getReservations, getPackages, createManualReservation, updateReservationStatus, updateReservationWorkflow } from "../core-actions";
+import Link from "next/link";
 
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
@@ -14,6 +15,8 @@ export default function ReservationsPage() {
     groomName: "", groomPhone: "", groomEmail: "",
     eventDate: "", eventTime: "10:00", packageIds: [], notes: ""
   });
+  const [workflowModal, setWorkflowModal] = useState({ isOpen: false, data: null });
+  const [workflowData, setWorkflowData] = useState({ workflowStatus: "PENDING", deliveryLink: "" });
 
   async function loadData() {
     const [resData, pkgData] = await Promise.all([getReservations(), getPackages()]);
@@ -55,6 +58,23 @@ export default function ReservationsPage() {
       case "PENDING": return { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.5)", border: "1px solid transparent" };
       default: return { background: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.3)", border: "1px solid transparent" };
     }
+  };
+
+  const openWorkflowModal = (res) => {
+    setWorkflowData({ 
+      workflowStatus: res.workflowStatus || "PENDING", 
+      deliveryLink: res.deliveryLink || "" 
+    });
+    setWorkflowModal({ isOpen: true, data: res });
+  };
+
+  const handleWorkflowSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    await updateReservationWorkflow(workflowModal.data.id, workflowData);
+    setWorkflowModal({ isOpen: false, data: null });
+    loadData();
+    setIsLoading(false);
   };
 
   return (
@@ -119,16 +139,27 @@ export default function ReservationsPage() {
                   </span>
                 </td>
                 <td style={{ padding: "1.5rem 2rem" }}>
-                  <select 
-                    value={res.status}
-                    onChange={(e) => handleStatusChange(res.id, e.target.value)}
-                    style={{ padding: "0.6rem 1rem", borderRadius: "1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "#fff", fontSize: "0.85rem", outline: "none" }}
-                  >
-                    <option value="PENDING">Bekleyen</option>
-                    <option value="CONFIRMED">Onayla</option>
-                    <option value="COMPLETED">Tamamlandı</option>
-                    <option value="CANCELLED">İptal Et</option>
-                  </select>
+                  <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                    <select 
+                      value={res.status}
+                      onChange={(e) => handleStatusChange(res.id, e.target.value)}
+                      style={{ padding: "0.6rem 1rem", borderRadius: "1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "#fff", fontSize: "0.85rem", outline: "none" }}
+                    >
+                      <option value="PENDING">Bekleyen</option>
+                      <option value="CONFIRMED">Onayla</option>
+                      <option value="COMPLETED">Tamamlandı</option>
+                      <option value="CANCELLED">İptal Et</option>
+                    </select>
+                    {res.status === "CONFIRMED" && (
+                      <button 
+                        onClick={() => openWorkflowModal(res)}
+                        style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", padding: "0.6rem", borderRadius: "1rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        title="İş Akışı ve Teslimat"
+                      >
+                        <Settings2 size={16} />
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
@@ -219,6 +250,74 @@ export default function ReservationsPage() {
               <div style={{ gridColumn: "span 2", display: "flex", gap: "1rem", marginTop: "1rem" }}>
                 <button type="button" onClick={() => setIsModalOpen(false)} style={{ flex: 1, padding: "1.25rem", borderRadius: "1.5rem", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "#fff", fontWeight: 700, cursor: "pointer" }}>İPTAL</button>
                 <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "1.25rem", borderRadius: "1.5rem", border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer" }}>{isLoading ? "KAYDEDİLİYOR..." : "KAYDET VE ONAYLA"}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Workflow & Delivery Link Modal */}
+      {workflowModal.isOpen && (
+        <div style={{ 
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(15px)",
+          display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "2rem"
+        }}>
+          <div style={{ 
+            background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "3rem", 
+            width: "100%", maxWidth: "500px", padding: "3rem", position: "relative",
+            boxShadow: "0 50px 100px -20px rgba(0,0,0,0.5)"
+          }}>
+            <h2 style={{ fontSize: "1.8rem", fontWeight: 900, marginBottom: "0.5rem", letterSpacing: "-0.04em" }}>İş Akışı & Teslimat</h2>
+            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", marginBottom: "2rem" }}>{workflowModal.data.brideName} & {workflowModal.data.groomName}</p>
+            
+            <form onSubmit={handleWorkflowSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+              
+              <div>
+                <label style={{ fontSize: "0.75rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: "0.75rem", display: "block", letterSpacing: "0.05em" }}>CRM Aşama Durumu</label>
+                <select 
+                  value={workflowData.workflowStatus}
+                  onChange={(e) => setWorkflowData({...workflowData, workflowStatus: e.target.value})}
+                  style={{ width: "100%", padding: "1.25rem", borderRadius: "1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "#fff", outline: "none", fontSize: "1rem" }}
+                >
+                  <option value="PENDING">Çekim Bekleniyor</option>
+                  <option value="SHOT_DONE">Çekim Tamamlandı</option>
+                  <option value="EDITING">Düzenleniyor</option>
+                  <option value="SELECTION_PENDING">Seçim Bekleniyor</option>
+                  <option value="DELIVERED">Teslim Edildi / Tamamlandı</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ fontSize: "0.75rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: "0.75rem", display: "block", letterSpacing: "0.05em" }}>Google Drive / Teslimat Linki</label>
+                <input 
+                  type="url" 
+                  placeholder="https://drive.google.com/..." 
+                  style={{ width: "100%", padding: "1.25rem", borderRadius: "1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "#fff", outline: "none" }}
+                  value={workflowData.deliveryLink}
+                  onChange={(e) => setWorkflowData({...workflowData, deliveryLink: e.target.value})}
+                />
+                <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)", marginTop: "0.75rem" }}>
+                  Bu linki girdiğinizde müşteri panelinde doğrudan "Teslimat Klasörü" butonu görünür.
+                </p>
+              </div>
+              
+              <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+                <button type="button" onClick={() => setWorkflowModal({isOpen: false, data: null})} style={{ flex: 1, padding: "1.25rem", borderRadius: "1.5rem", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "#fff", fontWeight: 700, cursor: "pointer" }}>İPTAL</button>
+                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "1.25rem", borderRadius: "1.5rem", border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer" }}>{isLoading ? "KAYDEDİLİYOR..." : "GÜNCELLE"}</button>
+              </div>
+
+              <div style={{ padding: "1.5rem", borderRadius: "1.5rem", border: "1px dashed rgba(255,255,255,0.2)", background: "rgba(255,255,255,0.02)", marginTop: "1rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.85rem", fontWeight: 700, color: "rgba(255,255,255,0.8)" }}>
+                  <ImageIcon size={16} className="text-white/50" /> Sadece Dış Çekim & Seçim Uygulanacak İşler İçin
+                </div>
+                <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", marginBottom: "0.5rem" }}>Orijinal fotoğrafları sisteme (Cloudinary) yükleyip müşterinin profiline göndermek için galeri yönetimine gidin.</p>
+                <Link 
+                  href={`/admin/reservations/${workflowModal.data.id}/gallery`}
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "1rem", borderRadius: "1rem", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, textDecoration: "none" }}
+                  className="hover:bg-white/10 transition-colors"
+                >
+                  GALERİ YÖNETİMİNE GİT
+                </Link>
               </div>
             </form>
           </div>

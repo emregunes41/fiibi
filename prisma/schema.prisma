@@ -54,6 +54,7 @@ model Reservation {
   userId         String?
   workflowStatus String               @default("PENDING")
   deliveryDate   DateTime?
+  deliveryLink   String?
   user           User?                @relation(fields: [userId], references: [id])
   gallery        PhotoGallery?
   packages       PhotographyPackage[] @relation("PhotographyPackageToReservation")
@@ -127,11 +128,20 @@ model PhotoGallery {
 }
 
 model Photo {
-  id          String       @id @default(cuid())
-  galleryId   String
-  gallery     PhotoGallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
-  photoNumber Int
-  url         String
-  isSelected  Boolean      @default(false)
-  createdAt   DateTime     @default(now())
+  id           String       @id @default(cuid())
+  galleryId    String
+  gallery      PhotoGallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  photoNumber  Int
+  originalName String?      // Changed from photoNumber implicitly, or adding it alongside. Let me re-read plan. "Orijinal isim alanı ekle". We can keep photoNumber if needed for sorting, but add originalName.
+  url          String
+  isSelected   Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+}
+
+model AdminNotification {
+  id        String   @id @default(cuid())
+  message   String
+  type      String   @default("INFO") // SELECTION_DONE, REMINDER vb.
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
 }

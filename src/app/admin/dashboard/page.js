@@ -1,6 +1,8 @@
-import { LayoutDashboard, Users, Package, Calendar, Clock, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Users, Package, Calendar, Clock, ChevronRight, Bell, CheckCircle } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { markNotificationAsRead, clearAllNotifications } from "../notification-actions";
+import NotificationList from "../components/NotificationList";
 
 export default async function AdminDashboard() {
   // Fetch quick stats
@@ -14,6 +16,12 @@ export default async function AdminDashboard() {
     take: 5,
     orderBy: { createdAt: "desc" },
     include: { packages: true }
+  });
+
+  // Fetch recent notifications
+  const notifications = await prisma.adminNotification.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 10
   });
 
   // Fetch upcoming deliveries
@@ -87,6 +95,9 @@ export default async function AdminDashboard() {
           <div style={{ fontSize: "2.5rem", fontWeight: 900 }}>{pendingReservations}</div>
         </div>
       </div>
+
+      {/* Notifications Widget */}
+      <NotificationList notifications={notifications} />
 
       {/* Revenue & Recent Activity */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "2rem", marginBottom: "3rem" }}>
