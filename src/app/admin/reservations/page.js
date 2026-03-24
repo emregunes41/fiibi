@@ -13,7 +13,8 @@ export default function ReservationsPage() {
   const [formData, setFormData] = useState({
     brideName: "", bridePhone: "", brideEmail: "",
     groomName: "", groomPhone: "", groomEmail: "",
-    eventDate: "", eventTime: "10:00", packageIds: [], notes: ""
+    eventDate: "", eventTime: "10:00", packageIds: [], notes: "",
+    selectedAddons: [], totalAmount: ""
   });
   const [workflowModal, setWorkflowModal] = useState({ isOpen: false, data: null });
   const [workflowData, setWorkflowData] = useState({ workflowStatus: "PENDING", deliveryLink: "" });
@@ -38,7 +39,8 @@ export default function ReservationsPage() {
       setFormData({ 
         brideName: "", bridePhone: "", brideEmail: "",
         groomName: "", groomPhone: "", groomEmail: "",
-        eventDate: "", eventTime: "10:00", packageIds: [], notes: "" 
+        eventDate: "", eventTime: "10:00", packageIds: [], notes: "",
+        selectedAddons: [], totalAmount: "" 
       });
       loadData();
     } else {
@@ -225,22 +227,61 @@ export default function ReservationsPage() {
                 <label style={{ fontSize: "0.75rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: "0.75rem", display: "block", letterSpacing: "0.05em" }}>Paketler (Birden fazla seçebilirsin)</label>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", background: "rgba(255,255,255,0.02)", padding: "1.5rem", borderRadius: "1.5rem", border: "1px solid rgba(255,255,255,0.05)" }}>
                   {packages.map(pkg => (
-                    <label key={pkg.id} style={{ display: "flex", alignItems: "center", gap: "0.75rem", fontSize: "0.9rem", cursor: "pointer", padding: "0.5rem", borderRadius: "0.5rem" }} className="hover:bg-white/5">
-                      <input 
-                        type="checkbox" 
-                        checked={formData.packageIds.includes(pkg.id)}
-                        onChange={(e) => {
-                          const ids = e.target.checked 
-                            ? [...formData.packageIds, pkg.id]
-                            : formData.packageIds.filter(id => id !== pkg.id);
-                          setFormData({...formData, packageIds: ids});
-                        }}
-                      />
-                      {pkg.name}
-                    </label>
+                    <div key={pkg.id}>
+                      <label style={{ display: "flex", alignItems: "center", gap: "0.75rem", fontSize: "0.9rem", cursor: "pointer", padding: "0.5rem", borderRadius: "0.5rem" }} className="hover:bg-white/5">
+                        <input 
+                          type="checkbox" 
+                          checked={formData.packageIds.includes(pkg.id)}
+                          onChange={(e) => {
+                            const ids = e.target.checked 
+                              ? [...formData.packageIds, pkg.id]
+                              : formData.packageIds.filter(id => id !== pkg.id);
+                            
+                            let newAddons = [...formData.selectedAddons];
+                            if (!e.target.checked && pkg.addons) {
+                              const titlesToRemove = pkg.addons.map(a => a.title);
+                              newAddons = newAddons.filter(a => !titlesToRemove.includes(a.title));
+                            }
+                            setFormData({...formData, packageIds: ids, selectedAddons: newAddons});
+                          }}
+                        />
+                        {pkg.name}
+                      </label>
+                      {formData.packageIds.includes(pkg.id) && pkg.addons && pkg.addons.length > 0 && (
+                        <div style={{ marginLeft: "2rem", marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                          {pkg.addons.map((addon, idx) => {
+                            const isSelected = formData.selectedAddons.some(a => a.title === addon.title);
+                            return (
+                              <label key={idx} style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.8rem", color: "rgba(255,255,255,0.7)", cursor: "pointer" }}>
+                                <input 
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={(e) => {
+                                    let currentAddons = [...formData.selectedAddons];
+                                    if (e.target.checked) {
+                                      currentAddons.push(addon);
+                                    } else {
+                                      currentAddons = currentAddons.filter(a => a.title !== addon.title);
+                                    }
+                                    setFormData({...formData, selectedAddons: currentAddons});
+                                  }}
+                                />
+                                + {addon.title} ({addon.price} TL)
+                              </label>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
+              <input 
+                placeholder="Toplam Fiyat (TL)" 
+                style={{ gridColumn: "span 2", padding: "1.25rem", borderRadius: "1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "#fff", outline: "none" }}
+                value={formData.totalAmount}
+                onChange={(e) => setFormData({...formData, totalAmount: e.target.value})}
+              />
               <textarea 
                 placeholder="Notlar (Opsiyonel)" 
                 style={{ gridColumn: "span 2", padding: "1.25rem", borderRadius: "1rem", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "#fff", minHeight: "80px", outline: "none", resize: "none" }}

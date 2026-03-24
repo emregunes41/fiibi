@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, Edit2, Package as PackageIcon } from "lucide-react";
+import { Plus, Trash2, Edit2, Package as PackageIcon, PlusCircle, X } from "lucide-react";
 import { getPackages, createPackage, updatePackage, deletePackage } from "../core-actions";
 
 const CATEGORIES = [
@@ -30,6 +30,7 @@ export default function PackagesPage() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [deleteMessage, setDeleteMessage] = useState(null);
 
   async function loadPackages() {
     const data = await getPackages();
@@ -86,9 +87,29 @@ export default function PackagesPage() {
 
   const handleDelete = async (id) => {
     if (confirm("Bu paketi silmek istediğine emin misin?")) {
-      await deletePackage(id);
-      loadPackages();
+      const res = await deletePackage(id);
+      if (res.error) {
+        setDeleteMessage({ type: "error", text: "Silme hatası: " + res.error });
+      } else {
+        setDeleteMessage({ type: "success", text: "Paket başarıyla silindi!" });
+        loadPackages();
+      }
+      setTimeout(() => setDeleteMessage(null), 4000);
     }
+  };
+
+  const addAddon = () => {
+    setFormData({ ...formData, addons: [...formData.addons, { title: "", price: "" }] });
+  };
+
+  const removeAddon = (index) => {
+    setFormData({ ...formData, addons: formData.addons.filter((_, i) => i !== index) });
+  };
+
+  const updateAddon = (index, field, value) => {
+    const newAddons = [...formData.addons];
+    newAddons[index] = { ...newAddons[index], [field]: value };
+    setFormData({ ...formData, addons: newAddons });
   };
 
   const groupedPackages = CATEGORIES.map(cat => ({
@@ -118,6 +139,19 @@ export default function PackagesPage() {
 
   return (
     <div style={{ color: "#fff" }}>
+      {/* Delete feedback */}
+      {deleteMessage && (
+        <div style={{ 
+          position: "fixed", top: 80, right: 24, zIndex: 2000, padding: "14px 24px", borderRadius: 14,
+          background: deleteMessage.type === "error" ? "rgba(239,68,68,0.15)" : "rgba(34,197,94,0.15)",
+          border: `1px solid ${deleteMessage.type === "error" ? "rgba(239,68,68,0.3)" : "rgba(34,197,94,0.3)"}`,
+          color: deleteMessage.type === "error" ? "#f87171" : "#4ade80",
+          fontWeight: 600, fontSize: 14, backdropFilter: "blur(10px)"
+        }}>
+          {deleteMessage.text}
+        </div>
+      )}
+
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "3rem" }}>
         <div>
           <h1 style={{ fontSize: "2.5rem", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: "0.5rem" }}>Paket Yönetimi</h1>
@@ -181,6 +215,21 @@ export default function PackagesPage() {
                     ⏳ {pkg.deliveryTimeDays} GÜN TESLİM
                   </span>
                 </div>
+
+                {/* Addons display */}
+                {pkg.addons && Array.isArray(pkg.addons) && pkg.addons.length > 0 && (
+                  <div style={{ marginTop: "1rem", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "1rem" }}>
+                    <p style={{ fontSize: "0.7rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: "0.5rem", letterSpacing: "0.05em" }}>Ek Hizmetler</p>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                      {pkg.addons.map((addon, i) => (
+                        <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "0.85rem", color: "rgba(255,255,255,0.6)" }}>
+                          <span>+ {addon.title}</span>
+                          <span style={{ fontWeight: 700 }}>{addon.price} TL</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -315,6 +364,51 @@ export default function PackagesPage() {
                   rows={3}
                   style={{ ...inputStyle, resize: "none" }}
                 />
+              </div>
+
+              {/* ADDON MANAGEMENT SECTION */}
+              <div style={{ gridColumn: "span 2", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "1.5rem", padding: "1.5rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+                  <label style={{ ...labelStyle, marginBottom: 0 }}>Ek Hizmetler (Addon)</label>
+                  <button 
+                    type="button" 
+                    onClick={addAddon}
+                    style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff", padding: "0.5rem 1rem", borderRadius: "0.75rem", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.4rem" }}
+                  >
+                    <PlusCircle size={14} /> Ekle
+                  </button>
+                </div>
+                {formData.addons.length === 0 ? (
+                  <p style={{ color: "rgba(255,255,255,0.25)", fontSize: "0.85rem", textAlign: "center", padding: "1rem 0" }}>Henüz ek hizmet eklenmedi. "Ekle" butonuna tıklayarak ekleyebilirsin.</p>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                    {formData.addons.map((addon, index) => (
+                      <div key={index} style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+                        <input
+                          type="text"
+                          placeholder="Ek hizmet adı (örn: Drone çekimi)"
+                          value={addon.title}
+                          onChange={(e) => updateAddon(index, "title", e.target.value)}
+                          style={{ ...inputStyle, flex: 2, padding: "0.85rem 1rem", borderRadius: "0.75rem" }}
+                        />
+                        <input
+                          type="text"
+                          placeholder="Fiyat"
+                          value={addon.price}
+                          onChange={(e) => updateAddon(index, "price", e.target.value)}
+                          style={{ ...inputStyle, flex: 1, padding: "0.85rem 1rem", borderRadius: "0.75rem" }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeAddon(index)}
+                          style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171", width: 36, height: 36, borderRadius: "0.6rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div style={{ gridColumn: "span 2" }}>

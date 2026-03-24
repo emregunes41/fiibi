@@ -24,6 +24,7 @@ export async function createPackage(data) {
         category: category || "STANDARD",
         timeType: timeType || "FULL_DAY",
         maxCapacity: parseInt(maxCapacity) || 1,
+        deliveryTimeDays: parseInt(deliveryTimeDays) || 14,
         features: Array.isArray(features) ? features : features.split(',').map(f => f.trim()).filter(f => f !== ""),
         addons: addons || [],
       }
@@ -62,8 +63,10 @@ export async function deletePackage(id) {
   try {
     await prisma.photographyPackage.delete({ where: { id } });
     revalidatePath('/admin/packages');
+    revalidatePath('/');
     return { success: true };
   } catch (error) {
+    console.error("Delete Package Error:", error);
     return { error: error.message };
   }
 }
@@ -183,7 +186,7 @@ export async function savePendingReservation(data) {
 
 export async function createManualReservation(data) {
   try {
-    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds, notes } = data;
+    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds, notes, selectedAddons = [], totalAmount = "" } = data;
     
     const packagesData = await prisma.photographyPackage.findMany({
       where: { id: { in: packageIds } }
@@ -225,6 +228,8 @@ export async function createManualReservation(data) {
           connect: packageIds.map(id => ({ id }))
         },
         notes,
+        totalAmount,
+        selectedAddons,
         status: "CONFIRMED", 
         paymentStatus: "UNPAID",
         workflowStatus: "PENDING",
