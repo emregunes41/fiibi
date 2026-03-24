@@ -1,7 +1,7 @@
 import { getCurrentUser, logoutUser } from "../user-actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { User, Calendar, Settings, LogOut, Package, Clock, CheckCircle, FileText } from "lucide-react";
+import { User, UserCircle, Calendar, Settings, LogOut, Package, Clock, CheckCircle, FileText } from "lucide-react";
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
@@ -37,22 +37,22 @@ export default async function ProfilePage() {
         
         {/* Sidebar / User Card */}
         <div className="lg:col-span-1 flex flex-col gap-6">
-          <div className="glass-panel rounded-[2.5rem] p-8">
+          <div className="glass-panel rounded-[3rem] p-10 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
             <div className="flex flex-col items-center text-center">
-              <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center mb-6">
-                <User size={48} className="text-white/70" />
+              <div className="w-28 h-28 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 rotate-3 hover:rotate-0 transition-transform duration-500">
+                <UserCircle size={64} className="text-white/80" />
               </div>
-              <h2 className="text-2xl font-black tracking-tighter mb-1">{user.name}</h2>
-              <p className="text-white/40 text-sm mb-6">{user.email}</p>
+              <h2 className="text-3xl font-black tracking-tighter mb-2 italic">{user.name}</h2>
+              <p className="text-white/30 text-xs font-bold uppercase tracking-widest mb-8">{user.email}</p>
               
               <div className="w-full grid grid-cols-2 gap-4 mb-8">
-                <div className="bg-white/5 rounded-2xl p-4 flex flex-col items-center">
-                  <span className="text-white/30 text-[10px] font-bold uppercase tracking-widest mb-1">RANDEVU</span>
-                  <span className="text-xl font-black">{user.reservations.length}</span>
+                <div className="bg-white/5 border border-white/5 rounded-[1.5rem] p-5 flex flex-col items-center group hover:bg-white/10 transition-colors">
+                  <span className="text-white/20 text-[10px] font-bold uppercase tracking-widest mb-1 group-hover:text-white/40">RANDEVU</span>
+                  <span className="text-2xl font-black">{user.reservations.length}</span>
                 </div>
-                <div className="bg-white/5 rounded-2xl p-4 flex flex-col items-center">
-                  <span className="text-white/30 text-[10px] font-bold uppercase tracking-widest mb-1">PUAN</span>
-                  <span className="text-xl font-black">0</span>
+                <div className="bg-white/5 border border-white/5 rounded-[1.5rem] p-5 flex flex-col items-center group hover:bg-white/10 transition-colors">
+                  <span className="text-white/20 text-[10px] font-bold uppercase tracking-widest mb-1 group-hover:text-white/40">PUAN</span>
+                  <span className="text-2xl font-black">0</span>
                 </div>
               </div>
 
@@ -98,7 +98,10 @@ export default async function ProfilePage() {
                   };
 
                   return (
-                    <div key={res.id} className="glass-panel rounded-3xl overflow-hidden relative border border-white/5">
+                    <div key={res.id} className="glass-panel rounded-[2.5rem] overflow-hidden relative border border-white/10 shadow-2xl transition-all hover:border-white/20">
+                      <div className="absolute top-0 right-0 p-8 pointer-events-none opacity-5">
+                        <Package size={120} />
+                      </div>
                       
                       {/* Top Header Card Info */}
                       <div className="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -127,8 +130,8 @@ export default async function ProfilePage() {
                       </div>
 
                       {/* CRM STEPS TRACKER */}
-                      <div className="p-6 md:p-8 bg-black/40">
-                        <h5 className="text-sm font-bold text-white/50 mb-6 uppercase tracking-wider">İşlem Gidişatı</h5>
+                      <div className="p-8 md:p-10 bg-white/[0.02]">
+                        <h5 className="text-[10px] font-black text-white/30 mb-8 uppercase tracking-[0.3em]">İşlem Gidişatı</h5>
                         
                         <div className="flex flex-col md:flex-row justify-between relative gap-4 md:gap-0">
                           {/* Background Line (visible only md+) */}

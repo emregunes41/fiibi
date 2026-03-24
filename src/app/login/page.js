@@ -32,14 +32,16 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-6 bg-black relative">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 blur-[120px] rounded-full"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[150px] rounded-full animate-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/5 blur-[150px] rounded-full"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0,transparent_100%)]"></div>
       </div>
 
-      <div className="w-full max-w-md glass-panel p-10 rounded-[2.5rem] relative z-10">
+      <div className="w-full max-w-md glass-panel p-10 md:p-12 rounded-[3.5rem] relative z-10 border border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-black tracking-tighter mb-2">Hoş Geldiniz</h1>
-          <p className="text-white/50">Hesabınıza giriş yapın</p>
+          <div className="w-16 h-16 bg-white text-black flex items-center justify-center rounded-2xl text-2xl font-black mx-auto mb-6 shadow-[0_0_30px_rgba(255,255,255,0.2)]">P</div>
+          <h1 className="text-4xl font-black tracking-tighter mb-2 italic">Giriş Yap</h1>
+          <p className="text-white/40 text-sm font-medium uppercase tracking-[0.2em] ml-1">Pinowed CRM Portal</p>
         </div>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-5">

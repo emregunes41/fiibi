@@ -30,14 +30,16 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-black relative">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 blur-[120px] rounded-full"></div>
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[150px] rounded-full animate-pulse"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-500/5 blur-[150px] rounded-full"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0,transparent_100%)]"></div>
       </div>
 
-      <div className="w-full max-w-md glass-panel p-10 rounded-[2.5rem] relative z-10">
+      <div className="w-full max-w-md glass-panel p-10 md:p-12 rounded-[3.5rem] relative z-10 border border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-black tracking-tighter mb-2">Kayıt Olun</h1>
-          <p className="text-white/50">Pinowed dünyasına adım atın</p>
+          <div className="w-16 h-16 bg-white text-black flex items-center justify-center rounded-2xl text-2xl font-black mx-auto mb-6 shadow-[0_0_30px_rgba(255,255,255,0.2)]">P</div>
+          <h1 className="text-4xl font-black tracking-tighter mb-2 italic">Kayıt Ol</h1>
+          <p className="text-white/40 text-sm font-medium uppercase tracking-[0.2em] ml-1">Pinowed CRM Portal</p>
         </div>
 
         <form onSubmit={handleRegister} className="flex flex-col gap-5">
@@ -54,8 +56,8 @@ export default function RegisterPage() {
               <input 
                 type="text" 
                 required 
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-white/30"
-                placeholder="John Doe"
+                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-white/30 transition-colors"
+                placeholder="Adınız Soyadınız"
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
               />
@@ -69,7 +71,7 @@ export default function RegisterPage() {
               <input 
                 type="email" 
                 required 
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-white/30"
+                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-white/30 transition-colors"
                 placeholder="ornek@mail.com"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -84,8 +86,9 @@ export default function RegisterPage() {
               <input 
                 type="password" 
                 required 
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-white/30"
-                placeholder="••••••••"
+                minLength={6}
+                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-white/30 transition-colors"
+                placeholder="En az 6 karakter"
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
               />
@@ -95,7 +98,7 @@ export default function RegisterPage() {
           <button 
             type="submit" 
             disabled={isLoading}
-            className="w-full bg-white text-black font-black py-4 rounded-2xl mt-4 flex items-center justify-center gap-2 hover:bg-white/90 transition-all disabled:opacity-50"
+            className="w-full bg-white text-black font-black py-4 rounded-2xl mt-4 flex items-center justify-center gap-2 hover:bg-white/90 transition-all disabled:opacity-50 shadow-[0_0_30px_rgba(255,255,255,0.1)]"
           >
             {isLoading ? <Loader2 className="animate-spin" size={20} /> : <UserPlus size={20} />}
             Hesap Oluştur
