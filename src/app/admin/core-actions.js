@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import bcrypt from "bcryptjs";
+import { sendWelcomeEmail } from "../actions/send-welcome";
 
 // --- PACKAGE ACTIONS ---
 
@@ -127,8 +129,30 @@ export async function savePendingReservation(data) {
     const deliveryDateObj = new Date(eventDateObj);
     deliveryDateObj.setDate(deliveryDateObj.getDate() + maxDays);
 
+    // Hesap kontrolü ve otomatik oluşturma
+    let userId = null;
+    if (data.brideEmail) {
+      let user = await prisma.user.findUnique({ where: { email: data.brideEmail } });
+      if (!user) {
+        const password = Math.random().toString(36).slice(-8);
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user = await prisma.user.create({
+          data: {
+            name: data.brideName,
+            email: data.brideEmail,
+            phone: data.bridePhone,
+            password: hashedPassword,
+            role: "MEMBER"
+          }
+        });
+        await sendWelcomeEmail(data.brideEmail, data.brideName, password);
+      }
+      userId = user.id;
+    }
+
     const reservation = await prisma.reservation.create({
       data: {
+        userId: userId,
         brideName: data.brideName,
         bridePhone: data.bridePhone,
         brideEmail: data.brideEmail,
@@ -169,8 +193,30 @@ export async function createManualReservation(data) {
     const deliveryDateObj = new Date(eventDateObj);
     deliveryDateObj.setDate(deliveryDateObj.getDate() + maxDays);
 
+    // Hesap kontrolü ve otomatik oluşturma
+    let userId = null;
+    if (brideEmail) {
+      let user = await prisma.user.findUnique({ where: { email: brideEmail } });
+      if (!user) {
+        const password = Math.random().toString(36).slice(-8);
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user = await prisma.user.create({
+          data: {
+            name: brideName,
+            email: brideEmail,
+            phone: bridePhone,
+            password: hashedPassword,
+            role: "MEMBER"
+          }
+        });
+        await sendWelcomeEmail(brideEmail, brideName, password);
+      }
+      userId = user.id;
+    }
+
     await prisma.reservation.create({
       data: {
+        userId: userId,
         brideName, bridePhone, brideEmail,
         groomName, groomPhone, groomEmail,
         eventDate: eventDateObj,

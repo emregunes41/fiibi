@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Lock } from "lucide-react";
+import { Lock, User } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -13,10 +13,18 @@ export default function Navbar() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-[100] px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex items-center justify-between border-b border-white/5 pb-4">
           {/* Logo */}
           <Link href="/" className="font-black text-2xl tracking-tighter text-white no-underline">
             PINOWED.
+          </Link>
+
+          {/* Client Login Link */}
+          <Link 
+            href="/login" 
+            className="flex items-center gap-2 text-sm font-bold text-white/50 hover:text-white transition-colors no-underline px-4 py-2 rounded-full border border-white/5 hover:bg-white/5"
+          >
+            <User size={16} /> Müşteri Girişi
           </Link>
         </div>
       </header>
