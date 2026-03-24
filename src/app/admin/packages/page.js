@@ -4,12 +4,29 @@ import { useState, useEffect } from "react";
 import { Plus, Trash2, Edit2, Package as PackageIcon } from "lucide-react";
 import { getPackages, createPackage, updatePackage, deletePackage } from "../core-actions";
 
+const CATEGORIES = [
+  { value: "DIS_CEKIM", label: "Dış Çekimler", icon: "🌿" },
+  { value: "DUGUN", label: "Düğün Çekimleri", icon: "💍" },
+  { value: "NISAN", label: "Nişan Çekimleri", icon: "💎" },
+];
+
+const TIME_TYPES = [
+  { value: "FULL_DAY", label: "Tüm Gün" },
+  { value: "MORNING", label: "Gündüz" },
+  { value: "EVENING", label: "Akşam" },
+  { value: "SLOT", label: "2 Saatlik Periyot" },
+];
+
+const getCategoryLabel = (val) => CATEGORIES.find(c => c.value === val)?.label || val;
+const getCategoryIcon = (val) => CATEGORIES.find(c => c.value === val)?.icon || "📷";
+const getTimeLabel = (val) => TIME_TYPES.find(t => t.value === val)?.label || val;
+
 export default function PackagesPage() {
   const [packages, setPackages] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ 
     name: "", description: "", price: "", features: "", 
-    category: "STANDARD", timeType: "FULL_DAY", maxCapacity: "1", addons: [] 
+    category: "DIS_CEKIM", timeType: "FULL_DAY", maxCapacity: "1", addons: [] 
   });
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -20,7 +37,6 @@ export default function PackagesPage() {
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadPackages();
   }, []);
 
@@ -36,7 +52,7 @@ export default function PackagesPage() {
       setEditingId(null);
       setFormData({ 
         name: "", description: "", price: "", features: "", 
-        category: "STANDARD", timeType: "FULL_DAY", maxCapacity: "1", addons: [] 
+        category: "DIS_CEKIM", timeType: "FULL_DAY", maxCapacity: "1", addons: [] 
       });
       loadPackages();
     }
@@ -62,7 +78,7 @@ export default function PackagesPage() {
     setEditingId(null);
     setFormData({ 
       name: "", description: "", price: "", features: "", 
-      category: "STANDARD", timeType: "FULL_DAY", maxCapacity: "1", addons: [] 
+      category: "DIS_CEKIM", timeType: "FULL_DAY", maxCapacity: "1", addons: [] 
     });
     setIsModalOpen(true);
   };
@@ -72,6 +88,31 @@ export default function PackagesPage() {
       await deletePackage(id);
       loadPackages();
     }
+  };
+
+  const groupedPackages = CATEGORIES.map(cat => ({
+    ...cat,
+    items: packages.filter(p => p.category === cat.value)
+  })).filter(g => g.items.length > 0);
+
+  const ungrouped = packages.filter(p => !CATEGORIES.some(c => c.value === p.category));
+
+  const selectStyle = {
+    width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: "1rem", padding: "1.25rem", color: "#fff", outline: "none", appearance: "none",
+    WebkitAppearance: "none", cursor: "pointer", fontSize: "0.95rem",
+    backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E\")",
+    backgroundRepeat: "no-repeat", backgroundPosition: "right 1.25rem center"
+  };
+
+  const labelStyle = { 
+    display: "block", fontSize: "0.75rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", 
+    textTransform: "uppercase", marginBottom: "0.75rem", letterSpacing: "0.05em" 
+  };
+
+  const inputStyle = { 
+    width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", 
+    borderRadius: "1rem", padding: "1.25rem", color: "#fff", outline: "none" 
   };
 
   return (
@@ -94,50 +135,83 @@ export default function PackagesPage() {
         </button>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: "2rem" }}>
-        {packages.map((pkg) => (
-          <div key={pkg.id} style={{ 
-            background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", 
-            padding: "2.5rem", borderRadius: "2.5rem", position: "relative",
-            backdropFilter: "blur(10px)", transition: "all 0.3s"
-          }} className="hover:border-white/30 hover:bg-white/5">
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1.5rem" }}>
-              <div style={{ 
-                background: "rgba(255,255,255,0.1)", borderRadius: "1rem", 
-                width: "48px", height: "48px", display: "flex", alignItems: "center", justifyContent: "center" 
-              }}>
-                <PackageIcon size={24} color="#fff" />
-              </div>
-              <div style={{ display: "flex", gap: "0.75rem" }}>
-                <button onClick={() => startEdit(pkg)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "0.6rem", borderRadius: "1rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} className="hover:bg-white/10">
-                  <Edit2 size={16} />
-                </button>
-                <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,77,77,0.2)", color: "#FF4D4D", padding: "0.6rem", borderRadius: "1rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} className="hover:bg-red-500/10">
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </div>
+      {groupedPackages.map((group) => (
+        <div key={group.value} style={{ marginBottom: "3rem" }}>
+          <h2 style={{ fontSize: "1.5rem", fontWeight: 900, marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <span>{group.icon}</span> {group.label}
+            <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.3)", fontWeight: 500 }}>({group.items.length} paket)</span>
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: "2rem" }}>
+            {group.items.map((pkg) => (
+              <div key={pkg.id} style={{ 
+                background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", 
+                padding: "2.5rem", borderRadius: "2.5rem", position: "relative",
+                backdropFilter: "blur(10px)", transition: "all 0.3s"
+              }} className="hover:border-white/30 hover:bg-white/5">
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+                  <div style={{ 
+                    background: "rgba(255,255,255,0.1)", borderRadius: "1rem", 
+                    width: "48px", height: "48px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem"
+                  }}>
+                    {getCategoryIcon(pkg.category)}
+                  </div>
+                  <div style={{ display: "flex", gap: "0.75rem" }}>
+                    <button onClick={() => startEdit(pkg)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "0.6rem", borderRadius: "1rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} className="hover:bg-white/10">
+                      <Edit2 size={16} />
+                    </button>
+                    <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,77,77,0.2)", color: "#FF4D4D", padding: "0.6rem", borderRadius: "1rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} className="hover:bg-red-500/10">
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </div>
 
-            <h3 style={{ fontSize: "1.5rem", fontWeight: 900, marginBottom: "0.5rem", letterSpacing: "-0.02em" }}>{pkg.name}</h3>
-            <div style={{ fontSize: "2rem", fontWeight: 900, marginBottom: "1.25rem", color: "#fff" }}>{pkg.price} TL</div>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.95rem", lineHeight: 1.6, marginBottom: "2rem", minHeight: "3em" }}>{pkg.description}</p>
-            
-            <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "1.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-              <span style={{ fontSize: "0.7rem", fontWeight: 900, background: "rgba(255,255,255,0.05)", padding: "0.4rem 0.8rem", borderRadius: "2rem", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
-                {pkg.category}
-              </span>
-              <span style={{ fontSize: "0.7rem", fontWeight: 900, background: "rgba(255,255,255,0.05)", padding: "0.4rem 0.8rem", borderRadius: "2rem", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
-                {pkg.timeType === "FULL_DAY" ? "TAM GÜN" : "SAATLİK"}
-              </span>
-              <span style={{ fontSize: "0.7rem", fontWeight: 900, background: "rgba(255,255,255,0.05)", padding: "0.4rem 0.8rem", borderRadius: "2rem", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
-                {pkg.maxCapacity} RANDEVU/GÜN
-              </span>
-            </div>
+                <h3 style={{ fontSize: "1.5rem", fontWeight: 900, marginBottom: "0.5rem", letterSpacing: "-0.02em" }}>{pkg.name}</h3>
+                <div style={{ fontSize: "2rem", fontWeight: 900, marginBottom: "1.25rem", color: "#fff" }}>{pkg.price} TL</div>
+                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.95rem", lineHeight: 1.6, marginBottom: "2rem", minHeight: "3em" }}>{pkg.description}</p>
+                
+                <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "1.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                  <span style={{ fontSize: "0.7rem", fontWeight: 900, background: "rgba(255,255,255,0.05)", padding: "0.4rem 0.8rem", borderRadius: "2rem", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                    {getTimeLabel(pkg.timeType)}
+                  </span>
+                  <span style={{ fontSize: "0.7rem", fontWeight: 900, background: "rgba(255,255,255,0.05)", padding: "0.4rem 0.8rem", borderRadius: "2rem", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                    {pkg.maxCapacity} RANDEVU/GÜN
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
 
-      {/* Modern Modal */}
+      {ungrouped.length > 0 && (
+        <div style={{ marginBottom: "3rem" }}>
+          <h2 style={{ fontSize: "1.5rem", fontWeight: 900, marginBottom: "1.5rem" }}>📷 Diğer Paketler</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: "2rem" }}>
+            {ungrouped.map((pkg) => (
+              <div key={pkg.id} style={{ 
+                background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", 
+                padding: "2.5rem", borderRadius: "2.5rem"
+              }}>
+                <h3 style={{ fontSize: "1.5rem", fontWeight: 900, marginBottom: "0.5rem" }}>{pkg.name}</h3>
+                <div style={{ fontSize: "2rem", fontWeight: 900, marginBottom: "1.25rem" }}>{pkg.price} TL</div>
+                <p style={{ color: "rgba(255,255,255,0.5)", marginBottom: "1rem" }}>{pkg.description}</p>
+                <div style={{ display: "flex", gap: "0.75rem" }}>
+                  <button onClick={() => startEdit(pkg)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "0.6rem 1rem", borderRadius: "1rem", cursor: "pointer", fontSize: "0.8rem" }}>Düzenle</button>
+                  <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,77,77,0.2)", color: "#FF4D4D", padding: "0.6rem 1rem", borderRadius: "1rem", cursor: "pointer", fontSize: "0.8rem" }}>Sil</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {packages.length === 0 && (
+        <div style={{ textAlign: "center", padding: "4rem", color: "rgba(255,255,255,0.3)" }}>
+          <PackageIcon size={48} style={{ margin: "0 auto 1rem" }} />
+          <p style={{ fontSize: "1.2rem" }}>Henüz paket eklenmemiş.</p>
+        </div>
+      )}
+
       {isModalOpen && (
         <div style={{ 
           position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(15px)",
@@ -146,54 +220,95 @@ export default function PackagesPage() {
           <div style={{ 
             background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "3rem", 
             width: "100%", maxWidth: "700px", padding: "3rem", position: "relative",
-            boxShadow: "0 50px 100px -20px rgba(0,0,0,0.5)"
+            boxShadow: "0 50px 100px -20px rgba(0,0,0,0.5)", maxHeight: "90vh", overflowY: "auto"
           }}>
             <h2 style={{ fontSize: "2rem", fontWeight: 900, marginBottom: "2rem", letterSpacing: "-0.04em" }}>{editingId ? "Paket Düzenle" : "Yeni Paket Oluştur"}</h2>
             
             <form onSubmit={handleSubmit} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
               <div style={{ gridColumn: "span 2" }}>
-                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: "0.75rem", letterSpacing: "0.05em" }}>Paket Adı</label>
+                <label style={labelStyle}>Paket Adı</label>
                 <input 
                   type="text" 
                   value={formData.name} 
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   required 
-                  style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "1rem", padding: "1.25rem", color: "#fff", outline: "none" }}
+                  style={inputStyle}
                   placeholder="Örn: Elit Düğün Hikayesi"
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: "0.75rem" }}>Fiyat</label>
+                <label style={labelStyle}>Kategori</label>
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  style={selectStyle}
+                >
+                  {CATEGORIES.map(c => (
+                    <option key={c.value} value={c.value} style={{ background: "#111", color: "#fff" }}>
+                      {c.icon} {c.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label style={labelStyle}>Zaman Tipi</label>
+                <select
+                  value={formData.timeType}
+                  onChange={(e) => setFormData({...formData, timeType: e.target.value})}
+                  style={selectStyle}
+                >
+                  {TIME_TYPES.map(t => (
+                    <option key={t.value} value={t.value} style={{ background: "#111", color: "#fff" }}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label style={labelStyle}>Fiyat</label>
                 <input 
                   type="text" 
                   value={formData.price} 
                   onChange={(e) => setFormData({...formData, price: e.target.value})}
                   required 
-                  style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "1rem", padding: "1.25rem", color: "#fff" }}
-                  placeholder="Örn: 15.000 TL"
+                  style={inputStyle}
+                  placeholder="Örn: 15.000"
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: "0.75rem" }}>Günlük Kapasite</label>
+                <label style={labelStyle}>Günlük Kapasite</label>
                 <input 
                   type="number" 
                   value={formData.maxCapacity} 
                   onChange={(e) => setFormData({...formData, maxCapacity: e.target.value})}
                   required 
-                  style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "1rem", padding: "1.25rem", color: "#fff" }}
+                  style={inputStyle}
                 />
               </div>
 
               <div style={{ gridColumn: "span 2" }}>
-                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: "0.75rem" }}>Açıklama</label>
+                <label style={labelStyle}>Açıklama</label>
                 <textarea 
                   value={formData.description} 
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
                   required 
                   rows={3}
-                  style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "1rem", padding: "1.25rem", color: "#fff", resize: "none" }}
+                  style={{ ...inputStyle, resize: "none" }}
+                />
+              </div>
+
+              <div style={{ gridColumn: "span 2" }}>
+                <label style={labelStyle}>Özellikler (virgülle ayır)</label>
+                <input 
+                  type="text" 
+                  value={formData.features} 
+                  onChange={(e) => setFormData({...formData, features: e.target.value})}
+                  style={inputStyle}
+                  placeholder="Örn: 200 fotoğraf, albüm, drone çekimi"
                 />
               </div>
 
