@@ -13,7 +13,7 @@ export async function getPackages() {
 
 export async function createPackage(data) {
   try {
-    const { name, description, price, features, category, timeType, maxCapacity, addons } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays } = data;
     await prisma.photographyPackage.create({
       data: {
         name,
@@ -35,7 +35,7 @@ export async function createPackage(data) {
 
 export async function updatePackage(id, data) {
   try {
-    const { name, description, price, features, category, timeType, maxCapacity, addons } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays } = data;
     await prisma.photographyPackage.update({
       where: { id },
       data: {
@@ -119,6 +119,14 @@ export async function checkAvailability(date, packageId, time = null) {
 
 export async function savePendingReservation(data) {
   try {
+    const packagesData = await prisma.photographyPackage.findMany({
+      where: { id: { in: data.packageIds } }
+    });
+    const maxDays = packagesData.reduce((max, pkg) => Math.max(max, pkg.deliveryTimeDays || 14), 0);
+    const eventDateObj = new Date(data.date);
+    const deliveryDateObj = new Date(eventDateObj);
+    deliveryDateObj.setDate(deliveryDateObj.getDate() + maxDays);
+
     const reservation = await prisma.reservation.create({
       data: {
         brideName: data.brideName,
@@ -127,7 +135,7 @@ export async function savePendingReservation(data) {
         groomName: data.groomName,
         groomPhone: data.groomPhone,
         groomEmail: data.groomEmail,
-        eventDate: new Date(data.date),
+        eventDate: eventDateObj,
         eventTime: data.time,
         packages: {
           connect: data.packageIds.map(id => ({ id }))
@@ -137,7 +145,9 @@ export async function savePendingReservation(data) {
         paidAmount: data.paidAmount,
         selectedAddons: data.selectedAddons || [], // Save the array of {title, price}
         status: "PENDING",
-        paymentStatus: "UNPAID"
+        paymentStatus: "UNPAID",
+        workflowStatus: "PENDING",
+        deliveryDate: deliveryDateObj
       }
     });
     return { success: true, id: reservation.id };
@@ -150,18 +160,29 @@ export async function savePendingReservation(data) {
 export async function createManualReservation(data) {
   try {
     const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds, notes } = data;
+    
+    const packagesData = await prisma.photographyPackage.findMany({
+      where: { id: { in: packageIds } }
+    });
+    const maxDays = packagesData.reduce((max, pkg) => Math.max(max, pkg.deliveryTimeDays || 14), 0);
+    const eventDateObj = new Date(eventDate);
+    const deliveryDateObj = new Date(eventDateObj);
+    deliveryDateObj.setDate(deliveryDateObj.getDate() + maxDays);
+
     await prisma.reservation.create({
       data: {
         brideName, bridePhone, brideEmail,
         groomName, groomPhone, groomEmail,
-        eventDate: new Date(eventDate),
+        eventDate: eventDateObj,
         eventTime,
         packages: {
           connect: packageIds.map(id => ({ id }))
         },
         notes,
         status: "CONFIRMED", 
-        paymentStatus: "UNPAID"
+        paymentStatus: "UNPAID",
+        workflowStatus: "PENDING",
+        deliveryDate: deliveryDateObj
       }
     });
     revalidatePath('/admin/reservations');

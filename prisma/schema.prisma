@@ -25,6 +25,7 @@ model PhotographyPackage {
   maxCapacity  Int           @default(1)
   features     String[]
   addons       Json?
+  deliveryTimeDays Int           @default(14)
   isActive     Boolean       @default(true)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -51,7 +52,10 @@ model Reservation {
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
   userId         String?
+  workflowStatus String               @default("PENDING")
+  deliveryDate   DateTime?
   user           User?                @relation(fields: [userId], references: [id])
+  gallery        PhotoGallery?
   packages       PhotographyPackage[] @relation("PhotographyPackageToReservation")
 }
 
@@ -109,4 +113,25 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PhotoGallery {
+  id              String      @id @default(cuid())
+  reservationId   String      @unique
+  reservation     Reservation @relation(fields: [reservationId], references: [id])
+  photos          Photo[]
+  isDelivered     Boolean     @default(false)
+  deliveredAt     DateTime?
+  selectionLimit  Int         @default(50)
+  createdAt       DateTime    @default(now())
+}
+
+model Photo {
+  id          String       @id @default(cuid())
+  galleryId   String
+  gallery     PhotoGallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  photoNumber Int
+  url         String
+  isSelected  Boolean      @default(false)
+  createdAt   DateTime     @default(now())
 }

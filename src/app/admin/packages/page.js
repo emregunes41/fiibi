@@ -26,7 +26,7 @@ export default function PackagesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ 
     name: "", description: "", price: "", features: "", 
-    category: "DIS_CEKIM", timeType: "FULL_DAY", maxCapacity: "1", addons: [] 
+    category: "DIS_CEKIM", timeType: "FULL_DAY", maxCapacity: "1", addons: [], deliveryTimeDays: "14"
   });
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -52,7 +52,7 @@ export default function PackagesPage() {
       setEditingId(null);
       setFormData({ 
         name: "", description: "", price: "", features: "", 
-        category: "DIS_CEKIM", timeType: "FULL_DAY", maxCapacity: "1", addons: [] 
+        category: "DIS_CEKIM", timeType: "FULL_DAY", maxCapacity: "1", addons: [], deliveryTimeDays: "14"
       });
       loadPackages();
     }
@@ -69,7 +69,8 @@ export default function PackagesPage() {
       category: pkg.category,
       timeType: pkg.timeType,
       maxCapacity: pkg.maxCapacity.toString(),
-      addons: pkg.addons || []
+      addons: pkg.addons || [],
+      deliveryTimeDays: pkg.deliveryTimeDays?.toString() || "14"
     });
     setIsModalOpen(true);
   };
@@ -78,7 +79,7 @@ export default function PackagesPage() {
     setEditingId(null);
     setFormData({ 
       name: "", description: "", price: "", features: "", 
-      category: "DIS_CEKIM", timeType: "FULL_DAY", maxCapacity: "1", addons: [] 
+      category: "DIS_CEKIM", timeType: "FULL_DAY", maxCapacity: "1", addons: [], deliveryTimeDays: "14"
     });
     setIsModalOpen(true);
   };
@@ -171,10 +172,13 @@ export default function PackagesPage() {
                 
                 <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "1.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
                   <span style={{ fontSize: "0.7rem", fontWeight: 900, background: "rgba(255,255,255,0.05)", padding: "0.4rem 0.8rem", borderRadius: "2rem", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
-                    {getTimeLabel(pkg.timeType)}
+                    {getCategoryLabel(pkg.category)}
                   </span>
                   <span style={{ fontSize: "0.7rem", fontWeight: 900, background: "rgba(255,255,255,0.05)", padding: "0.4rem 0.8rem", borderRadius: "2rem", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
                     {pkg.maxCapacity} RANDEVU/GÜN
+                  </span>
+                  <span style={{ fontSize: "0.7rem", fontWeight: 900, background: "rgba(255,255,255,0.05)", padding: "0.4rem 0.8rem", borderRadius: "2rem", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                    ⏳ {pkg.deliveryTimeDays} GÜN TESLİM
                   </span>
                 </div>
               </div>
@@ -287,6 +291,18 @@ export default function PackagesPage() {
                   onChange={(e) => setFormData({...formData, maxCapacity: e.target.value})}
                   required 
                   style={inputStyle}
+                />
+              </div>
+
+              <div>
+                <label style={labelStyle}>Teslim Süresi (Gün)</label>
+                <input 
+                  type="number" 
+                  value={formData.deliveryTimeDays} 
+                  onChange={(e) => setFormData({...formData, deliveryTimeDays: e.target.value})}
+                  required 
+                  style={inputStyle}
+                  placeholder="Örn: 14"
                 />
               </div>
 

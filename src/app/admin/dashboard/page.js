@@ -16,6 +16,28 @@ export default async function AdminDashboard() {
     include: { packages: true }
   });
 
+  // Fetch upcoming deliveries
+  const upcomingDeliveries = await prisma.reservation.findMany({
+    where: { 
+      status: "CONFIRMED", 
+      workflowStatus: { not: "COMPLETED" },
+      deliveryDate: { not: null }
+    },
+    orderBy: { deliveryDate: "asc" },
+    take: 5,
+    include: { packages: true }
+  });
+
+  const getDaysLeftInfo = (date) => {
+    if (!date) return { text: "-", color: "gray" };
+    const diffTime = new Date(date).getTime() - new Date().getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return { text: `${Math.abs(diffDays)} GÜN GECİKTİ`, color: "#EF4444" };
+    if (diffDays === 0) return { text: "BUGÜN TESLİM", color: "#F59E0B" };
+    if (diffDays <= 3) return { text: `${diffDays} GÜN KALDI`, color: "#F59E0B" };
+    return { text: `${diffDays} GÜN KALDI`, color: "#10B981" };
+  };
+
   // Calculate total revenue from confirmed reservations
   const confirmedReservations = await prisma.reservation.findMany({
     where: { status: "CONFIRMED" },
@@ -132,6 +154,64 @@ export default async function AdminDashboard() {
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+
+      {/* Yaklaşan Teslimatlar */}
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,191,36,0.3)", borderRadius: "2rem", overflow: "hidden", marginBottom: "3rem" }}>
+        <div style={{ padding: "1.5rem 2rem", borderBottom: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h3 style={{ fontWeight: 900, fontSize: "1.2rem", letterSpacing: "-0.02em", color: "#FBBF24", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <Calendar size={18} /> Yaklaşan Teslimatlar
+          </h3>
+        </div>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+            <thead style={{ background: "rgba(255,255,255,0.02)", fontSize: "0.7rem", color: "rgba(255,255,255,0.4)" }}>
+              <tr>
+                <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Müşteri</th>
+                <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Çekim Tarihi</th>
+                <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Son Teslim</th>
+                <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Kalan Süre</th>
+                <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Durum</th>
+              </tr>
+            </thead>
+            <tbody style={{ fontSize: "0.9rem" }}>
+              {upcomingDeliveries.map((res) => {
+                const info = getDaysLeftInfo(res.deliveryDate);
+                // Status Map for workflow
+                const statusMap = {
+                  "PENDING": "Çekim Bekleniyor",
+                  "SHOT_DONE": "Düzenlemede",
+                  "EDITING": "Düzenlemede",
+                  "SELECTION_PENDING": "Seçim Bekleniyor",
+                  "DELIVERED": "Teslim Edildi"
+                };
+
+                return (
+                  <tr key={res.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <td style={{ padding: "1.25rem 2rem", fontWeight: 700 }}>{res.brideName} {res.groomName ? `& ${res.groomName}` : ''}</td>
+                    <td style={{ padding: "1.25rem 2rem", color: "rgba(255,255,255,0.6)" }}>{new Date(res.eventDate).toLocaleDateString("tr-TR")}</td>
+                    <td style={{ padding: "1.25rem 2rem", fontWeight: 800 }}>{new Date(res.deliveryDate).toLocaleDateString("tr-TR")}</td>
+                    <td style={{ padding: "1.25rem 2rem", fontWeight: 900, color: info.color }}>{info.text}</td>
+                    <td style={{ padding: "1.25rem 2rem" }}>
+                      <span style={{ 
+                        padding: "0.4rem 0.75rem", borderRadius: "2rem", fontSize: "0.7rem", fontWeight: 900,
+                        background: "rgba(255,255,255,0.1)",
+                        color: "#fff",
+                      }}>
+                        {statusMap[res.workflowStatus] || res.workflowStatus}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+              {upcomingDeliveries.length === 0 && (
+                <tr>
+                  <td colSpan="5" style={{ padding: "4rem", textAlign: "center", color: "rgba(255,255,255,0.3)", fontSize: "0.9rem" }}>Yaklaşan veya gecikmiş teslimat bulunmuyor, harika!</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
