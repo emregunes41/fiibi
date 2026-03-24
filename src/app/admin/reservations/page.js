@@ -153,13 +153,22 @@ export default function ReservationsPage() {
                       <option value="CANCELLED">İptal Et</option>
                     </select>
                     {res.status === "CONFIRMED" && (
-                      <button 
-                        onClick={() => openWorkflowModal(res)}
-                        style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", padding: "0.6rem", borderRadius: "1rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
-                        title="İş Akışı ve Teslimat"
-                      >
-                        <Settings2 size={16} />
-                      </button>
+                      <>
+                        <Link 
+                          href={`/admin/reservations/${res.id}/gallery`}
+                          style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", padding: "0.6rem", borderRadius: "1rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                          title="Galeri Yönetimi"
+                        >
+                          <ImageIcon size={16} />
+                        </Link>
+                        <button 
+                          onClick={() => openWorkflowModal(res)}
+                          style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", padding: "0.6rem", borderRadius: "1rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                          title="İş Akışı ve Teslimat"
+                        >
+                          <Settings2 size={16} />
+                        </button>
+                      </>
                     )}
                   </div>
                 </td>
