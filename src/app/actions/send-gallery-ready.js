@@ -45,7 +45,7 @@ export async function sendGalleryReadyEmail(email, name, galleryUrl) {
     `;
 
     const data = await resend.emails.send({
-      from: "Pinowed CRM <bilgi@withnazligunes.com>", 
+      from: "Pinowed CRM <hello@pinowed.com>", 
       to: email, 
       subject: "Fotoğraflarınız Seçim İçin Hazır! 📸 - Pinowed",
       html: htmlContent,

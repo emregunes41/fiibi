@@ -11,7 +11,7 @@ export async function sendWelcomeEmail(email, name, password) {
 
     const resend = new Resend(apiKey);
     const { data, error } = await resend.emails.send({
-      from: "Pinowed <bilgi@withnazligunes.com>", // Verified domain in Resend
+      from: "Pinowed <hello@pinowed.com>", // Verified domain in Resend
       to: [email],
       subject: "Pinowed CRM - Müşteri Hesabınız Oluşturuldu",
       html: `
