@@ -1,7 +1,7 @@
 import { getCurrentUser, logoutUser } from "../user-actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { User, UserCircle, Calendar, Settings, LogOut, Package, Clock, CheckCircle, FileText } from "lucide-react";
+import { Calendar, Settings, LogOut, Package, Clock, CheckCircle, FileText, ExternalLink } from "lucide-react";
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
@@ -10,12 +10,8 @@ export default async function ProfilePage() {
     redirect("/login");
   }
 
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "CONFIRMED": return <CheckCircle size={16} className="text-green-500" />;
-      case "PENDING": return <Clock size={16} className="text-yellow-500" />;
-      default: return <Clock size={16} className="text-white/30" />;
-    }
+  const getInitials = (name) => {
+    return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
   };
 
   const getWorkflowStepIndex = (status) => {
@@ -32,37 +28,40 @@ export default async function ProfilePage() {
   ];
 
   return (
-    <main className="pt-32 pb-20 px-6 min-h-screen">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10">
+    <main style={{ paddingTop: 100, paddingBottom: 60, paddingLeft: 24, paddingRight: 24, minHeight: "100vh" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "280px 1fr", gap: 32 }}>
         
-        {/* Sidebar / User Card */}
-        <div className="lg:col-span-1 flex flex-col gap-6">
-          <div className="glass-panel rounded-[3rem] p-10 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-28 h-28 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 rotate-3 hover:rotate-0 transition-transform duration-500">
-                <UserCircle size={64} className="text-white/80" />
+        {/* Sidebar */}
+        <div>
+          <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 20, border: "1px solid rgba(255,255,255,0.08)", padding: 28, position: "sticky", top: 100 }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+              {/* Avatar */}
+              <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+                <span style={{ fontSize: 24, fontWeight: 700, color: "rgba(255,255,255,0.85)" }}>{getInitials(user.name)}</span>
               </div>
-              <h2 className="text-3xl font-black tracking-tighter mb-2 italic">{user.name}</h2>
-              <p className="text-white/30 text-xs font-bold uppercase tracking-widest mb-8">{user.email}</p>
+              <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{user.name}</h2>
+              <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, marginBottom: 20 }}>{user.email}</p>
               
-              <div className="w-full grid grid-cols-2 gap-4 mb-8">
-                <div className="bg-white/5 border border-white/5 rounded-[1.5rem] p-5 flex flex-col items-center group hover:bg-white/10 transition-colors">
-                  <span className="text-white/20 text-[10px] font-bold uppercase tracking-widest mb-1 group-hover:text-white/40">RANDEVU</span>
-                  <span className="text-2xl font-black">{user.reservations.length}</span>
+              {/* Stats */}
+              <div style={{ width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 20 }}>
+                <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 12, padding: "12px 8px", textAlign: "center" }}>
+                  <span style={{ display: "block", color: "rgba(255,255,255,0.3)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>Randevu</span>
+                  <span style={{ fontSize: 20, fontWeight: 700 }}>{user.reservations.length}</span>
                 </div>
-                <div className="bg-white/5 border border-white/5 rounded-[1.5rem] p-5 flex flex-col items-center group hover:bg-white/10 transition-colors">
-                  <span className="text-white/20 text-[10px] font-bold uppercase tracking-widest mb-1 group-hover:text-white/40">PUAN</span>
-                  <span className="text-2xl font-black">0</span>
+                <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 12, padding: "12px 8px", textAlign: "center" }}>
+                  <span style={{ display: "block", color: "rgba(255,255,255,0.3)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>Puan</span>
+                  <span style={{ fontSize: 20, fontWeight: 700 }}>0</span>
                 </div>
               </div>
 
-              <div className="w-full flex flex-col gap-2">
-                <Link href="/profile/settings" className="flex items-center gap-3 w-full p-4 rounded-xl hover:bg-white/5 text-white/70 hover:text-white transition-all text-sm font-semibold no-underline">
-                  <Settings size={18} /> Ayarlar
+              {/* Nav */}
+              <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 4, borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 16 }}>
+                <Link href="/profile/settings" style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderRadius: 12, color: "rgba(255,255,255,0.55)", fontSize: 14, textDecoration: "none", transition: "all 0.2s" }}>
+                  <Settings size={16} /> Ayarlar
                 </Link>
-                <form action={logoutUser} className="w-full">
-                  <button type="submit" className="flex items-center gap-3 w-full p-4 rounded-xl hover:bg-red-500/10 text-red-500 transition-all text-sm font-semibold">
-                    <LogOut size={18} /> Çıkış Yap
+                <form action={logoutUser}>
+                  <button type="submit" style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "10px 14px", borderRadius: 12, color: "rgba(248,113,113,0.7)", fontSize: 14, background: "transparent", border: "none", cursor: "pointer", transition: "all 0.2s" }}>
+                    <LogOut size={16} /> Çıkış Yap
                   </button>
                 </form>
               </div>
@@ -70,22 +69,24 @@ export default async function ProfilePage() {
           </div>
         </div>
 
-        {/* Content / Reservations & Purchases */}
-        <div className="lg:col-span-2 flex flex-col gap-12">
+        {/* Main Content */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
           
-          {/* Reservations Section */}
+          {/* Reservations */}
           <section>
-            <div className="mb-6">
-              <h3 className="text-3xl font-black tracking-tighter mb-2">Rezervasyonlarım</h3>
-              <p className="text-white/50">Geçmiş ve gelecek tüm çekim randevularınız</p>
+            <div style={{ marginBottom: 20 }}>
+              <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>Rezervasyonlarım</h3>
+              <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14 }}>Geçmiş ve gelecek tüm çekim randevularınız</p>
             </div>
 
-            <div className="flex flex-col gap-6">
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {user.reservations.length === 0 ? (
-                <div className="glass-panel rounded-3xl p-12 text-center">
-                  <Calendar size={48} className="text-white/10 mx-auto mb-4" />
-                  <p className="text-white/40 font-medium">Henüz bir rezervasyonunuz bulunmuyor.</p>
-                  <Link href="/#packages" className="inline-block mt-4 text-white font-bold no-underline hover:underline">Hemen bir paket inceleyin</Link>
+                <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)", padding: "48px 24px", textAlign: "center" }}>
+                  <Calendar size={36} style={{ color: "rgba(255,255,255,0.08)", margin: "0 auto 12px" }} />
+                  <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 14, marginBottom: 12 }}>Henüz bir rezervasyonunuz bulunmuyor.</p>
+                  <Link href="/#packages" style={{ color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none" }}>
+                    Paketleri İncele →
+                  </Link>
                 </div>
               ) : (
                 user.reservations.map((res) => {
@@ -98,104 +99,97 @@ export default async function ProfilePage() {
                   };
 
                   return (
-                    <div key={res.id} className="glass-panel rounded-[2.5rem] overflow-hidden relative border border-white/10 shadow-2xl transition-all hover:border-white/20">
-                      <div className="absolute top-0 right-0 p-8 pointer-events-none opacity-5">
-                        <Package size={120} />
-                      </div>
-                      
-                      {/* Top Header Card Info */}
-                      <div className="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                        <div className="flex gap-4 items-center">
-                          <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center shrink-0">
-                            <Package size={24} className="text-white/80" />
+                    <div key={res.id} style={{ background: "rgba(255,255,255,0.03)", borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                      {/* Header */}
+                      <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+                        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                          <div style={{ width: 44, height: 44, background: "rgba(255,255,255,0.06)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <Package size={18} style={{ color: "rgba(255,255,255,0.55)" }} />
                           </div>
                           <div>
-                            <h4 className="font-black text-xl mb-1">
+                            <h4 style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>
                               {res.packages.map(p => p.name).join(", ")}
                             </h4>
-                            <div className="text-white/50 text-sm flex gap-4 items-center">
-                              <span className="flex items-center gap-1.5"><Calendar size={14} /> {new Date(res.eventDate).toLocaleDateString("tr-TR")}</span>
-                              <span className="flex items-center gap-1.5"><CheckCircle size={14} className={res.status === "CONFIRMED" ? "text-green-500" : "text-yellow-500"}/> {res.status === "CONFIRMED" ? "Onaylı" : "Bekliyor"}</span>
+                            <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, display: "flex", gap: 12, alignItems: "center" }}>
+                              <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Calendar size={12} /> {new Date(res.eventDate).toLocaleDateString("tr-TR")}</span>
+                              <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                                <CheckCircle size={12} style={{ color: res.status === "CONFIRMED" ? "#4ade80" : "#facc15" }}/>
+                                {res.status === "CONFIRMED" ? "Onaylı" : "Bekliyor"}
+                              </span>
                             </div>
                           </div>
                         </div>
 
                         {deliveryDate && currentStepIdx < 4 && (
-                          <div className="text-center md:text-right bg-white/5 px-6 py-4 rounded-2xl">
-                            <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">SON TESLİM</p>
-                            <p className="text-lg font-black">{deliveryDate.toLocaleDateString("tr-TR")}</p>
-                            <p className="text-xs font-semibold text-yellow-500 mt-1">{getDaysLeft()} Gün Kaldı</p>
+                          <div style={{ background: "rgba(255,255,255,0.04)", padding: "10px 16px", borderRadius: 12, textAlign: "right" }}>
+                            <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Son Teslim</p>
+                            <p style={{ fontSize: 14, fontWeight: 700 }}>{deliveryDate.toLocaleDateString("tr-TR")}</p>
+                            <p style={{ fontSize: 11, fontWeight: 600, color: "#facc15" }}>{getDaysLeft()} gün kaldı</p>
                           </div>
                         )}
                       </div>
 
-                      {/* CRM STEPS TRACKER */}
-                      <div className="p-8 md:p-10 bg-white/[0.02]">
-                        <h5 className="text-[10px] font-black text-white/30 mb-8 uppercase tracking-[0.3em]">İşlem Gidişatı</h5>
+                      {/* Workflow */}
+                      <div style={{ padding: "20px 24px" }}>
+                        <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.2)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 20 }}>İşlem Gidişatı</p>
                         
-                        <div className="flex flex-col md:flex-row justify-between relative gap-4 md:gap-0">
-                          {/* Background Line (visible only md+) */}
-                          <div className="hidden md:block absolute top-[15px] left-[10%] right-[10%] h-[2px] bg-white/10 z-0"></div>
-                          <div 
-                            className="hidden md:block absolute top-[15px] left-[10%] h-[2px] bg-green-500 z-0 transition-all duration-1000"
-                            style={{ 
-                              width: currentStepIdx >= 0 ? `${(currentStepIdx / 4) * 80}%` : "0%"
-                            }}
-                          ></div>
+                        <div style={{ display: "flex", justifyContent: "space-between", position: "relative" }}>
+                          {/* Background line */}
+                          <div style={{ position: "absolute", top: 13, left: "10%", right: "10%", height: 1, background: "rgba(255,255,255,0.06)" }} />
+                          <div style={{ position: "absolute", top: 13, left: "10%", height: 1, background: "rgba(74,222,128,0.5)", transition: "all 0.7s", width: currentStepIdx >= 0 ? `${(currentStepIdx / 4) * 80}%` : "0%" }} />
 
                           {workflowSteps.map((step, idx) => {
                             const isCompleted = currentStepIdx > idx;
                             const isCurrent = currentStepIdx === idx;
                             
                             return (
-                              <div key={step.id} className="relative z-10 flex md:flex-col items-center gap-4 md:gap-2 text-center flex-1">
-                                <div className={`
-                                  w-8 h-8 rounded-full flex items-center justify-center text-xs font-black border-2 transition-all shrink-0
-                                  ${isCompleted ? "bg-green-500 border-green-500 text-black shadow-[0_0_15px_rgba(34,197,94,0.3)]" : 
-                                    isCurrent ? "bg-white border-white text-black shadow-[0_0_15px_rgba(255,255,255,0.4)] ring-4 ring-white/20" : 
-                                    "bg-black border-white/20 text-white/30"}
-                                `}>
+                              <div key={step.id} style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, textAlign: "center", flex: 1 }}>
+                                <div style={{
+                                  width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, transition: "all 0.3s",
+                                  ...(isCompleted ? { background: "#4ade80", color: "#000" } :
+                                    isCurrent ? { background: "#fff", color: "#000", boxShadow: "0 0 12px rgba(255,255,255,0.3)" } :
+                                    { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.25)" })
+                                }}>
                                   {isCompleted ? "✓" : (idx + 1)}
                                 </div>
                                 
-                                <div className="text-left md:text-center">
-                                  <p className={`text-sm font-bold ${isCurrent ? 'text-white' : isCompleted ? 'text-white/80' : 'text-white/40'}`}>
+                                <div>
+                                  <p style={{ fontSize: 12, fontWeight: 600, color: isCurrent ? "#fff" : isCompleted ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)" }}>
                                     {step.title}
                                   </p>
-                                  <p className="text-xs text-white/30 max-w-[120px] mx-auto hidden md:block">{step.desc}</p>
+                                  <p style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", maxWidth: 100 }}>{step.desc}</p>
                                 </div>
                               </div>
                             );
                           })}
                         </div>
                         
-                        {/* Call to action if selection pending */}
+                        {/* Selection CTA */}
                         {res.workflowStatus === "SELECTION_PENDING" && !res.deliveryLink && (
-                          <div className="mt-8 bg-green-500/10 border border-green-500/20 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                          <div style={{ marginTop: 20, background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.15)", borderRadius: 12, padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
                             <div>
-                              <h5 className="font-bold text-green-400 text-lg">Fotoğraflarınız Hazır! 🎉</h5>
-                              <p className="text-white/60 text-sm">Albüme gidecek fotoğrafları şimdi galerinize girerek seçebilirsiniz.</p>
+                              <h5 style={{ fontWeight: 700, color: "#4ade80", fontSize: 14 }}>Fotoğraflarınız Hazır! 🎉</h5>
+                              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 12 }}>Albüme gidecek fotoğrafları seçebilirsiniz.</p>
                             </div>
-                            <Link href="/profile/gallery" className="bg-green-500 text-black px-6 py-3 rounded-xl font-bold tracking-tight hover:bg-green-400 transition-colors whitespace-nowrap">
+                            <Link href="/profile/gallery" style={{ background: "#4ade80", color: "#000", padding: "10px 20px", borderRadius: 10, fontWeight: 700, fontSize: 13, textDecoration: "none", whiteSpace: "nowrap" }}>
                               Seçimi Başlat
                             </Link>
                           </div>
                         )}
 
-                        {/* Direct Delivery Link Call to Action */}
+                        {/* Delivery Link */}
                         {res.deliveryLink && (
-                          <div className="mt-8 bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                          <div style={{ marginTop: 20, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
                             <div>
-                              <h5 className="font-bold text-white text-lg">Teslimatınız Hazır! 📸</h5>
-                              <p className="text-white/60 text-sm">Tüm fotoğraflarınıza, videolarınıza ve içeriklerinize aşağıdaki bağlantıdan dışarıdan ulaşabilirsiniz.</p>
+                              <h5 style={{ fontWeight: 700, color: "#fff", fontSize: 14 }}>Teslimatınız Hazır! 📸</h5>
+                              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 12 }}>Tüm dosyalarınıza aşağıdaki bağlantıdan ulaşabilirsiniz.</p>
                             </div>
-                            <a href={res.deliveryLink} target="_blank" rel="noopener noreferrer" className="bg-white text-black px-6 py-3 rounded-xl font-bold tracking-tight hover:bg-white/90 transition-colors whitespace-nowrap flex items-center gap-2">
-                              Teslimat Klasörü
+                            <a href={res.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#fff", color: "#000", padding: "10px 20px", borderRadius: 10, fontWeight: 700, fontSize: 13, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
+                              <ExternalLink size={14} /> Klasöre Git
                             </a>
                           </div>
                         )}
                       </div>
-                      
                     </div>
                   );
                 })
@@ -203,34 +197,34 @@ export default async function ProfilePage() {
             </div>
           </section>
 
-          {/* Purchases Section */}
+          {/* Purchases */}
           <section>
-            <div className="mb-6">
-              <h3 className="text-3xl font-black tracking-tighter mb-2">Satın Alımlarım</h3>
-              <p className="text-white/50">Dijital ürünleriniz ve rehberleriniz</p>
+            <div style={{ marginBottom: 20 }}>
+              <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>Satın Alımlarım</h3>
+              <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14 }}>Dijital ürünleriniz ve rehberleriniz</p>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {user.purchases.length === 0 ? (
-                <div className="glass-panel rounded-3xl p-12 text-center">
-                  <Package size={48} className="text-white/10 mx-auto mb-4" />
-                  <p className="text-white/40 font-medium">Henüz bir dijital ürün satın almadınız.</p>
+                <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)", padding: "48px 24px", textAlign: "center" }}>
+                  <Package size={36} style={{ color: "rgba(255,255,255,0.08)", margin: "0 auto 12px" }} />
+                  <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 14 }}>Henüz bir dijital ürün satın almadınız.</p>
                 </div>
               ) : (
                 user.purchases.map((pur) => (
-                  <div key={pur.id} className="glass-panel rounded-3xl p-6 flex items-center justify-between">
-                    <div className="flex items-center gap-6">
-                      <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center">
-                        <FileText size={20} className="text-white/50" />
+                  <div key={pur.id} style={{ background: "rgba(255,255,255,0.03)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.06)", padding: 16, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                      <div style={{ width: 40, height: 40, background: "rgba(255,255,255,0.06)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <FileText size={16} style={{ color: "rgba(255,255,255,0.4)" }} />
                       </div>
                       <div>
-                        <h4 className="font-bold">{pur.productName}</h4>
-                        <div className="text-white/30 text-xs">
+                        <h4 style={{ fontWeight: 600, fontSize: 14 }}>{pur.productName}</h4>
+                        <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>
                           {new Date(pur.purchaseDate).toLocaleDateString("tr-TR")} • {pur.productType}
                         </div>
                       </div>
                     </div>
-                    <button className="bg-white text-black px-6 py-2 rounded-xl text-xs font-bold hover:bg-white/90 transition-all">
+                    <button style={{ background: "rgba(255,255,255,0.06)", color: "#fff", fontSize: 12, fontWeight: 600, padding: "8px 16px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", cursor: "pointer" }}>
                       Görüntüle
                     </button>
                   </div>

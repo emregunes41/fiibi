@@ -4,7 +4,7 @@ import { useState } from "react";
 import { loginUser } from "../user-actions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
+import { LogIn, Mail, Lock, Loader2, Camera } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -28,76 +28,103 @@ export default function LoginPage() {
     }
   };
 
+  const inputStyle = {
+    width: "100%",
+    background: "rgba(255,255,255,0.06)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: "14px",
+    padding: "14px 16px 14px 48px",
+    color: "#fff",
+    fontSize: "15px",
+    outline: "none",
+    transition: "all 0.2s ease",
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-black relative">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[150px] rounded-full animate-pulse"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/5 blur-[150px] rounded-full"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0,transparent_100%)]"></div>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px", background: "#000", position: "relative", overflow: "hidden" }}>
+      {/* Background orbs */}
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+        <div style={{ position: "absolute", top: "20%", left: "15%", width: 300, height: 300, background: "rgba(59,130,246,0.15)", filter: "blur(120px)", borderRadius: "50%" }} />
+        <div style={{ position: "absolute", bottom: "20%", right: "15%", width: 250, height: 250, background: "rgba(139,92,246,0.12)", filter: "blur(120px)", borderRadius: "50%" }} />
       </div>
 
-      <div className="w-full max-w-md glass-panel p-10 md:p-12 rounded-[3.5rem] relative z-10 border border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
-        <div className="text-center mb-10">
-          <div className="w-16 h-16 bg-white text-black flex items-center justify-center rounded-2xl text-2xl font-black mx-auto mb-6 shadow-[0_0_30px_rgba(255,255,255,0.2)]">P</div>
-          <h1 className="text-4xl font-black tracking-tighter mb-2 italic">Giriş Yap</h1>
-          <p className="text-white/40 text-sm font-medium uppercase tracking-[0.2em] ml-1">Pinowed CRM Portal</p>
+      <div style={{ width: "100%", maxWidth: 420, position: "relative", zIndex: 10 }}>
+        {/* Logo */}
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 32 }}>
+          <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,0.08)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 40px rgba(255,255,255,0.08)" }}>
+            <Camera size={32} style={{ color: "rgba(255,255,255,0.85)" }} />
+          </div>
         </div>
 
-        <form onSubmit={handleLogin} className="flex flex-col gap-5">
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-500 text-sm p-4 rounded-xl text-center">
-              {error}
-            </div>
-          )}
-
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-bold text-white/40 uppercase tracking-widest ml-1">E-POSTA</label>
-            <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={18} />
-              <input 
-                type="email" 
-                required 
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-white/30"
-                placeholder="ornek@mail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+        {/* Card */}
+        <div style={{ background: "rgba(255,255,255,0.05)", backdropFilter: "blur(40px)", borderRadius: 24, border: "1px solid rgba(255,255,255,0.1)", padding: "40px 36px", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 8 }}>Giriş Yap</h1>
+            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14 }}>Pinowed hesabınıza giriş yapın</p>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between items-center ml-1">
-              <label className="text-xs font-bold text-white/40 uppercase tracking-widest">ŞİFRE</label>
-              <Link href="#" className="text-xs text-white/30 hover:text-white no-underline">Şifremi unuttum</Link>
+          <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {error && (
+              <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171", fontSize: 14, padding: "14px", borderRadius: 16, textAlign: "center", fontWeight: 500 }}>
+                {error}
+              </div>
+            )}
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
+              <div style={{ position: "relative" }}>
+                <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.25)", pointerEvents: "none" }} />
+                <input 
+                  type="email" 
+                  required 
+                  style={inputStyle}
+                  placeholder="ornek@mail.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.25)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
+                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.06)"; }}
+                />
+              </div>
             </div>
-            <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={18} />
-              <input 
-                type="password" 
-                required 
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-white/30"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: 4, paddingRight: 4 }}>
+                <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Şifre</label>
+                <Link href="#" style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", textDecoration: "none" }}>Şifremi unuttum</Link>
+              </div>
+              <div style={{ position: "relative" }}>
+                <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.25)", pointerEvents: "none" }} />
+                <input 
+                  type="password" 
+                  required 
+                  style={inputStyle}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.25)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
+                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.06)"; }}
+                />
+              </div>
             </div>
+
+            <button 
+              type="submit" 
+              disabled={isLoading}
+              style={{ width: "100%", background: "#fff", color: "#000", fontWeight: 700, padding: "14px", borderRadius: 14, marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 15, transition: "all 0.2s ease", opacity: isLoading ? 0.5 : 1 }}
+            >
+              {isLoading ? <Loader2 className="animate-spin" size={18} /> : <LogIn size={18} />}
+              Giriş Yap
+            </button>
+          </form>
+
+          <div style={{ textAlign: "center", marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>
+              Hesabınız yok mu?{" "}
+              <Link href="/register" style={{ color: "#fff", fontWeight: 600, textDecoration: "none" }}>
+                Kayıt Ol
+              </Link>
+            </p>
           </div>
-
-          <button 
-            type="submit" 
-            disabled={isLoading}
-            className="w-full bg-white text-black font-black py-4 rounded-2xl mt-4 flex items-center justify-center gap-2 hover:bg-white/90 transition-all disabled:opacity-50"
-          >
-            {isLoading ? <Loader2 className="animate-spin" size={20} /> : <LogIn size={20} />}
-            Giriş Yap
-          </button>
-        </form>
-
-        <div className="text-center mt-10">
-          <p className="text-sm text-white/40">
-            Hesabınız yok mu? <Link href="/register" className="text-white font-bold no-underline hover:underline">Kayıt Ol</Link>
-          </p>
         </div>
       </div>
     </div>
