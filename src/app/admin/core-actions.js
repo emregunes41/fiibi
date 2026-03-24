@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import { sendWelcomeEmail } from "../actions/send-welcome";
+import { sendReservationSuccessEmail } from "../actions/send-reservation-success";
+import { sendDriveLinkEmail } from "../actions/send-drive-link";
 
 // --- PACKAGE ACTIONS ---
 
@@ -177,6 +179,10 @@ export async function savePendingReservation(data) {
         deliveryDate: deliveryDateObj
       }
     });
+
+    // Send confirmation email
+    await sendReservationSuccessEmail(data.brideEmail, data.brideName, data.date, data.totalAmount);
+
     return { success: true, id: reservation.id };
   } catch (error) {
     console.error("Save Reservation Error:", error);
@@ -236,6 +242,10 @@ export async function createManualReservation(data) {
         deliveryDate: deliveryDateObj
       }
     });
+    
+    // Send confirmation email
+    await sendReservationSuccessEmail(brideEmail, brideName, eventDate, totalAmount);
+
     revalidatePath('/admin/reservations');
     revalidatePath('/admin/dashboard');
     return { success: true };
@@ -261,13 +271,19 @@ export async function updateReservationStatus(id, status) {
 export async function updateReservationWorkflow(id, data) {
   try {
     const { workflowStatus, deliveryLink } = data;
-    await prisma.reservation.update({
+    const reservation = await prisma.reservation.update({
       where: { id },
       data: { 
         workflowStatus,
         deliveryLink 
       }
     });
+
+    // If a delivery link was added or updated, send email
+    if (deliveryLink && deliveryLink.trim() !== "") {
+      await sendDriveLinkEmail(reservation.brideEmail, reservation.brideName, deliveryLink);
+    }
+
     revalidatePath('/admin/reservations');
     revalidatePath('/admin/dashboard');
     return { success: true };
