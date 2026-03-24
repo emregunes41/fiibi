@@ -14,6 +14,7 @@ const TIME_TYPES = [
   { value: "FULL_DAY", label: "Tüm Gün" },
   { value: "MORNING", label: "Gündüz" },
   { value: "EVENING", label: "Akşam" },
+  { value: "FIVE_HOURS", label: "5 Saatlik Çekim" },
   { value: "SLOT", label: "2 Saatlik Periyot" },
 ];
 

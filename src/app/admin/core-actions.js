@@ -103,7 +103,7 @@ export async function checkAvailability(date, packageId, time = null) {
       }
     });
 
-    if (pkg.timeType === "FULL_DAY" || pkg.timeType === "MORNING" || pkg.timeType === "EVENING") {
+    if (pkg.timeType === "FULL_DAY" || pkg.timeType === "MORNING" || pkg.timeType === "EVENING" || pkg.timeType === "FIVE_HOURS") {
       // For these types, we usually count the whole day or the specific period
       // If the user wants specific evening capacity, we'd check eventTime too for "EVENING"
       const count = existingReservations.length;
