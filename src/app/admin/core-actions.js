@@ -17,7 +17,7 @@ export async function getPackages() {
 
 export async function createPackage(data) {
   try {
-    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, customFields, availableSlots } = data;
     await prisma.photographyPackage.create({
       data: {
         name,
@@ -29,6 +29,8 @@ export async function createPackage(data) {
         deliveryTimeDays: parseInt(deliveryTimeDays) || 14,
         features: Array.isArray(features) ? features : features.split(',').map(f => f.trim()).filter(f => f !== ""),
         addons: addons || [],
+        customFields: customFields || [],
+        availableSlots: availableSlots || [],
       }
     });
     revalidatePath('/admin/packages');
@@ -40,7 +42,7 @@ export async function createPackage(data) {
 
 export async function updatePackage(id, data) {
   try {
-    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, customFields, availableSlots } = data;
     await prisma.photographyPackage.update({
       where: { id },
       data: {
@@ -50,8 +52,11 @@ export async function updatePackage(id, data) {
         category,
         timeType,
         maxCapacity: parseInt(maxCapacity),
+        deliveryTimeDays: parseInt(deliveryTimeDays) || 14,
         features: Array.isArray(features) ? features : features.split(',').map(f => f.trim()).filter(f => f !== ""),
-        addons
+        addons,
+        customFields: customFields || [],
+        availableSlots: availableSlots || [],
       }
     });
     revalidatePath('/admin/packages');
@@ -77,7 +82,7 @@ export async function deletePackage(id) {
 
 export async function getReservations() {
   return await prisma.reservation.findMany({
-    include: { packages: true },
+    include: { packages: true, payments: { orderBy: { createdAt: 'desc' } } },
     orderBy: { createdAt: 'desc' }
   });
 }
@@ -157,7 +162,7 @@ export async function savePendingReservation(data) {
 
     const reservation = await prisma.reservation.create({
       data: {
-        userId: userId,
+        ...(userId ? { user: { connect: { id: userId } } } : {}),
         brideName: data.brideName,
         bridePhone: data.bridePhone,
         brideEmail: data.brideEmail,
@@ -172,7 +177,8 @@ export async function savePendingReservation(data) {
         notes: data.notes,
         totalAmount: data.totalAmount,
         paidAmount: data.paidAmount,
-        selectedAddons: data.selectedAddons || [], // Save the array of {title, price}
+        selectedAddons: data.selectedAddons || [],
+        customFieldAnswers: data.customFieldAnswers || [],
         status: "PENDING",
         paymentStatus: "UNPAID",
         workflowStatus: "PENDING",
@@ -225,7 +231,7 @@ export async function createManualReservation(data) {
 
     await prisma.reservation.create({
       data: {
-        userId: userId,
+        ...(userId ? { user: { connect: { id: userId } } } : {}),
         brideName, bridePhone, brideEmail,
         groomName, groomPhone, groomEmail,
         eventDate: eventDateObj,
@@ -245,6 +251,43 @@ export async function createManualReservation(data) {
     
     // Send confirmation email
     await sendReservationSuccessEmail(brideEmail, brideName, eventDate, totalAmount);
+
+    revalidatePath('/admin/reservations');
+    revalidatePath('/admin/dashboard');
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function updateReservation(id, data) {
+  try {
+    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds, notes, selectedAddons = [], totalAmount = "" } = data;
+    
+    const packagesData = await prisma.photographyPackage.findMany({
+      where: { id: { in: packageIds } }
+    });
+    const maxDays = packagesData.reduce((max, pkg) => Math.max(max, pkg.deliveryTimeDays || 14), 0);
+    const eventDateObj = new Date(eventDate);
+    const deliveryDateObj = new Date(eventDateObj);
+    deliveryDateObj.setDate(deliveryDateObj.getDate() + maxDays);
+
+    await prisma.reservation.update({
+      where: { id },
+      data: {
+        brideName, bridePhone, brideEmail,
+        groomName, groomPhone, groomEmail,
+        eventDate: eventDateObj,
+        eventTime,
+        packages: {
+          set: packageIds.map(id => ({ id }))
+        },
+        notes,
+        totalAmount,
+        selectedAddons,
+        deliveryDate: deliveryDateObj
+      }
+    });
 
     revalidatePath('/admin/reservations');
     revalidatePath('/admin/dashboard');
@@ -291,3 +334,249 @@ export async function updateReservationWorkflow(id, data) {
     return { error: error.message };
   }
 }
+
+// --- MONTHLY PRICE ACTIONS ---
+
+export async function getMonthlyPrices(category, year) {
+  try {
+    return await prisma.monthlyPriceConfig.findMany({
+      where: { 
+        category: category,
+        year: parseInt(year)
+      }
+    });
+  } catch (error) {
+    console.error("Get Monthly Prices Error:", error);
+    return [];
+  }
+}
+
+export async function updateMonthlyPrice(data) {
+  try {
+    const { category, month, year, minPrice, discountPercentage } = data;
+    const m = parseInt(month);
+    const y = parseInt(year);
+    const dp = parseInt(discountPercentage) || 0;
+    
+    // Prisma upsert with specific fields
+    await prisma.monthlyPriceConfig.upsert({
+      where: {
+        category_month_year: {
+          category,
+          month: m,
+          year: y
+        }
+      },
+      update: { 
+        discountPercentage: dp,
+        ...(minPrice !== undefined && minPrice !== null ? { minPrice: parseInt(minPrice) } : {})
+      },
+      create: {
+        category,
+        month: m,
+        year: y,
+        discountPercentage: dp,
+        minPrice: minPrice ? parseInt(minPrice) : null
+      }
+    });
+    revalidatePath('/admin/packages');
+    return { success: true };
+  } catch (error) {
+    console.error("Update Monthly Price Error:", error);
+    return { error: error.message };
+  }
+}
+
+// --- SLOT AVAILABILITY ---
+
+export async function getSlotAvailability(date, categoryValue) {
+  try {
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
+    const nextDate = new Date(selectedDate);
+    nextDate.setDate(selectedDate.getDate() + 1);
+
+    const reservations = await prisma.reservation.findMany({
+      where: {
+        eventDate: { gte: selectedDate, lt: nextDate },
+        status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] },
+        packages: { some: { category: categoryValue } }
+      },
+      include: { packages: true }
+    });
+
+    const packages = await prisma.photographyPackage.findMany({
+      where: { category: categoryValue, isActive: true }
+    });
+
+    const slotCounts = {};
+    for (const res of reservations) {
+      const t = res.eventTime || "FULL_DAY";
+      slotCounts[t] = (slotCounts[t] || 0) + 1;
+    }
+
+    const maxCap = packages.reduce((max, p) => Math.max(max, p.maxCapacity || 1), 1);
+
+    return { slotCounts, maxCapacity: maxCap, totalReservations: reservations.length };
+  } catch (error) {
+    console.error("Slot Availability Error:", error);
+    return { slotCounts: {}, maxCapacity: 1, totalReservations: 0 };
+  }
+}
+
+// --- SITE CONFIG ACTIONS ---
+
+export async function getSiteConfig() {
+  try {
+    let config = await prisma.globalSettings.findUnique({
+      where: { id: "global-settings" }
+    });
+    
+    if (!config) {
+      config = await prisma.globalSettings.create({
+        data: { id: "global-settings" }
+      });
+    }
+    
+    return config;
+  } catch (error) {
+    console.error("Get Site Config Error:", error);
+    // Return a default object if DB fails to prevent UI crash
+    return {
+      heroTitle: "Anları Sanata \n Dönüştürüyoruz",
+      heroSubtitle: "Premium Photography Service",
+      address: "Moda, Kadıköy / İstanbul",
+      phone: "+90 555 000 00 00",
+      email: "hello@pinowed.com",
+      instagram: "",
+      whatsapp: ""
+    };
+  }
+}
+
+export async function updateSiteConfig(data) {
+  try {
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp } = data;
+    await prisma.globalSettings.update({
+      where: { id: "global-settings" },
+      data: {
+        heroTitle,
+        heroSubtitle,
+        address,
+        phone,
+        email,
+        instagram,
+        whatsapp
+      }
+    });
+    revalidatePath('/');
+    revalidatePath('/admin/settings');
+    return { success: true };
+  } catch (error) {
+    console.error("Update Site Config Error:", error);
+    return { error: error.message };
+  }
+}
+export async function resetUserPassword(userId, newPassword) {
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword }
+    });
+    revalidatePath('/admin/members');
+    return { success: true };
+  } catch (error) {
+    console.error("Reset Password Error:", error);
+    return { error: error.message };
+  }
+}
+
+// --- PAYMENT ACTIONS ---
+
+export async function addPayment(reservationId, data) {
+  try {
+    const { amount, method, note } = data;
+    const parsedAmount = parseFloat(amount);
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      return { error: "Geçerli bir tutar girin." };
+    }
+
+    await prisma.payment.create({
+      data: {
+        reservationId,
+        amount: parsedAmount,
+        method: method || "CASH",
+        note: note || null,
+      }
+    });
+
+    // Recalculate paidAmount
+    const payments = await prisma.payment.findMany({ where: { reservationId } });
+    const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
+
+    // Get reservation to check totalAmount
+    const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    const totalAmount = parseFloat(reservation.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
+
+    // Determine payment status
+    let paymentStatus = "UNPAID";
+    if (totalPaid >= totalAmount && totalAmount > 0) {
+      paymentStatus = "PAID";
+    } else if (totalPaid > 0) {
+      paymentStatus = "PARTIAL";
+    }
+
+    await prisma.reservation.update({
+      where: { id: reservationId },
+      data: {
+        paidAmount: totalPaid.toString(),
+        paymentStatus,
+      }
+    });
+
+    revalidatePath('/admin/reservations');
+    return { success: true };
+  } catch (error) {
+    console.error("Add Payment Error:", error);
+    return { error: error.message };
+  }
+}
+
+export async function deletePayment(paymentId) {
+  try {
+    const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
+    if (!payment) return { error: "Ödeme bulunamadı." };
+
+    await prisma.payment.delete({ where: { id: paymentId } });
+
+    // Recalculate
+    const payments = await prisma.payment.findMany({ where: { reservationId: payment.reservationId } });
+    const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
+
+    const reservation = await prisma.reservation.findUnique({ where: { id: payment.reservationId } });
+    const totalAmount = parseFloat(reservation.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
+
+    let paymentStatus = "UNPAID";
+    if (totalPaid >= totalAmount && totalAmount > 0) {
+      paymentStatus = "PAID";
+    } else if (totalPaid > 0) {
+      paymentStatus = "PARTIAL";
+    }
+
+    await prisma.reservation.update({
+      where: { id: payment.reservationId },
+      data: {
+        paidAmount: totalPaid.toString(),
+        paymentStatus,
+      }
+    });
+
+    revalidatePath('/admin/reservations');
+    return { success: true };
+  } catch (error) {
+    console.error("Delete Payment Error:", error);
+    return { error: error.message };
+  }
+}
+

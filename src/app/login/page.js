@@ -57,10 +57,10 @@ export default function LoginPage() {
         </div>
 
         {/* Card */}
-        <div style={{ background: "rgba(255,255,255,0.05)", backdropFilter: "blur(40px)", borderRadius: 24, border: "1px solid rgba(255,255,255,0.1)", padding: "40px 36px", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
+        <div style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(40px)", borderRadius: 24, border: "1px solid rgba(255,255,255,0.15)", padding: "40px 36px", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
           <div style={{ textAlign: "center", marginBottom: 32 }}>
             <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 8 }}>Giriş Yap</h1>
-            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14 }}>Pinowed hesabınıza giriş yapın</p>
+            <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>Pinowed hesabınıza giriş yapın</p>
           </div>
 
           <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -73,7 +73,7 @@ export default function LoginPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
               <div style={{ position: "relative" }}>
-                <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.25)", pointerEvents: "none" }} />
+                <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.4)", pointerEvents: "none" }} />
                 <input 
                   type="email" 
                   required 
@@ -90,10 +90,10 @@ export default function LoginPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: 4, paddingRight: 4 }}>
                 <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Şifre</label>
-                <Link href="#" style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", textDecoration: "none" }}>Şifremi unuttum</Link>
+                <Link href="#" style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>Şifremi unuttum</Link>
               </div>
               <div style={{ position: "relative" }}>
-                <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.25)", pointerEvents: "none" }} />
+                <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.4)", pointerEvents: "none" }} />
                 <input 
                   type="password" 
                   required 
@@ -117,8 +117,8 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div style={{ textAlign: "center", marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>
+          <div style={{ textAlign: "center", marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)" }}>
               Hesabınız yok mu?{" "}
               <Link href="/register" style={{ color: "#fff", fontWeight: 600, textDecoration: "none" }}>
                 Kayıt Ol

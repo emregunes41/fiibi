@@ -1,24 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
+  --background: #050505;
+  --foreground: #F5F5F5;
   
   --primary: #ffffff;
   --primary-muted: rgba(255, 255, 255, 0.1);
-  --bg-card: rgba(255, 255, 255, 0.05);
-  --border: rgba(255, 255, 255, 0.15);
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --border: rgba(255, 255, 255, 0.08);
   --text-muted: rgba(255, 255, 255, 0.5);
   --text-subtle: rgba(255, 255, 255, 0.3);
   
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-blur: blur(25px);
+  --glass-bg: rgba(255, 255, 255, 0.02);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: blur(40px);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-serif: var(--font-geist-sans);
+  --font-jakarta: var(--font-geist-sans);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -29,11 +31,43 @@
   padding: 0;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), sans-serif;
+html {
+  background: #000 !important;
+}
+
+html, body {
+  max-width: 100%;
   overflow-x: hidden;
+  position: relative;
+  color: var(--foreground);
+}
+
+body {
+  background: transparent !important;
+}
+
+body {
+  font-family: var(--font-sans), sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-serif, .font-jakarta {
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-justify-balanced {
+  text-wrap: balance;
+}
+
+.section-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 5vw;
 }
 
 .glass-panel {
@@ -43,38 +77,67 @@ body {
   border: 1px solid var(--glass-border);
 }
 
-.glass-hover {
-  transition: all 0.3s ease;
+.premium-border {
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.glass-hover:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-5px);
+.reveal-text {
+  animation: reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
-input, select, textarea {
-  transition: all 0.2s ease;
+@keyframes reveal {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: var(--primary);
-  background: rgba(255, 255, 255, 0.1) !important;
+::selection {
+  background: #fff;
+  color: #000;
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--background);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: rgba(255, 255, 255, 0.3);
 }
 
+.logo-glow {
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
+}
+
+.global-video-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  pointer-events: none;
+}
+
+.global-video-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  /* Fixed cinematic look that doesn't scroll */
+  background: 
+    linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%),
+    radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%);
+  pointer-events: none;
+}
+
+button {
+  cursor: pointer;
+}

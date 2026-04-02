@@ -25,6 +25,8 @@ model PhotographyPackage {
   maxCapacity  Int           @default(1)
   features     String[]
   addons       Json?
+  customFields Json?
+  availableSlots Json?
   deliveryTimeDays Int           @default(14)
   isActive     Boolean       @default(true)
   createdAt    DateTime      @default(now())
@@ -47,17 +49,30 @@ model Reservation {
   paymentStatus  String               @default("UNPAID")
   totalAmount    String?
   paidAmount     String?
-  selectedAddons Json?
-  notes          String?
+  selectedAddons     Json?
+  customFieldAnswers Json?
+  notes              String?
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
   userId         String?
+  selectedPhotos String?
   workflowStatus String               @default("PENDING")
   deliveryDate   DateTime?
   deliveryLink   String?
   user           User?                @relation(fields: [userId], references: [id])
   gallery        PhotoGallery?
   packages       PhotographyPackage[] @relation("PhotographyPackageToReservation")
+  payments       Payment[]
+}
+
+model Payment {
+  id            String      @id @default(cuid())
+  reservationId String
+  amount        Float
+  method        String      // CASH, BANK_TRANSFER, CREDIT_CARD, ONLINE
+  note          String?
+  createdAt     DateTime    @default(now())
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -144,4 +159,45 @@ model AdminNotification {
   type      String   @default("INFO") // SELECTION_DONE, REMINDER vb.
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model PortfolioCategory {
+  id        String           @id @default(cuid())
+  name      String
+  slug      String           @unique
+  createdAt DateTime         @default(now())
+  photos    PortfolioPhoto[]
+}
+
+model PortfolioPhoto {
+  id          String            @id @default(cuid())
+  url         String
+  publicId    String?
+  categoryId  String
+  category    PortfolioCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime          @default(now())
+}
+
+model MonthlyPriceConfig {
+  id                 String   @id @default(cuid())
+  category           String   // DIŞ ÇEKİM, DÜĞÜN, NİŞAN gibi
+  month              Int      // 1-12
+  year               Int      // 2024, 2025 vb.
+  minPrice           Int?     // Opsiyonel taban fiyat
+  discountPercentage Int      @default(0) // -10: %10 indirim, 10: %10 zam
+  updatedAt          DateTime @updatedAt
+
+  @@unique([category, month, year])
+}
+
+model GlobalSettings {
+  id           String   @id @default("global-settings")
+  heroTitle    String   @default("Anları Sanata Dönüştürüyoruz")
+  heroSubtitle String   @default("Premium Photography Service")
+  address      String   @default("Moda, Kadıköy / İstanbul")
+  phone        String   @default("+90 555 000 00 00")
+  email        String   @default("hello@pinowed.com")
+  instagram    String   @default("")
+  whatsapp     String   @default("")
+  updatedAt    DateTime @updatedAt
 }

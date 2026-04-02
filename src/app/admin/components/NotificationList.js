@@ -36,7 +36,7 @@ export default function NotificationList({ notifications }) {
   }
 
   return (
-    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "2rem", overflow: "hidden", marginBottom: "3rem" }}>
+    <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "2rem", overflow: "hidden", marginBottom: "3rem" }}>
       <div style={{ padding: "1.5rem 2rem", borderBottom: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h3 style={{ fontWeight: 900, fontSize: "1.2rem", letterSpacing: "-0.02em", color: "#60A5FA", display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <Bell size={18} /> Bildirimler
@@ -61,7 +61,7 @@ export default function NotificationList({ notifications }) {
 
       <div style={{ padding: "1rem" }}>
         {unread.length === 0 && read.length > 0 && (
-          <div style={{ padding: "1rem", textAlign: "center", color: "rgba(255,255,255,0.3)", fontSize: "0.85rem", fontWeight: 500 }}>
+          <div style={{ padding: "1rem", textAlign: "center", color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", fontWeight: 500 }}>
             Tüm bildirimler okundu.
           </div>
         )}
@@ -92,7 +92,7 @@ export default function NotificationList({ notifications }) {
           {read.map(notif => (
             <div key={notif.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "1rem 1.5rem", background: "transparent", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "1rem", gap: "1rem", opacity: 0.6 }}>
               <div>
-                <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", marginBottom: "0.25rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", marginBottom: "0.25rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   {new Date(notif.createdAt).toLocaleString("tr-TR")}
                 </div>
                 <div style={{ fontSize: "0.95rem", fontWeight: 600, color: "rgba(255,255,255,0.6)", lineHeight: "1.4" }}>

@@ -81,7 +81,7 @@ export async function getCurrentUser() {
     const user = await prisma.user.findUnique({
       where: { id: payload.userId },
       include: { 
-        reservations: { include: { packages: true }, orderBy: { createdAt: 'desc' } },
+        reservations: { include: { packages: true, payments: { orderBy: { createdAt: 'desc' } } }, orderBy: { createdAt: 'desc' } },
         purchases: { orderBy: { purchaseDate: 'desc' } }
       }
     });
@@ -105,6 +105,28 @@ export async function updateUser(id, data) {
     revalidatePath('/profile');
     return { success: true };
   } catch (err) {
+    return { error: err.message };
+  }
+}
+export async function submitPhotoSelection(reservationId, selectionText) {
+  try {
+    const deliveryDate = new Date();
+    deliveryDate.setDate(deliveryDate.getDate() + 14);
+
+    await prisma.reservation.update({
+      where: { id: reservationId },
+      data: {
+        selectedPhotos: selectionText,
+        workflowStatus: "ALBUM_PREPARING",
+        deliveryDate: deliveryDate
+      }
+    });
+
+    revalidatePath('/profile');
+    revalidatePath('/admin/reservations');
+    return { success: true };
+  } catch (err) {
+    console.error("Selection Submit Error:", err);
     return { error: err.message };
   }
 }

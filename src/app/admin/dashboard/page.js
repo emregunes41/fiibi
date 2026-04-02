@@ -59,170 +59,120 @@ export default async function AdminDashboard() {
 
   return (
     <div style={{ color: "#fff" }}>
-      <div style={{ marginBottom: "3rem" }}>
-        <h1 style={{ fontSize: "2.5rem", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: "0.5rem" }}>Genel Bakış</h1>
-        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "1.1rem" }}>Pinowed yönetim paneline hoş geldin.</p>
+      <div style={{ marginBottom: "1.5rem" }}>
+        <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: "4px" }}>Genel Bakış</h1>
+        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem" }}>Pinowed yönetim paneli</p>
       </div>
 
       {/* Stats Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.5rem", marginBottom: "3rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px", marginBottom: "1.5rem" }}>
         
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", padding: "2rem", borderRadius: "1.5rem", backdropFilter: "blur(10px)" }}>
-          <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.8rem", fontWeight: 800, marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            <Package size={16} /> Toplam Paket
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: "10px" }}>
+          <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
+            <Package size={11} /> Paket
           </div>
-          <div style={{ fontSize: "2.5rem", fontWeight: 900 }}>{totalPackages}</div>
+          <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalPackages}</div>
         </div>
 
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", padding: "2rem", borderRadius: "1.5rem", backdropFilter: "blur(10px)" }}>
-          <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.8rem", fontWeight: 800, marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            <Calendar size={16} /> Tüm Randevular
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: "10px" }}>
+          <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
+            <Calendar size={11} /> Randevu
           </div>
-          <div style={{ fontSize: "2.5rem", fontWeight: 900 }}>{totalReservations}</div>
+          <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalReservations}</div>
         </div>
 
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", padding: "2rem", borderRadius: "1.5rem", backdropFilter: "blur(10px)" }}>
-          <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.8rem", fontWeight: 800, marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            <Users size={16} /> Toplam Üye
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: "10px" }}>
+          <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
+            <Users size={11} /> Üye
           </div>
-          <div style={{ fontSize: "2.5rem", fontWeight: 900 }}>{totalMembers}</div>
+          <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalMembers}</div>
         </div>
 
-        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid #fff", padding: "2rem", borderRadius: "1.5rem", boxShadow: "0 0 30px rgba(255,255,255,0.1)" }}>
-          <div style={{ color: "#fff", fontSize: "0.8rem", marginBottom: "1rem", fontWeight: 900, display: "flex", alignItems: "center", gap: "0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            <Clock size={16} /> Bekleyen Onaylar
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", padding: "12px", borderRadius: "10px" }}>
+          <div style={{ color: "#fff", fontSize: "0.6rem", fontWeight: 900, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
+            <Clock size={11} /> Bekleyen
           </div>
-          <div style={{ fontSize: "2.5rem", fontWeight: 900 }}>{pendingReservations}</div>
+          <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{pendingReservations}</div>
         </div>
       </div>
 
       {/* Notifications Widget */}
       <NotificationList notifications={notifications} />
 
-      {/* Revenue & Recent Activity */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "2rem", marginBottom: "3rem" }}>
+      {/* Revenue & Recent */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "10px", marginBottom: "1.25rem" }}>
         
         {/* Revenue Card */}
-        <div style={{ background: "linear-gradient(145deg, #111 0%, #000 100%)", border: "1px solid rgba(255,255,255,0.1)", padding: "2.5rem", borderRadius: "2rem", display: "flex", flexDirection: "column" }}>
-          <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.85rem", fontWeight: 800, marginBottom: "2rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            Hedef Kazanç İlerlemesi
+        <div style={{ background: "linear-gradient(145deg, #111 0%, #000 100%)", border: "1px solid rgba(255,255,255,0.08)", padding: "16px", borderRadius: "12px" }}>
+          <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "8px", textTransform: "uppercase" }}>Kazanç İlerlemesi</div>
+          <div style={{ fontSize: "1.5rem", fontWeight: 900, marginBottom: "4px" }}>{totalRevenue.toLocaleString("tr-TR")} TL</div>
+          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", marginBottom: "12px" }}>Onaylı rezervasyonlardan</p>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.6rem", fontWeight: 800, marginBottom: "4px" }}>
+            <span>HEDEF: 50.000 TL</span>
+            <span>%{Math.min(100, Math.round((totalRevenue / 50000) * 100))}</span>
           </div>
-          <div style={{ fontSize: "3rem", fontWeight: 900, marginBottom: "0.5rem" }}>{totalRevenue.toLocaleString("tr-TR")} TL</div>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", marginBottom: "2.5rem" }}>Onaylı rezervasyonlardan elde edilen toplam gelir.</p>
-          
-          <div style={{ marginTop: "auto" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", fontWeight: 800, marginBottom: "0.75rem" }}>
-              <span>HEDEF: 50.000 TL</span>
-              <span>%{Math.min(100, Math.round((totalRevenue / 50000) * 100))}</span>
-            </div>
-            <div style={{ height: "12px", background: "rgba(255,255,255,0.1)", borderRadius: "10px", overflow: "hidden" }}>
-              <div style={{ height: "100%", background: "#fff", width: `${Math.min(100, (totalRevenue / 50000) * 100)}%`, transition: "width 1s ease-out", boxShadow: "0 0 15px #fff" }} />
-            </div>
+          <div style={{ height: "6px", background: "rgba(255,255,255,0.08)", borderRadius: "6px", overflow: "hidden" }}>
+            <div style={{ height: "100%", background: "#fff", width: `${Math.min(100, (totalRevenue / 50000) * 100)}%`, boxShadow: "0 0 8px #fff" }} />
           </div>
         </div>
 
         {/* Recent Activity */}
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "2rem", overflow: "hidden" }}>
-          <div style={{ padding: "1.5rem 2rem", borderBottom: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h3 style={{ fontWeight: 900, fontSize: "1.2rem", letterSpacing: "-0.02em" }}>Son Rezervasyonlar</h3>
-            <Link href="/admin/reservations" style={{ color: "#fff", fontSize: "0.8rem", fontWeight: 800, textDecoration: "none", display: "flex", alignItems: "center", gap: "0.25rem", background: "rgba(255,255,255,0.1)", padding: "0.5rem 1rem", borderRadius: "2rem" }}>
-              TÜMÜ <ChevronRight size={14} />
+        <div style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "14px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+            <span style={{ fontWeight: 900, fontSize: "0.8rem" }}>Son Rezervasyonlar</span>
+            <Link href="/admin/reservations" style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.6rem", fontWeight: 800, textDecoration: "none", display: "flex", alignItems: "center", gap: "2px" }}>
+              TÜMÜ <ChevronRight size={10} />
             </Link>
           </div>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
-              <thead style={{ background: "rgba(255,255,255,0.02)", fontSize: "0.7rem", color: "rgba(255,255,255,0.4)" }}>
-                <tr>
-                  <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Müşteri</th>
-                  <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Tarih</th>
-                  <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Tutar</th>
-                  <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Durum</th>
-                </tr>
-              </thead>
-              <tbody style={{ fontSize: "0.9rem" }}>
-                {recentReservations.map((res) => (
-                  <tr key={res.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                    <td style={{ padding: "1.25rem 2rem", fontWeight: 700 }}>{res.brideName}</td>
-                    <td style={{ padding: "1.25rem 2rem", color: "rgba(255,255,255,0.6)" }}>{new Date(res.eventDate).toLocaleDateString("tr-TR")}</td>
-                    <td style={{ padding: "1.25rem 2rem", fontWeight: 800 }}>{res.paidAmount}</td>
-                    <td style={{ padding: "1.25rem 2rem" }}>
-                      <span style={{ 
-                        padding: "0.4rem 0.75rem", borderRadius: "2rem", fontSize: "0.7rem", fontWeight: 900,
-                        background: res.status === "CONFIRMED" ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.05)",
-                        color: res.status === "CONFIRMED" ? "#fff" : "rgba(255,255,255,0.5)",
-                        border: res.status === "CONFIRMED" ? "1px solid rgba(255,255,255,0.2)" : "1px solid transparent"
-                      }}>
-                        {res.status === "CONFIRMED" ? "ONAYLI" : "BEKLEMEDE"}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-                {recentReservations.length === 0 && (
-                  <tr>
-                    <td colSpan="4" style={{ padding: "4rem", textAlign: "center", color: "rgba(255,255,255,0.3)", fontSize: "0.9rem" }}>Henüz bir kayıt bulunmuyor.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            {recentReservations.map((res) => (
+              <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 8px", borderRadius: "6px", background: "rgba(255,255,255,0.08)" }}>
+                <div>
+                  <div style={{ fontSize: "0.75rem", fontWeight: 700 }}>{res.brideName}</div>
+                  <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)" }}>{new Date(res.eventDate).toLocaleDateString("tr-TR")}</div>
+                </div>
+                <span style={{
+                  padding: "2px 6px", borderRadius: "4px", fontSize: "0.55rem", fontWeight: 800,
+                  background: res.status === "CONFIRMED" ? "rgba(52,211,153,0.15)" : "rgba(255,255,255,0.05)",
+                  color: res.status === "CONFIRMED" ? "#34d399" : "rgba(255,255,255,0.4)",
+                }}>{res.status === "CONFIRMED" ? "ONAYLI" : "BEKLEMEDE"}</span>
+              </div>
+            ))}
+            {recentReservations.length === 0 && (
+              <div style={{ padding: "1.5rem", textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: "0.7rem" }}>Kayıt yok</div>
+            )}
           </div>
         </div>
       </div>
 
       {/* Yaklaşan Teslimatlar */}
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,191,36,0.3)", borderRadius: "2rem", overflow: "hidden", marginBottom: "3rem" }}>
-        <div style={{ padding: "1.5rem 2rem", borderBottom: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h3 style={{ fontWeight: 900, fontSize: "1.2rem", letterSpacing: "-0.02em", color: "#FBBF24", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <Calendar size={18} /> Yaklaşan Teslimatlar
-          </h3>
+      <div style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,191,36,0.2)", borderRadius: "12px", padding: "14px", marginBottom: "1.25rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
+          <Calendar size={13} style={{ color: "#FBBF24" }} />
+          <span style={{ fontWeight: 900, fontSize: "0.8rem", color: "#FBBF24" }}>Yaklaşan Teslimatlar</span>
         </div>
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
-            <thead style={{ background: "rgba(255,255,255,0.02)", fontSize: "0.7rem", color: "rgba(255,255,255,0.4)" }}>
-              <tr>
-                <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Müşteri</th>
-                <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Çekim Tarihi</th>
-                <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Son Teslim</th>
-                <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Kalan Süre</th>
-                <th style={{ padding: "1rem 2rem", fontWeight: 800, textTransform: "uppercase" }}>Durum</th>
-              </tr>
-            </thead>
-            <tbody style={{ fontSize: "0.9rem" }}>
-              {upcomingDeliveries.map((res) => {
-                const info = getDaysLeftInfo(res.deliveryDate);
-                // Status Map for workflow
-                const statusMap = {
-                  "PENDING": "Çekim Bekleniyor",
-                  "SHOT_DONE": "Düzenlemede",
-                  "EDITING": "Düzenlemede",
-                  "SELECTION_PENDING": "Seçim Bekleniyor",
-                  "DELIVERED": "Teslim Edildi"
-                };
-
-                return (
-                  <tr key={res.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                    <td style={{ padding: "1.25rem 2rem", fontWeight: 700 }}>{res.brideName} {res.groomName ? `& ${res.groomName}` : ''}</td>
-                    <td style={{ padding: "1.25rem 2rem", color: "rgba(255,255,255,0.6)" }}>{new Date(res.eventDate).toLocaleDateString("tr-TR")}</td>
-                    <td style={{ padding: "1.25rem 2rem", fontWeight: 800 }}>{new Date(res.deliveryDate).toLocaleDateString("tr-TR")}</td>
-                    <td style={{ padding: "1.25rem 2rem", fontWeight: 900, color: info.color }}>{info.text}</td>
-                    <td style={{ padding: "1.25rem 2rem" }}>
-                      <span style={{ 
-                        padding: "0.4rem 0.75rem", borderRadius: "2rem", fontSize: "0.7rem", fontWeight: 900,
-                        background: "rgba(255,255,255,0.1)",
-                        color: "#fff",
-                      }}>
-                        {statusMap[res.workflowStatus] || res.workflowStatus}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-              {upcomingDeliveries.length === 0 && (
-                <tr>
-                  <td colSpan="5" style={{ padding: "4rem", textAlign: "center", color: "rgba(255,255,255,0.3)", fontSize: "0.9rem" }}>Yaklaşan veya gecikmiş teslimat bulunmuyor, harika!</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+          {upcomingDeliveries.map((res) => {
+            const info = getDaysLeftInfo(res.deliveryDate);
+            const statusMap = { "PENDING": "Çekim Bekleniyor", "SHOT_DONE": "Düzenlemede", "EDITING": "Düzenlemede", "SELECTION_PENDING": "Seçim Bekleniyor", "DELIVERED": "Teslim Edildi" };
+            return (
+              <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", borderRadius: "8px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.brideName} {res.groomName ? `& ${res.groomName}` : ''}</div>
+                  <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)" }}>
+                    {new Date(res.eventDate).toLocaleDateString("tr-TR")} → {new Date(res.deliveryDate).toLocaleDateString("tr-TR")}
+                  </div>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2px", flexShrink: 0 }}>
+                  <span style={{ fontSize: "0.6rem", fontWeight: 900, color: info.color }}>{info.text}</span>
+                  <span style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.5)" }}>{statusMap[res.workflowStatus] || res.workflowStatus}</span>
+                </div>
+              </div>
+            );
+          })}
+          {upcomingDeliveries.length === 0 && (
+            <div style={{ padding: "1.5rem", textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: "0.7rem" }}>Yaklaşan teslimat yok 🎉</div>
+          )}
         </div>
       </div>
     </div>

@@ -31,17 +31,42 @@ export async function POST(req) {
     }
 
     if (status === "success") {
-      // Find the reservation associated with this merchant_oid
+      const paidAmountTL = parseFloat(total_amount) / 100; // PayTR sends kuruş
+
+      // Create payment record
+      await prisma.payment.create({
+        data: {
+          reservationId: merchant_oid,
+          amount: paidAmountTL,
+          method: "ONLINE",
+          note: "PayTR online ödeme",
+        }
+      });
+
+      // Recalculate total paid
+      const payments = await prisma.payment.findMany({ where: { reservationId: merchant_oid } });
+      const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
+
+      const reservation = await prisma.reservation.findUnique({ where: { id: merchant_oid } });
+      const totalAmount = parseFloat(reservation.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
+
+      let paymentStatus = "UNPAID";
+      if (totalPaid >= totalAmount && totalAmount > 0) {
+        paymentStatus = "PAID";
+      } else if (totalPaid > 0) {
+        paymentStatus = "PARTIAL";
+      }
+
       await prisma.reservation.update({
         where: { id: merchant_oid },
         data: {
           status: "CONFIRMED",
-          paymentStatus: "PAID",
-          // The paidAmount was set during pending save
+          paymentStatus,
+          paidAmount: totalPaid.toString(),
         }
       });
       
-      console.log(`PAYMENT SUCCESS for Reservation: ${merchant_oid}`);
+      console.log(`PAYMENT SUCCESS for Reservation: ${merchant_oid} - ${paidAmountTL} TL`);
     } else {
       console.log(`PAYMENT FAILED for Reservation: ${merchant_oid}`);
     }
