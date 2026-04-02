@@ -108,6 +108,29 @@ export async function updateUser(id, data) {
     return { error: err.message };
   }
 }
+
+export async function updatePassword(id, oldPassword, newPassword) {
+  try {
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) return { error: "Kullanıcı bulunamadı." };
+
+    if (!user.password) return { error: "Hesabınıza şifre atanmamış (Google ile giriş yapılmış olabilir)." };
+
+    const isValid = await bcrypt.compare(oldPassword, user.password);
+    if (!isValid) return { error: "Mevcut şifreniz hatalı." };
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id },
+      data: { password: hashedPassword }
+    });
+
+    return { success: true };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+
 export async function submitPhotoSelection(reservationId, selectionText) {
   try {
     const deliveryDate = new Date();

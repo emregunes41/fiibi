@@ -38,6 +38,8 @@ export default function RootLayout({ children }) {
         <CartWrapper>
           <Navbar />
           {children}
+          {/* Global Mobile Bottom Spacer for Floating CTA */}
+          <div className="md:hidden h-32 shrink-0 w-full" />
         </CartWrapper>
       </body>
     </html>

@@ -1,7 +1,7 @@
-import { getCurrentUser, logoutUser } from "../user-actions";
+import { getCurrentUser } from "../user-actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Calendar, Settings, LogOut, Package, Clock, CheckCircle, FileText, ExternalLink } from "lucide-react";
+import { Calendar, Package, Clock, CheckCircle, FileText, ExternalLink } from "lucide-react";
 import PhotoSelectionForm from "./PhotoSelectionForm";
 import PaymentSection from "./PaymentSection";
 
@@ -11,10 +11,6 @@ export default async function ProfilePage() {
   if (!user) {
     redirect("/login");
   }
-
-  const getInitials = (name) => {
-    return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
-  };
 
   const getWorkflowStepIndex = (status) => {
     const steps = ["PENDING", "SHOT_DONE", "EDITING", "SELECTION_PENDING", "ALBUM_PREPARING", "COMPLETED"];
@@ -31,52 +27,10 @@ export default async function ProfilePage() {
   ];
 
   return (
-    <main style={{ paddingTop: 100, paddingBottom: 60, paddingLeft: 24, paddingRight: 24, minHeight: "100vh" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "280px 1fr", gap: 32 }}>
-        
-        {/* Sidebar */}
-        <div>
-          <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 20, border: "1px solid rgba(255,255,255,0.12)", padding: 28, position: "sticky", top: 100 }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-              {/* Avatar */}
-              <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
-                <span style={{ fontSize: 24, fontWeight: 700, color: "rgba(255,255,255,0.85)" }}>{getInitials(user.name)}</span>
-              </div>
-              <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{user.name}</h2>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, marginBottom: 20 }}>{user.email}</p>
-              
-              {/* Stats */}
-              <div style={{ width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 20 }}>
-                <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 12, padding: "12px 8px", textAlign: "center" }}>
-                  <span style={{ display: "block", color: "rgba(255,255,255,0.5)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>Randevu</span>
-                  <span style={{ fontSize: 20, fontWeight: 700 }}>{user.reservations.length}</span>
-                </div>
-                <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 12, padding: "12px 8px", textAlign: "center" }}>
-                  <span style={{ display: "block", color: "rgba(255,255,255,0.5)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>Puan</span>
-                  <span style={{ fontSize: 20, fontWeight: 700 }}>0</span>
-                </div>
-              </div>
-
-              {/* Nav */}
-              <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 4, borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 16 }}>
-                <Link href="/profile/settings" style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderRadius: 12, color: "rgba(255,255,255,0.55)", fontSize: 14, textDecoration: "none", transition: "all 0.2s" }}>
-                  <Settings size={16} /> Ayarlar
-                </Link>
-                <form action={logoutUser}>
-                  <button type="submit" style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "10px 14px", borderRadius: 12, color: "rgba(248,113,113,0.7)", fontSize: 14, background: "transparent", border: "none", cursor: "pointer", transition: "all 0.2s" }}>
-                    <LogOut size={16} /> Çıkış Yap
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
-          
-          {/* Reservations */}
-          <section>
+    <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
+      
+      {/* Reservations */}
+      <section>
             <div style={{ marginBottom: 20 }}>
               <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>Rezervasyonlarım</h3>
               <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>Geçmiş ve gelecek tüm çekim randevularınız</p>
@@ -136,7 +90,8 @@ export default async function ProfilePage() {
                       <div style={{ padding: "20px 24px" }}>
                         <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 20 }}>İşlem Gidişatı</p>
                         
-                        <div style={{ display: "flex", justifyContent: "space-between", position: "relative" }}>
+                        <div style={{ paddingBottom: "30px", overflowX: "auto" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", position: "relative", minWidth: 500 }}>
                           {/* Background line */}
                           <div style={{ position: "absolute", top: 13, left: "10%", right: "10%", height: 1, background: "rgba(255,255,255,0.1)" }} />
                           <div style={{ position: "absolute", top: 13, left: "10%", height: 1, background: "rgba(74,222,128,0.5)", transition: "all 0.7s", width: currentStepIdx >= 0 ? `${(currentStepIdx / 4) * 80}%` : "0%" }} />
@@ -165,6 +120,7 @@ export default async function ProfilePage() {
                               </div>
                             );
                           })}
+                          </div>
                         </div>
                         
                         {/* Selection CTA */}
@@ -252,9 +208,6 @@ export default async function ProfilePage() {
             </div>
           </section>
 
-        </div>
-
-      </div>
-    </main>
+    </div>
   );
 }

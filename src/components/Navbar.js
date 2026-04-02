@@ -46,87 +46,88 @@ export default function Navbar() {
   return (
     <>
       <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled ? "py-4" : "py-8"}`}>
-        <div className={`max-w-[1440px] mx-auto px-6 md:px-12 flex items-center justify-between transition-all duration-500 ${scrolled ? "bg-black/40 backdrop-blur-md py-4 rounded-full border border-white/5 mx-6" : ""}`}>
+        <div className={`w-full max-w-[1440px] mx-auto px-6 md:px-12 flex justify-between items-center relative transition-all duration-500 ${scrolled ? "bg-black/40 backdrop-blur-md py-4 rounded-full border border-white/5 mx-6" : ""}`}>
           
-          {/* Logo */}
-          <Link href="/" className="group flex items-center gap-3 no-underline">
-            <div className="w-10 h-10 bg-white text-black flex items-center justify-center rounded-sm font-serif text-xl transition-transform group-hover:rotate-12">
-              P
-            </div>
-            <span className="font-serif text-2xl tracking-[0.2em] text-white hidden sm:block uppercase">Pinowed</span>
-          </Link>
+          {/* Logo (Left) */}
+          <div className="flex items-center z-10">
+            <Link href="/" className="group flex items-center gap-3 no-underline">
+              <div className="w-10 h-10 bg-white text-black flex items-center justify-center rounded-sm font-serif text-xl transition-transform group-hover:rotate-12">
+                P
+              </div>
+              <span className="font-serif text-2xl tracking-[0.2em] text-white hidden sm:block uppercase">Pinowed</span>
+            </Link>
+          </div>
 
-          {/* Nav Links */}
-          <nav className="hidden md:flex items-center gap-10 font-jakarta">
-            <Link href="/booking" className="text-[0.7rem] uppercase tracking-[0.3em] font-bold text-white bg-white/10 px-5 py-2.5 rounded-sm border border-white/20 hover:bg-white hover:text-black transition-all no-underline">
+          {/* Center Action (Desktop) */}
+          <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-max">
+            <Link href="/booking" className="text-[0.7rem] uppercase tracking-[0.3em] font-bold text-white bg-white/10 px-6 py-3 rounded-sm border border-white/20 hover:bg-white hover:text-black transition-all no-underline whitespace-nowrap">
               Online Rezervasyon
             </Link>
-            <Link href="/#portfolio" className="text-[0.7rem] uppercase tracking-[0.3em] text-white/50 hover:text-white transition-colors no-underline">
-              Portfolyo
-            </Link>
-            <Link href="/#contact" className="text-[0.7rem] uppercase tracking-[0.3em] text-white/50 hover:text-white transition-colors no-underline">
-              İletişim
-            </Link>
+          </div>
 
-            {/* Cart Icon */}
-            <button
-              onClick={() => openCart(true)}
-              className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all cursor-pointer group"
-              aria-label="Sepetim"
-            >
-              <ShoppingBag size={16} className="text-white/50 group-hover:text-white transition-colors" />
-              {itemCount > 0 && (
-                <span
-                  className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold bg-white text-black px-1"
-                  style={{ animation: "cartBadgePop 0.3s ease" }}
-                >
-                  {itemCount}
-                </span>
+          {/* Right Section */}
+          <div className="flex items-center gap-3 md:gap-8 font-jakarta z-10">
+
+            {/* Desktop Right */}
+            <div className="hidden md:flex items-center gap-6">
+              <button
+                onClick={() => openCart(true)}
+                className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all cursor-pointer group"
+                aria-label="Sepetim"
+              >
+                <ShoppingBag size={16} className="text-white/50 group-hover:text-white transition-colors" />
+                {itemCount > 0 && (
+                  <span
+                    className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold bg-white text-black px-1"
+                    style={{ animation: "cartBadgePop 0.3s ease" }}
+                  >
+                    {itemCount}
+                  </span>
+                )}
+              </button>
+
+              {!loading && (
+                user ? (
+                  <Link 
+                    href="/profile" 
+                    className="flex items-center gap-2 text-[0.7rem] uppercase tracking-[0.2em] text-white bg-white/5 hover:bg-white/10 transition-all no-underline px-6 py-3 rounded-sm border border-white/10"
+                  >
+                    <UserCircle size={14} /> Panel
+                  </Link>
+                ) : (
+                  <Link 
+                    href="/login" 
+                    className="flex items-center gap-2 text-[0.7rem] uppercase tracking-[0.2em] text-white/40 hover:text-white transition-colors no-underline"
+                  >
+                    <User size={14} /> Müşteri Girişi
+                  </Link>
+                )
               )}
-            </button>
+            </div>
 
-            {!loading && (
-              user ? (
-                <Link 
-                  href="/profile" 
-                  className="flex items-center gap-2 text-[0.7rem] uppercase tracking-[0.2em] text-white bg-white/5 hover:bg-white/10 transition-all no-underline px-6 py-3 rounded-sm border border-white/10"
-                >
-                  <UserCircle size={14} /> Panel
-                </Link>
-              ) : (
-                <Link 
-                  href="/login" 
-                  className="flex items-center gap-2 text-[0.7rem] uppercase tracking-[0.2em] text-white/40 hover:text-white transition-colors no-underline"
-                >
-                  <User size={14} /> Müşteri Girişi
-                </Link>
-              )
-            )}
-          </nav>
+            {/* Mobile Right */}
+            <div className="flex items-center gap-3 md:hidden">
+              <button
+                onClick={() => openCart(true)}
+                className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 transition-all cursor-pointer"
+                aria-label="Sepetim"
+              >
+                <ShoppingBag size={16} className="text-white/50" />
+                {itemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold bg-white text-black px-1">
+                    {itemCount}
+                  </span>
+                )}
+              </button>
 
-          {/* Mobile Right Section */}
-          <div className="flex items-center gap-3 md:hidden">
-            {/* Mobile Cart */}
-            <button
-              onClick={() => openCart(true)}
-              className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 transition-all cursor-pointer"
-              aria-label="Sepetim"
-            >
-              <ShoppingBag size={16} className="text-white/50" />
-              {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold bg-white text-black px-1">
-                  {itemCount}
-                </span>
-              )}
-            </button>
+              <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-2 text-white/70 hover:text-white transition-colors"
+              >
+                {isMenuOpen ? <CloseIcon size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
 
-            {/* Mobile Toggle */}
-            <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-white/70 hover:text-white transition-colors"
-            >
-              {isMenuOpen ? <CloseIcon size={24} /> : <Menu size={24} />}
-            </button>
           </div>
         </div>
 
@@ -137,8 +138,7 @@ export default function Navbar() {
               <CloseIcon size={32} />
             </button>
             <Link href="/booking" className="font-serif text-3xl text-white no-underline border-b border-white/10 pb-4 mb-2">Online Rezervasyon</Link>
-            <Link href="/#portfolio" className="font-serif text-3xl text-white no-underline">Portfolyo</Link>
-            <Link href="/#contact" className="font-serif text-4xl text-white no-underline">İletişim</Link>
+
             <button
               onClick={() => { setIsMenuOpen(false); openCart(true); }}
               className="font-jakarta text-sm uppercase tracking-[0.3em] text-white/60 no-underline flex items-center gap-3 bg-transparent border-none cursor-pointer"
