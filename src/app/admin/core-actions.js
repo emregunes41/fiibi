@@ -115,7 +115,7 @@ export async function getPackages() {
 
 export async function createPackage(data) {
   try {
-    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, customFields, availableSlots } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, customFields, availableSlots } = data;
     await prisma.photographyPackage.create({
       data: {
         name,
@@ -125,6 +125,7 @@ export async function createPackage(data) {
         timeType: timeType || "FULL_DAY",
         maxCapacity: parseInt(maxCapacity) || 1,
         deliveryTimeDays: parseInt(deliveryTimeDays) || 14,
+        postSelectionDays: parseInt(postSelectionDays) || 0,
         features: Array.isArray(features) ? features : features.split(',').map(f => f.trim()).filter(f => f !== ""),
         addons: addons || [],
         customFields: customFields || [],
@@ -140,7 +141,7 @@ export async function createPackage(data) {
 
 export async function updatePackage(id, data) {
   try {
-    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, customFields, availableSlots } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, customFields, availableSlots } = data;
     await prisma.photographyPackage.update({
       where: { id },
       data: {
@@ -151,6 +152,7 @@ export async function updatePackage(id, data) {
         timeType,
         maxCapacity: parseInt(maxCapacity),
         deliveryTimeDays: parseInt(deliveryTimeDays) || 14,
+        postSelectionDays: parseInt(postSelectionDays) || 0,
         features: Array.isArray(features) ? features : features.split(',').map(f => f.trim()).filter(f => f !== ""),
         addons,
         customFields: customFields || [],

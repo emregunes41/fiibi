@@ -147,7 +147,12 @@ export default async function ProfilePage() {
                                   <span style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginLeft: 8 }}>{categoryLabels[pkg.category] || pkg.category}</span>
                                 </div>
                               </div>
-                              <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.5)" }}>{pkg.deliveryTimeDays || 14} gün teslim</span>
+                              <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                                <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)" }}>{pkg.deliveryTimeDays || 14}g teslim</span>
+                                {pkg.postSelectionDays > 0 && (
+                                  <span style={{ fontSize: 10, fontWeight: 600, color: "#60a5fa" }}>+{pkg.postSelectionDays}g seçim</span>
+                                )}
+                              </div>
                             </div>
                           );
                         })}

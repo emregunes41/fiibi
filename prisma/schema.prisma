@@ -28,6 +28,7 @@ model PhotographyPackage {
   customFields Json?
   availableSlots Json?
   deliveryTimeDays Int           @default(14)
+  postSelectionDays Int          @default(0)
   isActive     Boolean       @default(true)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt

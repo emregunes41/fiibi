@@ -58,7 +58,7 @@ const lbl = { display: "block", fontSize: "0.65rem", fontWeight: 800, color: "rg
 const emptyForm = { 
   name: "", description: "", price: "", features: "", 
   category: "DIS_CEKIM", timeType: "SLOT_2H", maxCapacity: "1", 
-  addons: [], customFields: [], deliveryTimeDays: "14", availableSlots: []
+  addons: [], customFields: [], deliveryTimeDays: "14", postSelectionDays: "0", availableSlots: []
 };
 
 export default function PackagesPage() {
@@ -92,6 +92,7 @@ export default function PackagesPage() {
       timeType: pkg.timeType, maxCapacity: pkg.maxCapacity.toString(), 
       addons: pkg.addons || [], customFields: pkg.customFields || [], 
       deliveryTimeDays: pkg.deliveryTimeDays?.toString() || "14",
+      postSelectionDays: pkg.postSelectionDays?.toString() || "0",
       availableSlots: pkg.availableSlots || []
     });
     setIsModalOpen(true);
@@ -204,8 +205,13 @@ export default function PackagesPage() {
                     {pkg.maxCapacity}/periyot
                   </span>
                   <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: "5px", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
-                    ⏳{pkg.deliveryTimeDays}gün
+                    ⏳{pkg.deliveryTimeDays}gün teslim
                   </span>
+                  {pkg.postSelectionDays > 0 && (
+                    <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(96,165,250,0.08)", padding: "3px 8px", borderRadius: "5px", color: "#60a5fa", textTransform: "uppercase" }}>
+                      📋+{pkg.postSelectionDays}gün seçim
+                    </span>
+                  )}
                   {pkg.availableSlots && pkg.availableSlots.length > 0 && (
                     <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(168,85,247,0.08)", padding: "2px 6px", borderRadius: "4px", color: "#a855f7" }}>
                       🕐{pkg.availableSlots.length} slot
@@ -320,10 +326,11 @@ export default function PackagesPage() {
                 </div>
               )}
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.6rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "0.6rem" }}>
                 <div><div style={lbl}>Fiyat</div><input type="text" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} required style={inp} placeholder="15.000" /></div>
-                <div><div style={lbl}>Kapasite/Periyot</div><input type="number" value={formData.maxCapacity} onChange={(e) => setFormData({...formData, maxCapacity: e.target.value})} required style={inp} /></div>
-                <div><div style={lbl}>Teslim (Gün)</div><input type="number" value={formData.deliveryTimeDays} onChange={(e) => setFormData({...formData, deliveryTimeDays: e.target.value})} required style={inp} /></div>
+                <div><div style={lbl}>Kapasite</div><input type="number" value={formData.maxCapacity} onChange={(e) => setFormData({...formData, maxCapacity: e.target.value})} required style={inp} /></div>
+                <div><div style={lbl}>Teslim (Gün)</div><input type="number" value={formData.deliveryTimeDays} onChange={(e) => setFormData({...formData, deliveryTimeDays: e.target.value})} required style={inp} placeholder="7" /></div>
+                <div><div style={lbl}>Seçim Sonrası (Gün)</div><input type="number" value={formData.postSelectionDays} onChange={(e) => setFormData({...formData, postSelectionDays: e.target.value})} style={inp} placeholder="28" /></div>
               </div>
 
               <div>
