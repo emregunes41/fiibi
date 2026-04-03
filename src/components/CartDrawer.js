@@ -62,7 +62,18 @@ export default function CartDrawer() {
   const buildReservationData = (amount) => {
     const firstItem = items[0];
     const allAddons = items.flatMap(i => i.addons.map(a => ({ ...a, packageName: i.pkg.name })));
-    const allCustomFieldAnswers = items.flatMap(i => (i.details?.customFieldAnswers || []).map(a => ({ ...a, packageName: i.pkg.name })));
+    const allCustomFieldAnswers = items.flatMap(i => {
+      const answers = (i.details?.customFieldAnswers || []).map(a => ({ ...a, packageName: i.pkg.name }));
+      // Auto-inject date and time info for each package
+      if (i.details?.date) {
+        const dateStr = new Date(i.details.date).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric", weekday: "long" });
+        answers.unshift({ label: "Etkinlik Tarihi", value: dateStr, type: "text", packageName: i.pkg.name });
+      }
+      if (i.details?.timeLabel) {
+        answers.splice(i.details?.date ? 1 : 0, 0, { label: "Saat Dilimi", value: i.details.timeLabel, type: "text", packageName: i.pkg.name });
+      }
+      return answers;
+    });
     const allNotes = items.map(i => {
       const n = i.details?.notes;
       return n ? `[${i.pkg.name}] ${n}` : null;
