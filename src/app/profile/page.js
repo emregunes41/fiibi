@@ -268,14 +268,14 @@ export default async function ProfilePage() {
         {user.reservations.length > 0 && (() => {
           const allPayments = user.reservations.flatMap(r => r.payments || []);
           const totalAmount = user.reservations.reduce((sum, r) => {
-            return sum + parseFloat(r.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
+            return sum + parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
           }, 0);
           const totalPaid = allPayments.reduce((sum, p) => sum + p.amount, 0);
           const remaining = Math.max(0, totalAmount - totalPaid);
           const isPaid = totalPaid >= totalAmount && totalAmount > 0;
           // Find first unpaid reservation for the pay button
           const firstUnpaidRes = user.reservations.find(r => {
-            const rt = parseFloat(r.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
+            const rt = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
             const rp = (r.payments || []).reduce((s, p) => s + p.amount, 0);
             return rt - rp > 0;
           });

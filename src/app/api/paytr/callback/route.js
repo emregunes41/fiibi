@@ -48,7 +48,7 @@ export async function POST(req) {
       const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
 
       const reservation = await prisma.reservation.findUnique({ where: { id: merchant_oid } });
-      const totalAmount = parseFloat(reservation.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
+      const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
 
       let paymentStatus = "UNPAID";
       if (totalPaid >= totalAmount && totalAmount > 0) {

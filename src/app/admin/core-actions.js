@@ -669,7 +669,7 @@ export async function addPayment(reservationId, data) {
 
     // Get reservation to check totalAmount
     const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
-    const totalAmount = parseFloat(reservation.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
+    const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
 
     // Determine payment status
     let paymentStatus = "UNPAID";
@@ -707,7 +707,7 @@ export async function deletePayment(paymentId) {
     const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
 
     const reservation = await prisma.reservation.findUnique({ where: { id: payment.reservationId } });
-    const totalAmount = parseFloat(reservation.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
+    const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
 
     let paymentStatus = "UNPAID";
     if (totalPaid >= totalAmount && totalAmount > 0) {

@@ -475,8 +475,8 @@ export default function ReservationsPage() {
             });
           } else if (sortMode === "amount_high") {
             sorted.sort((a, b) => {
-              const amtA = parseFloat(a.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
-              const amtB = parseFloat(b.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
+              const amtA = parseFloat(a.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
+              const amtB = parseFloat(b.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
               return amtB - amtA;
             });
           }
@@ -937,7 +937,7 @@ export default function ReservationsPage() {
 
                 {/* ── Ödeme Takibi ── */}
                 {(() => {
-                  const totalAmount = parseFloat(r.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
+                  const totalAmount = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
                   const payments = r.payments || [];
                   const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
                   const remaining = Math.max(0, totalAmount - totalPaid);

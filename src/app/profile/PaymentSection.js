@@ -12,7 +12,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
   const [iframeToken, setIframeToken] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const totalAmount = parseFloat(reservation.totalAmount?.replace(/[^0-9.-]/g, '') || '0');
+  const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
   const payments = reservation.payments || [];
   const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
   const remaining = Math.max(0, totalAmount - totalPaid);
