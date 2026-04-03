@@ -29,7 +29,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
       // merchant_oid needs to be unique for each payment attempt
       const oid = `${reservation.id}_${Date.now()}`;
       const packageNames = reservation.packages.map(p => p.name).join(", ");
-      const basket = btoa(JSON.stringify([[packageNames, amount.toFixed(2), 1]]));
+      const basket = btoa(JSON.stringify([[packageNames, String(Math.round(amount)), "1"]]));
 
       const res = await fetch("/api/paytr/checkout", {
         method: "POST",
