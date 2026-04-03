@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Calendar, Phone, Settings2, X, Edit2, Eye, Mail, User, Package, Clock, FileText, CreditCard, ChevronDown, ChevronUp, Instagram, ExternalLink, Trash2, Banknote, DollarSign, List, CalendarDays, ChevronLeft, ChevronRight, ArrowUpDown, Filter, Search } from "lucide-react";
 import { getReservations, getPackages, createManualReservation, updateReservation, updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment, softDeleteReservation, hardDeleteReservation } from "../core-actions";
+import Link from "next/link";
 
 const inp = {
   padding: "0.7rem 0.8rem", borderRadius: "0.6rem", fontSize: "0.8rem",
@@ -140,16 +141,16 @@ export default function ReservationsPage() {
           <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>Rezervasyonlar</h1>
           <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.75rem", margin: "4px 0 0" }}>{reservations.filter(r => r.status !== "DELETED").length} kayıt</p>
         </div>
-        <button 
-          onClick={() => setIsModalOpen(true)}
+        <Link href="/admin/new-reservation"
           style={{ 
             background: "#fff", color: "#000", padding: "0.5rem 1rem", 
             borderRadius: "0.6rem", border: "none", fontWeight: 800, cursor: "pointer",
             display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem",
+            textDecoration: "none",
           }}
         >
           <Plus size={14} /> YENİ
-        </button>
+        </Link>
       </div>
 
       {/* View Mode Toggle */}

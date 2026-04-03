@@ -25,7 +25,6 @@ export default function AdminLayout({ children }) {
     { name: "Paketler", href: "/admin/packages", icon: Package },
     { name: "Albüm Modelleri", href: "/admin/album-models", icon: Book },
     { name: "Rezervasyonlar", href: "/admin/reservations", icon: CalendarDays },
-    { name: "Yeni Rezervasyon", href: "/admin/new-reservation", icon: Plus },
     { name: "Portfolyo", href: "/admin/portfolio", icon: Image },
     { name: "Üyeler", href: "/admin/members", icon: Users },
     { name: "Ayarlar", href: "/admin/settings", icon: Settings },
