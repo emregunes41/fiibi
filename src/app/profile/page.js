@@ -134,25 +134,35 @@ export default async function ProfilePage() {
                     {/* Package List - only show if packages exist */}
                     {res.packages.length > 0 && (
                     <div style={{ padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                      <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 10 }}>Paket Detayları</p>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                        {res.packages.map((pkg) => {
+                      <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 10 }}>Paket Detayları ({res.packages.length})</p>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                        {res.packages.map((pkg, pkgIdx) => {
                           const categoryLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart" };
+                          const timeLabels = { FULL_DAY: "Tam Gün", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
                           return (
-                            <div key={pkg.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.02)", borderRadius: 10, padding: "10px 14px", border: "1px solid rgba(255,255,255,0.04)" }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.3)" }} />
+                            <div key={pkg.id} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 12, padding: "14px 16px", border: "1px solid rgba(255,255,255,0.06)" }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
                                 <div>
-                                  <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{pkg.name}</span>
-                                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginLeft: 8 }}>{categoryLabels[pkg.category] || pkg.category}</span>
+                                  <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{pkgIdx + 1}. {pkg.name}</div>
+                                  {pkg.description && <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.4 }}>{pkg.description}</div>}
                                 </div>
+                                <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", flexShrink: 0, marginLeft: 12 }}>{pkg.price}₺</div>
                               </div>
-                              <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                                <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)" }}>{pkg.deliveryTimeDays || 14}g teslim</span>
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 6 }}>
+                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(168,85,247,0.1)", color: "#a855f7", padding: "2px 8px", borderRadius: 5 }}>{categoryLabels[pkg.category] || pkg.category}</span>
+                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(59,130,246,0.1)", color: "#60a5fa", padding: "2px 8px", borderRadius: 5 }}>{timeLabels[pkg.timeType] || pkg.timeType}</span>
+                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", padding: "2px 8px", borderRadius: 5 }}>📦 {pkg.deliveryTimeDays || 14}g teslim</span>
                                 {pkg.postSelectionDays > 0 && (
-                                  <span style={{ fontSize: 10, fontWeight: 600, color: "#60a5fa" }}>+{pkg.postSelectionDays}g seçim</span>
+                                  <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(250,204,21,0.08)", color: "#facc15", padding: "2px 8px", borderRadius: 5 }}>+{pkg.postSelectionDays}g seçim</span>
                                 )}
                               </div>
+                              {pkg.features && pkg.features.length > 0 && (
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: "3px 10px", paddingTop: 6, borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                                  {pkg.features.map((f, i) => (
+                                    <span key={i} style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>• {f}</span>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           );
                         })}

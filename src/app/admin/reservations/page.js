@@ -577,9 +577,8 @@ export default function ReservationsPage() {
                   <Calendar size={11} /> {new Date(res.eventDate).toLocaleDateString('tr-TR')}
                   {res.eventTime && ` · ${res.eventTime}`}
                 </span>
-                <span style={{ opacity: 0.5 }}>•</span>
-                <span style={{ maxWidth: "150px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  {res.packages.map(p => p.name).join(", ")}
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {res.packages.map(p => p.name).join(" + ")}
                 </span>
                 <span style={{ fontWeight: 800, color: "#fff" }}>
                   {res.totalAmount || "0"} TL
@@ -874,27 +873,39 @@ export default function ReservationsPage() {
                 <DetailRow icon={CreditCard} label="Ödenen Tutar" value={r.paidAmount && r.paidAmount !== "0" ? `${r.paidAmount} TL` : null} />
                 
                 {/* ── Paketler ── */}
-                <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📦 Seçilen Paketler</div>
+                <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📦 Seçilen Paketler ({r.packages?.length || 0})</div>
                 {r.packages && r.packages.length > 0 ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                    {r.packages.map((pkg) => (
-                      <div key={pkg.id} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", padding: "12px 14px" }}>
-                        <div style={{ fontWeight: 700, fontSize: "0.82rem", marginBottom: 4 }}>{pkg.name}</div>
-                        <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.5)", marginBottom: 6 }}>{pkg.description}</div>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
-                          <span style={{ fontSize: "0.6rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", padding: "2px 7px", borderRadius: "4px", color: "rgba(255,255,255,0.55)" }}>{pkg.price}₺</span>
-                          <span style={{ fontSize: "0.6rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", padding: "2px 7px", borderRadius: "4px", color: "rgba(255,255,255,0.55)" }}>{pkg.category}</span>
-                          <span style={{ fontSize: "0.6rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", padding: "2px 7px", borderRadius: "4px", color: "rgba(255,255,255,0.55)" }}>{pkg.timeType}</span>
-                        </div>
-                        {pkg.features && pkg.features.length > 0 && (
-                          <div style={{ marginTop: 8, display: "flex", flexWrap: "wrap", gap: "4px 10px" }}>
-                            {pkg.features.map((f, i) => (
-                              <span key={i} style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.45)" }}>• {f}</span>
-                            ))}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    {(() => {
+                      const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart" };
+                      const timeLabels = { FULL_DAY: "Tam Gün", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
+                      return r.packages.map((pkg, pkgIdx) => (
+                        <div key={pkg.id} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", padding: "14px 16px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+                            <div>
+                              <div style={{ fontWeight: 700, fontSize: "0.88rem", marginBottom: 2 }}>{pkgIdx + 1}. {pkg.name}</div>
+                              <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.45)", lineHeight: 1.4 }}>{pkg.description}</div>
+                            </div>
+                            <div style={{ fontSize: "0.9rem", fontWeight: 800, color: "#fff", flexShrink: 0, marginLeft: 12 }}>{pkg.price}₺</div>
                           </div>
-                        )}
-                      </div>
-                    ))}
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: 8 }}>
+                            <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(168,85,247,0.12)", color: "#a855f7", padding: "3px 8px", borderRadius: "5px" }}>{catLabels[pkg.category] || pkg.category}</span>
+                            <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(59,130,246,0.12)", color: "#60a5fa", padding: "3px 8px", borderRadius: "5px" }}>{timeLabels[pkg.timeType] || pkg.timeType}</span>
+                            <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: "5px" }}>📦 {pkg.deliveryTimeDays || 14} gün teslim</span>
+                            {pkg.postSelectionDays > 0 && (
+                              <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(250,204,21,0.1)", color: "#facc15", padding: "3px 8px", borderRadius: "5px" }}>🎯 +{pkg.postSelectionDays} gün seçim sonrası</span>
+                            )}
+                          </div>
+                          {pkg.features && pkg.features.length > 0 && (
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 10px", paddingTop: 6, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                              {pkg.features.map((f, i) => (
+                                <span key={i} style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.45)" }}>• {f}</span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ));
+                    })()}
                   </div>
                 ) : (
                   <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)" }}>Paket seçilmemiş</p>
