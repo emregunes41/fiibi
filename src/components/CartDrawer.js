@@ -68,6 +68,8 @@ export default function CartDrawer() {
       if (i.details?.date) {
         const dateStr = new Date(i.details.date).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric", weekday: "long" });
         answers.unshift({ label: "Etkinlik Tarihi", value: dateStr, type: "text", packageName: i.pkg.name });
+        // Hidden ISO date for calendar multi-date support
+        answers.push({ label: "_eventDateISO", value: i.details.date, type: "_hidden", packageName: i.pkg.name });
       }
       if (i.details?.timeLabel) {
         answers.splice(i.details?.date ? 1 : 0, 0, { label: "Saat Dilimi", value: i.details.timeLabel, type: "text", packageName: i.pkg.name });

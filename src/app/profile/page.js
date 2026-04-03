@@ -140,7 +140,7 @@ export default async function ProfilePage() {
                           const categoryLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart" };
                           const timeLabels = { SLOT_2H: "2 Saatlik Çekim", SLOT_4H: "4 Saatlik Çekim", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
                           // Filter custom field answers and addons for THIS package
-                          const pkgFields = (res.customFieldAnswers || []).filter(a => a.packageName === pkg.name);
+                          const pkgFields = (res.customFieldAnswers || []).filter(a => a.packageName === pkg.name && a.type !== "_hidden");
                           const pkgAddons = (res.selectedAddons || []).filter(a => a.packageName === pkg.name);
                           return (
                             <div key={pkg.id} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 12, padding: "14px 16px", border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -202,7 +202,7 @@ export default async function ProfilePage() {
                       </div>
                       {/* Unmatched custom fields & addons (legacy data without packageName) */}
                       {(() => {
-                        const unmatchedFields = (res.customFieldAnswers || []).filter(a => !a.packageName);
+                        const unmatchedFields = (res.customFieldAnswers || []).filter(a => !a.packageName && a.type !== "_hidden");
                         const unmatchedAddons = (res.selectedAddons || []).filter(a => !a.packageName);
                         if (unmatchedFields.length === 0 && unmatchedAddons.length === 0) return null;
                         return (
