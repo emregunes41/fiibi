@@ -85,10 +85,11 @@ export default function ReservationsPage() {
       brideName: res.brideName || "", bridePhone: res.bridePhone || "", brideEmail: res.brideEmail || "",
       groomName: res.groomName || "", groomPhone: res.groomPhone || "", groomEmail: res.groomEmail || "",
       eventDate: res.eventDate ? new Date(res.eventDate).toISOString().split('T')[0] : "",
-      eventTime: res.eventTime || "10:00",
+      eventTime: res.eventTime || "",
       packageIds: res.packages.map(p => p.id),
       notes: res.notes || "",
       selectedAddons: res.selectedAddons || [],
+      customFieldAnswers: res.customFieldAnswers || [],
       totalAmount: res.totalAmount || ""
     });
     setEditModal({ isOpen: true, data: res });
