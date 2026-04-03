@@ -81,7 +81,7 @@ export async function getCurrentUser() {
     const user = await prisma.user.findUnique({
       where: { id: payload.userId },
       include: { 
-        reservations: { include: { packages: true, payments: { orderBy: { createdAt: 'desc' } } }, orderBy: { createdAt: 'desc' } },
+        reservations: { include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true }, orderBy: { createdAt: 'desc' } },
         purchases: { orderBy: { purchaseDate: 'desc' } }
       }
     });
@@ -139,9 +139,7 @@ export async function submitPhotoSelection(reservationId, selectionText) {
     await prisma.reservation.update({
       where: { id: reservationId },
       data: {
-        selectedPhotos: selectionText,
-        workflowStatus: "ALBUM_PREPARING",
-        deliveryDate: deliveryDate
+        selectedPhotos: selectionText
       }
     });
 

@@ -6,6 +6,81 @@ import bcrypt from "bcryptjs";
 import { sendWelcomeEmail } from "../actions/send-welcome";
 import { sendReservationSuccessEmail } from "../actions/send-reservation-success";
 import { sendDriveLinkEmail } from "../actions/send-drive-link";
+import fs from "fs/promises";
+import path from "path";
+import crypto from "crypto";
+
+export async function uploadAlbumImage(formData) {
+  try {
+    const file = formData.get('file');
+    if (!file) return { error: "Dosya bulunamadı." };
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'albums');
+    await fs.mkdir(uploadDir, { recursive: true });
+
+    const ext = path.extname(file.name) || '.jpg';
+    const filename = `${crypto.randomBytes(16).toString('hex')}${ext}`;
+    const filepath = path.join(uploadDir, filename);
+
+    await fs.writeFile(filepath, buffer);
+    
+    return { success: true, url: `/uploads/albums/${filename}` };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+
+// --- ALBUM MODEL ACTIONS ---
+
+export async function getAlbumModels() {
+  return await prisma.albumModel.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+}
+
+export async function createAlbumModel(data) {
+  try {
+    const { name, imageUrl, description } = data;
+    await prisma.albumModel.create({
+      data: { name, imageUrl, description }
+    });
+    revalidatePath('/admin/album-models');
+    revalidatePath('/profile');
+    return { success: true };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+
+export async function deleteAlbumModel(id) {
+  try {
+    await prisma.albumModel.delete({
+      where: { id }
+    });
+    revalidatePath('/admin/album-models');
+    revalidatePath('/profile');
+    return { success: true };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+
+export async function selectAlbumModel(reservationId, albumModelId) {
+  try {
+    await prisma.reservation.update({
+      where: { id: reservationId },
+      data: { albumModelId }
+    });
+    revalidatePath('/profile');
+    revalidatePath('/admin/reservations');
+    return { success: true };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
 
 // --- PACKAGE ACTIONS ---
 
@@ -82,7 +157,7 @@ export async function deletePackage(id) {
 
 export async function getReservations() {
   return await prisma.reservation.findMany({
-    include: { packages: true, payments: { orderBy: { createdAt: 'desc' } } },
+    include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
   });
 }
@@ -329,6 +404,23 @@ export async function updateReservationWorkflow(id, data) {
 
     revalidatePath('/admin/reservations');
     revalidatePath('/admin/dashboard');
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function lockSelection(reservationId) {
+  try {
+    await prisma.reservation.update({
+      where: { id: reservationId },
+      data: { 
+        selectionLocked: true,
+        workflowStatus: "PREPARING"
+      }
+    });
+    revalidatePath('/admin/reservations');
+    revalidatePath('/profile');
     return { success: true };
   } catch (error) {
     return { error: error.message };

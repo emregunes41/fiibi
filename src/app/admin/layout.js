@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, CalendarDays, LogOut, Users, Image, Menu, X, Settings } from "lucide-react";
+import { LayoutDashboard, Package, CalendarDays, LogOut, Book, Users, Image, Menu, X, Settings } from "lucide-react";
 import { logoutAdmin } from "@/app/admin/actions";
 import { useState, useEffect } from "react";
 
@@ -23,6 +23,7 @@ export default function AdminLayout({ children }) {
   const navItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Paketler", href: "/admin/packages", icon: Package },
+    { name: "Albüm Modelleri", href: "/admin/album-models", icon: Book },
     { name: "Rezervasyonlar", href: "/admin/reservations", icon: CalendarDays },
     { name: "Üyeler", href: "/admin/members", icon: Users },
     { name: "Ayarlar", href: "/admin/settings", icon: Settings },

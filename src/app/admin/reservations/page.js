@@ -486,32 +486,68 @@ export default function ReservationsPage() {
               </div>
 
               {res.selectedPhotos && (
-                <div 
-                  onClick={() => toggleSelectionExpand(res.id)}
-                  style={{ 
-                    marginBottom: "8px", padding: "6px 10px", 
-                    background: "rgba(168,85,247,0.08)", border: "1px solid rgba(168,85,247,0.15)", 
-                    borderRadius: "8px", display: "flex", flexDirection: "column", gap: "6px", 
-                    cursor: "pointer", transition: "all 0.2s"
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.65rem", color: "#a855f7", fontWeight: 700 }}>
-                    <Edit2 size={10} /> 
-                    {expandedSelections.includes(res.id) ? "Seçimi Kapat" : "Seçim Yapıldı (Görmek için tıklayın)"}
+                <div style={{ marginBottom: "8px" }}>
+                  <div 
+                    onClick={() => toggleSelectionExpand(res.id)}
+                    style={{ 
+                      padding: "6px 10px", 
+                      background: res.selectionLocked ? "rgba(74,222,128,0.08)" : "rgba(168,85,247,0.08)", 
+                      border: `1px solid ${res.selectionLocked ? "rgba(74,222,128,0.15)" : "rgba(168,85,247,0.15)"}`, 
+                      borderRadius: "8px", display: "flex", flexDirection: "column", gap: "6px", 
+                      cursor: "pointer", transition: "all 0.2s"
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.65rem", color: res.selectionLocked ? "#4ade80" : "#a855f7", fontWeight: 700 }}>
+                        <Edit2 size={10} /> 
+                        {res.selectionLocked 
+                          ? "✅ İşleme Alındı" 
+                          : expandedSelections.includes(res.id) ? "Seçimi Kapat" : "Seçim Yapıldı (Görmek için tıklayın)"}
+                      </div>
+                      {res.selectedPhotos && !res.selectionLocked && (
+                        <button
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            if (!confirm("Seçimi işleme almak istediğinize emin misiniz? Müşteri artık seçimini değiştiremeyecek.")) return;
+                            const { lockSelection } = await import("../core-actions");
+                            await lockSelection(res.id);
+                            loadData();
+                          }}
+                          style={{
+                            padding: "4px 12px", borderRadius: 6, border: "none",
+                            background: "#a855f7", color: "#fff", fontSize: "0.62rem", fontWeight: 700,
+                            cursor: "pointer", whiteSpace: "nowrap",
+                          }}
+                        >
+                          İşleme Al
+                        </button>
+                      )}
+                    </div>
+                    
+                    {expandedSelections.includes(res.id) ? (
+                      <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.5, wordBreak: "break-all", background: "rgba(0,0,0,0.2)", padding: "10px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                        {res.selectedPhotos}
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                        {res.selectedPhotos}
+                      </div>
+                    )}
                   </div>
-                  
-                  {expandedSelections.includes(res.id) ? (
-                    <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.5, wordBreak: "break-all", background: "rgba(0,0,0,0.2)", padding: "10px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
-                      {res.selectedPhotos}
-                    </div>
-                  ) : (
-                    <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
-                      {res.selectedPhotos}
-                    </div>
-                  )}
                 </div>
               )}
-
+              {/* Album Model Display */}
+              {res.albumModel && (
+                <div style={{ marginBottom: "8px", padding: "6px 10px", background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.15)", borderRadius: "8px", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 4, overflow: "hidden", background: "#000", flexShrink: 0 }}>
+                    <img src={res.albumModel.imageUrl} alt="Album" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "#3b82f6", textTransform: "uppercase" }}>Albüm Seçimi</div>
+                    <div style={{ fontSize: "0.75rem", color: "#fff", fontWeight: 600 }}>{res.albumModel.name}</div>
+                  </div>
+                </div>
+              )}
               {/* Row 2: Date + Package + Amount */}
               <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 12px", alignItems: "center", fontSize: "0.75rem", color: "rgba(255,255,255,0.65)", marginBottom: "8px" }}>
                 <span style={{ display: "flex", alignItems: "center", gap: "3px" }}>
@@ -685,11 +721,10 @@ export default function ReservationsPage() {
                 <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", marginBottom: "5px" }}>CRM Durumu</div>
                 <select value={workflowData.workflowStatus} onChange={(e) => setWorkflowData({...workflowData, workflowStatus: e.target.value})} style={inp}>
                   <option value="PENDING">Çekim Bekleniyor</option>
-                  <option value="SHOT_DONE">Çekim Tamamlandı</option>
                   <option value="EDITING">Düzenleniyor</option>
                   <option value="SELECTION_PENDING">Seçim Bekleniyor</option>
-                  <option value="ALBUM_PREPARING">Albüm Hazırlanıyor</option>
-                  <option value="DELIVERED">Teslim Edildi (Bitti)</option>
+                  <option value="PREPARING">Hazırlanıyor</option>
+                  <option value="COMPLETED">Teslim Edildi</option>
                 </select>
               </div>
               <div>
@@ -716,9 +751,11 @@ export default function ReservationsPage() {
       {detailModal.isOpen && detailModal.data && (() => {
         const r = detailModal.data;
         const wfLabels = {
-          PENDING: "Çekim Bekleniyor", SHOT_DONE: "Çekim Tamamlandı",
+          PENDING: "Çekim Bekleniyor",
           EDITING: "Düzenleniyor", SELECTION_PENDING: "Seçim Bekleniyor",
-          ALBUM_PREPARING: "Albüm Hazırlanıyor", DELIVERED: "Teslim Edildi",
+          PREPARING: "Hazırlanıyor", COMPLETED: "Teslim Edildi",
+          // Legacy mappings
+          SHOT_DONE: "Düzenleniyor", ALBUM_PREPARING: "Hazırlanıyor", DELIVERED: "Teslim Edildi",
         };
         const statusLabels = { PENDING: "Bekleyen", CONFIRMED: "Onaylı", COMPLETED: "Tamamlandı", CANCELLED: "İptal" };
         const sc = statusColor(r.status);
@@ -1016,6 +1053,22 @@ export default function ReservationsPage() {
                     <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📸 Müşteri Fotoğraf Seçimi</div>
                     <div style={{ background: "rgba(168,85,247,0.06)", border: "1px solid rgba(168,85,247,0.15)", borderRadius: "10px", padding: "14px", fontSize: "0.78rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.6, wordBreak: "break-all" }}>
                       {r.selectedPhotos}
+                    </div>
+                  </>
+                )}
+
+                {/* ── Albüm Modeli ── */}
+                {r.albumModel && (
+                  <>
+                    <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📚 Albüm Seçimi</div>
+                    <div style={{ background: "rgba(59,130,246,0.06)", border: "1px solid rgba(59,130,246,0.15)", borderRadius: "10px", padding: "14px", display: "flex", gap: "12px", alignItems: "center" }}>
+                      <div style={{ width: 48, height: 48, borderRadius: 6, overflow: "hidden", background: "#000", flexShrink: 0 }}>
+                        <img src={r.albumModel.imageUrl} alt="Album" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: "0.9rem", color: "#fff", fontWeight: 700 }}>{r.albumModel.name}</div>
+                        {r.albumModel.description && <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.5)", marginTop: 4 }}>{r.albumModel.description}</div>}
+                      </div>
                     </div>
                   </>
                 )}

@@ -45,59 +45,162 @@ export default function Navbar() {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled ? "py-4" : "py-8"}`}>
-        <div className={`w-full max-w-[1440px] mx-auto px-6 md:px-12 flex justify-between items-center relative transition-all duration-500 ${scrolled ? "bg-black/40 backdrop-blur-md py-4 rounded-full border border-white/5 mx-6" : ""}`}>
-          
-          {/* Logo (Left) */}
-          <div className="flex items-center z-10">
-            <Link href="/" className="group flex items-center gap-3 no-underline">
-              <div className="w-10 h-10 bg-white text-black flex items-center justify-center rounded-sm font-serif text-xl transition-transform group-hover:rotate-12">
+      <header
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 100,
+          padding: scrolled ? "10px 16px" : "24px 16px",
+          transition: "padding 0.4s ease",
+        }}
+      >
+        <nav
+          style={{
+            maxWidth: 1600,
+            margin: "0 auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            position: "relative",
+            padding: scrolled ? "12px 28px" : "0 28px",
+            borderRadius: scrolled ? 100 : 0,
+            background: scrolled ? "rgba(0,0,0,0.5)" : "transparent",
+            backdropFilter: scrolled ? "blur(20px)" : "none",
+            WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+            border: scrolled ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
+            transition: "all 0.4s ease",
+          }}
+        >
+          {/* ── Left: Logo ── */}
+          <div style={{ display: "flex", alignItems: "center", flexShrink: 0, zIndex: 10 }}>
+            <Link href="/" className="group" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}>
+              <div
+                style={{
+                  width: 40, height: 40,
+                  background: "#fff", color: "#000",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  borderRadius: 4, fontFamily: "serif", fontSize: 20,
+                  transition: "transform 0.3s",
+                }}
+                className="group-hover:rotate-12"
+              >
                 P
               </div>
-              <span className="font-serif text-2xl tracking-[0.2em] text-white hidden sm:block uppercase">Pinowed</span>
+              <span
+                className="hidden sm:block"
+                style={{ fontFamily: "serif", fontSize: 24, letterSpacing: "0.2em", color: "#fff", textTransform: "uppercase" }}
+              >
+                Pinowed
+              </span>
             </Link>
           </div>
 
-          {/* Center Action (Desktop) */}
-          <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-max">
-            <Link href="/booking" className="text-[0.7rem] uppercase tracking-[0.3em] font-bold text-white bg-white/10 px-6 py-3 rounded-sm border border-white/20 hover:bg-white hover:text-black transition-all no-underline whitespace-nowrap">
+          {/* ── Center: Online Rezervasyon (Desktop) ── */}
+          <div
+            className="hidden md:block"
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 10,
+            }}
+          >
+            <Link
+              href="/booking"
+              style={{
+                fontSize: "0.7rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.3em",
+                fontWeight: 700,
+                color: "#fff",
+                background: "rgba(255,255,255,0.1)",
+                padding: "12px 24px",
+                borderRadius: 4,
+                border: "1px solid rgba(255,255,255,0.2)",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                transition: "all 0.3s",
+              }}
+              className="hover:!bg-white hover:!text-black"
+            >
               Online Rezervasyon
             </Link>
           </div>
 
-          {/* Right Section */}
-          <div className="flex items-center gap-3 md:gap-8 font-jakarta z-10">
+          {/* ── Right Section ── */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0, zIndex: 10 }}>
 
-            {/* Desktop Right */}
-            <div className="hidden md:flex items-center gap-6">
+            {/* Desktop Right Items */}
+            <div className="hidden md:flex" style={{ alignItems: "center", gap: 16 }}>
+              {/* Cart */}
               <button
                 onClick={() => openCart(true)}
-                className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all cursor-pointer group"
+                style={{
+                  position: "relative",
+                  width: 40, height: 40,
+                  borderRadius: "50%",
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer",
+                  transition: "all 0.3s",
+                }}
+                className="hover:!bg-white/10 hover:!border-white/20 group"
                 aria-label="Sepetim"
               >
-                <ShoppingBag size={16} className="text-white/50 group-hover:text-white transition-colors" />
+                <ShoppingBag size={16} style={{ color: "rgba(255,255,255,0.5)" }} className="group-hover:!text-white" />
                 {itemCount > 0 && (
                   <span
-                    className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold bg-white text-black px-1"
-                    style={{ animation: "cartBadgePop 0.3s ease" }}
+                    style={{
+                      position: "absolute", top: -4, right: -4,
+                      minWidth: 18, height: 18,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      borderRadius: 100, fontSize: 10, fontWeight: 700,
+                      background: "#fff", color: "#000", padding: "0 4px",
+                      animation: "cartBadgePop 0.3s ease",
+                    }}
                   >
                     {itemCount}
                   </span>
                 )}
               </button>
 
+              {/* Login / Panel */}
               {!loading && (
                 user ? (
-                  <Link 
-                    href="/profile" 
-                    className="flex items-center gap-2 text-[0.7rem] uppercase tracking-[0.2em] text-white bg-white/5 hover:bg-white/10 transition-all no-underline px-6 py-3 rounded-sm border border-white/10"
+                  <Link
+                    href="/profile"
+                    style={{
+                      display: "flex", alignItems: "center", gap: 8,
+                      fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.2em",
+                      color: "#fff",
+                      background: "rgba(255,255,255,0.05)",
+                      padding: "10px 20px",
+                      borderRadius: 4,
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      textDecoration: "none",
+                      whiteSpace: "nowrap",
+                      transition: "all 0.3s",
+                    }}
+                    className="hover:!bg-white/10"
                   >
                     <UserCircle size={14} /> Panel
                   </Link>
                 ) : (
-                  <Link 
-                    href="/login" 
-                    className="flex items-center gap-2 text-[0.7rem] uppercase tracking-[0.2em] text-white/40 hover:text-white transition-colors no-underline"
+                  <Link
+                    href="/login"
+                    style={{
+                      display: "flex", alignItems: "center", gap: 8,
+                      fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.2em",
+                      color: "rgba(255,255,255,0.4)",
+                      textDecoration: "none",
+                      whiteSpace: "nowrap",
+                      transition: "all 0.3s",
+                    }}
+                    className="hover:!text-white"
                   >
                     <User size={14} /> Müşteri Girişi
                   </Link>
@@ -105,79 +208,138 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Mobile Right */}
-            <div className="flex items-center gap-3 md:hidden">
+            {/* Mobile Right Items */}
+            <div className="flex md:hidden" style={{ alignItems: "center", gap: 10 }}>
+              {/* Cart */}
               <button
                 onClick={() => openCart(true)}
-                className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 transition-all cursor-pointer"
+                style={{
+                  position: "relative",
+                  width: 40, height: 40,
+                  borderRadius: "50%",
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer",
+                }}
                 aria-label="Sepetim"
               >
-                <ShoppingBag size={16} className="text-white/50" />
+                <ShoppingBag size={16} style={{ color: "rgba(255,255,255,0.5)" }} />
                 {itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold bg-white text-black px-1">
+                  <span style={{
+                    position: "absolute", top: -4, right: -4,
+                    minWidth: 18, height: 18,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    borderRadius: 100, fontSize: 10, fontWeight: 700,
+                    background: "#fff", color: "#000", padding: "0 4px",
+                  }}>
                     {itemCount}
                   </span>
                 )}
               </button>
 
-              <button 
+              {/* Hamburger */}
+              <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 text-white/70 hover:text-white transition-colors"
+                style={{ padding: 8, background: "none", border: "none", color: "rgba(255,255,255,0.7)", cursor: "pointer" }}
               >
                 {isMenuOpen ? <CloseIcon size={24} /> : <Menu size={24} />}
               </button>
             </div>
 
           </div>
-        </div>
+        </nav>
 
-        {/* Mobile Overlay */}
+        {/* ── Mobile Fullscreen Menu ── */}
         {isMenuOpen && (
-          <div className="fixed inset-0 z-[99] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-12 animate-in fade-in duration-500">
-            <button onClick={() => setIsMenuOpen(false)} className="absolute top-8 right-6 text-white/50 hover:text-white">
+          <div
+            style={{
+              position: "fixed", inset: 0, zIndex: 99,
+              background: "rgba(0,0,0,0.95)",
+              backdropFilter: "blur(40px)",
+              display: "flex", flexDirection: "column",
+              alignItems: "center", justifyContent: "center", gap: 48,
+            }}
+            className="animate-in fade-in duration-500"
+          >
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              style={{ position: "absolute", top: 32, right: 24, background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}
+            >
               <CloseIcon size={32} />
             </button>
-            <Link href="/booking" className="font-serif text-3xl text-white no-underline border-b border-white/10 pb-4 mb-2">Online Rezervasyon</Link>
+
+            <Link href="/booking" onClick={() => setIsMenuOpen(false)} style={{ fontFamily: "serif", fontSize: 30, color: "#fff", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 16 }}>
+              Online Rezervasyon
+            </Link>
 
             <button
               onClick={() => { setIsMenuOpen(false); openCart(true); }}
-              className="font-jakarta text-sm uppercase tracking-[0.3em] text-white/60 no-underline flex items-center gap-3 bg-transparent border-none cursor-pointer"
+              style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}
             >
               <ShoppingBag size={18} /> Sepetim {itemCount > 0 && `(${itemCount})`}
             </button>
+
             {!loading && !user && (
-              <Link href="/login" className="font-jakarta text-sm uppercase tracking-[0.3em] text-white/40 no-underline">Müşteri Girişi</Link>
+              <Link href="/login" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>
+                Müşteri Girişi
+              </Link>
             )}
             {user && (
-              <Link href="/profile" className="font-jakarta text-sm uppercase tracking-[0.3em] text-white no-underline">Hesabım</Link>
+              <Link href="/profile" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "#fff", textDecoration: "none" }}>
+                Hesabım
+              </Link>
             )}
           </div>
         )}
       </header>
 
-      {/* Glassy Admin Button - only on login page */}
+      {/* Admin Shortcut - only on login page */}
       {pathname === "/login" && (
         <div className="fixed bottom-28 md:bottom-10 right-6 md:right-10 z-[100]">
-          <Link 
-            href="/admin/dashboard" 
-            className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 backdrop-blur-lg border border-white/10 text-white/20 hover:text-white hover:bg-white/10 transition-all hover:scale-110 shadow-2xl"
+          <Link
+            href="/admin/dashboard"
+            style={{
+              width: 48, height: 48,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.05)",
+              backdropFilter: "blur(20px)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              color: "rgba(255,255,255,0.2)",
+              transition: "all 0.3s",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+            }}
+            className="hover:!text-white hover:!bg-white/10 hover:!scale-110"
           >
             <Lock size={16} />
           </Link>
         </div>
       )}
+
       {/* Sticky Mobile CTA */}
       <div className="md:hidden fixed bottom-8 left-6 right-6 z-[100] animate-in slide-in-from-bottom-10 duration-700">
-        <Link 
-          href="/booking" 
-          className="w-full h-14 bg-white text-black flex items-center justify-center gap-3 no-underline rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.4)] active:scale-95 transition-transform"
+        <Link
+          href="/booking"
+          style={{
+            width: "100%", height: 56,
+            background: "#fff", color: "#000",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
+            textDecoration: "none",
+            borderRadius: 100,
+            boxShadow: "0 20px 50px rgba(0,0,0,0.4)",
+            transition: "transform 0.2s",
+          }}
+          className="active:scale-95"
         >
-          <div className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
-          <span className="text-[0.75rem] uppercase tracking-[0.3em] font-jakarta font-extrabold">Online Rezervasyon</span>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#000", animation: "pulse 2s infinite" }} />
+          <span style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.3em", fontWeight: 800 }}>
+            Online Rezervasyon
+          </span>
         </Link>
       </div>
 
-      {/* Cart badge animation */}
+      {/* Animations */}
       <style jsx global>{`
         @keyframes cartBadgePop {
           0% { transform: scale(0.5); }

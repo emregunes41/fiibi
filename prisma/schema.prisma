@@ -56,12 +56,15 @@ model Reservation {
   updatedAt      DateTime             @updatedAt
   userId         String?
   selectedPhotos String?
+  selectionLocked Boolean              @default(false)
   workflowStatus String               @default("PENDING")
   deliveryDate   DateTime?
   deliveryLink   String?
   user           User?                @relation(fields: [userId], references: [id])
   gallery        PhotoGallery?
   packages       PhotographyPackage[] @relation("PhotographyPackageToReservation")
+  albumModelId   String?
+  albumModel     AlbumModel?          @relation(fields: [albumModelId], references: [id])
   payments       Payment[]
 }
 
@@ -159,6 +162,18 @@ model AdminNotification {
   type      String   @default("INFO") // SELECTION_DONE, REMINDER vb.
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model AlbumModel {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  imageUrl    String
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  reservations Reservation[]
 }
 
 model PortfolioCategory {

@@ -115,16 +115,16 @@ export default function ClientGalleryPage() {
                         <p className="text-xl font-black">{selectedCount} <span className="text-white/30">/ {gallery.selectionLimit}</span></p>
                       </div>
                       
-                      {gallery.reservation.workflowStatus === "SELECTION_PENDING" ? (
+                      {!gallery.reservation.selectionLocked ? (
                         <button 
                           onClick={() => handleComplete(gallery)}
                           className="bg-white text-black px-6 py-3 rounded-xl font-bold tracking-tight hover:bg-white/90 transition-all flex items-center gap-2"
                         >
-                          Seçimleri Gönder <CheckCircle size={18} />
+                          {selectedCount > 0 ? "Seçimleri Güncelle" : "Seçimleri Gönder"} <CheckCircle size={18} />
                         </button>
                       ) : (
                         <div className="bg-green-500/20 text-green-400 border border-green-500/30 px-6 py-3 rounded-xl font-bold flex items-center gap-2">
-                          <CheckCircle size={18} /> Seçimler İletildi
+                          <CheckCircle size={18} /> Seçiminiz İşleme Alındı
                         </div>
                       )}
                     </div>
@@ -132,7 +132,7 @@ export default function ClientGalleryPage() {
 
                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {gallery.photos.map(photo => {
-                      const isLocked = gallery.reservation.workflowStatus !== "SELECTION_PENDING";
+                      const isLocked = gallery.reservation.selectionLocked;
                       return (
                         <div 
                           key={photo.id} 

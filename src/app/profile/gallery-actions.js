@@ -41,10 +41,10 @@ export async function togglePhotoSelection(photoId, isSelected) {
 
 export async function completeSelection(galleryId, reservationId, coupleName, selectedPhotoNames) {
   try {
-    // 1. İş akış durumunu güncelle
+    // 1. Seçim metnini rezervasyona kaydet (workflowStatus değişmeden bekler)
     await prisma.reservation.update({
       where: { id: reservationId },
-      data: { workflowStatus: "EDITING" }
+      data: { selectedPhotos: selectedPhotoNames.join(', ') }
     });
 
     // 2. Admine sistem içi bildirim gönder
