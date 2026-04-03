@@ -18,8 +18,8 @@ export default function ReservationsPage() {
   const [formData, setFormData] = useState({
     brideName: "", bridePhone: "", brideEmail: "",
     groomName: "", groomPhone: "", groomEmail: "",
-    eventDate: "", eventTime: "10:00", packageIds: [], notes: "",
-    selectedAddons: [], totalAmount: ""
+    eventDate: "", eventTime: "", packageIds: [], notes: "",
+    selectedAddons: [], customFieldAnswers: [], totalAmount: ""
   });
   const [workflowModal, setWorkflowModal] = useState({ isOpen: false, data: null });
   const [editModal, setEditModal] = useState({ isOpen: false, data: null });
@@ -62,7 +62,7 @@ export default function ReservationsPage() {
     if (res.success) {
       setIsModalOpen(false);
       setEditModal({ isOpen: false, data: null });
-      setFormData({ brideName: "", bridePhone: "", brideEmail: "", groomName: "", groomPhone: "", groomEmail: "", eventDate: "", eventTime: "10:00", packageIds: [], notes: "", selectedAddons: [], totalAmount: "" });
+      setFormData({ brideName: "", bridePhone: "", brideEmail: "", groomName: "", groomPhone: "", groomEmail: "", eventDate: "", eventTime: "", packageIds: [], notes: "", selectedAddons: [], customFieldAnswers: [], totalAmount: "" });
       loadData();
     } else { alert("Hata: " + res.error); }
     setIsLoading(false);
@@ -721,65 +721,217 @@ export default function ReservationsPage() {
               <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>{editModal.isOpen ? "Rezervasyonu Düzenle" : "Yeni Rezervasyon"}</h2>
               <button onClick={() => { setIsModalOpen(false); setEditModal({isOpen: false, data: null}); }} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={18} /></button>
             </div>
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" }}>
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+
+              {/* İletişim Bilgileri */}
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "-4px" }}>İletişim Bilgileri</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                 <input placeholder="Gelin Adı *" required style={inp} value={formData.brideName} onChange={(e) => setFormData({...formData, brideName: e.target.value})} />
                 <input placeholder="Damat Adı *" required style={inp} value={formData.groomName} onChange={(e) => setFormData({...formData, groomName: e.target.value})} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                 <input placeholder="Gelin Telefon *" required style={inp} value={formData.bridePhone} onChange={(e) => setFormData({...formData, bridePhone: e.target.value})} />
-                <input placeholder="Gelin E-posta *" type="email" required style={inp} value={formData.brideEmail} onChange={(e) => setFormData({...formData, brideEmail: e.target.value})} />
+                <input placeholder="Damat Telefon" style={inp} value={formData.groomPhone} onChange={(e) => setFormData({...formData, groomPhone: e.target.value})} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" }}>
-                <input type="date" required style={{ ...inp, colorScheme: "dark" }} value={formData.eventDate} onChange={(e) => setFormData({...formData, eventDate: e.target.value})} />
-                <input type="time" required style={{ ...inp, colorScheme: "dark" }} value={formData.eventTime} onChange={(e) => setFormData({...formData, eventTime: e.target.value})} />
+              <input placeholder="Gelin E-posta *" type="email" required style={inp} value={formData.brideEmail} onChange={(e) => setFormData({...formData, brideEmail: e.target.value})} />
+
+              {/* Tarih */}
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Etkinlik Tarihi</div>
+              <input type="date" required style={{ ...inp, colorScheme: "dark" }} value={formData.eventDate} onChange={(e) => setFormData({...formData, eventDate: e.target.value})} />
+
+              {/* Paket Seçimi - Detaylı */}
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Paket Seçimi</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                {(() => {
+                  const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart" };
+                  const timeLabels = { SLOT_2H: "2 Saatlik", SLOT_4H: "4 Saatlik", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün" };
+                  const grouped = {};
+                  packages.forEach(pkg => {
+                    const cat = catLabels[pkg.category] || pkg.category;
+                    if (!grouped[cat]) grouped[cat] = [];
+                    grouped[cat].push(pkg);
+                  });
+                  return Object.entries(grouped).map(([catName, pkgs]) => (
+                    <div key={catName}>
+                      <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.3)", marginBottom: "3px", marginTop: "2px" }}>{catName}</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+                        {pkgs.map(pkg => {
+                          const on = formData.packageIds.includes(pkg.id);
+                          return (
+                            <button key={pkg.id} type="button" onClick={() => {
+                              const ids = on ? formData.packageIds.filter(id => id !== pkg.id) : [...formData.packageIds, pkg.id];
+                              let newAddons = [...formData.selectedAddons];
+                              let newCFA = [...formData.customFieldAnswers];
+                              if (on) {
+                                if (pkg.addons) { const titles = pkg.addons.map(a => a.title); newAddons = newAddons.filter(a => !titles.includes(a.title)); }
+                                newCFA = newCFA.filter(a => a.packageName !== pkg.name);
+                              } else {
+                                // Add custom field entries for this package
+                                if (pkg.customFields?.length > 0) {
+                                  pkg.customFields.forEach(f => {
+                                    newCFA.push({ label: f.label, value: "", type: f.type, packageName: pkg.name, options: f.options || "", required: f.required });
+                                  });
+                                }
+                              }
+                              // Recalculate total
+                              const selPkgs = packages.filter(p => ids.includes(p.id));
+                              const pkgTotal = selPkgs.reduce((s, p) => s + (parseInt(p.price?.replace(/\./g, '').replace(/\D/g, '')) || 0), 0);
+                              const addonTotal = newAddons.reduce((s, a) => s + (parseInt(a.price) || 0), 0);
+                              const total = pkgTotal + addonTotal;
+                              setFormData({...formData, packageIds: ids, selectedAddons: newAddons, customFieldAnswers: newCFA, totalAmount: total > 0 ? total.toLocaleString("tr-TR") : ""});
+                            }} style={{
+                              padding: "6px 10px", borderRadius: "8px", fontSize: "0.68rem", cursor: "pointer",
+                              border: on ? "1px solid rgba(255,255,255,0.35)" : "1px solid rgba(255,255,255,0.08)",
+                              background: on ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.03)",
+                              color: on ? "#fff" : "rgba(255,255,255,0.55)", fontWeight: on ? 700 : 500,
+                              display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "2px",
+                            }}>
+                              <span>{pkg.name}</span>
+                              <span style={{ fontSize: "0.55rem", color: on ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)" }}>
+                                {pkg.price}₺ · {timeLabels[pkg.timeType] || pkg.timeType}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ));
+                })()}
               </div>
 
-              {/* Packages */}
-              <div>
-                <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", marginBottom: "6px" }}>Paketler</div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
-                  {packages.map(pkg => {
-                    const on = formData.packageIds.includes(pkg.id);
-                    return (
-                      <button key={pkg.id} type="button" onClick={() => {
-                        const ids = on ? formData.packageIds.filter(id => id !== pkg.id) : [...formData.packageIds, pkg.id];
-                        let newAddons = [...formData.selectedAddons];
-                        if (on && pkg.addons) { const titlesToRemove = pkg.addons.map(a => a.title); newAddons = newAddons.filter(a => !titlesToRemove.includes(a.title)); }
-                        setFormData({...formData, packageIds: ids, selectedAddons: newAddons});
-                      }} style={{
-                        padding: "5px 10px", borderRadius: "6px", fontSize: "0.7rem", cursor: "pointer",
-                        border: on ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.08)",
-                        background: on ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.03)",
-                        color: on ? "#fff" : "rgba(255,255,255,0.55)", fontWeight: on ? 700 : 500,
-                      }}>
-                        {pkg.name}
-                      </button>
-                    );
-                  })}
-                </div>
-                {/* Addons for selected packages */}
-                {packages.filter(p => formData.packageIds.includes(p.id) && p.addons?.length > 0).map(pkg => (
-                  <div key={pkg.id} style={{ marginTop: "6px", paddingLeft: "8px" }}>
-                    {pkg.addons.map((addon, idx) => {
-                      const isSelected = formData.selectedAddons.some(a => a.title === addon.title);
-                      return (
-                        <label key={idx} style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", cursor: "pointer", marginBottom: "2px" }}>
-                          <input type="checkbox" checked={isSelected} onChange={(e) => {
-                            let cur = [...formData.selectedAddons];
-                            if (e.target.checked) cur.push(addon); else cur = cur.filter(a => a.title !== addon.title);
-                            setFormData({...formData, selectedAddons: cur});
-                          }} style={{ width: "12px", height: "12px" }} />
-                          +{addon.title} ({addon.price}₺)
+              {/* Saat Dilimi - Dinamik (seçilen paketlere göre) */}
+              {formData.packageIds.length > 0 && (() => {
+                const selPkgs = packages.filter(p => formData.packageIds.includes(p.id));
+                const needsSlot = selPkgs.some(p => ["SLOT_2H", "SLOT_4H", "WEDDING"].includes(p.timeType));
+                if (!needsSlot) return null;
+
+                const slotPkg = selPkgs.find(p => ["SLOT_2H", "SLOT_4H", "WEDDING"].includes(p.timeType));
+                const ALL_SLOTS_2H = [
+                  { value: "08:00", label: "08:00 – 10:00" }, { value: "10:00", label: "10:00 – 12:00" },
+                  { value: "12:00", label: "12:00 – 14:00" }, { value: "14:00", label: "14:00 – 16:00" },
+                  { value: "16:00", label: "16:00 – 18:00" }, { value: "18:00", label: "18:00 – 20:00" },
+                  { value: "20:00", label: "20:00 – 22:00" },
+                ];
+                const ALL_SLOTS_4H = [
+                  { value: "08:00-12:00", label: "08:00 – 12:00" }, { value: "10:00-14:00", label: "10:00 – 14:00" },
+                  { value: "12:00-16:00", label: "12:00 – 16:00" }, { value: "14:00-18:00", label: "14:00 – 18:00" },
+                  { value: "16:00-20:00", label: "16:00 – 20:00" }, { value: "18:00-22:00", label: "18:00 – 22:00" },
+                ];
+                const WEDDING_OPTIONS = [{ value: "GUNDUZ", label: "Gündüz" }, { value: "AKSAM", label: "Akşam" }];
+
+                let slots = [];
+                if (slotPkg.timeType === "SLOT_2H") {
+                  const configured = slotPkg.availableSlots || [];
+                  slots = configured.length > 0 ? ALL_SLOTS_2H.filter(s => configured.includes(s.value)) : ALL_SLOTS_2H;
+                } else if (slotPkg.timeType === "SLOT_4H") {
+                  const configured = slotPkg.availableSlots || [];
+                  slots = configured.length > 0 ? ALL_SLOTS_4H.filter(s => configured.includes(s.value)) : ALL_SLOTS_4H;
+                } else if (slotPkg.timeType === "WEDDING") {
+                  slots = WEDDING_OPTIONS;
+                }
+
+                return (
+                  <>
+                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Saat Dilimi</div>
+                    <div style={{ display: "grid", gridTemplateColumns: slotPkg.timeType === "WEDDING" ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: "4px" }}>
+                      {slots.map(slot => {
+                        const sel = formData.eventTime === slot.value;
+                        return (
+                          <button key={slot.value} type="button" onClick={() => setFormData({...formData, eventTime: slot.value})} style={{
+                            padding: "10px 6px", borderRadius: "8px",
+                            border: sel ? "2px solid #fff" : "1px solid rgba(255,255,255,0.08)",
+                            background: sel ? "#fff" : "rgba(255,255,255,0.03)",
+                            color: sel ? "#000" : "rgba(255,255,255,0.5)", fontSize: "0.7rem", fontWeight: 600,
+                            cursor: "pointer", transition: "all 0.2s", textAlign: "center",
+                          }}>
+                            {slot.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </>
+                );
+              })()}
+
+              {/* Custom Field Alanları (seçilen paketlerin özel alanları) */}
+              {formData.customFieldAnswers.length > 0 && (
+                <>
+                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Çekim Bilgileri</div>
+                  {formData.customFieldAnswers.map((cfa, idx) => (
+                    <div key={idx}>
+                      <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", marginBottom: "3px" }}>
+                        {cfa.packageName} — {cfa.label} {cfa.required ? "*" : ""}
+                      </div>
+                      {cfa.type === "dropdown" ? (
+                        <select value={cfa.value} onChange={(e) => {
+                          const arr = [...formData.customFieldAnswers]; arr[idx] = {...arr[idx], value: e.target.value};
+                          setFormData({...formData, customFieldAnswers: arr});
+                        }} style={inp}>
+                          <option value="" style={{ background: "#111" }}>Seçiniz...</option>
+                          {(cfa.options || "").split(",").map(o => o.trim()).filter(Boolean).map((o, oi) => (
+                            <option key={oi} value={o} style={{ background: "#111" }}>{o}</option>
+                          ))}
+                        </select>
+                      ) : cfa.type === "checkbox" ? (
+                        <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>
+                          <input type="checkbox" checked={cfa.value || false} onChange={(e) => {
+                            const arr = [...formData.customFieldAnswers]; arr[idx] = {...arr[idx], value: e.target.checked};
+                            setFormData({...formData, customFieldAnswers: arr});
+                          }} style={{ width: "14px", height: "14px", accentColor: "#fff" }} />
+                          {cfa.label}
                         </label>
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
+                      ) : (
+                        <input placeholder={cfa.label} value={cfa.value} onChange={(e) => {
+                          const arr = [...formData.customFieldAnswers]; arr[idx] = {...arr[idx], value: e.target.value};
+                          setFormData({...formData, customFieldAnswers: arr});
+                        }} style={inp} />
+                      )}
+                    </div>
+                  ))}
+                </>
+              )}
 
+              {/* Ek Hizmetler (seçilen paketlerin addon'ları) */}
+              {packages.filter(p => formData.packageIds.includes(p.id) && p.addons?.length > 0).length > 0 && (
+                <>
+                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Ek Hizmetler</div>
+                  {packages.filter(p => formData.packageIds.includes(p.id) && p.addons?.length > 0).map(pkg => (
+                    <div key={pkg.id}>
+                      <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.3)", marginBottom: "3px" }}>{pkg.name}</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+                        {pkg.addons.map((addon, idx) => {
+                          const isSelected = formData.selectedAddons.some(a => a.title === addon.title);
+                          return (
+                            <button key={idx} type="button" onClick={() => {
+                              let cur = [...formData.selectedAddons];
+                              if (isSelected) cur = cur.filter(a => a.title !== addon.title);
+                              else cur.push({...addon, packageName: pkg.name});
+                              // Recalculate total
+                              const selPkgs = packages.filter(p => formData.packageIds.includes(p.id));
+                              const pkgTotal = selPkgs.reduce((s, p) => s + (parseInt(p.price?.replace(/\./g, '').replace(/\D/g, '')) || 0), 0);
+                              const addonTotal = cur.reduce((s, a) => s + (parseInt(a.price) || 0), 0);
+                              const total = pkgTotal + addonTotal;
+                              setFormData({...formData, selectedAddons: cur, totalAmount: total > 0 ? total.toLocaleString("tr-TR") : ""});
+                            }} style={{
+                              padding: "5px 10px", borderRadius: "6px", fontSize: "0.65rem", cursor: "pointer",
+                              border: isSelected ? "1px solid rgba(255,255,255,0.25)" : "1px solid rgba(255,255,255,0.08)",
+                              background: isSelected ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.03)",
+                              color: isSelected ? "#fff" : "rgba(255,255,255,0.55)", fontWeight: isSelected ? 700 : 500,
+                            }}>
+                              + {addon.title} ({addon.price}₺)
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {/* Fiyat ve Not */}
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Fiyat & Not</div>
               <input placeholder="Toplam Fiyat (TL)" style={inp} value={formData.totalAmount} onChange={(e) => setFormData({...formData, totalAmount: e.target.value})} />
-              <textarea placeholder="Notlar" style={{ ...inp, minHeight: "50px", resize: "none" }} value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})} />
+              <textarea placeholder="Notlar (isteğe bağlı)" style={{ ...inp, minHeight: "50px", resize: "none" }} value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})} />
 
               <div style={{ display: "flex", gap: "0.5rem", marginTop: "4px" }}>
                 <button type="button" onClick={() => { setIsModalOpen(false); setEditModal({isOpen: false, data: null}); }} style={{ flex: 1, padding: "0.7rem", borderRadius: "0.6rem", border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "rgba(255,255,255,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>

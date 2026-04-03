@@ -325,7 +325,7 @@ export async function savePendingReservation(data) {
 
 export async function createManualReservation(data) {
   try {
-    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds, notes, selectedAddons = [], totalAmount = "" } = data;
+    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds, notes, selectedAddons = [], customFieldAnswers = [], totalAmount = "" } = data;
     
     const packagesData = await prisma.photographyPackage.findMany({
       where: { id: { in: packageIds } }
@@ -334,6 +334,26 @@ export async function createManualReservation(data) {
     const eventDateObj = new Date(eventDate);
     const deliveryDateObj = new Date(eventDateObj);
     deliveryDateObj.setDate(deliveryDateObj.getDate() + maxDays);
+
+    // Auto-inject date/time info into customFieldAnswers for calendar & detail display
+    const TIME_LABELS = { SLOT_2H: "2 Saatlik Çekim", SLOT_4H: "4 Saatlik Çekim", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün", GUNDUZ: "Gündüz", AKSAM: "Akşam" };
+    const ALL_SLOTS = [
+      { v: "08:00", l: "08:00 – 10:00" }, { v: "10:00", l: "10:00 – 12:00" }, { v: "12:00", l: "12:00 – 14:00" },
+      { v: "14:00", l: "14:00 – 16:00" }, { v: "16:00", l: "16:00 – 18:00" }, { v: "18:00", l: "18:00 – 20:00" }, { v: "20:00", l: "20:00 – 22:00" },
+      { v: "08:00-12:00", l: "08:00 – 12:00" }, { v: "10:00-14:00", l: "10:00 – 14:00" }, { v: "12:00-16:00", l: "12:00 – 16:00" },
+      { v: "14:00-18:00", l: "14:00 – 18:00" }, { v: "16:00-20:00", l: "16:00 – 20:00" }, { v: "18:00-22:00", l: "18:00 – 22:00" },
+    ];
+    const enrichedCFA = [...customFieldAnswers];
+    // Add date/time for ALL selected packages 
+    packagesData.forEach(pkg => {
+      const dateStr = eventDateObj.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric", weekday: "long" });
+      enrichedCFA.push({ label: "Etkinlik Tarihi", value: dateStr, type: "text", packageName: pkg.name });
+      enrichedCFA.push({ label: "_eventDateISO", value: eventDate, type: "_hidden", packageName: pkg.name });
+      if (eventTime) {
+        const slotLabel = ALL_SLOTS.find(s => s.v === eventTime)?.l || TIME_LABELS[eventTime] || eventTime;
+        enrichedCFA.push({ label: "Saat Dilimi", value: slotLabel, type: "text", packageName: pkg.name });
+      }
+    });
 
     // Hesap kontrolü ve otomatik oluşturma
     let userId = null;
@@ -369,6 +389,7 @@ export async function createManualReservation(data) {
         notes,
         totalAmount,
         selectedAddons,
+        customFieldAnswers: enrichedCFA,
         status: "CONFIRMED", 
         paymentStatus: "UNPAID",
         workflowStatus: "PENDING",
