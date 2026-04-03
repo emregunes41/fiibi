@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ShoppingBag, Trash2, ArrowRight, ArrowLeft,
   Camera, Heart, Gem, Calendar, Clock,
-  FileText, User, Phone, Mail, CreditCard, Instagram,
+  FileText, User, Phone, Mail, CreditCard, Instagram, Banknote, Wallet,
 } from "lucide-react";
 import { savePendingReservation } from "@/app/admin/core-actions";
 
@@ -52,15 +52,14 @@ export default function CartDrawer() {
     groomName: "", groomPhone: "", socialMedia: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitResult, setSubmitResult] = useState(null); // { success: true/false, message }
+  const [submitResult, setSubmitResult] = useState(null);
+  const [checkoutStep, setCheckoutStep] = useState("contact"); // "contact" | "payment_method"
+  const [iframeToken, setIframeToken] = useState(null);
 
   const isContactValid = contactForm.brideName && contactForm.bridePhone && contactForm.brideEmail && contactForm.groomName && contactForm.groomPhone;
+  const cardTotal = Math.round(cartTotal() * 1.15); // %15 artı
 
-  const handleCheckout = async () => {
-    if (!isContactValid || isSubmitting) return;
-    setIsSubmitting(true);
-
-    // Use the first item's details for event date/time (or we'll aggregate)
+  const buildReservationData = (amount) => {
     const firstItem = items[0];
     const allAddons = items.flatMap(i => i.addons);
     const allCustomFieldAnswers = items.flatMap(i => i.details?.customFieldAnswers || []);
@@ -69,7 +68,7 @@ export default function CartDrawer() {
       return n ? `[${i.pkg.name}] ${n}` : null;
     }).filter(Boolean).join("\n");
 
-    const result = await savePendingReservation({
+    return {
       brideName: contactForm.brideName,
       bridePhone: contactForm.bridePhone,
       brideEmail: contactForm.brideEmail,
@@ -80,23 +79,64 @@ export default function CartDrawer() {
       time: firstItem?.details?.time || "",
       packageIds: items.map(i => i.pkg.id),
       notes: allNotes,
-      totalAmount: fmt(cartTotal()),
+      totalAmount: fmt(amount),
       paidAmount: "0",
       selectedAddons: allAddons,
       customFieldAnswers: allCustomFieldAnswers,
-    });
+    };
+  };
 
+  const handleCashCheckout = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    const result = await savePendingReservation(buildReservationData(cartTotal()));
     setIsSubmitting(false);
     if (result.success) {
-      setSubmitResult({ success: true, message: "Rezervasyonunuz başarıyla oluşturuldu! 🎉" });
-      setTimeout(() => {
-        clearCart();
-        setCheckoutMode(false);
-        setSubmitResult(null);
-        setIsOpen(false);
-      }, 3000);
+      setSubmitResult({ success: true, type: "cash", message: "Rezervasyonunuz başarıyla oluşturuldu!" });
+      clearCart();
     } else {
       setSubmitResult({ success: false, message: "Bir hata oluştu: " + (result.error || "Bilinmeyen hata") });
+    }
+  };
+
+  const handleCardCheckout = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    const result = await savePendingReservation(buildReservationData(cardTotal));
+    setIsSubmitting(false);
+    if (!result.success) {
+      setSubmitResult({ success: false, message: "Bir hata oluştu: " + (result.error || "Bilinmeyen hata") });
+      return;
+    }
+    
+    // Get PayTR token
+    try {
+      const packageNames = items.map(i => i.pkg.name).join(", ");
+      const basket = btoa(JSON.stringify([[packageNames, cardTotal.toFixed(2), 1]]));
+      
+      const res = await fetch("/api/paytr/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          merchant_oid: result.id,
+          email: contactForm.brideEmail,
+          payment_amount: Math.round(cardTotal * 100), // kuruş
+          user_name: contactForm.brideName,
+          user_phone: contactForm.bridePhone,
+          user_address: "Türkiye",
+          user_basket: basket,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.token) {
+        setIframeToken(data.token);
+        clearCart();
+      } else {
+        setSubmitResult({ success: false, message: "Ödeme başlatılamadı: " + (data.error || "Bilinmeyen hata") });
+      }
+    } catch (err) {
+      setSubmitResult({ success: false, message: "Ödeme hatası: " + err.message });
     }
   };
 
@@ -140,7 +180,14 @@ export default function CartDrawer() {
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                 {checkoutMode && !submitResult && (
-                  <button onClick={() => setCheckoutMode(false)} style={{
+                  <button onClick={() => {
+                    if (checkoutStep === "payment_method") {
+                      setCheckoutStep("contact");
+                    } else {
+                      setCheckoutMode(false);
+                      setCheckoutStep("contact");
+                    }
+                  }} style={{
                     background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
                     borderRadius: "8px", padding: "6px", cursor: "pointer", color: "rgba(255,255,255,0.4)",
                   }}>
@@ -149,10 +196,10 @@ export default function CartDrawer() {
                 )}
                 <div>
                   <div style={{ fontSize: "16px", fontWeight: 700, color: "#fff" }}>
-                    {checkoutMode ? "Ödeme" : "Sepetim"}
+                    {submitResult ? (submitResult.success ? "Tamamlandı" : "Hata") : iframeToken ? "Kart ile Ödeme" : !checkoutMode ? "Sepetim" : checkoutStep === "contact" ? "Rezervasyon Bilgileri" : "Ödeme Yöntemi"}
                   </div>
                   <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
-                    {checkoutMode ? "İletişim bilgilerinizi girin" : `${itemCount} paket`}
+                    {submitResult ? "" : iframeToken ? "Güvenli ödeme" : !checkoutMode ? `${itemCount} paket` : checkoutStep === "contact" ? "Adım 1/2 — İletişim bilgileri" : "Adım 2/2 — Ödeme seçin"}
                   </div>
                 </div>
               </div>
@@ -282,9 +329,9 @@ export default function CartDrawer() {
                   </motion.div>
                 )}
 
-                {/* ── CHECKOUT VIEW ── */}
-                {checkoutMode && !submitResult && (
-                  <motion.div key="checkout-view" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
+                {/* ── CHECKOUT STEP 1: CONTACT FORM ── */}
+                {checkoutMode && !submitResult && checkoutStep === "contact" && (
+                  <motion.div key="checkout-contact" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
                     {/* Order summary */}
                     <div style={{
                       padding: "16px", borderRadius: "14px", marginBottom: "24px",
@@ -382,32 +429,183 @@ export default function CartDrawer() {
                   </motion.div>
                 )}
 
+                {/* ── CHECKOUT STEP 2: PAYMENT METHOD ── */}
+                {checkoutMode && !submitResult && checkoutStep === "payment_method" && (
+                  <motion.div key="checkout-payment" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
+                    <div style={{ marginBottom: 24 }}>
+                      <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.6, margin: 0 }}>
+                        Ödeme yönteminizi seçin. Nakit ödemelerde fiyat aynı kalır, kart ile ödemelerde %15 hizmet bedeli eklenir.
+                      </p>
+                    </div>
+
+                    {/* Cash Option */}
+                    <button
+                      onClick={handleCashCheckout}
+                      disabled={isSubmitting}
+                      style={{
+                        width: "100%", padding: "20px", borderRadius: 16, marginBottom: 12,
+                        background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.2)",
+                        cursor: isSubmitting ? "not-allowed" : "pointer", textAlign: "left",
+                        transition: "all 0.2s", color: "#fff",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                        <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(74,222,128,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <Banknote size={22} style={{ color: "#4ade80" }} />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Nakit / Havale</div>
+                          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.4 }}>Sizinle telefonla iletişime geçeceğiz</div>
+                        </div>
+                        <div style={{ textAlign: "right", flexShrink: 0 }}>
+                          <div style={{ fontSize: 20, fontWeight: 800, color: "#4ade80" }}>{fmt(cartTotal())}₺</div>
+                          <div style={{ fontSize: 10, color: "rgba(74,222,128,0.6)", fontWeight: 600, textTransform: "uppercase" }}>Aynı fiyat</div>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Card Option */}
+                    <button
+                      onClick={handleCardCheckout}
+                      disabled={isSubmitting}
+                      style={{
+                        width: "100%", padding: "20px", borderRadius: 16, marginBottom: 12,
+                        background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.2)",
+                        cursor: isSubmitting ? "not-allowed" : "pointer", textAlign: "left",
+                        transition: "all 0.2s", color: "#fff",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                        <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(96,165,250,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <CreditCard size={22} style={{ color: "#60a5fa" }} />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Kredi Kartı</div>
+                          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.4 }}>Online güvenli ödeme</div>
+                        </div>
+                        <div style={{ textAlign: "right", flexShrink: 0 }}>
+                          <div style={{ fontSize: 20, fontWeight: 800, color: "#60a5fa" }}>{fmt(cardTotal)}₺</div>
+                          <div style={{ fontSize: 10, color: "rgba(96,165,250,0.6)", fontWeight: 600, textTransform: "uppercase" }}>+%15 hizmet bedeli</div>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Info note */}
+                    <div style={{ marginTop: 16, padding: "12px 14px", borderRadius: 12, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: 1.6 }}>
+                        💡 Nakit/havale tercih ederseniz, rezervasyonunuz oluşturulur ve ödeme detayları için sizinle iletişime geçilir.
+                      </div>
+                    </div>
+
+                    {isSubmitting && (
+                      <div style={{ textAlign: "center", marginTop: 20, color: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 600 }}>
+                        İşleniyor...
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+
+                {/* ── PAYTR IFRAME VIEW ── */}
+                {iframeToken && !submitResult && (
+                  <motion.div key="paytr-view" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                        <CreditCard size={18} style={{ color: "#60a5fa" }} />
+                        <span style={{ fontSize: 16, fontWeight: 700 }}>Kart ile Ödeme</span>
+                      </div>
+                      <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", margin: 0 }}>
+                        Aşağıdaki formu doldurarak güvenli ödemenizi tamamlayın.
+                      </p>
+                    </div>
+                    <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)" }}>
+                      <iframe
+                        src={`https://www.paytr.com/odeme/guvenli/${iframeToken}`}
+                        style={{ width: "100%", height: 460, border: "none" }}
+                        frameBorder="0"
+                      />
+                    </div>
+                    <button
+                      onClick={() => { setIframeToken(null); setCheckoutStep("payment_method"); }}
+                      style={{
+                        marginTop: 16, width: "100%", padding: 12, borderRadius: 10,
+                        background: "transparent", border: "1px solid rgba(255,255,255,0.1)",
+                        color: "rgba(255,255,255,0.5)", fontWeight: 600, fontSize: 12, cursor: "pointer",
+                      }}
+                    >
+                      ← Vazgeç
+                    </button>
+                  </motion.div>
+                )}
+
                 {/* ── SUCCESS VIEW ── */}
                 {submitResult && (
                   <motion.div key="success-view" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
-                    <div style={{
-                      textAlign: "center", padding: "60px 20px",
-                    }}>
+                    <div style={{ textAlign: "center", padding: "40px 20px 20px" }}>
                       <div style={{
-                        width: "64px", height: "64px", margin: "0 auto 20px",
+                        width: "80px", height: "80px", margin: "0 auto 24px",
                         borderRadius: "50%",
                         background: submitResult.success ? "rgba(52,211,153,0.1)" : "rgba(255,60,60,0.1)",
-                        border: `1px solid ${submitResult.success ? "rgba(52,211,153,0.2)" : "rgba(255,60,60,0.2)"}`,
+                        border: `2px solid ${submitResult.success ? "rgba(52,211,153,0.25)" : "rgba(255,60,60,0.25)"}`,
                         display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: "36px",
                       }}>
                         {submitResult.success ? "🎉" : "❌"}
                       </div>
                       <div style={{
-                        fontSize: "16px", fontWeight: 700,
+                        fontSize: "22px", fontWeight: 800,
                         color: submitResult.success ? "#34d399" : "#ef4444",
-                        marginBottom: "8px",
+                        marginBottom: "12px",
                       }}>
-                        {submitResult.success ? "Başarılı!" : "Hata"}
+                        {submitResult.success ? "Rezervasyonunuz Oluşturuldu!" : "Hata"}
                       </div>
-                      <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", lineHeight: 1.6 }}>
+                      <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: 320, margin: "0 auto 24px" }}>
                         {submitResult.message}
                       </p>
                     </div>
+
+                    {submitResult.success && (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "0 4px" }}>
+
+                        <div style={{ padding: "14px 16px", borderRadius: 14, background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.12)", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                          <Mail size={18} style={{ color: "#60a5fa", flexShrink: 0, marginTop: 2 }} />
+                          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>
+                            E-posta adresinize bir <strong style={{ color: "#fff" }}>giriş şifresi</strong> gönderildi. Bu şifre ile hesabınıza giriş yapabilirsiniz.
+                          </span>
+                        </div>
+
+                        <div style={{ padding: "14px 16px", borderRadius: 14, background: "rgba(250,204,21,0.06)", border: "1px solid rgba(250,204,21,0.12)", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                          <User size={18} style={{ color: "#facc15", flexShrink: 0, marginTop: 2 }} />
+                          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>
+                            <strong style={{ color: "#fff" }}>Profilinizden</strong> rezervasyon durumunuzu takip edebilir, ödeme geçmişinizi görebilir ve tüm süreci yönetebilirsiniz.
+                          </span>
+                        </div>
+
+                        {submitResult.type === "cash" && (
+                          <div style={{ padding: "14px 16px", borderRadius: 14, background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.12)", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                            <Phone size={18} style={{ color: "#4ade80", flexShrink: 0, marginTop: 2 }} />
+                            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>
+                              Ekibimiz en kısa sürede sizinle <strong style={{ color: "#fff" }}>telefonla</strong> iletişime geçecek ve ödeme detaylarını paylaşacak.
+                            </span>
+                          </div>
+                        )}
+
+                        <button
+                          onClick={() => {
+                            setCheckoutMode(false);
+                            setCheckoutStep("contact");
+                            setSubmitResult(null);
+                            setIsOpen(false);
+                          }}
+                          style={{
+                            marginTop: 16, width: "100%", padding: "14px", borderRadius: 12,
+                            background: "#fff", color: "#000", border: "none",
+                            fontWeight: 700, fontSize: 14, cursor: "pointer",
+                          }}
+                        >
+                          Tamam, Anlaşıldı
+                        </button>
+                      </div>
+                    )}
                   </motion.div>
                 )}
 
@@ -442,20 +640,20 @@ export default function CartDrawer() {
                     }}>
                       Temizle
                     </button>
-                    <button onClick={() => setCheckoutMode(true)} style={{
+                    <button onClick={() => { setCheckoutMode(true); setCheckoutStep("contact"); }} style={{
                       flex: 2, padding: "14px", borderRadius: "12px",
                       border: "none", background: "#fff", color: "#000",
                       fontSize: "13px", fontWeight: 700, cursor: "pointer",
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                       transition: "all 0.2s",
                     }}>
-                      <CreditCard size={14} /> Ödemeye Geç
+                      <ArrowRight size={14} /> Rezervasyona Devam Et
                     </button>
                   </div>
-                ) : (
+                ) : checkoutStep === "contact" ? (
                   <button
-                    onClick={handleCheckout}
-                    disabled={!isContactValid || isSubmitting}
+                    onClick={() => setCheckoutStep("payment_method")}
+                    disabled={!isContactValid}
                     style={{
                       width: "100%", padding: "16px", borderRadius: "12px",
                       border: "none",
@@ -467,13 +665,9 @@ export default function CartDrawer() {
                       transition: "all 0.2s",
                     }}
                   >
-                    {isSubmitting ? "İşleniyor..." : (
-                      <>
-                        <CreditCard size={14} /> Rezervasyonu Oluştur — {fmt(cartTotal())}₺
-                      </>
-                    )}
+                    <ArrowRight size={14} /> Devam Et — Ödeme Yöntemi
                   </button>
-                )}
+                ) : null}
               </div>
             )}
           </motion.div>

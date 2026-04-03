@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getSiteConfig, updateSiteConfig } from "../core-actions";
+import { getSiteConfig, updateSiteConfig, uploadHeroBg } from "../core-actions";
 import { 
   Save, Home, Phone, Mail, Instagram, MessageCircle, 
-  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote
+  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette
 } from "lucide-react";
 
 const inp = {
@@ -48,6 +48,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const [uploadingBg, setUploadingBg] = useState(false);
 
   useEffect(() => {
     async function loadConfig() {
@@ -162,6 +163,98 @@ export default function SettingsPage() {
           <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 12, fontStyle: "italic", lineHeight: 1.5 }}>
             * Başlıktaki enter tuşu anasayfada tasarımın dengeli durmasını sağlar.
           </p>
+        </div>
+
+        {/* 2.5 Hero Arka Plan */}
+        <div style={sectionCard}>
+          {sectionHeader(Monitor, "Arka Plan Ayarı", "Anasayfadaki hero bölümünün arka planını değiştirin.")}
+
+          {/* Type Selector */}
+          <div style={{ marginBottom: 20 }}>
+            <label style={label}>Arka Plan Türü</label>
+            <div style={{ display: "flex", gap: 8 }}>
+              {[
+                { value: "video", label: "Video", icon: "🎬" },
+                { value: "image", label: "Fotoğraf", icon: "🖼️" },
+                { value: "color", label: "Düz Renk", icon: "🎨" },
+              ].map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setConfig({ ...config, heroBgType: opt.value })}
+                  style={{
+                    flex: 1, padding: "12px 8px", borderRadius: 10, border: "1px solid",
+                    borderColor: config.heroBgType === opt.value ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.08)",
+                    background: config.heroBgType === opt.value ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
+                    color: config.heroBgType === opt.value ? "#fff" : "rgba(255,255,255,0.5)",
+                    cursor: "pointer", fontSize: 12, fontWeight: 700, textAlign: "center",
+                    transition: "all 0.2s"
+                  }}
+                >
+                  <div style={{ fontSize: 18, marginBottom: 4 }}>{opt.icon}</div>
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Video or Image Upload */}
+          {(config.heroBgType === "video" || config.heroBgType === "image") && (
+            <div style={{ marginBottom: 16 }}>
+              <label style={label}>{config.heroBgType === "video" ? "Video Dosyası" : "Fotoğraf"} Yükle</label>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <Upload size={16} style={{ color: "rgba(255,255,255,0.4)", flexShrink: 0 }} />
+                <input
+                  type="file"
+                  accept={config.heroBgType === "video" ? "video/*" : "image/*"}
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    setUploadingBg(true);
+                    const fd = new FormData();
+                    fd.append('file', file);
+                    const res = await uploadHeroBg(fd);
+                    if (res.success) {
+                      setConfig({ ...config, heroBgUrl: res.url });
+                    } else {
+                      alert("Yükleme hatası: " + res.error);
+                    }
+                    setUploadingBg(false);
+                  }}
+                  style={{ ...inp, cursor: "pointer", flex: 1 }}
+                />
+              </div>
+              {uploadingBg && <p style={{ fontSize: 11, color: "#facc15", marginTop: 6 }}>Yükleniyor...</p>}
+              {config.heroBgUrl && (
+                <div style={{ marginTop: 8, fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
+                  Mevcut: <span style={{ color: "#4ade80" }}>{config.heroBgUrl}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Color Picker */}
+          {config.heroBgType === "color" && (
+            <div style={{ marginBottom: 16 }}>
+              <label style={label}>Arka Plan Rengi</label>
+              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <input
+                  type="color"
+                  value={config.heroBgColor || "#000000"}
+                  onChange={(e) => setConfig({ ...config, heroBgColor: e.target.value })}
+                  style={{ width: 48, height: 48, border: "none", borderRadius: 10, cursor: "pointer", background: "none" }}
+                />
+                <input
+                  type="text"
+                  value={config.heroBgColor || "#000000"}
+                  onChange={(e) => setConfig({ ...config, heroBgColor: e.target.value })}
+                  style={{ ...inp, maxWidth: 160 }}
+                  placeholder="#000000"
+                />
+                <div style={{ width: 48, height: 48, borderRadius: 10, background: config.heroBgColor || "#000", border: "1px solid rgba(255,255,255,0.1)" }} />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 3. Stüdyo & İletişim */}

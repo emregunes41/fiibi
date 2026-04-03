@@ -161,7 +161,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
             }}
           >
             <CreditCard size={16} />
-            Ödeme Yap — {remaining.toLocaleString('tr-TR')}₺
+            Ödeme Yap
           </button>
         )}
 

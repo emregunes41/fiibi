@@ -215,5 +215,8 @@ model GlobalSettings {
   instagram    String   @default("")
   whatsapp     String   @default("")
   cashPromoText String  @default("")
+  heroBgType   String   @default("video")
+  heroBgUrl    String   @default("/assets/hero.mp4")
+  heroBgColor  String   @default("#000000")
   updatedAt    DateTime @updatedAt
 }

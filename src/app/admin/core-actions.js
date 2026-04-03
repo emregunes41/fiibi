@@ -33,6 +33,29 @@ export async function uploadAlbumImage(formData) {
   }
 }
 
+export async function uploadHeroBg(formData) {
+  try {
+    const file = formData.get('file');
+    if (!file) return { error: "Dosya bulunamadı." };
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'hero');
+    await fs.mkdir(uploadDir, { recursive: true });
+
+    const ext = path.extname(file.name) || '.mp4';
+    const filename = `hero_bg${ext}`;
+    const filepath = path.join(uploadDir, filename);
+
+    await fs.writeFile(filepath, buffer);
+    
+    return { success: true, url: `/uploads/hero/${filename}` };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+
 // --- ALBUM MODEL ACTIONS ---
 
 export async function getAlbumModels() {
@@ -542,14 +565,17 @@ export async function getSiteConfig() {
       email: "hello@pinowed.com",
       instagram: "",
       whatsapp: "",
-      cashPromoText: ""
+      cashPromoText: "",
+      heroBgType: "video",
+      heroBgUrl: "/assets/hero.mp4",
+      heroBgColor: "#000000"
     };
   }
 }
 
 export async function updateSiteConfig(data) {
   try {
-    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText } = data;
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor } = data;
     await prisma.globalSettings.update({
       where: { id: "global-settings" },
       data: {
@@ -560,7 +586,10 @@ export async function updateSiteConfig(data) {
         email,
         instagram,
         whatsapp,
-        cashPromoText: cashPromoText || ""
+        cashPromoText: cashPromoText || "",
+        heroBgType: heroBgType || "video",
+        heroBgUrl: heroBgUrl || "/assets/hero.mp4",
+        heroBgColor: heroBgColor || "#000000"
       }
     });
     revalidatePath('/');

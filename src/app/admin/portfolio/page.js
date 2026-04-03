@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { CldUploadWidget } from "next-cloudinary";
-import { motion, AnimatePresence } from "framer-motion";
-import { UploadCloud, Image as ImageIcon, Trash2, Plus, RefreshCw, Folder, ArrowLeft } from "lucide-react";
+import { UploadCloud, Image as ImageIcon, Trash2, Plus, X, ArrowLeft, Folder, RefreshCw } from "lucide-react";
 import { 
   getPortfolioCategories, 
   createPortfolioCategory, 
@@ -11,18 +10,24 @@ import {
   addPhotoToPortfolio,
   deletePortfolioPhoto
 } from "../portfolio-actions";
-import Image from "next/image";
+
+const inp = {
+  width: "100%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)",
+  borderRadius: "0.6rem", padding: "0.7rem 0.8rem", color: "#fff", outline: "none",
+  fontSize: "0.8rem", boxSizing: "border-box",
+};
+
+const lbl = { display: "block", fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", marginBottom: "5px", letterSpacing: "0.04em" };
 
 export default function PortfolioAdminPage() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [newCatName, setNewCatName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
-  const [isAddingNew, setIsAddingNew] = useState(false); // Header'daki input için
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [activeCategoryId, setActiveCategoryId] = useState(null);
 
-  const totalPhotos = categories.reduce((acc, cat) => acc + (cat.photos?.length || 0), 0);
   const activeCategory = categories.find(c => c.id === activeCategoryId);
 
   const loadCategories = async () => {
@@ -33,20 +38,17 @@ export default function PortfolioAdminPage() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    loadCategories();
-  }, []);
+  useEffect(() => { loadCategories(); }, []);
 
   const handleCreateCategory = async (e) => {
     e.preventDefault();
     if (!newCatName.trim()) return;
-    
     setIsCreating(true);
     setErrorMsg("");
     const res = await createPortfolioCategory(newCatName);
-    
     if (res.success) {
       setNewCatName("");
+      setIsModalOpen(false);
       loadCategories();
     } else {
       setErrorMsg(res.error);
@@ -57,6 +59,7 @@ export default function PortfolioAdminPage() {
   const handleDeleteCategory = async (id, name) => {
     if (confirm(`'${name}' konseptini ve içindeki tüm fotoğrafları silmek istediğinize emin misiniz?`)) {
       await deletePortfolioCategory(id);
+      if (activeCategoryId === id) setActiveCategoryId(null);
       loadCategories();
     }
   };
@@ -79,229 +82,187 @@ export default function PortfolioAdminPage() {
 
   if (isLoading) {
     return (
-      <div className="text-white flex items-center justify-center p-20 gap-3">
-        <RefreshCw className="animate-spin text-white/50" /> Yükleniyor...
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh", color: "rgba(255,255,255,0.4)" }}>
+        <RefreshCw size={20} style={{ marginRight: 8, animation: "spin 1s linear infinite" }} /> Yükleniyor...
       </div>
     );
   }
 
-  return (
-    <div className="max-w-[1400px] mx-auto min-h-[80vh] flex flex-col gap-6">
-      {/* 
-          ### PRO STUDIO HEADER (Breadcrumb Style)
-      */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-white/5 pb-6 mb-2">
-        <div className="flex items-center gap-3 text-sm font-medium tracking-tight">
-          <span className="text-white/40">Portfolio Admin</span>
-          <span className="text-white/20">/</span>
-          <span className="text-white font-bold">{activeCategory ? activeCategory.name : "Koleksiyonlar"}</span>
-          <span className="text-white/10 ml-2 px-2 py-0.5 bg-white/5 rounded-md text-[10px] font-black tracking-widest uppercase">
-            {activeCategory ? `${activeCategory.photos?.length || 0} GÖRSEL` : `${categories.length} KONSEPT`}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 mt-4 md:mt-0">
-          <AnimatePresence mode="wait">
-            {!activeCategoryId ? (
-              <motion.div 
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 10 }}
-                className="flex items-center gap-2"
-              >
-                {isAddingNew ? (
-                  <form onSubmit={handleCreateCategory} className="flex items-center gap-2">
-                    <input
-                      autoFocus
-                      type="text"
-                      placeholder="Yeni Konsept İsmi..."
-                      value={newCatName}
-                      onChange={(e) => setNewCatName(e.target.value)}
-                      onBlur={() => !newCatName && setIsAddingNew(false)}
-                      className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-white/20 transition-all w-48 font-medium"
-                    />
-                    <button type="submit" disabled={isCreating} className="bg-white text-black px-3 py-1.5 rounded-lg text-xs font-black hover:bg-white/90 disabled:opacity-50">
-                      {isCreating ? <RefreshCw className="animate-spin" size={12} /> : "EKLE"}
-                    </button>
-                    <button type="button" onClick={() => setIsAddingNew(false)} className="p-1.5 text-white/40 hover:text-white"><Plus className="rotate-45" size={16} /></button>
-                  </form>
-                ) : (
-                  <button 
-                    onClick={() => setIsAddingNew(true)}
-                    className="flex items-center gap-2 bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 px-4 py-1.5 rounded-lg text-xs font-bold transition-all"
-                  >
-                    <Plus size={14} /> YENİ KONSEPT
-                  </button>
-                )}
-              </motion.div>
-            ) : (
-              <motion.div 
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                className="flex items-center gap-2"
-              >
-                <button 
-                  onClick={() => setActiveCategoryId(null)}
-                  className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-1.5 rounded-lg text-xs font-bold transition-all"
-                >
-                  <ArrowLeft size={14} /> KOLEKSİYONLARA DÖN
-                </button>
-
-                <div className="h-4 w-[1px] bg-white/10 mx-1"></div>
-
-                <CldUploadWidget 
-                  uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""} 
-                  onSuccess={(res) => handleUploadSuccess(res, activeCategory.id)}
-                  options={{ multiple: true, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
-                >
-                  {({ open }) => (
-                    <button onClick={() => open()} className="flex items-center gap-2 bg-white text-black hover:bg-white/90 px-4 py-1.5 rounded-lg text-xs font-bold transition-all">
-                      <UploadCloud size={14} /> GÖRSEL YÜKLE
-                    </button>
-                  )}
-                </CldUploadWidget>
-              </motion.div>
-            )}
-          </AnimatePresence>
+  // ── PHOTO DETAIL VIEW ──
+  if (activeCategory) {
+    return (
+      <div style={{ padding: "0.5rem" }}>
+        {/* Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <button 
+              onClick={() => setActiveCategoryId(null)}
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "0.5rem 0.8rem", borderRadius: "0.6rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem", fontWeight: 700 }}
+            >
+              <ArrowLeft size={14} /> Geri
+            </button>
+            <div>
+              <h1 style={{ fontSize: "1.8rem", fontWeight: 900, margin: 0 }}>{activeCategory.name}</h1>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", marginTop: 4 }}>
+                {activeCategory.photos?.length || 0} görsel
+              </p>
+            </div>
+          </div>
           
-          <button onClick={() => loadCategories()} className="p-2 text-white/30 hover:text-white transition-colors" title="Yenile">
-            <RefreshCw size={14} className={isLoading ? "animate-spin text-white" : ""} />
-          </button>
+          <CldUploadWidget
+            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""}
+            onSuccess={(res) => handleUploadSuccess(res, activeCategory.id)}
+            options={{ multiple: true, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+          >
+            {({ open }) => (
+              <button
+                onClick={() => open()}
+                style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: "2rem", fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
+                <UploadCloud size={16} /> Görsel Yükle
+              </button>
+            )}
+          </CldUploadWidget>
         </div>
+
+        {/* Photos Grid */}
+        {activeCategory.photos?.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "5rem 0", color: "rgba(255,255,255,0.4)" }}>
+            <UploadCloud size={48} style={{ opacity: 0.2, margin: "0 auto 1rem" }} />
+            <p style={{ marginBottom: 8, fontWeight: 600 }}>Bu konseptte henüz görsel yok.</p>
+            <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)" }}>Yukarıdaki butona tıklayarak fotoğraf yükleyebilirsiniz.</p>
+          </div>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "0.8rem" }}>
+            {activeCategory.photos.map((photo) => (
+              <div key={photo.id} style={{ position: "relative", aspectRatio: "1", borderRadius: "0.8rem", overflow: "hidden", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <img src={photo.url} alt="Portfolio" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <button
+                  onClick={() => handleDeletePhoto(photo.id)}
+                  style={{ position: "absolute", top: 8, right: 8, background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "5px", borderRadius: "50%", cursor: "pointer", opacity: 0.7, transition: "opacity 0.2s" }}
+                  onMouseEnter={(e) => e.target.style.opacity = 1}
+                  onMouseLeave={(e) => e.target.style.opacity = 0.7}
+                >
+                  <Trash2 size={12} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ── CATEGORIES LIST VIEW ──
+  return (
+    <div style={{ padding: "0.5rem" }}>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
+        <div>
+          <h1 style={{ fontSize: "1.8rem", fontWeight: 900, margin: 0 }}>Portfolyo</h1>
+          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", marginTop: 4 }}>
+            Anasayfadaki galeri fotoğraflarınızı konseptlere göre yönetin
+          </p>
+        </div>
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: "2rem", fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+        >
+          <Plus size={16} /> Yeni Konsept
+        </button>
       </div>
 
-      {errorMsg && <p className="text-red-500 text-[10px] font-bold text-center bg-red-500/5 py-2 rounded-lg border border-red-500/10 mb-4 uppercase tracking-widest">{errorMsg}</p>}
+      {errorMsg && (
+        <div style={{ padding: "10px 14px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: "0.6rem", color: "#f87171", fontSize: "0.75rem", fontWeight: 700, marginBottom: "1rem" }}>
+          {errorMsg}
+        </div>
+      )}
 
-      {/* 
-          ### MAIN CONTENT AREA
-      */}
-      <AnimatePresence mode="wait">
-        {!activeCategory ? (
-          /* COLLECTIONS GRID (Minimalist Squares) */
-          <motion.div 
-            key="grid"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"
+      {/* Categories Grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "1rem" }}>
+        {categories.map(category => (
+          <div 
+            key={category.id} 
+            onClick={() => setActiveCategoryId(category.id)}
+            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "1rem", overflow: "hidden", cursor: "pointer", transition: "all 0.2s", display: "flex", flexDirection: "column" }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.transform = "translateY(0)"; }}
           >
-            {categories.map((category) => (
-              <motion.div 
-                key={category.id}
-                whileHover={{ y: -4 }}
-                className="group relative cursor-pointer"
-                onClick={() => setActiveCategoryId(category.id)}
-              >
-                {/* Square Container */}
-                <div className="aspect-square bg-white/[0.03] border border-white/5 rounded-xl overflow-hidden mb-3 transition-colors group-hover:border-white/20">
-                  {category.photos?.[0] ? (
-                    <Image 
-                      src={category.photos[0].url} 
-                      alt={category.name} 
-                      fill 
-                      className="object-cover opacity-60 group-hover:opacity-100 transition-all duration-700"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-white/5">
-                      <ImageIcon size={40} strokeWidth={1} />
-                      <span className="text-[10px] mt-2 font-bold tracking-widest">BOŞ</span>
-                    </div>
-                  )}
-                  
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/80 to-transparent translate-y-full group-hover:translate-y-0 transition-transform flex items-center justify-between">
-                    <span className="text-[10px] font-black text-white/70">{category.photos?.length || 0} PT</span>
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); handleDeleteCategory(category.id, category.name); }}
-                      className="p-1.5 hover:bg-red-500 rounded-md transition-colors text-white/40 hover:text-white"
-                    >
-                      <Trash2 size={12} />
-                    </button>
-                  </div>
+            {/* Cover Image */}
+            <div style={{ width: "100%", height: "180px", position: "relative", backgroundColor: "rgba(0,0,0,0.3)" }}>
+              {category.photos?.[0] ? (
+                <img src={category.photos[0].url} alt={category.name} style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.75 }} />
+              ) : (
+                <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.1)" }}>
+                  <ImageIcon size={40} />
+                  <span style={{ fontSize: "0.6rem", fontWeight: 800, marginTop: 8, textTransform: "uppercase", letterSpacing: "0.1em" }}>Boş</span>
                 </div>
-
-                {/* Subtitle */}
-                <div className="px-1 text-left">
-                  <h3 className="text-xs font-bold leading-tight truncate tracking-tight">{category.name}</h3>
-                  <p className="text-[9px] text-white/20 font-mono mt-1 tracking-widest uppercase">/ {category.slug}</p>
-                </div>
-              </motion.div>
-            ))}
-
-            {/* Quick Add Placeholder */}
-            <motion.button 
-              onClick={() => setIsAddingNew(true)}
-              whileHover={{ scale: 0.98 }}
-              className="aspect-square bg-white/[0.01] border border-dashed border-white/10 rounded-xl flex flex-col items-center justify-center text-white/20 hover:text-white/40 hover:border-white/20 transition-all"
-            >
-              <Plus size={24} strokeWidth={1} />
-              <span className="text-[10px] font-bold mt-2 tracking-widest uppercase">Yeni Ekle</span>
-            </motion.button>
-          </motion.div>
-        ) : (
-          /* PHOTOS DETAIL AREA */
-          <motion.div 
-            key="detail"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.02 }}
-            className="flex flex-col"
-          >
-            {activeCategory.photos?.length === 0 ? (
-              <div className="py-32 flex flex-col items-center justify-center border border-dashed border-white/5 rounded-2xl bg-white/[0.01]">
-                <UploadCloud size={48} className="text-white/5 mb-6" strokeWidth={1} />
-                <h3 className="text-base font-bold mb-2">Bu albümde hiç görsel yok.</h3>
-                <p className="text-xs text-white/30 mb-8 max-w-xs text-center leading-relaxed">
-                  İşlerinizi sergilemek için hemen fotoğraf yüklemeye başlayın.
-                </p>
-                <CldUploadWidget 
-                  uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""} 
-                  onSuccess={(res) => handleUploadSuccess(res, activeCategory.id)}
-                  options={{ multiple: true, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+              )}
+              <div style={{ position: "absolute", top: 10, right: 10, display: "flex", gap: "0.4rem" }}>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleDeleteCategory(category.id, category.name); }}
+                  style={{ background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "6px", borderRadius: "50%", cursor: "pointer" }}
                 >
-                  {({ open }) => (
-                    <button onClick={() => open()} className="bg-white text-black px-10 py-3 rounded-lg text-sm font-bold active:scale-95 transition-all">
-                      FOTOĞRAF YÜKLE
-                    </button>
-                  )}
-                </CldUploadWidget>
+                  <Trash2 size={14} />
+                </button>
               </div>
-            ) : (
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-4">
-                <AnimatePresence mode="popLayout">
-                  {activeCategory.photos.map((photo, i) => (
-                    <motion.div 
-                      key={photo.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.02 }}
-                      whileHover={{ scale: 1.05, zIndex: 10 }}
-                      className="group relative aspect-square bg-white/[0.03] border border-white/5 rounded-lg overflow-hidden shadow-2xl"
-                    >
-                      <Image 
-                        src={photo.url} 
-                        alt="Portfolio photo" 
-                        fill 
-                        className="object-cover opacity-90 transition-opacity group-hover:opacity-100"
-                      />
-                      
-                      {/* Discrete Trash Button */}
-                      <button 
-                        onClick={() => handleDeletePhoto(photo.id)}
-                        className="absolute top-2 right-2 bg-black/60 backdrop-blur-md p-1.5 rounded-md text-white/40 hover:text-red-500 hover:bg-black transition-all opacity-0 group-hover:opacity-100 shadow-xl"
-                        title="Sil"
-                      >
-                        <Trash2 size={12} />
-                      </button>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+            </div>
+
+            {/* Info */}
+            <div style={{ padding: "1.2rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Konsept</div>
+              <h3 style={{ fontSize: "1.1rem", fontWeight: 800, margin: 0, color: "#fff" }}>{category.name}</h3>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.3rem" }}>
+                <ImageIcon size={12} style={{ color: "rgba(255,255,255,0.3)" }} />
+                <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>
+                  {category.photos?.length || 0} görsel
+                </span>
               </div>
-            )}
-          </motion.div>
+            </div>
+          </div>
+        ))}
+
+        {categories.length === 0 && (
+          <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "4rem 0", color: "rgba(255,255,255,0.4)" }}>
+            <Folder size={48} style={{ opacity: 0.2, margin: "0 auto 1rem" }} />
+            <p>Henüz portfolyo konsepti eklenmemiş.</p>
+          </div>
         )}
-      </AnimatePresence>
+      </div>
+
+      {/* New Category Modal */}
+      {isModalOpen && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", padding: "2rem", borderRadius: "1.5rem", width: "100%", maxWidth: "400px", position: "relative" }}>
+            <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>
+              <X size={20} />
+            </button>
+
+            <h2 style={{ fontSize: "1.2rem", fontWeight: 800, marginBottom: "1.5rem" }}>Yeni Konsept Ekle</h2>
+            
+            <form onSubmit={handleCreateCategory} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div>
+                <label style={lbl}>Konsept Adı</label>
+                <input 
+                  autoFocus
+                  placeholder="Örn: Düğün, Dış Çekim, Nişan..."
+                  style={inp} 
+                  value={newCatName} 
+                  onChange={(e) => setNewCatName(e.target.value)} 
+                  required 
+                />
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "0.5rem" }}>
+                <button type="button" onClick={() => setIsModalOpen(false)} style={{ background: "transparent", color: "rgba(255,255,255,0.6)", border: "none", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", padding: "0.5rem 1rem" }}>İptal</button>
+                <button type="submit" disabled={isCreating} style={{ background: "#fff", color: "#000", border: "none", padding: "0.8rem 1.5rem", borderRadius: "1rem", fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isCreating ? 0.7 : 1 }}>
+                  {isCreating ? "Oluşturuluyor..." : "Oluştur"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
