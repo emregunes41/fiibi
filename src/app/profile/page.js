@@ -139,6 +139,9 @@ export default async function ProfilePage() {
                         {res.packages.map((pkg, pkgIdx) => {
                           const categoryLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart" };
                           const timeLabels = { SLOT_2H: "2 Saatlik Çekim", SLOT_4H: "4 Saatlik Çekim", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
+                          // Filter custom field answers and addons for THIS package
+                          const pkgFields = (res.customFieldAnswers || []).filter(a => a.packageName === pkg.name);
+                          const pkgAddons = (res.selectedAddons || []).filter(a => a.packageName === pkg.name);
                           return (
                             <div key={pkg.id} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 12, padding: "14px 16px", border: "1px solid rgba(255,255,255,0.06)" }}>
                               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
@@ -163,42 +166,74 @@ export default async function ProfilePage() {
                                   ))}
                                 </div>
                               )}
+                              {/* Package-specific custom field answers (mekan, düğün yeri vb.) */}
+                              {pkgFields.length > 0 && (
+                                <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Çekim Bilgileri</div>
+                                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                                    {pkgFields.map((answer, i) => (
+                                      <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12 }}>
+                                        <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 600 }}>{answer.label}</span>
+                                        <span style={{ color: "#fff", fontWeight: 700 }}>
+                                          {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              {/* Package-specific addons */}
+                              {pkgAddons.length > 0 && (
+                                <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Ek Hizmetler</div>
+                                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                                    {pkgAddons.map((addon, i) => (
+                                      <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12 }}>
+                                        <span style={{ color: "#fff", fontWeight: 600 }}>+ {addon.title}</span>
+                                        <span style={{ color: "rgba(255,255,255,0.5)", fontWeight: 700 }}>{addon.price}₺</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           );
                         })}
                       </div>
-                    </div>
-                    )}
-
-                    {/* Custom Field Answers (Mekan, Düğün Yeri vb.) */}
-                    {res.customFieldAnswers && res.customFieldAnswers.length > 0 && (
-                    <div style={{ padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                      <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 10 }}>Çekim Bilgileri</p>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                        {res.customFieldAnswers.map((answer, i) => (
-                          <div key={i} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 10, padding: "10px 14px", border: "1px solid rgba(255,255,255,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 600 }}>{answer.label}</span>
-                            <span style={{ fontSize: 13, color: "#fff", fontWeight: 700 }}>
-                              {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
-                            </span>
+                      {/* Unmatched custom fields & addons (legacy data without packageName) */}
+                      {(() => {
+                        const unmatchedFields = (res.customFieldAnswers || []).filter(a => !a.packageName);
+                        const unmatchedAddons = (res.selectedAddons || []).filter(a => !a.packageName);
+                        if (unmatchedFields.length === 0 && unmatchedAddons.length === 0) return null;
+                        return (
+                          <div style={{ marginTop: 10, padding: "10px 14px", background: "rgba(255,255,255,0.02)", borderRadius: 10, border: "1px solid rgba(255,255,255,0.04)" }}>
+                            {unmatchedFields.length > 0 && (
+                              <>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Çekim Bilgileri</div>
+                                {unmatchedFields.map((answer, i) => (
+                                  <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12, marginBottom: 3 }}>
+                                    <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 600 }}>{answer.label}</span>
+                                    <span style={{ color: "#fff", fontWeight: 700 }}>
+                                      {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
+                                    </span>
+                                  </div>
+                                ))}
+                              </>
+                            )}
+                            {unmatchedAddons.length > 0 && (
+                              <>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6, marginTop: unmatchedFields.length > 0 ? 8 : 0 }}>Ek Hizmetler</div>
+                                {unmatchedAddons.map((addon, i) => (
+                                  <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12, marginBottom: 3 }}>
+                                    <span style={{ color: "#fff", fontWeight: 600 }}>+ {addon.title}</span>
+                                    <span style={{ color: "rgba(255,255,255,0.5)", fontWeight: 700 }}>{addon.price}₺</span>
+                                  </div>
+                                ))}
+                              </>
+                            )}
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                    )}
-
-                    {/* Selected Addons (Ek Hizmetler) */}
-                    {res.selectedAddons && res.selectedAddons.length > 0 && (
-                    <div style={{ padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                      <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 10 }}>Ek Hizmetler</p>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                        {res.selectedAddons.map((addon, i) => (
-                          <div key={i} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 10, padding: "10px 14px", border: "1px solid rgba(255,255,255,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <span style={{ fontSize: 13, color: "#fff", fontWeight: 600 }}>+ {addon.title}</span>
-                            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 700 }}>{addon.price}₺</span>
-                          </div>
-                        ))}
-                      </div>
+                        );
+                      })()}
                     </div>
                     )}
 

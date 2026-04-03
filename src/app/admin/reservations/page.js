@@ -879,7 +879,10 @@ export default function ReservationsPage() {
                     {(() => {
                       const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart" };
                       const timeLabels = { SLOT_2H: "2 Saatlik Çekim", SLOT_4H: "4 Saatlik Çekim", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
-                      return r.packages.map((pkg, pkgIdx) => (
+                      return r.packages.map((pkg, pkgIdx) => {
+                        const pkgFields = (r.customFieldAnswers || []).filter(a => a.packageName === pkg.name);
+                        const pkgAddons = (r.selectedAddons || []).filter(a => a.packageName === pkg.name);
+                        return (
                         <div key={pkg.id} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", padding: "14px 16px" }}>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                             <div>
@@ -903,45 +906,79 @@ export default function ReservationsPage() {
                               ))}
                             </div>
                           )}
+                          {/* Package-specific custom fields */}
+                          {pkgFields.length > 0 && (
+                            <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                              <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 4 }}>Çekim Bilgileri</div>
+                              {pkgFields.map((answer, i) => (
+                                <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                                  <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.45)", fontWeight: 600 }}>{answer.label}</span>
+                                  <span style={{ fontSize: "0.78rem", color: "#fff", fontWeight: 700 }}>
+                                    {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {/* Package-specific addons */}
+                          {pkgAddons.length > 0 && (
+                            <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                              <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 4 }}>Ek Hizmetler</div>
+                              {pkgAddons.map((addon, i) => (
+                                <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                                  <span style={{ fontSize: "0.72rem", color: "#fff", fontWeight: 600 }}>+ {addon.title}</span>
+                                  <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", fontWeight: 700 }}>{addon.price}₺</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      ));
+                      );
+                      });
                     })()}
                   </div>
                 ) : (
                   <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)" }}>Paket seçilmemiş</p>
                 )}
 
-                {/* ── Ek Hizmetler ── */}
-                {r.selectedAddons && r.selectedAddons.length > 0 && (
-                  <>
-                    <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>➕ Ek Hizmetler</div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                      {r.selectedAddons.map((addon, i) => (
-                        <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "10px 14px" }}>
-                          <span style={{ fontSize: "0.78rem", color: "#fff", fontWeight: 600 }}>{addon.title}</span>
-                          <span style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.6)", fontWeight: 700 }}>{addon.price}₺</span>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
-
-                {/* ── Özel Alan Cevapları ── */}
-                {r.customFieldAnswers && r.customFieldAnswers.length > 0 && (
-                  <>
-                    <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📝 Müşteri Detay Cevapları</div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                      {r.customFieldAnswers.map((answer, i) => (
-                        <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "10px 14px" }}>
-                          <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 3 }}>{answer.label}</div>
-                          <div style={{ fontSize: "0.82rem", color: "#fff", fontWeight: 600 }}>
-                            {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
+                {/* Unmatched custom fields & addons (legacy data without packageName) */}
+                {(() => {
+                  const unmatchedFields = (r.customFieldAnswers || []).filter(a => !a.packageName);
+                  const unmatchedAddons = (r.selectedAddons || []).filter(a => !a.packageName);
+                  if (unmatchedFields.length === 0 && unmatchedAddons.length === 0) return null;
+                  return (
+                    <>
+                      {unmatchedFields.length > 0 && (
+                        <>
+                          <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📝 Çekim Bilgileri</div>
+                          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                            {unmatchedFields.map((answer, i) => (
+                              <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "10px 14px" }}>
+                                <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 3 }}>{answer.label}</div>
+                                <div style={{ fontSize: "0.82rem", color: "#fff", fontWeight: 600 }}>
+                                  {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
+                                </div>
+                              </div>
+                            ))}
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
+                        </>
+                      )}
+                      {unmatchedAddons.length > 0 && (
+                        <>
+                          <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>➕ Ek Hizmetler</div>
+                          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                            {unmatchedAddons.map((addon, i) => (
+                              <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "10px 14px" }}>
+                                <span style={{ fontSize: "0.78rem", color: "#fff", fontWeight: 600 }}>{addon.title}</span>
+                                <span style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.6)", fontWeight: 700 }}>{addon.price}₺</span>
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </>
+                  );
+                })()}
 
                 {/* ── Notlar ── */}
                 <DetailRow icon={FileText} label="Notlar" value={r.notes} />

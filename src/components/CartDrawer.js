@@ -61,8 +61,8 @@ export default function CartDrawer() {
 
   const buildReservationData = (amount) => {
     const firstItem = items[0];
-    const allAddons = items.flatMap(i => i.addons);
-    const allCustomFieldAnswers = items.flatMap(i => i.details?.customFieldAnswers || []);
+    const allAddons = items.flatMap(i => i.addons.map(a => ({ ...a, packageName: i.pkg.name })));
+    const allCustomFieldAnswers = items.flatMap(i => (i.details?.customFieldAnswers || []).map(a => ({ ...a, packageName: i.pkg.name })));
     const allNotes = items.map(i => {
       const n = i.details?.notes;
       return n ? `[${i.pkg.name}] ${n}` : null;
