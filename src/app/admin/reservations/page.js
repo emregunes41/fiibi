@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Calendar, Phone, Settings2, X, Edit2, Eye, Mail, User, Package, Clock, FileText, CreditCard, ChevronDown, ChevronUp, Instagram, ExternalLink, Trash2, Banknote, DollarSign, List, CalendarDays, ChevronLeft, ChevronRight, ArrowUpDown, Filter, Search } from "lucide-react";
-import { getReservations, getPackages, createManualReservation, updateReservation, updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment } from "../core-actions";
+import { getReservations, getPackages, createManualReservation, updateReservation, updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment, softDeleteReservation, hardDeleteReservation } from "../core-actions";
 
 const inp = {
   padding: "0.7rem 0.8rem", borderRadius: "0.6rem", fontSize: "0.8rem",
@@ -102,14 +102,33 @@ export default function ReservationsPage() {
     setIsLoading(false);
   };
 
+  const handleDeleteReservation = async (id, brideName) => {
+    if (window.confirm(`DİKKAT: ${brideName} isimli müşterinin rezervosyonunu Çöp Kutusuna taşımak istiyor musunuz?`)) {
+      setIsLoading(true);
+      await softDeleteReservation(id);
+      await loadData();
+      setIsLoading(false);
+    }
+  };
+
+  const handleHardDeleteReservation = async (id, brideName) => {
+    if (window.confirm(`SON ONAY: ${brideName} isimli müşterinin rezervosyonu TAMAMEN ve KALICI OLARAK silinecektir. Emin misiniz?`)) {
+      setIsLoading(true);
+      await hardDeleteReservation(id);
+      await loadData();
+      setIsLoading(false);
+    }
+  };
+
   const statusLabel = (s) => {
-    const m = { CONFIRMED: "Onaylı", PENDING: "Bekliyor", COMPLETED: "Tamamlandı", CANCELLED: "İptal" };
+    const m = { CONFIRMED: "Onaylı", PENDING: "Bekliyor", COMPLETED: "Tamamlandı", CANCELLED: "İptal", DELETED: "Silindi" };
     return m[s] || s;
   };
   const statusColor = (s) => {
     if (s === "CONFIRMED") return { bg: "rgba(52,211,153,0.15)", c: "#34d399", b: "1px solid rgba(52,211,153,0.25)" };
     if (s === "COMPLETED") return { bg: "rgba(96,165,250,0.12)", c: "#60a5fa", b: "1px solid rgba(96,165,250,0.2)" };
     if (s === "CANCELLED") return { bg: "rgba(239,68,68,0.1)", c: "#ef4444", b: "1px solid rgba(239,68,68,0.15)" };
+    if (s === "DELETED") return { bg: "rgba(107,114,128,0.15)", c: "#9ca3af", b: "1px solid rgba(107,114,128,0.3)" };
     return { bg: "rgba(255,255,255,0.05)", c: "rgba(255,255,255,0.5)", b: "1px solid rgba(255,255,255,0.08)" };
   };
 
@@ -391,6 +410,7 @@ export default function ReservationsPage() {
           { key: "CONFIRMED", label: "Onaylı", color: "#34d399" },
           { key: "COMPLETED", label: "Tamam", color: "#60a5fa" },
           { key: "CANCELLED", label: "İptal", color: "#ef4444" },
+          { key: "DELETED", label: "Çöp Kutusu", color: "#9ca3af" },
         ].map(f => (
           <button
             key={f.key}
@@ -425,7 +445,9 @@ export default function ReservationsPage() {
           }
           
           // Filter
-          if (filterStatus !== "ALL") {
+          if (filterStatus === "ALL") {
+            sorted = sorted.filter(r => r.status !== "DELETED");
+          } else {
             sorted = sorted.filter(r => r.status === filterStatus);
           }
           
@@ -575,44 +597,83 @@ export default function ReservationsPage() {
                 <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "3px" }}>
                   <Phone size={10} /> {res.bridePhone}
                 </span>
-                <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-                  <select 
-                    value={res.status}
-                    onChange={(e) => handleStatusChange(res.id, e.target.value)}
-                    style={{
-                      padding: "4px 6px", borderRadius: "6px", fontSize: "0.68rem",
-                      border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)",
-                      color: "#fff", outline: "none",
-                    }}
-                  >
-                    <option value="PENDING">Bekleyen</option>
-                    <option value="CONFIRMED">Onayla</option>
-                    <option value="COMPLETED">Tamamlandı</option>
-                    <option value="CANCELLED">İptal Et</option>
-                  </select>
-                    <button 
-                      onClick={() => openEditModal(res)}
-                      style={{
-                        background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)",
-                        color: "rgba(255,255,255,0.5)", padding: "4px", borderRadius: "6px",
-                        cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                      }}
-                      title="Düzenle"
-                    >
-                      <Edit2 size={12} />
-                    </button>
-                  {res.status === "CONFIRMED" && (
-                    <button 
-                      onClick={() => openWorkflowModal(res)}
-                      style={{
-                        background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)",
-                        color: "rgba(255,255,255,0.5)", padding: "4px", borderRadius: "6px",
-                        cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                      }}
-                      title="İş Akışı"
-                    >
-                      <Settings2 size={12} />
-                    </button>
+                <div style={{ display: "flex", gap: "6px" }}>
+                  {res.status === "DELETED" ? (
+                    <>
+                      <button 
+                        onClick={() => handleStatusChange(res.id, "PENDING")}
+                        style={{
+                          background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.2)",
+                          color: "#34d399", padding: "4px 8px", borderRadius: "6px", fontSize: "0.65rem",
+                          cursor: "pointer", fontWeight: 700
+                        }}
+                      >
+                        Geri Yükle
+                      </button>
+                      <button 
+                        onClick={() => handleHardDeleteReservation(res.id, res.brideName)}
+                        style={{
+                          background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)",
+                          color: "#ef4444", padding: "4px 8px", borderRadius: "6px", fontSize: "0.65rem",
+                          cursor: "pointer", display: "flex", gap: "4px", alignItems: "center"
+                        }}
+                        title="Kalıcı Olarak Sil"
+                      >
+                        <Trash2 size={12} /> Kalıcı Sil
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <select 
+                        value={res.status}
+                        onChange={(e) => handleStatusChange(res.id, e.target.value)}
+                        style={{
+                          padding: "4px 6px", borderRadius: "6px", fontSize: "0.68rem",
+                          border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)",
+                          color: "#fff", outline: "none",
+                        }}
+                      >
+                        <option value="PENDING">Bekleyen</option>
+                        <option value="CONFIRMED">Onayla</option>
+                        <option value="COMPLETED">Tamamlandı</option>
+                        <option value="CANCELLED">İptal Et</option>
+                      </select>
+                      <button 
+                        onClick={() => openEditModal(res)}
+                        style={{
+                          background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)",
+                          color: "rgba(255,255,255,0.5)", padding: "4px", borderRadius: "6px",
+                          cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                        }}
+                        title="Düzenle"
+                      >
+                        <Edit2 size={12} />
+                      </button>
+                      {res.status === "CONFIRMED" && (
+                        <button 
+                          onClick={() => openWorkflowModal(res)}
+                          style={{
+                            background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)",
+                            color: "rgba(255,255,255,0.5)", padding: "4px", borderRadius: "6px",
+                            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                          }}
+                          title="İş Akışı"
+                        >
+                          <Settings2 size={12} />
+                        </button>
+                      )}
+                      <button 
+                        onClick={() => handleDeleteReservation(res.id, res.brideName)}
+                        style={{
+                          background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)",
+                          color: "#ef4444", padding: "4px", borderRadius: "6px",
+                          cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                        }}
+                        title="Çöpe Taşı"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </>
                   )}
                 </div>
               </div>

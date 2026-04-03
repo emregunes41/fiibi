@@ -180,6 +180,33 @@ export async function deletePackage(id) {
 
 // --- RESERVATION ACTIONS ---
 
+export async function softDeleteReservation(id) {
+  try {
+    await prisma.reservation.update({
+      where: { id },
+      data: { status: "DELETED" }
+    });
+    revalidatePath('/admin/reservations');
+    return { success: true };
+  } catch (error) {
+    console.error("Soft Delete Reservation Error:", error);
+    return { error: error.message };
+  }
+}
+
+export async function hardDeleteReservation(id) {
+  try {
+    // Payments are cascade deleted via schema, but let's be explicit
+    await prisma.payment.deleteMany({ where: { reservationId: id } });
+    await prisma.reservation.delete({ where: { id } });
+    revalidatePath('/admin/reservations');
+    return { success: true };
+  } catch (error) {
+    console.error("Delete Reservation Error:", error);
+    return { error: error.message };
+  }
+}
+
 export async function getReservations() {
   return await prisma.reservation.findMany({
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
