@@ -1226,7 +1226,14 @@ export default function ReservationsPage() {
 
                       {/* Add Payment Form */}
                       <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", padding: "12px", marginBottom: "10px" }}>
-                        <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", marginBottom: 8 }}>Ödeme Ekle</div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                          <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "rgba(255,255,255,0.45)", textTransform: "uppercase" }}>Ödeme Ekle</div>
+                          {r.paymentPreference && (
+                            <div style={{ fontSize: "0.55rem", fontWeight: 700, padding: "2px 8px", borderRadius: 6, background: r.paymentPreference === "CASH" ? "rgba(74,222,128,0.1)" : "rgba(96,165,250,0.1)", color: r.paymentPreference === "CASH" ? "#4ade80" : "#60a5fa", border: `1px solid ${r.paymentPreference === "CASH" ? "rgba(74,222,128,0.2)" : "rgba(96,165,250,0.2)"}` }}>
+                              {r.paymentPreference === "CASH" ? "💵 Nakit Tercih" : "💳 Kart Tercih"}
+                            </div>
+                          )}
+                        </div>
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: 8 }}>
                           <input 
                             type="number" 

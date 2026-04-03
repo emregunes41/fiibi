@@ -11,6 +11,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
   const [payAmount, setPayAmount] = useState("");
   const [iframeToken, setIframeToken] = useState(null);
   const [loading, setLoading] = useState(false);
+  const isCashOnly = reservation.paymentPreference === "CASH";
 
   const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
   const payments = reservation.payments || [];
@@ -150,7 +151,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
   if (compactMode) {
     return (
       <>
-        {remaining > 0 && (
+        {remaining > 0 && !isCashOnly && (
           <button
             onClick={() => { setPayAmount(remaining.toString()); setShowPayModal(true); }}
             style={{
@@ -241,7 +242,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
         )}
 
         {/* Pay Button */}
-        {remaining > 0 && (
+        {remaining > 0 && !isCashOnly && (
           <button
             onClick={() => { setPayAmount(remaining.toString()); setShowPayModal(true); }}
             style={{
@@ -254,6 +255,14 @@ export default function PaymentSection({ reservation, compactMode = false }) {
             <CreditCard size={16} />
             Ödeme Yap — {remaining.toLocaleString('tr-TR')}₺
           </button>
+        )}
+        {remaining > 0 && isCashOnly && (
+          <div style={{ textAlign: "center", padding: "10px 16px", borderRadius: 12, background: "rgba(74,222,128,0.05)", border: "1px solid rgba(74,222,128,0.1)" }}>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+              <Banknote size={14} style={{ color: "#4ade80" }} />
+              Nakit / Havale ile ödeme yapılacaktır
+            </div>
+          </div>
         )}
       </div>
 

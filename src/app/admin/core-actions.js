@@ -306,6 +306,7 @@ export async function savePendingReservation(data) {
         paidAmount: data.paidAmount,
         selectedAddons: data.selectedAddons || [],
         customFieldAnswers: data.customFieldAnswers || [],
+        paymentPreference: data.paymentPreference || null,
         status: "PENDING",
         paymentStatus: "UNPAID",
         workflowStatus: "PENDING",

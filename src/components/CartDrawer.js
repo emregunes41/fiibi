@@ -102,7 +102,9 @@ export default function CartDrawer() {
   const handleCashCheckout = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
-    const result = await savePendingReservation(buildReservationData(cartTotal()));
+    const data = buildReservationData(cartTotal());
+    data.paymentPreference = "CASH";
+    const result = await savePendingReservation(data);
     setIsSubmitting(false);
     if (result.success) {
       setSubmitResult({ success: true, type: "cash", message: "Rezervasyonunuz başarıyla oluşturuldu!" });
@@ -115,7 +117,9 @@ export default function CartDrawer() {
   const handleCardCheckout = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
-    const result = await savePendingReservation(buildReservationData(cardTotal));
+    const data = buildReservationData(cardTotal);
+    data.paymentPreference = "CARD";
+    const result = await savePendingReservation(data);
     setIsSubmitting(false);
     if (!result.success) {
       setSubmitResult({ success: false, message: "Bir hata oluştu: " + (result.error || "Bilinmeyen hata") });
