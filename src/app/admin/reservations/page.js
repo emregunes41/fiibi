@@ -878,7 +878,7 @@ export default function ReservationsPage() {
                   <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                     {(() => {
                       const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart" };
-                      const timeLabels = { FULL_DAY: "Tam Gün", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
+                      const timeLabels = { SLOT_2H: "2 Saatlik Çekim", SLOT_4H: "4 Saatlik Çekim", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
                       return r.packages.map((pkg, pkgIdx) => (
                         <div key={pkg.id} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", padding: "14px 16px" }}>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
@@ -891,9 +891,9 @@ export default function ReservationsPage() {
                           <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: 8 }}>
                             <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(168,85,247,0.12)", color: "#a855f7", padding: "3px 8px", borderRadius: "5px" }}>{catLabels[pkg.category] || pkg.category}</span>
                             <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(59,130,246,0.12)", color: "#60a5fa", padding: "3px 8px", borderRadius: "5px" }}>{timeLabels[pkg.timeType] || pkg.timeType}</span>
-                            <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: "5px" }}>📦 {pkg.deliveryTimeDays || 14} gün teslim</span>
+                            <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: "5px" }}>{pkg.deliveryTimeDays || 14} gün içinde teslim</span>
                             {pkg.postSelectionDays > 0 && (
-                              <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(250,204,21,0.1)", color: "#facc15", padding: "3px 8px", borderRadius: "5px" }}>🎯 +{pkg.postSelectionDays} gün seçim sonrası</span>
+                              <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(250,204,21,0.1)", color: "#facc15", padding: "3px 8px", borderRadius: "5px" }}>+{pkg.postSelectionDays} gün seçim süresi</span>
                             )}
                           </div>
                           {pkg.features && pkg.features.length > 0 && (

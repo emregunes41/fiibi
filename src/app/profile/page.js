@@ -138,7 +138,7 @@ export default async function ProfilePage() {
                       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                         {res.packages.map((pkg, pkgIdx) => {
                           const categoryLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart" };
-                          const timeLabels = { FULL_DAY: "Tam Gün", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
+                          const timeLabels = { SLOT_2H: "2 Saatlik Çekim", SLOT_4H: "4 Saatlik Çekim", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
                           return (
                             <div key={pkg.id} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 12, padding: "14px 16px", border: "1px solid rgba(255,255,255,0.06)" }}>
                               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
@@ -151,9 +151,9 @@ export default async function ProfilePage() {
                               <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 6 }}>
                                 <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(168,85,247,0.1)", color: "#a855f7", padding: "2px 8px", borderRadius: 5 }}>{categoryLabels[pkg.category] || pkg.category}</span>
                                 <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(59,130,246,0.1)", color: "#60a5fa", padding: "2px 8px", borderRadius: 5 }}>{timeLabels[pkg.timeType] || pkg.timeType}</span>
-                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", padding: "2px 8px", borderRadius: 5 }}>📦 {pkg.deliveryTimeDays || 14}g teslim</span>
+                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", padding: "2px 8px", borderRadius: 5 }}>{pkg.deliveryTimeDays || 14} gün içinde teslim</span>
                                 {pkg.postSelectionDays > 0 && (
-                                  <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(250,204,21,0.08)", color: "#facc15", padding: "2px 8px", borderRadius: 5 }}>+{pkg.postSelectionDays}g seçim</span>
+                                  <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(250,204,21,0.08)", color: "#facc15", padding: "2px 8px", borderRadius: 5 }}>+{pkg.postSelectionDays} gün seçim süresi</span>
                                 )}
                               </div>
                               {pkg.features && pkg.features.length > 0 && (
@@ -166,6 +166,38 @@ export default async function ProfilePage() {
                             </div>
                           );
                         })}
+                      </div>
+                    </div>
+                    )}
+
+                    {/* Custom Field Answers (Mekan, Düğün Yeri vb.) */}
+                    {res.customFieldAnswers && res.customFieldAnswers.length > 0 && (
+                    <div style={{ padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                      <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 10 }}>Çekim Bilgileri</p>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                        {res.customFieldAnswers.map((answer, i) => (
+                          <div key={i} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 10, padding: "10px 14px", border: "1px solid rgba(255,255,255,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 600 }}>{answer.label}</span>
+                            <span style={{ fontSize: 13, color: "#fff", fontWeight: 700 }}>
+                              {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    )}
+
+                    {/* Selected Addons (Ek Hizmetler) */}
+                    {res.selectedAddons && res.selectedAddons.length > 0 && (
+                    <div style={{ padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                      <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 10 }}>Ek Hizmetler</p>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                        {res.selectedAddons.map((addon, i) => (
+                          <div key={i} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 10, padding: "10px 14px", border: "1px solid rgba(255,255,255,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span style={{ fontSize: 13, color: "#fff", fontWeight: 600 }}>+ {addon.title}</span>
+                            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 700 }}>{addon.price}₺</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
                     )}
