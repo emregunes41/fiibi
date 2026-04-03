@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { getSiteConfig, updateSiteConfig } from "../core-actions";
 import { 
   Save, Home, Phone, Mail, Instagram, MessageCircle, 
-  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2
+  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote
 } from "lucide-react";
 
 const inp = {
@@ -243,6 +243,25 @@ export default function SettingsPage() {
                 />
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* 5. Nakit Kampanya */}
+        <div style={sectionCard}>
+          {sectionHeader(Banknote, "Nakit Ödeme Kampanyası", "Müşteri profilinde ödeme kısmında görünecek kampanya mesajı.")}
+
+          <div>
+            <label style={label}>Kampanya Metni</label>
+            <input
+              type="text"
+              value={config.cashPromoText || ""}
+              onChange={(e) => setConfig({ ...config, cashPromoText: e.target.value })}
+              style={inp}
+              placeholder="Örn: Nakit ödemelerde 45.000₺!"
+            />
+            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 6, fontStyle: "italic" }}>
+              Boş bırakırsanız kampanya görünmez. Doldurunca müşterinin ödeme panelinde yeşil bir banner olarak belirir.
+            </p>
           </div>
         </div>
 

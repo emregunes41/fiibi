@@ -1,8 +1,8 @@
 import { getCurrentUser } from "../user-actions";
-import { getAlbumModels } from "../admin/core-actions";
+import { getAlbumModels, getSiteConfig } from "../admin/core-actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Calendar, Package, Clock, CheckCircle, FileText, ExternalLink, Banknote, CreditCard } from "lucide-react";
+import { Calendar, Package, Clock, CheckCircle, FileText, ExternalLink, Banknote, CreditCard, Tag } from "lucide-react";
 import PhotoSelectionForm from "./PhotoSelectionForm";
 import AlbumSelectionForm from "./AlbumSelectionForm";
 import PaymentSection from "./PaymentSection";
@@ -10,6 +10,7 @@ import PaymentSection from "./PaymentSection";
 export default async function ProfilePage() {
   const user = await getCurrentUser();
   const albumModels = await getAlbumModels();
+  const siteConfig = await getSiteConfig();
 
   if (!user) {
     redirect("/login");
@@ -323,6 +324,32 @@ export default async function ProfilePage() {
                       </>
                     );
                   })()}
+
+                  {/* Cash Promo Banner */}
+                  {siteConfig?.cashPromoText && remaining > 0 && (
+                    <div style={{ 
+                      background: "linear-gradient(135deg, rgba(74,222,128,0.08) 0%, rgba(52,211,153,0.04) 100%)", 
+                      border: "1px solid rgba(74,222,128,0.18)", 
+                      borderRadius: 14, padding: "14px 18px", marginBottom: 12,
+                      display: "flex", alignItems: "center", gap: 12
+                    }}>
+                      <div style={{ 
+                        width: 36, height: 36, borderRadius: 10, 
+                        background: "rgba(74,222,128,0.12)", 
+                        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 
+                      }}>
+                        <Tag size={16} style={{ color: "#4ade80" }} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#4ade80", marginBottom: 2 }}>
+                          💰 Nakit Kampanya
+                        </div>
+                        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.4 }}>
+                          {siteConfig.cashPromoText}
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Single Pay Button */}
                   {firstUnpaidRes && remaining > 0 && (

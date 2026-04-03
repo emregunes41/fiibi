@@ -214,5 +214,6 @@ model GlobalSettings {
   email        String   @default("hello@pinowed.com")
   instagram    String   @default("")
   whatsapp     String   @default("")
+  cashPromoText String  @default("")
   updatedAt    DateTime @updatedAt
 }

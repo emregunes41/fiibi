@@ -541,14 +541,15 @@ export async function getSiteConfig() {
       phone: "+90 555 000 00 00",
       email: "hello@pinowed.com",
       instagram: "",
-      whatsapp: ""
+      whatsapp: "",
+      cashPromoText: ""
     };
   }
 }
 
 export async function updateSiteConfig(data) {
   try {
-    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp } = data;
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText } = data;
     await prisma.globalSettings.update({
       where: { id: "global-settings" },
       data: {
@@ -558,7 +559,8 @@ export async function updateSiteConfig(data) {
         phone,
         email,
         instagram,
-        whatsapp
+        whatsapp,
+        cashPromoText: cashPromoText || ""
       }
     });
     revalidatePath('/');
