@@ -138,7 +138,7 @@ export default function ReservationsPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", gap: "0.75rem", flexWrap: "wrap" }}>
         <div>
           <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>Rezervasyonlar</h1>
-          <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.75rem", margin: "4px 0 0" }}>{reservations.length} kayıt</p>
+          <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.75rem", margin: "4px 0 0" }}>{reservations.filter(r => r.status !== "DELETED").length} kayıt</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
@@ -196,7 +196,7 @@ export default function ReservationsPage() {
 
         // Group reservations by day
         const resByDay = {};
-        reservations.forEach(r => {
+        reservations.filter(r => r.status !== "DELETED").forEach(r => {
           const d = new Date(r.eventDate);
           if (d.getMonth() === calMonth && d.getFullYear() === calYear) {
             const day = d.getDate();
@@ -300,6 +300,7 @@ export default function ReservationsPage() {
             {/* Day detail panel - reservations for selected month summary */}
             {(() => {
               const monthRes = reservations.filter(r => {
+                if (r.status === "DELETED") return false;
                 const d = new Date(r.eventDate);
                 return d.getMonth() === calMonth && d.getFullYear() === calYear;
               }).sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));

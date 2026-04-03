@@ -7,12 +7,13 @@ import NotificationList from "../components/NotificationList";
 export default async function AdminDashboard() {
   // Fetch quick stats
   const totalPackages = await prisma.photographyPackage.count();
-  const totalReservations = await prisma.reservation.count();
+  const totalReservations = await prisma.reservation.count({ where: { status: { not: "DELETED" } } });
   const pendingReservations = await prisma.reservation.count({ where: { status: "PENDING" } });
   const totalMembers = await prisma.user.count();
 
   // Fetch recent reservations
   const recentReservations = await prisma.reservation.findMany({
+    where: { status: { not: "DELETED" } },
     take: 5,
     orderBy: { createdAt: "desc" },
     include: { packages: true }

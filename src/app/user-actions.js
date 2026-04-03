@@ -81,7 +81,7 @@ export async function getCurrentUser() {
     const user = await prisma.user.findUnique({
       where: { id: payload.userId },
       include: { 
-        reservations: { include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true }, orderBy: { createdAt: 'desc' } },
+        reservations: { where: { status: { not: "DELETED" } }, include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true }, orderBy: { createdAt: 'desc' } },
         purchases: { orderBy: { purchaseDate: 'desc' } }
       }
     });
