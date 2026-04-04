@@ -147,13 +147,15 @@ export default function PaymentSection({ reservation, compactMode = false }) {
     </div>
   ) : null;
 
+  const cardRemaining = isCashOnly ? Math.round(remaining * 1.15) : remaining;
+
   // In compact mode, only show the pay button (summary is handled by parent)
   if (compactMode) {
     return (
       <>
-        {remaining > 0 && !isCashOnly && (
+        {remaining > 0 && (
           <button
-            onClick={() => { setPayAmount(remaining.toString()); setShowPayModal(true); }}
+            onClick={() => { setPayAmount(cardRemaining.toString()); setShowPayModal(true); }}
             style={{
               width: "100%", padding: 14, borderRadius: 12, border: "none",
               background: "#fff", color: "#000", fontWeight: 700, fontSize: 14,
@@ -162,7 +164,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
             }}
           >
             <CreditCard size={16} />
-            Ödeme Yap
+            {isCashOnly ? `Kredi Kartı ile Öde (+%15)` : "Ödeme Yap"}
           </button>
         )}
 
@@ -242,26 +244,28 @@ export default function PaymentSection({ reservation, compactMode = false }) {
         )}
 
         {/* Pay Button */}
-        {remaining > 0 && !isCashOnly && (
-          <button
-            onClick={() => { setPayAmount(remaining.toString()); setShowPayModal(true); }}
-            style={{
-              width: "100%", padding: 14, borderRadius: 12, border: "none",
-              background: "#fff", color: "#000", fontWeight: 700, fontSize: 14,
-              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              transition: "all 0.2s",
-            }}
-          >
-            <CreditCard size={16} />
-            Ödeme Yap — {remaining.toLocaleString('tr-TR')}₺
-          </button>
-        )}
-        {remaining > 0 && isCashOnly && (
-          <div style={{ textAlign: "center", padding: "10px 16px", borderRadius: 12, background: "rgba(74,222,128,0.05)", border: "1px solid rgba(74,222,128,0.1)" }}>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-              <Banknote size={14} style={{ color: "#4ade80" }} />
-              Nakit / Havale ile ödeme yapılacaktır
-            </div>
+        {remaining > 0 && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <button
+              onClick={() => { setPayAmount(cardRemaining.toString()); setShowPayModal(true); }}
+              style={{
+                width: "100%", padding: 14, borderRadius: 12, border: "none",
+                background: "#fff", color: "#000", fontWeight: 700, fontSize: 14,
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                transition: "all 0.2s",
+              }}
+            >
+              <CreditCard size={16} />
+              {isCashOnly 
+                ? `Kredi Kartı ile Öde — ${cardRemaining.toLocaleString('tr-TR')}₺ (+%15)`
+                : `Ödeme Yap — ${remaining.toLocaleString('tr-TR')}₺`
+              }
+            </button>
+            {isCashOnly && (
+              <div style={{ textAlign: "center", fontSize: 11, color: "rgba(255,255,255,0.35)" }}>
+                Nakit fiyat: {remaining.toLocaleString('tr-TR')}₺ · Kredi kartı ile %15 fark uygulanır
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -271,3 +275,4 @@ export default function PaymentSection({ reservation, compactMode = false }) {
     </>
   );
 }
+
