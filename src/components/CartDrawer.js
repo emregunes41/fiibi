@@ -219,7 +219,8 @@ export default function CartDrawer() {
     // Get PayTR token
     try {
       const packageNames = items.map(i => i.pkg.name).join(", ");
-      const basket = btoa(JSON.stringify([[packageNames, String(cardTotal), "1"]]));
+      const baseBasketStr = JSON.stringify([[packageNames, String(cardTotal), "1"]]);
+      const basket = btoa(encodeURIComponent(baseBasketStr).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
       
       const res = await fetch("/api/paytr/checkout", {
         method: "POST",

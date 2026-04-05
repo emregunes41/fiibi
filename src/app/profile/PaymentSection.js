@@ -49,7 +49,8 @@ export default function PaymentSection({ reservation, compactMode = false }) {
     try {
       const oid = `${reservation.id}_${Date.now()}`;
       const packageNames = reservation.packages.map(p => p.name).join(", ");
-      const basket = btoa(JSON.stringify([[packageNames, String(Math.round(finalAmount)), "1"]]));
+      const baseBasketStr = JSON.stringify([[packageNames, String(Math.round(finalAmount)), "1"]]);
+      const basket = btoa(encodeURIComponent(baseBasketStr).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
 
       const res = await fetch("/api/paytr/checkout", {
         method: "POST",
