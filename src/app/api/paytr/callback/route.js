@@ -33,10 +33,12 @@ export async function POST(req) {
     if (status === "success") {
       const paidAmountTL = parseFloat(total_amount) / 100; // PayTR sends kuruş
 
+      const reservationId = merchant_oid.split('_')[0];
+
       // Create payment record
-      await prisma.payment.create({
+      const newPayment = await prisma.payment.create({
         data: {
-          reservationId: merchant_oid,
+          reservationId: reservationId,
           amount: paidAmountTL,
           method: "ONLINE",
           note: "PayTR online ödeme",
@@ -44,10 +46,10 @@ export async function POST(req) {
       });
 
       // Recalculate total paid
-      const payments = await prisma.payment.findMany({ where: { reservationId: merchant_oid } });
+      const payments = await prisma.payment.findMany({ where: { reservationId: reservationId } });
       const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
 
-      const reservation = await prisma.reservation.findUnique({ where: { id: merchant_oid } });
+      const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
       const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
 
       let paymentStatus = "UNPAID";
@@ -57,16 +59,21 @@ export async function POST(req) {
         paymentStatus = "PARTIAL";
       }
 
+      const logPayload = { id: Date.now().toString(), paymentId: newPayment.id, date: new Date().toISOString(), type: "ADD_PAYMENT", amount: `+ ${paidAmountTL.toLocaleString('tr-TR')}₺`, description: `Online ödeme alındı (PayTR).`, totalSnapshot: totalAmount, paidSnapshot: totalPaid };
+
       await prisma.reservation.update({
-        where: { id: merchant_oid },
+        where: { id: reservationId },
         data: {
           status: "CONFIRMED",
           paymentStatus,
           paidAmount: totalPaid.toString(),
+          paymentLogs: reservation.paymentLogs 
+            ? [...reservation.paymentLogs, logPayload]
+            : [logPayload]
         }
       });
       
-      console.log(`PAYMENT SUCCESS for Reservation: ${merchant_oid} - ${paidAmountTL} TL`);
+      console.log(`PAYMENT SUCCESS for Reservation: ${reservationId} - ${paidAmountTL} TL`);
     } else {
       console.log(`PAYMENT FAILED for Reservation: ${merchant_oid}`);
     }

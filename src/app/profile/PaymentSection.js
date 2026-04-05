@@ -61,7 +61,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          merchant_oid: reservation.id, 
+          merchant_oid: oid, 
           email: reservation.brideEmail,
           payment_amount: Math.round(finalAmount * 100), 
           user_name: reservation.brideName,
