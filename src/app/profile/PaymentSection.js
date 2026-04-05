@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { CreditCard, Banknote, X, AlertTriangle, ArrowLeft } from "lucide-react";
+import { useState, useEffect } from "react";
+import { CreditCard, Banknote, X, AlertTriangle, ArrowLeft, CheckCircle2, Circle } from "lucide-react";
 
 const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale/EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online" };
 const methodColors = { CASH: "#4ade80", BANK_TRANSFER: "#60a5fa", CREDIT_CARD: "#f59e0b", ONLINE: "#a78bfa" };
@@ -12,6 +12,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
   const [showRevertConfirm, setShowRevertConfirm] = useState(false);
   const [isConvertedToCard, setIsConvertedToCard] = useState(false);
   
+  const [paymentMode, setPaymentMode] = useState("full"); // "full" | "partial"
   const [payAmount, setPayAmount] = useState("");
   const [iframeToken, setIframeToken] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -32,16 +33,23 @@ export default function PaymentSection({ reservation, compactMode = false }) {
   const pct = currentTotalAmount > 0 ? Math.min(100, (totalPaid / currentTotalAmount) * 100) : 0;
   const isPaid = totalPaid >= currentTotalAmount && currentTotalAmount > 0;
 
+  // Make sure payAmount stays updated with full amount if mode is "full"
+  useEffect(() => {
+    if (paymentMode === "full") {
+      setPayAmount(currentRemaining.toString());
+    }
+  }, [paymentMode, currentRemaining]);
+
   const startPayment = async () => {
-    if (!payAmount || loading) return;
-    const amount = parseFloat(payAmount);
-    if (isNaN(amount) || amount <= 0) return;
+    const finalAmount = paymentMode === "full" ? currentRemaining : parseFloat(payAmount);
+    if (isNaN(finalAmount) || finalAmount <= 0) return;
+    if (loading) return;
 
     setLoading(true);
     try {
       const oid = `${reservation.id}_${Date.now()}`;
       const packageNames = reservation.packages.map(p => p.name).join(", ");
-      const basket = btoa(JSON.stringify([[packageNames, String(Math.round(amount)), "1"]]));
+      const basket = btoa(JSON.stringify([[packageNames, String(Math.round(finalAmount)), "1"]]));
 
       const res = await fetch("/api/paytr/checkout", {
         method: "POST",
@@ -49,7 +57,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
         body: JSON.stringify({
           merchant_oid: reservation.id, 
           email: reservation.brideEmail,
-          payment_amount: Math.round(amount * 100), 
+          payment_amount: Math.round(finalAmount * 100), 
           user_name: reservation.brideName,
           user_phone: reservation.bridePhone,
           user_address: "Türkiye",
@@ -93,8 +101,6 @@ export default function PaymentSection({ reservation, compactMode = false }) {
             onClick={() => {
               setShowConversionConfirm(false);
               setIsConvertedToCard(true);
-              setPayAmount(cardRemaining.toString());
-              setShowPayModal(true);
             }}
             style={{ flex: 1, padding: 14, borderRadius: 12, background: "#facc15", color: "#000", border: "none", fontWeight: 700, cursor: "pointer" }}>
             Evet, Onaylıyorum
@@ -137,65 +143,86 @@ export default function PaymentSection({ reservation, compactMode = false }) {
         {!iframeToken ? (
           <div style={{ padding: 28 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-              <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>Ödeme Tutarı</h3>
+              <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>Ödeme Tutarı Belirle</h3>
               <button onClick={() => { setShowPayModal(false); setIframeToken(null); }} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: 6, cursor: "pointer", color: "rgba(255,255,255,0.5)" }}>
                 <X size={16} />
               </button>
             </div>
 
             <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, marginBottom: 20 }}>
-              Kalan bakiye: <strong style={{ color: "#facc15" }}>{currentRemaining.toLocaleString('tr-TR')}₺</strong>. 
-              Tamamını veya bir kısmını ödeyebilirsiniz.
+              Kalan bakiye: <strong style={{ color: "#facc15" }}>{currentRemaining.toLocaleString('tr-TR')}₺</strong>
             </p>
 
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
-              {currentRemaining > 0 && (
-                <button onClick={() => setPayAmount(currentRemaining.toString())} style={{
-                  padding: "8px 16px", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer",
-                  border: payAmount === currentRemaining.toString() ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.1)",
-                  background: payAmount === currentRemaining.toString() ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.03)",
-                  color: "#fff",
-                }}>
-                  Tamamı ({currentRemaining.toLocaleString('tr-TR')}₺)
-                </button>
-              )}
-              {currentTotalAmount > 0 && currentRemaining > currentTotalAmount * 0.5 && (
-                <button onClick={() => setPayAmount(Math.round(currentTotalAmount * 0.5).toString())} style={{
-                  padding: "8px 16px", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer",
-                  border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", color: "#fff",
-                }}>
-                  %50 ({Math.round(currentTotalAmount * 0.5).toLocaleString('tr-TR')}₺)
-                </button>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 20 }}>
+              {/* Option 1: Full Payment */}
+              <button 
+                onClick={() => setPaymentMode("full")}
+                style={{
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  padding: "16px", borderRadius: 14, border: paymentMode === "full" ? "1px solid #fff" : "1px solid rgba(255,255,255,0.1)",
+                  background: paymentMode === "full" ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
+                  cursor: "pointer", transition: "all 0.2s"
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  {paymentMode === "full" ? <CheckCircle2 size={20} style={{ color: "#fff" }} /> : <Circle size={20} style={{ color: "rgba(255,255,255,0.2)" }} />}
+                  <span style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>Tamamını Öde</span>
+                </div>
+                <span style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>{currentRemaining.toLocaleString('tr-TR')}₺</span>
+              </button>
+
+              {/* Option 2: Partial Payment */}
+              <button 
+                onClick={() => setPaymentMode("partial")}
+                style={{
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  padding: "16px", borderRadius: 14, border: paymentMode === "partial" ? "1px solid #fff" : "1px solid rgba(255,255,255,0.1)",
+                  background: paymentMode === "partial" ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
+                  cursor: "pointer", transition: "all 0.2s"
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  {paymentMode === "partial" ? <CheckCircle2 size={20} style={{ color: "#fff" }} /> : <Circle size={20} style={{ color: "rgba(255,255,255,0.2)" }} />}
+                  <span style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>Farklı Tutar Gir</span>
+                </div>
+              </button>
+
+              {paymentMode === "partial" && (
+                <div style={{ marginTop: 4 }}>
+                  <input
+                    type="number"
+                    value={payAmount}
+                    onChange={(e) => setPayAmount(e.target.value)}
+                    placeholder="Miktar belirleyin (₺)"
+                    autoFocus
+                    style={{
+                      width: "100%", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.2)",
+                      borderRadius: 12, padding: "16px", fontSize: 16, color: "#fff", outline: "none",
+                      boxSizing: "border-box", fontWeight: 600,
+                    }}
+                  />
+                  {parseFloat(payAmount) > currentRemaining && (
+                    <div style={{ color: "#ef4444", fontSize: 12, marginTop: 8 }}>Belirtilen tutar kalan bakiyeden ({currentRemaining}₺) fazla olamaz.</div>
+                  )}
+                </div>
               )}
             </div>
 
-            <input
-              type="number"
-              value={payAmount}
-              onChange={(e) => setPayAmount(e.target.value)}
-              placeholder="Ödenecek tutar (₺)"
-              style={{
-                width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)",
-                borderRadius: 12, padding: "14px 16px", fontSize: 15, color: "#fff", outline: "none",
-                boxSizing: "border-box", marginBottom: 16,
-              }}
-            />
-
             <button
               onClick={startPayment}
-              disabled={!payAmount || loading}
+              disabled={loading || (paymentMode === "partial" && (!payAmount || parseFloat(payAmount) <= 0 || parseFloat(payAmount) > currentRemaining))}
               style={{
                 width: "100%", padding: 16, borderRadius: 14, border: "none",
-                background: payAmount ? "#fff" : "rgba(255,255,255,0.05)",
-                color: payAmount ? "#000" : "rgba(255,255,255,0.2)",
-                fontWeight: 700, fontSize: 15, cursor: payAmount ? "pointer" : "not-allowed",
+                background: "#fff", color: "#000",
+                fontWeight: 700, fontSize: 15, cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                opacity: loading || (paymentMode === "partial" && (!payAmount || parseFloat(payAmount) <= 0 || parseFloat(payAmount) > currentRemaining)) ? 0.5 : 1
               }}
             >
               {loading ? "İşleniyor..." : (
                 <>
                   <CreditCard size={16} />
-                  {payAmount ? `${parseFloat(payAmount).toLocaleString('tr-TR')}₺ Öde` : "Tutar Girin"}
+                  Devam Et
                 </>
               )}
             </button>
@@ -223,7 +250,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
     if (isCashOnly && !isConvertedToCard) {
       setShowConversionConfirm(true);
     } else {
-      setPayAmount(currentRemaining.toString());
+      setPaymentMode("full");
       setShowPayModal(true);
     }
   };
@@ -347,7 +374,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
               <CreditCard size={16} />
               {isCashOnly && !isConvertedToCard 
                 ? `Kredi Kartı ile Öde (+%15)`
-                : `Ödeme Yap — ${currentRemaining.toLocaleString('tr-TR')}₺`
+                : `Ödeme Yap`
               }
             </button>
             
@@ -364,7 +391,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
                className="hover:bg-white/5 hover:text-white"
              >
                <ArrowLeft size={14} />
-               Nakite Dön (Eski Fiyattan Havale/EFT)
+               Nakite Dön (Eski Fiyata Dön)
              </button>
             )}
           </div>
