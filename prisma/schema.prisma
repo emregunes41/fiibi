@@ -220,5 +220,12 @@ model GlobalSettings {
   heroBgType   String   @default("video")
   heroBgUrl    String   @default("/assets/hero.mp4")
   heroBgColor  String   @default("#000000")
+  // Bildirim kanalları
+  emailEnabled Boolean  @default(true)
+  smsEnabled   Boolean  @default(false)
+  // Netgsm API bilgileri
+  netgsmUsercode  String @default("")
+  netgsmPassword  String @default("")
+  netgsmMsgHeader String @default("")
   updatedAt    DateTime @updatedAt
 }

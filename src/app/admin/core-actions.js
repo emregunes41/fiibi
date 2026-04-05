@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import { sendWelcomeEmail } from "../actions/send-welcome";
 import { sendReservationSuccessEmail } from "../actions/send-reservation-success";
+import { notifyWelcome, notifyReservationSuccess } from "../actions/notify";
 import { sendDriveLinkEmail } from "../actions/send-drive-link";
 import fs from "fs/promises";
 import path from "path";
@@ -282,7 +283,7 @@ export async function savePendingReservation(data) {
             role: "MEMBER"
           }
         });
-        await sendWelcomeEmail(data.brideEmail, data.brideName, password);
+        await notifyWelcome(data.brideEmail, data.bridePhone, data.brideName, password);
       }
       userId = user.id;
     }
@@ -315,7 +316,7 @@ export async function savePendingReservation(data) {
     });
 
     // Send confirmation email
-    await sendReservationSuccessEmail(data.brideEmail, data.brideName, data.date, data.totalAmount);
+    await notifyReservationSuccess(data.brideEmail, data.bridePhone, data.brideName, data.date, data.totalAmount);
 
     return { success: true, id: reservation.id };
   } catch (error) {
@@ -372,7 +373,7 @@ export async function createManualReservation(data) {
             role: "MEMBER"
           }
         });
-        await sendWelcomeEmail(brideEmail, brideName, password);
+        await notifyWelcome(brideEmail, bridePhone, brideName, password);
       }
       userId = user.id;
     }
@@ -399,7 +400,7 @@ export async function createManualReservation(data) {
     });
     
     // Send confirmation email
-    await sendReservationSuccessEmail(brideEmail, brideName, eventDate, totalAmount);
+    await notifyReservationSuccess(brideEmail, bridePhone, brideName, eventDate, totalAmount);
 
     revalidatePath('/admin/reservations');
     revalidatePath('/admin/dashboard');
@@ -626,7 +627,7 @@ export async function getSiteConfig() {
 
 export async function updateSiteConfig(data) {
   try {
-    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor } = data;
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, emailEnabled, smsEnabled, netgsmUsercode, netgsmPassword, netgsmMsgHeader } = data;
     await prisma.globalSettings.update({
       where: { id: "global-settings" },
       data: {
@@ -640,7 +641,12 @@ export async function updateSiteConfig(data) {
         cashPromoText: cashPromoText || "",
         heroBgType: heroBgType || "video",
         heroBgUrl: heroBgUrl || "/assets/hero.mp4",
-        heroBgColor: heroBgColor || "#000000"
+        heroBgColor: heroBgColor || "#000000",
+        emailEnabled: emailEnabled ?? true,
+        smsEnabled: smsEnabled ?? false,
+        netgsmUsercode: netgsmUsercode || "",
+        netgsmPassword: netgsmPassword || "",
+        netgsmMsgHeader: netgsmMsgHeader || "",
       }
     });
     revalidatePath('/');
