@@ -1358,45 +1358,6 @@ export default function ReservationsPage() {
                         </div>
                       </div>
 
-                      {/* Payment History */}
-                      {payments.length > 0 && (
-                        <div style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "16px" }}>
-                          <div style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 2 }}>Kayıtlı Ödemeler ({payments.length})</div>
-                          {payments.map((p) => (
-                            <div key={p.id} style={{ 
-                              display: "flex", justifyContent: "space-between", alignItems: "center",
-                              background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
-                              borderRadius: "8px", padding: "8px 12px",
-                            }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1, minWidth: 0 }}>
-                                <div style={{ 
-                                  width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
-                                  background: methodColors[p.method] || "#888",
-                                }} />
-                                <div style={{ minWidth: 0 }}>
-                                  <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#fff" }}>
-                                    {p.amount.toLocaleString('tr-TR')}₺
-                                    <span style={{ fontSize: "0.62rem", fontWeight: 500, color: methodColors[p.method] || "#888", marginLeft: 6 }}>
-                                      {methodLabels[p.method] || p.method}
-                                    </span>
-                                  </div>
-                                  <div style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.35)" }}>
-                                    {new Date(p.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                                    {p.note && <span style={{ marginLeft: 6, color: "rgba(255,255,255,0.45)" }}>• {p.note}</span>}
-                                  </div>
-                                </div>
-                              </div>
-                              <button 
-                                onClick={() => handleDeletePayment(p.id)}
-                                style={{ background: "none", border: "none", color: "rgba(255,68,68,0.4)", cursor: "pointer", padding: 4, display: "flex", flexShrink: 0 }}
-                              >
-                                <Trash2 size={12} />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
                       {/* Unified Timeline Action Log */}
                       {(() => {
                         const rawLogs = r.paymentLogs || [];
@@ -1444,7 +1405,18 @@ export default function ReservationsPage() {
                                   <div style={{ flex: 1, background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: "10px 14px", display: "flex", flexDirection: "column", gap: 4 }}>
                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                                       <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "rgba(255,255,255,0.85)", lineHeight: 1.4 }}>{log.description}</span>
-                                      <span style={{ fontSize: "0.7rem", fontWeight: 800, color: isPositive ? "#4ade80" : (isNegative ? "#ef4444" : "#fff"), whiteSpace: "nowrap", marginLeft: 12 }}>{log.amount}</span>
+                                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                        <span style={{ fontSize: "0.7rem", fontWeight: 800, color: isPositive ? "#4ade80" : (isNegative ? "#ef4444" : "#fff"), whiteSpace: "nowrap" }}>{log.amount}</span>
+                                        {log.type === "ADD_PAYMENT" && log.paymentId && (
+                                          <button 
+                                            onClick={() => handleDeletePayment(log.paymentId)}
+                                            style={{ background: "none", border: "none", color: "rgba(255,68,68,0.5)", cursor: "pointer", padding: 4, display: "flex", flexShrink: 0 }}
+                                            title="Ödemeyi Sil / İptal Et"
+                                          >
+                                            <Trash2 size={12} />
+                                          </button>
+                                        )}
+                                      </div>
                                     </div>
                                     <span style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.3)", fontWeight: 500 }}>
                                       {new Date(log.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })} · {new Date(log.date).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}

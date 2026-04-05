@@ -689,7 +689,7 @@ export async function addPayment(reservationId, data) {
       return { error: "Geçerli bir tutar girin." };
     }
 
-    await prisma.payment.create({
+    const newPayment = await prisma.payment.create({
       data: {
         reservationId,
         amount: parsedAmount,
@@ -720,8 +720,8 @@ export async function addPayment(reservationId, data) {
         paidAmount: totalPaid.toString(),
         paymentStatus,
         paymentLogs: reservation.paymentLogs 
-          ? [...reservation.paymentLogs, { id: Date.now().toString(), date: new Date().toISOString(), type: "ADD_PAYMENT", amount: `+ ${parsedAmount.toLocaleString('tr-TR')}₺`, description: `${method} ödemesi alındı.` + (note ? ` (${note})` : '') }] 
-          : [{ id: Date.now().toString(), date: new Date().toISOString(), type: "ADD_PAYMENT", amount: `+ ${parsedAmount.toLocaleString('tr-TR')}₺`, description: `${method} ödemesi alındı.` + (note ? ` (${note})` : '') }]
+          ? [...reservation.paymentLogs, { id: Date.now().toString(), paymentId: newPayment.id, date: new Date().toISOString(), type: "ADD_PAYMENT", amount: `+ ${parsedAmount.toLocaleString('tr-TR')}₺`, description: `${method} ödemesi alındı.` + (note ? ` (${note})` : '') }] 
+          : [{ id: Date.now().toString(), paymentId: newPayment.id, date: new Date().toISOString(), type: "ADD_PAYMENT", amount: `+ ${parsedAmount.toLocaleString('tr-TR')}₺`, description: `${method} ödemesi alındı.` + (note ? ` (${note})` : '') }]
       }
     });
 
