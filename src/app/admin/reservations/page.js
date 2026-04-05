@@ -1421,6 +1421,19 @@ export default function ReservationsPage() {
                                     <span style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.3)", fontWeight: 500 }}>
                                       {new Date(log.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })} · {new Date(log.date).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
                                     </span>
+                                    {log.totalSnapshot !== undefined && log.paidSnapshot !== undefined && (
+                                      <div style={{ display: "flex", gap: 8, marginTop: 4, paddingTop: 4, borderTop: "1px dashed rgba(255,255,255,0.06)", flexWrap: "wrap" }}>
+                                        <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>
+                                          <span style={{color:"rgba(255,255,255,0.2)"}}>TOPLAM:</span> {log.totalSnapshot.toLocaleString('tr-TR')}₺
+                                        </div>
+                                        <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "#4ade80" }}>
+                                          <span style={{color:"rgba(74,222,128,0.4)"}}>ÖDENEN:</span> {log.paidSnapshot.toLocaleString('tr-TR')}₺
+                                        </div>
+                                        <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "#facc15" }}>
+                                          <span style={{color:"rgba(250,204,21,0.4)"}}>KALAN:</span> {(Math.max(0, log.totalSnapshot - log.paidSnapshot)).toLocaleString('tr-TR')}₺
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               )})}
