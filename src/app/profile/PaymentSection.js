@@ -361,28 +361,66 @@ export default function PaymentSection({ reservation, compactMode = false }) {
           %{Math.round(pct)} ödendi
         </div>
 
-        {/* Payment History */}
-        {payments.length > 0 && (
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 8 }}>Ödeme Geçmişi</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              {payments.map((p) => (
-                <div key={p.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: "8px 12px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: methodColors[p.method] || "#888" }} />
-                    <div>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{p.amount.toLocaleString('tr-TR')}₺</span>
-                      <span style={{ fontSize: 11, fontWeight: 500, color: methodColors[p.method] || "#888", marginLeft: 6 }}>{methodLabels[p.method] || p.method}</span>
+        {/* Unified Payment & Action Timeline */}
+        {(() => {
+          const rawLogs = reservation.paymentLogs || [];
+          // Inject legacy payments that were recorded prior to the semantic logging system
+          const legacyPayments = payments.filter(p => {
+            const pTime = new Date(p.createdAt).getTime();
+            return !rawLogs.some(l => l.type === "ADD_PAYMENT" && Math.abs(new Date(l.date).getTime() - pTime) < 5000);
+          }).map(p => ({
+            id: p.id,
+            date: p.createdAt,
+            type: "ADD_PAYMENT",
+            amount: `+ ${p.amount.toLocaleString('tr-TR')}₺`,
+            description: `${methodLabels[p.method] || p.method} ödemesi (Eski Kayıt)`
+          }));
+          
+          const timeline = [...rawLogs, ...legacyPayments].sort((a, b) => new Date(b.date) - new Date(a.date));
+          
+          if (timeline.length === 0) return null;
+
+          const getLogIcon = (type) => {
+             switch(type) {
+               case "ADD_PAYMENT": return <CreditCard size={12} style={{ color: "#4ade80" }} />;
+               case "DELETE_PAYMENT": return <X size={12} style={{ color: "#ef4444" }} />;
+               case "CARD_CONVERSION": return <CreditCard size={12} style={{ color: "#facc15" }} />;
+               case "EXTRA_FEE": return <AlertTriangle size={12} style={{ color: "#f97316" }} />;
+               case "CASH_REVERSION": return <Banknote size={12} style={{ color: "#a78bfa" }} />;
+               default: return <Circle size={12} style={{ color: "#888" }} />;
+             }
+          };
+
+          return (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 12 }}>Hesap Hareketleri</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, position: "relative" }}>
+                {/* Vertical timeline line */}
+                <div style={{ position: "absolute", left: 15, top: 10, bottom: 10, width: 2, background: "rgba(255,255,255,0.05)", zIndex: 0 }} />
+                
+                {timeline.map((log) => {
+                  const isPositive = log.amount && log.amount.includes("+");
+                  const isNegative = log.amount && log.amount.includes("-");
+                  return (
+                  <div key={log.id} style={{ display: "flex", gap: 12, position: "relative", zIndex: 1 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#111", border: "2px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      {getLogIcon(log.type)}
+                    </div>
+                    <div style={{ flex: 1, background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: "10px 14px", display: "flex", flexDirection: "column", gap: 4 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.85)", lineHeight: 1.4 }}>{log.description}</span>
+                        <span style={{ fontSize: 12, fontWeight: 800, color: isPositive ? "#4ade80" : (isNegative ? "#ef4444" : "#fff"), whiteSpace: "nowrap", marginLeft: 12 }}>{log.amount}</span>
+                      </div>
+                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", fontWeight: 500 }}>
+                        {new Date(log.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })} · {new Date(log.date).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
+                      </span>
                     </div>
                   </div>
-                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
-                    {new Date(p.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}
-                  </span>
-                </div>
-              ))}
+                )})}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Action Buttons */}
         {currentRemaining > 0 && (

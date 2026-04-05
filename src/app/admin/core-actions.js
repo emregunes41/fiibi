@@ -719,6 +719,9 @@ export async function addPayment(reservationId, data) {
       data: {
         paidAmount: totalPaid.toString(),
         paymentStatus,
+        paymentLogs: reservation.paymentLogs 
+          ? [...reservation.paymentLogs, { id: Date.now().toString(), date: new Date().toISOString(), type: "ADD_PAYMENT", amount: `+ ${parsedAmount.toLocaleString('tr-TR')}₺`, description: `${method} ödemesi alındı.` + (note ? ` (${note})` : '') }] 
+          : [{ id: Date.now().toString(), date: new Date().toISOString(), type: "ADD_PAYMENT", amount: `+ ${parsedAmount.toLocaleString('tr-TR')}₺`, description: `${method} ödemesi alındı.` + (note ? ` (${note})` : '') }]
       }
     });
 
@@ -756,6 +759,9 @@ export async function deletePayment(paymentId) {
       data: {
         paidAmount: totalPaid.toString(),
         paymentStatus,
+        paymentLogs: reservation.paymentLogs 
+          ? [...reservation.paymentLogs, { id: Date.now().toString(), date: new Date().toISOString(), type: "DELETE_PAYMENT", amount: `- ${payment.amount.toLocaleString('tr-TR')}₺`, description: `${payment.method} ödemesi silindi.` }] 
+          : [{ id: Date.now().toString(), date: new Date().toISOString(), type: "DELETE_PAYMENT", amount: `- ${payment.amount.toLocaleString('tr-TR')}₺`, description: `${payment.method} ödemesi silindi.` }]
       }
     });
 
@@ -769,11 +775,17 @@ export async function deletePayment(paymentId) {
 
 export async function convertToCreditCardPermanent(reservationId, newTotalStr) {
   try {
+    const r = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    if (!r) throw new Error("Reservation not found");
+    
     await prisma.reservation.update({
       where: { id: reservationId },
       data: {
         paymentPreference: "CREDIT_CARD",
-        totalAmount: newTotalStr
+        totalAmount: newTotalStr,
+        paymentLogs: r.paymentLogs
+          ? [...r.paymentLogs, { id: Date.now().toString(), date: new Date().toISOString(), type: "CARD_CONVERSION", amount: `+%15`, description: `Kredi kartı ödemesi için %15 komisyon yansıtıldı. Yeni Tutar: ${newTotalStr}` }]
+          : [{ id: Date.now().toString(), date: new Date().toISOString(), type: "CARD_CONVERSION", amount: `+%15`, description: `Kredi kartı ödemesi için %15 komisyon yansıtıldı. Yeni Tutar: ${newTotalStr}` }]
       }
     });
     revalidatePath('/profile');
@@ -818,7 +830,10 @@ export async function addReservationExtraFee(reservationId, amount, note) {
       data: {
         totalAmount: newTotalStr,
         notes: newNotes,
-        selectedAddons: currentAddons
+        selectedAddons: currentAddons,
+        paymentLogs: r.paymentLogs 
+          ? [...r.paymentLogs, { id: Date.now().toString(), date: new Date().toISOString(), type: "EXTRA_FEE", amount: `+ ${addAmount.toLocaleString('tr-TR')}₺`, description: `Ekstra hizmet/fiyat eklendi: ${note}` }] 
+          : [{ id: Date.now().toString(), date: new Date().toISOString(), type: "EXTRA_FEE", amount: `+ ${addAmount.toLocaleString('tr-TR')}₺`, description: `Ekstra hizmet/fiyat eklendi: ${note}` }]
       }
     });
 
@@ -861,7 +876,10 @@ export async function revertToCashPayment(reservationId) {
       where: { id: reservationId },
       data: {
         paymentPreference: "CASH",
-        totalAmount: cashTotalStr
+        totalAmount: cashTotalStr,
+        paymentLogs: r.paymentLogs 
+          ? [...r.paymentLogs, { id: Date.now().toString(), date: new Date().toISOString(), type: "CASH_REVERSION", amount: `Kaldırıldı`, description: `Nakit ödemeye dönüldü, komisyon iade edildi. Yeni Tutar: ${cashTotalStr}` }] 
+          : [{ id: Date.now().toString(), date: new Date().toISOString(), type: "CASH_REVERSION", amount: `Kaldırıldı`, description: `Nakit ödemeye dönüldü, komisyon iade edildi. Yeni Tutar: ${cashTotalStr}` }]
       }
     });
 
