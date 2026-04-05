@@ -149,7 +149,7 @@ export default function AdminLayout({ children }) {
         minWidth: 0, // prevents overflow on mobile
       }}>
         {/* Mobile top padding for the top bar */}
-        <div className="md:hidden" style={{ height: "56px" }} />
+        <div className="md:hidden" style={{ height: "72px" }} />
         <div style={{ padding: "clamp(16px, 4vw, 56px)", maxWidth: "1200px", margin: "0 auto" }}>
           {children}
         </div>

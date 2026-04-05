@@ -117,8 +117,10 @@ export default function CartDrawer() {
   const upsellSuggestions = [];
   const addedKeys = new Set();
   
-  cartCategories.forEach(cat => {
-    const suggestedCats = UPSELL_MAP[cat] || [];
+  // Sadece sepete eklenen ILK (ana) pakete göre öneri yap, zincirleme önermeyi engelle
+  const primaryCat = cartCategories[0];
+  if (primaryCat) {
+    const suggestedCats = UPSELL_MAP[primaryCat] || [];
     suggestedCats.forEach(sCat => {
       if (!cartCategories.includes(sCat) && !addedKeys.has(sCat)) {
         // En uygun fiyatlı paketi bul
@@ -128,9 +130,9 @@ export default function CartDrawer() {
           const bestPkg = catPkgs[0];
           
           let title = "Bunu da Ekleyin!";
-          if (cat === "DUGUN" && sCat === "DIS_CEKIM") title = "Dış Çekim İster misiniz?";
-          if (cat === "NISAN" && sCat === "DIS_CEKIM") title = "Özel Dış Çekim İster misiniz?";
-          if (cat === "DIS_CEKIM" && sCat === "DUGUN") title = "Düğün Çekimi de İster misiniz?";
+          if (primaryCat === "DUGUN" && sCat === "DIS_CEKIM") title = "Dış Çekim İster misiniz?";
+          if (primaryCat === "NISAN" && sCat === "DIS_CEKIM") title = "Özel Dış Çekim İster misiniz?";
+          if (primaryCat === "DIS_CEKIM" && sCat === "DUGUN") title = "Düğün Çekimi de İster misiniz?";
 
           upsellSuggestions.push({
             pkg: bestPkg,
@@ -144,7 +146,7 @@ export default function CartDrawer() {
         }
       }
     });
-  });
+  }
 
   const buildReservationData = (amount) => {
     const firstItem = items[0];
