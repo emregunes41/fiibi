@@ -780,7 +780,47 @@ export async function convertToCreditCardPermanent(reservationId, newTotalStr) {
     revalidatePath('/admin/reservations');
     return { success: true };
   } catch (error) {
-    console.error("Convert to Credit Card Permanent Error:", error);
+    return { error: error.message };
+  }
+}
+
+export async function addReservationExtraFee(reservationId, amount, note) {
+  try {
+    const r = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    if (!r) throw new Error("Reservation not found");
+
+    const currentTotal = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
+    const addAmount = parseFloat(amount || "0");
+    const newTotalStr = (currentTotal + addAmount).toLocaleString('tr-TR') + '₺';
+    
+    // Combine existing notes with new note
+    const timeStr = new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+    const newNotes = r.notes 
+      ? `${r.notes}\n\n[${timeStr} Ekstra] ${note} (+${addAmount.toLocaleString('tr-TR')}₺)`
+      : `[${timeStr} Ekstra] ${note} (+${addAmount.toLocaleString('tr-TR')}₺)`;
+
+    // Push to selectedAddons so the price goes into line items
+    const currentAddons = r.selectedAddons && Array.isArray(r.selectedAddons) ? r.selectedAddons : [];
+    currentAddons.push({
+      title: note,
+      price: addAmount.toString(),
+      isExtraFee: true
+    });
+
+    await prisma.reservation.update({
+      where: { id: reservationId },
+      data: {
+        totalAmount: newTotalStr,
+        notes: newNotes,
+        selectedAddons: currentAddons
+      }
+    });
+
+    revalidatePath('/profile');
+    revalidatePath('/admin/reservations');
+    return { success: true };
+  } catch (error) {
+    console.error("Add Extra Fee Error:", error);
     return { error: error.message };
   }
 }

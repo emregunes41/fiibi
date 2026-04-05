@@ -237,6 +237,15 @@ export default async function ProfilePage() {
                     </div>
                     )}
 
+                    {res.notes && (
+                       <div style={{ marginTop: 10, padding: "12px 14px", background: "rgba(250,204,21,0.05)", borderRadius: 10, border: "1px solid rgba(250,204,21,0.15)" }}>
+                          <div style={{ fontSize: 9, fontWeight: 700, color: "#facc15", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Notlar / Açıklama</div>
+                          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", lineHeight: 1.5, whiteSpace: "pre-wrap" }}>
+                             {res.notes}
+                          </div>
+                       </div>
+                    )}
+
                     {/* Workflow Progress */}
                     <div style={{ padding: "20px 24px" }}>
                       <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 20 }}>İşlem Gidişatı</p>

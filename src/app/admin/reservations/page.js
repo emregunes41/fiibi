@@ -29,6 +29,9 @@ export default function ReservationsPage() {
   const [detailModal, setDetailModal] = useState({ isOpen: false, data: null });
   const [paymentForm, setPaymentForm] = useState({ amount: "", method: "CASH", note: "" });
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const [extraFeeModal, setExtraFeeModal] = useState({ isOpen: false, data: null });
+  const [extraFeeForm, setExtraFeeForm] = useState({ amount: "", note: "" });
+  const [extraFeeLoading, setExtraFeeLoading] = useState(false);
   const [viewMode, setViewMode] = useState("list"); // "list" | "calendar"
   const [calMonth, setCalMonth] = useState(new Date().getMonth());
   const [calYear, setCalYear] = useState(new Date().getFullYear());
@@ -1172,17 +1175,43 @@ export default function ReservationsPage() {
                   const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale/EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online" };
                   const methodColors = { CASH: "#4ade80", BANK_TRANSFER: "#60a5fa", CREDIT_CARD: "#f59e0b", ONLINE: "#a78bfa" };
 
-                  const handleAddPayment = async () => {
-                    if (!paymentForm.amount || paymentLoading) return;
+                  const handleAddPayment = async (e) => {
+                    e.preventDefault();
                     setPaymentLoading(true);
-                    const res = await addPayment(r.id, paymentForm);
+                    const res = await addPayment(detailModal.data.id, {
+                      amount: parseFloat(paymentForm.amount),
+                      method: paymentForm.method,
+                      note: paymentForm.note
+                    });
                     if (res.success) {
                       setPaymentForm({ amount: "", method: "CASH", note: "" });
-                      const updated = await getReservations();
-                      const freshRes = updated.find(x => x.id === r.id);
-                      if (freshRes) setDetailModal({ isOpen: true, data: freshRes });
+                      loadData();
+                      // Yalnızca arayüzü güncelle, modalı kapatma ki kullanıcı hemen sonucu görsün
+                      const updatedRes = await getReservations();
+                      setDetailModal({ isOpen: true, data: updatedRes.find(r => r.id === detailModal.data.id) });
+                    } else {
+                      alert("Ödeme eklenemedi: " + res.error);
                     }
                     setPaymentLoading(false);
+                  };
+
+                  const handleAddExtraFee = async (e) => {
+                    e.preventDefault();
+                    setExtraFeeLoading(true);
+                    const { addReservationExtraFee } = await import('../core-actions');
+                    const res = await addReservationExtraFee(extraFeeModal.data.id, extraFeeForm.amount, extraFeeForm.note);
+                    if (res.success) {
+                      setExtraFeeForm({ amount: "", note: "" });
+                      setExtraFeeModal({ isOpen: false, data: null });
+                      loadData();
+                      if (detailModal.isOpen && detailModal.data?.id === extraFeeModal.data.id) {
+                        const updatedRes = await getReservations();
+                        setDetailModal({ isOpen: true, data: updatedRes.find(r => r.id === extraFeeModal.data.id) });
+                      }
+                    } else {
+                      alert("Ekstra fiyat eklenemedi: " + res.error);
+                    }
+                    setExtraFeeLoading(false);
                   };
 
                   const handleDeletePayment = async (paymentId) => {
@@ -1273,6 +1302,47 @@ export default function ReservationsPage() {
                             }}
                           >
                             {paymentLoading ? "..." : "+ Ekle"}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Add Extra Fee */}
+                      <div style={{ background: "rgba(250,204,21,0.06)", border: "1px solid rgba(250,204,21,0.15)", borderRadius: "10px", padding: "14px", marginBottom: 16 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                          <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "#facc15", textTransform: "uppercase", letterSpacing: "0.05em" }}>➕ Ekstra Fiyat / Hizmet Ekle</span>
+                        </div>
+                        <div style={{ display: "flex", gap: "8px", marginBottom: 8 }}>
+                          <input 
+                            type="text" 
+                            placeholder="Açıklama / Notlar" 
+                            value={extraFeeForm.note} 
+                            onChange={(e) => setExtraFeeForm(p => ({ ...p, note: e.target.value }))} 
+                            style={{ ...inp, fontSize: "0.78rem", flex: 1 }} 
+                          />
+                        </div>
+                        <div style={{ display: "flex", gap: "8px" }}>
+                          <input 
+                            type="number" 
+                            placeholder="Tutar (₺)" 
+                            value={extraFeeForm.amount} 
+                            onChange={(e) => setExtraFeeForm(p => ({ ...p, amount: e.target.value }))} 
+                            style={{ ...inp, fontSize: "0.78rem", width: "120px" }} 
+                          />
+                          <button 
+                            onClick={(e) => {
+                               setExtraFeeModal({ isOpen: true, data: detailModal.data });
+                               handleAddExtraFee(e);
+                            }} 
+                            disabled={!extraFeeForm.amount || !extraFeeForm.note || extraFeeLoading}
+                            style={{ 
+                              padding: "8px 16px", borderRadius: "0.6rem", border: "none",
+                              background: (extraFeeForm.amount && extraFeeForm.note) ? "#facc15" : "rgba(255,255,255,0.06)",
+                              color: (extraFeeForm.amount && extraFeeForm.note) ? "#000" : "rgba(255,255,255,0.3)",
+                              fontWeight: 800, fontSize: "0.72rem", cursor: (extraFeeForm.amount && extraFeeForm.note) ? "pointer" : "not-allowed",
+                              flexShrink: 0, flex: 1
+                            }}
+                          >
+                            {extraFeeLoading ? "..." : "Toplama Dahil Et ve Gözükmesini Sağla"}
                           </button>
                         </div>
                       </div>
