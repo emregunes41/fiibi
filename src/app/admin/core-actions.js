@@ -790,7 +790,13 @@ export async function addReservationExtraFee(reservationId, amount, note) {
     if (!r) throw new Error("Reservation not found");
 
     const currentTotal = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
-    const addAmount = parseFloat(amount || "0");
+    let addAmount = parseFloat(amount || "0");
+    
+    // Auto-apply %15 if the client is permanently on CREDIT_CARD mode, since the input is strictly cash based
+    if (r.paymentPreference === "CREDIT_CARD") {
+        addAmount = Math.round(addAmount * 1.15);
+    }
+    
     const newTotalStr = (currentTotal + addAmount).toLocaleString('tr-TR') + '₺';
     
     // Combine existing notes with new note

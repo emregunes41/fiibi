@@ -1197,19 +1197,22 @@ export default function ReservationsPage() {
 
                   const handleAddExtraFee = async (e) => {
                     e.preventDefault();
+                    if (!detailModal.data) return;
                     setExtraFeeLoading(true);
-                    const { addReservationExtraFee } = await import('../core-actions');
-                    const res = await addReservationExtraFee(extraFeeModal.data.id, extraFeeForm.amount, extraFeeForm.note);
-                    if (res.success) {
-                      setExtraFeeForm({ amount: "", note: "" });
-                      setExtraFeeModal({ isOpen: false, data: null });
-                      loadData();
-                      if (detailModal.isOpen && detailModal.data?.id === extraFeeModal.data.id) {
+                    try {
+                      const { addReservationExtraFee } = await import('../core-actions');
+                      const res = await addReservationExtraFee(detailModal.data.id, extraFeeForm.amount, extraFeeForm.note);
+                      if (res.success) {
+                        setExtraFeeForm({ amount: "", note: "" });
+                        loadData();
                         const updatedRes = await getReservations();
-                        setDetailModal({ isOpen: true, data: updatedRes.find(r => r.id === extraFeeModal.data.id) });
+                        setDetailModal({ isOpen: true, data: updatedRes.find(r => r.id === detailModal.data.id) });
+                      } else {
+                        alert("Ekstra fiyat eklenemedi: " + res.error);
                       }
-                    } else {
-                      alert("Ekstra fiyat eklenemedi: " + res.error);
+                    } catch (err) {
+                      console.error(err);
+                      alert("Hata oluştu.");
                     }
                     setExtraFeeLoading(false);
                   };
