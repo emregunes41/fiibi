@@ -767,3 +767,20 @@ export async function deletePayment(paymentId) {
   }
 }
 
+export async function convertToCreditCardPermanent(reservationId, newTotalStr) {
+  try {
+    await prisma.reservation.update({
+      where: { id: reservationId },
+      data: {
+        paymentPreference: "CREDIT_CARD",
+        totalAmount: newTotalStr
+      }
+    });
+    revalidatePath('/profile');
+    revalidatePath('/admin/reservations');
+    return { success: true };
+  } catch (error) {
+    console.error("Convert to Credit Card Permanent Error:", error);
+    return { error: error.message };
+  }
+}
