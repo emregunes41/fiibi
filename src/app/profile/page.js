@@ -343,19 +343,15 @@ export default async function ProfilePage() {
 
         {/* ── Unified Payment Section ── */}
         {user.reservations.length > 0 && (() => {
-          const allPayments = user.reservations.flatMap(r => r.payments || []);
-          const totalAmount = user.reservations.reduce((sum, r) => {
-            return sum + parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
-          }, 0);
-          const totalPaid = allPayments.reduce((sum, p) => sum + p.amount, 0);
-          const remaining = Math.max(0, totalAmount - totalPaid);
-          const isPaid = totalPaid >= totalAmount && totalAmount > 0;
           // Find first unpaid reservation for the pay button
           const firstUnpaidRes = user.reservations.find(r => {
             const rt = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
             const rp = (r.payments || []).reduce((s, p) => s + p.amount, 0);
             return rt - rp > 0;
           });
+          
+          // Fallback to the first reservation if everything is paid
+          const displayRes = firstUnpaidRes || user.reservations[0];
 
           return (
             <section style={{ marginTop: 16 }}>
@@ -364,56 +360,8 @@ export default async function ProfilePage() {
                 <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13 }}>Tüm rezervasyonlarınızın ödeme özeti</p>
               </div>
 
-              {isPaid ? (
-                <div style={{ background: "rgba(74,222,128,0.04)", border: "1px solid rgba(74,222,128,0.1)", borderRadius: 20, padding: "20px 24px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                    <CreditCard size={16} style={{ color: "#4ade80" }} />
-                    <span style={{ fontWeight: 700, fontSize: 14, color: "#4ade80" }}>✅ Tüm Ödemeler Tamamlandı</span>
-                  </div>
-                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)" }}>
-                    Toplam {totalPaid.toLocaleString('tr-TR')}₺ ödendi · {allPayments.length} işlem
-                  </div>
-                </div>
-              ) : (
-                <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, padding: "20px 24px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                    <Banknote size={16} style={{ color: "#facc15" }} />
-                    <span style={{ fontWeight: 700, fontSize: 14 }}>Genel Ödeme Özeti</span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-3" style={{ marginBottom: 14 }}>
-                    <div style={{ textAlign: "center", background: "rgba(255,255,255,0.02)", borderRadius: 10, padding: "10px 6px", border: "1px solid rgba(255,255,255,0.04)" }}>
-                      <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 4 }}>Toplam</div>
-                      <div style={{ fontSize: 16, fontWeight: 800, color: "#fff" }}>{totalAmount.toLocaleString('tr-TR')}₺</div>
-                    </div>
-                    <div style={{ textAlign: "center", background: "rgba(74,222,128,0.03)", borderRadius: 10, padding: "10px 6px", border: "1px solid rgba(74,222,128,0.06)" }}>
-                      <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(74,222,128,0.5)", textTransform: "uppercase", marginBottom: 4 }}>Ödenen</div>
-                      <div style={{ fontSize: 16, fontWeight: 800, color: "#4ade80" }}>{totalPaid.toLocaleString('tr-TR')}₺</div>
-                    </div>
-                    <div style={{ textAlign: "center", background: "rgba(250,204,21,0.03)", borderRadius: 10, padding: "10px 6px", border: "1px solid rgba(250,204,21,0.06)" }}>
-                      <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(250,204,21,0.5)", textTransform: "uppercase", marginBottom: 4 }}>Kalan</div>
-                      <div style={{ fontSize: 16, fontWeight: 800, color: "#facc15" }}>{remaining.toLocaleString('tr-TR')}₺</div>
-                    </div>
-                  </div>
-                  {/* Progress bar */}
-                  {(() => {
-                    const pct = totalAmount > 0 ? Math.min(100, (totalPaid / totalAmount) * 100) : 0;
-                    return (
-                      <>
-                        <div style={{ height: 5, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden", marginBottom: 6 }}>
-                          <div style={{ height: "100%", borderRadius: 3, background: pct > 0 ? "linear-gradient(90deg, #4ade80, #facc15)" : "transparent", width: `${pct}%`, transition: "width 0.5s ease" }} />
-                        </div>
-                        <div style={{ textAlign: "center", fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.3)", marginBottom: 16 }}>%{Math.round(pct)} ödendi</div>
-                      </>
-                    );
-                  })()}
-
-
-
-                  {/* Single Pay Button */}
-                  {firstUnpaidRes && remaining > 0 && (
-                    <PaymentSection reservation={firstUnpaidRes} compactMode={true} />
-                  )}
-                </div>
+              {displayRes && (
+                <PaymentSection reservation={displayRes} compactMode={false} />
               )}
             </section>
           );
