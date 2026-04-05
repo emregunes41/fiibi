@@ -528,13 +528,21 @@ export default function ReservationsPage() {
                   <Eye size={12} style={{ opacity: 0.4, flexShrink: 0 }} />
                   {res.brideName} {res.groomName ? `& ${res.groomName}` : ""}
                 </div>
-                <span style={{
-                  padding: "3px 8px", borderRadius: "6px", fontSize: "0.6rem", fontWeight: 800,
-                  textTransform: "uppercase", letterSpacing: "0.03em", flexShrink: 0,
-                  background: sc.bg, color: sc.c, border: sc.b,
-                }}>
-                  {statusLabel(res.status)}
-                </span>
+                <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                  {res.paymentPreference === "CREDIT_CARD" && (
+                    <span style={{ padding: "3px 6px", borderRadius: "4px", fontSize: "0.55rem", fontWeight: 800, background: "rgba(245,158,11,0.15)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}>💳 Kart</span>
+                  )}
+                  {res.paymentPreference === "CASH" && (
+                    <span style={{ padding: "3px 6px", borderRadius: "4px", fontSize: "0.55rem", fontWeight: 800, background: "rgba(74,222,128,0.15)", color: "#4ade80", border: "1px solid rgba(74,222,128,0.3)" }}>💵 Nakit</span>
+                  )}
+                  <span style={{
+                    padding: "3px 8px", borderRadius: "6px", fontSize: "0.6rem", fontWeight: 800,
+                    textTransform: "uppercase", letterSpacing: "0.03em", flexShrink: 0,
+                    background: sc.bg, color: sc.c, border: sc.b,
+                  }}>
+                    {statusLabel(res.status)}
+                  </span>
+                </div>
               </div>
 
               {res.selectedPhotos && (

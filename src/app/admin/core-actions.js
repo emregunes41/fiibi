@@ -826,7 +826,56 @@ export async function addReservationExtraFee(reservationId, amount, note) {
     revalidatePath('/admin/reservations');
     return { success: true };
   } catch (error) {
-    console.error("Add Extra Fee Error:", error);
+    return { error: error.message };
+  }
+}
+
+export async function revertToCashPayment(reservationId) {
+  try {
+    const r = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    if (!r) throw new Error("Reservation not found");
+    
+    // Only revert if we are in CREDIT_CARD mode
+    if (r.paymentPreference !== "CREDIT_CARD") {
+       return { success: true };
+    }
+
+    const currentTotal = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
+    // Mathematically revert 15% calculation (currentTotal / 1.15)
+    // We round to nearest integer to avoid float artifacts
+    const cashTotal = Math.round(currentTotal / 1.15);
+    const cashTotalStr = cashTotal.toLocaleString('tr-TR') + '₺';
+
+    await prisma.reservation.update({
+      where: { id: reservationId },
+      data: {
+        paymentPreference: "CASH",
+        totalAmount: cashTotalStr
+      }
+    });
+
+    // Notify Admin
+    try {
+        const { getNotificationSettings, sendEmailWithResend } = await import('../actions/notify');
+        const settings = await getNotificationSettings();
+        await sendEmailWithResend(settings, "hello@pinowed.com", "💰 Nakit Ödeme Talebi (Karttan Dönüş)", `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 8px;">
+            <h3>Yeni Nakit Ödeme Talebi</h3>
+            <p><strong>Müşteri:</strong> ${r.brideName} / ${r.groomName}</p>
+            <p><strong>Telefon:</strong> ${r.bridePhone || r.groomPhone}</p>
+            <p>Kredi kartı tercih eden bu kullanıcı, profil üzerinden yeniden <strong style="color: #4ade80;">Nakit Ödeme</strong> yöntemine dönüş yapmayı talep etti. İlgili komisyon (%15) fiyatından düşülüp düzeltildi.</p>
+            <p>Müşteriye IBAN bilgilerinizi iletmek için Whatsapp üzerinden iletişime geçebilirsiniz.</p>
+            <a href="https://www.pinowed.com/admin/reservations" style="background:#000;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;display:inline-block;margin-top:10px;">Admin Paneline Git</a>
+          </div>
+        `);
+    } catch(err) {
+        console.error("Email error in revert:", err);
+    }
+
+    revalidatePath('/profile');
+    revalidatePath('/admin/reservations');
+    return { success: true };
+  } catch (error) {
     return { error: error.message };
   }
 }

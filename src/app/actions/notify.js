@@ -7,7 +7,7 @@ import { sendSMS } from "./send-sms";
 /**
  * Bildirim ayarlarını yükle
  */
-async function getNotificationSettings() {
+export async function getNotificationSettings() {
   try {
     const settings = await prisma.globalSettings.findUnique({
       where: { id: "global-settings" },
@@ -28,7 +28,7 @@ function getResendApiKey(settings) {
 /**
  * Genel e-posta gönderme (DB'deki veya .env'deki Resend key ile)
  */
-async function sendEmailWithResend(settings, to, subject, html) {
+export async function sendEmailWithResend(settings, to, subject, html) {
   const apiKey = getResendApiKey(settings);
   if (!apiKey) return { success: false, error: "Resend API Key yok" };
 

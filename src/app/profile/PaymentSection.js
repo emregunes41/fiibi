@@ -10,10 +10,12 @@ const methodColors = { CASH: "#4ade80", BANK_TRANSFER: "#60a5fa", CREDIT_CARD: "
 export default function PaymentSection({ reservation, compactMode = false }) {
   const [showPayModal, setShowPayModal] = useState(false);
   const [showConversionConfirm, setShowConversionConfirm] = useState(false);
+  const [showRevertConfirm, setShowRevertConfirm] = useState(false);
   
   // Local active session indicator before page reload sets it permanently
   const [isConvertedToCard, setIsConvertedToCard] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
+  const [isReverting, setIsReverting] = useState(false);
   
   const [paymentMode, setPaymentMode] = useState("full"); // "full" | "partial"
   const [payAmount, setPayAmount] = useState("");
@@ -117,6 +119,43 @@ export default function PaymentSection({ reservation, compactMode = false }) {
             }}
             style={{ flex: 1, padding: 14, borderRadius: 12, background: "#facc15", color: "#000", border: "none", fontWeight: 700, cursor: isConverting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: isConverting ? 0.7 : 1 }}>
             {isConverting ? "Kayıt Ediliyor..." : "Evet, Onaylıyorum"}
+          </button>
+        </div>
+      </div>
+    </div>
+  ) : null;
+
+  const renderRevertConfirmModal = () => showRevertConfirm ? (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 24 }}>
+      <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 20, width: "100%", maxWidth: 440, padding: 28, animation: "popIn 0.3s ease" }}>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+          <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(74,222,128,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Banknote size={32} style={{ color: "#4ade80" }} />
+          </div>
+        </div>
+        <h3 style={{ fontSize: 20, fontWeight: 700, margin: "0 0 16px 0", textAlign: "center" }}>Nakite Geri Dönüş Talebi</h3>
+        <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, textAlign: "center", lineHeight: 1.6, marginBottom: 24 }}>
+          Mevcut bakiyenizdeki %15'lik komisyon kesintisi kaldırılarak nakit ödeme fiyatınıza geri dönecektir.<br/><br/>
+          İşlemi onayladığınızda ekibimiz sizinle IBAN bilgileri için iletişime geçecektir.<br/><br/>
+          Emin misiniz?
+        </p>
+        <div style={{ display: "flex", gap: 12 }}>
+          <button 
+            disabled={isReverting}
+            onClick={() => setShowRevertConfirm(false)}
+            style={{ flex: 1, padding: 14, borderRadius: 12, background: "rgba(255,255,255,0.05)", color: "#fff", border: "none", fontWeight: 700, cursor: isReverting ? "not-allowed" : "pointer" }}>
+            İptal
+          </button>
+          <button 
+            disabled={isReverting}
+            onClick={async () => {
+              setIsReverting(true);
+              const { revertToCashPayment } = await import('@/app/admin/core-actions');
+              await revertToCashPayment(reservation.id);
+              window.location.reload();
+            }}
+            style={{ flex: 1, padding: 14, borderRadius: 12, background: "#4ade80", color: "#000", border: "none", fontWeight: 700, cursor: isReverting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: isReverting ? 0.7 : 1 }}>
+            {isReverting ? "İşleniyor..." : "Evet, Döndür"}
           </button>
         </div>
       </div>
@@ -363,12 +402,28 @@ export default function PaymentSection({ reservation, compactMode = false }) {
                 : `Ödeme Yap`
               }
             </button>
+
+            {(!isCashOnly || isConvertedToCard) && (
+              <button
+                onClick={() => setShowRevertConfirm(true)}
+                style={{
+                  width: "100%", padding: 12, borderRadius: 12, border: "1px solid rgba(74,222,128,0.3)",
+                  background: "rgba(74,222,128,0.05)", color: "#4ade80", fontWeight: 700, fontSize: 13,
+                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  transition: "all 0.2s",
+                }}
+              >
+                <Banknote size={15} />
+                Nakit Ödemek İstiyorum
+              </button>
+            )}
           </div>
         )}
       </div>
 
       {/* Modals */}
       {renderConversionConfirmModal()}
+      {renderRevertConfirmModal()}
       {renderModal()}
     </>
   );
