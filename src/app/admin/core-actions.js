@@ -832,7 +832,10 @@ export async function addReservationExtraFee(reservationId, amount, note) {
 
 export async function revertToCashPayment(reservationId) {
   try {
-    const r = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    const r = await prisma.reservation.findUnique({ 
+        where: { id: reservationId },
+        include: { payments: true }
+    });
     if (!r) throw new Error("Reservation not found");
     
     // Only revert if we are in CREDIT_CARD mode
@@ -841,9 +844,17 @@ export async function revertToCashPayment(reservationId) {
     }
 
     const currentTotal = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
-    // Mathematically revert 15% calculation (currentTotal / 1.15)
+    
+    const payments = r.payments || [];
+    const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
+
+    // Only the REMAINING balance was subjected to the 15% markup
+    const cardRemaining = currentTotal - totalPaid;
+    
+    // Mathematically revert 15% calculation (currentTotal / 1.15) for the remaining portion
     // We round to nearest integer to avoid float artifacts
-    const cashTotal = Math.round(currentTotal / 1.15);
+    const cashRemaining = Math.max(0, Math.round(cardRemaining / 1.15));
+    const cashTotal = totalPaid + cashRemaining;
     const cashTotalStr = cashTotal.toLocaleString('tr-TR') + '₺';
 
     await prisma.reservation.update({
