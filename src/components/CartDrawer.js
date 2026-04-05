@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "./CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ShoppingBag, Trash2, ArrowRight, ArrowLeft,
   Camera, Heart, Gem, Calendar, Clock,
-  FileText, User, Phone, Mail, CreditCard, Instagram, Banknote, Wallet,
+  FileText, User, Phone, Mail, CreditCard, Instagram, Banknote, Wallet, Lock, Eye, EyeOff, Plus, Sparkles,
 } from "lucide-react";
-import { savePendingReservation } from "@/app/admin/core-actions";
+import { savePendingReservation, getPackages } from "@/app/admin/core-actions";
+import { getSiteConfig } from "@/app/admin/core-actions";
 
 const CAT_META = {
   DIS_CEKIM: { label: "Dış Çekim", Icon: Camera, color: "#f59e0b", gradient: "linear-gradient(135deg, #f59e0b22 0%, transparent 60%)" },
@@ -50,14 +51,100 @@ export default function CartDrawer() {
   const [contactForm, setContactForm] = useState({
     brideName: "", bridePhone: "", brideEmail: "",
     groomName: "", groomPhone: "", socialMedia: "",
+    password: "", passwordConfirm: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
   const [checkoutStep, setCheckoutStep] = useState("contact"); // "contact" | "payment_method"
   const [iframeToken, setIframeToken] = useState(null);
+  const [contractText, setContractText] = useState("");
+  const [contractAccepted, setContractAccepted] = useState(false);
+  const [showUpsell, setShowUpsell] = useState(false);
+  const [allPackages, setAllPackages] = useState([]);
 
-  const isContactValid = contactForm.brideName && contactForm.bridePhone && contactForm.brideEmail && contactForm.groomName && contactForm.groomPhone;
+  // Verileri yükle
+  useEffect(() => {
+    getSiteConfig().then(cfg => {
+      if (cfg?.contractText) setContractText(cfg.contractText);
+    });
+    getPackages().then(pkgs => setAllPackages(pkgs || []));
+  }, []);
+
+  const passwordsMatch = contactForm.password && contactForm.password.length >= 6 && contactForm.password === contactForm.passwordConfirm;
+
+  // Telefon numarası formatlayıcı: 0(5XX) XXX XX XX
+  const formatPhone = (value) => {
+    const digits = value.replace(/\D/g, "").slice(0, 11); // max 11 haneli
+    if (digits.length === 0) return "";
+    if (digits.length <= 1) return digits;
+    if (digits.length <= 4) return `${digits[0]}(${digits.slice(1)}`;
+    if (digits.length <= 7) return `${digits[0]}(${digits.slice(1, 4)}) ${digits.slice(4)}`;
+    if (digits.length <= 9) return `${digits[0]}(${digits.slice(1, 4)}) ${digits.slice(4, 7)} ${digits.slice(7)}`;
+    return `${digits[0]}(${digits.slice(1, 4)}) ${digits.slice(4, 7)} ${digits.slice(7, 9)} ${digits.slice(9, 11)}`;
+  };
+
+  const handlePhoneChange = (field) => (e) => {
+    const formatted = formatPhone(e.target.value);
+    setContactForm(p => ({ ...p, [field]: formatted }));
+  };
+
+  // Validasyonlar
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValidPhone = (phone) => phone.replace(/\D/g, "").length === 11;
+  const isValidName = (name) => name.trim().length >= 2;
+
+  const emailValid = isValidEmail(contactForm.brideEmail);
+  const bridePhoneValid = isValidPhone(contactForm.bridePhone);
+  const groomPhoneValid = isValidPhone(contactForm.groomPhone);
+  const brideNameValid = isValidName(contactForm.brideName);
+  const groomNameValid = isValidName(contactForm.groomName);
+
+  const isContactValid = brideNameValid && bridePhoneValid && emailValid && groomNameValid && groomPhoneValid && passwordsMatch;
   const cardTotal = Math.round(cartTotal() * 1.15); // %15 artı
+
+  // Akıllı upsell önerileri - spesifik paket bulur
+  const cartCategories = items.map(i => i.category);
+  const UPSELL_MAP = {
+    // Düğün alan kişiye → Dış Çekim öner
+    DUGUN: ["DIS_CEKIM"],
+    // Nişan alan kişiye → Dış Çekim öner
+    NISAN: ["DIS_CEKIM"],
+    // Dış Çekim alan kişiye → Düğün öner
+    DIS_CEKIM: ["DUGUN"],
+  };
+
+  const upsellSuggestions = [];
+  const addedKeys = new Set();
+  
+  cartCategories.forEach(cat => {
+    const suggestedCats = UPSELL_MAP[cat] || [];
+    suggestedCats.forEach(sCat => {
+      if (!cartCategories.includes(sCat) && !addedKeys.has(sCat)) {
+        // En uygun fiyatlı paketi bul
+        const catPkgs = allPackages.filter(p => p.category === sCat);
+        if (catPkgs.length > 0) {
+          catPkgs.sort((a,b) => (parseInt(a.price.replace(/\D/g,""))||0) - (parseInt(b.price.replace(/\D/g,""))||0));
+          const bestPkg = catPkgs[0];
+          
+          let title = "Bunu da Ekleyin!";
+          if (cat === "DUGUN" && sCat === "DIS_CEKIM") title = "Dış Çekim İster misiniz?";
+          if (cat === "NISAN" && sCat === "DIS_CEKIM") title = "Özel Dış Çekim İster misiniz?";
+          if (cat === "DIS_CEKIM" && sCat === "DUGUN") title = "Düğün Çekimi de İster misiniz?";
+
+          upsellSuggestions.push({
+            pkg: bestPkg,
+            key: sCat,
+            title,
+            desc: bestPkg.name,
+            color: CAT_META[sCat].color,
+            Icon: CAT_META[sCat].Icon,
+          });
+          addedKeys.add(sCat);
+        }
+      }
+    });
+  });
 
   const buildReservationData = (amount) => {
     const firstItem = items[0];
@@ -88,6 +175,7 @@ export default function CartDrawer() {
       groomName: contactForm.groomName,
       groomPhone: contactForm.groomPhone,
       groomEmail: "",
+      password: contactForm.password,
       date: firstItem?.details?.date || new Date().toISOString().split("T")[0],
       time: firstItem?.details?.time || "",
       packageIds: items.map(i => i.pkg.id),
@@ -346,6 +434,91 @@ export default function CartDrawer() {
                   </motion.div>
                 )}
 
+                {/* ── UPSELL STEP ── */}
+                {showUpsell && !checkoutMode && (
+                  <motion.div key="upsell-view" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>
+                    <div style={{
+                      textAlign: "center", padding: "10px 0 20px",
+                    }}>
+                      <div style={{
+                        width: 56, height: 56, borderRadius: 16, margin: "0 auto 16px",
+                        background: "linear-gradient(135deg, rgba(245,158,11,0.15), rgba(251,113,133,0.15))",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <Sparkles size={24} style={{ color: "#f59e0b" }} />
+                      </div>
+                      <h3 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: "0 0 6px" }}>Bir Şey Eksik Olmasın!</h3>
+                      <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.5 }}>
+                        Bu hizmetleri de eklemek ister misiniz?
+                      </p>
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                      {upsellSuggestions.map((suggestion) => {
+                        const SugIcon = suggestion.Icon;
+                        return (
+                          <button
+                            key={suggestion.key}
+                            onClick={() => {
+                              setShowUpsell(false);
+                              setIsOpen(false);
+                              const m = items[0]?.month || new Date().getMonth() + 1;
+                              const y = items[0]?.year || new Date().getFullYear();
+                              window.location.href = `/booking?upsellPkg=${suggestion.pkg.id}&m=${m}&y=${y}`;
+                            }}
+                            style={{
+                              width: "100%", padding: "18px 16px", borderRadius: 14,
+                              background: `linear-gradient(135deg, ${suggestion.color}11 0%, transparent 60%)`,
+                              border: `1px solid ${suggestion.color}33`,
+                              cursor: "pointer", textAlign: "left",
+                              transition: "all 0.2s", color: "#fff",
+                            }}
+                          >
+                            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                              <div style={{
+                                width: 44, height: 44, borderRadius: 12,
+                                background: `${suggestion.color}18`,
+                                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                              }}>
+                                <SugIcon size={20} style={{ color: suggestion.color }} />
+                              </div>
+                              <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>{suggestion.title}</div>
+                                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", fontWeight: 600, marginBottom: 2 }}>{suggestion.desc}</div>
+                                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>{suggestion.pkg.price}</div>
+                              </div>
+                              <div style={{
+                                width: 32, height: 32, borderRadius: 8,
+                                background: `${suggestion.color}20`, border: `1px solid ${suggestion.color}40`,
+                                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                              }}>
+                                <Plus size={16} style={{ color: suggestion.color }} />
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        setShowUpsell(false);
+                        setCheckoutMode(true);
+                        setCheckoutStep("contact");
+                      }}
+                      style={{
+                        width: "100%", marginTop: 20, padding: "14px",
+                        borderRadius: 12, border: "none",
+                        background: "#fff", color: "#000",
+                        fontSize: 13, fontWeight: 700, cursor: "pointer",
+                        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                      }}
+                    >
+                      <ArrowRight size={14} /> Hayır, Devam Et
+                    </button>
+                  </motion.div>
+                )}
+
                 {/* ── CHECKOUT STEP 1: CONTACT FORM ── */}
                 {checkoutMode && !submitResult && checkoutStep === "contact" && (
                   <motion.div key="checkout-contact" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
@@ -385,31 +558,15 @@ export default function CartDrawer() {
                         </label>
                         <input type="text" value={contactForm.brideName}
                           onChange={(e) => setContactForm(p => ({ ...p, brideName: e.target.value }))}
-                          placeholder="Ad Soyad" style={inputStyle}
+                          placeholder="Ad Soyad" style={{
+                            ...inputStyle,
+                            borderColor: contactForm.brideName && !brideNameValid ? "rgba(248,113,113,0.4)" : undefined,
+                          }}
                         />
+                        {contactForm.brideName && !brideNameValid && (
+                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
+                        )}
                       </div>
-
-                      <div>
-                        <label style={labelStyle}>
-                          <Phone size={10} style={{ display: "inline", marginRight: "4px" }} /> Telefon *
-                        </label>
-                        <input type="tel" value={contactForm.bridePhone}
-                          onChange={(e) => setContactForm(p => ({ ...p, bridePhone: e.target.value }))}
-                          placeholder="05XX XXX XX XX" style={inputStyle}
-                        />
-                      </div>
-
-                      <div>
-                        <label style={labelStyle}>
-                          <Mail size={10} style={{ display: "inline", marginRight: "4px" }} /> E-posta *
-                        </label>
-                        <input type="email" value={contactForm.brideEmail}
-                          onChange={(e) => setContactForm(p => ({ ...p, brideEmail: e.target.value }))}
-                          placeholder="ornek@email.com" style={inputStyle}
-                        />
-                      </div>
-
-                      <div style={{ height: "1px", background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
 
                       <div>
                         <label style={labelStyle}>
@@ -417,30 +574,122 @@ export default function CartDrawer() {
                         </label>
                         <input type="text" value={contactForm.groomName}
                           onChange={(e) => setContactForm(p => ({ ...p, groomName: e.target.value }))}
-                          placeholder="Ad Soyad" style={inputStyle}
+                          placeholder="Ad Soyad" style={{
+                            ...inputStyle,
+                            borderColor: contactForm.groomName && !groomNameValid ? "rgba(248,113,113,0.4)" : undefined,
+                          }}
                         />
+                        {contactForm.groomName && !groomNameValid && (
+                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
+                        )}
+                      </div>
+                      
+                      <div style={{ height: "1px", background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
+
+                      <div>
+                        <label style={labelStyle}>
+                          <Phone size={10} style={{ display: "inline", marginRight: "4px" }} /> 1. Telefon Numarası *
+                        </label>
+                        <input type="tel" value={contactForm.bridePhone}
+                          onChange={handlePhoneChange("bridePhone")}
+                          placeholder="0(5XX) XXX XX XX" style={{
+                            ...inputStyle,
+                            borderColor: contactForm.bridePhone && !bridePhoneValid ? "rgba(248,113,113,0.4)" : undefined,
+                          }}
+                          maxLength={16}
+                        />
+                        {contactForm.bridePhone && !bridePhoneValid && (
+                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
+                        )}
                       </div>
 
                       <div>
                         <label style={labelStyle}>
-                          <Phone size={10} style={{ display: "inline", marginRight: "4px" }} /> Damat Telefon *
+                          <Phone size={10} style={{ display: "inline", marginRight: "4px" }} /> 2. Telefon Numarası *
                         </label>
                         <input type="tel" value={contactForm.groomPhone}
-                          onChange={(e) => setContactForm(p => ({ ...p, groomPhone: e.target.value }))}
-                          placeholder="05XX XXX XX XX" style={inputStyle}
+                          onChange={handlePhoneChange("groomPhone")}
+                          placeholder="0(5XX) XXX XX XX" style={{
+                            ...inputStyle,
+                            borderColor: contactForm.groomPhone && !groomPhoneValid ? "rgba(248,113,113,0.4)" : undefined,
+                          }}
+                          maxLength={16}
                         />
+                        {contactForm.groomPhone && !groomPhoneValid && (
+                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
+                        )}
                       </div>
 
                       <div style={{ height: "1px", background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
 
                       <div>
                         <label style={labelStyle}>
-                          <Instagram size={10} style={{ display: "inline", marginRight: "4px" }} /> Sosyal Medya Hesabı
+                          <Mail size={10} style={{ display: "inline", marginRight: "4px" }} /> E-posta *
+                        </label>
+                        <input type="email" value={contactForm.brideEmail}
+                          onChange={(e) => setContactForm(p => ({ ...p, brideEmail: e.target.value }))}
+                          placeholder="ornek@email.com" style={{
+                            ...inputStyle,
+                            borderColor: contactForm.brideEmail && !emailValid ? "rgba(248,113,113,0.4)" : undefined,
+                          }}
+                        />
+                        {contactForm.brideEmail && !emailValid && (
+                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>Geçerli bir e-posta adresi girin (ör: ornek@email.com)</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label style={labelStyle}>
+                          <Instagram size={10} style={{ display: "inline", marginRight: "4px" }} /> Instagram Kullanıcı Adı
                         </label>
                         <input type="text" value={contactForm.socialMedia}
                           onChange={(e) => setContactForm(p => ({ ...p, socialMedia: e.target.value }))}
                           placeholder="@instagram_kullanici_adi" style={inputStyle}
                         />
+                      </div>
+
+                      <div style={{ height: "1px", background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
+
+                      {/* Şifre Belirleme */}
+                      <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", marginTop: "4px" }}>
+                        🔐 Hesap Şifresi Belirleyin
+                      </div>
+                      <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", margin: "0 0 8px", lineHeight: 1.5 }}>
+                        Rezervasyon durumunuzu ve fotoğraflarınızı takip edebilmeniz için bir şifre belirleyin.
+                      </p>
+
+                      <div>
+                        <label style={labelStyle}>
+                          <Lock size={10} style={{ display: "inline", marginRight: "4px" }} /> Şifre *
+                        </label>
+                        <div style={{ position: "relative" }}>
+                          <input type={showPassword ? "text" : "password"} value={contactForm.password}
+                            onChange={(e) => setContactForm(p => ({ ...p, password: e.target.value }))}
+                            placeholder="En az 6 karakter" style={inputStyle}
+                          />
+                          <button type="button" onClick={() => setShowPassword(!showPassword)} style={{
+                            position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+                            background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.3)", padding: 4,
+                          }}>
+                            {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                          </button>
+                        </div>
+                        {contactForm.password && contactForm.password.length < 6 && (
+                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>En az 6 karakter olmalı</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label style={labelStyle}>
+                          <Lock size={10} style={{ display: "inline", marginRight: "4px" }} /> Şifre Tekrar *
+                        </label>
+                        <input type={showPassword ? "text" : "password"} value={contactForm.passwordConfirm}
+                          onChange={(e) => setContactForm(p => ({ ...p, passwordConfirm: e.target.value }))}
+                          placeholder="Şifrenizi tekrar girin" style={inputStyle}
+                        />
+                        {contactForm.passwordConfirm && contactForm.password !== contactForm.passwordConfirm && (
+                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>Şifreler eşleşmiyor</p>
+                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -455,15 +704,62 @@ export default function CartDrawer() {
                       </p>
                     </div>
 
+                    {/* Sözleşme */}
+                    {contractText && (
+                      <div style={{ marginBottom: 20 }}>
+                        <div style={{
+                          background: "rgba(255,255,255,0.03)",
+                          border: "1px solid rgba(255,255,255,0.1)",
+                          borderRadius: 12, padding: 16,
+                          maxHeight: 180, overflowY: "auto",
+                          marginBottom: 12,
+                        }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                            <FileText size={14} style={{ color: "rgba(255,255,255,0.5)" }} />
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Hizmet Sözleşmesi</span>
+                          </div>
+                          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.8, margin: 0, whiteSpace: "pre-wrap" }}>
+                            {contractText}
+                          </p>
+                        </div>
+                        <div
+                          onClick={() => setContractAccepted(!contractAccepted)}
+                          style={{
+                            display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer",
+                            padding: "12px 14px", borderRadius: 12,
+                            background: contractAccepted ? "rgba(74,222,128,0.06)" : "rgba(255,255,255,0.02)",
+                            border: `1px solid ${contractAccepted ? "rgba(74,222,128,0.2)" : "rgba(255,255,255,0.08)"}`,
+                            transition: "all 0.2s",
+                          }}
+                        >
+                          <div style={{
+                            width: 20, height: 20, borderRadius: 6, flexShrink: 0, marginTop: 1,
+                            border: `2px solid ${contractAccepted ? "#4ade80" : "rgba(255,255,255,0.25)"}`,
+                            background: contractAccepted ? "#4ade80" : "transparent",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            transition: "all 0.2s",
+                          }}>
+                            {contractAccepted && (
+                              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                            )}
+                          </div>
+                          <span style={{ fontSize: 12, color: contractAccepted ? "#fff" : "rgba(255,255,255,0.5)", lineHeight: 1.5, transition: "all 0.2s" }}>
+                            Hizmet sözleşmesini okudum ve kabul ediyorum. *
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Cash Option */}
                     <button
                       onClick={handleCashCheckout}
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || (contractText && !contractAccepted)}
                       style={{
                         width: "100%", padding: "20px", borderRadius: 16, marginBottom: 12,
                         background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.2)",
-                        cursor: isSubmitting ? "not-allowed" : "pointer", textAlign: "left",
+                        cursor: (isSubmitting || (contractText && !contractAccepted)) ? "not-allowed" : "pointer", textAlign: "left",
                         transition: "all 0.2s", color: "#fff",
+                        opacity: (contractText && !contractAccepted) ? 0.4 : 1,
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -484,12 +780,13 @@ export default function CartDrawer() {
                     {/* Card Option */}
                     <button
                       onClick={handleCardCheckout}
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || (contractText && !contractAccepted)}
                       style={{
                         width: "100%", padding: "20px", borderRadius: 16, marginBottom: 12,
                         background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.2)",
-                        cursor: isSubmitting ? "not-allowed" : "pointer", textAlign: "left",
+                        cursor: (isSubmitting || (contractText && !contractAccepted)) ? "not-allowed" : "pointer", textAlign: "left",
                         transition: "all 0.2s", color: "#fff",
+                        opacity: (contractText && !contractAccepted) ? 0.4 : 1,
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -586,7 +883,7 @@ export default function CartDrawer() {
                         <div style={{ padding: "14px 16px", borderRadius: 14, background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.12)", display: "flex", alignItems: "flex-start", gap: 12 }}>
                           <Mail size={18} style={{ color: "#60a5fa", flexShrink: 0, marginTop: 2 }} />
                           <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>
-                            E-posta adresinize bir <strong style={{ color: "#fff" }}>giriş şifresi</strong> gönderildi. Bu şifre ile hesabınıza giriş yapabilirsiniz.
+                            Belirlediğiniz <strong style={{ color: "#fff" }}>giriş şifresi</strong> ile hesabınıza giriş yapabilir ve rezervasyon durumunuzu takip edebilirsiniz.
                           </span>
                         </div>
 
@@ -608,10 +905,7 @@ export default function CartDrawer() {
 
                         <button
                           onClick={() => {
-                            setCheckoutMode(false);
-                            setCheckoutStep("contact");
-                            setSubmitResult(null);
-                            setIsOpen(false);
+                            window.location.href = "/";
                           }}
                           style={{
                             marginTop: 16, width: "100%", padding: "14px", borderRadius: 12,
@@ -657,7 +951,14 @@ export default function CartDrawer() {
                     }}>
                       Temizle
                     </button>
-                    <button onClick={() => { setCheckoutMode(true); setCheckoutStep("contact"); }} style={{
+                    <button onClick={() => {
+                      if (upsellSuggestions.length > 0) {
+                        setShowUpsell(true);
+                      } else {
+                        setCheckoutMode(true);
+                        setCheckoutStep("contact");
+                      }
+                    }} style={{
                       flex: 2, padding: "14px", borderRadius: "12px",
                       border: "none", background: "#fff", color: "#000",
                       fontSize: "13px", fontWeight: 700, cursor: "pointer",

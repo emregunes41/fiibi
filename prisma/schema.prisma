@@ -220,12 +220,21 @@ model GlobalSettings {
   heroBgType   String   @default("video")
   heroBgUrl    String   @default("/assets/hero.mp4")
   heroBgColor  String   @default("#000000")
+  // Sözleşme
+  contractText String   @default("")
   // Bildirim kanalları
   emailEnabled Boolean  @default(true)
   smsEnabled   Boolean  @default(false)
-  // Netgsm API bilgileri
+  // Resend API (E-posta)
+  resendApiKey    String @default("")
+  // Netgsm API (SMS)
   netgsmUsercode  String @default("")
   netgsmPassword  String @default("")
   netgsmMsgHeader String @default("")
+  // Bildirim tercihleri (hangileri gönderilsin)
+  notifyReservation  Boolean @default(true)
+  notifyPayment      Boolean @default(true)
+  notifyReminder     Boolean @default(true)
+  notifyPhotosReady  Boolean @default(true)
   updatedAt    DateTime @updatedAt
 }

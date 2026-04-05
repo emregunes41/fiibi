@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import { sendWelcomeEmail } from "../actions/send-welcome";
 import { sendReservationSuccessEmail } from "../actions/send-reservation-success";
-import { notifyWelcome, notifyReservationSuccess } from "../actions/notify";
+import { notifyReservationSuccess } from "../actions/notify";
 import { sendDriveLinkEmail } from "../actions/send-drive-link";
 import fs from "fs/promises";
 import path from "path";
@@ -272,7 +272,8 @@ export async function savePendingReservation(data) {
     if (data.brideEmail) {
       let user = await prisma.user.findUnique({ where: { email: data.brideEmail } });
       if (!user) {
-        const password = Math.random().toString(36).slice(-8);
+        // Müşterinin checkout sırasında belirlediği şifreyi kullan
+        const password = data.password || Math.random().toString(36).slice(-8);
         const hashedPassword = await bcrypt.hash(password, 10);
         user = await prisma.user.create({
           data: {
@@ -283,7 +284,7 @@ export async function savePendingReservation(data) {
             role: "MEMBER"
           }
         });
-        await notifyWelcome(data.brideEmail, data.bridePhone, data.brideName, password);
+        // Hoş geldin e-postası gönderilmiyor — şifreyi müşteri kendisi belirledi
       }
       userId = user.id;
     }
@@ -627,7 +628,7 @@ export async function getSiteConfig() {
 
 export async function updateSiteConfig(data) {
   try {
-    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, emailEnabled, smsEnabled, netgsmUsercode, netgsmPassword, netgsmMsgHeader } = data;
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady } = data;
     await prisma.globalSettings.update({
       where: { id: "global-settings" },
       data: {
@@ -642,11 +643,17 @@ export async function updateSiteConfig(data) {
         heroBgType: heroBgType || "video",
         heroBgUrl: heroBgUrl || "/assets/hero.mp4",
         heroBgColor: heroBgColor || "#000000",
+        contractText: contractText || "",
         emailEnabled: emailEnabled ?? true,
         smsEnabled: smsEnabled ?? false,
+        resendApiKey: resendApiKey || "",
         netgsmUsercode: netgsmUsercode || "",
         netgsmPassword: netgsmPassword || "",
         netgsmMsgHeader: netgsmMsgHeader || "",
+        notifyReservation: notifyReservation ?? true,
+        notifyPayment: notifyPayment ?? true,
+        notifyReminder: notifyReminder ?? true,
+        notifyPhotosReady: notifyPhotosReady ?? true,
       }
     });
     revalidatePath('/');

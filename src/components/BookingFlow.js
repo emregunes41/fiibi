@@ -143,6 +143,30 @@ export default function BookingFlow({ initialPackages }) {
   const [prices, setPrices] = useState([]);
   const [selectedPkg, setSelectedPkg] = useState(null);
 
+  // Auto-fill from URL parameters (Upsell integration)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const pkgId = params.get("upsellPkg");
+      const urlM = parseInt(params.get("m"), 10);
+      const urlY = parseInt(params.get("y"), 10);
+
+      if (pkgId && urlM && urlY) {
+        const pkg = initialPackages.find(p => p.id === pkgId);
+        if (pkg) {
+          setCat(pkg.category);
+          setYear(urlY);
+          setMonth(urlM);
+          setSelectedPkg(pkg);
+          setStep(3);
+          
+          // Clear URL to prevent re-triggering
+          window.history.replaceState({}, '', '/booking');
+        }
+      }
+    }
+  }, [initialPackages]);
+
   // Details form state (step 3)
   const [detailForm, setDetailForm] = useState({
     date: "", time: "", notes: "",
@@ -156,6 +180,17 @@ export default function BookingFlow({ initialPackages }) {
   const fmt = (n) => n.toLocaleString("tr-TR");
   const packs = initialPackages.filter((p) => p.category === cat);
   const disc = (m) => prices.find((p) => p.month === m)?.discountPercentage || 0;
+
+  // O ayın en ucuz paket fiyatını hesapla
+  const minPrice = (m) => {
+    if (!packs.length) return null;
+    const d = prices.find((p) => p.month === m)?.discountPercentage || 0;
+    const basePrices = packs.map(pkg => {
+      const b = parseInt(pkg.price.replace(/\D/g, "")) || 0;
+      return Math.round(b * (1 + d / 100));
+    });
+    return Math.min(...basePrices);
+  };
 
   const price = useCallback((pkg) => {
     const b = parseInt(pkg.price.replace(/\D/g, "")) || 0;
@@ -412,8 +447,8 @@ export default function BookingFlow({ initialPackages }) {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: "8px", marginBottom: "24px" }}>
-                  {MS.map((name, i) => {
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px", marginBottom: "24px" }}>
+                  {MF.map((name, i) => {
                     const m = i + 1;
                     const d = disc(m);
                     const sel = month === m;
@@ -422,36 +457,43 @@ export default function BookingFlow({ initialPackages }) {
                       <button
                         key={m}
                         disabled={past}
-                        onClick={() => { setMonth(m); }}
+                        onClick={() => { setMonth(m); go(2); }}
                         style={{
-                          padding: "12px 4px", borderRadius: "12px",
-                          border: sel ? "2px solid #fff" : "1px solid transparent",
-                          background: sel ? "#fff" : "rgba(255,255,255,0.02)",
+                          padding: "14px 4px", borderRadius: "12px",
+                          border: sel ? "2px solid #fff" : d < 0 ? "1px solid rgba(217,181,120,0.18)" : "1px solid rgba(255,255,255,0.06)",
+                          background: sel ? "#fff" : d < 0 ? "rgba(217,181,120,0.05)" : "rgba(255,255,255,0.02)",
                           cursor: past ? "not-allowed" : "pointer",
                           opacity: past ? 0.15 : 1, transition: "all 0.25s", textAlign: "center",
+                          position: "relative",
+                          overflow: "hidden",
                         }}
                       >
-                        <div style={{ fontSize: "13px", fontWeight: 700, color: sel ? "#000" : "rgba(255,255,255,0.6)" }}>{name}</div>
-                        {d !== 0 && (
+                        {/* İndirimli ay alt çizgi */}
+                        {!sel && d < 0 && (
                           <div style={{
-                            fontSize: "10px", fontWeight: 700, marginTop: "2px",
-                            color: sel ? (d < 0 ? "#166534" : "#9a3412") : (d < 0 ? "#34d399" : "#fb923c"),
-                          }}>
-                            {d < 0 ? `%${Math.abs(d)} ↓` : `%${d} ↑`}
-                          </div>
+                            position: "absolute", bottom: 0, left: "20%", right: "20%", height: "2px",
+                            background: "linear-gradient(90deg, transparent, rgba(217,181,120,0.5), transparent)",
+                            borderRadius: "1px",
+                          }} />
                         )}
+                        <div style={{ fontSize: "13px", fontWeight: 700, color: sel ? "#000" : "rgba(255,255,255,0.6)" }}>{name}</div>
+                        {(() => {
+                          const mp = minPrice(m);
+                          if (mp === null) return null;
+                          return (
+                            <div style={{
+                              fontSize: "8px", fontWeight: 500, marginTop: "4px",
+                              color: sel ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.4)",
+                              letterSpacing: "0.01em",
+                            }}>
+                              <span style={{ fontWeight: 800 }}>{fmt(mp)} TL</span>'den başlayan fiyatlarla
+                            </div>
+                          );
+                        })()}
                       </button>
                     );
                   })}
                 </div>
-
-                {month && (
-                  <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
-                    <button onClick={() => go(2)} style={S.btn(true)}>
-                      Paketleri Gör <ArrowRight size={16} />
-                    </button>
-                  </motion.div>
-                )}
               </motion.div>
             )}
           </motion.div>

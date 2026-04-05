@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { getSiteConfig, updateSiteConfig, uploadHeroBg } from "../core-actions";
 import { 
   Save, Home, Phone, Mail, Instagram, MessageCircle, 
-  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette
+  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText
 } from "lucide-react";
 
 const inp = {
@@ -344,7 +344,7 @@ export default function SettingsPage() {
           {sectionHeader(Mail, "Bildirim Kanalları", "Müşterilere gönderilecek bildirimlerin kanallarını yönetin.")}
 
           {/* Toggle Switches */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
             {/* Email Toggle */}
             <div style={{
               background: config.emailEnabled ? "rgba(74,222,128,0.08)" : "rgba(255,255,255,0.03)",
@@ -358,7 +358,6 @@ export default function SettingsPage() {
                   <Mail size={16} style={{ color: config.emailEnabled ? "#4ade80" : "rgba(255,255,255,0.3)" }} />
                   <span style={{ fontSize: 13, fontWeight: 800, color: config.emailEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>E-Posta</span>
                 </div>
-                {/* Toggle Switch */}
                 <div style={{
                   width: 40, height: 22, borderRadius: 11, position: "relative",
                   background: config.emailEnabled ? "#4ade80" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
@@ -407,98 +406,142 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* Netgsm API Bilgileri - Sadece SMS aktifken göster */}
-          {config.smsEnabled && (
+          {/* Resend API - E-posta aktifken göster */}
+          {config.emailEnabled && (
             <div style={{
               background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 12, padding: 20, marginTop: 4,
+              borderRadius: 12, padding: 20, marginBottom: 12,
             }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-                <Sparkles size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
-                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Netgsm API Bilgileri</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <Mail size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
+                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Resend API (E-posta)</span>
               </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-                <div>
-                  <label style={label}>Kullanıcı Kodu</label>
-                  <input
-                    type="text"
-                    value={config.netgsmUsercode || ""}
-                    onChange={(e) => setConfig({ ...config, netgsmUsercode: e.target.value })}
-                    style={inp}
-                    placeholder="850XXXXXXX"
-                  />
-                </div>
-                <div>
-                  <label style={label}>Şifre</label>
-                  <input
-                    type="password"
-                    value={config.netgsmPassword || ""}
-                    onChange={(e) => setConfig({ ...config, netgsmPassword: e.target.value })}
-                    style={inp}
-                    placeholder="••••••••"
-                  />
-                </div>
-                <div>
-                  <label style={label}>Mesaj Başlığı</label>
-                  <input
-                    type="text"
-                    value={config.netgsmMsgHeader || ""}
-                    onChange={(e) => setConfig({ ...config, netgsmMsgHeader: e.target.value })}
-                    style={inp}
-                    placeholder="PINOWED"
-                  />
-                </div>
+              <div>
+                <label style={label}>API Key</label>
+                <input
+                  type="password"
+                  value={config.resendApiKey || ""}
+                  onChange={(e) => setConfig({ ...config, resendApiKey: e.target.value })}
+                  style={inp}
+                  placeholder="re_xxxxxxxxxxxxxxxxxxxxxxxxx"
+                />
               </div>
-
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 12, lineHeight: 1.6 }}>
-                📖 <a href="https://www.netgsm.com.tr" target="_blank" rel="noopener" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "underline" }}>netgsm.com.tr</a> üzerinden hesap açın → 
-                Ayarlar → API Bilgileri bölümünden bu bilgileri alabilirsiniz.
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 10, lineHeight: 1.6 }}>
+                📖 <a href="https://resend.com" target="_blank" rel="noopener" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "underline" }}>resend.com</a> → API Keys bölümünden alabilirsiniz. Boş bırakırsanız .env dosyasındaki key kullanılır.
               </p>
             </div>
           )}
 
-          {/* Bildirim Listesi */}
-          <div style={{ marginTop: 20 }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>Gönderilen Bildirimler</p>
+          {/* Netgsm API - SMS aktifken göster */}
+          {config.smsEnabled && (
+            <div style={{
+              background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 12, padding: 20, marginBottom: 12,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                <Phone size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
+                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Netgsm API (SMS)</span>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+                <div>
+                  <label style={label}>Kullanıcı Kodu</label>
+                  <input type="text" value={config.netgsmUsercode || ""}
+                    onChange={(e) => setConfig({ ...config, netgsmUsercode: e.target.value })}
+                    style={inp} placeholder="850XXXXXXX"
+                  />
+                </div>
+                <div>
+                  <label style={label}>Şifre</label>
+                  <input type="password" value={config.netgsmPassword || ""}
+                    onChange={(e) => setConfig({ ...config, netgsmPassword: e.target.value })}
+                    style={inp} placeholder="••••••••"
+                  />
+                </div>
+                <div>
+                  <label style={label}>Mesaj Başlığı</label>
+                  <input type="text" value={config.netgsmMsgHeader || ""}
+                    onChange={(e) => setConfig({ ...config, netgsmMsgHeader: e.target.value })}
+                    style={inp} placeholder="PINOWED"
+                  />
+                </div>
+              </div>
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 10, lineHeight: 1.6 }}>
+                📖 <a href="https://www.netgsm.com.tr" target="_blank" rel="noopener" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "underline" }}>netgsm.com.tr</a> → Ayarlar → API Bilgileri bölümünden alabilirsiniz.
+              </p>
+            </div>
+          )}
+
+          {/* Bildirim Tercihleri - Checkbox'lı */}
+          <div style={{ marginTop: 8 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Bildirim Tercihleri</p>
             {[
-              { icon: "👋", text: "Hoş geldin (şifre bilgisi)" },
-              { icon: "📅", text: "Rezervasyon onayı" },
-              { icon: "💰", text: "Ödeme alındı" },
-              { icon: "⏰", text: "Etkinlik hatırlatma (1 hafta)" },
-              { icon: "📸", text: "Fotoğraflar hazır" },
-            ].map((item, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: i < 4 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
-                <span style={{ fontSize: 14 }}>{item.icon}</span>
-                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{item.text}</span>
-                <div style={{ marginLeft: "auto", display: "flex", gap: 6 }}>
-                  {config.emailEnabled && <span style={{ fontSize: 9, background: "rgba(74,222,128,0.15)", color: "#4ade80", padding: "2px 8px", borderRadius: 6, fontWeight: 700 }}>EMAIL</span>}
-                  {config.smsEnabled && <span style={{ fontSize: 9, background: "rgba(96,165,250,0.15)", color: "#60a5fa", padding: "2px 8px", borderRadius: 6, fontWeight: 700 }}>SMS</span>}
+              { key: "notifyReservation", icon: "📅", text: "Rezervasyon onayı", desc: "Rezervasyon oluşturulduğunda" },
+              { key: "notifyPayment", icon: "💰", text: "Ödeme alındı", desc: "Ödeme başarılı olduğunda" },
+              { key: "notifyReminder", icon: "⏰", text: "Etkinlik hatırlatma", desc: "Çekime 1 hafta kala" },
+              { key: "notifyPhotosReady", icon: "📸", text: "Fotoğraflar hazır", desc: "Fotoğraflar teslim edildiğinde" },
+            ].map((item) => (
+              <div
+                key={item.key}
+                onClick={() => setConfig({ ...config, [item.key]: !config[item.key] })}
+                style={{
+                  display: "flex", alignItems: "center", gap: 12, padding: "12px 14px",
+                  marginBottom: 6, borderRadius: 12, cursor: "pointer", transition: "all 0.2s",
+                  background: config[item.key] ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.01)",
+                  border: `1px solid ${config[item.key] ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.04)"}`,
+                }}
+              >
+                {/* Checkbox */}
+                <div style={{
+                  width: 20, height: 20, borderRadius: 6, flexShrink: 0,
+                  border: `2px solid ${config[item.key] ? "#4ade80" : "rgba(255,255,255,0.2)"}`,
+                  background: config[item.key] ? "#4ade80" : "transparent",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  transition: "all 0.2s",
+                }}>
+                  {config[item.key] && (
+                    <CheckCircle2 size={12} style={{ color: "#000" }} />
+                  )}
+                </div>
+
+                <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
+
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: config[item.key] ? "#fff" : "rgba(255,255,255,0.4)", transition: "all 0.2s" }}>{item.text}</div>
+                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{item.desc}</div>
+                </div>
+
+                <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+                  {config.emailEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(74,222,128,0.15)", color: "#4ade80", padding: "2px 6px", borderRadius: 5, fontWeight: 700 }}>EMAIL</span>}
+                  {config.smsEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(96,165,250,0.15)", color: "#60a5fa", padding: "2px 6px", borderRadius: 5, fontWeight: 700 }}>SMS</span>}
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* 6. Nakit Kampanya */}
+        {/* 6. Rezervasyon Sözleşmesi */}
         <div style={sectionCard}>
-          {sectionHeader(Banknote, "Nakit Ödeme Kampanyası", "Müşteri profilinde ödeme kısmında görünecek kampanya mesajı.")}
+          {sectionHeader(FileText, "Rezervasyon Sözleşmesi", "Müşterinin ödeme öncesi onaylaması gereken sözleşme metni.")}
 
           <div>
-            <label style={label}>Kampanya Metni</label>
-            <input
-              type="text"
-              value={config.cashPromoText || ""}
-              onChange={(e) => setConfig({ ...config, cashPromoText: e.target.value })}
-              style={inp}
-              placeholder="Örn: Nakit ödemelerde 45.000₺!"
+            <label style={label}>Sözleşme İçeriği</label>
+            <textarea
+              value={config.contractText || ""}
+              onChange={(e) => setConfig({ ...config, contractText: e.target.value })}
+              style={{
+                ...inp,
+                minHeight: 200,
+                resize: "vertical",
+                lineHeight: 1.7,
+                fontFamily: "inherit",
+              }}
+              placeholder={"Örnek:\n\nRezervasyonunuzu onaylayarak aşağıdaki koşulları kabul etmiş olursunuz:\n\n1. Çekim tarihi değişikliği en geç 7 gün öncesinden bildirilmelidir.\n2. İptal durumunda kapora iade edilmez.\n3. Fotoğraf teslim süresi paket detaylarında belirtilmiştir."}
             />
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 6, fontStyle: "italic" }}>
-              Boş bırakırsanız kampanya görünmez. Doldurunca müşterinin ödeme panelinde yeşil bir banner olarak belirir.
+            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 8, lineHeight: 1.6 }}>
+              💡 Boş bırakırsanız sözleşme adımı gösterilmez. Doldurursanız müşteri ödeme öncesi bu metni onaylamak zorundadır.
             </p>
           </div>
         </div>
-
         {/* Status Message */}
         {message && (
           <div style={{
