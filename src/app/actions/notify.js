@@ -94,6 +94,58 @@ export async function notifyReservationConfirmed(email, phone, name, date, total
 }
 
 /**
+ * 1c. MANUEL Rezervasyon Oluşturuldu (Sözleşme Onayı Bekliyor)
+ */
+export async function notifyManualReservationCreated(email, phone, name, date, totalAmount) {
+  const settings = await getNotificationSettings();
+  if (!settings.notifyReservation) return { email: null, sms: null };
+
+  const results = { email: null, sms: null };
+  const formattedDate = new Date(date).toLocaleDateString("tr-TR");
+
+  if (settings.emailEnabled) {
+    const html = `
+      <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        <div style="background: #000; color: #fff; padding: 32px 30px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1 style="margin: 0; font-size: 22px; font-weight: 700;">PINOWED</h1>
+          <p style="margin: 8px 0 0; font-size: 13px; opacity: 0.6;">Profesyonel Fotoğrafçılık</p>
+        </div>
+        <div style="padding: 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
+          <h2 style="color: #333; font-size: 20px; margin: 0 0 8px;">Merhaba ${name}!</h2>
+          <p style="color: #666; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">
+            Ekibimiz tarafından sizin adınıza yeni bir rezervasyon kaydı oluşturulmuştur.
+          </p>
+
+          <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 16px 20px; border-radius: 6px; margin-bottom: 24px;">
+            <div style="font-size: 13px; font-weight: 700; color: #b45309; margin-bottom: 6px;">⚠️ Sözleşme Onayınız Gerekiyor</div>
+            <p style="margin: 0; font-size: 13px; color: #78350f; line-height: 1.6;">
+              İşlemlerin resmi olarak başlayabilmesi için Pinowed.com üzerinden müşteri panelinize giriş yaparak <strong>Hizmet Sözleşmesini okumanız ve tarafınıza atanmış olan bu rezervasyonu onaylamanız</strong> gerekmektedir.
+            </p>
+          </div>
+          
+          <div style="text-align: center; margin-top: 32px;">
+            <a href="https://www.pinowed.com/profile" style="background-color: #000; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; display: inline-block; font-size: 14px;">Panele Git & Sözleşmeyi Onayla</a>
+          </div>
+          
+          <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+            <p style="color: #999; font-size: 12px; margin: 0;">Pinowed — Profesyonel Fotoğrafçılık Çözümleri</p>
+            <p style="color: #bbb; font-size: 11px; margin: 6px 0 0;">pinowed.com</p>
+          </div>
+        </div>
+      </div>
+    `;
+    results.email = await sendEmailWithResend(settings, email, "Rezervasyonunuz Oluşturuldu - Sözleşme Onayı Gerekli ⚠️", html);
+  }
+
+  if (settings.smsEnabled && phone) {
+    const message = `Merhaba ${name}, adiniza rezervasyon olusturuldu. Tarih: ${formattedDate}. Lutfen pinowed.com/profile adresinden Sozlesmenizi onaylayin.`;
+    results.sms = await sendSMS(phone, message, settings);
+  }
+
+  return results;
+}
+
+/**
  * 2. Ödeme Alındı Bildirimi
  */
 export async function notifyPaymentReceived(email, phone, name, amount, remaining) {

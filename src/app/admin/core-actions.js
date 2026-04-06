@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import { requireAdmin, getServerAuthSession } from "@/lib/session";
 import { sendWelcomeEmail } from "../actions/send-welcome";
-import { notifyReservationReceived, notifyReservationConfirmed } from "../actions/notify";
+import { notifyReservationReceived, notifyReservationConfirmed, notifyManualReservationCreated } from "../actions/notify";
 import { sendDriveLinkEmail } from "../actions/send-drive-link";
 import fs from "fs/promises";
 import path from "path";
@@ -477,7 +477,7 @@ export async function createManualReservation(data) {
     });
     
     // Send confirmation email
-    await notifyReservationSuccess(brideEmail, bridePhone, brideName, eventDate, totalAmount);
+    await notifyManualReservationCreated(brideEmail, bridePhone, brideName, eventDate, totalAmount);
 
     revalidatePath('/admin/reservations');
     revalidatePath('/admin/dashboard');
