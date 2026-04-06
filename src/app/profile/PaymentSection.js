@@ -159,8 +159,10 @@ export default function PaymentSection({ reservation, compactMode = false }) {
             onClick={async () => {
               setIsReverting(true);
               const { toggleCustomerPaymentPreference } = await import('@/app/actions/payment-preferences');
-              // Original total amount as a string (stripped of 15% padding)
-              const originalCashTotalStr = Math.round(originalTotalAmount / 1.15).toLocaleString('tr-TR');
+              // Original total amount: %15 was only added to the remaining (unpaid) portion,
+              // so the correct cash total = totalPaid + remaining/1.15
+              const originalCashTotal = Math.round(totalPaid + (baseRemaining / 1.15));
+              const originalCashTotalStr = originalCashTotal.toLocaleString('tr-TR') + '₺';
               
               const res = await toggleCustomerPaymentPreference(reservation.id, "CASH", originalCashTotalStr);
               if (res.success) {
