@@ -352,26 +352,45 @@ export default async function ProfilePage() {
 
         {/* ── Unified Payment Section ── */}
         {user.reservations.length > 0 && (() => {
-          // Find first unpaid reservation for the pay button
+          // Build a unified reservation object
+          const unifiedTotalNumeric = user.reservations.reduce((sum, r) => {
+             return sum + parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
+          }, 0);
+          
+          const unifiedPayments = user.reservations.flatMap(r => r.payments || []);
+          const allPackages = user.reservations.flatMap(r => r.packages || []);
+          
+          // Fallback ID to the first unpaid, or just the first reservation
           const firstUnpaidRes = user.reservations.find(r => {
-            const rt = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
-            const rp = (r.payments || []).reduce((s, p) => s + p.amount, 0);
-            return rt - rp > 0;
+             const rt = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
+             const rp = (r.payments || []).reduce((s, p) => s + p.amount, 0);
+             return rt - rp > 0;
           });
           
-          // Fallback to the first reservation if everything is paid
-          const displayRes = firstUnpaidRes || user.reservations[0];
+          const primaryRes = firstUnpaidRes || user.reservations[0];
+          
+          // Does any reservation use CASH?
+          const hasCash = user.reservations.some(r => r.paymentPreference === "CASH");
+          
+          const unifiedReservation = {
+             id: primaryRes.id, // Payment will be attached to this reservation in DB
+             totalAmount: unifiedTotalNumeric.toString(),
+             payments: unifiedPayments,
+             paymentPreference: hasCash ? "CASH" : primaryRes.paymentPreference,
+             packages: allPackages,
+             brideEmail: primaryRes.brideEmail,
+             brideName: primaryRes.brideName,
+             bridePhone: primaryRes.bridePhone
+          };
 
           return (
             <section style={{ marginTop: 16 }}>
               <div style={{ marginBottom: 16 }}>
                 <h3 style={{ fontSize: 18, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 4 }}>Ödeme Durumu</h3>
-                <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13 }}>Tüm rezervasyonlarınızın ödeme özeti</p>
+                <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13 }}>Tüm rezervasyonlarınızın toplam ödeme özeti</p>
               </div>
 
-              {displayRes && (
-                <PaymentSection reservation={displayRes} compactMode={false} />
-              )}
+              <PaymentSection reservation={unifiedReservation} compactMode={false} />
             </section>
           );
         })()}
