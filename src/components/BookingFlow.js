@@ -648,8 +648,10 @@ export default function BookingFlow({ initialPackages }) {
                 const firstDay = `${y}-${String(m).padStart(2, '0')}-01`;
                 const lastDay = new Date(y, m, 0).getDate();
                 const lastDayStr = `${y}-${String(m).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
-                const today = new Date().toISOString().split('T')[0];
-                const minDate = firstDay > today ? firstDay : today;
+                const targetDate = new Date();
+                targetDate.setDate(targetDate.getDate() + 2);
+                const bookableLimit = targetDate.toISOString().split('T')[0];
+                const minDate = firstDay > bookableLimit ? firstDay : bookableLimit;
                 return (
                   <input type="date" value={detailForm.date}
                     min={minDate}
