@@ -114,11 +114,15 @@ export default function PaymentSection({ reservation, compactMode = false }) {
               setIsConverting(true);
               const newTotalNumeric = originalTotalAmount + (cardRemaining - baseRemaining);
               const newTotalStr = newTotalNumeric.toLocaleString('tr-TR') + '₺';
-              // Make server call to save permanently
-              await convertToCreditCardPermanent(reservation.id, newTotalStr);
-              // Instantly update visual local UI 
-              setIsConvertedToCard(true);
-              setShowConversionConfirm(false);
+              const { toggleCustomerPaymentPreference } = await import('@/app/actions/payment-preferences');
+              const res = await toggleCustomerPaymentPreference(reservation.id, "CREDIT_CARD", newTotalStr);
+              if (res.success) {
+                window.location.reload();
+              } else {
+                alert("Uyarı: " + res.error);
+                setIsConverting(false);
+                setShowConversionConfirm(false);
+              }
               setIsConverting(false);
             }}
             style={{ flex: 1, padding: 14, borderRadius: 12, background: "#facc15", color: "#000", border: "none", fontWeight: 700, cursor: isConverting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: isConverting ? 0.7 : 1 }}>
@@ -154,9 +158,18 @@ export default function PaymentSection({ reservation, compactMode = false }) {
             disabled={isReverting}
             onClick={async () => {
               setIsReverting(true);
-              const { revertToCashPayment } = await import('@/app/admin/core-actions');
-              await revertToCashPayment(reservation.id);
-              window.location.reload();
+              const { toggleCustomerPaymentPreference } = await import('@/app/actions/payment-preferences');
+              // Original total amount as a string (stripped of 15% padding)
+              const originalCashTotalStr = Math.round(originalTotalAmount / 1.15).toLocaleString('tr-TR');
+              
+              const res = await toggleCustomerPaymentPreference(reservation.id, "CASH", originalCashTotalStr);
+              if (res.success) {
+                window.location.reload();
+              } else {
+                alert("Bir hata oluştu: " + res.error);
+                setIsReverting(false);
+                setShowRevertConfirm(false);
+              }
             }}
             style={{ flex: 1, padding: 14, borderRadius: 12, background: "#4ade80", color: "#000", border: "none", fontWeight: 700, cursor: isReverting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: isReverting ? 0.7 : 1 }}>
             {isReverting ? "İşleniyor..." : "Evet, Döndür"}
