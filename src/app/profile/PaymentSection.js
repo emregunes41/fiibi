@@ -383,23 +383,36 @@ export default function PaymentSection({ reservation, compactMode = false }) {
           
           let chronologicalTimeline = [...rawLogs, ...legacyPayments].sort((a, b) => new Date(a.date) - new Date(b.date));
           
-          let runningTotal = originalTotalAmount;
+          let runningTotal = 0;
           let runningPaid = 0;
+          let isFirst = true;
 
           // Compute dynamic snapshots securely 
           chronologicalTimeline = chronologicalTimeline.map(log => {
-             if (log.type === "CARD_CONVERSION") {
-               runningTotal = Math.round(originalTotalAmount * 1.15); // +15%
-             } else if (log.type === "CASH_REVERSION") {
-               runningTotal = originalTotalAmount;
-             } else if (log.type === "EXTRA_FEE" && log._rawAmount) {
-               runningTotal += log._rawAmount;
-             } else if (log.type === "ADD_PAYMENT") {
-               const amt = log._rawAmount !== undefined ? log._rawAmount : (typeof log.amount === 'number' ? log.amount : parseFloat(log.amount?.replace(/[^0-9,-]+/g,"").replace(",",".") || 0));
-               runningPaid += amt;
-             } else if (log.type === "DELETE_PAYMENT") {
-               const amt = log._rawAmount !== undefined ? log._rawAmount : (typeof log.amount === 'number' ? log.amount : parseFloat(log.amount?.replace(/[^0-9,-]+/g,"").replace(",",".") || 0));
-               runningPaid -= amt;
+             // If this log contains an exact snapshot from the database, trust it completely.
+             if (log.totalSnapshot !== undefined) {
+               runningTotal = log.totalSnapshot;
+             }
+             if (log.paidSnapshot !== undefined) {
+               runningPaid = log.paidSnapshot;
+             }
+             
+             // If this is an old legacy log without a snapshot
+             if (log.totalSnapshot === undefined && log.paidSnapshot === undefined) {
+                 if (isFirst) {
+                   // Initial fallback for very old data
+                   runningTotal = currentTotalAmount;
+                   isFirst = false;
+                 }
+                 if (log.type === "EXTRA_FEE" && log._rawAmount) {
+                   runningTotal += log._rawAmount;
+                 } else if (log.type === "ADD_PAYMENT") {
+                   const amt = log._rawAmount !== undefined ? log._rawAmount : (typeof log.amount === 'number' ? log.amount : parseFloat(log.amount?.replace(/[^0-9,-]+/g,"").replace(",",".") || 0));
+                   runningPaid += amt;
+                 } else if (log.type === "DELETE_PAYMENT") {
+                   const amt = log._rawAmount !== undefined ? log._rawAmount : (typeof log.amount === 'number' ? log.amount : parseFloat(log.amount?.replace(/[^0-9,-]+/g,"").replace(",",".") || 0));
+                   runningPaid -= amt;
+                 }
              }
              
              return {
