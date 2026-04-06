@@ -39,6 +39,7 @@ function AdminCartDrawer() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
   const [showContact, setShowContact] = useState(false);
+  const [manualDiscount, setManualDiscount] = useState("");
 
   const isContactValid = contactForm.brideName && contactForm.bridePhone && contactForm.brideEmail && contactForm.groomName && contactForm.groomPhone;
 
@@ -64,6 +65,14 @@ function AdminCartDrawer() {
       return n ? `[${i.pkg.name}] ${n}` : null;
     }).filter(Boolean).join("\n");
 
+    const discountVal = Number(manualDiscount) || 0;
+    const finalTotal = Math.max(0, cartTotal() - discountVal);
+
+    let updatedNotes = allNotes;
+    if (discountVal > 0) {
+      updatedNotes += `\n\n[ADMIN NOTU] Sisteme ${fmt(discountVal)} TL özel manuel indirim uygulanmıştır.`;
+    }
+
     const firstItem = items[0];
     const data = {
       brideName: contactForm.brideName,
@@ -75,8 +84,8 @@ function AdminCartDrawer() {
       date: firstItem?.details?.date || new Date().toISOString().split("T")[0],
       time: firstItem?.details?.time || "",
       packageIds: items.map(i => i.pkg.id),
-      notes: allNotes,
-      totalAmount: fmt(cartTotal()),
+      notes: updatedNotes,
+      totalAmount: fmt(finalTotal),
       paidAmount: "0",
       selectedAddons: allAddons,
       customFieldAnswers: allCustomFieldAnswers,
@@ -236,10 +245,27 @@ function AdminCartDrawer() {
             {/* Footer */}
             {items.length > 0 && !submitResult && (
               <div style={{ padding: 20, borderTop: "1px solid rgba(255,255,255,0.08)", background: "rgba(0,0,0,0.3)" }}>
+                {showContact && (
+                  <div style={{ marginBottom: 16 }}>
+                    <label style={{...labelStyle, color: "#facc15"}}>Manuel İndirim Tutarı (TL) - İsteğe Bağlı</label>
+                    <input 
+                      type="number" 
+                      min="0"
+                      value={manualDiscount} 
+                      onChange={(e) => setManualDiscount(e.target.value)} 
+                      placeholder="Örn: 2000" 
+                      style={{ ...inputStyle, border: "1px solid rgba(250,204,21,0.3)", background: "rgba(250,204,21,0.05)" }} 
+                    />
+                  </div>
+                )}
+                
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 16 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)" }}>TOPLAM</div>
-                  <div>
-                    <span style={{ fontSize: 24, fontWeight: 700, color: "#fff" }}>{fmt(cartTotal())}</span>
+                  <div style={{ textAlign: "right" }}>
+                    {showContact && Number(manualDiscount) > 0 && (
+                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", textDecoration: "line-through", marginBottom: 2 }}>{fmt(cartTotal())} ₺</div>
+                    )}
+                    <span style={{ fontSize: 24, fontWeight: 700, color: "#fff" }}>{fmt(Math.max(0, cartTotal() - (Number(manualDiscount) || 0)))}</span>
                     <span style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", fontWeight: 400, marginLeft: 2 }}>₺</span>
                   </div>
                 </div>
@@ -283,10 +309,10 @@ export default function AdminBookingClient({ initialPackages }) {
             Manuel Rezervasyon Oluştur
           </h1>
           <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", lineHeight: 1.7 }}>
-            Online rezervasyon akışının aynısını kullanarak müşteri adına rezervasyon oluşturun. Paketleri sepete ekleyin, sonra müşteri bilgilerini girip kaydedin.
+            Online rezervasyon akışının aynısını kullanarak müşteri adına rezervasyon oluşturun. Müşteri bilgilerini girerken isteğe bağlı özel indirim tanımlayabilirsiniz.
           </p>
         </div>
-        <BookingFlow initialPackages={initialPackages} />
+        <BookingFlow initialPackages={initialPackages} isAdmin={true} />
       </div>
       <AdminCartDrawer />
     </CartProvider>

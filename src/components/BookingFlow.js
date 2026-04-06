@@ -134,7 +134,7 @@ const S = {
 };
 
 /* ─── component ─── */
-export default function BookingFlow({ initialPackages }) {
+export default function BookingFlow({ initialPackages, isAdmin = false }) {
   const cart = useCart();
   const [step, setStep] = useState(1);
   const [cat, setCat] = useState(null);
@@ -179,12 +179,12 @@ export default function BookingFlow({ initialPackages }) {
 
   const fmt = (n) => n.toLocaleString("tr-TR");
   const packs = initialPackages.filter((p) => p.category === cat);
-  const disc = (m) => prices.find((p) => p.month === m)?.discountPercentage || 0;
+  const disc = (m) => isAdmin ? 0 : (prices.find((p) => p.month === m)?.discountPercentage || 0);
 
   // O ayın en ucuz paket fiyatını hesapla
   const minPrice = (m) => {
     if (!packs.length) return null;
-    const d = prices.find((p) => p.month === m)?.discountPercentage || 0;
+    const d = isAdmin ? 0 : (prices.find((p) => p.month === m)?.discountPercentage || 0);
     const basePrices = packs.map(pkg => {
       const b = parseInt(pkg.price.replace(/\D/g, "")) || 0;
       return Math.round(b * (1 + d / 100));
@@ -194,11 +194,11 @@ export default function BookingFlow({ initialPackages }) {
 
   const price = useCallback((pkg) => {
     const b = parseInt(pkg.price.replace(/\D/g, "")) || 0;
-    if (!month || !prices.length) return b;
+    if (!month || !prices.length || isAdmin) return b;
     const c = prices.find((p) => p.month === month);
     if (!c?.discountPercentage) return b;
     return Math.round(b * (1 + c.discountPercentage / 100));
-  }, [month, prices]);
+  }, [month, prices, isAdmin]);
 
   const go = (s) => { window.scrollTo({ top: 0, behavior: "smooth" }); setStep(s); };
 
