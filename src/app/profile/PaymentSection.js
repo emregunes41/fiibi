@@ -465,7 +465,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
                 }}
               >
                 <Banknote size={15} />
-                Nakit Ödemek İstiyorum
+                Nakit Ödemek İstiyorum (%15 İndirim)
               </button>
             )}
           </div>
