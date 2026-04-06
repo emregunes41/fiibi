@@ -815,7 +815,7 @@ export async function updateSiteConfig(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl } = data;
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions } = data;
     await prisma.globalSettings.update({
       where: { id: "global-settings" },
       data: {
@@ -842,6 +842,8 @@ export async function updateSiteConfig(data) {
         notifyReminder: notifyReminder ?? true,
         notifyPhotosReady: notifyPhotosReady ?? true,
         googleMapsUrl: googleMapsUrl || "",
+        chatbotEnabled: chatbotEnabled ?? true,
+        chatbotInstructions: chatbotInstructions || "",
       }
     });
     revalidatePath('/');
