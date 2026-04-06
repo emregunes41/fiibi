@@ -403,7 +403,7 @@ export async function createManualReservation(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds, notes, selectedAddons = [], customFieldAnswers = [], totalAmount = "" } = data;
+    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds, notes, selectedAddons = [], customFieldAnswers = [], totalAmount = "", initialPaymentAmount } = data;
     
     const packagesData = await prisma.photographyPackage.findMany({
       where: { id: { in: packageIds } }
@@ -454,6 +454,18 @@ export async function createManualReservation(data) {
       userId = user.id;
     }
 
+    const numericInitialPayment = Number(initialPaymentAmount) || 0;
+    const numericTotal = Number(totalAmount.replace(/\D/g, '')) || 0;
+    
+    let paymentStatus = "UNPAID";
+    if (numericInitialPayment > 0) {
+      if (numericInitialPayment >= numericTotal) {
+        paymentStatus = "PAID";
+      } else {
+        paymentStatus = "PARTIAL";
+      }
+    }
+
     await prisma.reservation.create({
       data: {
         ...(userId ? { user: { connect: { id: userId } } } : {}),
@@ -469,10 +481,17 @@ export async function createManualReservation(data) {
         selectedAddons,
         customFieldAnswers: enrichedCFA,
         status: "CONFIRMED", 
-        paymentStatus: "UNPAID",
+        paymentStatus,
         workflowStatus: "PENDING",
         deliveryDate: deliveryDateObj,
-        contractApproved: false
+        contractApproved: false,
+        ...(numericInitialPayment > 0 ? {
+          payments: {
+            create: [
+              { amount: numericInitialPayment, method: "CASH", note: "Ön Ödeme (Nakit/Havale)" }
+            ]
+          }
+        } : {})
       }
     });
     

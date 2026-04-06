@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ShoppingBag, Trash2, ArrowRight,
   Camera, Heart, Gem, Calendar, Clock,
-  FileText, User, Phone, Mail, Instagram, Check,
+  FileText, User, Phone, Mail, Instagram, Check, Banknote
 } from "lucide-react";
 
 const CAT_META = {
@@ -40,6 +40,7 @@ function AdminCartDrawer() {
   const [submitResult, setSubmitResult] = useState(null);
   const [showContact, setShowContact] = useState(false);
   const [manualDiscount, setManualDiscount] = useState("");
+  const [initialPaymentAmount, setInitialPaymentAmount] = useState("");
 
   const isContactValid = contactForm.brideName && contactForm.bridePhone && contactForm.brideEmail && contactForm.groomName && contactForm.groomPhone;
 
@@ -87,6 +88,7 @@ function AdminCartDrawer() {
       notes: updatedNotes,
       totalAmount: fmt(finalTotal),
       paidAmount: "0",
+      initialPaymentAmount: initialPaymentAmount,
       selectedAddons: allAddons,
       customFieldAnswers: allCustomFieldAnswers,
     };
@@ -169,6 +171,18 @@ function AdminCartDrawer() {
                   <div style={{ height: 1, background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
                   <div><label style={labelStyle}><Instagram size={10} style={{ display: "inline", marginRight: 4 }} /> Sosyal Medya</label>
                     <input type="text" value={contactForm.socialMedia} onChange={(e) => setContactForm(p => ({ ...p, socialMedia: e.target.value }))} placeholder="@instagram" style={inputStyle} /></div>
+                  <div style={{ height: 1, background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
+                  <div>
+                    <label style={{...labelStyle, color: "#34d399"}}><Banknote size={10} style={{ display: "inline", marginRight: 4 }} /> Alınan Ön Ödeme (Kapora) Tutarı - Opsiyonel</label>
+                    <input 
+                      type="number" 
+                      min="0"
+                      value={initialPaymentAmount} 
+                      onChange={(e) => setInitialPaymentAmount(e.target.value)} 
+                      placeholder="Örn: 4000" 
+                      style={{ ...inputStyle, border: "1px solid rgba(52,211,153,0.3)", background: "rgba(52,211,153,0.05)" }} 
+                    />
+                  </div>
                 </div>
               ) : (
                 /* Cart Items */
