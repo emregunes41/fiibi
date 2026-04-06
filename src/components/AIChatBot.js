@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Sparkles, ArrowRight, Bot } from "lucide-react";
+import { MessageCircle, X, Send, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AIChatBot() {
@@ -94,36 +94,26 @@ export default function AIChatBot() {
             onClick={() => setIsOpen(true)}
             style={{
               position: "fixed",
-              bottom: 24,
-              right: 24,
-              width: 60,
-              height: 60,
+              bottom: 90,
+              right: 20,
+              width: 46,
+              height: 46,
               borderRadius: "50%",
-              background: "linear-gradient(135deg, #fff 0%, #e0e0e0 100%)",
-              border: "none",
+              background: "rgba(255,255,255,0.1)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "1px solid rgba(255,255,255,0.15)",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 4px 24px rgba(0,0,0,0.4), 0 0 40px rgba(255,255,255,0.1)",
+              boxShadow: "0 2px 16px rgba(0,0,0,0.3)",
               zIndex: 4999,
             }}
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Sparkles size={24} style={{ color: "#000" }} />
-            
-            {/* Pulse ring */}
-            <motion.div
-              animate={{ scale: [1, 1.5], opacity: [0.4, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              style={{
-                position: "absolute",
-                inset: -4,
-                borderRadius: "50%",
-                border: "2px solid rgba(255,255,255,0.3)",
-              }}
-            />
+            <MessageCircle size={20} style={{ color: "#fff" }} />
           </motion.button>
         )}
       </AnimatePresence>
@@ -139,8 +129,8 @@ export default function AIChatBot() {
             style={{
               position: "fixed",
               bottom: 24,
-              right: 24,
-              width: "min(400px, calc(100vw - 32px))",
+              right: 16,
+              width: "min(380px, calc(100vw - 32px))",
               height: "min(600px, calc(100vh - 48px))",
               borderRadius: 20,
               background: "#0a0a0f",
@@ -163,16 +153,17 @@ export default function AIChatBot() {
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{
-                  width: 36, height: 36, borderRadius: 10,
-                  background: "linear-gradient(135deg, #fff 0%, #ccc 100%)",
+                  width: 32, height: 32, borderRadius: 8,
+                  background: "rgba(255,255,255,0.08)",
+                  border: "1px solid rgba(255,255,255,0.1)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                  <Bot size={18} style={{ color: "#000" }} />
+                  <MessageCircle size={15} style={{ color: "#fff" }} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>Pinowed AI</div>
+                  <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>Pinowed</div>
                   <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", gap: 4 }}>
-                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80" }} />
+                    <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#4ade80" }} />
                     Çevrimiçi
                   </div>
                 </div>
@@ -217,7 +208,7 @@ export default function AIChatBot() {
                       display: "flex", alignItems: "center", justifyContent: "center",
                       marginTop: 2,
                     }}>
-                      <Sparkles size={12} style={{ color: "#fff" }} />
+                      <MessageCircle size={11} style={{ color: "rgba(255,255,255,0.6)" }} />
                     </div>
                   )}
                   <div style={{ maxWidth: "78%", display: "flex", flexDirection: "column", gap: 6 }}>
@@ -289,7 +280,7 @@ export default function AIChatBot() {
                     background: "rgba(255,255,255,0.08)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <Sparkles size={12} style={{ color: "#fff" }} />
+                    <MessageCircle size={11} style={{ color: "rgba(255,255,255,0.6)" }} />
                   </div>
                   <div style={{
                     padding: "12px 16px",
@@ -375,11 +366,11 @@ export default function AIChatBot() {
               <div style={{ 
                 textAlign: "center", 
                 fontSize: 9, 
-                color: "rgba(255,255,255,0.15)", 
+                color: "rgba(255,255,255,0.1)", 
                 marginTop: 8,
                 letterSpacing: "0.05em",
               }}>
-                Pinowed AI · Yapay Zeka Asistanı
+                pinowed.com
               </div>
             </div>
           </motion.div>
