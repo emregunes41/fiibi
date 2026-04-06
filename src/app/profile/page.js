@@ -399,10 +399,19 @@ export default async function ProfilePage() {
           // Does any reservation use CASH?
           const hasCash = user.reservations.some(r => r.paymentPreference === "CASH");
           
+          // Merge all paymentLogs from every reservation into one timeline
+          const unifiedPaymentLogs = user.reservations.flatMap(r => r.paymentLogs || []);
+          // Sum paidAmount across reservations
+          const unifiedPaidAmount = user.reservations.reduce((sum, r) => {
+            return sum + parseFloat(r.paidAmount || '0');
+          }, 0);
+
           const unifiedReservation = {
              id: primaryRes.id, // Payment will be attached to this reservation in DB
              totalAmount: unifiedTotalNumeric.toString(),
              payments: unifiedPayments,
+             paymentLogs: unifiedPaymentLogs,
+             paidAmount: unifiedPaidAmount.toString(),
              paymentPreference: hasCash ? "CASH" : primaryRes.paymentPreference,
              packages: allPackages,
              brideEmail: primaryRes.brideEmail,

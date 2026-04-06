@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { CreditCard, Banknote, X, AlertTriangle, CheckCircle2, Circle } from "lucide-react";
-import { convertToCreditCardPermanent } from "@/app/admin/core-actions";
+// Payment preference toggling is handled by @/app/actions/payment-preferences
 
 const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale/EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online" };
 const methodColors = { CASH: "#4ade80", BANK_TRANSFER: "#60a5fa", CREDIT_CARD: "#f59e0b", ONLINE: "#a78bfa" };
