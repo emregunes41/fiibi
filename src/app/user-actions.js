@@ -189,6 +189,18 @@ export async function approveContract(reservationId) {
       data: { contractApproved: true }
     });
 
+    // Notify admin
+    try {
+      const fullRes = await prisma.reservation.findUnique({ where: { id: reservationId } });
+      const { notifyAdminContractApproved } = await import("./actions/admin-notifications");
+      await notifyAdminContractApproved({
+        brideName: fullRes.brideName,
+        bridePhone: fullRes.bridePhone,
+        brideEmail: fullRes.brideEmail,
+        eventDate: fullRes.eventDate
+      });
+    } catch (e) { console.error("Admin notify error:", e); }
+
     revalidatePath('/profile');
     revalidatePath('/admin/reservations');
     return { success: true };

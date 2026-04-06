@@ -65,6 +65,18 @@ export async function toggleCustomerPaymentPreference(reservationId, newPreferen
     });
 
     revalidatePath("/profile");
+
+    // Notify admin
+    try {
+      const { notifyAdminPaymentPreferenceChanged } = await import("./admin-notifications");
+      await notifyAdminPaymentPreferenceChanged({
+        brideName: r.brideName,
+        bridePhone: r.bridePhone,
+        newPreference,
+        totalAmount: newTotalStr || r.totalAmount
+      });
+    } catch (e) { console.error("Admin notify error:", e); }
+
     return { success: true };
   } catch (err) {
     console.error("Payment Preference Toggle Error:", err);

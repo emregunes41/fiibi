@@ -166,6 +166,19 @@ export async function selectAlbumModel(reservationId, albumModelId) {
       where: { id: reservationId },
       data: { albumModelId }
     });
+
+    // Notify admin
+    try {
+      const res = await prisma.reservation.findUnique({ where: { id: reservationId } });
+      const model = await prisma.albumModel.findUnique({ where: { id: albumModelId } });
+      const { notifyAdminAlbumSelected } = await import("../actions/admin-notifications");
+      await notifyAdminAlbumSelected({
+        brideName: res?.brideName,
+        bridePhone: res?.bridePhone,
+        modelName: model?.name || "Bilinmiyor"
+      });
+    } catch (e) { console.error("Admin notify error:", e); }
+
     revalidatePath('/profile');
     revalidatePath('/admin/reservations');
     return { success: true };
@@ -419,6 +432,21 @@ export async function savePendingReservation(data) {
     } catch (emailErr) {
       console.error("Reservation received email error:", emailErr);
     }
+
+    // Notify admin about new reservation
+    try {
+      const packageNames = packagesData.map(p => p.name).join(', ');
+      const { notifyAdminNewReservation } = await import("../actions/admin-notifications");
+      await notifyAdminNewReservation({
+        brideName: data.brideName,
+        groomName: data.groomName,
+        bridePhone: data.bridePhone,
+        brideEmail: data.brideEmail,
+        eventDate: data.date,
+        totalAmount: data.totalAmount,
+        packageNames
+      });
+    } catch (e) { console.error("Admin notify error:", e); }
 
     return { success: true, id: reservation.id };
   } catch (error) {
@@ -897,6 +925,21 @@ export async function addPayment(reservationId, data) {
     }
 
     revalidatePath('/admin/reservations');
+
+    // Notify admin about every payment (including admin-added ones for record)
+    try {
+      const { notifyAdminPaymentReceived } = await import("../actions/admin-notifications");
+      await notifyAdminPaymentReceived({
+        brideName: reservation.brideName,
+        bridePhone: reservation.bridePhone,
+        amount: numericAmount,
+        method,
+        totalAmount,
+        totalPaid,
+        remaining: Math.max(0, totalAmount - totalPaid)
+      });
+    } catch (e) { console.error("Admin notify error:", e); }
+
     return { success: true };
   } catch (error) {
     console.error("Add Payment Error:", error);

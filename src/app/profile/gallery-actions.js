@@ -83,6 +83,17 @@ export async function completeSelection(galleryId, reservationId, coupleName, se
       }
     });
 
+    // 3. Admine email gönder
+    try {
+      const { notifyAdminPhotoSelectionSubmitted } = await import("@/app/actions/admin-notifications");
+      await notifyAdminPhotoSelectionSubmitted({
+        brideName: reservation.brideName,
+        bridePhone: reservation.bridePhone,
+        selectedCount: selectedPhotoNames.length,
+        reservationId
+      });
+    } catch (e) { console.error("Admin notify error:", e); }
+
     revalidatePath('/profile/gallery');
     revalidatePath('/profile');
     revalidatePath('/admin/dashboard');

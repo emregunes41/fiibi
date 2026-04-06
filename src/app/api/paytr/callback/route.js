@@ -82,6 +82,20 @@ export async function POST(req) {
             : [logPayload]
         }
       });
+
+      // Notify admin
+      try {
+        const { notifyAdminPaymentReceived } = await import("@/app/actions/admin-notifications");
+        await notifyAdminPaymentReceived({
+          brideName: reservation.brideName,
+          bridePhone: reservation.bridePhone,
+          amount: paidAmountTL,
+          method: "ONLINE",
+          totalAmount,
+          totalPaid,
+          remaining: Math.max(0, totalAmount - totalPaid)
+        });
+      } catch (e) { console.error("Admin notify error:", e); }
       
       console.log(`PAYMENT SUCCESS for Reservation: ${reservationId} - ${paidAmountTL} TL`);
     } else {
