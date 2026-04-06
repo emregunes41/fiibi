@@ -322,27 +322,42 @@ export async function checkAvailability(date, packageId, time = null) {
     const nextDate = new Date(selectedDate);
     nextDate.setDate(selectedDate.getDate() + 1);
 
-    // Find confirmed reservations for the same category on that day
+    // DIS_CEKIM: Tek fotoğrafçı — tüm dış çekim paketleri aynı saat dilimini paylaşır
+    // Diğer kategoriler: paket bazlı kapasite kontrolü
+    const isDisCekim = pkg.category === "DIS_CEKIM";
+
+    // Find reservations on that day for the relevant scope
     const existingReservations = await prisma.reservation.findMany({
       where: {
-        eventDate: {
-          gte: selectedDate,
-          lt: nextDate
-        },
-        status: { in: ["CONFIRMED", "COMPLETED"] },
-        package: { category: pkg.category }
+        eventDate: { gte: selectedDate, lt: nextDate },
+        status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] },
+        packages: {
+          some: isDisCekim
+            ? { category: "DIS_CEKIM" } // Tüm dış çekim paketlerini say
+            : { id: packageId }          // Sadece aynı paketi say
+        }
       }
     });
 
-    if (pkg.timeType === "FULL_DAY" || pkg.timeType === "MORNING" || pkg.timeType === "EVENING" || pkg.timeType === "FIVE_HOURS") {
-      // For these types, we usually count the whole day or the specific period
-      // If the user wants specific evening capacity, we'd check eventTime too for "EVENING"
+    if (isDisCekim) {
+      // Dış çekim: tek fotoğrafçı, kapasite = 1
+      if (pkg.timeType === "SLOT_2H" || pkg.timeType === "SLOT_4H" || pkg.timeType === "SLOT") {
+        // Slot bazlı: aynı saat diliminde herhangi bir dış çekim var mı?
+        const count = existingReservations.filter(r => r.eventTime === time).length;
+        return { available: count < 1, count, max: 1 };
+      }
+      // Full day / morning / evening: o gün herhangi bir dış çekim var mı?
+      const count = existingReservations.length;
+      return { available: count < 1, count, max: 1 };
+    }
+
+    // Diğer kategoriler (Düğün, Nişan vb.): paket bazlı kapasite
+    if (pkg.timeType === "FULL_DAY" || pkg.timeType === "MORNING" || pkg.timeType === "EVENING" || pkg.timeType === "FIVE_HOURS" || pkg.timeType === "WEDDING") {
       const count = existingReservations.length;
       return { available: count < pkg.maxCapacity, count, max: pkg.maxCapacity };
     }
 
-    if (pkg.timeType === "SLOT") {
-      // For slots, we check the specific time
+    if (pkg.timeType === "SLOT" || pkg.timeType === "SLOT_2H" || pkg.timeType === "SLOT_4H") {
       const count = existingReservations.filter(r => r.eventTime === time).length;
       return { available: count < pkg.maxCapacity, count, max: pkg.maxCapacity };
     }
@@ -748,7 +763,10 @@ export async function getSlotAvailability(date, categoryValue) {
       slotCounts[t] = (slotCounts[t] || 0) + 1;
     }
 
-    const maxCap = packages.reduce((max, p) => Math.max(max, p.maxCapacity || 1), 1);
+    // DIS_CEKIM: tek fotoğrafçı, tüm paketler aynı kapasiteyi paylaşır
+    const maxCap = categoryValue === "DIS_CEKIM" 
+      ? 1 
+      : packages.reduce((max, p) => Math.max(max, p.maxCapacity || 1), 1);
 
     return { slotCounts, maxCapacity: maxCap, totalReservations: reservations.length };
   } catch (error) {
