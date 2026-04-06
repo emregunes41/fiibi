@@ -88,6 +88,7 @@ export async function getCurrentUser() {
     });
     return user;
   } catch (err) {
+    console.error("getCurrentUser Crash:", err);
     return null;
   }
 }

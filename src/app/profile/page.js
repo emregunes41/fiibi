@@ -106,7 +106,7 @@ export default async function ProfilePage() {
                           <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
                             <Link href="/sozlesme" target="_blank" style={{ color: "#facc15", fontSize: 13, fontWeight: 600, textDecoration: "underline", opacity: 0.8 }}>Sözleşmeyi Oku</Link>
                             <form action={approveContract.bind(null, res.id)}>
-                              <button type="submit" style={{ background: "#facc15", color: "#000", fontWeight: 700, fontSize: 13, padding: "10px 20px", borderRadius: 8, border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, transition: "opacity 0.2s" }} onMouseOver={e=>e.currentTarget.style.opacity=0.8} onMouseOut={e=>e.currentTarget.style.opacity=1}>
+                              <button type="submit" className="hover:opacity-80" style={{ background: "#facc15", color: "#000", fontWeight: 700, fontSize: 13, padding: "10px 20px", borderRadius: 8, border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, transition: "opacity 0.2s" }}>
                                 <CheckCircle size={16} /> Okudum ve Onaylıyorum
                               </button>
                             </form>
