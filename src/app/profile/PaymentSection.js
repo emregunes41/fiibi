@@ -18,6 +18,10 @@ export default function PaymentSection({ reservation, compactMode = false }) {
   const [isReverting, setIsReverting] = useState(false);
   
   const [paymentMode, setPaymentMode] = useState("full"); // "full" | "partial"
+  const [partialAmountInput, setPartialAmountInput] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [showAllLogs, setShowAllLogs] = useState(false);
+  
   const [payAmount, setPayAmount] = useState("");
   const [iframeToken, setIframeToken] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -373,12 +377,42 @@ export default function PaymentSection({ reservation, compactMode = false }) {
             date: p.createdAt,
             type: "ADD_PAYMENT",
             amount: `+ ${p.amount.toLocaleString('tr-TR')}₺`,
-            description: `${methodLabels[p.method] || p.method} ödemesi (Eski Kayıt)`
+            description: `${methodLabels[p.method] || p.method} ödemesi`,
+            _rawAmount: p.amount
           }));
           
-          const timeline = [...rawLogs, ...legacyPayments].sort((a, b) => new Date(b.date) - new Date(a.date));
+          let chronologicalTimeline = [...rawLogs, ...legacyPayments].sort((a, b) => new Date(a.date) - new Date(b.date));
           
-          if (timeline.length === 0) return null;
+          let runningTotal = originalTotalAmount;
+          let runningPaid = 0;
+
+          // Compute dynamic snapshots securely 
+          chronologicalTimeline = chronologicalTimeline.map(log => {
+             if (log.type === "CARD_CONVERSION") {
+               runningTotal = Math.round(originalTotalAmount * 1.15); // +15%
+             } else if (log.type === "CASH_REVERSION") {
+               runningTotal = originalTotalAmount;
+             } else if (log.type === "EXTRA_FEE" && log._rawAmount) {
+               runningTotal += log._rawAmount;
+             } else if (log.type === "ADD_PAYMENT") {
+               const amt = log._rawAmount !== undefined ? log._rawAmount : (typeof log.amount === 'number' ? log.amount : parseFloat(log.amount?.replace(/[^0-9,-]+/g,"").replace(",",".") || 0));
+               runningPaid += amt;
+             } else if (log.type === "DELETE_PAYMENT") {
+               const amt = log._rawAmount !== undefined ? log._rawAmount : (typeof log.amount === 'number' ? log.amount : parseFloat(log.amount?.replace(/[^0-9,-]+/g,"").replace(",",".") || 0));
+               runningPaid -= amt;
+             }
+             
+             return {
+                ...log,
+                _dynamicTotal: runningTotal,
+                _dynamicPaid: runningPaid
+             };
+          });
+
+          // Sort descending for display
+          const displayTimeline = chronologicalTimeline.sort((a, b) => new Date(b.date) - new Date(a.date));
+          
+          if (displayTimeline.length === 0) return null;
 
           const getLogIcon = (type) => {
              switch(type) {
@@ -391,6 +425,8 @@ export default function PaymentSection({ reservation, compactMode = false }) {
              }
           };
 
+          const limitedTimeline = showAllLogs ? displayTimeline : displayTimeline.slice(0, 4);
+
           return (
             <div style={{ marginBottom: 16 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 12 }}>Hesap Hareketleri</div>
@@ -398,9 +434,12 @@ export default function PaymentSection({ reservation, compactMode = false }) {
                 {/* Vertical timeline line */}
                 <div style={{ position: "absolute", left: 15, top: 10, bottom: 10, width: 2, background: "rgba(255,255,255,0.05)", zIndex: 0 }} />
                 
-                {timeline.map((log) => {
-                  const isPositive = log.amount && log.amount.includes("+");
-                  const isNegative = log.amount && log.amount.includes("-");
+                {limitedTimeline.map((log) => {
+                  const isPositive = log.amount && typeof log.amount === 'string' && log.amount.includes("+");
+                  const isNegative = log.amount && typeof log.amount === 'string' && log.amount.includes("-");
+                  // Fallback string if it's somehow not a string in old logs
+                  const amtDisplay = typeof log.amount === 'string' ? log.amount : (log.amount ? log.amount.toLocaleString('tr-TR') + "₺" : "");
+                  
                   return (
                   <div key={log.id} style={{ display: "flex", gap: 12, position: "relative", zIndex: 1 }}>
                     <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#111", border: "2px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -409,28 +448,39 @@ export default function PaymentSection({ reservation, compactMode = false }) {
                     <div style={{ flex: 1, background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: "10px 14px", display: "flex", flexDirection: "column", gap: 4 }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                         <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.85)", lineHeight: 1.4 }}>{log.description}</span>
-                        <span style={{ fontSize: 12, fontWeight: 800, color: isPositive ? "#4ade80" : (isNegative ? "#ef4444" : "#fff"), whiteSpace: "nowrap", marginLeft: 12 }}>{log.amount}</span>
+                        <span style={{ fontSize: 12, fontWeight: 800, color: isPositive ? "#4ade80" : (isNegative ? "#ef4444" : "#fff"), whiteSpace: "nowrap", marginLeft: 12 }}>{amtDisplay}</span>
                       </div>
                       <span style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", fontWeight: 500 }}>
                         {new Date(log.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })} · {new Date(log.date).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
                       </span>
-                      {log.totalSnapshot !== undefined && log.paidSnapshot !== undefined && (
-                        <div style={{ display: "flex", gap: 8, marginTop: 6, paddingTop: 6, borderTop: "1px dashed rgba(255,255,255,0.06)", flexWrap: "wrap" }}>
-                          <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>
-                            <span style={{color:"rgba(255,255,255,0.2)"}}>TOPLAM:</span> {log.totalSnapshot.toLocaleString('tr-TR')}₺
-                          </div>
-                          <div style={{ fontSize: 9, fontWeight: 700, color: "#4ade80" }}>
-                            <span style={{color:"rgba(74,222,128,0.4)"}}>ÖDENEN:</span> {log.paidSnapshot.toLocaleString('tr-TR')}₺
-                          </div>
-                          <div style={{ fontSize: 9, fontWeight: 700, color: "#facc15" }}>
-                            <span style={{color:"rgba(250,204,21,0.4)"}}>KALAN:</span> {(Math.max(0, log.totalSnapshot - log.paidSnapshot)).toLocaleString('tr-TR')}₺
-                          </div>
+                      
+                      {/* Show computed snapshots directly */}
+                      <div style={{ display: "flex", gap: 8, marginTop: 6, paddingTop: 6, borderTop: "1px dashed rgba(255,255,255,0.06)", flexWrap: "wrap" }}>
+                        <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>
+                          <span style={{color:"rgba(255,255,255,0.2)"}}>TOPLAM:</span> {Math.round(log._dynamicTotal || 0).toLocaleString('tr-TR')}₺
                         </div>
-                      )}
+                        <div style={{ fontSize: 9, fontWeight: 700, color: "#4ade80" }}>
+                          <span style={{color:"rgba(74,222,128,0.4)"}}>ÖDENEN:</span> {Math.round(log._dynamicPaid || 0).toLocaleString('tr-TR')}₺
+                        </div>
+                        <div style={{ fontSize: 9, fontWeight: 700, color: "#facc15" }}>
+                          <span style={{color:"rgba(250,204,21,0.4)"}}>KALAN:</span> {Math.max(0, Math.round((log._dynamicTotal || 0) - (log._dynamicPaid || 0))).toLocaleString('tr-TR')}₺
+                        </div>
+                      </div>
+                      
                     </div>
                   </div>
                 )})}
               </div>
+
+              {!showAllLogs && displayTimeline.length > 4 && (
+                <button 
+                  onClick={() => setShowAllLogs(true)}
+                  style={{ width: "100%", background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", padding: "8px", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer", marginTop: 12, transition: "all 0.2s" }}
+                  className="hover:bg-white/5 hover:text-white"
+                >
+                  Tüm Ödeme Geçmişini Gör ({displayTimeline.length - 4} Daha)
+                </button>
+              )}
             </div>
           );
         })()}
