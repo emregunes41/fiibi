@@ -19,13 +19,26 @@ export async function uploadAlbumImage(formData) {
     const file = formData.get('file');
     if (!file) return { error: "Dosya bulunamadı." };
 
+    // File Validation
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedMimeTypes.includes(file.type)) {
+      return { error: "Güvenlik İhlali: Sadece JPEG, PNG veya WEBP yükleyebilirsiniz." };
+    }
+    const fileSize = file.size;
+    if (fileSize > 5 * 1024 * 1024) { // 5MB limit
+      return { error: "Dosya boyutu çok büyük (Maks 5MB)." };
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'albums');
     await fs.mkdir(uploadDir, { recursive: true });
 
-    const ext = path.extname(file.name) || '.jpg';
+    // Enforce safe extension based on mime type
+    const extRaw = file.type.split('/')[1]; 
+    const ext = `.${extRaw === 'jpeg' ? 'jpg' : extRaw}`;
+    
     const filename = `${crypto.randomBytes(16).toString('hex')}${ext}`;
     const filepath = path.join(uploadDir, filename);
 
@@ -45,14 +58,27 @@ export async function uploadHeroBg(formData) {
     const file = formData.get('file');
     if (!file) return { error: "Dosya bulunamadı." };
 
+    // File Validation
+    const allowedMimeTypes = ['video/mp4', 'video/webm', 'image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedMimeTypes.includes(file.type)) {
+      return { error: "Güvenlik İhlali: Sadece MP4, WEBM veya görsel (JPG/PNG) yükleyebilirsiniz." };
+    }
+    const fileSize = file.size;
+    if (fileSize > 25 * 1024 * 1024) { // 25MB limit
+      return { error: "Dosya boyutu çok büyük (Maks 25MB)." };
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'hero');
     await fs.mkdir(uploadDir, { recursive: true });
 
-    const ext = path.extname(file.name) || '.mp4';
-    const filename = `hero_bg${ext}`;
+    // Enforce safe extension
+    const extRaw = file.type.split('/')[1];
+    const ext = `.${extRaw === 'jpeg' ? 'jpg' : extRaw}`;
+    
+    const filename = `hero_bg_${Date.now()}${ext}`; // Avoid caching issues by adding timestamp
     const filepath = path.join(uploadDir, filename);
 
     await fs.writeFile(filepath, buffer);

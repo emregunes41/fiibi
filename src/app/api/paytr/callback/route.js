@@ -35,13 +35,23 @@ export async function POST(req) {
 
       const reservationId = merchant_oid.split('X')[0];
 
+      // IDEMPOTENCY CHECK: Race Condition and Replay Protection
+      const existingPayment = await prisma.payment.findFirst({
+        where: { note: { contains: merchant_oid } }
+      });
+
+      if (existingPayment) {
+        console.log(`PAYMENT ALREADY PROCESSED for merchant_oid: ${merchant_oid}`);
+        return new Response("OK"); // Respond OK to PayTR so it stops retrying
+      }
+
       // Create payment record
       const newPayment = await prisma.payment.create({
         data: {
           reservationId: reservationId,
           amount: paidAmountTL,
           method: "ONLINE",
-          note: "PayTR online ödeme",
+          note: `PayTR online ödeme: ${merchant_oid}`,
         }
       });
 
