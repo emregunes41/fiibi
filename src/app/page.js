@@ -79,6 +79,12 @@ export default async function PinowedPage() {
             <a href={`tel:${siteConfig?.phone?.replace(/\s/g, '') || "+905550000000"}`} className="text-xl font-jakarta text-white/80 hover:text-white transition-colors no-underline flex items-center gap-3">
               <Phone size={18} strokeWidth={1.5} /> {siteConfig?.phone || "+90 555 000 00 00"}
             </a>
+            <a href="https://wa.me/905525244988?text=Merhaba%2C%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener noreferrer" className="text-xl font-jakarta text-white/80 hover:text-white transition-colors no-underline flex items-center gap-3">
+              <MessageCircle size={18} strokeWidth={1.5} /> WhatsApp ile Yazın
+            </a>
+            <a href="https://maps.app.goo.gl/wrrKU2MM3xAdwCEK9" target="_blank" rel="noopener noreferrer" className="text-xl font-jakarta text-white/80 hover:text-white transition-colors no-underline flex items-center gap-3">
+              <MapPin size={18} strokeWidth={1.5} /> Yol Tarifi Al
+            </a>
           </div>
 
           <div className="flex flex-col gap-6">
