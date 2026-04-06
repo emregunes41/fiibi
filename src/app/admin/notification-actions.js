@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/lib/session";
 
 export async function markNotificationAsRead(id) {
   const auth = await requireAdmin();

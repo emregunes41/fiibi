@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { requireUser } from "@/lib/auth";
+import { requireUser } from "@/lib/session";
 
 export async function getClientGalleries() {
   const auth = await requireUser();

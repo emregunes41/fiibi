@@ -1,7 +1,8 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { signToken, verifyAuth, requireUser } from "@/lib/auth";
+import { signToken, verifyAuth } from "@/lib/auth";
+import { requireUser } from "@/lib/session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";

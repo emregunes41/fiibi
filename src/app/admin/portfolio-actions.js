@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/lib/session";
 
 // Kategori (Konsept) oluştururken stringi slug formata çevirme yardımcı fonksiyonu
 function slugify(text) {
