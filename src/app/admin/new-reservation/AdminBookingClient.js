@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { CartProvider, useCart } from "@/components/CartContext";
 import BookingFlow from "@/components/BookingFlow";
-import { savePendingReservation } from "@/app/admin/core-actions";
+import { createManualReservation } from "@/app/admin/core-actions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ShoppingBag, Trash2, ArrowRight,
@@ -82,18 +82,17 @@ function AdminCartDrawer() {
       groomName: contactForm.groomName,
       groomPhone: contactForm.groomPhone,
       groomEmail: "",
-      date: firstItem?.details?.date || new Date().toISOString().split("T")[0],
-      time: firstItem?.details?.time || "",
+      eventDate: firstItem?.details?.date || new Date().toISOString().split("T")[0],
+      eventTime: firstItem?.details?.time || "",
       packageIds: items.map(i => i.pkg.id),
       notes: updatedNotes,
       totalAmount: fmt(finalTotal),
-      paidAmount: "0",
       initialPaymentAmount: initialPaymentAmount,
       selectedAddons: allAddons,
       customFieldAnswers: allCustomFieldAnswers,
     };
 
-    const result = await savePendingReservation(data);
+    const result = await createManualReservation(data);
     setIsSubmitting(false);
     if (result.success) {
       setSubmitResult({ success: true, message: "Rezervasyon başarıyla oluşturuldu!" });
