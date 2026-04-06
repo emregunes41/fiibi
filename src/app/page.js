@@ -4,6 +4,7 @@ import BookingFlow from "@/components/BookingFlow";
 import GalleryClient from "./gallery/GalleryClient";
 import Image from "next/image";
 import Link from "next/link";
+import AIChatBot from "@/components/AIChatBot";
 import { ArrowDown, Instagram, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
@@ -153,6 +154,9 @@ export default async function PinowedPage() {
           </div>
         </div>
       </footer>
+
+      {/* Floating Chat - sadece anasayfada */}
+      <AIChatBot />
 
     </main>
   );

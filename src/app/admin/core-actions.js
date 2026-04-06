@@ -796,7 +796,7 @@ export async function getSiteConfig() {
     return {
       heroTitle: "Anları Sanata \n Dönüştürüyoruz",
       heroSubtitle: "Premium Photography Service",
-      address: "Moda, Kadıköy / İstanbul",
+      address: "",
       phone: "+90 555 000 00 00",
       email: "hello@pinowed.com",
       instagram: "",

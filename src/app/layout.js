@@ -4,7 +4,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CartWrapper from "@/components/CartWrapper";
 import HeroBackground from "@/components/HeroBackground";
-import AIChatBot from "@/components/AIChatBot";
 import { getSiteConfig } from "@/app/admin/core-actions";
 
 const geistSans = Geist({
@@ -43,7 +42,6 @@ export default async function RootLayout({ children }) {
           {children}
           {/* Global Mobile Bottom Spacer for Floating CTA */}
           <div className="md:hidden h-32 shrink-0 w-full" />
-          <AIChatBot />
         </CartWrapper>
       </body>
     </html>

@@ -42,7 +42,7 @@ export default function Footer() {
           <ul className="list-none flex flex-col gap-4">
             <li className="flex items-start gap-3 text-white/50 text-sm">
               <MapPin size={18} className="text-white shrink-0" />
-              <span>Moda, Kadıköy / İstanbul</span>
+              <span>Türkiye</span>
             </li>
             <li className="flex items-center gap-3 text-white/50 text-sm">
               <Phone size={18} className="text-white shrink-0" />

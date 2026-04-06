@@ -279,7 +279,7 @@ export default function SettingsPage() {
               value={config.address}
               onChange={(e) => setConfig({ ...config, address: e.target.value })}
               style={inp}
-              placeholder="Moda, Kadıköy / İstanbul"
+              placeholder="Stüdyo adresi"
               required
             />
           </div>
