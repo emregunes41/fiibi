@@ -449,7 +449,7 @@ export async function createManualReservation(data) {
             role: "MEMBER"
           }
         });
-        await notifyWelcome(brideEmail, bridePhone, brideName, password);
+        await sendWelcomeEmail(brideEmail, brideName, password);
       }
       userId = user.id;
     }
