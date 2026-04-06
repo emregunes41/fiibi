@@ -2,10 +2,11 @@ import { getCurrentUser } from "../user-actions";
 import { getAlbumModels, getSiteConfig } from "../admin/core-actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Calendar, Package, Clock, CheckCircle, FileText, ExternalLink, Banknote, CreditCard, Tag } from "lucide-react";
+import { Calendar, Package, Clock, CheckCircle, FileText, ExternalLink, Banknote, CreditCard, Tag, AlertTriangle } from "lucide-react";
 import PhotoSelectionForm from "./PhotoSelectionForm";
 import AlbumSelectionForm from "./AlbumSelectionForm";
 import PaymentSection from "./PaymentSection";
+import { approveContract } from "../user-actions";
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
@@ -90,8 +91,33 @@ export default async function ProfilePage() {
               return (
                 <div key={res.id} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   
+                  {/* Contract Approval Banner */}
+                  {!res.contractApproved && (
+                    <div style={{ background: "rgba(250,204,21,0.06)", border: "1px solid rgba(250,204,21,0.3)", borderRadius: 20, padding: "20px 24px" }}>
+                      <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
+                        <div style={{ width: 44, height: 44, background: "rgba(250,204,21,0.15)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <AlertTriangle size={20} style={{ color: "#facc15" }} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 260 }}>
+                          <h4 style={{ fontWeight: 700, fontSize: 15, color: "#facc15", marginBottom: 6 }}>Sözleşme Onayı Bekleniyor</h4>
+                          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, lineHeight: 1.5, marginBottom: 16 }}>
+                            Bu rezervasyon ekibimiz tarafından sizin adınıza oluşturulmuştur. Çekim planlaması ve hizmet detaylarının resmi olarak başlayabilmesi için Pinowed mesafeli satış ve hizmet sözleşmesini onaylamanız gerekmektedir.
+                          </p>
+                          <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+                            <Link href="/sozlesme" target="_blank" style={{ color: "#facc15", fontSize: 13, fontWeight: 600, textDecoration: "underline", opacity: 0.8 }}>Sözleşmeyi Oku</Link>
+                            <form action={approveContract.bind(null, res.id)}>
+                              <button type="submit" style={{ background: "#facc15", color: "#000", fontWeight: 700, fontSize: 13, padding: "10px 20px", borderRadius: 8, border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, transition: "opacity 0.2s" }} onMouseOver={e=>e.currentTarget.style.opacity=0.8} onMouseOut={e=>e.currentTarget.style.opacity=1}>
+                                <CheckCircle size={16} /> Okudum ve Onaylıyorum
+                              </button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* ── Main Reservation Card ── */}
-                  <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 20, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                  <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 20, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden", opacity: !res.contractApproved ? 0.6 : 1, pointerEvents: !res.contractApproved ? "none" : "auto" }}>
                     
                     {/* Card Header */}
                     <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>

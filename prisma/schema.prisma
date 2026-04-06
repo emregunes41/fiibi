@@ -55,6 +55,7 @@ model Reservation {
   paymentPreference  String?            // CASH or CARD
   notes              String?
   paymentLogs        Json?
+  contractApproved   Boolean              @default(true)
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
   userId         String?

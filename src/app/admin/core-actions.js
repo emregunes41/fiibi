@@ -471,7 +471,8 @@ export async function createManualReservation(data) {
         status: "CONFIRMED", 
         paymentStatus: "UNPAID",
         workflowStatus: "PENDING",
-        deliveryDate: deliveryDateObj
+        deliveryDate: deliveryDateObj,
+        contractApproved: false
       }
     });
     

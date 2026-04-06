@@ -168,3 +168,31 @@ export async function submitPhotoSelection(reservationId, selectionText) {
     return { error: err.message };
   }
 }
+
+export async function approveContract(reservationId) {
+  const auth = await requireUser();
+  if (auth?.error) return auth;
+
+  try {
+    const reservation = await prisma.reservation.findUnique({
+      where: { id: reservationId },
+      select: { userId: true }
+    });
+
+    if (!reservation || reservation.userId !== auth.session.userId) {
+      return { error: "Yetkisiz islem." };
+    }
+
+    await prisma.reservation.update({
+      where: { id: reservationId },
+      data: { contractApproved: true }
+    });
+
+    revalidatePath('/profile');
+    revalidatePath('/admin/reservations');
+    return { success: true };
+  } catch (err) {
+    console.error("Approve Contract Error:", err);
+    return { error: err.message };
+  }
+}
