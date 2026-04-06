@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode } from "../core-actions";
 import { 
-  Save, Home, Phone, Mail, Instagram, MessageCircle, 
+  Save, Home, Phone, Mail, Instagram, MessageCircle, MapPin,
   Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power
 } from "lucide-react";
 
@@ -346,6 +346,20 @@ export default function SettingsPage() {
                   placeholder="905550000000"
                 />
               </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: 12 }}>
+            <label style={label}>Google Maps Yol Tarifi Linki</label>
+            <div style={{ position: "relative" }}>
+              <MapPin size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.3)", pointerEvents: "none" }} />
+              <input
+                type="text"
+                value={config.googleMapsUrl || ""}
+                onChange={(e) => setConfig({ ...config, googleMapsUrl: e.target.value })}
+                style={inpIcon}
+                placeholder="https://maps.app.goo.gl/..."
+              />
             </div>
           </div>
         </div>

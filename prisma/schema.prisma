@@ -237,6 +237,7 @@ model GlobalSettings {
   notifyPayment      Boolean @default(true)
   notifyReminder     Boolean @default(true)
   notifyPhotosReady  Boolean @default(true)
+  googleMapsUrl  String   @default("")
   updatedAt    DateTime @updatedAt
 }
 

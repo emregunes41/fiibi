@@ -634,14 +634,15 @@ export async function getSiteConfig() {
       cashPromoText: "",
       heroBgType: "video",
       heroBgUrl: "/assets/hero.mp4",
-      heroBgColor: "#000000"
+      heroBgColor: "#000000",
+      googleMapsUrl: "",
     };
   }
 }
 
 export async function updateSiteConfig(data) {
   try {
-    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady } = data;
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl } = data;
     await prisma.globalSettings.update({
       where: { id: "global-settings" },
       data: {
@@ -667,6 +668,7 @@ export async function updateSiteConfig(data) {
         notifyPayment: notifyPayment ?? true,
         notifyReminder: notifyReminder ?? true,
         notifyPhotosReady: notifyPhotosReady ?? true,
+        googleMapsUrl: googleMapsUrl || "",
       }
     });
     revalidatePath('/');
