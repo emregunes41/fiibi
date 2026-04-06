@@ -340,6 +340,12 @@ export default async function ProfilePage() {
                           </a>
                         </div>
                       )}
+
+                      {/* Payment Section for this Specific Reservation */}
+                      <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                         <h5 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12 }}>Ödeme Durumu</h5>
+                         <PaymentSection reservation={res} compactMode={false} />
+                      </div>
                     </div>
                   </div>
 
@@ -349,32 +355,6 @@ export default async function ProfilePage() {
             })()
           )}
         </div>
-
-        {/* ── Unified Payment Section ── */}
-        {user.reservations.length > 0 && (() => {
-          // Find first unpaid reservation for the pay button
-          const firstUnpaidRes = user.reservations.find(r => {
-            const rt = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
-            const rp = (r.payments || []).reduce((s, p) => s + p.amount, 0);
-            return rt - rp > 0;
-          });
-          
-          // Fallback to the first reservation if everything is paid
-          const displayRes = firstUnpaidRes || user.reservations[0];
-
-          return (
-            <section style={{ marginTop: 16 }}>
-              <div style={{ marginBottom: 16 }}>
-                <h3 style={{ fontSize: 18, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 4 }}>Ödeme Durumu</h3>
-                <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13 }}>Tüm rezervasyonlarınızın ödeme özeti</p>
-              </div>
-
-              {displayRes && (
-                <PaymentSection reservation={displayRes} compactMode={false} />
-              )}
-            </section>
-          );
-        })()}
       </section>
 
       {/* Purchases */}
