@@ -4,8 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import { sendWelcomeEmail } from "../actions/send-welcome";
-import { sendReservationSuccessEmail } from "../actions/send-reservation-success";
-import { notifyReservationSuccess } from "../actions/notify";
+import { notifyReservationReceived, notifyReservationConfirmed } from "../actions/notify";
 import { sendDriveLinkEmail } from "../actions/send-drive-link";
 import fs from "fs/promises";
 import path from "path";
@@ -316,8 +315,22 @@ export async function savePendingReservation(data) {
       }
     });
 
-    // Send confirmation email
-    await notifyReservationSuccess(data.brideEmail, data.bridePhone, data.brideName, data.date, data.totalAmount);
+    // Send "Reservation Received" email with full details (NOT confirmation)
+    try {
+      const packageNames = packagesData.map(p => p.name).join(', ');
+      await notifyReservationReceived(data.brideEmail, data.bridePhone, data.brideName, {
+        date: data.date,
+        totalAmount: data.totalAmount,
+        packages: packageNames,
+        groomName: data.groomName,
+        bridePhone: data.bridePhone,
+        eventTime: data.time,
+        paymentPreference: data.paymentPreference,
+        notes: data.notes,
+      });
+    } catch (emailErr) {
+      console.error("Reservation received email error:", emailErr);
+    }
 
     return { success: true, id: reservation.id };
   } catch (error) {
@@ -714,16 +727,39 @@ export async function addPayment(reservationId, data) {
       paymentStatus = "PARTIAL";
     }
 
+    // Auto-confirm reservation if it was PENDING (first deposit = confirmation)
+    const updateData = {
+      paidAmount: totalPaid.toString(),
+      paymentStatus,
+      paymentLogs: reservation.paymentLogs 
+        ? [...reservation.paymentLogs, { id: Date.now().toString(), paymentId: newPayment.id, date: new Date().toISOString(), type: "ADD_PAYMENT", amount: `+ ${parsedAmount.toLocaleString('tr-TR')}₺`, description: `${method} ödemesi alındı.` + (note ? ` (${note})` : ''), totalSnapshot: totalAmount, paidSnapshot: totalPaid }] 
+        : [{ id: Date.now().toString(), paymentId: newPayment.id, date: new Date().toISOString(), type: "ADD_PAYMENT", amount: `+ ${parsedAmount.toLocaleString('tr-TR')}₺`, description: `${method} ödemesi alındı.` + (note ? ` (${note})` : ''), totalSnapshot: totalAmount, paidSnapshot: totalPaid }]
+    };
+
+    // If reservation was PENDING, promote to CONFIRMED on first payment
+    if (reservation.status === "PENDING") {
+      updateData.status = "CONFIRMED";
+    }
+
     await prisma.reservation.update({
       where: { id: reservationId },
-      data: {
-        paidAmount: totalPaid.toString(),
-        paymentStatus,
-        paymentLogs: reservation.paymentLogs 
-          ? [...reservation.paymentLogs, { id: Date.now().toString(), paymentId: newPayment.id, date: new Date().toISOString(), type: "ADD_PAYMENT", amount: `+ ${parsedAmount.toLocaleString('tr-TR')}₺`, description: `${method} ödemesi alındı.` + (note ? ` (${note})` : ''), totalSnapshot: totalAmount, paidSnapshot: totalPaid }] 
-          : [{ id: Date.now().toString(), paymentId: newPayment.id, date: new Date().toISOString(), type: "ADD_PAYMENT", amount: `+ ${parsedAmount.toLocaleString('tr-TR')}₺`, description: `${method} ödemesi alındı.` + (note ? ` (${note})` : ''), totalSnapshot: totalAmount, paidSnapshot: totalPaid }]
-      }
+      data: updateData,
     });
+
+    // Send confirmation email if this was the first payment (deposit)
+    if (reservation.status === "PENDING") {
+      try {
+        await notifyReservationConfirmed(
+          reservation.brideEmail, 
+          reservation.bridePhone, 
+          reservation.brideName, 
+          reservation.eventDate, 
+          reservation.totalAmount
+        );
+      } catch (emailErr) {
+        console.error("Confirmation email error:", emailErr);
+      }
+    }
 
     revalidatePath('/admin/reservations');
     return { success: true };

@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { sendReservationSuccessEmail } from "./send-reservation-success";
+import { sendReservationReceivedEmail, sendReservationConfirmedEmail } from "./send-reservation-success";
 import { sendSMS } from "./send-sms";
 
 /**
@@ -50,9 +50,31 @@ export async function sendEmailWithResend(settings, to, subject, html) {
 }
 
 /**
- * 1. Rezervasyon Onay Bildirimi
+ * 1a. Rezervasyon ALINDI Bildirimi (henüz onay değil — detaylı bilgi maili)
  */
-export async function notifyReservationSuccess(email, phone, name, date, totalAmount) {
+export async function notifyReservationReceived(email, phone, name, reservationDetails) {
+  const settings = await getNotificationSettings();
+  if (!settings.notifyReservation) return { email: null, sms: null };
+
+  const results = { email: null, sms: null };
+
+  if (settings.emailEnabled) {
+    results.email = await sendReservationReceivedEmail(email, name, reservationDetails);
+  }
+
+  if (settings.smsEnabled && phone) {
+    const formattedDate = new Date(reservationDetails.date).toLocaleDateString("tr-TR");
+    const message = `Merhaba ${name}, rezervasyon talebiniz alındı! Tarih: ${formattedDate} | Tutar: ${reservationDetails.totalAmount} TL | Kapora sonrası onaylanacaktır. Detay: pinowed.com/profile`;
+    results.sms = await sendSMS(phone, message, settings);
+  }
+
+  return results;
+}
+
+/**
+ * 1b. Rezervasyon ONAYLANDI Bildirimi (kapora ödendi)
+ */
+export async function notifyReservationConfirmed(email, phone, name, date, totalAmount) {
   const settings = await getNotificationSettings();
   if (!settings.notifyReservation) return { email: null, sms: null };
 
@@ -60,11 +82,11 @@ export async function notifyReservationSuccess(email, phone, name, date, totalAm
   const formattedDate = new Date(date).toLocaleDateString("tr-TR");
 
   if (settings.emailEnabled) {
-    results.email = await sendReservationSuccessEmail(email, name, date, totalAmount);
+    results.email = await sendReservationConfirmedEmail(email, name, date, totalAmount);
   }
 
   if (settings.smsEnabled && phone) {
-    const message = `Merhaba ${name}, rezervasyonunuz onaylandı! Tarih: ${formattedDate} | Tutar: ${totalAmount} TL | Detay: pinowed.com/profile`;
+    const message = `Merhaba ${name}, rezervasyonunuz onaylandı! Tarih: ${formattedDate} | Detay: pinowed.com/profile`;
     results.sms = await sendSMS(phone, message, settings);
   }
 
