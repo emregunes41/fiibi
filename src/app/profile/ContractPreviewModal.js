@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { X, FileText, CheckCircle2 } from "lucide-react";
 
-export default function ContractPreviewModal() {
+export default function ContractPreviewModal({ customText }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -44,37 +44,43 @@ export default function ContractPreviewModal() {
             {/* Scrollable Content */}
             <div style={{ padding: "24px", overflowY: "auto", color: "rgba(255,255,255,0.75)", fontSize: 14, lineHeight: 1.6, flex: 1, display: "flex", flexDirection: "column", gap: 20 }}>
               
-              <p style={{ margin: 0 }}>Bu sözleşme, <strong>Pinowed Fotoğrafçılık</strong> ile siz değerli müşterimiz arasında yürürlüktedir.</p>
+              {customText ? (
+                <div style={{ whiteSpace: "pre-wrap" }}>{customText}</div>
+              ) : (
+                <>
+                  <p style={{ margin: 0 }}>Bu sözleşme, <strong>Pinowed Fotoğrafçılık</strong> ile siz değerli müşterimiz arasında yürürlüktedir.</p>
 
-              <div>
-                <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>1.</span> Hizmetin Kapsamı</h4>
-                <p style={{ margin: 0 }}>Seçilen paket kapsamında belirtilen fotoğraf ve/veya video çekim hizmeti sunulacaktır.</p>
-              </div>
+                  <div>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>1.</span> Hizmetin Kapsamı</h4>
+                    <p style={{ margin: 0 }}>Seçilen paket kapsamında belirtilen fotoğraf ve/veya video çekim hizmeti sunulacaktır.</p>
+                  </div>
 
-              <div>
-                <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>2.</span> Rezervasyon ve Kapora</h4>
-                <p style={{ margin: 0 }}>Rezervasyon, kapora ödemesinin yapılması ile kesinleşir. Kapora ödemesi yapılmadan tarih rezerve edilmez.</p>
-              </div>
+                  <div>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>2.</span> Rezervasyon ve Kapora</h4>
+                    <p style={{ margin: 0 }}>Rezervasyon, kapora ödemesinin yapılması ile kesinleşir. Kapora ödemesi yapılmadan tarih rezerve edilmez.</p>
+                  </div>
 
-              <div>
-                <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>3.</span> Ödeme Koşulları</h4>
-                <p style={{ margin: 0 }}>Kalan ödeme, çekim tarihinden en geç 3 gün önce tamamlanmalıdır. Kredi kartı ödemelerinde altyapı komisyonu uygulanır.</p>
-              </div>
+                  <div>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>3.</span> Ödeme Koşulları</h4>
+                    <p style={{ margin: 0 }}>Kalan ödeme, çekim tarihinden en geç 3 gün önce tamamlanmalıdır. Kredi kartı ödemelerinde altyapı komisyonu uygulanır.</p>
+                  </div>
 
-              <div>
-                <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>4.</span> Tarih Değişikliği ve İptal</h4>
-                <p style={{ margin: 0 }}>Değişiklik en geç 15 gün öncesinden bildirilmelidir ve 1 kez ücretsizdir. Müşteri kaynaklı iptallerde kapora iade edilmez.</p>
-              </div>
+                  <div>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>4.</span> Tarih Değişikliği ve İptal</h4>
+                    <p style={{ margin: 0 }}>Değişiklik en geç 15 gün öncesinden bildirilmelidir ve 1 kez ücretsizdir. Müşteri kaynaklı iptallerde kapora iade edilmez.</p>
+                  </div>
 
-              <div>
-                <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>5.</span> Çekim Günleri</h4>
-                <p style={{ margin: 0 }}>30 dakikayı aşan gecikmeler çekim süresinden düşülür.</p>
-              </div>
+                  <div>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>5.</span> Çekim Günleri</h4>
+                    <p style={{ margin: 0 }}>30 dakikayı aşan gecikmeler çekim süresinden düşülür.</p>
+                  </div>
 
-              <div>
-                <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>6.</span> Teslim Süresi ve Telif</h4>
-                <p style={{ margin: 0 }}>Çekilen fotoğrafların telif hakkı Pinowed'e aittir. Tanıtım amaçlı kullanılmasını istemediğinizi yazılı olarak bildirebilirsiniz.</p>
-              </div>
+                  <div>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "#facc15" }}>6.</span> Teslim Süresi ve Telif</h4>
+                    <p style={{ margin: 0 }}>Çekilen fotoğrafların telif hakkı Pinowed'e aittir. Tanıtım amaçlı kullanılmasını istemediğinizi yazılı olarak bildirebilirsiniz.</p>
+                  </div>
+                </>
+              )}
               
               <div style={{ marginTop: 8, padding: 16, background: "rgba(74,222,128,0.05)", borderRadius: 12, border: "1px solid rgba(74,222,128,0.15)", display: "flex", gap: 12 }}>
                 <CheckCircle2 size={20} style={{ color: "#4ade80", flexShrink: 0 }} />

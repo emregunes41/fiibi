@@ -105,7 +105,7 @@ export default async function ProfilePage() {
                             Bu rezervasyon ekibimiz tarafından sizin adınıza oluşturulmuştur. Çekim planlaması ve hizmet detaylarının resmi olarak başlayabilmesi için Pinowed mesafeli satış ve hizmet sözleşmesini onaylamanız gerekmektedir.
                           </p>
                           <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-                            <ContractPreviewModal />
+                            <ContractPreviewModal customText={siteConfig?.contractText} />
                             <form action={approveContract.bind(null, res.id)}>
                               <button type="submit" className="hover:opacity-80" style={{ background: "#facc15", color: "#000", fontWeight: 700, fontSize: 13, padding: "10px 20px", borderRadius: 8, border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, transition: "opacity 0.2s" }}>
                                 <CheckCircle size={16} /> Okudum ve Onaylıyorum
