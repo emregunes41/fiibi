@@ -1,5 +1,6 @@
 import { getCurrentUser } from "../user-actions";
 import { getAlbumModels, getSiteConfig } from "../admin/core-actions";
+import ContractPreviewModal from "./ContractPreviewModal";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Calendar, Package, Clock, CheckCircle, FileText, ExternalLink, Banknote, CreditCard, Tag, AlertTriangle } from "lucide-react";
@@ -104,7 +105,7 @@ export default async function ProfilePage() {
                             Bu rezervasyon ekibimiz tarafından sizin adınıza oluşturulmuştur. Çekim planlaması ve hizmet detaylarının resmi olarak başlayabilmesi için Pinowed mesafeli satış ve hizmet sözleşmesini onaylamanız gerekmektedir.
                           </p>
                           <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-                            <Link href="/sozlesme" target="_blank" style={{ color: "#facc15", fontSize: 13, fontWeight: 600, textDecoration: "underline", opacity: 0.8 }}>Sözleşmeyi Oku</Link>
+                            <ContractPreviewModal />
                             <form action={approveContract.bind(null, res.id)}>
                               <button type="submit" className="hover:opacity-80" style={{ background: "#facc15", color: "#000", fontWeight: 700, fontSize: 13, padding: "10px 20px", borderRadius: 8, border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, transition: "opacity 0.2s" }}>
                                 <CheckCircle size={16} /> Okudum ve Onaylıyorum
