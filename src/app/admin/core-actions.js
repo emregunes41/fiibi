@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
-import { requireAdmin } from "@/lib/session";
+import { requireAdmin, getServerAuthSession } from "@/lib/session";
 import { sendWelcomeEmail } from "../actions/send-welcome";
 import { notifyReservationReceived, notifyReservationConfirmed } from "../actions/notify";
 import { sendDriveLinkEmail } from "../actions/send-drive-link";
@@ -324,8 +324,14 @@ export async function savePendingReservation(data) {
     let userId = null;
     if (data.brideEmail) {
       let user = await prisma.user.findUnique({ where: { email: data.brideEmail } });
-      if (!user) {
-        // Müşterinin checkout sırasında belirlediği şifreyi kullan
+      if (user) {
+        // Müşteri hesabı sistemde mevcut. O hesap sahibi bu işlemi mi yapıyor teyit et:
+        const auth = await getServerAuthSession();
+        if (!auth || auth.userId !== user.id) {
+           return { error: "Bu e-posta adresi sistemimizde kayıtlı. Mevcut hesabınıza yeni bir randevu eklemek için lütfen giriş yaptıktan sonra tekrar deneyiniz." };
+        }
+      } else {
+        // Yeni kullanıcı oluştur
         const password = data.password || Math.random().toString(36).slice(-8);
         const hashedPassword = await bcrypt.hash(password, 10);
         user = await prisma.user.create({
@@ -337,7 +343,6 @@ export async function savePendingReservation(data) {
             role: "MEMBER"
           }
         });
-        // Hoş geldin e-postası gönderilmiyor — şifreyi müşteri kendisi belirledi
       }
       userId = user.id;
     }
