@@ -96,6 +96,14 @@ export async function sendReservationReceivedEmail(email, name, reservationDetai
             <div style="text-align: center; margin-top: 24px;">
               <a href="https://www.pinowed.com/profile" style="background-color: #000; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; display: inline-block; font-size: 14px;">Profilime Git</a>
             </div>
+
+            <!-- WhatsApp & Google Maps -->
+            <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;">
+              <a href="https://wa.me/905525244988?text=Merhaba%2C%20rezervasyonum%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." style="display: inline-block; padding: 12px 24px; border-radius: 8px; background: #25D366; color: #fff; text-decoration: none; font-weight: 700; font-size: 13px;">💬 WhatsApp ile İletişim</a>
+            </div>
+            <div style="margin-top: 10px; display: flex; gap: 12px; justify-content: center;">
+              <a href="https://maps.app.goo.gl/wrrKU2MM3xAdwCEK9" style="display: inline-block; padding: 12px 24px; border-radius: 8px; background: #4285F4; color: #fff; text-decoration: none; font-weight: 700; font-size: 13px;">📍 Yol Tarifi Al</a>
+            </div>
             
             <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
               <p style="color: #999; font-size: 12px; margin: 0;">Pinowed — Profesyonel Fotoğrafçılık Çözümleri</p>
@@ -156,6 +164,14 @@ export async function sendReservationConfirmedEmail(email, name, date, totalAmou
 
             <div style="text-align: center; margin-top: 24px;">
               <a href="https://www.pinowed.com/profile" style="background-color: #000; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; display: inline-block; font-size: 14px;">Profilime Git</a>
+            </div>
+
+            <!-- WhatsApp & Google Maps -->
+            <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;">
+              <a href="https://wa.me/905525244988?text=Merhaba%2C%20rezervasyonum%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." style="display: inline-block; padding: 12px 24px; border-radius: 8px; background: #25D366; color: #fff; text-decoration: none; font-weight: 700; font-size: 13px;">💬 WhatsApp ile İletişim</a>
+            </div>
+            <div style="margin-top: 10px; display: flex; gap: 12px; justify-content: center;">
+              <a href="https://maps.app.goo.gl/wrrKU2MM3xAdwCEK9" style="display: inline-block; padding: 12px 24px; border-radius: 8px; background: #4285F4; color: #fff; text-decoration: none; font-weight: 700; font-size: 13px;">📍 Yol Tarifi Al</a>
             </div>
             
             <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
