@@ -3,6 +3,7 @@ import { User as UserIcon, Mail, Phone, Calendar } from "lucide-react";
 import Image from "next/image";
 
 import ResetPasswordButton from "./ResetPasswordButton";
+import DeleteUserButton from "./DeleteUserButton";
 
 export default async function AdminMembersPage() {
   const users = await prisma.user.findMany({
@@ -85,6 +86,7 @@ export default async function AdminMembersPage() {
                   </span>
                 )}
                 <ResetPasswordButton userId={user.id} />
+                <DeleteUserButton userId={user.id} userName={user.name} role={user.role} />
               </div>
 
               <div style={{ textAlign: "right" }}>

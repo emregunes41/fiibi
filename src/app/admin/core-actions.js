@@ -114,6 +114,36 @@ export async function createAlbumModel(data) {
   }
 }
 
+export async function deleteUser(userId) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  
+  try {
+    // SİSTEM GÜVENLİĞİ: Muhasebe ve sipariş geçmişinin bozulmaması için
+    // silinen kullanıcının mevcut rezervasyonlarının user bağlantısını koparıyoruz.
+    // Bu sayede rezervasyonlar sistemde 'anonim' olarak kalmaya devam eder, faturalar silinmez.
+    await prisma.reservation.updateMany({
+      where: { userId },
+      data: { userId: null }
+    });
+
+    // Kullanıcıya ait sepet, cihaz logları, satın alımlar (eğer varsa)
+    await prisma.purchase?.deleteMany({ where: { userId } }).catch(() => {});
+    await prisma.account?.deleteMany({ where: { userId } }).catch(() => {});
+
+    // Kullanıcıyı sil
+    await prisma.user.delete({
+      where: { id: userId }
+    });
+
+    revalidatePath('/admin/members');
+    return { success: true };
+  } catch (err) {
+    console.error("Delete user error:", err);
+    return { error: err.message };
+  }
+}
+
 export async function deleteAlbumModel(id) {
   
   const auth = await requireAdmin();
