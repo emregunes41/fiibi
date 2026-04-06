@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode } from "../core-actions";
 import { 
   Save, Home, Phone, Mail, Instagram, MessageCircle, MapPin,
-  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power
+  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot
 } from "lucide-react";
 
 const inp = {
@@ -706,6 +706,88 @@ export default function SettingsPage() {
             </div>
           )}
         </div>
+
+        {/* 8. AI Chatbot Ayarları */}
+        <div style={sectionCard}>
+          {sectionHeader(Bot, "AI Chatbot Ayarları", "Yapay zeka asistanının davranışını ve talimatlarını düzenleyin.")}
+
+          {/* Toggle */}
+          <div
+            style={{
+              background: config.chatbotEnabled ? "rgba(74,222,128,0.08)" : "rgba(255,255,255,0.03)",
+              border: `1px solid ${config.chatbotEnabled ? "rgba(74,222,128,0.2)" : "rgba(255,255,255,0.08)"}`,
+              borderRadius: 14, padding: "18px 16px", cursor: "pointer", transition: "all 0.2s",
+              marginBottom: 16,
+            }}
+            onClick={() => setConfig({ ...config, chatbotEnabled: !config.chatbotEnabled })}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Bot size={16} style={{ color: config.chatbotEnabled ? "#4ade80" : "rgba(255,255,255,0.3)" }} />
+                <span style={{ fontSize: 13, fontWeight: 800, color: config.chatbotEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>Chatbot Aktif</span>
+              </div>
+              <div style={{
+                width: 40, height: 22, borderRadius: 11, position: "relative",
+                background: config.chatbotEnabled ? "#4ade80" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
+              }}>
+                <div style={{
+                  width: 18, height: 18, borderRadius: "50%", background: "#fff",
+                  position: "absolute", top: 2, transition: "all 0.2s",
+                  left: config.chatbotEnabled ? 20 : 2,
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+                }} />
+              </div>
+            </div>
+            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", margin: 0 }}>
+              Anasayfada AI sohbet asistanını göster/gizle
+            </p>
+          </div>
+
+          {config.chatbotEnabled && (
+            <div>
+              <label style={label}>Özel Talimatlar</label>
+              <textarea
+                value={config.chatbotInstructions || ""}
+                onChange={(e) => setConfig({ ...config, chatbotInstructions: e.target.value })}
+                style={{
+                  ...inp,
+                  minHeight: 250,
+                  resize: "vertical",
+                  lineHeight: 1.7,
+                  fontFamily: "inherit",
+                }}
+                placeholder={`Buraya AI'ın nasıl davranmasını istediğini yaz. Örnekler:
+
+• Kendini "Emre" olarak tanıt, samimi ol
+• Müşterilere önce dış çekim paketini öner
+• Fiyat sorulduğunda nakit indirimi mutlaka belirt
+• Düğün tarihi yakınsa acil rezervasyon yapmasını söyle
+• Rakipleri kötüleme
+• Kısa ve öz cevaplar ver, uzun yazma
+• Müşteriye her zaman "siz" diye hitap et
+• Şaka yap, emoji kullan
+• Bütçesi düşükse taksit seçeneğini belirt`}
+              />
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 10, lineHeight: 1.8 }}>
+                💡 <strong style={{ color: "rgba(255,255,255,0.5)" }}>Nasıl çalışır:</strong> Buraya yazdığın her şey AI'ın "beynine" eklenir. Paket bilgileri ve iletişim bilgileri zaten otomatik olarak AI'a verilir — sen sadece davranışını, üslubunu ve özel kurallarını belirle.
+              </p>
+              <div style={{ marginTop: 14, padding: "14px 16px", borderRadius: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>Otomatik bilinen bilgiler</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {[
+                    "📦 Tüm paketler & fiyatlar",
+                    "📞 İletişim bilgileri", 
+                    "💵 Nakit/kart seçenekleri",
+                    "🗓️ Rezervasyon yönlendirmesi",
+                  ].map((item, i) => (
+                    <span key={i} style={{ fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 6, background: "rgba(74,222,128,0.06)", color: "rgba(74,222,128,0.7)", border: "1px solid rgba(74,222,128,0.1)" }}>{item}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Status Message */}
         {message && (
           <div style={{

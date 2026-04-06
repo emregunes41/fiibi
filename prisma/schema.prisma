@@ -239,6 +239,9 @@ model GlobalSettings {
   notifyReminder     Boolean @default(true)
   notifyPhotosReady  Boolean @default(true)
   googleMapsUrl  String   @default("")
+  // AI Chatbot
+  chatbotEnabled      Boolean @default(true)
+  chatbotInstructions String  @default("")
   updatedAt    DateTime @updatedAt
 }
 

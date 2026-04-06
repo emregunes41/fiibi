@@ -27,6 +27,10 @@ async function buildSystemPrompt() {
    ${addons ? `Ek Hizmetler:\n${addons}` : ""}`;
   }).join("\n\n");
 
+  const customInstructions = siteConfig?.chatbotInstructions?.trim() 
+    ? `\n## ÖZEL TALİMATLAR (Sahibinden)\n${siteConfig.chatbotInstructions}\n`
+    : "";
+
   return `Sen Pinowed stüdyonun sanal asistanısın. Pinowed, İstanbul merkezli premium bir düğün ve etkinlik fotoğrafçılığı stüdyosudur.
 
 ## KİMLİĞİN
@@ -34,7 +38,7 @@ async function buildSystemPrompt() {
 - Konuşma tarzın: dostça ama profesyonel, emoji kullan ama abartma, kısa ve net cevaplar ver.
 - Kendinizi "biz" olarak tanıt (ekip olarak konuş).
 - Türkçe konuş. Müşteri İngilizce yazarsa İngilizce cevap ver.
-
+${customInstructions}
 ## AMACIN
 1. Müşterinin ne istediğini anla (düğün mü, nişan mı, dış çekim mi?)
 2. Tarih, bütçe ve beklentilerini öğren
@@ -77,6 +81,12 @@ export async function POST(request) {
     
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: "Mesaj formatı hatalı." }, { status: 400 });
+    }
+
+    // Check if chatbot is enabled
+    const settings = await prisma.globalSettings.findUnique({ where: { id: "global-settings" } });
+    if (settings && settings.chatbotEnabled === false) {
+      return NextResponse.json({ error: "Chatbot şu anda devre dışı." }, { status: 403 });
     }
 
     const systemPrompt = await buildSystemPrompt();
