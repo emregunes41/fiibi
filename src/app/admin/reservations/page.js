@@ -529,6 +529,11 @@ export default function ReservationsPage() {
                   {res.brideName} {res.groomName ? `& ${res.groomName}` : ""}
                 </div>
                 <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                  {res.contractApproved ? (
+                    <span style={{ padding: "3px 6px", borderRadius: "4px", fontSize: "0.55rem", fontWeight: 800, background: "rgba(74,222,128,0.15)", color: "#4ade80", border: "1px solid rgba(74,222,128,0.3)" }}>📝 Sözleşme ✓</span>
+                  ) : (
+                    <span style={{ padding: "3px 6px", borderRadius: "4px", fontSize: "0.55rem", fontWeight: 800, background: "rgba(239,68,68,0.15)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.3)" }}>📝 Onay Yok</span>
+                  )}
                   {res.paymentPreference === "CREDIT_CARD" && (
                     <span style={{ padding: "3px 6px", borderRadius: "4px", fontSize: "0.55rem", fontWeight: 800, background: "rgba(245,158,11,0.15)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}>💳 Kart</span>
                   )}
@@ -1060,6 +1065,15 @@ export default function ReservationsPage() {
                 <DetailRow icon={Clock} label="Saat" value={r.eventTime} />
                 <DetailRow icon={CreditCard} label="Toplam Tutar" value={r.totalAmount ? `${r.totalAmount} TL` : null} />
                 <DetailRow icon={CreditCard} label="Ödenen Tutar" value={r.paidAmount && r.paidAmount !== "0" ? `${r.paidAmount} TL` : null} />
+                <div style={{ display: "flex", alignItems: "center", padding: "8px 0", gap: 10, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                  <FileText size={13} style={{ color: r.contractApproved ? "#4ade80" : "#ef4444", flexShrink: 0 }} />
+                  <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", minWidth: 110 }}>Sözleşme</span>
+                  {r.contractApproved ? (
+                    <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#4ade80" }}>✅ Onaylandı</span>
+                  ) : (
+                    <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#ef4444" }}>⚠️ Henüz Onaylanmadı</span>
+                  )}
+                </div>
                 
                 {/* ── Paketler ── */}
                 <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📦 Seçilen Paketler ({r.packages?.length || 0})</div>
