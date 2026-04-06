@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth";
 
 // Kategori (Konsept) oluştururken stringi slug formata çevirme yardımcı fonksiyonu
 function slugify(text) {
@@ -32,6 +33,8 @@ export async function getPortfolioCategories() {
 }
 
 export async function createPortfolioCategory(name) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const slug = slugify(name) || `kategori-${Date.now()}`;
     const category = await prisma.portfolioCategory.create({
@@ -54,6 +57,8 @@ export async function createPortfolioCategory(name) {
 }
 
 export async function deletePortfolioCategory(id) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     await prisma.portfolioCategory.delete({
       where: { id }
@@ -68,6 +73,8 @@ export async function deletePortfolioCategory(id) {
 }
 
 export async function addPhotoToPortfolio(categoryId, url, publicId) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const photo = await prisma.portfolioPhoto.create({
       data: {
@@ -86,6 +93,8 @@ export async function addPhotoToPortfolio(categoryId, url, publicId) {
 }
 
 export async function deletePortfolioPhoto(id) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     await prisma.portfolioPhoto.delete({
       where: { id }

@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
+import { requireAdmin } from "@/lib/auth";
 import { sendWelcomeEmail } from "../actions/send-welcome";
 import { notifyReservationReceived, notifyReservationConfirmed } from "../actions/notify";
 import { sendDriveLinkEmail } from "../actions/send-drive-link";
@@ -11,6 +12,9 @@ import path from "path";
 import crypto from "crypto";
 
 export async function uploadAlbumImage(formData) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const file = formData.get('file');
     if (!file) return { error: "Dosya bulunamadı." };
@@ -34,6 +38,9 @@ export async function uploadAlbumImage(formData) {
 }
 
 export async function uploadHeroBg(formData) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const file = formData.get('file');
     if (!file) return { error: "Dosya bulunamadı." };
@@ -65,6 +72,9 @@ export async function getAlbumModels() {
 }
 
 export async function createAlbumModel(data) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const { name, imageUrl, description } = data;
     await prisma.albumModel.create({
@@ -79,6 +89,9 @@ export async function createAlbumModel(data) {
 }
 
 export async function deleteAlbumModel(id) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     await prisma.albumModel.delete({
       where: { id }
@@ -114,6 +127,9 @@ export async function getPackages() {
 }
 
 export async function createPackage(data) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, customFields, availableSlots } = data;
     await prisma.photographyPackage.create({
@@ -140,6 +156,9 @@ export async function createPackage(data) {
 }
 
 export async function updatePackage(id, data) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, customFields, availableSlots } = data;
     await prisma.photographyPackage.update({
@@ -167,6 +186,9 @@ export async function updatePackage(id, data) {
 }
 
 export async function deletePackage(id) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     await prisma.photographyPackage.delete({ where: { id } });
     revalidatePath('/admin/packages');
@@ -181,6 +203,9 @@ export async function deletePackage(id) {
 // --- RESERVATION ACTIONS ---
 
 export async function softDeleteReservation(id) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     await prisma.reservation.update({
       where: { id },
@@ -195,6 +220,9 @@ export async function softDeleteReservation(id) {
 }
 
 export async function hardDeleteReservation(id) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     // Payments are cascade deleted via schema, but let's be explicit
     await prisma.payment.deleteMany({ where: { reservationId: id } });
@@ -340,6 +368,9 @@ export async function savePendingReservation(data) {
 }
 
 export async function createManualReservation(data) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds, notes, selectedAddons = [], customFieldAnswers = [], totalAmount = "" } = data;
     
@@ -425,6 +456,9 @@ export async function createManualReservation(data) {
 }
 
 export async function updateReservation(id, data) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds, notes, selectedAddons = [], totalAmount = "" } = data;
     
@@ -462,6 +496,9 @@ export async function updateReservation(id, data) {
 }
 
 export async function updateReservationStatus(id, status) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     await prisma.reservation.update({
       where: { id },
@@ -476,6 +513,9 @@ export async function updateReservationStatus(id, status) {
 }
 
 export async function updateReservationWorkflow(id, data) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const { workflowStatus, deliveryLink } = data;
     const reservation = await prisma.reservation.update({
@@ -533,6 +573,9 @@ export async function getMonthlyPrices(category, year) {
 }
 
 export async function updateMonthlyPrice(data) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const { category, month, year, minPrice, discountPercentage } = data;
     const m = parseInt(month);
@@ -641,6 +684,9 @@ export async function getSiteConfig() {
 }
 
 export async function updateSiteConfig(data) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl } = data;
     await prisma.globalSettings.update({
@@ -680,6 +726,9 @@ export async function updateSiteConfig(data) {
   }
 }
 export async function resetUserPassword(userId, newPassword) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await prisma.user.update({
@@ -697,6 +746,9 @@ export async function resetUserPassword(userId, newPassword) {
 // --- PAYMENT ACTIONS ---
 
 export async function addPayment(reservationId, data) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const { amount, method, note } = data;
     const parsedAmount = parseFloat(amount);
@@ -772,6 +824,9 @@ export async function addPayment(reservationId, data) {
 }
 
 export async function deletePayment(paymentId) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
     if (!payment) return { error: "Ödeme bulunamadı." };
@@ -812,6 +867,9 @@ export async function deletePayment(paymentId) {
 }
 
 export async function convertToCreditCardPermanent(reservationId, newTotalStr) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const r = await prisma.reservation.findUnique({ where: { id: reservationId } });
     if (!r) throw new Error("Reservation not found");
@@ -837,6 +895,9 @@ export async function convertToCreditCardPermanent(reservationId, newTotalStr) {
 }
 
 export async function addReservationExtraFee(reservationId, amount, note) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const r = await prisma.reservation.findUnique({ where: { id: reservationId } });
     if (!r) throw new Error("Reservation not found");
@@ -886,6 +947,9 @@ export async function addReservationExtraFee(reservationId, amount, note) {
 }
 
 export async function revertToCashPayment(reservationId) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const r = await prisma.reservation.findUnique({ 
         where: { id: reservationId },
@@ -960,6 +1024,9 @@ export async function getDiscountCodes() {
 }
 
 export async function createDiscountCode(data) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const { code, discountPercent, maxUses, description } = data;
     if (!code || !discountPercent) return { error: "Kod ve yüzde zorunludur." };
@@ -981,6 +1048,9 @@ export async function createDiscountCode(data) {
 }
 
 export async function deleteDiscountCode(id) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     await prisma.discountCode.delete({ where: { id } });
     revalidatePath('/admin/settings');
@@ -991,6 +1061,9 @@ export async function deleteDiscountCode(id) {
 }
 
 export async function toggleDiscountCode(id) {
+  
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const dc = await prisma.discountCode.findUnique({ where: { id } });
     if (!dc) return { error: "Bulunamadı." };

@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { signToken, verifyAuth } from "@/lib/auth";
+import { signToken, verifyAuth, requireUser } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -92,6 +92,10 @@ export async function getCurrentUser() {
 }
 
 export async function updateUser(id, data) {
+  const auth = await requireUser();
+  if (auth?.error) return auth;
+  if (auth.session.userId !== id) return { error: "Yetkisiz islem!" };
+
   try {
     await prisma.user.update({
       where: { id },
@@ -110,6 +114,10 @@ export async function updateUser(id, data) {
 }
 
 export async function updatePassword(id, oldPassword, newPassword) {
+  const auth = await requireUser();
+  if (auth?.error) return auth;
+  if (auth.session.userId !== id) return { error: "Yetkisiz islem!" };
+
   try {
     const user = await prisma.user.findUnique({ where: { id } });
     if (!user) return { error: "Kullanıcı bulunamadı." };
@@ -132,7 +140,15 @@ export async function updatePassword(id, oldPassword, newPassword) {
 }
 
 export async function submitPhotoSelection(reservationId, selectionText) {
+  const auth = await requireUser();
+  if (auth?.error) return auth;
+
   try {
+    const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    if (!reservation || reservation.userId !== auth.session.userId) {
+      return { error: "Yetkisiz islem." };
+    }
+
     const deliveryDate = new Date();
     deliveryDate.setDate(deliveryDate.getDate() + 14);
 

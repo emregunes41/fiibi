@@ -2,8 +2,13 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireUser } from "@/lib/auth";
 
-export async function getClientGalleries(userId) {
+export async function getClientGalleries() {
+  const auth = await requireUser();
+  if (auth?.error) return auth;
+  const userId = auth.session.userId;
+
   try {
     const galleries = await prisma.photoGallery.findMany({
       where: {
@@ -27,7 +32,20 @@ export async function getClientGalleries(userId) {
 }
 
 export async function togglePhotoSelection(photoId, isSelected) {
+  const auth = await requireUser();
+  if (auth?.error) return auth;
+
   try {
+    // IDOR Check: Ensure the photo belongs to a gallery of a reservation owned by the user
+    const photo = await prisma.photo.findUnique({
+      where: { id: photoId },
+      include: { gallery: { include: { reservation: true } } }
+    });
+
+    if (!photo || photo.gallery.reservation.userId !== auth.session.userId) {
+      return { error: "Yetkisiz islem!" };
+    }
+
     await prisma.photo.update({
       where: { id: photoId },
       data: { isSelected }
@@ -40,7 +58,16 @@ export async function togglePhotoSelection(photoId, isSelected) {
 }
 
 export async function completeSelection(galleryId, reservationId, coupleName, selectedPhotoNames) {
+  const auth = await requireUser();
+  if (auth?.error) return auth;
+
   try {
+    // IDOR check
+    const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    if (!reservation || reservation.userId !== auth.session.userId) {
+      return { error: "Yetkisiz islem." };
+    }
+
     // 1. Seçim metnini rezervasyona kaydet (workflowStatus değişmeden bekler)
     await prisma.reservation.update({
       where: { id: reservationId },

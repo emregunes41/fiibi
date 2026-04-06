@@ -19,7 +19,7 @@ export default function ClientGalleryPage() {
     
     if (session?.user) {
       setUser(session.user);
-      const res = await getClientGalleries(session.user.id);
+      const res = await getClientGalleries();
       if (res.success) {
         setGalleries(res.galleries);
       }

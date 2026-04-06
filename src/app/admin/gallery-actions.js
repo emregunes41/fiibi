@@ -3,8 +3,11 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { sendGalleryReadyEmail } from "../actions/send-gallery-ready";
+import { requireAdmin } from "@/lib/auth";
 
 export async function getReservationGallery(reservationId) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     let gallery = await prisma.photoGallery.findUnique({
       where: { reservationId },
@@ -24,6 +27,8 @@ export async function getReservationGallery(reservationId) {
 }
 
 export async function addPhotoToGallery(galleryId, url, originalName) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     // Fotoğraf numarasını belirle
     const maxPhoto = await prisma.photo.findFirst({
@@ -49,6 +54,8 @@ export async function addPhotoToGallery(galleryId, url, originalName) {
 }
 
 export async function deletePhoto(photoId) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     await prisma.photo.delete({ where: { id: photoId } });
     revalidatePath('/admin/reservations/[id]/gallery', 'page');
@@ -59,6 +66,8 @@ export async function deletePhoto(photoId) {
 }
 
 export async function toggleGalleryDelivery(galleryId, isDelivered) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const gallery = await prisma.photoGallery.update({
       where: { id: galleryId },
