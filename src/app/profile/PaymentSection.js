@@ -52,7 +52,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
 
     setLoading(true);
     try {
-      const oid = `${reservation.id}_${Date.now()}`;
+      const oid = `${reservation.id}X${Date.now()}`;
       const packageNames = reservation.packages.map(p => p.name).join(", ");
       const baseBasketStr = JSON.stringify([[packageNames, String(Math.round(finalAmount)), "1"]]);
       const basket = btoa(encodeURIComponent(baseBasketStr).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));

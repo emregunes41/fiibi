@@ -33,7 +33,7 @@ export async function POST(req) {
     if (status === "success") {
       const paidAmountTL = parseFloat(total_amount) / 100; // PayTR sends kuruş
 
-      const reservationId = merchant_oid.split('_')[0];
+      const reservationId = merchant_oid.split('X')[0];
 
       // Create payment record
       const newPayment = await prisma.payment.create({
