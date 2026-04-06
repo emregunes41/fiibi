@@ -910,3 +910,80 @@ export async function revertToCashPayment(reservationId) {
     return { error: error.message };
   }
 }
+
+// --- DISCOUNT CODE ACTIONS ---
+
+export async function getDiscountCodes() {
+  try {
+    return await prisma.discountCode.findMany({ orderBy: { createdAt: "desc" } });
+  } catch {
+    return [];
+  }
+}
+
+export async function createDiscountCode(data) {
+  try {
+    const { code, discountPercent, maxUses, description } = data;
+    if (!code || !discountPercent) return { error: "Kod ve yüzde zorunludur." };
+    const existing = await prisma.discountCode.findUnique({ where: { code: code.toUpperCase() } });
+    if (existing) return { error: "Bu kod zaten mevcut." };
+    await prisma.discountCode.create({
+      data: {
+        code: code.toUpperCase(),
+        discountPercent: parseInt(discountPercent),
+        maxUses: parseInt(maxUses) || 0,
+        description: description || null,
+      }
+    });
+    revalidatePath('/admin/settings');
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function deleteDiscountCode(id) {
+  try {
+    await prisma.discountCode.delete({ where: { id } });
+    revalidatePath('/admin/settings');
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function toggleDiscountCode(id) {
+  try {
+    const dc = await prisma.discountCode.findUnique({ where: { id } });
+    if (!dc) return { error: "Bulunamadı." };
+    await prisma.discountCode.update({ where: { id }, data: { isActive: !dc.isActive } });
+    revalidatePath('/admin/settings');
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function validateDiscountCode(code) {
+  try {
+    const dc = await prisma.discountCode.findUnique({ where: { code: code.toUpperCase() } });
+    if (!dc) return { error: "Geçersiz kod." };
+    if (!dc.isActive) return { error: "Bu kod artık geçerli değil." };
+    if (dc.maxUses > 0 && dc.usedCount >= dc.maxUses) return { error: "Bu kodun kullanım limiti doldu." };
+    return { success: true, discountPercent: dc.discountPercent, description: dc.description };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function incrementDiscountCodeUsage(code) {
+  try {
+    await prisma.discountCode.update({
+      where: { code: code.toUpperCase() },
+      data: { usedCount: { increment: 1 } },
+    });
+    return { success: true };
+  } catch {
+    return { error: "Kod kullanımı güncellenemedi." };
+  }
+}

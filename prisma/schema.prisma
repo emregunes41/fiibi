@@ -239,3 +239,15 @@ model GlobalSettings {
   notifyPhotosReady  Boolean @default(true)
   updatedAt    DateTime @updatedAt
 }
+
+model DiscountCode {
+  id              String   @id @default(cuid())
+  code            String   @unique
+  discountPercent Int      // e.g. 10 = %10
+  isActive        Boolean  @default(true)
+  maxUses         Int      @default(0)   // 0 = unlimited
+  usedCount       Int      @default(0)
+  description     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getSiteConfig, updateSiteConfig, uploadHeroBg } from "../core-actions";
+import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode } from "../core-actions";
 import { 
   Save, Home, Phone, Mail, Instagram, MessageCircle, 
-  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText
+  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power
 } from "lucide-react";
 
 const inp = {
@@ -50,13 +50,24 @@ export default function SettingsPage() {
   const [isError, setIsError] = useState(false);
   const [uploadingBg, setUploadingBg] = useState(false);
 
+  // Discount codes
+  const [discountCodes, setDiscountCodes] = useState([]);
+  const [dcForm, setDcForm] = useState({ code: "", discountPercent: "", maxUses: "", description: "" });
+  const [dcLoading, setDcLoading] = useState(false);
+  const [dcMessage, setDcMessage] = useState("");
+
   useEffect(() => {
     async function loadConfig() {
       const data = await getSiteConfig();
       if (data) setConfig(data);
       setLoading(false);
     }
+    async function loadDiscountCodes() {
+      const codes = await getDiscountCodes();
+      setDiscountCodes(codes);
+    }
     loadConfig();
+    loadDiscountCodes();
   }, []);
 
   async function handleSubmit(e) {
@@ -541,6 +552,145 @@ export default function SettingsPage() {
               💡 Boş bırakırsanız sözleşme adımı gösterilmez. Doldurursanız müşteri ödeme öncesi bu metni onaylamak zorundadır.
             </p>
           </div>
+        </div>
+
+        {/* İndirim Kodları Section */}
+        <div style={sectionCard}>
+          {sectionHeader(Tag, "İndirim Kodları", "Müşterilere verebileceğiniz indirim kuponları")}
+
+          {/* Create new code */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <div style={{ flex: 2, minWidth: 120 }}>
+                <label style={label}>Kod</label>
+                <input
+                  value={dcForm.code}
+                  onChange={(e) => setDcForm(p => ({ ...p, code: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '') }))}
+                  placeholder="Ör: YENIYIL25"
+                  style={inp}
+                  maxLength={20}
+                />
+              </div>
+              <div style={{ flex: 1, minWidth: 80 }}>
+                <label style={label}>İndirim %</label>
+                <input
+                  type="number"
+                  value={dcForm.discountPercent}
+                  onChange={(e) => setDcForm(p => ({ ...p, discountPercent: e.target.value }))}
+                  placeholder="10"
+                  style={inp}
+                  min={1} max={100}
+                />
+              </div>
+              <div style={{ flex: 1, minWidth: 80 }}>
+                <label style={label}>Max Kullanım</label>
+                <input
+                  type="number"
+                  value={dcForm.maxUses}
+                  onChange={(e) => setDcForm(p => ({ ...p, maxUses: e.target.value }))}
+                  placeholder="0 = Sınırsız"
+                  style={inp}
+                  min={0}
+                />
+              </div>
+            </div>
+            <div>
+              <label style={label}>Açıklama (Opsiyonel)</label>
+              <input
+                value={dcForm.description}
+                onChange={(e) => setDcForm(p => ({ ...p, description: e.target.value }))}
+                placeholder="Ör: Yeni yıl kampanyası"
+                style={inp}
+              />
+            </div>
+            <button
+              type="button"
+              disabled={dcLoading || !dcForm.code || !dcForm.discountPercent}
+              onClick={async () => {
+                setDcLoading(true);
+                setDcMessage("");
+                const res = await createDiscountCode(dcForm);
+                if (res.success) {
+                  setDcForm({ code: "", discountPercent: "", maxUses: "", description: "" });
+                  setDiscountCodes(await getDiscountCodes());
+                  setDcMessage("✅ Kod oluşturuldu!");
+                  setTimeout(() => setDcMessage(""), 3000);
+                } else {
+                  setDcMessage("❌ " + res.error);
+                }
+                setDcLoading(false);
+              }}
+              style={{
+                padding: "12px 20px", borderRadius: 10, border: "none",
+                background: (dcForm.code && dcForm.discountPercent) ? "#4ade80" : "rgba(255,255,255,0.06)",
+                color: (dcForm.code && dcForm.discountPercent) ? "#000" : "rgba(255,255,255,0.3)",
+                fontWeight: 700, fontSize: 12, cursor: (dcForm.code && dcForm.discountPercent) ? "pointer" : "not-allowed",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              }}
+            >
+              <Plus size={14} />
+              {dcLoading ? "Oluşturuluyor..." : "İndirim Kodu Ekle"}
+            </button>
+            {dcMessage && <div style={{ fontSize: 12, fontWeight: 600, color: dcMessage.includes("✅") ? "#4ade80" : "#f87171" }}>{dcMessage}</div>}
+          </div>
+
+          {/* Existing codes */}
+          {discountCodes.length > 0 && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Mevcut Kodlar ({discountCodes.length})</div>
+              {discountCodes.map((dc) => (
+                <div key={dc.id} style={{
+                  display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
+                  padding: "12px 14px", borderRadius: 12,
+                  background: dc.isActive ? "rgba(74,222,128,0.04)" : "rgba(255,255,255,0.02)",
+                  border: `1px solid ${dc.isActive ? "rgba(74,222,128,0.15)" : "rgba(255,255,255,0.06)"}`,
+                  opacity: dc.isActive ? 1 : 0.5,
+                }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                      <span style={{ fontSize: 14, fontWeight: 800, color: "#fff", fontFamily: "monospace", letterSpacing: "0.05em" }}>{dc.code}</span>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 6,
+                        background: dc.isActive ? "rgba(74,222,128,0.12)" : "rgba(255,255,255,0.06)",
+                        color: dc.isActive ? "#4ade80" : "rgba(255,255,255,0.3)",
+                      }}>
+                        %{dc.discountPercent} İndirim
+                      </span>
+                    </div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>
+                      {dc.description && <span>{dc.description} · </span>}
+                      Kullanım: {dc.usedCount}{dc.maxUses > 0 ? `/${dc.maxUses}` : " (Sınırsız)"}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await toggleDiscountCode(dc.id);
+                        setDiscountCodes(await getDiscountCodes());
+                      }}
+                      title={dc.isActive ? "Pasifleştir" : "Aktifleştir"}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: dc.isActive ? "#4ade80" : "rgba(255,255,255,0.25)" }}
+                    >
+                      <Power size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (confirm("Bu kodu silmek istediğinize emin misiniz?")) {
+                          await deleteDiscountCode(dc.id);
+                          setDiscountCodes(await getDiscountCodes());
+                        }
+                      }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "rgba(255,68,68,0.5)" }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         {/* Status Message */}
         {message && (

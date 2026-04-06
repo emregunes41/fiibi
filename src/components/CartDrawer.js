@@ -6,9 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ShoppingBag, Trash2, ArrowRight, ArrowLeft,
   Camera, Heart, Gem, Calendar, Clock,
-  FileText, User, Phone, Mail, CreditCard, Instagram, Banknote, Wallet, Lock, Eye, EyeOff, Plus, Sparkles,
+  FileText, User, Phone, Mail, CreditCard, Instagram, Banknote, Wallet, Lock, Eye, EyeOff, Plus, Sparkles, Tag, Check,
 } from "lucide-react";
-import { savePendingReservation, getPackages } from "@/app/admin/core-actions";
+import { savePendingReservation, getPackages, validateDiscountCode, incrementDiscountCodeUsage } from "@/app/admin/core-actions";
 import { getSiteConfig } from "@/app/admin/core-actions";
 
 const CAT_META = {
@@ -63,6 +63,12 @@ export default function CartDrawer() {
   const [showUpsell, setShowUpsell] = useState(false);
   const [allPackages, setAllPackages] = useState([]);
 
+  // Discount code state
+  const [discountCode, setDiscountCode] = useState("");
+  const [discountResult, setDiscountResult] = useState(null); // { discountPercent, description } or null
+  const [discountError, setDiscountError] = useState("");
+  const [discountLoading, setDiscountLoading] = useState(false);
+
   // Verileri yükle
   useEffect(() => {
     getSiteConfig().then(cfg => {
@@ -101,7 +107,27 @@ export default function CartDrawer() {
   const groomNameValid = isValidName(contactForm.groomName);
 
   const isContactValid = brideNameValid && bridePhoneValid && emailValid && groomNameValid && groomPhoneValid && passwordsMatch;
-  const cardTotal = Math.round(cartTotal() * 1.15); // %15 artı
+
+  // Calculate totals with discount applied
+  const rawTotal = cartTotal();
+  const discountAmount = discountResult ? Math.round(rawTotal * discountResult.discountPercent / 100) : 0;
+  const effectiveTotal = rawTotal - discountAmount;
+  const cardTotal = Math.round(effectiveTotal * 1.15);
+
+  const handleApplyDiscount = async () => {
+    if (!discountCode.trim()) return;
+    setDiscountLoading(true);
+    setDiscountError("");
+    const res = await validateDiscountCode(discountCode.trim());
+    if (res.success) {
+      setDiscountResult({ discountPercent: res.discountPercent, description: res.description });
+      setDiscountError("");
+    } else {
+      setDiscountResult(null);
+      setDiscountError(res.error);
+    }
+    setDiscountLoading(false);
+  };
 
   // Akıllı upsell önerileri - spesifik paket bulur
   const cartCategories = items.map(i => i.category);
@@ -192,9 +218,15 @@ export default function CartDrawer() {
   const handleCashCheckout = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
-    const data = buildReservationData(cartTotal());
+    const data = buildReservationData(effectiveTotal);
     data.paymentPreference = "CASH";
+    if (discountResult) {
+      data.notes = (data.notes ? data.notes + "\n" : "") + `[İNDİRİM] Kod: ${discountCode.toUpperCase()} (%${discountResult.discountPercent} - ${discountAmount.toLocaleString('tr-TR')}₺ indirim)`;
+    }
     const result = await savePendingReservation(data);
+    if (result.success && discountResult) {
+      await incrementDiscountCodeUsage(discountCode);
+    }
     setIsSubmitting(false);
     if (result.success) {
       setSubmitResult({ success: true, type: "cash", message: "Rezervasyonunuz başarıyla oluşturuldu!" });
@@ -209,7 +241,13 @@ export default function CartDrawer() {
     setIsSubmitting(true);
     const data = buildReservationData(cardTotal);
     data.paymentPreference = "CARD";
+    if (discountResult) {
+      data.notes = (data.notes ? data.notes + "\n" : "") + `[İNDİRİM] Kod: ${discountCode.toUpperCase()} (%${discountResult.discountPercent} - ${discountAmount.toLocaleString('tr-TR')}₺ indirim)`;
+    }
     const result = await savePendingReservation(data);
+    if (result.success && discountResult) {
+      await incrementDiscountCodeUsage(discountCode);
+    }
     setIsSubmitting(false);
     if (!result.success) {
       setSubmitResult({ success: false, message: "Bir hata oluştu: " + (result.error || "Bilinmeyen hata") });
@@ -549,6 +587,67 @@ export default function CartDrawer() {
                       </div>
                     </div>
 
+                    {/* Discount Code Input */}
+                    <div style={{
+                      padding: "14px 16px", borderRadius: "14px", marginBottom: "24px",
+                      background: discountResult ? "rgba(74,222,128,0.04)" : "rgba(255,255,255,0.03)",
+                      border: `1px solid ${discountResult ? "rgba(74,222,128,0.2)" : "rgba(255,255,255,0.08)"}`,
+                      transition: "all 0.3s",
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                        <Tag size={12} style={{ color: discountResult ? "#4ade80" : "rgba(255,255,255,0.4)" }} />
+                        <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: discountResult ? "#4ade80" : "rgba(255,255,255,0.4)" }}>
+                          {discountResult ? "İndirim Uygulandı!" : "İndirim Kodunuz Var Mı?"}
+                        </span>
+                      </div>
+                      {!discountResult ? (
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <input
+                            value={discountCode}
+                            onChange={(e) => setDiscountCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))}
+                            placeholder="Kodu giriniz"
+                            maxLength={20}
+                            style={{
+                              ...inputStyle, flex: 1, fontSize: 13, fontFamily: "monospace",
+                              letterSpacing: "0.1em", textTransform: "uppercase",
+                              borderColor: discountError ? "rgba(248,113,113,0.3)" : undefined,
+                            }}
+                            onKeyDown={(e) => e.key === "Enter" && handleApplyDiscount()}
+                          />
+                          <button
+                            onClick={handleApplyDiscount}
+                            disabled={discountLoading || !discountCode.trim()}
+                            style={{
+                              padding: "0 18px", borderRadius: 12, border: "none",
+                              background: discountCode.trim() ? "#fff" : "rgba(255,255,255,0.06)",
+                              color: discountCode.trim() ? "#000" : "rgba(255,255,255,0.2)",
+                              fontWeight: 700, fontSize: 12, cursor: discountCode.trim() ? "pointer" : "not-allowed",
+                              flexShrink: 0, transition: "all 0.2s",
+                            }}
+                          >
+                            {discountLoading ? "..." : "Uygula"}
+                          </button>
+                        </div>
+                      ) : (
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <Check size={14} style={{ color: "#4ade80" }} />
+                              <span style={{ fontSize: 14, fontWeight: 800, color: "#fff", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: "#4ade80" }}>%{discountResult.discountPercent}</span>
+                            </div>
+                            {discountResult.description && (
+                              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4, marginLeft: 22 }}>{discountResult.description}</div>
+                            )}
+                          </div>
+                          <button onClick={() => { setDiscountResult(null); setDiscountCode(""); setDiscountError(""); }} style={{
+                            background: "none", border: "none", color: "rgba(255,68,68,0.5)", cursor: "pointer", padding: 4, fontSize: 11,
+                          }}>Kaldır</button>
+                        </div>
+                      )}
+                      {discountError && <div style={{ fontSize: 11, color: "#f87171", marginTop: 8, fontWeight: 600 }}>{discountError}</div>}
+                    </div>
+
                     {/* Contact Form */}
                     <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", marginBottom: "16px" }}>
                       İletişim Bilgileri
@@ -774,8 +873,8 @@ export default function CartDrawer() {
                           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.4 }}>Sizinle telefonla iletişime geçeceğiz</div>
                         </div>
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontSize: 20, fontWeight: 800, color: "#4ade80" }}>{fmt(cartTotal())}₺</div>
-                          <div style={{ fontSize: 10, color: "rgba(74,222,128,0.6)", fontWeight: 600, textTransform: "uppercase" }}>Aynı fiyat</div>
+                          <div style={{ fontSize: 20, fontWeight: 800, color: "#4ade80" }}>{fmt(effectiveTotal)}₺</div>
+                          <div style={{ fontSize: 10, color: "rgba(74,222,128,0.6)", fontWeight: 600, textTransform: "uppercase" }}>{discountResult ? `%${discountResult.discountPercent} indirimli` : "Aynı fiyat"}</div>
                         </div>
                       </div>
                     </button>
@@ -939,10 +1038,19 @@ export default function CartDrawer() {
                     TOPLAM
                   </div>
                   <div>
-                    <span style={{ fontSize: "24px", fontWeight: 700, color: "#fff" }}>{fmt(cartTotal())}</span>
+                    <span style={{ fontSize: "24px", fontWeight: 700, color: "#fff" }}>{fmt(discountResult ? effectiveTotal : rawTotal)}</span>
                     <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)", fontWeight: 400, marginLeft: "2px" }}>₺</span>
                   </div>
                 </div>
+                {discountResult && (
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, padding: "8px 10px", borderRadius: 8, background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.12)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <Tag size={11} style={{ color: "#4ade80" }} />
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#4ade80", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
+                    </div>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#4ade80" }}>-{fmt(discountAmount)}₺</span>
+                  </div>
+                )}
 
                 {!checkoutMode ? (
                   <div style={{ display: "flex", gap: "10px" }}>
