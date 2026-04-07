@@ -594,6 +594,19 @@ export async function updateReservation(id, data) {
     const deliveryDateObj = new Date(eventDateObj);
     deliveryDateObj.setDate(deliveryDateObj.getDate() + maxDays);
 
+    // Update _eventDateISO and Etkinlik Tarihi inside customFieldAnswers
+    // so the calendar view doesn't show ghost entries at the old date
+    const existing = await prisma.reservation.findUnique({ where: { id }, select: { customFieldAnswers: true } });
+    let updatedCFA = existing?.customFieldAnswers || [];
+    if (Array.isArray(updatedCFA) && updatedCFA.length > 0) {
+      const newDateStr = eventDateObj.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric", weekday: "long" });
+      updatedCFA = updatedCFA.map(a => {
+        if (a.label === "_eventDateISO") return { ...a, value: eventDate };
+        if (a.label === "Etkinlik Tarihi") return { ...a, value: newDateStr };
+        return a;
+      });
+    }
+
     await prisma.reservation.update({
       where: { id },
       data: {
@@ -607,7 +620,8 @@ export async function updateReservation(id, data) {
         notes,
         totalAmount,
         selectedAddons,
-        deliveryDate: deliveryDateObj
+        deliveryDate: deliveryDateObj,
+        customFieldAnswers: updatedCFA
       }
     });
 
