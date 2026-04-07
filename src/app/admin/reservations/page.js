@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Calendar, Phone, Settings2, X, Edit2, Eye, Mail, User, Package, Clock, FileText, CreditCard, ChevronDown, ChevronUp, Instagram, ExternalLink, Trash2, Banknote, DollarSign, List, CalendarDays, ChevronLeft, ChevronRight, ArrowUpDown, Filter, Search } from "lucide-react";
-import { getReservations, getPackages, createManualReservation, updateReservation, updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment, softDeleteReservation, hardDeleteReservation } from "../core-actions";
+import { Plus, Calendar, Phone, Settings2, X, Edit2, Eye, Mail, User, Package, Clock, FileText, CreditCard, ChevronDown, ChevronUp, Instagram, ExternalLink, Trash2, Banknote, DollarSign, List, CalendarDays, ChevronLeft, ChevronRight, ArrowUpDown, Filter, Search, Star } from "lucide-react";
+import { getReservations, getPackages, createManualReservation, updateReservation, updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment, softDeleteReservation, hardDeleteReservation, getCalendarEvents, createCalendarEvent, updateCalendarEvent, deleteCalendarEvent } from "../core-actions";
 import Link from "next/link";
 
 const inp = {
@@ -38,11 +38,16 @@ export default function ReservationsPage() {
   const [sortMode, setSortMode] = useState("newest");
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+  const [calendarEvents, setCalendarEvents] = useState([]);
+  const [eventModal, setEventModal] = useState({ isOpen: false, data: null });
+  const [eventForm, setEventForm] = useState({ title: "", eventDate: "", startTime: "", endTime: "", color: "#3b82f6", notes: "" });
+  const [eventLoading, setEventLoading] = useState(false);
 
   async function loadData() {
-    const [resData, pkgData] = await Promise.all([getReservations(), getPackages()]);
+    const [resData, pkgData, evtData] = await Promise.all([getReservations(), getPackages(), getCalendarEvents()]);
     setReservations(resData);
     setPackages(pkgData);
+    setCalendarEvents(evtData || []);
   }
 
   const toggleSelectionExpand = (id) => {
@@ -210,6 +215,17 @@ export default function ReservationsPage() {
           }
         });
 
+        // Group calendar events by day
+        const evtsByDay = {};
+        calendarEvents.forEach(evt => {
+          const d = new Date(evt.eventDate);
+          if (d.getMonth() === calMonth && d.getFullYear() === calYear) {
+            const day = d.getDate();
+            if (!evtsByDay[day]) evtsByDay[day] = [];
+            evtsByDay[day].push(evt);
+          }
+        });
+
         const cells = [];
         for (let i = 0; i < startWeekday; i++) cells.push(null);
         for (let d = 1; d <= daysInMonth; d++) cells.push(d);
@@ -239,9 +255,14 @@ export default function ReservationsPage() {
                   <ChevronRight size={14} />
                 </button>
               </div>
-              <button onClick={goToday} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "5px 12px", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", fontWeight: 700 }}>
-                Bugün
-              </button>
+              <div style={{ display: "flex", gap: 6 }}>
+                <button onClick={() => { setEventForm({ title: "", eventDate: "", startTime: "", endTime: "", color: "#3b82f6", notes: "" }); setEventModal({ isOpen: true, data: null }); }} style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: 8, padding: "5px 12px", cursor: "pointer", color: "#60a5fa", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                  <Star size={11} /> Olay Ekle
+                </button>
+                <button onClick={goToday} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "5px 12px", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", fontWeight: 700 }}>
+                  Bugün
+                </button>
+              </div>
             </div>
 
             {/* Day Headers */}
@@ -259,42 +280,72 @@ export default function ReservationsPage() {
                 if (day === null) return <div key={`e${idx}`} style={{ minHeight: 70, background: "rgba(255,255,255,0.01)", borderRadius: 6 }} />;
                 
                 const dayRes = resByDay[day] || [];
-                const hasRes = dayRes.length > 0;
+                const dayEvts = evtsByDay[day] || [];
+                const hasContent = dayRes.length > 0 || dayEvts.length > 0;
                 const todayStyle = isToday(day);
+                const allItems = [...dayRes.map(r => ({ type: 'res', data: r })), ...dayEvts.map(e => ({ type: 'evt', data: e }))];
 
                 return (
                   <div key={day} style={{
                     minHeight: 70, borderRadius: 6, padding: "4px 5px",
-                    background: todayStyle ? "rgba(59,130,246,0.08)" : hasRes ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
+                    background: todayStyle ? "rgba(59,130,246,0.08)" : hasContent ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
                     border: todayStyle ? "1px solid rgba(59,130,246,0.25)" : "1px solid rgba(255,255,255,0.04)",
-                    cursor: hasRes ? "pointer" : "default",
+                    cursor: hasContent ? "pointer" : "default",
                     transition: "all 0.15s",
                   }}>
-                    <div style={{ fontSize: "0.7rem", fontWeight: todayStyle ? 800 : 600, color: todayStyle ? "#60a5fa" : hasRes ? "#fff" : "rgba(255,255,255,0.3)", marginBottom: 3 }}>
+                    <div style={{ fontSize: "0.7rem", fontWeight: todayStyle ? 800 : 600, color: todayStyle ? "#60a5fa" : hasContent ? "#fff" : "rgba(255,255,255,0.3)", marginBottom: 3 }}>
                       {day}
                     </div>
-                    {dayRes.slice(0, 3).map((r) => {
-                      const sc = statusColor(r.status);
-                      return (
-                        <div
-                          key={r.id}
-                          onClick={() => setDetailModal({ isOpen: true, data: r })}
-                          style={{
-                            fontSize: "0.55rem", fontWeight: 700, padding: "2px 4px",
-                            borderRadius: 4, marginBottom: 2, cursor: "pointer",
-                            background: sc.bg, color: sc.c, whiteSpace: "nowrap",
-                            overflow: "hidden", textOverflow: "ellipsis",
-                            transition: "all 0.15s",
-                          }}
-                          title={`${r.brideName} - ${r.packages.map(p => p.name).join(", ")}`}
-                        >
-                          {r.eventTime ? `${r.eventTime} ` : ""}{r.brideName?.split(" ")[0]}
-                        </div>
-                      );
+                    {allItems.slice(0, 3).map((item) => {
+                      if (item.type === 'res') {
+                        const r = item.data;
+                        const sc = statusColor(r.status);
+                        return (
+                          <div
+                            key={r.id}
+                            onClick={() => setDetailModal({ isOpen: true, data: r })}
+                            style={{
+                              fontSize: "0.55rem", fontWeight: 700, padding: "2px 4px",
+                              borderRadius: 4, marginBottom: 2, cursor: "pointer",
+                              background: sc.bg, color: sc.c, whiteSpace: "nowrap",
+                              overflow: "hidden", textOverflow: "ellipsis",
+                              transition: "all 0.15s",
+                            }}
+                            title={`${r.brideName} - ${r.packages.map(p => p.name).join(", ")}`}
+                          >
+                            {r.eventTime ? `${r.eventTime} ` : ""}{r.brideName?.split(" ")[0]}
+                          </div>
+                        );
+                      } else {
+                        const evt = item.data;
+                        return (
+                          <div
+                            key={`evt-${evt.id}`}
+                            onClick={() => {
+                              setEventForm({
+                                title: evt.title, eventDate: new Date(evt.eventDate).toISOString().split('T')[0],
+                                startTime: evt.startTime || "", endTime: evt.endTime || "",
+                                color: evt.color || "#3b82f6", notes: evt.notes || ""
+                              });
+                              setEventModal({ isOpen: true, data: evt });
+                            }}
+                            style={{
+                              fontSize: "0.55rem", fontWeight: 700, padding: "2px 4px",
+                              borderRadius: 4, marginBottom: 2, cursor: "pointer",
+                              background: `${evt.color}20`, color: evt.color, whiteSpace: "nowrap",
+                              overflow: "hidden", textOverflow: "ellipsis",
+                              transition: "all 0.15s", borderLeft: `2px solid ${evt.color}`,
+                            }}
+                            title={`${evt.title}${evt.startTime ? ` ${evt.startTime}` : ""}${evt.endTime ? `-${evt.endTime}` : ""}`}
+                          >
+                            ★ {evt.startTime ? `${evt.startTime} ` : ""}{evt.title}
+                          </div>
+                        );
+                      }
                     })}
-                    {dayRes.length > 3 && (
+                    {allItems.length > 3 && (
                       <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)", fontWeight: 700, paddingLeft: 2 }}>
-                        +{dayRes.length - 3} daha
+                        +{allItems.length - 3} daha
                       </div>
                     )}
                   </div>
@@ -302,7 +353,7 @@ export default function ReservationsPage() {
               })}
             </div>
 
-            {/* Day detail panel - reservations for selected month summary */}
+            {/* Day detail panel - reservations + events for selected month summary */}
             {(() => {
               const monthRes = reservations.filter(r => {
                 if (r.status === "DELETED") return false;
@@ -310,50 +361,112 @@ export default function ReservationsPage() {
                 return d.getMonth() === calMonth && d.getFullYear() === calYear;
               }).sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
 
-              if (monthRes.length === 0) return null;
+              const monthEvts = calendarEvents.filter(evt => {
+                const d = new Date(evt.eventDate);
+                return d.getMonth() === calMonth && d.getFullYear() === calYear;
+              }).sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+
+              if (monthRes.length === 0 && monthEvts.length === 0) return null;
               return (
                 <div style={{ marginTop: 14, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "12px" }}>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 8 }}>
-                    {monthNames[calMonth]} Rezervasyonları ({monthRes.length})
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    {monthRes.map(r => {
-                      const sc = statusColor(r.status);
-                      const d = new Date(r.eventDate);
-                      return (
-                        <div
-                          key={r.id}
-                          onClick={() => setDetailModal({ isOpen: true, data: r })}
-                          style={{
-                            display: "flex", justifyContent: "space-between", alignItems: "center",
-                            padding: "8px 10px", borderRadius: 8, cursor: "pointer",
-                            background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)",
-                            transition: "all 0.15s",
-                          }}
-                        >
-                          <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
-                            <div style={{ width: 32, textAlign: "center", flexShrink: 0 }}>
-                              <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>{d.getDate()}</div>
-                              <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.3)", fontWeight: 600 }}>
-                                {["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"][d.getDay()]}
+                  {monthRes.length > 0 && (
+                    <>
+                      <div style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 8 }}>
+                        {monthNames[calMonth]} Rezervasyonları ({monthRes.length})
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                        {monthRes.map(r => {
+                          const sc = statusColor(r.status);
+                          const d = new Date(r.eventDate);
+                          return (
+                            <div
+                              key={r.id}
+                              onClick={() => setDetailModal({ isOpen: true, data: r })}
+                              style={{
+                                display: "flex", justifyContent: "space-between", alignItems: "center",
+                                padding: "8px 10px", borderRadius: 8, cursor: "pointer",
+                                background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)",
+                                transition: "all 0.15s",
+                              }}
+                            >
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+                                <div style={{ width: 32, textAlign: "center", flexShrink: 0 }}>
+                                  <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>{d.getDate()}</div>
+                                  <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.3)", fontWeight: 600 }}>
+                                    {["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"][d.getDay()]}
+                                  </div>
+                                </div>
+                                <div style={{ minWidth: 0 }}>
+                                  <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                    {r.brideName}{r.groomName ? ` & ${r.groomName}` : ""}
+                                  </div>
+                                  <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)" }}>
+                                    {r.eventTime || ""} · {r.packages.map(p => p.name).join(", ")}
+                                  </div>
+                                </div>
                               </div>
+                              <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: "0.52rem", fontWeight: 800, textTransform: "uppercase", background: sc.bg, color: sc.c, flexShrink: 0 }}>
+                                {statusLabel(r.status)}
+                              </span>
                             </div>
-                            <div style={{ minWidth: 0 }}>
-                              <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                {r.brideName}{r.groomName ? ` & ${r.groomName}` : ""}
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
+                  {monthEvts.length > 0 && (
+                    <>
+                      <div style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 8, marginTop: monthRes.length > 0 ? 14 : 0 }}>
+                        ★ {monthNames[calMonth]} Olayları ({monthEvts.length})
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                        {monthEvts.map(evt => {
+                          const d = new Date(evt.eventDate);
+                          return (
+                            <div
+                              key={evt.id}
+                              onClick={() => {
+                                setEventForm({
+                                  title: evt.title, eventDate: new Date(evt.eventDate).toISOString().split('T')[0],
+                                  startTime: evt.startTime || "", endTime: evt.endTime || "",
+                                  color: evt.color || "#3b82f6", notes: evt.notes || ""
+                                });
+                                setEventModal({ isOpen: true, data: evt });
+                              }}
+                              style={{
+                                display: "flex", justifyContent: "space-between", alignItems: "center",
+                                padding: "8px 10px", borderRadius: 8, cursor: "pointer",
+                                background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)",
+                                borderLeft: `3px solid ${evt.color || '#3b82f6'}`,
+                                transition: "all 0.15s",
+                              }}
+                            >
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+                                <div style={{ width: 32, textAlign: "center", flexShrink: 0 }}>
+                                  <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>{d.getDate()}</div>
+                                  <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.3)", fontWeight: 600 }}>
+                                    {["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"][d.getDay()]}
+                                  </div>
+                                </div>
+                                <div style={{ minWidth: 0 }}>
+                                  <div style={{ fontSize: "0.72rem", fontWeight: 700, color: evt.color || "#3b82f6", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                    ★ {evt.title}
+                                  </div>
+                                  <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)" }}>
+                                    {evt.startTime && evt.endTime ? `${evt.startTime} – ${evt.endTime}` : evt.startTime || ""}
+                                    {evt.notes ? ` · ${evt.notes}` : ""}
+                                  </div>
+                                </div>
                               </div>
-                              <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)" }}>
-                                {r.eventTime || ""} · {r.packages.map(p => p.name).join(", ")}
-                              </div>
+                              <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: "0.52rem", fontWeight: 800, textTransform: "uppercase", background: `${evt.color || '#3b82f6'}15`, color: evt.color || '#3b82f6', flexShrink: 0 }}>
+                                Olay
+                              </span>
                             </div>
-                          </div>
-                          <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: "0.52rem", fontWeight: 800, textTransform: "uppercase", background: sc.bg, color: sc.c, flexShrink: 0 }}>
-                            {statusLabel(r.status)}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
                 </div>
               );
             })()}
@@ -1494,6 +1607,109 @@ export default function ReservationsPage() {
           </div>
         );
       })()}
+
+      {/* ── Calendar Event Modal ── */}
+      {eventModal.isOpen && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
+          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "1rem", width: "100%", maxWidth: "380px", padding: "1.25rem", position: "relative", margin: "3rem 0" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>
+                <Star size={16} style={{ marginRight: 6, verticalAlign: "middle", color: eventForm.color || "#3b82f6" }} />
+                {eventModal.data ? "Olayı Düzenle" : "Yeni Olay"}
+              </h2>
+              <button onClick={() => setEventModal({ isOpen: false, data: null })} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={18} /></button>
+            </div>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              setEventLoading(true);
+              let res;
+              if (eventModal.data) {
+                res = await updateCalendarEvent(eventModal.data.id, eventForm);
+              } else {
+                res = await createCalendarEvent(eventForm);
+              }
+              if (res.success) {
+                setEventModal({ isOpen: false, data: null });
+                loadData();
+              } else {
+                alert("Hata: " + res.error);
+              }
+              setEventLoading(false);
+            }} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <div>
+                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Başlık *</label>
+                <input required placeholder="Etkinlik adı" style={inp} value={eventForm.title} onChange={(e) => setEventForm({...eventForm, title: e.target.value})} />
+              </div>
+              <div>
+                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Tarih *</label>
+                <input type="date" required style={{ ...inp, colorScheme: "dark" }} value={eventForm.eventDate} onChange={(e) => setEventForm({...eventForm, eventDate: e.target.value})} />
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
+                <div>
+                  <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Başlangıç Saati</label>
+                  <input type="time" style={{ ...inp, colorScheme: "dark" }} value={eventForm.startTime} onChange={(e) => setEventForm({...eventForm, startTime: e.target.value})} />
+                </div>
+                <div>
+                  <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Bitiş Saati</label>
+                  <input type="time" style={{ ...inp, colorScheme: "dark" }} value={eventForm.endTime} onChange={(e) => setEventForm({...eventForm, endTime: e.target.value})} />
+                </div>
+              </div>
+              <div>
+                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 6 }}>Renk Etiketi</label>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {[
+                    { c: "#3b82f6", l: "Mavi" },
+                    { c: "#ef4444", l: "Kırmızı" },
+                    { c: "#f59e0b", l: "Turuncu" },
+                    { c: "#10b981", l: "Yeşil" },
+                    { c: "#8b5cf6", l: "Mor" },
+                    { c: "#ec4899", l: "Pembe" },
+                    { c: "#6b7280", l: "Gri" },
+                  ].map(({ c, l }) => (
+                    <button key={c} type="button" onClick={() => setEventForm({...eventForm, color: c})}
+                      style={{
+                        width: 28, height: 28, borderRadius: "50%", border: eventForm.color === c ? "2px solid #fff" : "2px solid transparent",
+                        background: c, cursor: "pointer", transition: "all 0.15s",
+                        boxShadow: eventForm.color === c ? `0 0 0 2px ${c}40` : "none",
+                      }}
+                      title={l}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Detay / Not</label>
+                <textarea placeholder="Opsiyonel notlar..." style={{ ...inp, minHeight: 70, resize: "vertical" }} value={eventForm.notes} onChange={(e) => setEventForm({...eventForm, notes: e.target.value})} />
+              </div>
+              <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+                <button type="submit" disabled={eventLoading} style={{
+                  flex: 1, padding: "0.7rem", borderRadius: "0.6rem", border: "none",
+                  background: eventForm.color || "#3b82f6", color: "#fff", fontWeight: 800, fontSize: "0.78rem",
+                  cursor: "pointer", opacity: eventLoading ? 0.6 : 1, transition: "all 0.2s",
+                }}>
+                  {eventLoading ? "Kaydediliyor..." : (eventModal.data ? "Güncelle" : "Kaydet")}
+                </button>
+                {eventModal.data && (
+                  <button type="button" disabled={eventLoading} onClick={async () => {
+                    if (!confirm("Bu olayı silmek istediğinize emin misiniz?")) return;
+                    setEventLoading(true);
+                    await deleteCalendarEvent(eventModal.data.id);
+                    setEventModal({ isOpen: false, data: null });
+                    loadData();
+                    setEventLoading(false);
+                  }} style={{
+                    padding: "0.7rem 1rem", borderRadius: "0.6rem",
+                    border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.1)",
+                    color: "#ef4444", fontWeight: 800, fontSize: "0.78rem", cursor: "pointer",
+                  }}>
+                    <Trash2 size={14} />
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

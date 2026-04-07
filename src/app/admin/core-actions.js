@@ -1256,3 +1256,71 @@ export async function incrementDiscountCodeUsage(code) {
     return { error: "Kod kullanımı güncellenemedi." };
   }
 }
+
+// --- CALENDAR EVENT ACTIONS ---
+
+export async function getCalendarEvents() {
+  return await prisma.calendarEvent.findMany({
+    orderBy: { eventDate: 'asc' }
+  });
+}
+
+export async function createCalendarEvent(data) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    const { title, eventDate, startTime, endTime, color, notes } = data;
+    await prisma.calendarEvent.create({
+      data: {
+        title,
+        eventDate: new Date(eventDate),
+        startTime: startTime || null,
+        endTime: endTime || null,
+        color: color || "#3b82f6",
+        notes: notes || null,
+      }
+    });
+    revalidatePath('/admin/reservations');
+    revalidatePath('/admin/dashboard');
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function updateCalendarEvent(id, data) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    const { title, eventDate, startTime, endTime, color, notes } = data;
+    await prisma.calendarEvent.update({
+      where: { id },
+      data: {
+        title,
+        eventDate: new Date(eventDate),
+        startTime: startTime || null,
+        endTime: endTime || null,
+        color: color || "#3b82f6",
+        notes: notes || null,
+      }
+    });
+    revalidatePath('/admin/reservations');
+    revalidatePath('/admin/dashboard');
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function deleteCalendarEvent(id) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    await prisma.calendarEvent.delete({ where: { id } });
+    revalidatePath('/admin/reservations');
+    revalidatePath('/admin/dashboard');
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
