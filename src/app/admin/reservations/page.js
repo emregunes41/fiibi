@@ -199,31 +199,15 @@ export default function ReservationsPage() {
         const today = new Date();
         const isToday = (d) => d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear();
 
-        // Group reservations by day (including multi-date from package-specific dates)
+        // Group reservations by day using eventDate as single source of truth
         const resByDay = {};
         reservations.filter(r => r.status !== "DELETED").forEach(r => {
-          const dates = new Set();
-          // Primary event date
           const d = new Date(r.eventDate);
           if (d.getMonth() === calMonth && d.getFullYear() === calYear) {
-            dates.add(d.getDate());
-          }
-          // Additional package dates from customFieldAnswers
-          if (r.customFieldAnswers && Array.isArray(r.customFieldAnswers)) {
-            r.customFieldAnswers.filter(a => a.label === "_eventDateISO" && a.value).forEach(a => {
-              const pd = new Date(a.value);
-              if (pd.getMonth() === calMonth && pd.getFullYear() === calYear) {
-                dates.add(pd.getDate());
-              }
-            });
-          }
-          dates.forEach(day => {
+            const day = d.getDate();
             if (!resByDay[day]) resByDay[day] = [];
-            // Avoid duplicate entries for same reservation on same day
-            if (!resByDay[day].some(existing => existing.id === r.id)) {
-              resByDay[day].push(r);
-            }
-          });
+            resByDay[day].push(r);
+          }
         });
 
         const cells = [];
@@ -323,15 +307,7 @@ export default function ReservationsPage() {
               const monthRes = reservations.filter(r => {
                 if (r.status === "DELETED") return false;
                 const d = new Date(r.eventDate);
-                if (d.getMonth() === calMonth && d.getFullYear() === calYear) return true;
-                // Also check package-specific dates
-                if (r.customFieldAnswers && Array.isArray(r.customFieldAnswers)) {
-                  return r.customFieldAnswers.some(a => a.label === "_eventDateISO" && a.value && (() => {
-                    const pd = new Date(a.value);
-                    return pd.getMonth() === calMonth && pd.getFullYear() === calYear;
-                  })());
-                }
-                return false;
+                return d.getMonth() === calMonth && d.getFullYear() === calYear;
               }).sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
 
               if (monthRes.length === 0) return null;
