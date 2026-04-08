@@ -106,7 +106,7 @@ export default async function MuhasebePage() {
   const catColors = { DIS_CEKIM: "#f59e0b", DUGUN: "#fb7185", NISAN: "#67e8f9" };
 
   return (
-    <div style={{ color: "#fff" }}>
+    <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
       {/* Header */}
       <div style={{ marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
@@ -164,7 +164,7 @@ export default async function MuhasebePage() {
       </div>
 
       {/* ═══ AYLIK GRAFİK + YÖNTEM DAĞILIMI ═══ */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "10px", marginBottom: "1.5rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "10px", marginBottom: "1.5rem" }}>
         
         {/* Aylık Gelir Grafiği */}
         <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "18px" }}>
@@ -245,7 +245,7 @@ export default async function MuhasebePage() {
       </div>
 
       {/* ═══ KATEGORİ GELİRİ + AÇIK BAKİYELER ═══ */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "10px", marginBottom: "1.5rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "10px", marginBottom: "1.5rem" }}>
 
         {/* Kategoriye Göre Gelir */}
         <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "18px" }}>
@@ -325,39 +325,32 @@ export default async function MuhasebePage() {
         </div>
         
         {/* Table Header */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 100px 90px 80px", gap: 8, padding: "0 8px 8px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-          <span style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Müşteri</span>
-          <span style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Tarih</span>
-          <span style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Yöntem</span>
-          <span style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", textAlign: "right" }}>Tutar</span>
-        </div>
+        <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: 4 }} />
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           {recentPayments.map((p, i) => (
             <div key={p.id} style={{ 
-              display: "grid", gridTemplateColumns: "1fr 100px 90px 80px", gap: 8,
+              display: "flex", flexWrap: "wrap", gap: "4px 12px", alignItems: "center", justifyContent: "space-between",
               padding: "10px 8px", 
               borderBottom: i < recentPayments.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none",
             }}>
-              <div style={{ minWidth: 0 }}>
+              <div style={{ minWidth: 0, flex: "1 1 120px" }}>
                 <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {p.reservation?.brideName || "—"}
                 </div>
                 {p.note && <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.note}</div>}
               </div>
-              <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center" }}>
+              <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)", flexShrink: 0 }}>
                 {new Date(p.createdAt).toLocaleDateString("tr-TR", { day: "numeric", month: "short" })}
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span style={{ 
-                  fontSize: "0.55rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4,
-                  background: `${methodColors[p.method] || "#888"}15`, 
-                  color: methodColors[p.method] || "#888" 
-                }}>
-                  {methodLabels[p.method] || p.method}
-                </span>
-              </div>
-              <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "#4ade80", textAlign: "right", display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+              <span style={{ 
+                fontSize: "0.55rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4, flexShrink: 0,
+                background: `${methodColors[p.method] || "#888"}15`, 
+                color: methodColors[p.method] || "#888" 
+              }}>
+                {methodLabels[p.method] || p.method}
+              </span>
+              <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "#4ade80", flexShrink: 0 }}>
                 +{fmt(p.amount)}₺
               </div>
             </div>
