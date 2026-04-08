@@ -350,10 +350,10 @@ export default function ReservationsPage() {
                             </div>
                             <div style={{ minWidth: 0 }}>
                               <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                {r.venueName || r.brideName}{r.groomName ? ` & ${r.groomName}` : ""}
+                                {r.brideName}{r.groomName ? ` & ${r.groomName}` : ""}
                               </div>
                               <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)" }}>
-                                {r.eventTime ? r.eventTime.split('-')[0] : ""} · {r.packages.map(p => p.name).join(", ") || "Olay"}
+                                {r.eventTime || ""} · {r.venueName || r.packages.map(p => p.name).join(", ") || ""}
                               </div>
                             </div>
                           </div>
@@ -512,7 +512,7 @@ export default function ReservationsPage() {
                   style={{ fontWeight: 700, fontSize: "0.85rem", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}
                 >
                   <Eye size={12} style={{ opacity: 0.4, flexShrink: 0 }} />
-                  {res.venueName || res.brideName} {res.groomName ? `& ${res.groomName}` : ""}
+                  {res.brideName} {res.groomName ? `& ${res.groomName}` : ""}
                 </div>
                 <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
                   {res.contractApproved ? (
