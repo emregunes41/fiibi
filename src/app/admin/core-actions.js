@@ -584,11 +584,11 @@ export async function updateReservation(id, data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds, notes, selectedAddons = [], totalAmount = "" } = data;
+    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds = [], notes, selectedAddons = [], totalAmount = "", venueName } = data;
     
-    const packagesData = await prisma.photographyPackage.findMany({
+    const packagesData = packageIds.length > 0 ? await prisma.photographyPackage.findMany({
       where: { id: { in: packageIds } }
-    });
+    }) : [];
     const maxDays = packagesData.reduce((max, pkg) => Math.max(max, pkg.deliveryTimeDays || 14), 0);
     const eventDateObj = new Date(eventDate);
     const deliveryDateObj = new Date(eventDateObj);
@@ -614,12 +614,11 @@ export async function updateReservation(id, data) {
         groomName, groomPhone, groomEmail,
         eventDate: eventDateObj,
         eventTime,
-        packages: {
-          set: packageIds.map(id => ({ id }))
-        },
+        ...(packageIds.length > 0 ? { packages: { set: packageIds.map(id => ({ id })) } } : {}),
         notes,
         totalAmount,
         selectedAddons,
+        venueName: venueName || null,
         deliveryDate: deliveryDateObj,
         customFieldAnswers: updatedCFA
       }
@@ -1257,29 +1256,48 @@ export async function incrementDiscountCodeUsage(code) {
   }
 }
 
-// --- CALENDAR EVENT ACTIONS ---
+// --- QUICK EVENT (creates a Reservation) ---
 
-export async function getCalendarEvents() {
-  return await prisma.calendarEvent.findMany({
-    orderBy: { eventDate: 'asc' }
-  });
-}
-
-export async function createCalendarEvent(data) {
+export async function createQuickEvent(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { title, eventDate, startTime, endTime, color, notes } = data;
-    await prisma.calendarEvent.create({
+    const { venueName, eventDate, startTime, endTime, notes, totalAmount, initialPaymentAmount, paymentMethod } = data;
+
+    const eventDateObj = new Date(eventDate);
+    const eventTime = startTime && endTime ? `${startTime}-${endTime}` : startTime || null;
+
+    const numericInitialPayment = Number(initialPaymentAmount) || 0;
+    const numericTotal = Number(String(totalAmount).replace(/\D/g, '')) || 0;
+
+    let paymentStatus = "UNPAID";
+    if (numericInitialPayment > 0) {
+      paymentStatus = numericInitialPayment >= numericTotal ? "PAID" : "PARTIAL";
+    }
+
+    await prisma.reservation.create({
       data: {
-        title,
-        eventDate: new Date(eventDate),
-        startTime: startTime || null,
-        endTime: endTime || null,
-        color: color || "#3b82f6",
+        brideName: venueName,
+        bridePhone: "-",
+        brideEmail: "",
+        venueName,
+        eventDate: eventDateObj,
+        eventTime,
         notes: notes || null,
+        totalAmount: totalAmount || "",
+        status: "CONFIRMED",
+        paymentStatus,
+        paymentPreference: "CASH",
+        workflowStatus: "PENDING",
+        contractApproved: true,
+        ...(numericInitialPayment > 0 ? {
+          payments: {
+            create: [{ amount: numericInitialPayment, method: paymentMethod || "CASH", note: "Ön Ödeme" }]
+          }
+        } : {})
       }
     });
+
     revalidatePath('/admin/reservations');
     revalidatePath('/admin/dashboard');
     return { success: true };
@@ -1288,39 +1306,3 @@ export async function createCalendarEvent(data) {
   }
 }
 
-export async function updateCalendarEvent(id, data) {
-  const auth = await requireAdmin();
-  if (auth?.error) return auth;
-  try {
-    const { title, eventDate, startTime, endTime, color, notes } = data;
-    await prisma.calendarEvent.update({
-      where: { id },
-      data: {
-        title,
-        eventDate: new Date(eventDate),
-        startTime: startTime || null,
-        endTime: endTime || null,
-        color: color || "#3b82f6",
-        notes: notes || null,
-      }
-    });
-    revalidatePath('/admin/reservations');
-    revalidatePath('/admin/dashboard');
-    return { success: true };
-  } catch (error) {
-    return { error: error.message };
-  }
-}
-
-export async function deleteCalendarEvent(id) {
-  const auth = await requireAdmin();
-  if (auth?.error) return auth;
-  try {
-    await prisma.calendarEvent.delete({ where: { id } });
-    revalidatePath('/admin/reservations');
-    revalidatePath('/admin/dashboard');
-    return { success: true };
-  } catch (error) {
-    return { error: error.message };
-  }
-}
