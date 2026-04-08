@@ -79,15 +79,33 @@ export default function BannerCarousel({ banners }) {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Image */}
-      <Image
-        src={banner.imageUrl}
-        alt={banner.title || "Banner"}
-        fill
-        style={{ objectFit: "cover", transition: "opacity 0.5s ease" }}
-        sizes="100vw"
-        priority={current === 0}
-      />
+      {/* Media — Image or Video */}
+      {banner.mediaType === "video" ? (
+        <video
+          key={banner.id}
+          src={banner.imageUrl}
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+      ) : (
+        <Image
+          src={banner.imageUrl}
+          alt={banner.title || "Banner"}
+          fill
+          style={{ objectFit: "cover", transition: "opacity 0.5s ease" }}
+          sizes="100vw"
+          priority={current === 0}
+        />
+      )}
 
       {/* Gradient overlay for text */}
       {(banner.title || banner.subtitle) && (

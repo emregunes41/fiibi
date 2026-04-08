@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 export async function getBanners() {
   try {
@@ -27,7 +27,7 @@ export async function getActiveBanners() {
   }
 }
 
-export async function createBanner({ imageUrl, title, subtitle, link }) {
+export async function createBanner({ imageUrl, mediaType, title, subtitle, link }) {
   try {
     // Get max order
     const maxOrder = await prisma.banner.aggregate({ _max: { order: true } });
@@ -36,6 +36,7 @@ export async function createBanner({ imageUrl, title, subtitle, link }) {
     const banner = await prisma.banner.create({
       data: {
         imageUrl,
+        mediaType: mediaType || "image",
         title: title || null,
         subtitle: subtitle || null,
         link: link || null,

@@ -261,6 +261,7 @@ model DiscountCode {
 model Banner {
   id        String   @id @default(cuid())
   imageUrl  String
+  mediaType String   @default("image") // "image" or "video"
   title     String?
   subtitle  String?
   link      String?

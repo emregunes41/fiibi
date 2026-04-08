@@ -63,6 +63,7 @@ export default function SettingsPage() {
   const [bannerForm, setBannerForm] = useState({ title: "", subtitle: "", link: "" });
   const [bannerUploading, setBannerUploading] = useState(false);
   const [pendingBannerUrl, setPendingBannerUrl] = useState("");
+  const [pendingMediaType, setPendingMediaType] = useState("image");
 
   useEffect(() => {
     async function loadConfig() {
@@ -196,9 +197,10 @@ export default function SettingsPage() {
               onSuccess={(res) => {
                 if (res.event === "success") {
                   setPendingBannerUrl(res.info.secure_url);
+                  setPendingMediaType(res.info.resource_type === "video" ? "video" : "image");
                 }
               }}
-              options={{ multiple: false, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+              options={{ multiple: false, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, resourceType: "auto" }}
             >
               {({ open }) => (
                 <button
@@ -213,7 +215,7 @@ export default function SettingsPage() {
                   }}
                 >
                   <UploadCloud size={18} />
-                  Banner Görseli Yükle
+                  Banner Yükle (Görsel veya Video)
                 </button>
               )}
             </CldUploadWidget>
@@ -226,7 +228,11 @@ export default function SettingsPage() {
               background: "rgba(74,222,128,0.04)", border: "1px solid rgba(74,222,128,0.15)",
             }}>
               <div style={{ display: "flex", gap: 14, marginBottom: 14 }}>
-                <img src={pendingBannerUrl} alt="Preview" style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)" }} />
+                {pendingMediaType === "video" ? (
+                  <video src={pendingBannerUrl} style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)" }} muted autoPlay loop />
+                ) : (
+                  <img src={pendingBannerUrl} alt="Preview" style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)" }} />
+                )}
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
                   <input type="text" placeholder="Başlık (opsiyonel)" value={bannerForm.title}
                     onChange={(e) => setBannerForm(p => ({ ...p, title: e.target.value }))}
@@ -243,17 +249,18 @@ export default function SettingsPage() {
                 style={{ ...inp, padding: "10px 12px", fontSize: 12, marginBottom: 12 }}
               />
               <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                <button type="button" onClick={() => { setPendingBannerUrl(""); setBannerForm({ title: "", subtitle: "", link: "" }); }}
+                <button type="button" onClick={() => { setPendingBannerUrl(""); setPendingMediaType("image"); setBannerForm({ title: "", subtitle: "", link: "" }); }}
                   style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: 12, fontWeight: 700 }}
                 >İptal</button>
                 <button type="button"
                   disabled={bannerUploading}
                   onClick={async () => {
                     setBannerUploading(true);
-                    const res = await createBanner({ imageUrl: pendingBannerUrl, ...bannerForm });
+                    const res = await createBanner({ imageUrl: pendingBannerUrl, mediaType: pendingMediaType, ...bannerForm });
                     if (res.success) {
                       setBanners(await getBanners());
                       setPendingBannerUrl("");
+                      setPendingMediaType("image");
                       setBannerForm({ title: "", subtitle: "", link: "" });
                     }
                     setBannerUploading(false);
@@ -283,8 +290,13 @@ export default function SettingsPage() {
                 }}>
                   <img src={b.imageUrl} alt="" style={{ width: 80, height: 40, objectFit: "cover", borderRadius: 8, flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {b.title || "(Başlıksız)"}
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ fontSize: 10, padding: "1px 5px", borderRadius: 4, background: b.mediaType === "video" ? "rgba(96,165,250,0.15)" : "rgba(255,255,255,0.06)", color: b.mediaType === "video" ? "#60a5fa" : "rgba(255,255,255,0.4)", fontWeight: 800 }}>
+                        {b.mediaType === "video" ? "🎬" : "🖼️"}
+                      </span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {b.title || "(Başlıksız)"}
+                      </span>
                     </div>
                     <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>
                       Sıra: {idx + 1} {b.subtitle && `· ${b.subtitle}`}
