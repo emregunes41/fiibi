@@ -273,11 +273,15 @@ export default function ReservationsPage() {
                 const todayStyle = isToday(day);
 
                 return (
-                  <div key={day} style={{
+                  <div key={day} onClick={() => {
+                    const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    setQuickEventForm({ venueName: "", eventDate: dateStr, startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
+                    setQuickEventModal(true);
+                  }} style={{
                     minHeight: 70, borderRadius: 6, padding: "4px 5px",
                     background: todayStyle ? "rgba(59,130,246,0.08)" : hasRes ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
                     border: todayStyle ? "1px solid rgba(59,130,246,0.25)" : "1px solid rgba(255,255,255,0.04)",
-                    cursor: hasRes ? "pointer" : "default",
+                    cursor: "pointer",
                     transition: "all 0.15s",
                   }}>
                     <div style={{ fontSize: "0.7rem", fontWeight: todayStyle ? 800 : 600, color: todayStyle ? "#60a5fa" : hasRes ? "#fff" : "rgba(255,255,255,0.3)", marginBottom: 3 }}>
@@ -288,7 +292,7 @@ export default function ReservationsPage() {
                       return (
                         <div
                           key={r.id}
-                          onClick={() => setDetailModal({ isOpen: true, data: r })}
+                          onClick={(e) => { e.stopPropagation(); setDetailModal({ isOpen: true, data: r }); }}
                           style={{
                             fontSize: "0.55rem", fontWeight: 700, padding: "2px 4px",
                             borderRadius: 4, marginBottom: 2, cursor: "pointer",
