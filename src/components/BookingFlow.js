@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ArrowLeft, Check, Calendar,
@@ -200,7 +200,17 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
     return Math.round(b * (1 + c.discountPercentage / 100));
   }, [month, prices, isAdmin]);
 
-  const go = (s) => { window.scrollTo({ top: 0, behavior: "smooth" }); setStep(s); };
+  const topRef = useRef(null);
+
+  const go = (s) => {
+    setStep(s);
+    // Scroll the step bar into view after React renders the new step
+    setTimeout(() => {
+      if (topRef.current) {
+        topRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 50);
+  };
 
   /* effects */
   useEffect(() => {
@@ -314,7 +324,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
     <div style={{ width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
 
       {/* Step bar */}
-      <div style={{ display: "flex", gap: "8px", marginBottom: "48px" }}>
+      <div ref={topRef} style={{ display: "flex", gap: "8px", marginBottom: "48px", scrollMarginTop: "120px" }}>
         {["Hizmet","Paket","Detaylar"].map((l, i) => {
           const n = i + 1;
           const done = step > n;
