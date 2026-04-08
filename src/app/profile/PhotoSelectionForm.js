@@ -75,24 +75,6 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
           onFocus={(e) => e.target.style.borderColor = "rgba(255,255,255,0.3)"}
           onBlur={(e) => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
         />
-
-        {/* Photo Count Indicator */}
-        {(() => {
-          const count = selection.trim() ? selection.split(',').filter(s => s.trim()).length : 0;
-          const isExact = count === 30;
-          const isOver = count > 30;
-          const color = isExact ? "#4ade80" : isOver ? "#ef4444" : count > 0 ? "#f59e0b" : "rgba(255,255,255,0.3)";
-          return (
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", background: `${color}08`, borderRadius: 8, border: `1px solid ${color}20` }}>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>Seçilen fotoğraf sayısı:</span>
-              <span style={{ fontSize: 14, fontWeight: 800, color }}>
-                {count} / 30
-                {isExact && " ✓"}
-                {isOver && " (fazla!)"}
-              </span>
-            </div>
-          );
-        })()}
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           {message && <span style={{ fontSize: 12, color: message.includes("Hata") ? "#f87171" : "#4ade80", fontWeight: 600 }}>{message}</span>}
