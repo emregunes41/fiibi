@@ -55,9 +55,6 @@ export default async function PinowedPage() {
       {/* 3. Portfolio Glimpse */}
       <section id="portfolio" className="py-20 border-t border-white/5">
         <div className="section-container mb-16 overflow-hidden">
-          <h2 className="text-[0.75rem] uppercase tracking-[0.4em] text-white/40 mb-12 flex items-center gap-4">
-            <span className="w-12 h-[1px] bg-white/20" /> Seçili Çalışmalar
-          </h2>
           <GalleryClient categories={categories} />
         </div>
       </section>
