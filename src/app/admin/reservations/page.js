@@ -297,14 +297,14 @@ export default function ReservationsPage() {
                             transition: "all 0.15s",
                           }}
                           title={(() => {
-                            const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede"];
+                            const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede", "alanı", "alan"];
                             const cfa = r.customFieldAnswers || [];
                             const venueField = cfa.find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
                             return venueField?.value || r.venueName || "";
                           })()}
                         >
-                          {r.eventTime ? `${r.eventTime.split('-')[0]} ` : ""}{(() => {
-                            const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede"];
+                          {(() => {
+                            const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede", "alanı", "alan"];
                             const cfa = r.customFieldAnswers || [];
                             const venueField = cfa.find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
                             return venueField?.value || r.venueName || "-";
@@ -364,7 +364,7 @@ export default function ReservationsPage() {
                               </div>
                               <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)" }}>
                                 {r.eventTime || ""} · {(() => {
-                                  const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede"];
+                                  const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede", "alanı", "alan"];
                                   const cfa = r.customFieldAnswers || [];
                                   const venueField = cfa.find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
                                   return venueField?.value || r.venueName || r.packages.map(p => p.name).join(", ") || "";
