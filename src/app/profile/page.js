@@ -49,7 +49,7 @@ export default async function ProfilePage() {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 40, maxWidth: "100%", overflowX: "hidden" }}>
       
       {/* Reservations */}
       <section>
@@ -99,7 +99,7 @@ export default async function ProfilePage() {
                         <div style={{ width: 44, height: 44, background: "rgba(250,204,21,0.15)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                           <AlertTriangle size={20} style={{ color: "#facc15" }} />
                         </div>
-                        <div style={{ flex: 1, minWidth: 260 }}>
+                        <div style={{ flex: 1, minWidth: 200 }}>
                           <h4 style={{ fontWeight: 700, fontSize: 15, color: "#facc15", marginBottom: 6 }}>Sözleşme Onayı Bekleniyor</h4>
                           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, lineHeight: 1.5, marginBottom: 16 }}>
                             Bu rezervasyon ekibimiz tarafından sizin adınıza oluşturulmuştur. Çekim planlaması ve hizmet detaylarının resmi olarak başlayabilmesi için Pinowed mesafeli satış ve hizmet sözleşmesini onaylamanız gerekmektedir.

@@ -149,7 +149,7 @@ export default function ProfileLayoutClient({ user, children }) {
       <div className="hidden md:block" style={{ width: "280px", flexShrink: 0 }} />
 
       {/* Main Content Area */}
-      <main style={{ flex: 1, position: "relative", zIndex: 5, overflowY: "auto", background: "rgba(255,255,255,0.03)", minWidth: 0 }}>
+      <main style={{ flex: 1, position: "relative", zIndex: 5, overflowY: "auto", overflowX: "hidden", background: "rgba(255,255,255,0.03)", minWidth: 0 }}>
         {/* Mobile top padding */}
         <div className="md:hidden" style={{ height: "76px" }} />
         <div style={{ padding: "clamp(16px, 4vw, 56px)", maxWidth: "1200px", margin: "0 auto", marginTop: "20px" }}>

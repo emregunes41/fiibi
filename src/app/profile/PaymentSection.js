@@ -357,7 +357,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
           )}
         </div>
         
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(90px, 1fr))", gap: 12, marginBottom: 14 }}>
           <div style={{ textAlign: "center", background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: "10px 6px" }}>
             <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Toplam</div>
             <div style={{ fontSize: 16, fontWeight: 800, color: "#fff" }}>{currentTotalAmount.toLocaleString('tr-TR')}₺</div>

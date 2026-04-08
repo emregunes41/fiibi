@@ -447,7 +447,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px", marginBottom: "24px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(70px, 1fr))", gap: "8px", marginBottom: "24px" }}>
                   {MF.map((name, i) => {
                     const m = i + 1;
                     const d = disc(m);
@@ -676,7 +676,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
 
                 {needsTimeSelection ? (
                   // Show slot/option buttons
-                  <div style={{ display: "grid", gridTemplateColumns: selectedPkg.timeType === "WEDDING" ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: "8px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: selectedPkg.timeType === "WEDDING" ? "repeat(auto-fill, minmax(130px, 1fr))" : "repeat(auto-fill, minmax(100px, 1fr))", gap: "8px" }}>
                     {getAvailableSlotsForPkg().map((slot) => {
                       const full = isSlotFull(slot.value);
                       const sel = detailForm.time === slot.value;
