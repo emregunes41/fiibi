@@ -1,10 +1,12 @@
 import { getPackages, getSiteConfig } from "./admin/core-actions";
 import { getPortfolioCategories } from "./admin/portfolio-actions";
+import { getActiveBanners } from "./admin/banner-actions";
 import BookingFlow from "@/components/BookingFlow";
 import GalleryClient from "./gallery/GalleryClient";
 import Image from "next/image";
 import Link from "next/link";
 import AIChatBot from "@/components/AIChatBot";
+import BannerCarousel from "@/components/BannerCarousel";
 import { ArrowDown, Instagram, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
@@ -14,6 +16,7 @@ export default async function PinowedPage() {
   const portfolioRes = await getPortfolioCategories();
   const categories = portfolioRes.success ? portfolioRes.categories : [];
   const siteConfig = await getSiteConfig();
+  const banners = await getActiveBanners();
 
   // Helper to render newlines as <br/>
   const renderTitle = (text) => {
@@ -51,6 +54,15 @@ export default async function PinowedPage() {
         </div>
       </section>
 
+
+      {/* 2. Banner Carousel */}
+      {banners && banners.length > 0 && (
+        <section className="py-12 border-t border-white/5">
+          <div className="section-container">
+            <BannerCarousel banners={banners} />
+          </div>
+        </section>
+      )}
 
       {/* 3. Portfolio Glimpse */}
       <section id="portfolio" className="py-20 border-t border-white/5">

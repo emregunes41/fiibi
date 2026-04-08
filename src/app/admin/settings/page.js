@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode } from "../core-actions";
+import { getBanners, createBanner, updateBanner, deleteBanner, reorderBanners } from "../banner-actions";
+import { CldUploadWidget } from "next-cloudinary";
 import { 
   Save, Home, Phone, Mail, Instagram, MessageCircle, MapPin,
-  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot
+  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot, Image as ImageIcon, ArrowUp, ArrowDown, Eye, EyeOff, UploadCloud
 } from "lucide-react";
 
 const inp = {
@@ -56,6 +58,12 @@ export default function SettingsPage() {
   const [dcLoading, setDcLoading] = useState(false);
   const [dcMessage, setDcMessage] = useState("");
 
+  // Banners
+  const [banners, setBanners] = useState([]);
+  const [bannerForm, setBannerForm] = useState({ title: "", subtitle: "", link: "" });
+  const [bannerUploading, setBannerUploading] = useState(false);
+  const [pendingBannerUrl, setPendingBannerUrl] = useState("");
+
   useEffect(() => {
     async function loadConfig() {
       const data = await getSiteConfig();
@@ -68,6 +76,7 @@ export default function SettingsPage() {
     }
     loadConfig();
     loadDiscountCodes();
+    getBanners().then(setBanners);
   }, []);
 
   async function handleSubmit(e) {
@@ -174,6 +183,161 @@ export default function SettingsPage() {
           <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 12, fontStyle: "italic", lineHeight: 1.5 }}>
             * Başlıktaki enter tuşu anasayfada tasarımın dengeli durmasını sağlar.
           </p>
+        </div>
+
+        {/* Banner Carousel Management */}
+        <div style={sectionCard}>
+          {sectionHeader(ImageIcon, "Banner Carousel", "Anasayfada portfolyo bölümünün üstünde görünen kayan banner görselleri.")}
+
+          {/* Upload new banner */}
+          <div style={{ marginBottom: 20 }}>
+            <CldUploadWidget
+              uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""}
+              onSuccess={(res) => {
+                if (res.event === "success") {
+                  setPendingBannerUrl(res.info.secure_url);
+                }
+              }}
+              options={{ multiple: false, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+            >
+              {({ open }) => (
+                <button
+                  type="button"
+                  onClick={() => open()}
+                  style={{
+                    width: "100%", padding: "20px", borderRadius: 14, cursor: "pointer",
+                    border: "2px dashed rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.02)",
+                    color: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 700,
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                    transition: "all 0.2s",
+                  }}
+                >
+                  <UploadCloud size={18} />
+                  Banner Görseli Yükle
+                </button>
+              )}
+            </CldUploadWidget>
+          </div>
+
+          {/* Pending banner form */}
+          {pendingBannerUrl && (
+            <div style={{
+              padding: 16, borderRadius: 14, marginBottom: 20,
+              background: "rgba(74,222,128,0.04)", border: "1px solid rgba(74,222,128,0.15)",
+            }}>
+              <div style={{ display: "flex", gap: 14, marginBottom: 14 }}>
+                <img src={pendingBannerUrl} alt="Preview" style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)" }} />
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
+                  <input type="text" placeholder="Başlık (opsiyonel)" value={bannerForm.title}
+                    onChange={(e) => setBannerForm(p => ({ ...p, title: e.target.value }))}
+                    style={{ ...inp, padding: "10px 12px", fontSize: 12 }}
+                  />
+                  <input type="text" placeholder="Alt Başlık (opsiyonel)" value={bannerForm.subtitle}
+                    onChange={(e) => setBannerForm(p => ({ ...p, subtitle: e.target.value }))}
+                    style={{ ...inp, padding: "10px 12px", fontSize: 12 }}
+                  />
+                </div>
+              </div>
+              <input type="text" placeholder="Link (opsiyonel, ör: /booking)" value={bannerForm.link}
+                onChange={(e) => setBannerForm(p => ({ ...p, link: e.target.value }))}
+                style={{ ...inp, padding: "10px 12px", fontSize: 12, marginBottom: 12 }}
+              />
+              <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                <button type="button" onClick={() => { setPendingBannerUrl(""); setBannerForm({ title: "", subtitle: "", link: "" }); }}
+                  style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: 12, fontWeight: 700 }}
+                >İptal</button>
+                <button type="button"
+                  disabled={bannerUploading}
+                  onClick={async () => {
+                    setBannerUploading(true);
+                    const res = await createBanner({ imageUrl: pendingBannerUrl, ...bannerForm });
+                    if (res.success) {
+                      setBanners(await getBanners());
+                      setPendingBannerUrl("");
+                      setBannerForm({ title: "", subtitle: "", link: "" });
+                    }
+                    setBannerUploading(false);
+                  }}
+                  style={{
+                    padding: "10px 20px", borderRadius: 10, border: "none",
+                    background: "#4ade80", color: "#000", fontWeight: 800, fontSize: 12,
+                    cursor: "pointer", display: "flex", alignItems: "center", gap: 6,
+                  }}
+                >
+                  <Plus size={14} />
+                  {bannerUploading ? "Ekleniyor..." : "Banner Ekle"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Existing banners list */}
+          {banners.length > 0 ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {banners.map((b, idx) => (
+                <div key={b.id} style={{
+                  display: "flex", alignItems: "center", gap: 12, padding: "10px 12px",
+                  borderRadius: 12, background: b.isActive ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
+                  border: `1px solid ${b.isActive ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)"}`,
+                  opacity: b.isActive ? 1 : 0.5,
+                }}>
+                  <img src={b.imageUrl} alt="" style={{ width: 80, height: 40, objectFit: "cover", borderRadius: 8, flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {b.title || "(Başlıksız)"}
+                    </div>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>
+                      Sıra: {idx + 1} {b.subtitle && `· ${b.subtitle}`}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+                    {/* Move up */}
+                    <button type="button" disabled={idx === 0}
+                      onClick={async () => {
+                        const ids = banners.map(x => x.id);
+                        [ids[idx - 1], ids[idx]] = [ids[idx], ids[idx - 1]];
+                        await reorderBanners(ids);
+                        setBanners(await getBanners());
+                      }}
+                      style={{ background: "none", border: "none", cursor: idx === 0 ? "not-allowed" : "pointer", padding: 4, color: "rgba(255,255,255,0.3)", opacity: idx === 0 ? 0.3 : 1 }}
+                    ><ArrowUp size={14} /></button>
+                    {/* Move down */}
+                    <button type="button" disabled={idx === banners.length - 1}
+                      onClick={async () => {
+                        const ids = banners.map(x => x.id);
+                        [ids[idx], ids[idx + 1]] = [ids[idx + 1], ids[idx]];
+                        await reorderBanners(ids);
+                        setBanners(await getBanners());
+                      }}
+                      style={{ background: "none", border: "none", cursor: idx === banners.length - 1 ? "not-allowed" : "pointer", padding: 4, color: "rgba(255,255,255,0.3)", opacity: idx === banners.length - 1 ? 0.3 : 1 }}
+                    ><ArrowDown size={14} /></button>
+                    {/* Toggle active */}
+                    <button type="button"
+                      onClick={async () => {
+                        await updateBanner(b.id, { isActive: !b.isActive });
+                        setBanners(await getBanners());
+                      }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: b.isActive ? "#4ade80" : "rgba(255,255,255,0.25)" }}
+                    >{b.isActive ? <Eye size={14} /> : <EyeOff size={14} />}</button>
+                    {/* Delete */}
+                    <button type="button"
+                      onClick={async () => {
+                        if (confirm("Bu banner'ı silmek istediğinize emin misiniz?")) {
+                          await deleteBanner(b.id);
+                          setBanners(await getBanners());
+                        }
+                      }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(255,68,68,0.5)" }}
+                    ><Trash2 size={14} /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(255,255,255,0.25)", fontSize: 12 }}>
+              Henüz banner eklenmemiş.
+            </div>
+          )}
         </div>
 
         {/* 2.5 Hero Arka Plan */}
