@@ -296,9 +296,9 @@ export default function ReservationsPage() {
                             overflow: "hidden", textOverflow: "ellipsis",
                             transition: "all 0.15s",
                           }}
-                          title={`${r.venueName || r.packages.map(p => p.name).join(", ")}`}
+                          title={r.venueName || ""}
                         >
-                          {r.eventTime ? `${r.eventTime.split('-')[0]} ` : ""}{r.venueName || r.packages.map(p => p.name).join(", ") || "-"}
+                          {r.eventTime ? `${r.eventTime.split('-')[0]} ` : ""}{r.venueName || "-"}
                         </div>
                       );
                     })}
