@@ -635,59 +635,95 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
               Bu paket için gerekli bilgileri doldurun, ardından sepetinize ekleyin.
             </p>
 
-            {/* Date */}
+            {/* Date — Custom inline calendar for selected month only */}
             <div style={{ marginBottom: "24px", maxWidth: "100%", overflow: "hidden" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
                 <Calendar size={14} style={{ color: "rgba(255,255,255,0.25)" }} />
                 <span style={S.label}>Etkinlik Tarihi *</span>
-                <span style={{ fontSize: "10px", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 6, marginLeft: "auto" }}>
-                  Sadece {MF[month - 1]} {year}
-                </span>
               </div>
+
+              {/* Month header */}
+              <div style={{ textAlign: "center", marginBottom: "12px", fontSize: "14px", fontWeight: 700, color: "#fff" }}>
+                {MF[month - 1]} {year}
+              </div>
+
+              {/* Day-of-week headers */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "4px", marginBottom: "6px" }}>
+                {["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"].map(d => (
+                  <div key={d} style={{ textAlign: "center", fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.25)", padding: "4px 0" }}>{d}</div>
+                ))}
+              </div>
+
+              {/* Day cells */}
               {(() => {
-                // Lock date picker to the selected month/year
                 const y = year;
                 const m = month;
-                const firstDay = `${y}-${String(m).padStart(2, '0')}-01`;
-                const lastDay = new Date(y, m, 0).getDate();
-                const lastDayStr = `${y}-${String(m).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
-                const targetDate = new Date();
-                targetDate.setDate(targetDate.getDate() + 2);
-                const bookableLimit = targetDate.toISOString().split('T')[0];
-                const minDate = firstDay > bookableLimit ? firstDay : bookableLimit;
-                return (
-                  <>
-                    <input type="date" value={detailForm.date}
-                      min={minDate}
-                      max={lastDayStr}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        // Validate: reject if outside selected month/year
-                        if (val) {
-                          const parts = val.split('-');
-                          const selectedYear = parseInt(parts[0], 10);
-                          const selectedMonth = parseInt(parts[1], 10);
-                          if (selectedYear !== y || selectedMonth !== m) {
-                            // Reset — user picked outside allowed range
-                            setDetailForm(p => ({ ...p, date: "", time: "" }));
-                            return;
-                          }
+                const totalDays = new Date(y, m, 0).getDate();
+                // Day of week for 1st of month (0=Sun, convert to Mon-start: Mon=0..Sun=6)
+                const firstDow = new Date(y, m - 1, 1).getDay();
+                const startOffset = firstDow === 0 ? 6 : firstDow - 1; // Mon-based offset
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const minBookable = new Date();
+                minBookable.setDate(minBookable.getDate() + 2);
+                minBookable.setHours(0, 0, 0, 0);
+
+                const cells = [];
+                // Empty cells before 1st
+                for (let i = 0; i < startOffset; i++) {
+                  cells.push(<div key={`e${i}`} />);
+                }
+                // Day cells
+                for (let day = 1; day <= totalDays; day++) {
+                  const dateObj = new Date(y, m - 1, day);
+                  const dateStr = `${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                  const isPast = dateObj < minBookable;
+                  const isSelected = detailForm.date === dateStr;
+                  const isSunday = dateObj.getDay() === 0;
+
+                  cells.push(
+                    <button
+                      key={day}
+                      disabled={isPast}
+                      onClick={() => {
+                        if (!isPast) {
+                          setDetailForm(p => ({ ...p, date: dateStr, time: "" }));
                         }
-                        setDetailForm(p => ({ ...p, date: val, time: "" }));
                       }}
-                      style={{ ...S.input, colorScheme: "dark", maxWidth: "100%", boxSizing: "border-box" }}
-                    />
-                    {detailForm.date && (() => {
-                      const parts = detailForm.date.split('-');
-                      const selMonth = parseInt(parts[1], 10);
-                      if (selMonth !== m) {
-                        return <p style={{ fontSize: "11px", color: "#ef4444", marginTop: 6 }}>⚠️ Sadece {MF[m - 1]} {y} ayını seçebilirsiniz.</p>;
-                      }
-                      return null;
-                    })()}
-                  </>
+                      style={{
+                        aspectRatio: "1",
+                        borderRadius: "10px",
+                        border: isSelected ? "2px solid #fff" : "1px solid rgba(255,255,255,0.06)",
+                        background: isSelected ? "#fff" : isPast ? "transparent" : "rgba(255,255,255,0.03)",
+                        color: isSelected ? "#000" : isPast ? "rgba(255,255,255,0.12)" : isSunday ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.7)",
+                        fontSize: "13px",
+                        fontWeight: isSelected ? 800 : 600,
+                        cursor: isPast ? "not-allowed" : "pointer",
+                        transition: "all 0.15s",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: 0,
+                      }}
+                    >
+                      {day}
+                    </button>
+                  );
+                }
+
+                return (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "4px" }}>
+                    {cells}
+                  </div>
                 );
               })()}
+
+              {/* Selected date display */}
+              {detailForm.date && (
+                <div style={{ marginTop: "12px", textAlign: "center", fontSize: "13px", fontWeight: 600, color: "#fff", padding: "8px", background: "rgba(255,255,255,0.04)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  📅 {new Date(detailForm.date).toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+                </div>
+              )}
             </div>
 
             {/* Time Slot Selection */}
