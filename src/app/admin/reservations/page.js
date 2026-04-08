@@ -1466,28 +1466,73 @@ export default function ReservationsPage() {
                   );
                 })()}
 
-                {/* ── İş Akışı ── */}
+                {/* ── İş Akışı (Progress Bar) ── */}
                 <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>⚙️ İş Akışı</div>
-                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", padding: "12px 14px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)" }}>CRM Durumu</span>
-                    <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "#4ade80" }}>{wfLabels[r.workflowStatus] || r.workflowStatus}</span>
-                  </div>
-                  {r.deliveryLink && (
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)" }}>Teslimat Linki</span>
-                      <a href={r.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.72rem", color: "#60a5fa", textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
-                        <ExternalLink size={11} /> Aç
-                      </a>
+                {(() => {
+                  const wfSteps = [
+                    { id: "PENDING", title: "Bekleniyor", desc: "Çekim Günü" },
+                    { id: "EDITING", title: "Düzenleniyor", desc: "Fotoğraf İşleme" },
+                    { id: "SELECTION_PENDING", title: "Seçim", desc: "Müşteri Seçimi" },
+                    { id: "PREPARING", title: "Hazırlanıyor", desc: "Proje Hazırlık" },
+                    { id: "COMPLETED", title: "Teslim Edildi", desc: "Tamamlandı" },
+                  ];
+                  // Map legacy statuses
+                  const mappedStatus = r.workflowStatus === "SHOT_DONE" ? "EDITING" : r.workflowStatus === "ALBUM_PREPARING" ? "PREPARING" : r.workflowStatus === "DELIVERED" ? "COMPLETED" : r.workflowStatus;
+                  const currentIdx = wfSteps.findIndex(s => s.id === mappedStatus);
+
+                  return (
+                    <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", padding: "16px 14px" }}>
+                      {/* Progress Bar */}
+                      <div style={{ position: "relative", display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+                        {/* Background line */}
+                        <div style={{ position: "absolute", top: 11, left: "10%", right: "10%", height: 2, background: "rgba(255,255,255,0.08)", borderRadius: 1 }} />
+                        {/* Active line */}
+                        <div style={{ position: "absolute", top: 11, left: "10%", height: 2, background: "rgba(74,222,128,0.6)", borderRadius: 1, transition: "all 0.5s", width: currentIdx >= 0 ? `${(currentIdx / 4) * 80}%` : "0%" }} />
+
+                        {wfSteps.map((step, idx) => {
+                          const isCompleted = currentIdx > idx;
+                          const isCurrent = currentIdx === idx;
+                          return (
+                            <div key={step.id} style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, textAlign: "center", flex: 1 }}>
+                              <div style={{
+                                width: 22, height: 22, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.55rem", fontWeight: 800, transition: "all 0.3s",
+                                ...(isCompleted ? { background: "#4ade80", color: "#000" } :
+                                  isCurrent ? { background: "#fff", color: "#000", boxShadow: "0 0 10px rgba(255,255,255,0.3)" } :
+                                  { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.3)" })
+                              }}>
+                                {isCompleted ? "✓" : (idx + 1)}
+                              </div>
+                              <div style={{ fontSize: "0.55rem", fontWeight: isCurrent ? 800 : 600, color: isCurrent ? "#fff" : isCompleted ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.25)", lineHeight: 1.2 }}>
+                                {step.title}
+                              </div>
+                              <div style={{ fontSize: "0.45rem", color: "rgba(255,255,255,0.2)", lineHeight: 1.1 }}>
+                                {step.desc}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Delivery info */}
+                      <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 10, display: "flex", flexDirection: "column", gap: 6 }}>
+                        {r.deliveryLink && (
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.5)" }}>Teslimat Linki</span>
+                            <a href={r.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.68rem", color: "#60a5fa", textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
+                              <ExternalLink size={11} /> Aç
+                            </a>
+                          </div>
+                        )}
+                        {r.deliveryDate && (
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.5)" }}>Teslim Tarihi</span>
+                            <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "#fff" }}>{new Date(r.deliveryDate).toLocaleDateString('tr-TR')}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
-                  {r.deliveryDate && (
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)" }}>Teslim Tarihi</span>
-                      <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "#fff" }}>{new Date(r.deliveryDate).toLocaleDateString('tr-TR')}</span>
-                    </div>
-                  )}
-                </div>
+                  );
+                })()}
 
                 {/* ── Fotoğraf Seçimi ── */}
                 {r.selectedPhotos && (
