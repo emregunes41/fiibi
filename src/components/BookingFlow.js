@@ -311,7 +311,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
   //  RENDER
   // ──────────────────────────────────────
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
 
       {/* Step bar */}
       <div style={{ display: "flex", gap: "8px", marginBottom: "48px" }}>
@@ -617,7 +617,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
               padding: "20px", borderRadius: "16px", marginBottom: "32px",
               border: "1px solid rgba(255,255,255,0.08)",
               background: `linear-gradient(135deg, ${CATS.find(c => c.value === cat)?.color || "#888"}12 0%, transparent 60%)`,
-              display: "flex", alignItems: "center", justifyContent: "space-between",
+              display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12,
             }}>
               <div>
                 <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: CATS.find(c => c.value === cat)?.color, opacity: 0.7, marginBottom: "4px" }}>
@@ -636,10 +636,13 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
             </p>
 
             {/* Date */}
-            <div style={{ marginBottom: "24px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+            <div style={{ marginBottom: "24px", maxWidth: "100%", overflow: "hidden" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", flexWrap: "wrap" }}>
                 <Calendar size={14} style={{ color: "rgba(255,255,255,0.25)" }} />
                 <span style={S.label}>Etkinlik Tarihi *</span>
+                <span style={{ fontSize: "10px", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 6, marginLeft: "auto" }}>
+                  Sadece {MF[month - 1]} {year}
+                </span>
               </div>
               {(() => {
                 // Lock date picker to the selected month/year
@@ -653,12 +656,36 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                 const bookableLimit = targetDate.toISOString().split('T')[0];
                 const minDate = firstDay > bookableLimit ? firstDay : bookableLimit;
                 return (
-                  <input type="date" value={detailForm.date}
-                    min={minDate}
-                    max={lastDayStr}
-                    onChange={(e) => setDetailForm(p => ({ ...p, date: e.target.value, time: "" }))}
-                    style={{ ...S.input, colorScheme: "dark" }}
-                  />
+                  <>
+                    <input type="date" value={detailForm.date}
+                      min={minDate}
+                      max={lastDayStr}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        // Validate: reject if outside selected month/year
+                        if (val) {
+                          const parts = val.split('-');
+                          const selectedYear = parseInt(parts[0], 10);
+                          const selectedMonth = parseInt(parts[1], 10);
+                          if (selectedYear !== y || selectedMonth !== m) {
+                            // Reset — user picked outside allowed range
+                            setDetailForm(p => ({ ...p, date: "", time: "" }));
+                            return;
+                          }
+                        }
+                        setDetailForm(p => ({ ...p, date: val, time: "" }));
+                      }}
+                      style={{ ...S.input, colorScheme: "dark", maxWidth: "100%", boxSizing: "border-box" }}
+                    />
+                    {detailForm.date && (() => {
+                      const parts = detailForm.date.split('-');
+                      const selMonth = parseInt(parts[1], 10);
+                      if (selMonth !== m) {
+                        return <p style={{ fontSize: "11px", color: "#ef4444", marginTop: 6 }}>⚠️ Sadece {MF[m - 1]} {y} ayını seçebilirsiniz.</p>;
+                      }
+                      return null;
+                    })()}
+                  </>
                 );
               })()}
             </div>
