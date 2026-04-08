@@ -143,7 +143,7 @@ export default function ReservationsPage() {
   };
 
   return (
-    <div style={{ color: "#fff" }}>
+    <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", gap: "0.75rem", flexWrap: "wrap" }}>
         <div>
@@ -232,7 +232,7 @@ export default function ReservationsPage() {
         return (
           <div>
             {/* Month Navigation */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <button onClick={prevMonth} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "6px 8px", cursor: "pointer", color: "rgba(255,255,255,0.5)", display: "flex" }}>
                   <ChevronLeft size={14} />
@@ -264,9 +264,9 @@ export default function ReservationsPage() {
             </div>
 
             {/* Calendar Grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2, overflowX: "hidden" }}>
               {cells.map((day, idx) => {
-                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 70, background: "rgba(255,255,255,0.01)", borderRadius: 6 }} />;
+                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 55, background: "rgba(255,255,255,0.01)", borderRadius: 6 }} />;
                 
                 const dayRes = resByDay[day] || [];
                 const hasRes = dayRes.length > 0;
@@ -278,7 +278,7 @@ export default function ReservationsPage() {
                     setQuickEventForm({ venueName: "", eventDate: dateStr, startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
                     setQuickEventModal(true);
                   }} style={{
-                    minHeight: 70, borderRadius: 6, padding: "4px 5px",
+                    minHeight: 55, borderRadius: 6, padding: "3px 4px",
                     background: todayStyle ? "rgba(59,130,246,0.08)" : hasRes ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
                     border: todayStyle ? "1px solid rgba(59,130,246,0.25)" : "1px solid rgba(255,255,255,0.04)",
                     cursor: "pointer",
@@ -1042,7 +1042,7 @@ export default function ReservationsPage() {
 
         return (
           <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-            <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "1rem", width: "100%", maxWidth: "520px", padding: "0", margin: "2rem 0", overflow: "hidden" }}>
+            <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "1rem", width: "100%", maxWidth: "520px", padding: "0", margin: "2rem 0", overflow: "hidden", maxHeight: "90vh", overflowY: "auto" }}>
               
               {/* Header */}
               <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
