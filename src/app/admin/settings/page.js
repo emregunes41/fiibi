@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode } from "../core-actions";
 import { getBanners, createBanner, updateBanner, deleteBanner, reorderBanners } from "../banner-actions";
+import { sendTestSMS } from "../test-sms-action";
 import { CldUploadWidget } from "next-cloudinary";
 import { 
   Save, Home, Phone, Mail, Instagram, MessageCircle, MapPin,
@@ -64,6 +65,11 @@ export default function SettingsPage() {
   const [bannerUploading, setBannerUploading] = useState(false);
   const [pendingBannerUrl, setPendingBannerUrl] = useState("");
   const [pendingMediaType, setPendingMediaType] = useState("image");
+
+  // SMS Test
+  const [testPhone, setTestPhone] = useState("");
+  const [testSmsResult, setTestSmsResult] = useState(null);
+  const [testSmsLoading, setTestSmsLoading] = useState(false);
 
   useEffect(() => {
     async function loadConfig() {
@@ -288,7 +294,11 @@ export default function SettingsPage() {
                   border: `1px solid ${b.isActive ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)"}`,
                   opacity: b.isActive ? 1 : 0.5,
                 }}>
-                  <img src={b.imageUrl} alt="" style={{ width: 80, height: 40, objectFit: "cover", borderRadius: 8, flexShrink: 0 }} />
+                  {b.mediaType === "video" ? (
+                    <video src={b.imageUrl} muted playsInline style={{ width: 80, height: 40, objectFit: "cover", borderRadius: 8, flexShrink: 0 }} />
+                  ) : (
+                    <img src={b.imageUrl} alt="" style={{ width: 80, height: 40, objectFit: "cover", borderRadius: 8, flexShrink: 0 }} />
+                  )}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                       <span style={{ fontSize: 10, padding: "1px 5px", borderRadius: 4, background: b.mediaType === "video" ? "rgba(96,165,250,0.15)" : "rgba(255,255,255,0.06)", color: b.mediaType === "video" ? "#60a5fa" : "rgba(255,255,255,0.4)", fontWeight: 800 }}>
@@ -669,6 +679,62 @@ export default function SettingsPage() {
               <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 10, lineHeight: 1.6 }}>
                 📖 <a href="https://www.netgsm.com.tr" target="_blank" rel="noopener" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "underline" }}>netgsm.com.tr</a> → Ayarlar → API Bilgileri bölümünden alabilirsiniz.
               </p>
+            </div>
+          )}
+
+          {/* SMS Test Butonu */}
+          {config.smsEnabled && config.netgsmUsercode && (
+            <div style={{
+              background: "rgba(74,222,128,0.03)", border: "1px solid rgba(74,222,128,0.12)",
+              borderRadius: 12, padding: 16, marginBottom: 12,
+            }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>
+                📱 SMS Test
+              </div>
+              <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
+                <div style={{ flex: 1 }}>
+                  <label style={label}>Telefon Numarası</label>
+                  <input
+                    type="tel"
+                    value={testPhone}
+                    onChange={(e) => setTestPhone(e.target.value)}
+                    placeholder="05XX XXX XX XX"
+                    style={inp}
+                  />
+                </div>
+                <button
+                  type="button"
+                  disabled={!testPhone.trim() || testSmsLoading}
+                  onClick={async () => {
+                    setTestSmsLoading(true);
+                    setTestSmsResult(null);
+                    const res = await sendTestSMS(testPhone.trim());
+                    setTestSmsResult(res);
+                    setTestSmsLoading(false);
+                  }}
+                  style={{
+                    padding: "10px 18px", borderRadius: 10, border: "none", flexShrink: 0,
+                    background: testPhone.trim() && !testSmsLoading ? "#4ade80" : "rgba(255,255,255,0.06)",
+                    color: testPhone.trim() && !testSmsLoading ? "#000" : "rgba(255,255,255,0.3)",
+                    fontWeight: 800, fontSize: 11, cursor: testPhone.trim() && !testSmsLoading ? "pointer" : "not-allowed",
+                    height: 42,
+                  }}
+                >
+                  {testSmsLoading ? "Gönderiliyor..." : "Test SMS Gönder"}
+                </button>
+              </div>
+              {testSmsResult && (
+                <div style={{
+                  marginTop: 10, padding: "8px 12px", borderRadius: 8, fontSize: 11, fontWeight: 600,
+                  background: testSmsResult.success ? "rgba(74,222,128,0.1)" : "rgba(255,68,68,0.1)",
+                  color: testSmsResult.success ? "#4ade80" : "#ff6b6b",
+                  border: `1px solid ${testSmsResult.success ? "rgba(74,222,128,0.2)" : "rgba(255,68,68,0.2)"}`,
+                }}>
+                  {testSmsResult.success
+                    ? "✅ SMS başarıyla gönderildi!"
+                    : `❌ Hata: ${testSmsResult.error}`}
+                </div>
+              )}
             </div>
           )}
 

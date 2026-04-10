@@ -279,7 +279,7 @@ export default function GalleryClient({ categories }) {
             marginBottom: "0.75rem",
             lineHeight: 1.15,
           }}>
-            Çekimlerimizden <span style={{ color: "rgba(255,255,255,0.5)" }}>Kareler</span>
+            Portfolyo
           </h2>
         </div>
 

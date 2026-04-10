@@ -27,6 +27,14 @@ export default function AIChatBot() {
     }
   }, [isOpen]);
 
+  // Lock body scroll when chat is open (mobile)
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [isOpen]);
+
   // Send initial greeting when first opened
   useEffect(() => {
     if (isOpen && !hasGreeted && messages.length === 0) {
@@ -69,7 +77,6 @@ export default function AIChatBot() {
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
 
-    // Only send role + content to API (strip suggestedPackage)
     const apiMessages = newMessages.map(m => ({ role: m.role, content: m.content }));
     await fetchAIReply(apiMessages);
   };
@@ -126,30 +133,27 @@ export default function AIChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="chatbot-window"
             style={{
               position: "fixed",
-              bottom: 24,
-              right: 16,
-              width: "min(380px, calc(100vw - 32px))",
-              height: "min(600px, calc(100vh - 48px))",
-              borderRadius: 20,
-              background: "#0a0a0f",
-              border: "1px solid rgba(255,255,255,0.1)",
+              zIndex: 5000,
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
-              zIndex: 5000,
+              background: "#0a0a0f",
+              border: "1px solid rgba(255,255,255,0.1)",
               boxShadow: "0 8px 48px rgba(0,0,0,0.6), 0 0 80px rgba(255,255,255,0.03)",
             }}
           >
             {/* Header */}
             <div style={{
-              padding: "16px 20px",
+              padding: "14px 16px",
               borderBottom: "1px solid rgba(255,255,255,0.08)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
               background: "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%)",
+              flexShrink: 0,
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{
@@ -189,10 +193,13 @@ export default function AIChatBot() {
               style={{
                 flex: 1,
                 overflowY: "auto",
-                padding: "16px 16px 8px",
+                overflowX: "hidden",
+                padding: "16px 14px 8px",
                 display: "flex",
                 flexDirection: "column",
                 gap: 12,
+                WebkitOverflowScrolling: "touch",
+                minHeight: 0,
               }}
             >
               {messages.map((msg, i) => (
@@ -228,11 +235,11 @@ export default function AIChatBot() {
                         ? "none" 
                         : "1px solid rgba(255,255,255,0.06)",
                       whiteSpace: "pre-wrap",
+                      wordBreak: "break-word",
                     }}>
                       {msg.content}
                     </div>
                     
-                    {/* Package suggestion button */}
                     {msg.suggestedPackage && (
                       <motion.a
                         href="/booking"
@@ -272,7 +279,6 @@ export default function AIChatBot() {
                 </div>
               ))}
 
-              {/* Loading indicator */}
               {isLoading && (
                 <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                   <div style={{
@@ -312,9 +318,11 @@ export default function AIChatBot() {
 
             {/* Input */}
             <div style={{
-              padding: "12px 16px 16px",
+              padding: "10px 14px",
+              paddingBottom: "calc(10px + env(safe-area-inset-bottom, 0px))",
               borderTop: "1px solid rgba(255,255,255,0.06)",
-              background: "rgba(0,0,0,0.3)",
+              background: "rgba(0,0,0,0.5)",
+              flexShrink: 0,
             }}>
               <div style={{
                 display: "flex",
@@ -334,13 +342,14 @@ export default function AIChatBot() {
                     border: "1px solid rgba(255,255,255,0.1)",
                     borderRadius: 12,
                     padding: "12px 14px",
-                    fontSize: 13,
+                    fontSize: 16,
                     color: "#fff",
                     outline: "none",
                     resize: "none",
                     fontFamily: "inherit",
                     maxHeight: 80,
                     lineHeight: 1.4,
+                    boxSizing: "border-box",
                   }}
                 />
                 <button
@@ -363,19 +372,30 @@ export default function AIChatBot() {
                   <Send size={16} style={{ color: input.trim() && !isLoading ? "#000" : "rgba(255,255,255,0.2)" }} />
                 </button>
               </div>
-              <div style={{ 
-                textAlign: "center", 
-                fontSize: 9, 
-                color: "rgba(255,255,255,0.1)", 
-                marginTop: 8,
-                letterSpacing: "0.05em",
-              }}>
-                pinowed.com
-              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <style jsx global>{`
+        .chatbot-window {
+          bottom: 24px;
+          right: 16px;
+          width: min(380px, calc(100vw - 32px));
+          height: min(600px, calc(100vh - 48px));
+          border-radius: 20px;
+        }
+        @media (max-width: 480px) {
+          .chatbot-window {
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100dvh !important;
+            max-height: 100dvh !important;
+            border-radius: 0 !important;
+            border: none !important;
+          }
+        }
+      `}</style>
     </>
   );
 }
