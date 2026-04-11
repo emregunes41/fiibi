@@ -584,7 +584,7 @@ export async function updateReservation(id, data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds = [], notes, selectedAddons = [], totalAmount = "", venueName } = data;
+    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds = [], notes, selectedAddons = [], customFieldAnswers, totalAmount = "", venueName } = data;
     
     const packagesData = packageIds.length > 0 ? await prisma.photographyPackage.findMany({
       where: { id: { in: packageIds } }
@@ -594,10 +594,16 @@ export async function updateReservation(id, data) {
     const deliveryDateObj = new Date(eventDateObj);
     deliveryDateObj.setDate(deliveryDateObj.getDate() + maxDays);
 
-    // Update _eventDateISO and Etkinlik Tarihi inside customFieldAnswers
-    // so the calendar view doesn't show ghost entries at the old date
-    const existing = await prisma.reservation.findUnique({ where: { id }, select: { customFieldAnswers: true } });
-    let updatedCFA = existing?.customFieldAnswers || [];
+    // Use form's customFieldAnswers if provided, otherwise read from DB
+    let updatedCFA;
+    if (customFieldAnswers && Array.isArray(customFieldAnswers)) {
+      updatedCFA = customFieldAnswers;
+    } else {
+      const existing = await prisma.reservation.findUnique({ where: { id }, select: { customFieldAnswers: true } });
+      updatedCFA = existing?.customFieldAnswers || [];
+    }
+    
+    // Update date fields inside customFieldAnswers
     if (Array.isArray(updatedCFA) && updatedCFA.length > 0) {
       const newDateStr = eventDateObj.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric", weekday: "long" });
       updatedCFA = updatedCFA.map(a => {
