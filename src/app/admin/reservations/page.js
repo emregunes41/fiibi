@@ -1123,6 +1123,9 @@ export default function ReservationsPage() {
                   <button onClick={() => { setDetailModal({ isOpen: false, data: null }); openEditModal(r); }} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.65rem", fontWeight: 700 }}>
                     <Edit2 size={12} /> Düzenle
                   </button>
+                  <button onClick={() => { setDetailModal({ isOpen: false, data: null }); handleDeleteReservation(r.id, r.brideName); }} style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#ef4444", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.65rem", fontWeight: 700 }}>
+                    <Trash2 size={12} /> Sil
+                  </button>
                   <button onClick={() => setDetailModal({ isOpen: false, data: null })} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)", padding: "6px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
                     <X size={14} />
                   </button>
