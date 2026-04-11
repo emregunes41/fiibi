@@ -61,7 +61,7 @@ export default async function PinowedPage() {
 
       {/* 2. Banner Carousel */}
       {banners && banners.length > 0 && (
-        <section className="py-12 pb-16 border-t border-white/5">
+        <section className="py-12 pb-8 border-t border-white/5">
           <div className="section-container">
             <BannerCarousel banners={banners} />
           </div>
@@ -70,7 +70,7 @@ export default async function PinowedPage() {
 
       {/* 2.5 Content Blocks */}
       {contentBlocks && contentBlocks.filter(b => b.isActive).length > 0 && (
-        <section style={{ marginTop: 30, paddingTop: 30, paddingBottom: 60, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+        <section style={{ paddingTop: 20, paddingBottom: 40, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
           <div className="section-container">
             <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
               {contentBlocks.filter(b => b.isActive).map((block, idx) => (
