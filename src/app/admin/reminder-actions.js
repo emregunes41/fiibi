@@ -70,19 +70,36 @@ export async function resendCredentials(reservationId) {
     if (!reservation) return { success: false, error: "Rezervasyon bulunamadı" };
     if (!reservation.brideEmail) return { success: false, error: "E-posta adresi yok" };
 
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { email: reservation.brideEmail }
     });
-    if (!user) return { success: false, error: "Bu e-posta ile kayıtlı kullanıcı bulunamadı" };
 
     // Yeni şifre oluştur
     const newPassword = Math.random().toString(36).slice(-8);
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { password: hashedPassword }
-    });
+
+    if (!user) {
+      // Kullanıcı yoksa otomatik oluştur
+      user = await prisma.user.create({
+        data: {
+          name: reservation.brideName,
+          email: reservation.brideEmail,
+          phone: reservation.bridePhone,
+          password: hashedPassword,
+          role: "MEMBER"
+        }
+      });
+      // Rezervasyonu bu kullanıcıya bağla
+      await prisma.reservation.update({
+        where: { id: reservationId },
+        data: { userId: user.id }
+      });
+    } else {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { password: hashedPassword }
+      });
+    }
 
     const resend = await getResendClient();
     if (!resend) return { success: false, error: "RESEND_API_KEY eksik" };
