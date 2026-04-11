@@ -70,16 +70,21 @@ export default function ContentBlockCarousel({ images }) {
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Image */}
-      <div style={{ position: "relative", width: "100%", maxHeight: 420, overflow: "hidden", display: "flex", justifyContent: "center", background: "rgba(0,0,0,0.3)" }}>
-        <img
-          key={current}
-          src={optimizeCloudinaryUrl(images[current], { width: 900 })}
-          alt=""
-          style={{
-            maxWidth: "100%", maxHeight: 420, objectFit: "contain", display: "block",
-            animation: "fadeIn 0.4s ease",
-          }}
-        />
+      <div style={{ position: "relative", width: "100%", height: 420, overflow: "hidden", background: "rgba(0,0,0,0.2)" }}>
+        {images.map((img, i) => (
+          <img
+            key={i}
+            src={optimizeCloudinaryUrl(img, { width: 900 })}
+            alt=""
+            style={{
+              position: "absolute", top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
+              maxWidth: "100%", maxHeight: 420, objectFit: "contain",
+              opacity: i === current ? 1 : 0,
+              transition: "opacity 0.5s ease",
+            }}
+          />
+        ))}
       </div>
 
       {/* Progress dots */}
