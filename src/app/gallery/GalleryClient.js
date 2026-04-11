@@ -332,6 +332,8 @@ export default function GalleryClient({ categories }) {
                       fill
                       style={{ objectFit: "cover" }}
                       sizes="(max-width: 640px) 150px, (max-width: 1024px) 200px, 300px"
+                      loading="eager"
+                      priority={i < 6}
                     />
                   ) : (
                     <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>

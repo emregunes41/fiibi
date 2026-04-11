@@ -2,17 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import { Calendar, Settings, LogOut, Menu, X } from "lucide-react";
+import { Calendar, Settings, LogOut, Home } from "lucide-react";
 import { logoutUser } from "../user-actions";
 
 export default function ProfileLayoutClient({ user, children }) {
   const pathname = usePathname();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    setSidebarOpen(false);
-  }, [pathname]);
 
   const getInitials = (name) => {
     if (!name) return "";
@@ -24,141 +18,72 @@ export default function ProfileLayoutClient({ user, children }) {
     { name: "Ayarlar", href: "/profile/settings", icon: Settings, exact: false },
   ];
 
-  const sidebarContent = (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", paddingBottom: "20px" }}>
-      <div style={{ fontWeight: 900, fontSize: "1.5rem", letterSpacing: "-0.04em", marginBottom: "2rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Link href="/" style={{ textDecoration: "none", color: "inherit", position: "relative", zIndex: 10 }}>
-          <span>PINOWED.<span style={{ color: "rgba(255,255,255,0.4)", fontSize: "1.1rem" }}>client</span></span>
-        </Link>
-        <button
-          onClick={() => setSidebarOpen(false)}
-          className="md:hidden"
-          style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: "4px" }}
-        >
-          <X size={20} />
-        </button>
-      </div>
-
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: "2rem" }}>
-        {/* Avatar */}
-        <div style={{ width: 72, height: 72, borderRadius: 0, background: "linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
-          <span style={{ fontSize: 24, fontWeight: 700, color: "rgba(255,255,255,0.85)" }}>{getInitials(user?.name)}</span>
-        </div>
-        <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{user?.name}</h2>
-        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, marginBottom: 20 }}>{user?.email}</p>
-        
-        {/* Stats */}
-        <div style={{ width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-          <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 0, padding: "12px 8px", textAlign: "center" }}>
-            <span style={{ display: "block", color: "rgba(255,255,255,0.5)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>Randevu</span>
-            <span style={{ fontSize: 20, fontWeight: 700 }}>{user?.reservations?.length || 0}</span>
-          </div>
-          <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 0, padding: "12px 8px", textAlign: "center" }}>
-            <span style={{ display: "block", color: "rgba(255,255,255,0.5)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>Puan</span>
-            <span style={{ fontSize: 20, fontWeight: 700 }}>0</span>
-          </div>
-        </div>
-      </div>
-
-      <nav style={{ display: "flex", flexDirection: "column", gap: "0.75rem", flex: 1 }}>
-        {navItems.map((item) => {
-          const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href);
-          return (
-            <Link key={item.name} href={item.href} style={{ textDecoration: "none" }}>
-              <div style={{
-                display: "flex", alignItems: "center", gap: "1rem", padding: "1rem 1.25rem", borderRadius: 0,
-                background: isActive ? "rgba(255,255,255,0.1)" : "transparent",
-                color: isActive ? "#fff" : "rgba(255,255,255,0.65)",
-                fontWeight: isActive ? 700 : 500,
-                transition: "all 0.2s",
-                border: isActive ? "1px solid rgba(255,255,255,0.1)" : "1px solid transparent"
-              }} className="hover:bg-white/5">
-                <item.icon size={20} color={isActive ? "#fff" : "rgba(255,255,255,0.5)"} />
-                {item.name}
-              </div>
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Logout */}
-      <form action={logoutUser}>
-        <button type="submit" style={{ 
-          display: "flex", alignItems: "center", gap: "1rem", padding: "1rem 1.25rem", 
-          width: "100%", background: "transparent", border: "none", color: "#FF4D4D", 
-          fontWeight: 700, cursor: "pointer", borderRadius: 0, transition: "all 0.2s",
-          marginTop: "auto", textAlign: "left"
-        }} className="hover:bg-white/80/10">
-          <LogOut size={20} /> Çıkış Yap
-        </button>
-      </form>
-    </div>
-  );
-
   return (
-    <div className="pinowed-theme" style={{ display: "flex", minHeight: "100vh", background: "#000", color: "#fff" }}>
-      
-      {/* Mobile Top Bar */}
-      <div className="md:hidden" style={{
+    <div style={{ minHeight: "100vh", background: "#000", color: "#fff" }}>
+      {/* Top Bar */}
+      <div style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
         background: "rgba(0,0,0,0.9)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
         borderBottom: "1px solid rgba(255,255,255,0.06)",
-        padding: "14px 16px",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "0 16px",
       }}>
-        <button
-          onClick={() => setSidebarOpen(true)}
-          style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", padding: "4px" }}
-        >
-          <Menu size={22} />
-        </button>
-        <Link href="/" style={{ textDecoration: "none", color: "inherit", fontWeight: 800, fontSize: "0.9rem", letterSpacing: "-0.02em" }}>
-          PINOWED<span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>.client</span>
-        </Link>
-        <div style={{ width: "30px" }} /> {/* spacer */}
+        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
+          {/* Left: Logo */}
+          <Link href="/" style={{ textDecoration: "none", color: "inherit", fontWeight: 800, fontSize: "0.9rem", letterSpacing: "-0.02em", display: "flex", alignItems: "center", gap: 8 }}>
+            <Home size={14} style={{ color: "rgba(255,255,255,0.4)" }} />
+            PINOWED
+          </Link>
+
+          {/* Center: Nav Items */}
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            {navItems.map((item) => {
+              const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href);
+              return (
+                <Link key={item.name} href={item.href} style={{
+                  textDecoration: "none", display: "flex", alignItems: "center", gap: 6,
+                  padding: "8px 14px", borderRadius: 0, fontSize: "0.72rem", fontWeight: isActive ? 700 : 500,
+                  color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
+                  background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
+                  border: isActive ? "1px solid rgba(255,255,255,0.1)" : "1px solid transparent",
+                  transition: "all 0.2s",
+                }}>
+                  <item.icon size={13} />
+                  <span className="hidden sm:inline">{item.name}</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Right: User + Logout */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ width: 28, height: 28, borderRadius: 0, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>{getInitials(user?.name)}</span>
+              </div>
+              <span className="hidden sm:block" style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)" }}>{user?.name}</span>
+            </div>
+            <form action={logoutUser}>
+              <button type="submit" style={{
+                display: "flex", alignItems: "center", gap: 5, padding: "6px 12px",
+                background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 0, color: "rgba(255,255,255,0.45)", fontSize: 11, fontWeight: 600,
+                cursor: "pointer", transition: "all 0.2s",
+              }}>
+                <LogOut size={12} /> Çıkış
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
 
-      {/* Mobile Sidebar Backdrop */}
-      {sidebarOpen && (
-        <div
-          className="md:hidden"
-          onClick={() => setSidebarOpen(false)}
-          style={{ position: "fixed", inset: 0, zIndex: 105, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
-        />
-      )}
-
-      {/* Desktop Sidebar Background */}
-      <div className="hidden md:block" style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: "280px", zIndex: 0, overflow: "hidden", borderRight: "1px solid rgba(255,255,255,0.1)" }}>
-         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.95))", zIndex: 1 }} />
-      </div>
-
-      {/* Sidebar Content */}
-      <aside
-        className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
-        style={{ 
-          width: "280px", position: "fixed", top: 0, left: 0, bottom: 0, zIndex: 110,
-          padding: "2.5rem 1.5rem", display: "flex", flexDirection: "column",
-          background: "#000", borderRight: "1px solid rgba(255,255,255,0.08)",
-          transition: "transform 0.3s ease", overflowY: "auto",
-        }}
-      >
-        {sidebarContent}
-      </aside>
-
-      {/* Desktop sidebar spacer */}
-      <div className="hidden md:block" style={{ width: "280px", flexShrink: 0 }} />
-
-      {/* Main Content Area */}
-      <main style={{ flex: 1, position: "relative", zIndex: 5, overflowY: "auto", overflowX: "hidden", background: "rgba(255,255,255,0.03)", minWidth: 0 }}>
-        {/* Mobile top padding */}
-        <div className="md:hidden" style={{ height: "76px" }} />
-        <div style={{ padding: "clamp(16px, 4vw, 56px)", maxWidth: "1200px", margin: "0 auto", marginTop: "20px" }}>
+      {/* Main Content */}
+      <main style={{ paddingTop: 56, minHeight: "100vh", background: "rgba(255,255,255,0.02)" }}>
+        <div style={{ padding: "clamp(16px, 4vw, 56px)", maxWidth: 1200, margin: "0 auto", marginTop: 20 }}>
           {children}
-          {/* Mobile Bottom Spacer for Global CTA */}
+          {/* Mobile Bottom Spacer */}
           <div className="md:hidden" style={{ height: "120px" }} />
         </div>
       </main>
-
     </div>
   );
 }

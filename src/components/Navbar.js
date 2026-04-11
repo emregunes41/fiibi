@@ -27,6 +27,8 @@ export default function Navbar() {
         const session = await res.json();
         if (session && session.user) {
           setUser(session.user);
+        } else {
+          setUser(null);
         }
       } catch (err) {
         console.error("Session fetch error:", err);
