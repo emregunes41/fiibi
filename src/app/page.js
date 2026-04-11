@@ -70,7 +70,7 @@ export default async function PinowedPage() {
 
       {/* 2.5 Content Blocks */}
       {contentBlocks && contentBlocks.filter(b => b.isActive).length > 0 && (
-        <section className="py-16 border-t border-white/5">
+        <section className="pt-20 pb-16 border-t border-white/5">
           <div className="section-container">
             <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
               {contentBlocks.filter(b => b.isActive).map((block, idx) => (
