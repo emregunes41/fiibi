@@ -301,7 +301,7 @@ export default function ReservationsPage() {
                     <div style={{ fontSize: "0.7rem", fontWeight: todayStyle ? 800 : 600, color: todayStyle ? "rgba(255,255,255,0.5)" : hasRes ? "#fff" : "rgba(255,255,255,0.3)", marginBottom: 3 }}>
                       {day}
                     </div>
-                    {dayRes.slice(0, 3).map((r) => {
+                    {dayRes.slice(0, dayRes.length <= 3 ? 3 : 2).map((r) => {
                       const sc = statusColor(r.status);
                       return (
                         <div
@@ -336,7 +336,7 @@ export default function ReservationsPage() {
                         const rect = e.currentTarget.getBoundingClientRect();
                         setDayPopup({ day, reservations: dayRes, x: rect.left, y: rect.bottom + 4 });
                       }} style={{ fontSize: "0.48rem", color: "rgba(34,197,94,0.8)", fontWeight: 700, paddingLeft: 2, cursor: "pointer" }}>
-                        +{dayRes.length - 3} daha
+                        +{dayRes.length - 2} daha
                       </div>
                     )}
                   </div>
