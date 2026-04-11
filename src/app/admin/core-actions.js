@@ -7,9 +7,6 @@ import { requireAdmin, getServerAuthSession } from "@/lib/session";
 import { sendWelcomeEmail } from "../actions/send-welcome";
 import { notifyReservationReceived, notifyReservationConfirmed, notifyManualReservationCreated } from "../actions/notify";
 import { sendDriveLinkEmail } from "../actions/send-drive-link";
-import fs from "fs/promises";
-import path from "path";
-import crypto from "crypto";
 
 export async function uploadAlbumImage(formData) {
   
@@ -29,22 +26,29 @@ export async function uploadAlbumImage(formData) {
       return { error: "Dosya boyutu çok büyük (Maks 5MB)." };
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    // Upload to Cloudinary
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    if (!cloudName || !uploadPreset) {
+      return { error: "Cloudinary yapılandırması eksik." };
+    }
 
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'albums');
-    await fs.mkdir(uploadDir, { recursive: true });
+    const cloudinaryForm = new FormData();
+    cloudinaryForm.append('file', file);
+    cloudinaryForm.append('upload_preset', uploadPreset);
+    cloudinaryForm.append('folder', 'albums');
 
-    // Enforce safe extension based on mime type
-    const extRaw = file.type.split('/')[1]; 
-    const ext = `.${extRaw === 'jpeg' ? 'jpg' : extRaw}`;
-    
-    const filename = `${crypto.randomBytes(16).toString('hex')}${ext}`;
-    const filepath = path.join(uploadDir, filename);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+      method: 'POST',
+      body: cloudinaryForm,
+    });
 
-    await fs.writeFile(filepath, buffer);
-    
-    return { success: true, url: `/uploads/albums/${filename}` };
+    const result = await res.json();
+    if (result.error) {
+      return { error: result.error.message };
+    }
+
+    return { success: true, url: result.secure_url };
   } catch (err) {
     return { error: err.message };
   }
@@ -68,22 +72,32 @@ export async function uploadHeroBg(formData) {
       return { error: "Dosya boyutu çok büyük (Maks 25MB)." };
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    // Upload to Cloudinary
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    if (!cloudName || !uploadPreset) {
+      return { error: "Cloudinary yapılandırması eksik." };
+    }
 
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'hero');
-    await fs.mkdir(uploadDir, { recursive: true });
+    const isVideo = file.type.startsWith('video/');
+    const resourceType = isVideo ? 'video' : 'image';
 
-    // Enforce safe extension
-    const extRaw = file.type.split('/')[1];
-    const ext = `.${extRaw === 'jpeg' ? 'jpg' : extRaw}`;
-    
-    const filename = `hero_bg_${Date.now()}${ext}`; // Avoid caching issues by adding timestamp
-    const filepath = path.join(uploadDir, filename);
+    const cloudinaryForm = new FormData();
+    cloudinaryForm.append('file', file);
+    cloudinaryForm.append('upload_preset', uploadPreset);
+    cloudinaryForm.append('folder', 'hero');
 
-    await fs.writeFile(filepath, buffer);
-    
-    return { success: true, url: `/uploads/hero/${filename}` };
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
+      method: 'POST',
+      body: cloudinaryForm,
+    });
+
+    const result = await res.json();
+    if (result.error) {
+      return { error: result.error.message };
+    }
+
+    return { success: true, url: result.secure_url };
   } catch (err) {
     return { error: err.message };
   }
