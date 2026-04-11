@@ -61,7 +61,7 @@ export default async function PinowedPage() {
 
       {/* 2. Banner Carousel */}
       {banners && banners.length > 0 && (
-        <section className="py-12 pb-4 border-t border-white/5">
+        <section className="py-12 pb-16 border-t border-white/5">
           <div className="section-container">
             <BannerCarousel banners={banners} />
           </div>
