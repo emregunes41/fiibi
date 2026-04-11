@@ -74,7 +74,7 @@ export default function SettingsPage() {
 
   // Content Blocks
   const [contentBlocks, setContentBlocks] = useState([]);
-  const [cbForm, setCbForm] = useState({ title: "", description: "", imageUrl: "" });
+  const [cbForm, setCbForm] = useState({ title: "", description: "", imageUrls: [] });
   const [cbUploading, setCbUploading] = useState(false);
 
   useEffect(() => {
@@ -1082,12 +1082,17 @@ export default function SettingsPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
             {contentBlocks.map((cb) => (
               <div key={cb.id} style={{ display: "flex", gap: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: 12, alignItems: "center" }}>
-                {cb.imageUrl && (
-                  <img src={cb.imageUrl} alt="" style={{ width: 60, height: 60, objectFit: "cover", flexShrink: 0 }} />
+                {cb.imageUrls && cb.imageUrls.length > 0 && (
+                  <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+                    {cb.imageUrls.slice(0, 3).map((url, i) => (
+                      <img key={i} src={url} alt="" style={{ width: 40, height: 40, objectFit: "cover" }} />
+                    ))}
+                    {cb.imageUrls.length > 3 && <span style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", alignSelf: "center" }}>+{cb.imageUrls.length - 3}</span>}
+                  </div>
                 )}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{cb.title || "(Başlıksız)"}</div>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cb.description || ""}</div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cb.description || ""} — {cb.imageUrls?.length || 0} görsel</div>
                 </div>
                 <button onClick={async () => {
                   if (!confirm("Bu bloğu silmek istediğinize emin misiniz?")) return;
@@ -1103,44 +1108,52 @@ export default function SettingsPage() {
 
         {/* Add new block */}
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-            <div>
-              <label style={label}>Başlık</label>
-              <input value={cbForm.title} onChange={e => setCbForm(p => ({ ...p, title: e.target.value }))} placeholder="Bölüm başlığı" style={inp} />
-            </div>
-            <div>
-              <label style={label}>Görsel</label>
-              <CldUploadWidget
-                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                options={{ maxFiles: 1, resourceType: "image" }}
-                onSuccess={(result) => {
-                  setCbForm(p => ({ ...p, imageUrl: result.info.secure_url }));
-                }}
-              >
-                {({ open }) => (
-                  <button type="button" onClick={() => open()} style={{ ...inp, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: cbForm.imageUrl ? "#4ade80" : "rgba(255,255,255,0.5)" }}>
-                    <UploadCloud size={14} />
-                    {cbForm.imageUrl ? "✓ Yüklendi" : "Görsel Yükle"}
-                  </button>
-                )}
-              </CldUploadWidget>
-            </div>
+          <div>
+            <label style={label}>Başlık</label>
+            <input value={cbForm.title} onChange={e => setCbForm(p => ({ ...p, title: e.target.value }))} placeholder="Bölüm başlığı" style={inp} />
+          </div>
+          <div>
+            <label style={label}>Görseller ({cbForm.imageUrls.length} yüklendi)</label>
+            {cbForm.imageUrls.length > 0 && (
+              <div style={{ display: "flex", gap: 6, marginBottom: 8, flexWrap: "wrap" }}>
+                {cbForm.imageUrls.map((url, i) => (
+                  <div key={i} style={{ position: "relative", width: 56, height: 56 }}>
+                    <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <button onClick={() => setCbForm(p => ({ ...p, imageUrls: p.imageUrls.filter((_, idx) => idx !== i) }))} style={{ position: "absolute", top: -4, right: -4, width: 16, height: 16, borderRadius: "50%", background: "#ef4444", border: "none", color: "#fff", fontSize: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1, padding: 0 }}>×</button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <CldUploadWidget
+              uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+              options={{ maxFiles: 10, resourceType: "image" }}
+              onSuccess={(result) => {
+                setCbForm(p => ({ ...p, imageUrls: [...p.imageUrls, result.info.secure_url] }));
+              }}
+            >
+              {({ open }) => (
+                <button type="button" onClick={() => open()} style={{ ...inp, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.5)" }}>
+                  <UploadCloud size={14} />
+                  Görsel Ekle
+                </button>
+              )}
+            </CldUploadWidget>
           </div>
           <div>
             <label style={label}>Açıklama</label>
             <textarea value={cbForm.description} onChange={e => setCbForm(p => ({ ...p, description: e.target.value }))} placeholder="Bu bölümde anlatmak istediğiniz metin..." rows={3} style={{ ...inp, resize: "vertical" }} />
           </div>
-          <button type="button" disabled={cbUploading || (!cbForm.title && !cbForm.imageUrl)} onClick={async () => {
+          <button type="button" disabled={cbUploading || (!cbForm.title && cbForm.imageUrls.length === 0)} onClick={async () => {
             setCbUploading(true);
             await createContentBlock(cbForm);
-            setCbForm({ title: "", description: "", imageUrl: "" });
+            setCbForm({ title: "", description: "", imageUrls: [] });
             setContentBlocks(await getContentBlocks());
             setCbUploading(false);
           }} style={{
             padding: "12px 20px", borderRadius: 0, border: "none",
-            background: (cbForm.title || cbForm.imageUrl) ? "#22c55e" : "rgba(255,255,255,0.06)",
-            color: (cbForm.title || cbForm.imageUrl) ? "#000" : "rgba(255,255,255,0.3)",
-            fontWeight: 800, fontSize: 12, cursor: (cbForm.title || cbForm.imageUrl) ? "pointer" : "not-allowed",
+            background: (cbForm.title || cbForm.imageUrls.length > 0) ? "#22c55e" : "rgba(255,255,255,0.06)",
+            color: (cbForm.title || cbForm.imageUrls.length > 0) ? "#000" : "rgba(255,255,255,0.3)",
+            fontWeight: 800, fontSize: 12, cursor: (cbForm.title || cbForm.imageUrls.length > 0) ? "pointer" : "not-allowed",
             display: "flex", alignItems: "center", gap: 8, width: "fit-content",
           }}>
             <Plus size={14} /> {cbUploading ? "Ekleniyor..." : "Blok Ekle"}

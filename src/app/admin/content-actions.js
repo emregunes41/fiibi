@@ -16,7 +16,7 @@ export async function createContentBlock(data) {
       data: {
         title: data.title || "",
         description: data.description || "",
-        imageUrl: data.imageUrl || "",
+        imageUrls: data.imageUrls || [],
         order: (maxOrder._max.order ?? -1) + 1,
       },
     });
@@ -35,7 +35,7 @@ export async function updateContentBlock(id, data) {
       data: {
         title: data.title,
         description: data.description,
-        imageUrl: data.imageUrl,
+        imageUrls: data.imageUrls,
         isActive: data.isActive,
       },
     });

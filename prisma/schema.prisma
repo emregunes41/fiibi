@@ -275,7 +275,7 @@ model ContentBlock {
   id          String   @id @default(cuid())
   title       String?
   description String?
-  imageUrl    String?
+  imageUrls   String[]
   order       Int      @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
