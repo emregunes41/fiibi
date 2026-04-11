@@ -148,11 +148,11 @@ export default function ReservationsPage() {
     return m[s] || s;
   };
   const statusColor = (s) => {
-    if (s === "CONFIRMED") return { bg: "rgba(255,255,255,0.08)", c: "rgba(255,255,255,0.7)", b: "1px solid rgba(255,255,255,0.15)" };
-    if (s === "COMPLETED") return { bg: "rgba(96,165,250,0.12)", c: "rgba(255,255,255,0.5)", b: "1px solid rgba(96,165,250,0.2)" };
-    if (s === "CANCELLED") return { bg: "rgba(255,255,255,0.04)", c: "rgba(255,255,255,0.5)", b: "1px solid rgba(255,255,255,0.08)" };
+    if (s === "CONFIRMED") return { bg: "rgba(34,197,94,0.12)", c: "#4ade80", b: "1px solid rgba(34,197,94,0.25)" };
+    if (s === "COMPLETED") return { bg: "rgba(16,185,129,0.10)", c: "#6ee7b7", b: "1px solid rgba(16,185,129,0.2)" };
+    if (s === "CANCELLED") return { bg: "rgba(255,255,255,0.04)", c: "rgba(255,255,255,0.4)", b: "1px solid rgba(255,255,255,0.08)" };
     if (s === "DELETED") return { bg: "rgba(107,114,128,0.15)", c: "#9ca3af", b: "1px solid rgba(107,114,128,0.3)" };
-    return { bg: "rgba(255,255,255,0.05)", c: "rgba(255,255,255,0.5)", b: "1px solid rgba(255,255,255,0.08)" };
+    return { bg: "rgba(34,197,94,0.06)", c: "rgba(34,197,94,0.7)", b: "1px solid rgba(34,197,94,0.15)" };
   };
 
   return (
@@ -165,7 +165,7 @@ export default function ReservationsPage() {
         </div>
         <Link href="/admin/new-reservation"
           style={{ 
-            background: "#fff", color: "#000", padding: "0.5rem 1rem", 
+            background: "#22c55e", color: "#000", padding: "0.5rem 1rem", 
             borderRadius: 0, border: "none", fontWeight: 800, cursor: "pointer",
             display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem",
             textDecoration: "none",
@@ -1095,9 +1095,9 @@ export default function ReservationsPage() {
                 
                 {/* ── İletişim Bilgileri ── */}
                 <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "16px 0 4px", marginBottom: 0 }}>👤 İletişim Bilgileri</div>
-                <DetailRow icon={User} label="Gelin" value={r.brideName} color="#f472b6" />
-                <DetailRow icon={Phone} label="Gelin Telefon" value={r.bridePhone} color="#f472b6" />
-                <DetailRow icon={Mail} label="Gelin E-posta" value={r.brideEmail} color="#f472b6" />
+                <DetailRow icon={User} label="Gelin" value={r.brideName} color="#4ade80" />
+                <DetailRow icon={Phone} label="Gelin Telefon" value={r.bridePhone} color="#4ade80" />
+                <DetailRow icon={Mail} label="Gelin E-posta" value={r.brideEmail} color="#4ade80" />
                 <DetailRow icon={User} label="Damat" value={r.groomName} color="rgba(255,255,255,0.5)" />
                 <DetailRow icon={Phone} label="Damat Telefon" value={r.groomPhone} color="rgba(255,255,255,0.5)" />
 
