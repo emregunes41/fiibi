@@ -295,7 +295,7 @@ export default function ReservationsPage() {
                       return (
                         <div
                           key={r.id}
-                          onClick={(e) => { e.stopPropagation(); setDetailModal({ isOpen: true, data: r }); }}
+                          onClick={(e) => { e.stopPropagation(); setReminderResult(null); setDetailModal({ isOpen: true, data: r }); }}
                           style={{
                             fontSize: "0.55rem", fontWeight: 700, padding: "2px 4px",
                             borderRadius: 0, marginBottom: 2, cursor: "pointer",
@@ -350,7 +350,7 @@ export default function ReservationsPage() {
                       return (
                         <div
                           key={r.id}
-                          onClick={() => setDetailModal({ isOpen: true, data: r })}
+                          onClick={() => { setReminderResult(null); setDetailModal({ isOpen: true, data: r }); }}
                           style={{
                             display: "flex", justifyContent: "space-between", alignItems: "center",
                             padding: "8px 10px", borderRadius: 0, cursor: "pointer",
@@ -530,7 +530,7 @@ export default function ReservationsPage() {
               {/* Row 1: Name + Status */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
                 <div 
-                  onClick={() => setDetailModal({ isOpen: true, data: res })}
+                  onClick={() => { setReminderResult(null); setDetailModal({ isOpen: true, data: res }); }}
                   style={{ fontWeight: 700, fontSize: "0.85rem", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}
                 >
                   <Eye size={12} style={{ opacity: 0.4, flexShrink: 0 }} />
