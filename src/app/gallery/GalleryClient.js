@@ -326,14 +326,12 @@ export default function GalleryClient({ categories }) {
                   }}
                 >
                   {coverPhoto ? (
-                    <Image
+                    <img
                       src={thumbnailUrl(coverPhoto, 600)}
                       alt={cat.name}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      sizes="(max-width: 640px) 150px, (max-width: 1024px) 200px, 300px"
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
                       loading="eager"
-                      priority={i < 6}
+                      decoding="async"
                     />
                   ) : (
                     <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
