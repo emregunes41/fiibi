@@ -56,7 +56,7 @@ export default function ContentBlockCarousel({ images }) {
       <img
         src={optimizeCloudinaryUrl(images[0], { width: 800 })}
         alt=""
-        style={{ width: "100%", height: "auto", maxHeight: 600, objectFit: "contain", display: "block" }}
+        style={{ width: "100%", height: "auto", maxHeight: 420, objectFit: "contain", display: "block" }}
       />
     );
   }
@@ -70,13 +70,13 @@ export default function ContentBlockCarousel({ images }) {
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Image */}
-      <div style={{ position: "relative", width: "100%", maxHeight: 600, overflow: "hidden", display: "flex", justifyContent: "center", background: "rgba(0,0,0,0.3)" }}>
+      <div style={{ position: "relative", width: "100%", maxHeight: 420, overflow: "hidden", display: "flex", justifyContent: "center", background: "rgba(0,0,0,0.3)" }}>
         <img
           key={current}
           src={optimizeCloudinaryUrl(images[current], { width: 900 })}
           alt=""
           style={{
-            maxWidth: "100%", maxHeight: 600, objectFit: "contain", display: "block",
+            maxWidth: "100%", maxHeight: 420, objectFit: "contain", display: "block",
             animation: "fadeIn 0.4s ease",
           }}
         />
