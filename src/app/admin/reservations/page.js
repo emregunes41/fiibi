@@ -45,6 +45,7 @@ export default function ReservationsPage() {
   const [quickEventLoading, setQuickEventLoading] = useState(false);
   const [reminderLoading, setReminderLoading] = useState("");
   const [reminderResult, setReminderResult] = useState(null);
+  const [dayPopup, setDayPopup] = useState(null); // { day, reservations, x, y }
 
   async function loadData() {
     const [resData, pkgData] = await Promise.all([getReservations(), getPackages()]);
@@ -277,7 +278,7 @@ export default function ReservationsPage() {
             </div>
 
             {/* Calendar Grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gridAutoRows: "70px", gap: 2, overflowX: "hidden" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gridAutoRows: "85px", gap: 2, overflowX: "hidden" }}>
               {cells.map((day, idx) => {
                 if (day === null) return <div key={`e${idx}`} style={{ background: "rgba(255,255,255,0.01)", borderRadius: 0 }} />;
                 
@@ -300,7 +301,7 @@ export default function ReservationsPage() {
                     <div style={{ fontSize: "0.7rem", fontWeight: todayStyle ? 800 : 600, color: todayStyle ? "rgba(255,255,255,0.5)" : hasRes ? "#fff" : "rgba(255,255,255,0.3)", marginBottom: 3 }}>
                       {day}
                     </div>
-                    {dayRes.slice(0, 2).map((r) => {
+                    {dayRes.slice(0, 3).map((r) => {
                       const sc = statusColor(r.status);
                       return (
                         <div
@@ -329,15 +330,52 @@ export default function ReservationsPage() {
                         </div>
                       );
                     })}
-                    {dayRes.length > 2 && (
-                      <div style={{ fontSize: "0.48rem", color: "rgba(255,255,255,0.35)", fontWeight: 700, paddingLeft: 2 }}>
-                        +{dayRes.length - 2}
+                    {dayRes.length > 3 && (
+                      <div onClick={(e) => {
+                        e.stopPropagation();
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        setDayPopup({ day, reservations: dayRes, x: rect.left, y: rect.bottom + 4 });
+                      }} style={{ fontSize: "0.48rem", color: "rgba(34,197,94,0.8)", fontWeight: 700, paddingLeft: 2, cursor: "pointer" }}>
+                        +{dayRes.length - 3} daha
                       </div>
                     )}
                   </div>
                 );
               })}
             </div>
+
+            {/* Day Popup - tüm rezervasyonlar */}
+            {dayPopup && (
+              <>
+                <div onClick={() => setDayPopup(null)} style={{ position: "fixed", inset: 0, zIndex: 999 }} />
+                <div style={{
+                  position: "fixed", left: Math.min(dayPopup.x, window.innerWidth - 260), top: Math.min(dayPopup.y, window.innerHeight - 200),
+                  zIndex: 1000, background: "#111", border: "1px solid rgba(255,255,255,0.15)",
+                  borderRadius: 0, padding: "10px 12px", minWidth: 220, maxWidth: 280, maxHeight: 250, overflowY: "auto",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
+                }}>
+                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 8 }}>
+                    {dayPopup.day} {monthNames[calMonth]} — {dayPopup.reservations.length} Rezervasyon
+                  </div>
+                  {dayPopup.reservations.map((r) => {
+                    const sc = statusColor(r.status);
+                    return (
+                      <div key={r.id} onClick={() => { setDayPopup(null); setReminderResult(null); setDetailModal({ isOpen: true, data: r }); }}
+                        style={{
+                          padding: "6px 8px", marginBottom: 4, cursor: "pointer",
+                          background: sc.bg, border: `1px solid ${sc.b.split('solid ')[1]}`,
+                          fontSize: "0.65rem", fontWeight: 700, color: sc.c,
+                          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                          transition: "all 0.15s",
+                        }}>
+                        {r.brideName}{r.groomName ? ` & ${r.groomName}` : ""}
+                        {r.eventTime && <span style={{ color: "rgba(255,255,255,0.3)", marginLeft: 6 }}>{r.eventTime}</span>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
 
             {/* Day detail panel - reservations for selected month summary */}
             {(() => {
