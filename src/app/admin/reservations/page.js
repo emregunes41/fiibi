@@ -1056,21 +1056,21 @@ export default function ReservationsPage() {
         
         const DetailRow = ({ icon: Icon, label, value, color }) => (
           value ? (
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-              <div style={{ width: 28, height: 28, borderRadius: 0, background: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
-                <Icon size={13} style={{ color: color || "rgba(255,255,255,0.4)" }} />
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 3 }}>{label}</div>
-                <div style={{ fontSize: "0.82rem", color: "#fff", wordBreak: "break-word", lineHeight: 1.5 }}>{value}</div>
-              </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+              <Icon size={12} style={{ color: color || "rgba(255,255,255,0.35)", flexShrink: 0 }} />
+              <span style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)", minWidth: 70, flexShrink: 0 }}>{label}</span>
+              <span style={{ fontSize: "0.75rem", color: "#fff", fontWeight: 600, wordBreak: "break-word" }}>{value}</span>
             </div>
           ) : null
         );
 
         return (
           <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-            <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "520px", padding: "0", margin: "2rem 0", overflow: "hidden", maxHeight: "90vh", overflowY: "auto" }}>
+            <style>{`
+              .detail-modal-body { display: flex; flex-direction: column; gap: 0; }
+              @media (min-width: 700px) { .detail-modal-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; } .detail-modal-body > .detail-full { grid-column: 1 / -1; } }
+            `}</style>
+            <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "780px", padding: "0", margin: "2rem 0", overflow: "hidden", maxHeight: "90vh", overflowY: "auto" }}>
               
               {/* Header */}
               <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -1091,18 +1091,19 @@ export default function ReservationsPage() {
                 </div>
               </div>
 
-              <div style={{ padding: "8px 24px 24px" }}>
-                
-                {/* ── İletişim Bilgileri ── */}
-                <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "16px 0 4px", marginBottom: 0 }}>👤 İletişim Bilgileri</div>
+              <div className="detail-modal-body" style={{ padding: "12px 20px 20px" }}>
+                {/* ── SOL KOLON: İletişim + Etkinlik ── */}
+                <div>
+                {/* İletişim */}
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 2px" }}>İletişim</div>
                 <DetailRow icon={User} label="Gelin" value={r.brideName} color="#4ade80" />
                 <DetailRow icon={Phone} label="Gelin Telefon" value={r.bridePhone} color="#4ade80" />
                 <DetailRow icon={Mail} label="Gelin E-posta" value={r.brideEmail} color="#4ade80" />
                 <DetailRow icon={User} label="Damat" value={r.groomName} color="rgba(255,255,255,0.5)" />
                 <DetailRow icon={Phone} label="Damat Telefon" value={r.groomPhone} color="rgba(255,255,255,0.5)" />
 
-                {/* ── Etkinlik Detayları ── */}
-                <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 4px" }}>📅 Etkinlik Detayları</div>
+                {/* Etkinlik */}
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 2px" }}>Etkinlik</div>
                 <DetailRow icon={Calendar} label="Tarih" value={new Date(r.eventDate).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' })} />
                 <DetailRow icon={Clock} label="Saat" value={r.eventTime} />
                 <DetailRow icon={CreditCard} label="Toplam Tutar" value={r.totalAmount ? `${r.totalAmount} TL` : null} />
@@ -1116,9 +1117,13 @@ export default function ReservationsPage() {
                     <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>⚠️ Henüz Onaylanmadı</span>
                   )}
                 </div>
-                
+                <DetailRow icon={FileText} label="Notlar" value={r.notes} />
+                </div>{/* end sol kolon */}
+
+                {/* ── SAĞ KOLON: Ödeme + İş Akışı + Hatırlatma ── */}
+                <div>
                 {/* ── Paketler ── */}
-                <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📦 Seçilen Paketler ({r.packages?.length || 0})</div>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 4px" }}>Paketler ({r.packages?.length || 0})</div>
                 {r.packages && r.packages.length > 0 ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                     {(() => {
@@ -1226,7 +1231,7 @@ export default function ReservationsPage() {
                 })()}
 
                 {/* ── Notlar ── */}
-                <DetailRow icon={FileText} label="Notlar" value={r.notes} />
+
 
                 {/* ── Ödeme Takibi ── */}
                 {(() => {
@@ -1293,7 +1298,7 @@ export default function ReservationsPage() {
 
                   return (
                     <>
-                      <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>💰 Ödeme Takibi</div>
+                      <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 4px" }}>Ödeme Takibi</div>
                       
                       {/* Summary Card */}
                       <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "16px", marginBottom: "10px" }}>
@@ -1502,7 +1507,7 @@ export default function ReservationsPage() {
                 })()}
 
                 {/* ── İş Akışı (Progress Bar) ── */}
-                <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>⚙️ İş Akışı</div>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 4px" }}>İş Akışı</div>
                 {(() => {
                   const wfSteps = [
                     { id: "PENDING", title: "Bekleniyor", desc: "Çekim Günü" },
@@ -1596,7 +1601,7 @@ export default function ReservationsPage() {
                 )}
 
                 {/* ── Hatırlatma Gönder ── */}
-                <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>✉️ Hatırlatma Gönder</div>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 4px" }}>Hatırlatma</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   {!r.contractApproved && (
                     <button
@@ -1661,8 +1666,10 @@ export default function ReservationsPage() {
                   )}
                 </div>
 
-                {/* ── Meta ── */}
-                <div style={{ marginTop: 20, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", fontSize: "0.65rem", color: "rgba(255,255,255,0.3)" }}>
+                </div>{/* end sağ kolon */}
+
+                {/* ── FULL WIDTH: Meta ── */}
+                <div className="detail-full" style={{ paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", fontSize: "0.6rem", color: "rgba(255,255,255,0.25)" }}>
                   <span>Oluşturulma: {new Date(r.createdAt).toLocaleDateString('tr-TR')}</span>
                   <span>Güncelleme: {new Date(r.updatedAt).toLocaleDateString('tr-TR')}</span>
                 </div>
