@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Image as ImageIcon, Eye } from "lucide-react";
+import { optimizeCloudinaryUrl, thumbnailUrl } from "@/lib/image-utils";
 
 /* ─────────────────────────────────────────────
    FULLSCREEN STORY VIEWER
@@ -206,7 +207,7 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
             style={{ position: "absolute", inset: 0 }}
           >
             <Image
-              src={photo.url}
+              src={optimizeCloudinaryUrl(photo.url, { width: 1400 })}
               alt={`Fotoğraf ${currentIndex + 1}`}
               fill
               style={{ objectFit: "contain" }}
@@ -326,7 +327,7 @@ export default function GalleryClient({ categories }) {
                 >
                   {coverPhoto ? (
                     <Image
-                      src={coverPhoto}
+                      src={thumbnailUrl(coverPhoto, 600)}
                       alt={cat.name}
                       fill
                       style={{ objectFit: "cover" }}

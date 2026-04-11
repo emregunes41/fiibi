@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import { UploadCloud, Image as ImageIcon, Trash2, Plus, X, ArrowLeft, Folder, RefreshCw } from "lucide-react";
+import { thumbnailUrl } from "@/lib/image-utils";
 import { 
   getPortfolioCategories, 
   createPortfolioCategory, 
@@ -136,7 +137,7 @@ export default function PortfolioAdminPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "0.8rem" }}>
             {activeCategory.photos.map((photo) => (
               <div key={photo.id} style={{ position: "relative", aspectRatio: "1", borderRadius: 0, overflow: "hidden", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <img src={photo.url} alt="Portfolio" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src={thumbnailUrl(photo.url)} alt="Portfolio" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 <button
                   onClick={() => handleDeletePhoto(photo.id)}
                   style={{ position: "absolute", top: 8, right: 8, background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "5px", borderRadius: 0, cursor: "pointer", opacity: 0.7, transition: "opacity 0.2s" }}
@@ -191,7 +192,7 @@ export default function PortfolioAdminPage() {
             {/* Cover Image */}
             <div style={{ width: "100%", height: "180px", position: "relative", backgroundColor: "rgba(0,0,0,0.3)" }}>
               {category.photos?.[0] ? (
-                <img src={category.photos[0].url} alt={category.name} style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.75 }} />
+                <img src={thumbnailUrl(category.photos[0].url)} alt={category.name} style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.75 }} />
               ) : (
                 <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.1)" }}>
                   <ImageIcon size={40} />

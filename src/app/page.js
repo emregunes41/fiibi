@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import AIChatBot from "@/components/AIChatBot";
 import BannerCarousel from "@/components/BannerCarousel";
+import { optimizeCloudinaryUrl } from "@/lib/image-utils";
 import { ArrowDown, Instagram, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
@@ -80,7 +81,7 @@ export default async function PinowedPage() {
                   {block.imageUrl && (
                     <div style={{ flex: "1 1 300px", minWidth: 0 }}>
                       <img
-                        src={block.imageUrl}
+                        src={optimizeCloudinaryUrl(block.imageUrl, { width: 800 })}
                         alt={block.title || ""}
                         style={{ width: "100%", height: "auto", maxHeight: 400, objectFit: "cover", display: "block" }}
                       />

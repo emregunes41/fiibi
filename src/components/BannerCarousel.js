@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { optimizeCloudinaryUrl } from "@/lib/image-utils";
 
 const AUTO_SLIDE_INTERVAL = 5000; // 5 saniye
 
@@ -98,7 +99,7 @@ export default function BannerCarousel({ banners }) {
         />
       ) : (
         <Image
-          src={banner.imageUrl}
+          src={optimizeCloudinaryUrl(banner.imageUrl, { width: 1400 })}
           alt={banner.title || "Banner"}
           fill
           style={{ objectFit: "cover", transition: "opacity 0.5s ease" }}
