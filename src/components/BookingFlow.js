@@ -295,7 +295,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
       time: detailForm.time || selectedPkg.timeType,
       timeLabel,
       notes: detailForm.notes,
-      customFieldAnswers: detailForm.customFieldAnswers.filter((a) => a.value !== "" && a.value !== false),
+      customFieldAnswers: detailForm.customFieldAnswers.filter((a) => a.value !== "" && a.value !== false && a.value !== "__OTHER__"),
     });
 
     setAddedFeedback(true);
@@ -864,16 +864,21 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
 
                     if (field.type === "dropdown") {
                       const opts = (field.options || "").split(",").map(o => o.trim()).filter(Boolean);
+                      const isOther = answer.value === "__OTHER__" || (answer.value && !opts.includes(answer.value) && answer.value !== "");
                       return (
                         <div key={idx}>
                           <label style={{ ...S.label, fontSize: "11px" }}>
                             {field.label} {field.required && "*"}
                           </label>
                           <select
-                            value={answer.value}
+                            value={isOther ? "__OTHER__" : answer.value}
                             onChange={(e) => {
                               const arr = [...detailForm.customFieldAnswers];
-                              arr[idx] = { ...arr[idx], value: e.target.value };
+                              if (e.target.value === "__OTHER__") {
+                                arr[idx] = { ...arr[idx], value: "__OTHER__" };
+                              } else {
+                                arr[idx] = { ...arr[idx], value: e.target.value };
+                              }
                               setDetailForm(p => ({ ...p, customFieldAnswers: arr }));
                             }}
                             style={{ ...S.input, appearance: "none", WebkitAppearance: "none", cursor: "pointer" }}
@@ -882,7 +887,22 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                             {opts.map((o, oi) => (
                               <option key={oi} value={o} style={{ background: "#0a0a0f" }}>{o}</option>
                             ))}
+                            <option value="__OTHER__" style={{ background: "#0a0a0f" }}>Diğer...</option>
                           </select>
+                          {isOther && (
+                            <input
+                              type="text"
+                              placeholder="Lütfen belirtiniz..."
+                              value={answer.value === "__OTHER__" ? "" : answer.value}
+                              onChange={(e) => {
+                                const arr = [...detailForm.customFieldAnswers];
+                                arr[idx] = { ...arr[idx], value: e.target.value || "__OTHER__" };
+                                setDetailForm(p => ({ ...p, customFieldAnswers: arr }));
+                              }}
+                              style={{ ...S.input, marginTop: "8px" }}
+                              autoFocus
+                            />
+                          )}
                         </div>
                       );
                     }

@@ -894,17 +894,32 @@ export default function ReservationsPage() {
                       <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", marginBottom: "3px" }}>
                         {cfa.packageName} — {cfa.label} {cfa.required ? "*" : ""}
                       </div>
-                      {cfa.type === "dropdown" ? (
-                        <select value={cfa.value} onChange={(e) => {
-                          const arr = [...formData.customFieldAnswers]; arr[idx] = {...arr[idx], value: e.target.value};
-                          setFormData({...formData, customFieldAnswers: arr});
-                        }} style={inp}>
-                          <option value="" style={{ background: "#111" }}>Seçiniz...</option>
-                          {(cfa.options || "").split(",").map(o => o.trim()).filter(Boolean).map((o, oi) => (
-                            <option key={oi} value={o} style={{ background: "#111" }}>{o}</option>
-                          ))}
-                        </select>
-                      ) : cfa.type === "checkbox" ? (
+                      {cfa.type === "dropdown" ? (() => {
+                        const opts = (cfa.options || "").split(",").map(o => o.trim()).filter(Boolean);
+                        const isOther = cfa.value === "__OTHER__" || (cfa.value && !opts.includes(cfa.value) && cfa.value !== "");
+                        return (
+                          <>
+                            <select value={isOther ? "__OTHER__" : cfa.value} onChange={(e) => {
+                              const arr = [...formData.customFieldAnswers];
+                              arr[idx] = {...arr[idx], value: e.target.value === "__OTHER__" ? "__OTHER__" : e.target.value};
+                              setFormData({...formData, customFieldAnswers: arr});
+                            }} style={inp}>
+                              <option value="" style={{ background: "#111" }}>Seçiniz...</option>
+                              {opts.map((o, oi) => (
+                                <option key={oi} value={o} style={{ background: "#111" }}>{o}</option>
+                              ))}
+                              <option value="__OTHER__" style={{ background: "#111" }}>Diğer...</option>
+                            </select>
+                            {isOther && (
+                              <input placeholder="Lütfen belirtiniz..." value={cfa.value === "__OTHER__" ? "" : cfa.value} onChange={(e) => {
+                                const arr = [...formData.customFieldAnswers];
+                                arr[idx] = {...arr[idx], value: e.target.value || "__OTHER__"};
+                                setFormData({...formData, customFieldAnswers: arr});
+                              }} style={{...inp, marginTop: "4px"}} autoFocus />
+                            )}
+                          </>
+                        );
+                      })() : cfa.type === "checkbox" ? (
                         <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>
                           <input type="checkbox" checked={cfa.value || false} onChange={(e) => {
                             const arr = [...formData.customFieldAnswers]; arr[idx] = {...arr[idx], value: e.target.checked};
