@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Calendar, Phone, Settings2, X, Edit2, Eye, Mail, User, Package, Clock, FileText, CreditCard, ChevronDown, ChevronUp, Instagram, ExternalLink, Trash2, Banknote, DollarSign, List, CalendarDays, ChevronLeft, ChevronRight, ArrowUpDown, Filter, Search, Star } from "lucide-react";
 import { getReservations, getPackages, createManualReservation, updateReservation, updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment, softDeleteReservation, hardDeleteReservation, createQuickEvent } from "../core-actions";
+import { sendContractReminder, resendCredentials } from "../reminder-actions";
 import Link from "next/link";
 
 const inp = {
@@ -42,6 +43,8 @@ export default function ReservationsPage() {
   const [quickEventModal, setQuickEventModal] = useState(false);
   const [quickEventForm, setQuickEventForm] = useState({ venueName: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
   const [quickEventLoading, setQuickEventLoading] = useState(false);
+  const [reminderLoading, setReminderLoading] = useState("");
+  const [reminderResult, setReminderResult] = useState(null);
 
   async function loadData() {
     const [resData, pkgData] = await Promise.all([getReservations(), getPackages()]);
@@ -1563,6 +1566,72 @@ export default function ReservationsPage() {
                     </div>
                   </>
                 )}
+
+                {/* ── Hatırlatma Gönder ── */}
+                <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>✉️ Hatırlatma Gönder</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {!r.contractApproved && (
+                    <button
+                      disabled={reminderLoading === "contract"}
+                      onClick={async () => {
+                        setReminderLoading("contract");
+                        setReminderResult(null);
+                        const res = await sendContractReminder(r.id);
+                        setReminderResult(res.success ? { type: "success", msg: "Sözleşme hatırlatması gönderildi" } : { type: "error", msg: res.error });
+                        setReminderLoading("");
+                      }}
+                      style={{
+                        display: "flex", alignItems: "center", gap: 8, padding: "10px 14px",
+                        background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
+                        borderRadius: 0, color: "#fff", fontSize: "0.75rem", fontWeight: 700,
+                        cursor: reminderLoading === "contract" ? "not-allowed" : "pointer",
+                        opacity: reminderLoading === "contract" ? 0.5 : 1, transition: "all 0.2s",
+                        textAlign: "left",
+                      }}
+                    >
+                      <Mail size={14} style={{ flexShrink: 0 }} />
+                      <div>
+                        <div>{reminderLoading === "contract" ? "Gönderiliyor..." : "Sözleşme Onayı Hatırlat"}</div>
+                        <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.35)", fontWeight: 500 }}>Müşteriye sözleşmeyi onaylaması gerektiğini hatırlatır</div>
+                      </div>
+                    </button>
+                  )}
+                  <button
+                    disabled={reminderLoading === "credentials"}
+                    onClick={async () => {
+                      if (!confirm("Müşteriye yeni şifre oluşturulup gönderilecek. Eski şifre geçersiz olacak. Devam edilsin mi?")) return;
+                      setReminderLoading("credentials");
+                      setReminderResult(null);
+                      const res = await resendCredentials(r.id);
+                      setReminderResult(res.success ? { type: "success", msg: "Giriş bilgileri gönderildi" } : { type: "error", msg: res.error });
+                      setReminderLoading("");
+                    }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 8, padding: "10px 14px",
+                      background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: 0, color: "#fff", fontSize: "0.75rem", fontWeight: 700,
+                      cursor: reminderLoading === "credentials" ? "not-allowed" : "pointer",
+                      opacity: reminderLoading === "credentials" ? 0.5 : 1, transition: "all 0.2s",
+                      textAlign: "left",
+                    }}
+                  >
+                    <Mail size={14} style={{ flexShrink: 0 }} />
+                    <div>
+                      <div>{reminderLoading === "credentials" ? "Gönderiliyor..." : "Giriş Bilgilerini Tekrar Gönder"}</div>
+                      <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.35)", fontWeight: 500 }}>Yeni şifre oluşturur ve e-posta ile gönderir</div>
+                    </div>
+                  </button>
+                  {reminderResult && (
+                    <div style={{
+                      padding: "8px 12px", fontSize: "0.72rem", fontWeight: 600,
+                      background: reminderResult.type === "success" ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.04)",
+                      border: `1px solid ${reminderResult.type === "success" ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.1)"}`,
+                      color: reminderResult.type === "success" ? "#fff" : "rgba(255,255,255,0.6)",
+                    }}>
+                      {reminderResult.type === "success" ? "✓" : "✕"} {reminderResult.msg}
+                    </div>
+                  )}
+                </div>
 
                 {/* ── Meta ── */}
                 <div style={{ marginTop: 20, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", fontSize: "0.65rem", color: "rgba(255,255,255,0.3)" }}>
