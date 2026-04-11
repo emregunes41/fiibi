@@ -49,12 +49,7 @@ export default async function ProfilePage() {
   ];
 
   return (
-    <>
-      <style>{`
-        .profile-grid { display: flex; flex-direction: column; gap: 40px; }
-        @media (min-width: 900px) { .profile-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 32px; align-items: start; } }
-      `}</style>
-      <div className="profile-grid">
+    <div style={{ display: "flex", flexDirection: "column", gap: 40, maxWidth: "100%", overflowX: "hidden" }}>
       
       {/* Reservations */}
       <section>
@@ -435,49 +430,6 @@ export default async function ProfilePage() {
           );
         })()}
       </section>
-
-      {/* RIGHT COLUMN: Payment + Purchases */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-        {/* Payment section is already rendered as part of the left column above  */}
-
-        {/* Purchases */}
-      <section>
-        <div style={{ marginBottom: 20 }}>
-          <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>Satın Alımlarım</h3>
-          <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>Dijital ürünleriniz ve rehberleriniz</p>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {user.purchases.length === 0 ? (
-            <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", padding: "48px 24px", textAlign: "center" }}>
-              <Package size={36} style={{ color: "rgba(255,255,255,0.2)", margin: "0 auto 12px" }} />
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>Henüz bir dijital ürün satın almadınız.</p>
-            </div>
-          ) : (
-            user.purchases.map((pur) => (
-              <div key={pur.id} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", padding: 16, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <div style={{ width: 40, height: 40, background: "rgba(255,255,255,0.04)", borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <FileText size={16} style={{ color: "rgba(255,255,255,0.5)" }} />
-                  </div>
-                  <div>
-                    <h4 style={{ fontWeight: 600, fontSize: 14 }}>{pur.productName}</h4>
-                    <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12 }}>
-                      {new Date(pur.purchaseDate).toLocaleDateString("tr-TR")} • {pur.productType}
-                    </div>
-                  </div>
-                </div>
-                <button style={{ background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: 12, fontWeight: 600, padding: "8px 16px", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", cursor: "pointer" }}>
-                  Görüntüle
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-      </div>
-
     </div>
-    </>
   );
 }
