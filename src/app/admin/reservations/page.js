@@ -1103,28 +1103,31 @@ export default function ReservationsPage() {
         );
 
         return (
-          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "0", overflowY: "auto" }}>
             <style>{`
               .detail-modal-body { display: flex; flex-direction: column; gap: 0; }
               @media (min-width: 700px) { .detail-modal-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; } .detail-modal-body > .detail-full { grid-column: 1 / -1; } }
+              .detail-modal-container { width: 100%; max-width: 780px; background: #111; border: 1px solid rgba(255,255,255,0.15); border-radius: 0; overflow: hidden; max-height: 100vh; overflow-y: auto; margin: 0; }
+              @media (min-width: 700px) { .detail-modal-container { margin: 2rem auto; max-height: 90vh; } }
+              .detail-header-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
             `}</style>
-            <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "780px", padding: "0", margin: "2rem 0", overflow: "hidden", maxHeight: "90vh", overflowY: "auto" }}>
+            <div className="detail-modal-container">
               
               {/* Header */}
-              <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>Rezervasyon Detayı</h2>
-                  <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.7rem", margin: "3px 0 0" }}>ID: {r.id.slice(0, 12)}...</p>
+              <div style={{ padding: "16px", borderBottom: "1px solid rgba(255,255,255,0.1)", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+                <div style={{ minWidth: 0 }}>
+                  <h2 style={{ fontSize: "1rem", fontWeight: 900, margin: 0 }}>Rezervasyon Detayı</h2>
+                  <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.65rem", margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>ID: {r.id.slice(0, 12)}...</p>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <span style={{ padding: "4px 10px", borderRadius: 0, fontSize: "0.62rem", fontWeight: 800, textTransform: "uppercase", background: sc.bg, color: sc.c, border: sc.b }}>
+                <div className="detail-header-actions">
+                  <span style={{ padding: "4px 10px", borderRadius: 0, fontSize: "0.6rem", fontWeight: 800, textTransform: "uppercase", background: sc.bg, color: sc.c, border: sc.b }}>
                     {statusLabels[r.status] || r.status}
                   </span>
-                  <button onClick={() => { setDetailModal({ isOpen: false, data: null }); openEditModal(r); }} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.65rem", fontWeight: 700 }}>
-                    <Edit2 size={12} /> Düzenle
+                  <button onClick={() => { setDetailModal({ isOpen: false, data: null }); openEditModal(r); }} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
+                    <Edit2 size={11} /> Düzenle
                   </button>
-                  <button onClick={() => { setDetailModal({ isOpen: false, data: null }); handleDeleteReservation(r.id, r.brideName); }} style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#ef4444", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.65rem", fontWeight: 700 }}>
-                    <Trash2 size={12} /> Sil
+                  <button onClick={() => { setDetailModal({ isOpen: false, data: null }); handleDeleteReservation(r.id, r.brideName); }} style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#ef4444", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
+                    <Trash2 size={11} /> Sil
                   </button>
                   <button onClick={() => setDetailModal({ isOpen: false, data: null })} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)", padding: "6px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
                     <X size={14} />
@@ -1132,7 +1135,7 @@ export default function ReservationsPage() {
                 </div>
               </div>
 
-              <div className="detail-modal-body" style={{ padding: "12px 20px 20px" }}>
+              <div className="detail-modal-body" style={{ padding: "12px 16px 16px" }}>
                 {/* ── SOL KOLON: İletişim + Etkinlik ── */}
                 <div>
                 {/* İletişim */}
@@ -1342,8 +1345,8 @@ export default function ReservationsPage() {
                       <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 4px" }}>Ödeme Takibi</div>
                       
                       {/* Summary Card */}
-                      <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "16px", marginBottom: "10px" }}>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px", marginBottom: "12px" }}>
+                      <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "12px", marginBottom: "10px" }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px", marginBottom: "12px" }}>
                           <div style={{ textAlign: "center" }}>
                             <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Toplam</div>
                             <div style={{ fontSize: "1rem", fontWeight: 800, color: "#fff" }}>{totalAmount.toLocaleString('tr-TR')}₺</div>
