@@ -1118,9 +1118,9 @@ export default function ReservationsPage() {
                   )}
                 </div>
                 <DetailRow icon={FileText} label="Notlar" value={r.notes} />
-                </div>{/* end sol kolon */}
 
-                {/* ── SAĞ KOLON: Ödeme + İş Akışı + Hatırlatma ── */}
+                {/* ── SAĞ KOLON: Paketler + Ödeme ── */}
+                </div>{/* end sol kolon */}
                 <div>
                 {/* ── Paketler ── */}
                 <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 4px" }}>Paketler ({r.packages?.length || 0})</div>
@@ -1505,6 +1505,8 @@ export default function ReservationsPage() {
                     </>
                   );
                 })()}
+                </div>{/* end sağ kolon */}
+                <div className="detail-full">
 
                 {/* ── İş Akışı (Progress Bar) ── */}
                 <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 4px" }}>İş Akışı</div>
@@ -1666,7 +1668,7 @@ export default function ReservationsPage() {
                   )}
                 </div>
 
-                </div>{/* end sağ kolon */}
+                </div>{/* end full-width section */}
 
                 {/* ── FULL WIDTH: Meta ── */}
                 <div className="detail-full" style={{ paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", fontSize: "0.6rem", color: "rgba(255,255,255,0.25)" }}>
