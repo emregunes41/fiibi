@@ -86,8 +86,7 @@ export default function AdminLayout({ children }) {
       {/* Mobile Top Bar */}
       <div className="md:hidden" style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
-        background: "rgba(0,0,0,0.9)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        background: "#000", borderBottom: "1px solid rgba(255,255,255,0.08)",
         padding: "14px 16px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
