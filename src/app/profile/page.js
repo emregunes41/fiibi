@@ -49,7 +49,12 @@ export default async function ProfilePage() {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 40, maxWidth: "100%", overflowX: "hidden" }}>
+    <>
+      <style>{`
+        .profile-grid { display: flex; flex-direction: column; gap: 40px; }
+        @media (min-width: 900px) { .profile-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 32px; align-items: start; } }
+      `}</style>
+      <div className="profile-grid">
       
       {/* Reservations */}
       <section>
@@ -377,8 +382,7 @@ export default async function ProfilePage() {
           )}
         </div>
 
-        {/* ── Unified Payment Section ── */}
-        {user.reservations.length > 0 && (() => {
+         {user.reservations.length > 0 && (() => {
           // Build a unified reservation object
           const unifiedTotalNumeric = user.reservations.reduce((sum, r) => {
              return sum + parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
@@ -407,7 +411,7 @@ export default async function ProfilePage() {
           }, 0);
 
           const unifiedReservation = {
-             id: primaryRes.id, // Payment will be attached to this reservation in DB
+             id: primaryRes.id,
              totalAmount: unifiedTotalNumeric.toString(),
              payments: unifiedPayments,
              paymentLogs: unifiedPaymentLogs,
@@ -432,7 +436,11 @@ export default async function ProfilePage() {
         })()}
       </section>
 
-      {/* Purchases */}
+      {/* RIGHT COLUMN: Payment + Purchases */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+        {/* Payment section is already rendered as part of the left column above  */}
+
+        {/* Purchases */}
       <section>
         <div style={{ marginBottom: 20 }}>
           <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>Satın Alımlarım</h3>
@@ -467,7 +475,9 @@ export default async function ProfilePage() {
           )}
         </div>
       </section>
+      </div>
 
     </div>
+    </>
   );
 }

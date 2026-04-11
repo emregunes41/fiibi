@@ -43,7 +43,7 @@ export default function Navbar() {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  if (pathname.startsWith("/admin")) return null;
+  if (pathname.startsWith("/admin") || pathname.startsWith("/profile")) return null;
 
   return (
     <>

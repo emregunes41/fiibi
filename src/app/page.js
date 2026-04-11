@@ -9,7 +9,7 @@ import Link from "next/link";
 import AIChatBot from "@/components/AIChatBot";
 import BannerCarousel from "@/components/BannerCarousel";
 import ContentBlockCarousel from "@/components/ContentBlockCarousel";
-import { optimizeCloudinaryUrl } from "@/lib/image-utils";
+import { optimizeCloudinaryUrl, thumbnailUrl } from "@/lib/image-utils";
 import { ArrowDown, Instagram, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 
 export const revalidate = 60; // cache for 60 seconds
@@ -32,8 +32,18 @@ export default async function PinowedPage() {
     ));
   };
 
+  // Preload portfolio cover photos
+  const preloadUrls = categories.slice(0, 8).map(cat => {
+    if (cat.photos && cat.photos.length > 0) return thumbnailUrl(cat.photos[0].url, 600);
+    return null;
+  }).filter(Boolean);
+
   return (
     <main className="relative min-h-screen w-full">
+      {/* Preload portfolio images */}
+      {preloadUrls.map((url, i) => (
+        <link key={i} rel="preload" as="image" href={url} />
+      ))}
       
       {/* 1. Cinematic Hero Section */}
       <section className="relative h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
