@@ -433,24 +433,44 @@ export default function SettingsPage() {
                   onChange={async (e) => {
                     const file = e.target.files[0];
                     if (!file) return;
+                    if (file.size > 50 * 1024 * 1024) {
+                      alert("Dosya çok büyük (Maks 50MB)");
+                      return;
+                    }
                     setUploadingBg(true);
-                    const fd = new FormData();
-                    fd.append('file', file);
-                    const res = await uploadHeroBg(fd);
-                    if (res.success) {
-                      setConfig({ ...config, heroBgUrl: res.url });
-                    } else {
-                      alert("Yükleme hatası: " + res.error);
+                    try {
+                      const isVideo = file.type.startsWith('video/');
+                      const resourceType = isVideo ? 'video' : 'image';
+                      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+                      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+                      
+                      const fd = new FormData();
+                      fd.append('file', file);
+                      fd.append('upload_preset', uploadPreset);
+                      fd.append('folder', 'hero');
+
+                      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
+                        method: 'POST',
+                        body: fd,
+                      });
+                      const result = await res.json();
+                      if (result.secure_url) {
+                        setConfig({ ...config, heroBgUrl: result.secure_url });
+                      } else {
+                        alert("Yükleme hatası: " + (result.error?.message || "Bilinmeyen hata"));
+                      }
+                    } catch (err) {
+                      alert("Yükleme hatası: " + err.message);
                     }
                     setUploadingBg(false);
                   }}
                   style={{ ...inp, cursor: "pointer", flex: 1 }}
                 />
               </div>
-              {uploadingBg && <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", marginTop: 6 }}>Yükleniyor...</p>}
+              {uploadingBg && <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", marginTop: 6 }}>Yükleniyor... (büyük dosyalar biraz sürebilir)</p>}
               {config.heroBgUrl && (
                 <div style={{ marginTop: 8, fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
-                  Mevcut: <span style={{ color: "#fff" }}>{config.heroBgUrl}</span>
+                  Mevcut: <span style={{ color: "#fff" }}>{config.heroBgUrl.length > 60 ? config.heroBgUrl.slice(0, 60) + "..." : config.heroBgUrl}</span>
                 </div>
               )}
             </div>
