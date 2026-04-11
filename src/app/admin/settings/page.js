@@ -53,6 +53,7 @@ export default function SettingsPage() {
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [uploadingBg, setUploadingBg] = useState(false);
+  const [activeTab, setActiveTab] = useState("genel");
 
   // Discount codes
   const [discountCodes, setDiscountCodes] = useState([]);
@@ -139,10 +140,28 @@ export default function SettingsPage() {
         <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>Site Yapılandırması</h1>
       </div>
 
+      {/* Tab Bar */}
+      <div style={{ display: "flex", gap: 0, marginBottom: 24, borderBottom: "1px solid rgba(255,255,255,0.08)", overflowX: "auto" }}>
+        {[
+          { id: "genel", label: "Genel" },
+          { id: "icerik", label: "İçerik" },
+          { id: "bildirim", label: "Bildirimler" },
+          { id: "sozlesme", label: "Sözleşme" },
+          { id: "ai", label: "AI" },
+        ].map(tab => (
+          <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
+            padding: "10px 18px", fontSize: 12, fontWeight: activeTab === tab.id ? 800 : 500,
+            color: activeTab === tab.id ? "#fff" : "rgba(255,255,255,0.4)",
+            background: "none", border: "none", borderBottom: activeTab === tab.id ? "2px solid #fff" : "2px solid transparent",
+            cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap",
+          }}>{tab.label}</button>
+        ))}
+      </div>
+
       <form onSubmit={handleSubmit}>
 
         {/* 1. Hero Başlıkları */}
-        <div style={sectionCard}>
+        {activeTab === "genel" && <div style={sectionCard}>
           {sectionHeader(Type, "Sinematik Başlıklar", "Anasayfada görünen büyük başlık ve slogan.")}
 
           <div style={{ marginBottom: 16 }}>
@@ -170,10 +189,10 @@ export default function SettingsPage() {
               required
             />
           </div>
-        </div>
+        </div>}
 
         {/* 2. Preview Card */}
-        <div style={{ ...sectionCard, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
+        {activeTab === "genel" && <div style={{ ...sectionCard, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
             <Layout size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
             <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Canlı Önizleme</span>
@@ -197,10 +216,10 @@ export default function SettingsPage() {
           <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 12, fontStyle: "italic", lineHeight: 1.5 }}>
             * Başlıktaki enter tuşu anasayfada tasarımın dengeli durmasını sağlar.
           </p>
-        </div>
+        </div>}
 
         {/* Banner Carousel Management */}
-        <div style={sectionCard}>
+        {activeTab === "icerik" && <div style={sectionCard}>
           {sectionHeader(ImageIcon, "Banner Carousel", "Anasayfada portfolyo bölümünün üstünde görünen kayan banner görselleri.")}
 
           {/* Upload new banner */}
@@ -367,10 +386,10 @@ export default function SettingsPage() {
               Henüz banner eklenmemiş.
             </div>
           )}
-        </div>
+        </div>}
 
         {/* 2.5 Hero Arka Plan */}
-        <div style={sectionCard}>
+        {activeTab === "genel" && <div style={sectionCard}>
           {sectionHeader(Monitor, "Arka Plan Ayarı", "Anasayfadaki hero bölümünün arka planını değiştirin.")}
 
           {/* Type Selector */}
@@ -459,10 +478,10 @@ export default function SettingsPage() {
               </div>
             </div>
           )}
-        </div>
+        </div>}
 
         {/* 3. Stüdyo & İletişim */}
-        <div style={sectionCard}>
+        {activeTab === "genel" && <div style={sectionCard}>
           {sectionHeader(Home, "Stüdyo & İletişim", "Alt panelde yer alan adres ve iletişim detayları.")}
 
           <div style={{ marginBottom: 16 }}>
@@ -507,10 +526,10 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
-        </div>
+        </div>}
 
         {/* 4. Sosyal Kanallar */}
-        <div style={sectionCard}>
+        {activeTab === "genel" && <div style={sectionCard}>
           {sectionHeader(Instagram, "Sosyal Kanallar", "Müşterilerinizin size ulaşabileceği linkler.")}
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -555,10 +574,10 @@ export default function SettingsPage() {
               />
             </div>
           </div>
-        </div>
+        </div>}
 
         {/* 5. Bildirim Kanalları */}
-        <div style={sectionCard}>
+        {activeTab === "bildirim" && <div style={sectionCard}>
           {sectionHeader(Mail, "Bildirim Kanalları", "Müşterilere gönderilecek bildirimlerin kanallarını yönetin.")}
 
           {/* Toggle Switches */}
@@ -791,10 +810,10 @@ export default function SettingsPage() {
               </div>
             ))}
           </div>
-        </div>
+        </div>}
 
         {/* 6. Rezervasyon Sözleşmesi */}
-        <div style={sectionCard}>
+        {activeTab === "sozlesme" && <div style={sectionCard}>
           {sectionHeader(FileText, "Rezervasyon Sözleşmesi", "Müşterinin ödeme öncesi onaylaması gereken sözleşme metni.")}
 
           <div>
@@ -815,10 +834,10 @@ export default function SettingsPage() {
               💡 Boş bırakırsanız sözleşme adımı gösterilmez. Doldurursanız müşteri ödeme öncesi bu metni onaylamak zorundadır.
             </p>
           </div>
-        </div>
+        </div>}
 
         {/* İndirim Kodları Section */}
-        <div style={sectionCard}>
+        {activeTab === "sozlesme" && <div style={sectionCard}>
           {sectionHeader(Tag, "İndirim Kodları", "Müşterilere verebileceğiniz indirim kuponları")}
 
           {/* Create new code */}
@@ -954,10 +973,10 @@ export default function SettingsPage() {
               ))}
             </div>
           )}
-        </div>
+        </div>}
 
         {/* 8. AI Chatbot Ayarları */}
-        <div style={sectionCard}>
+        {activeTab === "ai" && <div style={sectionCard}>
           {sectionHeader(Bot, "AI Chatbot Ayarları", "Yapay zeka asistanının davranışını ve talimatlarını düzenleyin.")}
 
           {/* Toggle */}
@@ -1035,7 +1054,7 @@ export default function SettingsPage() {
               </div>
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Status Message */}
         {message && (
@@ -1074,7 +1093,7 @@ export default function SettingsPage() {
       </form>
 
       {/* ── Content Blocks ── */}
-      <div style={sectionCard}>
+      {activeTab === "icerik" && <div style={sectionCard}>
         {sectionHeader(Layout, "Anasayfa İçerik Blokları", "Anasayfada görsel ve metin ile bölümler ekleyin")}
         
         {/* Existing blocks */}
@@ -1159,7 +1178,7 @@ export default function SettingsPage() {
             <Plus size={14} /> {cbUploading ? "Ekleniyor..." : "Blok Ekle"}
           </button>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }
