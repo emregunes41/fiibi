@@ -12,7 +12,7 @@ import ContentBlockCarousel from "@/components/ContentBlockCarousel";
 import { optimizeCloudinaryUrl } from "@/lib/image-utils";
 import { ArrowDown, Instagram, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // cache for 60 seconds
 
 export default async function PinowedPage() {
   const packages = await getPackages();

@@ -3,11 +3,11 @@ import { getAlbumModels, getSiteConfig } from "../admin/core-actions";
 import ContractPreviewModal from "./ContractPreviewModal";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Calendar, Package, Clock, CheckCircle, FileText, ExternalLink, Banknote, CreditCard, Tag, AlertTriangle } from "lucide-react";
+import { Calendar, Package, Clock, CheckCircle, FileText, ExternalLink, Banknote, CreditCard, Tag, AlertTriangle, LogOut } from "lucide-react";
 import PhotoSelectionForm from "./PhotoSelectionForm";
 import AlbumSelectionForm from "./AlbumSelectionForm";
 import PaymentSection from "./PaymentSection";
-import { approveContract } from "../user-actions";
+import { approveContract, logoutUser } from "../user-actions";
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
@@ -53,9 +53,16 @@ export default async function ProfilePage() {
       
       {/* Reservations */}
       <section>
-        <div style={{ marginBottom: 20 }}>
-          <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>Rezervasyonlarım</h3>
-          <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>Geçmiş ve gelecek tüm çekim randevularınız</p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+          <div>
+            <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>Rezervasyonlarım</h3>
+            <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>Geçmiş ve gelecek tüm çekim randevularınız</p>
+          </div>
+          <form action={logoutUser}>
+            <button type="submit" style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, color: "rgba(255,255,255,0.5)", fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all 0.2s" }}>
+              <LogOut size={13} /> Çıkış Yap
+            </button>
+          </form>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>

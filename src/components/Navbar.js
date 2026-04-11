@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Lock, User, UserCircle, Menu, X as CloseIcon, ShoppingBag } from "lucide-react";
+import { User, UserCircle, Menu, X as CloseIcon, ShoppingBag } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useCart } from "./CartContext";
 
@@ -97,27 +97,31 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* ── Center: Online Rezervasyon (Desktop) ── */}
+          {/* ── Center: Navigation Links (Desktop) ── */}
           <div
-            className="hidden md:block"
+            className="hidden md:flex"
             style={{
               position: "absolute",
               left: "50%",
               top: "50%",
               transform: "translate(-50%, -50%)",
               zIndex: 10,
+              alignItems: "center",
+              gap: 6,
             }}
           >
+            <Link href="/#portfolio" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:!text-white">Portfolyo</Link>
+            <Link href="/#contact" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:!text-white">İletişim</Link>
             <Link
               href="/booking"
               style={{
-                fontSize: "0.7rem",
+                fontSize: "0.65rem",
                 textTransform: "uppercase",
-                letterSpacing: "0.3em",
+                letterSpacing: "0.2em",
                 fontWeight: 700,
                 color: "#fff",
                 background: "rgba(255,255,255,0.1)",
-                padding: "12px 24px",
+                padding: "10px 20px",
                 borderRadius: 0,
                 border: "1px solid rgba(255,255,255,0.2)",
                 textDecoration: "none",
@@ -126,7 +130,7 @@ export default function Navbar() {
               }}
               className="hover:!bg-white hover:!text-black"
             >
-              Online Rezervasyon
+              Rezervasyon
             </Link>
           </div>
 
@@ -273,6 +277,14 @@ export default function Navbar() {
               Online Rezervasyon
             </Link>
 
+            <Link href="/#portfolio" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", textDecoration: "none" }}>
+              Portfolyo
+            </Link>
+
+            <Link href="/#contact" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", textDecoration: "none" }}>
+              İletişim
+            </Link>
+
             <button
               onClick={() => { setIsMenuOpen(false); openCart(true); }}
               style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}
@@ -294,50 +306,31 @@ export default function Navbar() {
         )}
       </header>
 
-      {/* Admin Shortcut - only on login page */}
-      {pathname === "/login" && (
-        <div className="fixed bottom-28 md:bottom-10 right-6 md:right-10 z-[100]">
+
+
+      {/* Sticky Mobile CTA - hidden on booking/login/register/profile */}
+      {!['/booking', '/login', '/register', '/profile'].some(p => pathname.startsWith(p)) && (
+        <div className="md:hidden fixed bottom-8 left-6 right-6 z-[100] animate-in slide-in-from-bottom-10 duration-700">
           <Link
-            href="/admin/dashboard"
+            href="/booking"
             style={{
-              width: 48, height: 48,
-              display: "flex", alignItems: "center", justifyContent: "center",
+              width: "100%", height: 56,
+              background: "#fff", color: "#000",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
+              textDecoration: "none",
               borderRadius: 0,
-              background: "rgba(255,255,255,0.05)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: "rgba(255,255,255,0.2)",
-              transition: "all 0.3s",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+              boxShadow: "0 20px 50px rgba(0,0,0,0.4)",
+              transition: "transform 0.2s",
             }}
-            className="hover:!text-white hover:!bg-white/10 hover:!scale-110"
+            className="active:scale-95"
           >
-            <Lock size={16} />
+            <div style={{ width: 6, height: 6, borderRadius: 0, background: "#000", animation: "pulse 2s infinite" }} />
+            <span style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.3em", fontWeight: 800 }}>
+              Online Rezervasyon
+            </span>
           </Link>
         </div>
       )}
-
-      {/* Sticky Mobile CTA */}
-      <div className="md:hidden fixed bottom-8 left-6 right-6 z-[100] animate-in slide-in-from-bottom-10 duration-700">
-        <Link
-          href="/booking"
-          style={{
-            width: "100%", height: 56,
-            background: "#fff", color: "#000",
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
-            textDecoration: "none",
-            borderRadius: 0,
-            boxShadow: "0 20px 50px rgba(0,0,0,0.4)",
-            transition: "transform 0.2s",
-          }}
-          className="active:scale-95"
-        >
-          <div style={{ width: 6, height: 6, borderRadius: 0, background: "#000", animation: "pulse 2s infinite" }} />
-          <span style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.3em", fontWeight: 800 }}>
-            Online Rezervasyon
-          </span>
-        </Link>
-      </div>
 
       {/* Animations */}
       <style jsx global>{`

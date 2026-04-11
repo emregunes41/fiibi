@@ -90,7 +90,6 @@ export default function LoginPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: 4, paddingRight: 4 }}>
                 <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Şifre</label>
-                <Link href="#" style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>Şifremi unuttum</Link>
               </div>
               <div style={{ position: "relative" }}>
                 <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.4)", pointerEvents: "none" }} />
