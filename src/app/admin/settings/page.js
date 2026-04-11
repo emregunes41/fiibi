@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode } from "../core-actions";
 import { getBanners, createBanner, updateBanner, deleteBanner, reorderBanners } from "../banner-actions";
+import { getContentBlocks, createContentBlock, updateContentBlock, deleteContentBlock } from "../content-actions";
 import { sendTestSMS } from "../test-sms-action";
 import { CldUploadWidget } from "next-cloudinary";
 import { 
@@ -71,6 +72,11 @@ export default function SettingsPage() {
   const [testSmsResult, setTestSmsResult] = useState(null);
   const [testSmsLoading, setTestSmsLoading] = useState(false);
 
+  // Content Blocks
+  const [contentBlocks, setContentBlocks] = useState([]);
+  const [cbForm, setCbForm] = useState({ title: "", description: "", imageUrl: "" });
+  const [cbUploading, setCbUploading] = useState(false);
+
   useEffect(() => {
     async function loadConfig() {
       const data = await getSiteConfig();
@@ -84,6 +90,7 @@ export default function SettingsPage() {
     loadConfig();
     loadDiscountCodes();
     getBanners().then(setBanners);
+    getContentBlocks().then(setContentBlocks);
   }, []);
 
   async function handleSubmit(e) {
@@ -1065,6 +1072,81 @@ export default function SettingsPage() {
         </button>
 
       </form>
+
+      {/* ── Content Blocks ── */}
+      <div style={sectionCard}>
+        {sectionHeader(Layout, "Anasayfa İçerik Blokları", "Anasayfada görsel ve metin ile bölümler ekleyin")}
+        
+        {/* Existing blocks */}
+        {contentBlocks.length > 0 && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+            {contentBlocks.map((cb) => (
+              <div key={cb.id} style={{ display: "flex", gap: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: 12, alignItems: "center" }}>
+                {cb.imageUrl && (
+                  <img src={cb.imageUrl} alt="" style={{ width: 60, height: 60, objectFit: "cover", flexShrink: 0 }} />
+                )}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{cb.title || "(Başlıksız)"}</div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cb.description || ""}</div>
+                </div>
+                <button onClick={async () => {
+                  if (!confirm("Bu bloğu silmek istediğinize emin misiniz?")) return;
+                  await deleteContentBlock(cb.id);
+                  setContentBlocks(await getContentBlocks());
+                }} style={{ background: "none", border: "none", color: "rgba(239,68,68,0.7)", cursor: "pointer", padding: 6, flexShrink: 0 }}>
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Add new block */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div>
+              <label style={label}>Başlık</label>
+              <input value={cbForm.title} onChange={e => setCbForm(p => ({ ...p, title: e.target.value }))} placeholder="Bölüm başlığı" style={inp} />
+            </div>
+            <div>
+              <label style={label}>Görsel</label>
+              <CldUploadWidget
+                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                options={{ maxFiles: 1, resourceType: "image" }}
+                onSuccess={(result) => {
+                  setCbForm(p => ({ ...p, imageUrl: result.info.secure_url }));
+                }}
+              >
+                {({ open }) => (
+                  <button type="button" onClick={() => open()} style={{ ...inp, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: cbForm.imageUrl ? "#4ade80" : "rgba(255,255,255,0.5)" }}>
+                    <UploadCloud size={14} />
+                    {cbForm.imageUrl ? "✓ Yüklendi" : "Görsel Yükle"}
+                  </button>
+                )}
+              </CldUploadWidget>
+            </div>
+          </div>
+          <div>
+            <label style={label}>Açıklama</label>
+            <textarea value={cbForm.description} onChange={e => setCbForm(p => ({ ...p, description: e.target.value }))} placeholder="Bu bölümde anlatmak istediğiniz metin..." rows={3} style={{ ...inp, resize: "vertical" }} />
+          </div>
+          <button type="button" disabled={cbUploading || (!cbForm.title && !cbForm.imageUrl)} onClick={async () => {
+            setCbUploading(true);
+            await createContentBlock(cbForm);
+            setCbForm({ title: "", description: "", imageUrl: "" });
+            setContentBlocks(await getContentBlocks());
+            setCbUploading(false);
+          }} style={{
+            padding: "12px 20px", borderRadius: 0, border: "none",
+            background: (cbForm.title || cbForm.imageUrl) ? "#22c55e" : "rgba(255,255,255,0.06)",
+            color: (cbForm.title || cbForm.imageUrl) ? "#000" : "rgba(255,255,255,0.3)",
+            fontWeight: 800, fontSize: 12, cursor: (cbForm.title || cbForm.imageUrl) ? "pointer" : "not-allowed",
+            display: "flex", alignItems: "center", gap: 8, width: "fit-content",
+          }}>
+            <Plus size={14} /> {cbUploading ? "Ekleniyor..." : "Blok Ekle"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

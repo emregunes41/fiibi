@@ -1,6 +1,7 @@
 import { getPackages, getSiteConfig } from "./admin/core-actions";
 import { getPortfolioCategories } from "./admin/portfolio-actions";
 import { getActiveBanners } from "./admin/banner-actions";
+import { getContentBlocks } from "./admin/content-actions";
 import BookingFlow from "@/components/BookingFlow";
 import GalleryClient from "./gallery/GalleryClient";
 import Image from "next/image";
@@ -17,6 +18,7 @@ export default async function PinowedPage() {
   const categories = portfolioRes.success ? portfolioRes.categories : [];
   const siteConfig = await getSiteConfig();
   const banners = await getActiveBanners();
+  const contentBlocks = await getContentBlocks();
 
   // Helper to render newlines as <br/>
   const renderTitle = (text) => {
@@ -60,6 +62,54 @@ export default async function PinowedPage() {
         <section className="py-12 pb-4 border-t border-white/5">
           <div className="section-container">
             <BannerCarousel banners={banners} />
+          </div>
+        </section>
+      )}
+
+      {/* 2.5 Content Blocks */}
+      {contentBlocks && contentBlocks.filter(b => b.isActive).length > 0 && (
+        <section className="py-16 border-t border-white/5">
+          <div className="section-container">
+            <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+              {contentBlocks.filter(b => b.isActive).map((block, idx) => (
+                <div key={block.id} style={{
+                  display: "flex", flexDirection: idx % 2 === 0 ? "row" : "row-reverse",
+                  gap: "2.5rem", alignItems: "center",
+                  flexWrap: "wrap",
+                }}>
+                  {block.imageUrl && (
+                    <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+                      <img
+                        src={block.imageUrl}
+                        alt={block.title || ""}
+                        style={{ width: "100%", height: "auto", maxHeight: 400, objectFit: "cover", display: "block" }}
+                      />
+                    </div>
+                  )}
+                  {(block.title || block.description) && (
+                    <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+                      {block.title && (
+                        <h3 style={{
+                          fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.02em",
+                          color: "#fff", margin: "0 0 1rem", lineHeight: 1.2,
+                          fontFamily: "'Playfair Display', serif",
+                        }}>
+                          {block.title}
+                        </h3>
+                      )}
+                      {block.description && (
+                        <p style={{
+                          fontSize: "0.9rem", lineHeight: 1.8, color: "rgba(255,255,255,0.45)",
+                          margin: 0, whiteSpace: "pre-line",
+                        }}>
+                          {block.description}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       )}
