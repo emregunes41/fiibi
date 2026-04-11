@@ -99,7 +99,17 @@ export default function ReservationsPage() {
       packageIds: res.packages.map(p => p.id),
       notes: res.notes || "",
       selectedAddons: res.selectedAddons || [],
-      customFieldAnswers: res.customFieldAnswers || [],
+      customFieldAnswers: (res.customFieldAnswers || []).map(cfa => {
+        // Enrich with options from package definition if missing
+        if (cfa.type === "dropdown" && !cfa.options) {
+          const pkg = res.packages.find(p => p.name === cfa.packageName);
+          if (pkg && pkg.customFields) {
+            const fieldDef = pkg.customFields.find(f => f.label === cfa.label);
+            if (fieldDef) return { ...cfa, options: fieldDef.options || "", required: fieldDef.required };
+          }
+        }
+        return cfa;
+      }).filter(cfa => cfa.type !== "_hidden"),
       totalAmount: res.totalAmount || "",
       venueName: res.venueName || ""
     });
