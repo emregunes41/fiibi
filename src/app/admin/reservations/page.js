@@ -277,9 +277,9 @@ export default function ReservationsPage() {
             </div>
 
             {/* Calendar Grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2, overflowX: "hidden" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gridAutoRows: "70px", gap: 2, overflowX: "hidden" }}>
               {cells.map((day, idx) => {
-                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 55, background: "rgba(255,255,255,0.01)", borderRadius: 0 }} />;
+                if (day === null) return <div key={`e${idx}`} style={{ background: "rgba(255,255,255,0.01)", borderRadius: 0 }} />;
                 
                 const dayRes = resByDay[day] || [];
                 const hasRes = dayRes.length > 0;
@@ -291,16 +291,16 @@ export default function ReservationsPage() {
                     setQuickEventForm({ venueName: "", eventDate: dateStr, startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
                     setQuickEventModal(true);
                   }} style={{
-                    minHeight: 55, borderRadius: 0, padding: "3px 4px",
+                    height: "100%", borderRadius: 0, padding: "3px 4px",
                     background: todayStyle ? "rgba(255,255,255,0.04)" : hasRes ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
                     border: todayStyle ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(255,255,255,0.04)",
-                    cursor: "pointer",
+                    cursor: "pointer", overflow: "hidden",
                     transition: "all 0.15s",
                   }}>
                     <div style={{ fontSize: "0.7rem", fontWeight: todayStyle ? 800 : 600, color: todayStyle ? "rgba(255,255,255,0.5)" : hasRes ? "#fff" : "rgba(255,255,255,0.3)", marginBottom: 3 }}>
                       {day}
                     </div>
-                    {dayRes.slice(0, 3).map((r) => {
+                    {dayRes.slice(0, 2).map((r) => {
                       const sc = statusColor(r.status);
                       return (
                         <div
@@ -329,9 +329,9 @@ export default function ReservationsPage() {
                         </div>
                       );
                     })}
-                    {dayRes.length > 3 && (
-                      <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)", fontWeight: 700, paddingLeft: 2 }}>
-                        +{dayRes.length - 3} daha
+                    {dayRes.length > 2 && (
+                      <div style={{ fontSize: "0.48rem", color: "rgba(255,255,255,0.35)", fontWeight: 700, paddingLeft: 2 }}>
+                        +{dayRes.length - 2}
                       </div>
                     )}
                   </div>
