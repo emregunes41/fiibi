@@ -164,8 +164,8 @@ export default async function PinowedPage() {
         </div>
       </footer>
 
-      {/* Floating Chat - sadece anasayfada */}
-      <AIChatBot />
+      {/* Floating Chat - sadece anasayfada, settings'den aktifse */}
+      {siteConfig?.chatbotEnabled !== false && <AIChatBot />}
 
     </main>
   );
