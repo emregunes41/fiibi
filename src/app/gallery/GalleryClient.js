@@ -298,7 +298,7 @@ export default function GalleryClient({ categories }) {
               padding: "4rem 2rem",
               color: "rgba(255,255,255,0.12)",
               border: "1px dashed rgba(255,255,255,0.1)",
-              borderRadius: "0.5rem",
+              borderRadius: 0,
             }}>
               <ImageIcon size={32} strokeWidth={1} style={{ margin: "0 auto 0.75rem", opacity: 0.5 }} />
               <p style={{ fontSize: "0.85rem" }}>Henüz koleksiyon bulunmuyor.</p>
@@ -318,7 +318,7 @@ export default function GalleryClient({ categories }) {
                   style={{
                     cursor: photoCount > 0 ? "pointer" : "default",
                     position: "relative",
-                    borderRadius: "0.5rem",
+                    borderRadius: 0,
                     overflow: "hidden",
                     aspectRatio: "3 / 4",
                     background: "#111",

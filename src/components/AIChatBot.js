@@ -221,9 +221,7 @@ export default function AIChatBot() {
                   <div style={{ maxWidth: "78%", display: "flex", flexDirection: "column", gap: 6 }}>
                     <div style={{
                       padding: "10px 14px",
-                      borderRadius: msg.role === "user" 
-                        ? "14px 14px 4px 14px" 
-                        : "14px 14px 14px 4px",
+                      borderRadius: 0,
                       background: msg.role === "user" 
                         ? "#fff" 
                         : "rgba(255,255,255,0.06)",
@@ -290,7 +288,7 @@ export default function AIChatBot() {
                   </div>
                   <div style={{
                     padding: "12px 16px",
-                    borderRadius: "14px 14px 14px 4px",
+                    borderRadius: 0,
                     background: "rgba(255,255,255,0.06)",
                     border: "1px solid rgba(255,255,255,0.06)",
                     display: "flex",

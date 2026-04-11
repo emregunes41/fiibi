@@ -6,7 +6,7 @@ import { getReservations, getPackages, createManualReservation, updateReservatio
 import Link from "next/link";
 
 const inp = {
-  padding: "0.7rem 0.8rem", borderRadius: "0.6rem", fontSize: "0.8rem",
+  padding: "0.7rem 0.8rem", borderRadius: 0, fontSize: "0.8rem",
   border: "1px solid rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.08)",
   color: "#fff", outline: "none", width: "100%", boxSizing: "border-box",
 };
@@ -137,7 +137,7 @@ export default function ReservationsPage() {
   const statusColor = (s) => {
     if (s === "CONFIRMED") return { bg: "rgba(255,255,255,0.08)", c: "rgba(255,255,255,0.7)", b: "1px solid rgba(255,255,255,0.15)" };
     if (s === "COMPLETED") return { bg: "rgba(96,165,250,0.12)", c: "rgba(255,255,255,0.5)", b: "1px solid rgba(96,165,250,0.2)" };
-    if (s === "CANCELLED") return { bg: "rgba(255,255,255,0.04)", c: "rgba(255,255,255,0.5)", b: "1px solid rgba(239,68,68,0.15)" };
+    if (s === "CANCELLED") return { bg: "rgba(255,255,255,0.04)", c: "rgba(255,255,255,0.5)", b: "1px solid rgba(255,255,255,0.08)" };
     if (s === "DELETED") return { bg: "rgba(107,114,128,0.15)", c: "#9ca3af", b: "1px solid rgba(107,114,128,0.3)" };
     return { bg: "rgba(255,255,255,0.05)", c: "rgba(255,255,255,0.5)", b: "1px solid rgba(255,255,255,0.08)" };
   };
@@ -153,7 +153,7 @@ export default function ReservationsPage() {
         <Link href="/admin/new-reservation"
           style={{ 
             background: "#fff", color: "#000", padding: "0.5rem 1rem", 
-            borderRadius: "0.6rem", border: "none", fontWeight: 800, cursor: "pointer",
+            borderRadius: 0, border: "none", fontWeight: 800, cursor: "pointer",
             display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem",
             textDecoration: "none",
           }}
@@ -245,7 +245,7 @@ export default function ReservationsPage() {
                 </button>
               </div>
               <div style={{ display: "flex", gap: 6 }}>
-                <button onClick={() => { setQuickEventForm({ venueName: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" }); setQuickEventModal(true); }} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: 0, padding: "5px 12px", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                <button onClick={() => { setQuickEventForm({ venueName: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" }); setQuickEventModal(true); }} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "5px 12px", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
                   <Star size={11} /> Olay Ekle
                 </button>
                 <button onClick={goToday} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "5px 12px", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", fontWeight: 700 }}>
@@ -279,8 +279,8 @@ export default function ReservationsPage() {
                     setQuickEventModal(true);
                   }} style={{
                     minHeight: 55, borderRadius: 0, padding: "3px 4px",
-                    background: todayStyle ? "rgba(59,130,246,0.08)" : hasRes ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
-                    border: todayStyle ? "1px solid rgba(59,130,246,0.25)" : "1px solid rgba(255,255,255,0.04)",
+                    background: todayStyle ? "rgba(255,255,255,0.04)" : hasRes ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
+                    border: todayStyle ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(255,255,255,0.04)",
                     cursor: "pointer",
                     transition: "all 0.15s",
                   }}>
@@ -537,7 +537,7 @@ export default function ReservationsPage() {
                   {res.contractApproved ? (
                     <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(74,222,128,0.3)" }}>📝 Sözleşme ✓</span>
                   ) : (
-                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(239,68,68,0.15)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(239,68,68,0.3)" }}>📝 Onay Yok</span>
+                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.12)" }}>📝 Onay Yok</span>
                   )}
                   {res.paymentPreference === "CREDIT_CARD" && (
                     <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(245,158,11,0.15)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}>💳 Kart</span>
@@ -561,7 +561,7 @@ export default function ReservationsPage() {
                     onClick={() => toggleSelectionExpand(res.id)}
                     style={{ 
                       padding: "6px 10px", 
-                      background: res.selectionLocked ? "rgba(255,255,255,0.04)" : "rgba(168,85,247,0.08)", 
+                      background: res.selectionLocked ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.04)", 
                       border: `1px solid ${res.selectionLocked ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.08)"}`, 
                       borderRadius: 0, display: "flex", flexDirection: "column", gap: "6px", 
                       cursor: "pointer", transition: "all 0.2s"
@@ -608,7 +608,7 @@ export default function ReservationsPage() {
               )}
               {/* Album Model Display */}
               {res.albumModel && (
-                <div style={{ marginBottom: "8px", padding: "6px 10px", background: "rgba(59,130,246,0.08)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 0, display: "flex", alignItems: "center", gap: "8px" }}>
+                <div style={{ marginBottom: "8px", padding: "6px 10px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 0, display: "flex", alignItems: "center", gap: "8px" }}>
                   <div style={{ width: 32, height: 32, borderRadius: 0, overflow: "hidden", background: "#000", flexShrink: 0 }}>
                     <img src={res.albumModel.imageUrl} alt="Album" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
@@ -739,7 +739,7 @@ export default function ReservationsPage() {
       {/* ── New / Edit Reservation Modal ── */}
       {(isModalOpen || editModal.isOpen) && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "1rem", width: "100%", maxWidth: "420px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
+          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "420px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>{editModal.isOpen ? "Rezervasyonu Düzenle" : "Yeni Rezervasyon"}</h2>
               <button onClick={() => { setIsModalOpen(false); setEditModal({isOpen: false, data: null}); }} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={18} /></button>
@@ -963,8 +963,8 @@ export default function ReservationsPage() {
               <textarea placeholder="Notlar (isteğe bağlı)" style={{ ...inp, minHeight: "50px", resize: "none" }} value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})} />
 
               <div style={{ display: "flex", gap: "0.5rem", marginTop: "4px" }}>
-                <button type="button" onClick={() => { setIsModalOpen(false); setEditModal({isOpen: false, data: null}); }} style={{ flex: 1, padding: "0.7rem", borderRadius: "0.6rem", border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "rgba(255,255,255,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>
-                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: "0.6rem", border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : (editModal.isOpen ? "GÜNCELLE" : "KAYDET")}</button>
+                <button type="button" onClick={() => { setIsModalOpen(false); setEditModal({isOpen: false, data: null}); }} style={{ flex: 1, padding: "0.7rem", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "rgba(255,255,255,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>
+                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : (editModal.isOpen ? "GÜNCELLE" : "KAYDET")}</button>
               </div>
             </form>
           </div>
@@ -974,7 +974,7 @@ export default function ReservationsPage() {
       {/* ── Workflow Modal ── */}
       {workflowModal.isOpen && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "1rem", width: "100%", maxWidth: "380px", padding: "1.25rem", margin: "2rem 0" }}>
+          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "380px", padding: "1.25rem", margin: "2rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
               <div>
                 <h2 style={{ fontSize: "1rem", fontWeight: 900, margin: 0 }}>İş Akışı</h2>
@@ -1005,8 +1005,8 @@ export default function ReservationsPage() {
                 </div>
               </div>
               <div style={{ display: "flex", gap: "0.5rem" }}>
-                <button type="button" onClick={() => setWorkflowModal({isOpen: false, data: null})} style={{ flex: 1, padding: "0.65rem", borderRadius: "0.6rem", border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "rgba(255,255,255,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.72rem" }}>İPTAL</button>
-                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.65rem", borderRadius: "0.6rem", border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer", fontSize: "0.72rem" }}>{isLoading ? "..." : "GÜNCELLE"}</button>
+                <button type="button" onClick={() => setWorkflowModal({isOpen: false, data: null})} style={{ flex: 1, padding: "0.65rem", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "rgba(255,255,255,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.72rem" }}>İPTAL</button>
+                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.65rem", borderRadius: 0, border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer", fontSize: "0.72rem" }}>{isLoading ? "..." : "GÜNCELLE"}</button>
               </div>
             </form>
           </div>
@@ -1042,7 +1042,7 @@ export default function ReservationsPage() {
 
         return (
           <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-            <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "1rem", width: "100%", maxWidth: "520px", padding: "0", margin: "2rem 0", overflow: "hidden", maxHeight: "90vh", overflowY: "auto" }}>
+            <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "520px", padding: "0", margin: "2rem 0", overflow: "hidden", maxHeight: "90vh", overflowY: "auto" }}>
               
               {/* Header */}
               <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -1106,8 +1106,8 @@ export default function ReservationsPage() {
                             <div style={{ fontSize: "0.9rem", fontWeight: 800, color: "#fff", flexShrink: 0, marginLeft: 12 }}>{pkg.price}₺</div>
                           </div>
                           <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: 8 }}>
-                            <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(168,85,247,0.12)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 0 }}>{catLabels[pkg.category] || pkg.category}</span>
-                            <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(59,130,246,0.12)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 0 }}>{timeLabels[pkg.timeType] || pkg.timeType}</span>
+                            <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 0 }}>{catLabels[pkg.category] || pkg.category}</span>
+                            <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 0 }}>{timeLabels[pkg.timeType] || pkg.timeType}</span>
                             <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 0 }}>{pkg.deliveryTimeDays || 14} gün içinde teslim</span>
                             {pkg.postSelectionDays > 0 && (
                               <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.7)", padding: "3px 8px", borderRadius: 0 }}>+{pkg.postSelectionDays} gün seçim süresi</span>
@@ -1330,7 +1330,7 @@ export default function ReservationsPage() {
                             onClick={handleAddPayment} 
                             disabled={!paymentForm.amount || paymentLoading}
                             style={{ 
-                              padding: "8px 16px", borderRadius: "0.6rem", border: "none",
+                              padding: "8px 16px", borderRadius: 0, border: "none",
                               background: paymentForm.amount ? "#fff" : "rgba(255,255,255,0.06)",
                               color: paymentForm.amount ? "#000" : "rgba(255,255,255,0.3)",
                               fontWeight: 800, fontSize: "0.72rem", cursor: paymentForm.amount ? "pointer" : "not-allowed",
@@ -1371,7 +1371,7 @@ export default function ReservationsPage() {
                             }} 
                             disabled={!extraFeeForm.amount || !extraFeeForm.note || extraFeeLoading}
                             style={{ 
-                              padding: "8px 16px", borderRadius: "0.6rem", border: "none",
+                              padding: "8px 16px", borderRadius: 0, border: "none",
                               background: (extraFeeForm.amount && extraFeeForm.note) ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.06)",
                               color: (extraFeeForm.amount && extraFeeForm.note) ? "#000" : "rgba(255,255,255,0.3)",
                               fontWeight: 800, fontSize: "0.72rem", cursor: (extraFeeForm.amount && extraFeeForm.note) ? "pointer" : "not-allowed",
@@ -1542,7 +1542,7 @@ export default function ReservationsPage() {
                 {r.selectedPhotos && (
                   <>
                     <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📸 Müşteri Fotoğraf Seçimi</div>
-                    <div style={{ background: "rgba(168,85,247,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "14px", fontSize: "0.78rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.6, wordBreak: "break-all" }}>
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "14px", fontSize: "0.78rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.6, wordBreak: "break-all" }}>
                       {r.selectedPhotos}
                     </div>
                   </>
@@ -1552,7 +1552,7 @@ export default function ReservationsPage() {
                 {r.albumModel && (
                   <>
                     <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📚 Albüm Seçimi</div>
-                    <div style={{ background: "rgba(59,130,246,0.06)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 0, padding: "14px", display: "flex", gap: "12px", alignItems: "center" }}>
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 0, padding: "14px", display: "flex", gap: "12px", alignItems: "center" }}>
                       <div style={{ width: 48, height: 48, borderRadius: 0, overflow: "hidden", background: "#000", flexShrink: 0 }}>
                         <img src={r.albumModel.imageUrl} alt="Album" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       </div>
@@ -1578,7 +1578,7 @@ export default function ReservationsPage() {
       {/* ── Quick Event Modal ── */}
       {quickEventModal && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "1rem", width: "100%", maxWidth: "380px", padding: "1.25rem", position: "relative", margin: "3rem 0" }}>
+          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "380px", padding: "1.25rem", position: "relative", margin: "3rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>
                 <Star size={16} style={{ marginRight: 6, verticalAlign: "middle", color: "rgba(255,255,255,0.5)" }} />
@@ -1658,7 +1658,7 @@ export default function ReservationsPage() {
               </div>
 
               <button type="submit" disabled={quickEventLoading} style={{
-                padding: "0.75rem", borderRadius: "0.6rem", border: "none",
+                padding: "0.75rem", borderRadius: 0, border: "none",
                 background: "rgba(255,255,255,0.5)", color: "#fff", fontWeight: 800, fontSize: "0.8rem",
                 cursor: "pointer", opacity: quickEventLoading ? 0.6 : 1, transition: "all 0.2s",
                 marginTop: 4,

@@ -43,7 +43,7 @@ const getTimeTypeLabel = (val) => TIME_TYPES.find(t => t.value === val)?.label |
 
 const inp = {
   width: "100%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)",
-  borderRadius: "0.6rem", padding: "0.7rem 0.8rem", color: "#fff", outline: "none",
+  borderRadius: 0, padding: "0.7rem 0.8rem", color: "#fff", outline: "none",
   fontSize: "0.8rem", boxSizing: "border-box",
 };
 
@@ -140,8 +140,8 @@ export default function PackagesPage() {
       {/* Toast */}
       {deleteMessage && (
         <div style={{ position: "fixed", top: 70, right: 16, zIndex: 2000, padding: "10px 16px", borderRadius: 0,
-          background: deleteMessage.type === "error" ? "rgba(239,68,68,0.15)" : "rgba(34,197,94,0.15)",
-          border: `1px solid ${deleteMessage.type === "error" ? "rgba(239,68,68,0.3)" : "rgba(34,197,94,0.3)"}`,
+          background: deleteMessage.type === "error" ? "rgba(255,255,255,0.08)" : "rgba(34,197,94,0.15)",
+          border: `1px solid ${deleteMessage.type === "error" ? "rgba(255,255,255,0.12)" : "rgba(34,197,94,0.3)"}`,
           color: deleteMessage.type === "error" ? "rgba(255,255,255,0.6)" : "#fff", fontWeight: 600, fontSize: 12,
         }}>{deleteMessage.text}</div>
       )}
@@ -153,7 +153,7 @@ export default function PackagesPage() {
           <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.75rem", margin: "4px 0 0" }}>{packages.length} paket</p>
         </div>
         <button onClick={openNew} style={{
-          background: "#fff", color: "#000", padding: "0.5rem 1rem", borderRadius: "0.6rem",
+          background: "#fff", color: "#000", padding: "0.5rem 1rem", borderRadius: 0,
           border: "none", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem",
         }}><Plus size={14} /> YENİ</button>
       </div>
@@ -213,7 +213,7 @@ export default function PackagesPage() {
                     </span>
                   )}
                   {pkg.availableSlots && pkg.availableSlots.length > 0 && (
-                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(168,85,247,0.08)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.5)" }}>
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.5)" }}>
                       🕐{pkg.availableSlots.length} slot
                     </span>
                   )}
@@ -264,7 +264,7 @@ export default function PackagesPage() {
       {/* ── Modal ── */}
       {isModalOpen && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "1rem", width: "100%", maxWidth: "440px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
+          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, width: "100%", maxWidth: "440px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1rem", fontWeight: 900, margin: 0 }}>{editingId ? "Düzenle" : "Yeni Paket"}</h2>
               <button onClick={() => setIsModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}><X size={18} /></button>
@@ -293,7 +293,7 @@ export default function PackagesPage() {
 
               {/* Slot Configuration for SLOT_2H / SLOT_4H */}
               {(formData.timeType === "SLOT_2H" || formData.timeType === "SLOT_4H") && (
-                <div style={{ background: "rgba(168,85,247,0.05)", border: "1px solid rgba(168,85,247,0.12)", borderRadius: "0.6rem", padding: "10px" }}>
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "10px" }}>
                   <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: "8px" }}>
                     🕐 Aktif Saat Dilimleri
                   </div>
@@ -344,7 +344,7 @@ export default function PackagesPage() {
               </div>
 
               {/* Addons */}
-              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "0.6rem", padding: "10px" }}>
+              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "10px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
                   <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Ek Hizmetler</span>
                   <button type="button" onClick={addAddon} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "3px 8px", borderRadius: 0, cursor: "pointer", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "3px" }}>
@@ -359,7 +359,7 @@ export default function PackagesPage() {
                       <div key={i} style={{ display: "flex", gap: "4px", alignItems: "center" }}>
                         <input type="text" placeholder="Hizmet adı" value={addon.title} onChange={(e) => updateAddon(i, "title", e.target.value)} style={{ ...inp, flex: 2, padding: "6px 8px", fontSize: "0.75rem" }} />
                         <input type="text" placeholder="₺" value={addon.price} onChange={(e) => updateAddon(i, "price", e.target.value)} style={{ ...inp, flex: 0.7, padding: "6px 8px", fontSize: "0.75rem" }} />
-                        <button type="button" onClick={() => removeAddon(i)} style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", color: "rgba(255,255,255,0.6)", width: 26, height: 26, borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={11} /></button>
+                        <button type="button" onClick={() => removeAddon(i)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)", width: 26, height: 26, borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={11} /></button>
                       </div>
                     ))}
                   </div>
@@ -367,7 +367,7 @@ export default function PackagesPage() {
               </div>
 
               {/* Custom Fields */}
-              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "0.6rem", padding: "10px" }}>
+              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "10px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
                   <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Özel Alanlar</span>
                   <button type="button" onClick={() => setFormData({ ...formData, customFields: [...formData.customFields, { label: "", type: "text", placeholder: "", options: "", required: false }] })}
@@ -395,7 +395,7 @@ export default function PackagesPage() {
                               style={{ width: "12px", height: "12px" }} /> Zorunlu
                           </label>
                           <button type="button" onClick={() => setFormData({ ...formData, customFields: formData.customFields.filter((_, idx) => idx !== i) })}
-                            style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", color: "rgba(255,255,255,0.6)", width: 24, height: 24, borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={10} /></button>
+                            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)", width: 24, height: 24, borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={10} /></button>
                         </div>
                         {field.type === "text" && <input type="text" placeholder="Placeholder metin..." value={field.placeholder || ""} onChange={(e) => { const cf = [...formData.customFields]; cf[i] = { ...cf[i], placeholder: e.target.value }; setFormData({ ...formData, customFields: cf }); }} style={{ ...inp, padding: "5px 8px", fontSize: "0.7rem" }} />}
                         {field.type === "dropdown" && <input type="text" placeholder="Seçenekler (virgülle)" value={field.options || ""} onChange={(e) => { const cf = [...formData.customFields]; cf[i] = { ...cf[i], options: e.target.value }; setFormData({ ...formData, customFields: cf }); }} style={{ ...inp, padding: "5px 8px", fontSize: "0.7rem" }} />}
@@ -408,8 +408,8 @@ export default function PackagesPage() {
 
               {/* Buttons */}
               <div style={{ display: "flex", gap: "0.5rem", marginTop: "4px" }}>
-                <button type="button" onClick={() => setIsModalOpen(false)} style={{ flex: 1, padding: "0.7rem", borderRadius: "0.6rem", border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "rgba(255,255,255,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>
-                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: "0.6rem", border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : "KAYDET"}</button>
+                <button type="button" onClick={() => setIsModalOpen(false)} style={{ flex: 1, padding: "0.7rem", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "rgba(255,255,255,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>
+                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : "KAYDET"}</button>
               </div>
             </form>
           </div>

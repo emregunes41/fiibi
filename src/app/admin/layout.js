@@ -51,7 +51,7 @@ export default function AdminLayout({ children }) {
           return (
             <Link key={item.name} href={item.href} style={{ textDecoration: "none" }}>
               <div style={{
-                display: "flex", alignItems: "center", gap: "1rem", padding: "1rem 1.25rem", borderRadius: "1rem",
+                display: "flex", alignItems: "center", gap: "1rem", padding: "1rem 1.25rem", borderRadius: 0,
                 background: isActive ? "rgba(255,255,255,0.1)" : "transparent",
                 color: isActive ? "#fff" : "rgba(255,255,255,0.65)",
                 fontWeight: isActive ? 700 : 500,
@@ -71,9 +71,9 @@ export default function AdminLayout({ children }) {
         <button type="submit" style={{ 
           display: "flex", alignItems: "center", gap: "1rem", padding: "1rem 1.25rem", 
           width: "100%", background: "transparent", border: "none", color: "#FF4D4D", 
-          fontWeight: 700, cursor: "pointer", borderRadius: "1rem", transition: "all 0.2s",
+          fontWeight: 700, cursor: "pointer", borderRadius: 0, transition: "all 0.2s",
           marginTop: "auto", textAlign: "left"
-        }} className="hover:bg-red-500/10">
+        }} className="hover:bg-white/80/10">
           <LogOut size={20} /> Çıkış Yap
         </button>
       </form>

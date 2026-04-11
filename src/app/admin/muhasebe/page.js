@@ -182,7 +182,7 @@ export default async function MuhasebePage() {
                     {m.total > 0 ? `${fmt(m.total / 1000)}K` : ""}
                   </div>
                   <div style={{ 
-                    width: "100%", maxWidth: 28, borderRadius: "4px 4px 2px 2px", 
+                    width: "100%", maxWidth: 28, borderRadius: 0, 
                     height: `${Math.max(h, 2)}%`, minHeight: 3,
                     background: isCurrentMonth 
                       ? "linear-gradient(180deg, #fff, #22c55e)" 

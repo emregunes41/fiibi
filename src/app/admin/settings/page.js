@@ -1034,8 +1034,8 @@ export default function SettingsPage() {
         {message && (
           <div style={{
             padding: "12px 16px", borderRadius: 0, display: "flex", alignItems: "center", gap: 10, marginBottom: 16,
-            background: isError ? "rgba(239,68,68,0.08)" : "rgba(255,255,255,0.04)",
-            border: `1px solid ${isError ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.1)"}`,
+            background: isError ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.04)",
+            border: `1px solid ${isError ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.1)"}`,
             color: isError ? "rgba(255,255,255,0.6)" : "#fff",
           }}>
             {isError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}

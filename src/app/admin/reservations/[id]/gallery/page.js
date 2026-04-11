@@ -125,7 +125,7 @@ export default function GalleryManagementPage() {
               onClick={handleDeliveryToggle}
               className={`w-full py-3 rounded-none font-bold tracking-tight transition-all flex items-center justify-center gap-2 ${
                 gallery.isDelivered 
-                  ? "bg-red-500 text-white hover:bg-red-600" 
+                  ? "bg-white text-white hover:bg-white/80" 
                   : "bg-white text-black hover:bg-green-400"
               }`}
             >
@@ -169,7 +169,7 @@ export default function GalleryManagementPage() {
                     </span>
                     <button 
                       onClick={() => handleDelete(photo.id)}
-                      className="bg-red-500/80 text-white p-1.5 rounded-none hover:bg-red-500 transition-colors"
+                      className="bg-white/60 text-white p-1.5 rounded-none hover:bg-white/80 transition-colors"
                       title="Sil"
                     >
                       <Trash2 size={12} />

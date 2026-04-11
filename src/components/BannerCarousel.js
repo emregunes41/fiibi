@@ -70,7 +70,7 @@ export default function BannerCarousel({ banners }) {
         width: "100%",
         aspectRatio: "21 / 9",
         maxHeight: "420px",
-        borderRadius: "1rem",
+        borderRadius: 0,
         overflow: "hidden",
         cursor: banner.link ? "pointer" : "default",
       }}

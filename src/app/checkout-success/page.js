@@ -9,11 +9,11 @@ export default function SuccessPage() {
       position: 'relative', overflow: 'hidden'
     }}>
       {/* Background Glow */}
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '400px', height: '400px', background: 'rgba(16, 185, 129, 0.1)', filter: 'blur(100px)', zIndex: 0 }} />
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '400px', height: '400px', background: 'rgba(255,255,255,0.06)', filter: 'blur(100px)', zIndex: 0 }} />
 
       <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ 
-          width: '120px', height: '120px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', 
+          width: '120px', height: '120px', borderRadius: 0, background: 'rgba(255,255,255,0.06)', 
           display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem',
           border: '1px solid rgba(16, 185, 129, 0.2)', boxShadow: '0 0 40px rgba(16, 185, 129, 0.1)'
         }}>
@@ -28,14 +28,14 @@ export default function SuccessPage() {
         <div style={{ display: 'flex', gap: '1.5rem' }}>
           <Link href="/profile" style={{ 
             textDecoration: 'none', background: 'rgba(255,255,255,0.05)', color: '#fff', 
-            padding: '1.25rem 2.5rem', borderRadius: '1.5rem', fontWeight: 800, fontSize: '1rem',
+            padding: '1.25rem 2.5rem', borderRadius: 0, fontWeight: 800, fontSize: '1rem',
             border: '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s'
           }} className="hover:bg-white/10">
             REZERVASYONLARIM
           </Link>
           <Link href="/" style={{ 
             textDecoration: 'none', background: '#fff', color: '#000', 
-            padding: '1.25rem 2.5rem', borderRadius: '1.5rem', fontWeight: 800, fontSize: '1rem',
+            padding: '1.25rem 2.5rem', borderRadius: 0, fontWeight: 800, fontSize: '1rem',
             transition: 'transform 0.2s', display: 'flex', alignItems: 'center', gap: '0.75rem'
           }} className="hover:scale-105">
             ANA SAYFA <ArrowRight size={18} />

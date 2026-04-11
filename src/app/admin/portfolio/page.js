@@ -13,7 +13,7 @@ import {
 
 const inp = {
   width: "100%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)",
-  borderRadius: "0.6rem", padding: "0.7rem 0.8rem", color: "#fff", outline: "none",
+  borderRadius: 0, padding: "0.7rem 0.8rem", color: "#fff", outline: "none",
   fontSize: "0.8rem", boxSizing: "border-box",
 };
 
@@ -97,7 +97,7 @@ export default function PortfolioAdminPage() {
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <button 
               onClick={() => setActiveCategoryId(null)}
-              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "0.5rem 0.8rem", borderRadius: "0.6rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem", fontWeight: 700 }}
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "0.5rem 0.8rem", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem", fontWeight: 700 }}
             >
               <ArrowLeft size={14} /> Geri
             </button>
@@ -117,7 +117,7 @@ export default function PortfolioAdminPage() {
             {({ open }) => (
               <button
                 onClick={() => open()}
-                style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: "2rem", fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+                style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
               >
                 <UploadCloud size={16} /> Görsel Yükle
               </button>
@@ -135,7 +135,7 @@ export default function PortfolioAdminPage() {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "0.8rem" }}>
             {activeCategory.photos.map((photo) => (
-              <div key={photo.id} style={{ position: "relative", aspectRatio: "1", borderRadius: "0.8rem", overflow: "hidden", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={photo.id} style={{ position: "relative", aspectRatio: "1", borderRadius: 0, overflow: "hidden", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <img src={photo.url} alt="Portfolio" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 <button
                   onClick={() => handleDeletePhoto(photo.id)}
@@ -166,14 +166,14 @@ export default function PortfolioAdminPage() {
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: "2rem", fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+          style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
         >
           <Plus size={16} /> Yeni Konsept
         </button>
       </div>
 
       {errorMsg && (
-        <div style={{ padding: "10px 14px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: "0.6rem", color: "rgba(255,255,255,0.6)", fontSize: "0.75rem", fontWeight: 700, marginBottom: "1rem" }}>
+        <div style={{ padding: "10px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, color: "rgba(255,255,255,0.6)", fontSize: "0.75rem", fontWeight: 700, marginBottom: "1rem" }}>
           {errorMsg}
         </div>
       )}
@@ -184,7 +184,7 @@ export default function PortfolioAdminPage() {
           <div 
             key={category.id} 
             onClick={() => setActiveCategoryId(category.id)}
-            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "1rem", overflow: "hidden", cursor: "pointer", transition: "all 0.2s", display: "flex", flexDirection: "column" }}
+            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, overflow: "hidden", cursor: "pointer", transition: "all 0.2s", display: "flex", flexDirection: "column" }}
             onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.transform = "translateY(0)"; }}
           >
@@ -233,7 +233,7 @@ export default function PortfolioAdminPage() {
       {/* New Category Modal */}
       {isModalOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", padding: "2rem", borderRadius: "1.5rem", width: "100%", maxWidth: "400px", position: "relative" }}>
+          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", padding: "2rem", borderRadius: 0, width: "100%", maxWidth: "400px", position: "relative" }}>
             <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>
               <X size={20} />
             </button>
@@ -255,7 +255,7 @@ export default function PortfolioAdminPage() {
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "0.5rem" }}>
                 <button type="button" onClick={() => setIsModalOpen(false)} style={{ background: "transparent", color: "rgba(255,255,255,0.6)", border: "none", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", padding: "0.5rem 1rem" }}>İptal</button>
-                <button type="submit" disabled={isCreating} style={{ background: "#fff", color: "#000", border: "none", padding: "0.8rem 1.5rem", borderRadius: "1rem", fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isCreating ? 0.7 : 1 }}>
+                <button type="submit" disabled={isCreating} style={{ background: "#fff", color: "#000", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isCreating ? 0.7 : 1 }}>
                   {isCreating ? "Oluşturuluyor..." : "Oluştur"}
                 </button>
               </div>

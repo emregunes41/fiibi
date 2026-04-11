@@ -65,7 +65,7 @@ export default function Navbar() {
             justifyContent: "space-between",
             position: "relative",
             padding: scrolled ? "12px 28px" : "0 28px",
-            borderRadius: scrolled ? 100 : 0,
+            borderRadius: 0,
             background: scrolled ? "rgba(0,0,0,0.5)" : "transparent",
             backdropFilter: scrolled ? "blur(20px)" : "none",
             WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",

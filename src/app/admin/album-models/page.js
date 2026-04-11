@@ -6,7 +6,7 @@ import { getAlbumModels, createAlbumModel, deleteAlbumModel, uploadAlbumImage } 
 
 const inp = {
   width: "100%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)",
-  borderRadius: "0.6rem", padding: "0.7rem 0.8rem", color: "#fff", outline: "none",
+  borderRadius: 0, padding: "0.7rem 0.8rem", color: "#fff", outline: "none",
   fontSize: "0.8rem", boxSizing: "border-box",
 };
 
@@ -90,7 +90,7 @@ export default function AlbumModelsPage() {
         </div>
         <button 
           onClick={openNew}
-          style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: "2rem", fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+          style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
         >
           <Plus size={16} /> Yeni Model Ekle
         </button>
@@ -98,7 +98,7 @@ export default function AlbumModelsPage() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
         {models.map(model => (
-          <div key={model.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "1rem", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+          <div key={model.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
             <div style={{ width: "100%", height: "200px", position: "relative", backgroundColor: "rgba(0,0,0,0.5)" }}>
               {/* Using img tag to avoid next/image domain config issues for external urls */}
               <img src={model.imageUrl} alt={model.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -136,7 +136,7 @@ export default function AlbumModelsPage() {
 
       {isModalOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", padding: "2rem", borderRadius: "1.5rem", width: "100%", maxWidth: "450px", maxHeight: "90vh", overflowY: "auto", position: "relative" }}>
+          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", padding: "2rem", borderRadius: 0, width: "100%", maxWidth: "450px", maxHeight: "90vh", overflowY: "auto", position: "relative" }}>
             <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>
               <X size={20} />
             </button>
@@ -177,7 +177,7 @@ export default function AlbumModelsPage() {
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1rem" }}>
                 <button type="button" onClick={() => setIsModalOpen(false)} style={{ background: "transparent", color: "rgba(255,255,255,0.6)", border: "none", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", padding: "0.5rem 1rem" }}>İptal</button>
-                <button type="submit" disabled={isLoading} style={{ background: "#fff", color: "#000", border: "none", padding: "0.8rem 1.5rem", borderRadius: "1rem", fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isLoading ? 0.7 : 1 }}>
+                <button type="submit" disabled={isLoading} style={{ background: "#fff", color: "#000", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isLoading ? 0.7 : 1 }}>
                   {isLoading ? "Ekleniyor..." : "Ekle"}
                 </button>
               </div>

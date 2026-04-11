@@ -33,7 +33,7 @@ export default function AlbumSelectionForm({ reservationId, initialSelectedId, m
   if (models.length === 0) return null; // If admin hasn't added any models, don't show the section.
 
   return (
-    <div style={{ marginTop: 24, background: "rgba(59,130,246,0.06)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 0, padding: 24 }}>
+    <div style={{ marginTop: 24, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 0, padding: 24 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
         <Book size={20} style={{ color: "rgba(255,255,255,0.5)" }} />
         <h4 style={{ fontSize: 18, fontWeight: 800, color: "#fff" }}>Albüm Modeli Seçimi</h4>
