@@ -139,7 +139,7 @@ export default function PortfolioAdminPage() {
                 <img src={photo.url} alt="Portfolio" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 <button
                   onClick={() => handleDeletePhoto(photo.id)}
-                  style={{ position: "absolute", top: 8, right: 8, background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "5px", borderRadius: "50%", cursor: "pointer", opacity: 0.7, transition: "opacity 0.2s" }}
+                  style={{ position: "absolute", top: 8, right: 8, background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "5px", borderRadius: 0, cursor: "pointer", opacity: 0.7, transition: "opacity 0.2s" }}
                   onMouseEnter={(e) => e.target.style.opacity = 1}
                   onMouseLeave={(e) => e.target.style.opacity = 0.7}
                 >
@@ -173,7 +173,7 @@ export default function PortfolioAdminPage() {
       </div>
 
       {errorMsg && (
-        <div style={{ padding: "10px 14px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: "0.6rem", color: "#f87171", fontSize: "0.75rem", fontWeight: 700, marginBottom: "1rem" }}>
+        <div style={{ padding: "10px 14px", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: "0.6rem", color: "rgba(255,255,255,0.6)", fontSize: "0.75rem", fontWeight: 700, marginBottom: "1rem" }}>
           {errorMsg}
         </div>
       )}
@@ -201,7 +201,7 @@ export default function PortfolioAdminPage() {
               <div style={{ position: "absolute", top: 10, right: 10, display: "flex", gap: "0.4rem" }}>
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDeleteCategory(category.id, category.name); }}
-                  style={{ background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "6px", borderRadius: "50%", cursor: "pointer" }}
+                  style={{ background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "6px", borderRadius: 0, cursor: "pointer" }}
                 >
                   <Trash2 size={14} />
                 </button>

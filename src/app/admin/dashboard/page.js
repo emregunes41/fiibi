@@ -50,10 +50,10 @@ export default async function AdminDashboard() {
     if (!date) return { text: "-", color: "gray" };
     const diffTime = new Date(date).getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays < 0) return { text: `${Math.abs(diffDays)} GÜN GECİKTİ`, color: "#EF4444" };
-    if (diffDays === 0) return { text: "BUGÜN", color: "#F59E0B" };
-    if (diffDays <= 3) return { text: `${diffDays} GÜN KALDI`, color: "#F59E0B" };
-    return { text: `${diffDays} GÜN KALDI`, color: "#10B981" };
+    if (diffDays < 0) return { text: `${Math.abs(diffDays)} GÜN GECİKTİ`, color: "rgba(255,255,255,0.6)" };
+    if (diffDays === 0) return { text: "BUGÜN", color: "rgba(255,255,255,0.5)" };
+    if (diffDays <= 3) return { text: `${diffDays} GÜN KALDI`, color: "rgba(255,255,255,0.5)" };
+    return { text: `${diffDays} GÜN KALDI`, color: "rgba(255,255,255,0.6)" };
   };
 
   return (
@@ -65,28 +65,28 @@ export default async function AdminDashboard() {
 
       {/* Stats Grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "8px", marginBottom: "1.5rem" }}>
-        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: "10px" }}>
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: 0 }}>
           <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
             <Package size={11} /> Paket
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalPackages}</div>
         </div>
 
-        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: "10px" }}>
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: 0 }}>
           <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
             <Calendar size={11} /> Randevu
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalReservations}</div>
         </div>
 
-        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: "10px" }}>
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: 0 }}>
           <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
             <Users size={11} /> Üye
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalMembers}</div>
         </div>
 
-        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", padding: "12px", borderRadius: "10px" }}>
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", padding: "12px", borderRadius: 0 }}>
           <div style={{ color: "#fff", fontSize: "0.6rem", fontWeight: 900, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
             <Clock size={11} /> Bekleyen
           </div>
@@ -101,16 +101,16 @@ export default async function AdminDashboard() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "10px", marginBottom: "1.25rem" }}>
         
         {/* Yaklaşan Çekimler */}
-        <div style={{ background: "rgba(139,92,246,0.04)", border: "1px solid rgba(139,92,246,0.15)", borderRadius: "12px", padding: "14px" }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "14px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
-            <Calendar size={13} style={{ color: "#a78bfa" }} />
-            <span style={{ fontWeight: 900, fontSize: "0.8rem", color: "#a78bfa" }}>Yaklaşan Çekimler</span>
+            <Calendar size={13} style={{ color: "rgba(255,255,255,0.6)" }} />
+            <span style={{ fontWeight: 900, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)" }}>Yaklaşan Çekimler</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             {upcomingShoots.map((res) => {
               const info = getDaysLeftInfo(res.eventDate);
               return (
-                <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", borderRadius: "8px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.brideName} {res.groomName ? `& ${res.groomName}` : ''}</div>
                     <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)" }}>
@@ -129,7 +129,7 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Son Rezervasyonlar */}
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "14px" }}>
+        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "14px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
             <span style={{ fontWeight: 900, fontSize: "0.8rem" }}>Son Rezervasyonlar</span>
             <Link href="/admin/reservations" style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.6rem", fontWeight: 800, textDecoration: "none", display: "flex", alignItems: "center", gap: "2px" }}>
@@ -138,15 +138,15 @@ export default async function AdminDashboard() {
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             {recentReservations.map((res) => (
-              <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 8px", borderRadius: "6px", background: "rgba(255,255,255,0.04)" }}>
+              <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 8px", borderRadius: 0, background: "rgba(255,255,255,0.04)" }}>
                 <div>
                   <div style={{ fontSize: "0.75rem", fontWeight: 700 }}>{res.brideName}</div>
                   <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)" }}>{new Date(res.eventDate).toLocaleDateString("tr-TR")}</div>
                 </div>
                 <span style={{
-                  padding: "2px 6px", borderRadius: "4px", fontSize: "0.55rem", fontWeight: 800,
-                  background: res.status === "CONFIRMED" ? "rgba(52,211,153,0.15)" : "rgba(255,255,255,0.05)",
-                  color: res.status === "CONFIRMED" ? "#34d399" : "rgba(255,255,255,0.4)",
+                  padding: "2px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800,
+                  background: res.status === "CONFIRMED" ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.05)",
+                  color: res.status === "CONFIRMED" ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.4)",
                 }}>{res.status === "CONFIRMED" ? "ONAYLI" : "BEKLEMEDE"}</span>
               </div>
             ))}
@@ -158,17 +158,17 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Yaklaşan Teslimatlar */}
-      <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,191,36,0.2)", borderRadius: "12px", padding: "14px", marginBottom: "1.25rem" }}>
+      <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "14px", marginBottom: "1.25rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
-          <Calendar size={13} style={{ color: "#FBBF24" }} />
-          <span style={{ fontWeight: 900, fontSize: "0.8rem", color: "#FBBF24" }}>Yaklaşan Teslimatlar</span>
+          <Calendar size={13} style={{ color: "rgba(255,255,255,0.6)" }} />
+          <span style={{ fontWeight: 900, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)" }}>Yaklaşan Teslimatlar</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
           {upcomingDeliveries.map((res) => {
             const info = getDaysLeftInfo(res.deliveryDate);
             const statusMap = { "PENDING": "Çekim Bekleniyor", "SHOT_DONE": "Düzenlemede", "EDITING": "Düzenlemede", "SELECTION_PENDING": "Seçim Bekleniyor", "DELIVERED": "Teslim Edildi", "PREPARING": "Hazırlanıyor" };
             return (
-              <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", borderRadius: "8px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.brideName} {res.groomName ? `& ${res.groomName}` : ''}</div>
                   <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)" }}>

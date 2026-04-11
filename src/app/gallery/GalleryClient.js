@@ -115,11 +115,11 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
       }}>
         {photos.map((_, i) => (
           <div key={i} style={{
-            flex: 1, height: "2.5px", borderRadius: "2px",
+            flex: 1, height: "2.5px", borderRadius: 0,
             background: "rgba(255,255,255,0.15)", overflow: "hidden",
           }}>
             <div style={{
-              height: "100%", borderRadius: "2px", background: "#fff",
+              height: "100%", borderRadius: 0, background: "#fff",
               width: i < currentIndex ? "100%" : i === currentIndex ? `${progress}%` : "0%",
               transition: i === currentIndex ? "none" : "width 0.3s ease",
             }} />
@@ -142,7 +142,7 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
           onClick={onClose}
           style={{
             background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)",
-            border: "none", borderRadius: "50%", width: "36px", height: "36px",
+            border: "none", borderRadius: 0, width: "36px", height: "36px",
             display: "flex", alignItems: "center", justifyContent: "center",
             cursor: "pointer", color: "#fff",
           }}
@@ -173,7 +173,7 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
         <button onClick={goPrev} style={{
           position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)",
           zIndex: 20, background: "rgba(255,255,255,0.08)", border: "none",
-          borderRadius: "50%", width: "40px", height: "40px",
+          borderRadius: 0, width: "40px", height: "40px",
           display: "flex", alignItems: "center", justifyContent: "center",
           cursor: "pointer", color: "rgba(255,255,255,0.6)",
         }}>
@@ -184,7 +184,7 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
         <button onClick={goNext} style={{
           position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)",
           zIndex: 20, background: "rgba(255,255,255,0.08)", border: "none",
-          borderRadius: "50%", width: "40px", height: "40px",
+          borderRadius: 0, width: "40px", height: "40px",
           display: "flex", alignItems: "center", justifyContent: "center",
           cursor: "pointer", color: "rgba(255,255,255,0.6)",
         }}>
@@ -268,7 +268,7 @@ export default function GalleryClient({ categories }) {
             marginBottom: "1rem",
             padding: "0.4rem 1rem",
             border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: "100px",
+            borderRadius: 0,
           }}>
             Portfolyo
           </div>

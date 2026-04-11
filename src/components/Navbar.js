@@ -81,7 +81,7 @@ export default function Navbar() {
                   width: 40, height: 40,
                   background: "#fff", color: "#000",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  borderRadius: 4, fontFamily: "serif", fontSize: 20,
+                  borderRadius: 0, fontFamily: "serif", fontSize: 20,
                   transition: "transform 0.3s",
                 }}
                 className="group-hover:rotate-12"
@@ -118,7 +118,7 @@ export default function Navbar() {
                 color: "#fff",
                 background: "rgba(255,255,255,0.1)",
                 padding: "12px 24px",
-                borderRadius: 4,
+                borderRadius: 0,
                 border: "1px solid rgba(255,255,255,0.2)",
                 textDecoration: "none",
                 whiteSpace: "nowrap",
@@ -141,7 +141,7 @@ export default function Navbar() {
                 style={{
                   position: "relative",
                   width: 40, height: 40,
-                  borderRadius: "50%",
+                  borderRadius: 0,
                   background: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.1)",
                   display: "flex", alignItems: "center", justifyContent: "center",
@@ -158,7 +158,7 @@ export default function Navbar() {
                       position: "absolute", top: -4, right: -4,
                       minWidth: 18, height: 18,
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      borderRadius: 100, fontSize: 10, fontWeight: 700,
+                      borderRadius: 0, fontSize: 10, fontWeight: 700,
                       background: "#fff", color: "#000", padding: "0 4px",
                       animation: "cartBadgePop 0.3s ease",
                     }}
@@ -179,7 +179,7 @@ export default function Navbar() {
                       color: "#fff",
                       background: "rgba(255,255,255,0.05)",
                       padding: "10px 20px",
-                      borderRadius: 4,
+                      borderRadius: 0,
                       border: "1px solid rgba(255,255,255,0.1)",
                       textDecoration: "none",
                       whiteSpace: "nowrap",
@@ -216,7 +216,7 @@ export default function Navbar() {
                 style={{
                   position: "relative",
                   width: 40, height: 40,
-                  borderRadius: "50%",
+                  borderRadius: 0,
                   background: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.1)",
                   display: "flex", alignItems: "center", justifyContent: "center",
@@ -230,7 +230,7 @@ export default function Navbar() {
                     position: "absolute", top: -4, right: -4,
                     minWidth: 18, height: 18,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    borderRadius: 100, fontSize: 10, fontWeight: 700,
+                    borderRadius: 0, fontSize: 10, fontWeight: 700,
                     background: "#fff", color: "#000", padding: "0 4px",
                   }}>
                     {itemCount}
@@ -302,7 +302,7 @@ export default function Navbar() {
             style={{
               width: 48, height: 48,
               display: "flex", alignItems: "center", justifyContent: "center",
-              borderRadius: "50%",
+              borderRadius: 0,
               background: "rgba(255,255,255,0.05)",
               backdropFilter: "blur(20px)",
               border: "1px solid rgba(255,255,255,0.1)",
@@ -326,13 +326,13 @@ export default function Navbar() {
             background: "#fff", color: "#000",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
             textDecoration: "none",
-            borderRadius: 100,
+            borderRadius: 0,
             boxShadow: "0 20px 50px rgba(0,0,0,0.4)",
             transition: "transform 0.2s",
           }}
           className="active:scale-95"
         >
-          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#000", animation: "pulse 2s infinite" }} />
+          <div style={{ width: 6, height: 6, borderRadius: 0, background: "#000", animation: "pulse 2s infinite" }} />
           <span style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.3em", fontWeight: 800 }}>
             Online Rezervasyon
           </span>

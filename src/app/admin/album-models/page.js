@@ -105,7 +105,7 @@ export default function AlbumModelsPage() {
               <div style={{ position: "absolute", top: 10, right: 10, display: "flex", gap: "0.4rem" }}>
                 <button
                   onClick={() => handleDelete(model.id)}
-                  style={{ background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "6px", borderRadius: "50%", cursor: "pointer" }}
+                  style={{ background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "6px", borderRadius: 0, cursor: "pointer" }}
                 >
                   <Trash2 size={14} />
                 </button>
@@ -121,7 +121,7 @@ export default function AlbumModelsPage() {
                 </p>
               )}
               {deleteMessage?.id === model.id && (
-                <div style={{ fontSize: "0.7rem", color: "#f87171", marginTop: "0.5rem", fontWeight: 600 }}>{deleteMessage.text}</div>
+                <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", marginTop: "0.5rem", fontWeight: 600 }}>{deleteMessage.text}</div>
               )}
             </div>
           </div>
@@ -162,7 +162,7 @@ export default function AlbumModelsPage() {
                       required 
                     />
                     {selectedFile && (
-                      <div style={{ fontSize: "0.7rem", color: "#4ade80", marginTop: "4px" }}>
+                      <div style={{ fontSize: "0.7rem", color: "#fff", marginTop: "4px" }}>
                         Seçildi: {selectedFile.name}
                       </div>
                     )}

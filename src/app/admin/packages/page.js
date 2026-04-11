@@ -139,10 +139,10 @@ export default function PackagesPage() {
     <div style={{ color: "#fff" }}>
       {/* Toast */}
       {deleteMessage && (
-        <div style={{ position: "fixed", top: 70, right: 16, zIndex: 2000, padding: "10px 16px", borderRadius: 8,
+        <div style={{ position: "fixed", top: 70, right: 16, zIndex: 2000, padding: "10px 16px", borderRadius: 0,
           background: deleteMessage.type === "error" ? "rgba(239,68,68,0.15)" : "rgba(34,197,94,0.15)",
           border: `1px solid ${deleteMessage.type === "error" ? "rgba(239,68,68,0.3)" : "rgba(34,197,94,0.3)"}`,
-          color: deleteMessage.type === "error" ? "#f87171" : "#4ade80", fontWeight: 600, fontSize: 12,
+          color: deleteMessage.type === "error" ? "rgba(255,255,255,0.6)" : "#fff", fontWeight: 600, fontSize: 12,
         }}>{deleteMessage.text}</div>
       )}
 
@@ -170,7 +170,7 @@ export default function PackagesPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {group.items.map((pkg) => (
               <div key={pkg.id} style={{
-                padding: "12px 14px", borderRadius: "10px",
+                padding: "12px 14px", borderRadius: 0,
                 border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.05)",
               }}>
                 {/* Row 1: Name + Price + Actions */}
@@ -184,10 +184,10 @@ export default function PackagesPage() {
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
                     <span style={{ fontWeight: 900, fontSize: "0.9rem" }}>{pkg.price}₺</span>
-                    <button onClick={() => startEdit(pkg)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", padding: "5px", borderRadius: "6px", cursor: "pointer", display: "flex" }}>
+                    <button onClick={() => startEdit(pkg)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
                       <Edit2 size={12} />
                     </button>
-                    <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(255,68,68,0.05)", border: "1px solid rgba(255,68,68,0.15)", color: "#ff6b6b", padding: "5px", borderRadius: "6px", cursor: "pointer", display: "flex" }}>
+                    <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(255,68,68,0.05)", border: "1px solid rgba(255,68,68,0.15)", color: "#ff6b6b", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
                       <Trash2 size={12} />
                     </button>
                   </div>
@@ -195,35 +195,35 @@ export default function PackagesPage() {
 
                 {/* Row 2: Tags */}
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
-                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: "5px", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
                     {getCategoryLabel(pkg.category)}
                   </span>
-                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: "5px", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
                     {getTimeTypeLabel(pkg.timeType)}
                   </span>
-                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: "5px", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
                     {pkg.maxCapacity}/periyot
                   </span>
-                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: "5px", color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
                     ⏳{pkg.deliveryTimeDays}gün teslim
                   </span>
                   {pkg.postSelectionDays > 0 && (
-                    <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(96,165,250,0.08)", padding: "3px 8px", borderRadius: "5px", color: "#60a5fa", textTransform: "uppercase" }}>
+                    <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(96,165,250,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.5)", textTransform: "uppercase" }}>
                       📋+{pkg.postSelectionDays}gün seçim
                     </span>
                   )}
                   {pkg.availableSlots && pkg.availableSlots.length > 0 && (
-                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(168,85,247,0.08)", padding: "2px 6px", borderRadius: "4px", color: "#a855f7" }}>
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(168,85,247,0.08)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.5)" }}>
                       🕐{pkg.availableSlots.length} slot
                     </span>
                   )}
                   {pkg.addons && pkg.addons.length > 0 && (
-                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: "4px", color: "rgba(255,255,255,0.4)" }}>
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.4)" }}>
                       +{pkg.addons.length} ek hizmet
                     </span>
                   )}
                   {pkg.customFields && pkg.customFields.length > 0 && (
-                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: "4px", color: "rgba(255,255,255,0.4)" }}>
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.4)" }}>
                       📝{pkg.customFields.length} alan
                     </span>
                   )}
@@ -239,14 +239,14 @@ export default function PackagesPage() {
           <h2 style={{ fontSize: "0.9rem", fontWeight: 900, marginBottom: "10px" }}>📷 Diğer</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {ungrouped.map((pkg) => (
-              <div key={pkg.id} style={{ padding: "12px 14px", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div key={pkg.id} style={{ padding: "12px 14px", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div>
                   <div style={{ fontWeight: 700, fontSize: "0.85rem" }}>{pkg.name}</div>
                   <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.3)" }}>{pkg.price}₺</div>
                 </div>
                 <div style={{ display: "flex", gap: "6px" }}>
-                  <button onClick={() => startEdit(pkg)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", padding: "5px", borderRadius: "6px", cursor: "pointer", display: "flex" }}><Edit2 size={12} /></button>
-                  <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(255,68,68,0.05)", border: "1px solid rgba(255,68,68,0.15)", color: "#ff6b6b", padding: "5px", borderRadius: "6px", cursor: "pointer", display: "flex" }}><Trash2 size={12} /></button>
+                  <button onClick={() => startEdit(pkg)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}><Edit2 size={12} /></button>
+                  <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(255,68,68,0.05)", border: "1px solid rgba(255,68,68,0.15)", color: "#ff6b6b", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}><Trash2 size={12} /></button>
                 </div>
               </div>
             ))}
@@ -294,7 +294,7 @@ export default function PackagesPage() {
               {/* Slot Configuration for SLOT_2H / SLOT_4H */}
               {(formData.timeType === "SLOT_2H" || formData.timeType === "SLOT_4H") && (
                 <div style={{ background: "rgba(168,85,247,0.05)", border: "1px solid rgba(168,85,247,0.12)", borderRadius: "0.6rem", padding: "10px" }}>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "#a855f7", textTransform: "uppercase", marginBottom: "8px" }}>
+                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: "8px" }}>
                     🕐 Aktif Saat Dilimleri
                   </div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
@@ -306,9 +306,9 @@ export default function PackagesPage() {
                           type="button"
                           onClick={() => toggleSlot(slot.value)}
                           style={{
-                            padding: "6px 10px", borderRadius: "6px", fontSize: "0.7rem", fontWeight: 700,
+                            padding: "6px 10px", borderRadius: 0, fontSize: "0.7rem", fontWeight: 700,
                             cursor: "pointer", transition: "all 0.15s",
-                            border: active ? "1px solid #a855f7" : "1px solid rgba(255,255,255,0.08)",
+                            border: active ? "1px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.08)",
                             background: active ? "rgba(168,85,247,0.2)" : "rgba(255,255,255,0.03)",
                             color: active ? "#c084fc" : "rgba(255,255,255,0.35)",
                           }}
@@ -347,7 +347,7 @@ export default function PackagesPage() {
               <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "0.6rem", padding: "10px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
                   <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Ek Hizmetler</span>
-                  <button type="button" onClick={addAddon} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "3px 8px", borderRadius: "4px", cursor: "pointer", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "3px" }}>
+                  <button type="button" onClick={addAddon} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "3px 8px", borderRadius: 0, cursor: "pointer", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "3px" }}>
                     <PlusCircle size={10} /> Ekle
                   </button>
                 </div>
@@ -359,7 +359,7 @@ export default function PackagesPage() {
                       <div key={i} style={{ display: "flex", gap: "4px", alignItems: "center" }}>
                         <input type="text" placeholder="Hizmet adı" value={addon.title} onChange={(e) => updateAddon(i, "title", e.target.value)} style={{ ...inp, flex: 2, padding: "6px 8px", fontSize: "0.75rem" }} />
                         <input type="text" placeholder="₺" value={addon.price} onChange={(e) => updateAddon(i, "price", e.target.value)} style={{ ...inp, flex: 0.7, padding: "6px 8px", fontSize: "0.75rem" }} />
-                        <button type="button" onClick={() => removeAddon(i)} style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", color: "#f87171", width: 26, height: 26, borderRadius: "4px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={11} /></button>
+                        <button type="button" onClick={() => removeAddon(i)} style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", color: "rgba(255,255,255,0.6)", width: 26, height: 26, borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={11} /></button>
                       </div>
                     ))}
                   </div>
@@ -371,7 +371,7 @@ export default function PackagesPage() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
                   <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Özel Alanlar</span>
                   <button type="button" onClick={() => setFormData({ ...formData, customFields: [...formData.customFields, { label: "", type: "text", placeholder: "", options: "", required: false }] })}
-                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "3px 8px", borderRadius: "4px", cursor: "pointer", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "3px" }}>
+                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "3px 8px", borderRadius: 0, cursor: "pointer", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "3px" }}>
                     <PlusCircle size={10} /> Ekle
                   </button>
                 </div>
@@ -380,7 +380,7 @@ export default function PackagesPage() {
                 ) : (
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                     {formData.customFields.map((field, i) => (
-                      <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)", borderRadius: "6px", padding: "8px" }}>
+                      <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)", borderRadius: 0, padding: "8px" }}>
                         <div style={{ display: "flex", gap: "4px", alignItems: "center", marginBottom: "4px" }}>
                           <input type="text" placeholder="Alan adı" value={field.label} onChange={(e) => { const cf = [...formData.customFields]; cf[i] = { ...cf[i], label: e.target.value }; setFormData({ ...formData, customFields: cf }); }}
                             style={{ ...inp, flex: 2, padding: "6px 8px", fontSize: "0.75rem" }} />
@@ -395,7 +395,7 @@ export default function PackagesPage() {
                               style={{ width: "12px", height: "12px" }} /> Zorunlu
                           </label>
                           <button type="button" onClick={() => setFormData({ ...formData, customFields: formData.customFields.filter((_, idx) => idx !== i) })}
-                            style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", color: "#f87171", width: 24, height: 24, borderRadius: "4px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={10} /></button>
+                            style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)", color: "rgba(255,255,255,0.6)", width: 24, height: 24, borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={10} /></button>
                         </div>
                         {field.type === "text" && <input type="text" placeholder="Placeholder metin..." value={field.placeholder || ""} onChange={(e) => { const cf = [...formData.customFields]; cf[i] = { ...cf[i], placeholder: e.target.value }; setFormData({ ...formData, customFields: cf }); }} style={{ ...inp, padding: "5px 8px", fontSize: "0.7rem" }} />}
                         {field.type === "dropdown" && <input type="text" placeholder="Seçenekler (virgülle)" value={field.options || ""} onChange={(e) => { const cf = [...formData.customFields]; cf[i] = { ...cf[i], options: e.target.value }; setFormData({ ...formData, customFields: cf }); }} style={{ ...inp, padding: "5px 8px", fontSize: "0.7rem" }} />}

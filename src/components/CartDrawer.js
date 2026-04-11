@@ -24,7 +24,7 @@ const inputStyle = {
   width: "100%",
   background: "rgba(255,255,255,0.06)",
   border: "1px solid rgba(255,255,255,0.15)",
-  borderRadius: "12px",
+  borderRadius: 0,
   padding: "14px 16px",
   fontSize: "13px",
   color: "#fff",
@@ -335,7 +335,7 @@ export default function CartDrawer() {
                     }
                   }} style={{
                     background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
-                    borderRadius: "8px", padding: "6px", cursor: "pointer", color: "rgba(255,255,255,0.4)",
+                    borderRadius: 0, padding: "6px", cursor: "pointer", color: "rgba(255,255,255,0.4)",
                   }}>
                     <ArrowLeft size={14} />
                   </button>
@@ -351,7 +351,7 @@ export default function CartDrawer() {
               </div>
               <button onClick={() => { setIsOpen(false); setCheckoutMode(false); }} style={{
                 background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
-                borderRadius: "10px", padding: "8px", cursor: "pointer", color: "rgba(255,255,255,0.6)",
+                borderRadius: 0, padding: "8px", cursor: "pointer", color: "rgba(255,255,255,0.6)",
               }}>
                 <X size={16} />
               </button>
@@ -379,7 +379,7 @@ export default function CartDrawer() {
 
                           return (
                             <div key={item.pkg.id} style={{
-                              padding: "16px", borderRadius: "14px",
+                              padding: "16px", borderRadius: 0,
                               border: "1px solid rgba(255,255,255,0.1)",
                               background: meta.gradient,
                               position: "relative",
@@ -398,7 +398,7 @@ export default function CartDrawer() {
                                 </div>
                                 <button onClick={() => removeItem(item.pkg.id)} style={{
                                   background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
-                                  borderRadius: "8px", padding: "6px", cursor: "pointer", color: "rgba(255,60,60,0.7)",
+                                  borderRadius: 0, padding: "6px", cursor: "pointer", color: "rgba(255,255,255,0.4)",
                                 }}>
                                   <Trash2 size={12} />
                                 </button>
@@ -415,7 +415,7 @@ export default function CartDrawer() {
                               {/* Details */}
                               {item.details && (
                                 <div style={{
-                                  padding: "10px", borderRadius: "10px", marginBottom: "12px",
+                                  padding: "10px", borderRadius: 0, marginBottom: "12px",
                                   background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
                                 }}>
                                   {item.details.date && (
@@ -482,7 +482,7 @@ export default function CartDrawer() {
                       textAlign: "center", padding: "10px 0 20px",
                     }}>
                       <div style={{
-                        width: 56, height: 56, borderRadius: 16, margin: "0 auto 16px",
+                        width: 56, height: 56, borderRadius: 0, margin: "0 auto 16px",
                         background: "linear-gradient(135deg, rgba(245,158,11,0.15), rgba(251,113,133,0.15))",
                         display: "flex", alignItems: "center", justifyContent: "center",
                       }}>
@@ -508,7 +508,7 @@ export default function CartDrawer() {
                               window.location.href = `/booking?upsellPkg=${suggestion.pkg.id}&m=${m}&y=${y}`;
                             }}
                             style={{
-                              width: "100%", padding: "18px 16px", borderRadius: 14,
+                              width: "100%", padding: "18px 16px", borderRadius: 0,
                               background: `linear-gradient(135deg, ${suggestion.color}11 0%, transparent 60%)`,
                               border: `1px solid ${suggestion.color}33`,
                               cursor: "pointer", textAlign: "left",
@@ -517,7 +517,7 @@ export default function CartDrawer() {
                           >
                             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                               <div style={{
-                                width: 44, height: 44, borderRadius: 12,
+                                width: 44, height: 44, borderRadius: 0,
                                 background: `${suggestion.color}18`,
                                 display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                               }}>
@@ -529,7 +529,7 @@ export default function CartDrawer() {
                                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>{suggestion.pkg.price}</div>
                               </div>
                               <div style={{
-                                width: 32, height: 32, borderRadius: 8,
+                                width: 32, height: 32, borderRadius: 0,
                                 background: `${suggestion.color}20`, border: `1px solid ${suggestion.color}40`,
                                 display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                               }}>
@@ -549,7 +549,7 @@ export default function CartDrawer() {
                       }}
                       style={{
                         width: "100%", marginTop: 20, padding: "14px",
-                        borderRadius: 12, border: "none",
+                        borderRadius: 0, border: "none",
                         background: "#fff", color: "#000",
                         fontSize: 13, fontWeight: 700, cursor: "pointer",
                         display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
@@ -565,7 +565,7 @@ export default function CartDrawer() {
                   <motion.div key="checkout-contact" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
                     {/* Order summary */}
                     <div style={{
-                      padding: "16px", borderRadius: "14px", marginBottom: "24px",
+                      padding: "16px", borderRadius: 0, marginBottom: "24px",
                       background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
                     }}>
                       <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", marginBottom: "10px" }}>
@@ -589,14 +589,14 @@ export default function CartDrawer() {
 
                     {/* Discount Code Input */}
                     <div style={{
-                      padding: "14px 16px", borderRadius: "14px", marginBottom: "24px",
-                      background: discountResult ? "rgba(74,222,128,0.04)" : "rgba(255,255,255,0.03)",
-                      border: `1px solid ${discountResult ? "rgba(74,222,128,0.2)" : "rgba(255,255,255,0.08)"}`,
+                      padding: "14px 16px", borderRadius: 0, marginBottom: "24px",
+                      background: discountResult ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.03)",
+                      border: `1px solid ${discountResult ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
                       transition: "all 0.3s",
                     }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                        <Tag size={12} style={{ color: discountResult ? "#4ade80" : "rgba(255,255,255,0.4)" }} />
-                        <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: discountResult ? "#4ade80" : "rgba(255,255,255,0.4)" }}>
+                        <Tag size={12} style={{ color: discountResult ? "#fff" : "rgba(255,255,255,0.4)" }} />
+                        <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: discountResult ? "#fff" : "rgba(255,255,255,0.4)" }}>
                           {discountResult ? "İndirim Uygulandı!" : "İndirim Kodunuz Var Mı?"}
                         </span>
                       </div>
@@ -618,7 +618,7 @@ export default function CartDrawer() {
                             onClick={handleApplyDiscount}
                             disabled={discountLoading || !discountCode.trim()}
                             style={{
-                              padding: "0 18px", borderRadius: 12, border: "none",
+                              padding: "0 18px", borderRadius: 0, border: "none",
                               background: discountCode.trim() ? "#fff" : "rgba(255,255,255,0.06)",
                               color: discountCode.trim() ? "#000" : "rgba(255,255,255,0.2)",
                               fontWeight: 700, fontSize: 12, cursor: discountCode.trim() ? "pointer" : "not-allowed",
@@ -632,20 +632,20 @@ export default function CartDrawer() {
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <div>
                             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <Check size={14} style={{ color: "#4ade80" }} />
+                              <Check size={14} style={{ color: "#fff" }} />
                               <span style={{ fontSize: 14, fontWeight: 800, color: "#fff", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: "#4ade80" }}>%{discountResult.discountPercent}</span>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: "#fff" }}>%{discountResult.discountPercent}</span>
                             </div>
                             {discountResult.description && (
                               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4, marginLeft: 22 }}>{discountResult.description}</div>
                             )}
                           </div>
                           <button onClick={() => { setDiscountResult(null); setDiscountCode(""); setDiscountError(""); }} style={{
-                            background: "none", border: "none", color: "rgba(255,68,68,0.5)", cursor: "pointer", padding: 4, fontSize: 11,
+                            background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 4, fontSize: 11,
                           }}>Kaldır</button>
                         </div>
                       )}
-                      {discountError && <div style={{ fontSize: 11, color: "#f87171", marginTop: 8, fontWeight: 600 }}>{discountError}</div>}
+                      {discountError && <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", marginTop: 8, fontWeight: 600 }}>{discountError}</div>}
                     </div>
 
                     {/* Contact Form */}
@@ -666,7 +666,7 @@ export default function CartDrawer() {
                           }}
                         />
                         {contactForm.brideName && !brideNameValid && (
-                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
+                          <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
                         )}
                       </div>
 
@@ -682,7 +682,7 @@ export default function CartDrawer() {
                           }}
                         />
                         {contactForm.groomName && !groomNameValid && (
-                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
+                          <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
                         )}
                       </div>
                       
@@ -701,7 +701,7 @@ export default function CartDrawer() {
                           maxLength={16}
                         />
                         {contactForm.bridePhone && !bridePhoneValid && (
-                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
+                          <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
                         )}
                       </div>
 
@@ -718,7 +718,7 @@ export default function CartDrawer() {
                           maxLength={16}
                         />
                         {contactForm.groomPhone && !groomPhoneValid && (
-                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
+                          <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
                         )}
                       </div>
 
@@ -736,7 +736,7 @@ export default function CartDrawer() {
                           }}
                         />
                         {contactForm.brideEmail && !emailValid && (
-                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>Geçerli bir e-posta adresi girin (ör: ornek@email.com)</p>
+                          <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>Geçerli bir e-posta adresi girin (ör: ornek@email.com)</p>
                         )}
                       </div>
 
@@ -777,7 +777,7 @@ export default function CartDrawer() {
                           </button>
                         </div>
                         {contactForm.password && contactForm.password.length < 6 && (
-                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>En az 6 karakter olmalı</p>
+                          <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>En az 6 karakter olmalı</p>
                         )}
                       </div>
 
@@ -790,7 +790,7 @@ export default function CartDrawer() {
                           placeholder="Şifrenizi tekrar girin" style={inputStyle}
                         />
                         {contactForm.passwordConfirm && contactForm.password !== contactForm.passwordConfirm && (
-                          <p style={{ fontSize: "10px", color: "#f87171", margin: "4px 0 0" }}>Şifreler eşleşmiyor</p>
+                          <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>Şifreler eşleşmiyor</p>
                         )}
                       </div>
                     </div>
@@ -812,7 +812,7 @@ export default function CartDrawer() {
                         <div style={{
                           background: "rgba(255,255,255,0.03)",
                           border: "1px solid rgba(255,255,255,0.1)",
-                          borderRadius: 12, padding: 16,
+                          borderRadius: 0, padding: 16,
                           maxHeight: 180, overflowY: "auto",
                           marginBottom: 12,
                         }}>
@@ -828,16 +828,16 @@ export default function CartDrawer() {
                           onClick={() => setContractAccepted(!contractAccepted)}
                           style={{
                             display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer",
-                            padding: "12px 14px", borderRadius: 12,
-                            background: contractAccepted ? "rgba(74,222,128,0.06)" : "rgba(255,255,255,0.02)",
-                            border: `1px solid ${contractAccepted ? "rgba(74,222,128,0.2)" : "rgba(255,255,255,0.08)"}`,
+                            padding: "12px 14px", borderRadius: 0,
+                            background: contractAccepted ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
+                            border: `1px solid ${contractAccepted ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
                             transition: "all 0.2s",
                           }}
                         >
                           <div style={{
-                            width: 20, height: 20, borderRadius: 6, flexShrink: 0, marginTop: 1,
-                            border: `2px solid ${contractAccepted ? "#4ade80" : "rgba(255,255,255,0.25)"}`,
-                            background: contractAccepted ? "#4ade80" : "transparent",
+                            width: 20, height: 20, borderRadius: 0, flexShrink: 0, marginTop: 1,
+                            border: `2px solid ${contractAccepted ? "#fff" : "rgba(255,255,255,0.25)"}`,
+                            background: contractAccepted ? "#fff" : "transparent",
                             display: "flex", alignItems: "center", justifyContent: "center",
                             transition: "all 0.2s",
                           }}>
@@ -857,24 +857,24 @@ export default function CartDrawer() {
                       onClick={handleCashCheckout}
                       disabled={isSubmitting || (contractText && !contractAccepted)}
                       style={{
-                        width: "100%", padding: "20px", borderRadius: 16, marginBottom: 12,
-                        background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.2)",
+                        width: "100%", padding: "20px", borderRadius: 0, marginBottom: 12,
+                        background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)",
                         cursor: (isSubmitting || (contractText && !contractAccepted)) ? "not-allowed" : "pointer", textAlign: "left",
                         transition: "all 0.2s", color: "#fff",
                         opacity: (contractText && !contractAccepted) ? 0.4 : 1,
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                        <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(74,222,128,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          <Banknote size={22} style={{ color: "#4ade80" }} />
+                        <div style={{ width: 48, height: 48, borderRadius: 0, background: "rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <Banknote size={22} style={{ color: "#fff" }} />
                         </div>
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Nakit / Havale</div>
                           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.4 }}>Sizinle telefonla iletişime geçeceğiz</div>
                         </div>
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontSize: 20, fontWeight: 800, color: "#4ade80" }}>{fmt(effectiveTotal)}₺</div>
-                          <div style={{ fontSize: 10, color: "rgba(74,222,128,0.6)", fontWeight: 600, textTransform: "uppercase" }}>{discountResult ? `%${discountResult.discountPercent} indirimli` : "Aynı fiyat"}</div>
+                          <div style={{ fontSize: 20, fontWeight: 800, color: "#fff" }}>{fmt(effectiveTotal)}₺</div>
+                          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 600, textTransform: "uppercase" }}>{discountResult ? `%${discountResult.discountPercent} indirimli` : "Aynı fiyat"}</div>
                         </div>
                       </div>
                     </button>
@@ -884,7 +884,7 @@ export default function CartDrawer() {
                       onClick={handleCardCheckout}
                       disabled={isSubmitting || (contractText && !contractAccepted)}
                       style={{
-                        width: "100%", padding: "20px", borderRadius: 16, marginBottom: 12,
+                        width: "100%", padding: "20px", borderRadius: 0, marginBottom: 12,
                         background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.2)",
                         cursor: (isSubmitting || (contractText && !contractAccepted)) ? "not-allowed" : "pointer", textAlign: "left",
                         transition: "all 0.2s", color: "#fff",
@@ -892,22 +892,22 @@ export default function CartDrawer() {
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                        <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(96,165,250,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          <CreditCard size={22} style={{ color: "#60a5fa" }} />
+                        <div style={{ width: 48, height: 48, borderRadius: 0, background: "rgba(96,165,250,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <CreditCard size={22} style={{ color: "rgba(255,255,255,0.5)" }} />
                         </div>
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Kredi Kartı</div>
                           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.4 }}>Online güvenli ödeme</div>
                         </div>
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontSize: 20, fontWeight: 800, color: "#60a5fa" }}>{fmt(cardTotal)}₺</div>
+                          <div style={{ fontSize: 20, fontWeight: 800, color: "rgba(255,255,255,0.5)" }}>{fmt(cardTotal)}₺</div>
                           <div style={{ fontSize: 10, color: "rgba(96,165,250,0.6)", fontWeight: 600, textTransform: "uppercase" }}>+%15 hizmet bedeli</div>
                         </div>
                       </div>
                     </button>
 
                     {/* Info note */}
-                    <div style={{ marginTop: 16, padding: "12px 14px", borderRadius: 12, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                    <div style={{ marginTop: 16, padding: "12px 14px", borderRadius: 0, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
                       <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: 1.6 }}>
                         💡 Nakit/havale tercih ederseniz, rezervasyonunuz oluşturulur ve ödeme detayları için sizinle iletişime geçilir.
                       </div>
@@ -926,14 +926,14 @@ export default function CartDrawer() {
                   <motion.div key="paytr-view" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
                     <div style={{ marginBottom: 16 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                        <CreditCard size={18} style={{ color: "#60a5fa" }} />
+                        <CreditCard size={18} style={{ color: "rgba(255,255,255,0.5)" }} />
                         <span style={{ fontSize: 16, fontWeight: 700 }}>Kart ile Ödeme</span>
                       </div>
                       <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", margin: 0 }}>
                         Aşağıdaki formu doldurarak güvenli ödemenizi tamamlayın.
                       </p>
                     </div>
-                    <div style={{ borderRadius: 14, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)" }}>
+                    <div style={{ borderRadius: 0, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)" }}>
                       <iframe
                         src={`https://www.paytr.com/odeme/guvenli/${iframeToken}`}
                         style={{ width: "100%", height: 460, border: "none" }}
@@ -943,7 +943,7 @@ export default function CartDrawer() {
                     <button
                       onClick={() => { setIframeToken(null); setCheckoutStep("payment_method"); }}
                       style={{
-                        marginTop: 16, width: "100%", padding: 12, borderRadius: 10,
+                        marginTop: 16, width: "100%", padding: 12, borderRadius: 0,
                         background: "transparent", border: "1px solid rgba(255,255,255,0.1)",
                         color: "rgba(255,255,255,0.5)", fontWeight: 600, fontSize: 12, cursor: "pointer",
                       }}
@@ -959,9 +959,9 @@ export default function CartDrawer() {
                     <div style={{ textAlign: "center", padding: "40px 20px 20px" }}>
                       <div style={{
                         width: "80px", height: "80px", margin: "0 auto 24px",
-                        borderRadius: "50%",
-                        background: submitResult.success ? "rgba(52,211,153,0.1)" : "rgba(255,60,60,0.1)",
-                        border: `2px solid ${submitResult.success ? "rgba(52,211,153,0.25)" : "rgba(255,60,60,0.25)"}`,
+                        borderRadius: 0,
+                        background: submitResult.success ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.04)",
+                        border: `2px solid ${submitResult.success ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.1)"}`,
                         display: "flex", alignItems: "center", justifyContent: "center",
                         fontSize: "36px",
                       }}>
@@ -969,7 +969,7 @@ export default function CartDrawer() {
                       </div>
                       <div style={{
                         fontSize: "22px", fontWeight: 800,
-                        color: submitResult.success ? "#34d399" : "#ef4444",
+                        color: submitResult.success ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.5)",
                         marginBottom: "12px",
                       }}>
                         {submitResult.success ? "Rezervasyonunuz Oluşturuldu!" : "Hata"}
@@ -982,23 +982,23 @@ export default function CartDrawer() {
                     {submitResult.success && (
                       <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "0 4px" }}>
 
-                        <div style={{ padding: "14px 16px", borderRadius: 14, background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.12)", display: "flex", alignItems: "flex-start", gap: 12 }}>
-                          <Mail size={18} style={{ color: "#60a5fa", flexShrink: 0, marginTop: 2 }} />
+                        <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.12)", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                          <Mail size={18} style={{ color: "rgba(255,255,255,0.5)", flexShrink: 0, marginTop: 2 }} />
                           <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>
                             Belirlediğiniz <strong style={{ color: "#fff" }}>giriş şifresi</strong> ile hesabınıza giriş yapabilir ve rezervasyon durumunuzu takip edebilirsiniz.
                           </span>
                         </div>
 
-                        <div style={{ padding: "14px 16px", borderRadius: 14, background: "rgba(250,204,21,0.06)", border: "1px solid rgba(250,204,21,0.12)", display: "flex", alignItems: "flex-start", gap: 12 }}>
-                          <User size={18} style={{ color: "#facc15", flexShrink: 0, marginTop: 2 }} />
+                        <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                          <User size={18} style={{ color: "rgba(255,255,255,0.7)", flexShrink: 0, marginTop: 2 }} />
                           <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>
                             <strong style={{ color: "#fff" }}>Profilinizden</strong> rezervasyon durumunuzu takip edebilir, ödeme geçmişinizi görebilir ve tüm süreci yönetebilirsiniz.
                           </span>
                         </div>
 
                         {submitResult.type === "cash" && (
-                          <div style={{ padding: "14px 16px", borderRadius: 14, background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.12)", display: "flex", alignItems: "flex-start", gap: 12 }}>
-                            <Phone size={18} style={{ color: "#4ade80", flexShrink: 0, marginTop: 2 }} />
+                          <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                            <Phone size={18} style={{ color: "#fff", flexShrink: 0, marginTop: 2 }} />
                             <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>
                               Ekibimiz en kısa sürede sizinle <strong style={{ color: "#fff" }}>telefonla</strong> iletişime geçecek ve ödeme detaylarını paylaşacak.
                             </span>
@@ -1010,7 +1010,7 @@ export default function CartDrawer() {
                             window.location.href = "/";
                           }}
                           style={{
-                            marginTop: 16, width: "100%", padding: "14px", borderRadius: 12,
+                            marginTop: 16, width: "100%", padding: "14px", borderRadius: 0,
                             background: "#fff", color: "#000", border: "none",
                             fontWeight: 700, fontSize: 14, cursor: "pointer",
                           }}
@@ -1043,19 +1043,19 @@ export default function CartDrawer() {
                   </div>
                 </div>
                 {discountResult && (
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, padding: "8px 10px", borderRadius: 8, background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.12)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, padding: "8px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Tag size={11} style={{ color: "#4ade80" }} />
-                      <span style={{ fontSize: 11, fontWeight: 700, color: "#4ade80", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
+                      <Tag size={11} style={{ color: "#fff" }} />
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#fff", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
                     </div>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#4ade80" }}>-{fmt(discountAmount)}₺</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>-{fmt(discountAmount)}₺</span>
                   </div>
                 )}
 
                 {!checkoutMode ? (
                   <div style={{ display: "flex", gap: "10px" }}>
                     <button onClick={clearCart} style={{
-                      flex: 1, padding: "14px", borderRadius: "12px",
+                      flex: 1, padding: "14px", borderRadius: 0,
                       border: "1px solid rgba(255,255,255,0.06)", background: "transparent",
                       color: "rgba(255,255,255,0.45)", fontSize: "12px", fontWeight: 600,
                       cursor: "pointer", transition: "all 0.2s",
@@ -1070,7 +1070,7 @@ export default function CartDrawer() {
                         setCheckoutStep("contact");
                       }
                     }} style={{
-                      flex: 2, padding: "14px", borderRadius: "12px",
+                      flex: 2, padding: "14px", borderRadius: 0,
                       border: "none", background: "#fff", color: "#000",
                       fontSize: "13px", fontWeight: 700, cursor: "pointer",
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
@@ -1084,7 +1084,7 @@ export default function CartDrawer() {
                     onClick={() => setCheckoutStep("payment_method")}
                     disabled={!isContactValid}
                     style={{
-                      width: "100%", padding: "16px", borderRadius: "12px",
+                      width: "100%", padding: "16px", borderRadius: 0,
                       border: "none",
                       background: isContactValid ? "#fff" : "rgba(255,255,255,0.04)",
                       color: isContactValid ? "#000" : "rgba(255,255,255,0.15)",

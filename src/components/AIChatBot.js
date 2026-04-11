@@ -105,7 +105,7 @@ export default function AIChatBot() {
               right: 20,
               width: 46,
               height: 46,
-              borderRadius: "50%",
+              borderRadius: 0,
               background: "rgba(255,255,255,0.1)",
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
@@ -157,7 +157,7 @@ export default function AIChatBot() {
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{
-                  width: 32, height: 32, borderRadius: 8,
+                  width: 32, height: 32, borderRadius: 0,
                   background: "rgba(255,255,255,0.08)",
                   border: "1px solid rgba(255,255,255,0.1)",
                   display: "flex", alignItems: "center", justifyContent: "center",
@@ -167,7 +167,7 @@ export default function AIChatBot() {
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>Pinowed</div>
                   <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", gap: 4 }}>
-                    <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#4ade80" }} />
+                    <div style={{ width: 5, height: 5, borderRadius: 0, background: "#fff" }} />
                     Çevrimiçi
                   </div>
                 </div>
@@ -177,7 +177,7 @@ export default function AIChatBot() {
                 style={{
                   background: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 8,
+                  borderRadius: 0,
                   padding: 6,
                   cursor: "pointer",
                   color: "rgba(255,255,255,0.5)",
@@ -210,7 +210,7 @@ export default function AIChatBot() {
                 }}>
                   {msg.role === "assistant" && (
                     <div style={{
-                      width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+                      width: 28, height: 28, borderRadius: 0, flexShrink: 0,
                       background: "rgba(255,255,255,0.08)",
                       display: "flex", alignItems: "center", justifyContent: "center",
                       marginTop: 2,
@@ -251,7 +251,7 @@ export default function AIChatBot() {
                           alignItems: "center",
                           justifyContent: "space-between",
                           padding: "10px 14px",
-                          borderRadius: 12,
+                          borderRadius: 0,
                           background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%)",
                           border: "1px solid rgba(255,255,255,0.15)",
                           textDecoration: "none",
@@ -267,7 +267,7 @@ export default function AIChatBot() {
                           <div style={{ fontSize: 13, fontWeight: 700 }}>{msg.suggestedPackage}</div>
                         </div>
                         <div style={{
-                          width: 28, height: 28, borderRadius: 8,
+                          width: 28, height: 28, borderRadius: 0,
                           background: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
                           flexShrink: 0,
                         }}>
@@ -282,7 +282,7 @@ export default function AIChatBot() {
               {isLoading && (
                 <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                   <div style={{
-                    width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+                    width: 28, height: 28, borderRadius: 0, flexShrink: 0,
                     background: "rgba(255,255,255,0.08)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
@@ -299,17 +299,17 @@ export default function AIChatBot() {
                     <motion.div
                       animate={{ opacity: [0.3, 1, 0.3] }}
                       transition={{ duration: 1, repeat: Infinity, delay: 0 }}
-                      style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.5)" }}
+                      style={{ width: 6, height: 6, borderRadius: 0, background: "rgba(255,255,255,0.5)" }}
                     />
                     <motion.div
                       animate={{ opacity: [0.3, 1, 0.3] }}
                       transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
-                      style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.5)" }}
+                      style={{ width: 6, height: 6, borderRadius: 0, background: "rgba(255,255,255,0.5)" }}
                     />
                     <motion.div
                       animate={{ opacity: [0.3, 1, 0.3] }}
                       transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
-                      style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.5)" }}
+                      style={{ width: 6, height: 6, borderRadius: 0, background: "rgba(255,255,255,0.5)" }}
                     />
                   </div>
                 </div>
@@ -340,7 +340,7 @@ export default function AIChatBot() {
                     flex: 1,
                     background: "rgba(255,255,255,0.06)",
                     border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: 12,
+                    borderRadius: 0,
                     padding: "12px 14px",
                     fontSize: 16,
                     color: "#fff",
@@ -358,7 +358,7 @@ export default function AIChatBot() {
                   style={{
                     width: 42,
                     height: 42,
-                    borderRadius: 12,
+                    borderRadius: 0,
                     background: input.trim() && !isLoading ? "#fff" : "rgba(255,255,255,0.06)",
                     border: "none",
                     cursor: input.trim() && !isLoading ? "pointer" : "not-allowed",
@@ -383,7 +383,7 @@ export default function AIChatBot() {
           right: 16px;
           width: min(380px, calc(100vw - 32px));
           height: min(600px, calc(100vh - 48px));
-          border-radius: 20px;
+          border-radius: 0;
         }
         @media (max-width: 480px) {
           .chatbot-window {

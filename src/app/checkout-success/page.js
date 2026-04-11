@@ -17,7 +17,7 @@ export default function SuccessPage() {
           display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem',
           border: '1px solid rgba(16, 185, 129, 0.2)', boxShadow: '0 0 40px rgba(16, 185, 129, 0.1)'
         }}>
-          <CheckCircle size={60} color="#10B981" />
+          <CheckCircle size={60} color="rgba(255,255,255,0.6)" />
         </div>
 
         <h1 style={{ fontSize: '3.5rem', fontWeight: 900, letterSpacing: '-0.04em', marginBottom: '1.5rem' }}>Rezervasyon Alındı!</h1>

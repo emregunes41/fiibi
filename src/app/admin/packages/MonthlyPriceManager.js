@@ -84,7 +84,7 @@ export default function MonthlyPriceManager() {
           {message && (
             <span style={{ 
               fontSize: "0.65rem", 
-              color: message.type === "success" ? "#4ade80" : "#f87171",
+              color: message.type === "success" ? "#fff" : "rgba(255,255,255,0.6)",
               fontWeight: 700,
               marginLeft: "10px"
             }}>
@@ -94,13 +94,13 @@ export default function MonthlyPriceManager() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <div style={{ display: "flex", background: "rgba(255,255,255,0.05)", padding: "2px", borderRadius: "6px" }}>
+          <div style={{ display: "flex", background: "rgba(255,255,255,0.05)", padding: "2px", borderRadius: 0 }}>
             {CATEGORIES.map(cat => (
               <button
                 key={cat.value}
                 onClick={() => setActiveCategory(cat.value)}
                 style={{
-                  padding: "4px 8px", borderRadius: "4px", fontSize: "0.65rem", fontWeight: 700, border: "none", cursor: "pointer", transition: "all 0.2s",
+                  padding: "4px 8px", borderRadius: 0, fontSize: "0.65rem", fontWeight: 700, border: "none", cursor: "pointer", transition: "all 0.2s",
                   background: activeCategory === cat.value ? "#fff" : "transparent",
                   color: activeCategory === cat.value ? "#000" : "rgba(255,255,255,0.4)"
                 }}
@@ -110,7 +110,7 @@ export default function MonthlyPriceManager() {
             ))}
           </div>
           
-          <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "rgba(255,255,255,0.05)", padding: "2px 8px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.08)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "rgba(255,255,255,0.05)", padding: "2px 8px", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)" }}>
             <button onClick={() => setSelectedYear(y => y - 1)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", display: "flex" }}><ChevronLeft size={12} /></button>
             <span style={{ fontSize: "0.7rem", fontWeight: 800, width: "30px", textAlign: "center" }}>{selectedYear}</span>
             <button onClick={() => setSelectedYear(y => y + 1)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", display: "flex" }}><ChevronRight size={12} /></button>
@@ -129,7 +129,7 @@ export default function MonthlyPriceManager() {
           return (
             <div key={month} style={{ 
               padding: "8px", 
-              borderRadius: "8px", 
+              borderRadius: 0, 
               background: "rgba(0,0,0,0.2)", 
               border: "1px solid rgba(255,255,255,0.08)",
               position: "relative"
@@ -144,7 +144,7 @@ export default function MonthlyPriceManager() {
                   placeholder="0"
                   style={{ 
                     width: "100%", background: "transparent", border: "none", borderBottom: "1px solid rgba(255,255,255,0.1)", 
-                    color: val < 0 ? "#4ade80" : val > 0 ? "#fbbf24" : "#fff",
+                    color: val < 0 ? "#fff" : val > 0 ? "#fbbf24" : "#fff",
                     fontSize: "0.85rem", fontWeight: 800, outline: "none", padding: "2px 0"
                   }}
                 />

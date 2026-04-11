@@ -36,9 +36,9 @@ export default function DeleteUserButton({ userId, userName, role }) {
       style={{
         background: isDeleting ? "rgba(255,255,255,0.1)" : "rgba(239, 68, 68, 0.15)",
         border: `1px solid ${isDeleting ? "transparent" : "rgba(239, 68, 68, 0.3)"}`,
-        color: isDeleting ? "rgba(255,255,255,0.5)" : "#ef4444",
+        color: isDeleting ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.5)",
         padding: "4px 8px",
-        borderRadius: "6px",
+        borderRadius: 0,
         fontSize: "0.65rem",
         fontWeight: 600,
         cursor: isDeleting || role === "ADMIN" ? "not-allowed" : "pointer",

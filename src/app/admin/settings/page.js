@@ -13,7 +13,7 @@ import {
 const inp = {
   width: "100%", boxSizing: "border-box",
   background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
-  borderRadius: 12, padding: "14px 16px", fontSize: 14, color: "#fff",
+  borderRadius: 0, padding: "14px 16px", fontSize: 14, color: "#fff",
   outline: "none", transition: "all 0.2s",
 };
 
@@ -26,13 +26,13 @@ const label = {
 
 const sectionCard = {
   background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-  borderRadius: 16, padding: "24px", marginBottom: 16,
+  borderRadius: 0, padding: "24px", marginBottom: 16,
 };
 
 const sectionHeader = (Icon, title, desc) => (
   <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 24 }}>
     <div style={{
-      width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.06)",
+      width: 36, height: 36, borderRadius: 0, background: "rgba(255,255,255,0.06)",
       border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center",
       justifyContent: "center", flexShrink: 0,
     }}>
@@ -110,11 +110,11 @@ export default function SettingsPage() {
 
   if (!config) return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
-      <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: "40px 32px", textAlign: "center", maxWidth: 360 }}>
-        <AlertCircle size={32} style={{ color: "rgba(255,68,68,0.5)", margin: "0 auto 12px" }} />
+      <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "40px 32px", textAlign: "center", maxWidth: 360 }}>
+        <AlertCircle size={32} style={{ color: "rgba(255,255,255,0.4)", margin: "0 auto 12px" }} />
         <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Bağlantı Kesildi</h2>
         <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 20 }}>Ayarları yükleyemiyoruz.</p>
-        <button onClick={() => window.location.reload()} style={{ background: "#fff", color: "#000", border: "none", borderRadius: 10, padding: "10px 24px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+        <button onClick={() => window.location.reload()} style={{ background: "#fff", color: "#000", border: "none", borderRadius: 0, padding: "10px 24px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
           Yenile
         </button>
       </div>
@@ -172,11 +172,11 @@ export default function SettingsPage() {
             <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Canlı Önizleme</span>
           </div>
           <div style={{
-            background: "#000", borderRadius: 14, border: "1px solid rgba(255,255,255,0.06)",
+            background: "#000", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)",
             padding: "40px 24px", textAlign: "center", position: "relative", overflow: "hidden",
           }}>
             {/* Glow */}
-            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 200, height: 200, background: "rgba(255,255,255,0.04)", borderRadius: "50%", filter: "blur(60px)", pointerEvents: "none" }} />
+            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 200, height: 200, background: "rgba(255,255,255,0.04)", borderRadius: 0, filter: "blur(60px)", pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1 }}>
               <span style={{ display: "block", fontSize: 8, textTransform: "uppercase", letterSpacing: "0.4em", color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>
                 {config.heroSubtitle || "Premium Photography Service"}
@@ -213,7 +213,7 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => open()}
                   style={{
-                    width: "100%", padding: "20px", borderRadius: 14, cursor: "pointer",
+                    width: "100%", padding: "20px", borderRadius: 0, cursor: "pointer",
                     border: "2px dashed rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.02)",
                     color: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 700,
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
@@ -230,14 +230,14 @@ export default function SettingsPage() {
           {/* Pending banner form */}
           {pendingBannerUrl && (
             <div style={{
-              padding: 16, borderRadius: 14, marginBottom: 20,
-              background: "rgba(74,222,128,0.04)", border: "1px solid rgba(74,222,128,0.15)",
+              padding: 16, borderRadius: 0, marginBottom: 20,
+              background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)",
             }}>
               <div style={{ display: "flex", gap: 14, marginBottom: 14 }}>
                 {pendingMediaType === "video" ? (
-                  <video src={pendingBannerUrl} style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)" }} muted autoPlay loop />
+                  <video src={pendingBannerUrl} style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 0, border: "1px solid rgba(255,255,255,0.1)" }} muted autoPlay loop />
                 ) : (
-                  <img src={pendingBannerUrl} alt="Preview" style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)" }} />
+                  <img src={pendingBannerUrl} alt="Preview" style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 0, border: "1px solid rgba(255,255,255,0.1)" }} />
                 )}
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
                   <input type="text" placeholder="Başlık (opsiyonel)" value={bannerForm.title}
@@ -272,8 +272,8 @@ export default function SettingsPage() {
                     setBannerUploading(false);
                   }}
                   style={{
-                    padding: "10px 20px", borderRadius: 10, border: "none",
-                    background: "#4ade80", color: "#000", fontWeight: 800, fontSize: 12,
+                    padding: "10px 20px", borderRadius: 0, border: "none",
+                    background: "#fff", color: "#000", fontWeight: 800, fontSize: 12,
                     cursor: "pointer", display: "flex", alignItems: "center", gap: 6,
                   }}
                 >
@@ -290,18 +290,18 @@ export default function SettingsPage() {
               {banners.map((b, idx) => (
                 <div key={b.id} style={{
                   display: "flex", alignItems: "center", gap: 12, padding: "10px 12px",
-                  borderRadius: 12, background: b.isActive ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
+                  borderRadius: 0, background: b.isActive ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
                   border: `1px solid ${b.isActive ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)"}`,
                   opacity: b.isActive ? 1 : 0.5,
                 }}>
                   {b.mediaType === "video" ? (
-                    <video src={b.imageUrl} muted playsInline style={{ width: 80, height: 40, objectFit: "cover", borderRadius: 8, flexShrink: 0 }} />
+                    <video src={b.imageUrl} muted playsInline style={{ width: 80, height: 40, objectFit: "cover", borderRadius: 0, flexShrink: 0 }} />
                   ) : (
-                    <img src={b.imageUrl} alt="" style={{ width: 80, height: 40, objectFit: "cover", borderRadius: 8, flexShrink: 0 }} />
+                    <img src={b.imageUrl} alt="" style={{ width: 80, height: 40, objectFit: "cover", borderRadius: 0, flexShrink: 0 }} />
                   )}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span style={{ fontSize: 10, padding: "1px 5px", borderRadius: 4, background: b.mediaType === "video" ? "rgba(96,165,250,0.15)" : "rgba(255,255,255,0.06)", color: b.mediaType === "video" ? "#60a5fa" : "rgba(255,255,255,0.4)", fontWeight: 800 }}>
+                      <span style={{ fontSize: 10, padding: "1px 5px", borderRadius: 0, background: b.mediaType === "video" ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.06)", color: b.mediaType === "video" ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.4)", fontWeight: 800 }}>
                         {b.mediaType === "video" ? "🎬" : "🖼️"}
                       </span>
                       <span style={{ fontSize: 13, fontWeight: 700, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -339,7 +339,7 @@ export default function SettingsPage() {
                         await updateBanner(b.id, { isActive: !b.isActive });
                         setBanners(await getBanners());
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: b.isActive ? "#4ade80" : "rgba(255,255,255,0.25)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: b.isActive ? "#fff" : "rgba(255,255,255,0.25)" }}
                     >{b.isActive ? <Eye size={14} /> : <EyeOff size={14} />}</button>
                     {/* Delete */}
                     <button type="button"
@@ -349,7 +349,7 @@ export default function SettingsPage() {
                           setBanners(await getBanners());
                         }
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(255,68,68,0.5)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(255,255,255,0.4)" }}
                     ><Trash2 size={14} /></button>
                   </div>
                 </div>
@@ -380,7 +380,7 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => setConfig({ ...config, heroBgType: opt.value })}
                   style={{
-                    flex: 1, padding: "12px 8px", borderRadius: 10, border: "1px solid",
+                    flex: 1, padding: "12px 8px", borderRadius: 0, border: "1px solid",
                     borderColor: config.heroBgType === opt.value ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.08)",
                     background: config.heroBgType === opt.value ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
                     color: config.heroBgType === opt.value ? "#fff" : "rgba(255,255,255,0.5)",
@@ -421,10 +421,10 @@ export default function SettingsPage() {
                   style={{ ...inp, cursor: "pointer", flex: 1 }}
                 />
               </div>
-              {uploadingBg && <p style={{ fontSize: 11, color: "#facc15", marginTop: 6 }}>Yükleniyor...</p>}
+              {uploadingBg && <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", marginTop: 6 }}>Yükleniyor...</p>}
               {config.heroBgUrl && (
                 <div style={{ marginTop: 8, fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
-                  Mevcut: <span style={{ color: "#4ade80" }}>{config.heroBgUrl}</span>
+                  Mevcut: <span style={{ color: "#fff" }}>{config.heroBgUrl}</span>
                 </div>
               )}
             </div>
@@ -439,7 +439,7 @@ export default function SettingsPage() {
                   type="color"
                   value={config.heroBgColor || "#000000"}
                   onChange={(e) => setConfig({ ...config, heroBgColor: e.target.value })}
-                  style={{ width: 48, height: 48, border: "none", borderRadius: 10, cursor: "pointer", background: "none" }}
+                  style={{ width: 48, height: 48, border: "none", borderRadius: 0, cursor: "pointer", background: "none" }}
                 />
                 <input
                   type="text"
@@ -448,7 +448,7 @@ export default function SettingsPage() {
                   style={{ ...inp, maxWidth: 160 }}
                   placeholder="#000000"
                 />
-                <div style={{ width: 48, height: 48, borderRadius: 10, background: config.heroBgColor || "#000", border: "1px solid rgba(255,255,255,0.1)" }} />
+                <div style={{ width: 48, height: 48, borderRadius: 0, background: config.heroBgColor || "#000", border: "1px solid rgba(255,255,255,0.1)" }} />
               </div>
             </div>
           )}
@@ -558,23 +558,23 @@ export default function SettingsPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
             {/* Email Toggle */}
             <div style={{
-              background: config.emailEnabled ? "rgba(74,222,128,0.08)" : "rgba(255,255,255,0.03)",
-              border: `1px solid ${config.emailEnabled ? "rgba(74,222,128,0.2)" : "rgba(255,255,255,0.08)"}`,
-              borderRadius: 14, padding: "18px 16px", cursor: "pointer", transition: "all 0.2s",
+              background: config.emailEnabled ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.03)",
+              border: `1px solid ${config.emailEnabled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
+              borderRadius: 0, padding: "18px 16px", cursor: "pointer", transition: "all 0.2s",
             }}
               onClick={() => setConfig({ ...config, emailEnabled: !config.emailEnabled })}
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Mail size={16} style={{ color: config.emailEnabled ? "#4ade80" : "rgba(255,255,255,0.3)" }} />
+                  <Mail size={16} style={{ color: config.emailEnabled ? "#fff" : "rgba(255,255,255,0.3)" }} />
                   <span style={{ fontSize: 13, fontWeight: 800, color: config.emailEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>E-Posta</span>
                 </div>
                 <div style={{
-                  width: 40, height: 22, borderRadius: 11, position: "relative",
-                  background: config.emailEnabled ? "#4ade80" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
+                  width: 40, height: 22, borderRadius: 0, position: "relative",
+                  background: config.emailEnabled ? "#fff" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
                 }}>
                   <div style={{
-                    width: 18, height: 18, borderRadius: "50%", background: "#fff",
+                    width: 18, height: 18, borderRadius: 0, background: "#fff",
                     position: "absolute", top: 2, transition: "all 0.2s",
                     left: config.emailEnabled ? 20 : 2,
                     boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
@@ -588,23 +588,23 @@ export default function SettingsPage() {
 
             {/* SMS Toggle */}
             <div style={{
-              background: config.smsEnabled ? "rgba(74,222,128,0.08)" : "rgba(255,255,255,0.03)",
-              border: `1px solid ${config.smsEnabled ? "rgba(74,222,128,0.2)" : "rgba(255,255,255,0.08)"}`,
-              borderRadius: 14, padding: "18px 16px", cursor: "pointer", transition: "all 0.2s",
+              background: config.smsEnabled ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.03)",
+              border: `1px solid ${config.smsEnabled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
+              borderRadius: 0, padding: "18px 16px", cursor: "pointer", transition: "all 0.2s",
             }}
               onClick={() => setConfig({ ...config, smsEnabled: !config.smsEnabled })}
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Phone size={16} style={{ color: config.smsEnabled ? "#4ade80" : "rgba(255,255,255,0.3)" }} />
+                  <Phone size={16} style={{ color: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.3)" }} />
                   <span style={{ fontSize: 13, fontWeight: 800, color: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>SMS</span>
                 </div>
                 <div style={{
-                  width: 40, height: 22, borderRadius: 11, position: "relative",
-                  background: config.smsEnabled ? "#4ade80" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
+                  width: 40, height: 22, borderRadius: 0, position: "relative",
+                  background: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
                 }}>
                   <div style={{
-                    width: 18, height: 18, borderRadius: "50%", background: "#fff",
+                    width: 18, height: 18, borderRadius: 0, background: "#fff",
                     position: "absolute", top: 2, transition: "all 0.2s",
                     left: config.smsEnabled ? 20 : 2,
                     boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
@@ -621,7 +621,7 @@ export default function SettingsPage() {
           {config.emailEnabled && (
             <div style={{
               background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 12, padding: 20, marginBottom: 12,
+              borderRadius: 0, padding: 20, marginBottom: 12,
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <Mail size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
@@ -647,7 +647,7 @@ export default function SettingsPage() {
           {config.smsEnabled && (
             <div style={{
               background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 12, padding: 20, marginBottom: 12,
+              borderRadius: 0, padding: 20, marginBottom: 12,
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                 <Phone size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
@@ -685,8 +685,8 @@ export default function SettingsPage() {
           {/* SMS Test Butonu */}
           {config.smsEnabled && config.netgsmUsercode && (
             <div style={{
-              background: "rgba(74,222,128,0.03)", border: "1px solid rgba(74,222,128,0.12)",
-              borderRadius: 12, padding: 16, marginBottom: 12,
+              background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 0, padding: 16, marginBottom: 12,
             }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>
                 📱 SMS Test
@@ -713,8 +713,8 @@ export default function SettingsPage() {
                     setTestSmsLoading(false);
                   }}
                   style={{
-                    padding: "10px 18px", borderRadius: 10, border: "none", flexShrink: 0,
-                    background: testPhone.trim() && !testSmsLoading ? "#4ade80" : "rgba(255,255,255,0.06)",
+                    padding: "10px 18px", borderRadius: 0, border: "none", flexShrink: 0,
+                    background: testPhone.trim() && !testSmsLoading ? "#fff" : "rgba(255,255,255,0.06)",
                     color: testPhone.trim() && !testSmsLoading ? "#000" : "rgba(255,255,255,0.3)",
                     fontWeight: 800, fontSize: 11, cursor: testPhone.trim() && !testSmsLoading ? "pointer" : "not-allowed",
                     height: 42,
@@ -725,10 +725,10 @@ export default function SettingsPage() {
               </div>
               {testSmsResult && (
                 <div style={{
-                  marginTop: 10, padding: "8px 12px", borderRadius: 8, fontSize: 11, fontWeight: 600,
-                  background: testSmsResult.success ? "rgba(74,222,128,0.1)" : "rgba(255,68,68,0.1)",
-                  color: testSmsResult.success ? "#4ade80" : "#ff6b6b",
-                  border: `1px solid ${testSmsResult.success ? "rgba(74,222,128,0.2)" : "rgba(255,68,68,0.2)"}`,
+                  marginTop: 10, padding: "8px 12px", borderRadius: 0, fontSize: 11, fontWeight: 600,
+                  background: testSmsResult.success ? "rgba(255,255,255,0.06)" : "rgba(255,68,68,0.1)",
+                  color: testSmsResult.success ? "#fff" : "#ff6b6b",
+                  border: `1px solid ${testSmsResult.success ? "rgba(255,255,255,0.12)" : "rgba(255,68,68,0.2)"}`,
                 }}>
                   {testSmsResult.success
                     ? "✅ SMS başarıyla gönderildi!"
@@ -752,16 +752,16 @@ export default function SettingsPage() {
                 onClick={() => setConfig({ ...config, [item.key]: !config[item.key] })}
                 style={{
                   display: "flex", alignItems: "center", gap: 12, padding: "12px 14px",
-                  marginBottom: 6, borderRadius: 12, cursor: "pointer", transition: "all 0.2s",
+                  marginBottom: 6, borderRadius: 0, cursor: "pointer", transition: "all 0.2s",
                   background: config[item.key] ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.01)",
                   border: `1px solid ${config[item.key] ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.04)"}`,
                 }}
               >
                 {/* Checkbox */}
                 <div style={{
-                  width: 20, height: 20, borderRadius: 6, flexShrink: 0,
-                  border: `2px solid ${config[item.key] ? "#4ade80" : "rgba(255,255,255,0.2)"}`,
-                  background: config[item.key] ? "#4ade80" : "transparent",
+                  width: 20, height: 20, borderRadius: 0, flexShrink: 0,
+                  border: `2px solid ${config[item.key] ? "#fff" : "rgba(255,255,255,0.2)"}`,
+                  background: config[item.key] ? "#fff" : "transparent",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   transition: "all 0.2s",
                 }}>
@@ -778,8 +778,8 @@ export default function SettingsPage() {
                 </div>
 
                 <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
-                  {config.emailEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(74,222,128,0.15)", color: "#4ade80", padding: "2px 6px", borderRadius: 5, fontWeight: 700 }}>EMAIL</span>}
-                  {config.smsEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(96,165,250,0.15)", color: "#60a5fa", padding: "2px 6px", borderRadius: 5, fontWeight: 700 }}>SMS</span>}
+                  {config.emailEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(255,255,255,0.1)", color: "#fff", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>EMAIL</span>}
+                  {config.smsEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>SMS</span>}
                 </div>
               </div>
             ))}
@@ -877,8 +877,8 @@ export default function SettingsPage() {
                 setDcLoading(false);
               }}
               style={{
-                padding: "12px 20px", borderRadius: 10, border: "none",
-                background: (dcForm.code && dcForm.discountPercent) ? "#4ade80" : "rgba(255,255,255,0.06)",
+                padding: "12px 20px", borderRadius: 0, border: "none",
+                background: (dcForm.code && dcForm.discountPercent) ? "#fff" : "rgba(255,255,255,0.06)",
                 color: (dcForm.code && dcForm.discountPercent) ? "#000" : "rgba(255,255,255,0.3)",
                 fontWeight: 700, fontSize: 12, cursor: (dcForm.code && dcForm.discountPercent) ? "pointer" : "not-allowed",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
@@ -887,7 +887,7 @@ export default function SettingsPage() {
               <Plus size={14} />
               {dcLoading ? "Oluşturuluyor..." : "İndirim Kodu Ekle"}
             </button>
-            {dcMessage && <div style={{ fontSize: 12, fontWeight: 600, color: dcMessage.includes("✅") ? "#4ade80" : "#f87171" }}>{dcMessage}</div>}
+            {dcMessage && <div style={{ fontSize: 12, fontWeight: 600, color: dcMessage.includes("✅") ? "#fff" : "rgba(255,255,255,0.6)" }}>{dcMessage}</div>}
           </div>
 
           {/* Existing codes */}
@@ -897,18 +897,18 @@ export default function SettingsPage() {
               {discountCodes.map((dc) => (
                 <div key={dc.id} style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
-                  padding: "12px 14px", borderRadius: 12,
-                  background: dc.isActive ? "rgba(74,222,128,0.04)" : "rgba(255,255,255,0.02)",
-                  border: `1px solid ${dc.isActive ? "rgba(74,222,128,0.15)" : "rgba(255,255,255,0.06)"}`,
+                  padding: "12px 14px", borderRadius: 0,
+                  background: dc.isActive ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.02)",
+                  border: `1px solid ${dc.isActive ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.06)"}`,
                   opacity: dc.isActive ? 1 : 0.5,
                 }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                       <span style={{ fontSize: 14, fontWeight: 800, color: "#fff", fontFamily: "monospace", letterSpacing: "0.05em" }}>{dc.code}</span>
                       <span style={{
-                        fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 6,
-                        background: dc.isActive ? "rgba(74,222,128,0.12)" : "rgba(255,255,255,0.06)",
-                        color: dc.isActive ? "#4ade80" : "rgba(255,255,255,0.3)",
+                        fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 0,
+                        background: dc.isActive ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.06)",
+                        color: dc.isActive ? "#fff" : "rgba(255,255,255,0.3)",
                       }}>
                         %{dc.discountPercent} İndirim
                       </span>
@@ -926,7 +926,7 @@ export default function SettingsPage() {
                         setDiscountCodes(await getDiscountCodes());
                       }}
                       title={dc.isActive ? "Pasifleştir" : "Aktifleştir"}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: dc.isActive ? "#4ade80" : "rgba(255,255,255,0.25)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: dc.isActive ? "#fff" : "rgba(255,255,255,0.25)" }}
                     >
                       <Power size={14} />
                     </button>
@@ -938,7 +938,7 @@ export default function SettingsPage() {
                           setDiscountCodes(await getDiscountCodes());
                         }
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "rgba(255,68,68,0.5)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "rgba(255,255,255,0.4)" }}
                     >
                       <Trash2 size={14} />
                     </button>
@@ -956,24 +956,24 @@ export default function SettingsPage() {
           {/* Toggle */}
           <div
             style={{
-              background: config.chatbotEnabled ? "rgba(74,222,128,0.08)" : "rgba(255,255,255,0.03)",
-              border: `1px solid ${config.chatbotEnabled ? "rgba(74,222,128,0.2)" : "rgba(255,255,255,0.08)"}`,
-              borderRadius: 14, padding: "18px 16px", cursor: "pointer", transition: "all 0.2s",
+              background: config.chatbotEnabled ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.03)",
+              border: `1px solid ${config.chatbotEnabled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
+              borderRadius: 0, padding: "18px 16px", cursor: "pointer", transition: "all 0.2s",
               marginBottom: 16,
             }}
             onClick={() => setConfig({ ...config, chatbotEnabled: !config.chatbotEnabled })}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Bot size={16} style={{ color: config.chatbotEnabled ? "#4ade80" : "rgba(255,255,255,0.3)" }} />
+                <Bot size={16} style={{ color: config.chatbotEnabled ? "#fff" : "rgba(255,255,255,0.3)" }} />
                 <span style={{ fontSize: 13, fontWeight: 800, color: config.chatbotEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>Chatbot Aktif</span>
               </div>
               <div style={{
-                width: 40, height: 22, borderRadius: 11, position: "relative",
-                background: config.chatbotEnabled ? "#4ade80" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
+                width: 40, height: 22, borderRadius: 0, position: "relative",
+                background: config.chatbotEnabled ? "#fff" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
               }}>
                 <div style={{
-                  width: 18, height: 18, borderRadius: "50%", background: "#fff",
+                  width: 18, height: 18, borderRadius: 0, background: "#fff",
                   position: "absolute", top: 2, transition: "all 0.2s",
                   left: config.chatbotEnabled ? 20 : 2,
                   boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
@@ -1013,7 +1013,7 @@ export default function SettingsPage() {
               <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 10, lineHeight: 1.8 }}>
                 💡 <strong style={{ color: "rgba(255,255,255,0.5)" }}>Nasıl çalışır:</strong> Buraya yazdığın her şey AI'ın "beynine" eklenir. Paket bilgileri ve iletişim bilgileri zaten otomatik olarak AI'a verilir — sen sadece davranışını, üslubunu ve özel kurallarını belirle.
               </p>
-              <div style={{ marginTop: 14, padding: "14px 16px", borderRadius: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div style={{ marginTop: 14, padding: "14px 16px", borderRadius: 0, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>Otomatik bilinen bilgiler</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {[
@@ -1022,7 +1022,7 @@ export default function SettingsPage() {
                     "💵 Nakit/kart seçenekleri",
                     "🗓️ Rezervasyon yönlendirmesi",
                   ].map((item, i) => (
-                    <span key={i} style={{ fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 6, background: "rgba(74,222,128,0.06)", color: "rgba(74,222,128,0.7)", border: "1px solid rgba(74,222,128,0.1)" }}>{item}</span>
+                    <span key={i} style={{ fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", color: "rgba(74,222,128,0.7)", border: "1px solid rgba(255,255,255,0.06)" }}>{item}</span>
                   ))}
                 </div>
               </div>
@@ -1033,10 +1033,10 @@ export default function SettingsPage() {
         {/* Status Message */}
         {message && (
           <div style={{
-            padding: "12px 16px", borderRadius: 12, display: "flex", alignItems: "center", gap: 10, marginBottom: 16,
-            background: isError ? "rgba(239,68,68,0.08)" : "rgba(74,222,128,0.08)",
-            border: `1px solid ${isError ? "rgba(239,68,68,0.15)" : "rgba(74,222,128,0.15)"}`,
-            color: isError ? "#f87171" : "#4ade80",
+            padding: "12px 16px", borderRadius: 0, display: "flex", alignItems: "center", gap: 10, marginBottom: 16,
+            background: isError ? "rgba(239,68,68,0.08)" : "rgba(255,255,255,0.04)",
+            border: `1px solid ${isError ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.1)"}`,
+            color: isError ? "rgba(255,255,255,0.6)" : "#fff",
           }}>
             {isError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
             <span style={{ fontSize: 12, fontWeight: 700 }}>{message}</span>
@@ -1048,7 +1048,7 @@ export default function SettingsPage() {
           type="submit"
           disabled={saving}
           style={{
-            width: "100%", padding: 16, borderRadius: 14, border: "none",
+            width: "100%", padding: 16, borderRadius: 0, border: "none",
             background: "#fff", color: "#000", fontWeight: 800, fontSize: 13,
             textTransform: "uppercase", letterSpacing: "0.08em",
             cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.5 : 1,

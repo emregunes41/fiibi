@@ -78,7 +78,7 @@ export default function ClientGalleryPage() {
       <div className="max-w-6xl mx-auto text-white">
         
         <div className="flex items-center gap-4 mb-8">
-          <Link href="/profile" className="p-3 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors">
+          <Link href="/profile" className="p-3 bg-white/5 rounded-none hover:bg-white/10 transition-colors">
             <ArrowLeft size={20} />
           </Link>
           <div>
@@ -90,7 +90,7 @@ export default function ClientGalleryPage() {
         </div>
 
         {galleries.length === 0 ? (
-          <div className="glass-panel p-16 rounded-3xl text-center border border-white/5 mt-8">
+          <div className="glass-panel p-16 rounded-none text-center border border-white/5 mt-8">
             <Folder size={48} className="text-white/10 mx-auto mb-4" />
             <h3 className="text-xl font-bold mb-2">Henüz Hazır Bir Galeri Yok</h3>
             <p className="text-white/40">Fotoğraflarınız düzenlenip sisteme yüklendiğinde burada görünecektir.</p>
@@ -102,7 +102,7 @@ export default function ClientGalleryPage() {
               const remainingCount = gallery.selectionLimit - selectedCount;
 
               return (
-                <div key={gallery.id} className="glass-panel rounded-3xl p-6 md:p-10 border border-white/5">
+                <div key={gallery.id} className="glass-panel rounded-none p-6 md:p-10 border border-white/5">
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 border-b border-white/10 pb-8">
                     <div>
                       <h2 className="text-2xl font-black mb-2">{gallery.reservation.packages.map(p => p.name).join(", ")}</h2>
@@ -118,12 +118,12 @@ export default function ClientGalleryPage() {
                       {!gallery.reservation.selectionLocked ? (
                         <button 
                           onClick={() => handleComplete(gallery)}
-                          className="bg-white text-black px-6 py-3 rounded-xl font-bold tracking-tight hover:bg-white/90 transition-all flex items-center gap-2"
+                          className="bg-white text-black px-6 py-3 rounded-none font-bold tracking-tight hover:bg-white/90 transition-all flex items-center gap-2"
                         >
                           {selectedCount > 0 ? "Seçimleri Güncelle" : "Seçimleri Gönder"} <CheckCircle size={18} />
                         </button>
                       ) : (
-                        <div className="bg-green-500/20 text-green-400 border border-green-500/30 px-6 py-3 rounded-xl font-bold flex items-center gap-2">
+                        <div className="bg-white/10 text-white/70 border border-white/15 px-6 py-3 rounded-none font-bold flex items-center gap-2">
                           <CheckCircle size={18} /> Seçiminiz İşleme Alındı
                         </div>
                       )}
@@ -137,8 +137,8 @@ export default function ClientGalleryPage() {
                         <div 
                           key={photo.id} 
                           onClick={() => !isLocked && handleToggle(photo, gallery)}
-                          className={`relative aspect-square rounded-2xl overflow-hidden cursor-pointer border-2 transition-all ${
-                            photo.isSelected ? "border-green-500 scale-[0.98] shadow-[0_0_20px_rgba(34,197,94,0.2)]" : "border-transparent hover:border-white/20"
+                          className={`relative aspect-square rounded-none overflow-hidden cursor-pointer border-2 transition-all ${
+                            photo.isSelected ? "border-white/30 scale-[0.98] shadow-[0_0_20px_rgba(255,255,255,0.1)]" : "border-transparent hover:border-white/20"
                           } ${isLocked ? "cursor-default opacity-80" : ""}`}
                         >
                           <Image 
@@ -147,11 +147,11 @@ export default function ClientGalleryPage() {
                             fill 
                             className="object-cover"
                           />
-                          <div className={`absolute inset-0 transition-opacity ${photo.isSelected ? "bg-green-500/10" : "bg-black/20 hover:bg-black/0"}`}></div>
+                          <div className={`absolute inset-0 transition-opacity ${photo.isSelected ? "bg-white/5" : "bg-black/20 hover:bg-black/0"}`}></div>
                           
                           {/* Heart/Select Icon */}
-                          <div className={`absolute bottom-3 right-3 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-all ${
-                            photo.isSelected ? "bg-green-500 text-black scale-110" : "bg-black/50 text-white/50"
+                          <div className={`absolute bottom-3 right-3 w-8 h-8 rounded-none flex items-center justify-center backdrop-blur-md transition-all ${
+                            photo.isSelected ? "bg-white text-black scale-110" : "bg-black/50 text-white/50"
                           }`}>
                             <Heart size={16} fill={photo.isSelected ? "currentColor" : "none"} />
                           </div>

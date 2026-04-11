@@ -17,7 +17,7 @@ export default function FailPage() {
           display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem',
           border: '1px solid rgba(239, 68, 68, 0.2)', boxShadow: '0 0 40px rgba(239, 68, 68, 0.1)'
         }}>
-          <XCircle size={60} color="#EF4444" />
+          <XCircle size={60} color="rgba(255,255,255,0.6)" />
         </div>
 
         <h1 style={{ fontSize: '3.5rem', fontWeight: 900, letterSpacing: '-0.04em', marginBottom: '1.5rem' }}>İşlem Başarısız</h1>

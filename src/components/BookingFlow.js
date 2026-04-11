@@ -77,7 +77,7 @@ const S = {
     width: "100%",
     textAlign: "left",
     padding: "20px",
-    borderRadius: "16px",
+    borderRadius: 0,
     border: `1px solid ${on ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.1)"}`,
     background: on ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.025)",
     cursor: "pointer",
@@ -92,7 +92,7 @@ const S = {
     justifyContent: "center",
     gap: "8px",
     padding: "14px 32px",
-    borderRadius: "12px",
+    borderRadius: 0,
     fontWeight: 600,
     fontSize: "14px",
     background: active ? bg : "rgba(255,255,255,0.04)",
@@ -106,7 +106,7 @@ const S = {
     width: "100%",
     background: "rgba(255,255,255,0.05)",
     border: "1px solid rgba(255,255,255,0.12)",
-    borderRadius: "12px",
+    borderRadius: 0,
     padding: "14px 16px",
     fontSize: "14px",
     color: "#fff",
@@ -127,7 +127,7 @@ const S = {
     fontSize: "11px",
     fontWeight: 700,
     padding: "3px 8px",
-    borderRadius: "6px",
+    borderRadius: 0,
     lineHeight: 1,
   },
   section: { marginBottom: "48px" },
@@ -336,7 +336,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
               style={{
                 flex: 1,
                 padding: "12px 0",
-                borderRadius: "12px",
+                borderRadius: 0,
                 border: "none",
                 fontSize: "13px",
                 fontWeight: 600,
@@ -366,7 +366,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
             alignItems: "center",
             gap: "12px",
             padding: "12px 20px",
-            borderRadius: "16px",
+            borderRadius: 0,
             background: "rgba(10,10,15,0.9)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
@@ -382,7 +382,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
             <div style={{ fontSize: "15px", fontWeight: 700, color: "#fff" }}>{fmt(cart.cartTotal())}₺</div>
           </div>
           <div style={{
-            width: "32px", height: "32px", borderRadius: "8px", background: "#fff",
+            width: "32px", height: "32px", borderRadius: 0, background: "#fff",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
             <ArrowRight size={14} style={{ color: "#000" }} />
@@ -406,7 +406,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       key={c.value}
                       onClick={() => { setCat(c.value); setMonth(null); }}
                       style={{
-                        textAlign: "left", padding: "20px", borderRadius: "16px",
+                        textAlign: "left", padding: "20px", borderRadius: 0,
                         border: `1px solid ${on ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.15)"}`,
                         background: on ? `linear-gradient(135deg, ${c.color}22 0%, transparent 60%)` : "rgba(255,255,255,0.04)",
                         cursor: "pointer", transition: "all 0.3s", position: "relative",
@@ -414,7 +414,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                     >
                       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "12px" }}>
                         <div style={{
-                          width: "40px", height: "40px", borderRadius: "12px",
+                          width: "40px", height: "40px", borderRadius: 0,
                           display: "flex", alignItems: "center", justifyContent: "center",
                           background: on ? `${c.color}25` : "rgba(255,255,255,0.06)",
                         }}>
@@ -422,7 +422,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                         </div>
                         {on && (
                           <div style={{
-                            width: "24px", height: "24px", borderRadius: "50%",
+                            width: "24px", height: "24px", borderRadius: 0,
                             background: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
                           }}>
                             <Check size={12} style={{ color: "#000" }} strokeWidth={3} />
@@ -444,7 +444,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                   <div style={S.label}>Dönem Seçimi</div>
                   <div style={{
                     display: "flex", alignItems: "center", gap: "4px",
-                    background: "rgba(255,255,255,0.03)", borderRadius: "8px",
+                    background: "rgba(255,255,255,0.03)", borderRadius: 0,
                     padding: "4px 8px", border: "1px solid rgba(255,255,255,0.06)",
                   }}>
                     <button onClick={() => setYear(y => y - 1)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.25)", cursor: "pointer", padding: "4px" }}>
@@ -469,7 +469,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                         disabled={past}
                         onClick={() => { setMonth(m); go(2); }}
                         style={{
-                          padding: "14px 4px", borderRadius: "12px",
+                          padding: "14px 4px", borderRadius: 0,
                           border: sel ? "2px solid #fff" : d < 0 ? "1px solid rgba(217,181,120,0.18)" : "1px solid rgba(255,255,255,0.06)",
                           background: sel ? "#fff" : d < 0 ? "rgba(217,181,120,0.05)" : "rgba(255,255,255,0.02)",
                           cursor: past ? "not-allowed" : "pointer",
@@ -483,7 +483,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                           <div style={{
                             position: "absolute", bottom: 0, left: "20%", right: "20%", height: "2px",
                             background: "linear-gradient(90deg, transparent, rgba(217,181,120,0.5), transparent)",
-                            borderRadius: "1px",
+                            borderRadius: 0,
                           }} />
                         )}
                         <div style={{ fontSize: "13px", fontWeight: 700, color: sel ? "#000" : "rgba(255,255,255,0.6)" }}>{name}</div>
@@ -524,8 +524,8 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
               {disc(month) !== 0 && (
                 <span style={{
                   ...S.tag,
-                  background: disc(month) < 0 ? "rgba(52,211,153,0.1)" : "rgba(251,146,60,0.1)",
-                  color: disc(month) < 0 ? "#34d399" : "#fb923c",
+                  background: disc(month) < 0 ? "rgba(255,255,255,0.06)" : "rgba(251,146,60,0.1)",
+                  color: disc(month) < 0 ? "rgba(255,255,255,0.7)" : "#fb923c",
                 }}>
                   {disc(month) < 0 ? `%${Math.abs(disc(month))} İndirim` : `+%${disc(month)}`}
                 </span>
@@ -549,9 +549,9 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                     position: "relative",
                   }}>
                     <div style={{
-                      width: "32px", height: "32px", borderRadius: "8px",
+                      width: "32px", height: "32px", borderRadius: 0,
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      background: inCart ? "#34d399" : "rgba(255,255,255,0.04)",
+                      background: inCart ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.04)",
                       color: inCart ? "#000" : "rgba(255,255,255,0.15)",
                       flexShrink: 0, marginTop: "2px", transition: "all 0.3s",
                     }}>
@@ -574,7 +574,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       {inCart && (
                         <div style={{
                           marginTop: "8px", fontSize: "11px", fontWeight: 600,
-                          color: "#34d399", display: "flex", alignItems: "center", gap: "4px",
+                          color: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", gap: "4px",
                         }}>
                           <Check size={10} strokeWidth={3} /> Sepette
                         </div>
@@ -588,7 +588,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
             {/* Cart summary bar */}
             {cart.itemCount > 0 && (
               <div style={{
-                padding: "20px", borderRadius: "16px",
+                padding: "20px", borderRadius: 0,
                 border: "1px solid rgba(255,255,255,0.06)",
                 background: "rgba(255,255,255,0.015)",
                 display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -600,7 +600,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                 <button
                   onClick={() => cart.setIsOpen(true)}
                   style={{
-                    padding: "14px 28px", borderRadius: "12px",
+                    padding: "14px 28px", borderRadius: 0,
                     background: "#fff", border: "none", color: "#000",
                     fontSize: "13px", fontWeight: 700, cursor: "pointer",
                     display: "flex", alignItems: "center", gap: "8px",
@@ -624,7 +624,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
 
             {/* Package summary */}
             <div style={{
-              padding: "20px", borderRadius: "16px", marginBottom: "32px",
+              padding: "20px", borderRadius: 0, marginBottom: "32px",
               border: "1px solid rgba(255,255,255,0.08)",
               background: `linear-gradient(135deg, ${CATS.find(c => c.value === cat)?.color || "#888"}12 0%, transparent 60%)`,
               display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12,
@@ -702,7 +702,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       }}
                       style={{
                         aspectRatio: "1",
-                        borderRadius: "10px",
+                        borderRadius: 0,
                         border: isSelected ? "2px solid #fff" : "1px solid rgba(255,255,255,0.06)",
                         background: isSelected ? "#fff" : isPast ? "transparent" : "rgba(255,255,255,0.03)",
                         color: isSelected ? "#000" : isPast ? "rgba(255,255,255,0.12)" : isSunday ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.7)",
@@ -730,7 +730,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
 
               {/* Selected date display */}
               {detailForm.date && (
-                <div style={{ marginTop: "12px", textAlign: "center", fontSize: "13px", fontWeight: 600, color: "#fff", padding: "8px", background: "rgba(255,255,255,0.04)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div style={{ marginTop: "12px", textAlign: "center", fontSize: "13px", fontWeight: 600, color: "#fff", padding: "8px", background: "rgba(255,255,255,0.04)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)" }}>
                   📅 {new Date(detailForm.date).toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
                 </div>
               )}
@@ -759,7 +759,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                           disabled={full}
                           onClick={() => setDetailForm(p => ({ ...p, time: slot.value }))}
                           style={{
-                            padding: "14px 8px", borderRadius: "12px",
+                            padding: "14px 8px", borderRadius: 0,
                             border: sel ? "2px solid #fff" : `1px solid ${full ? "rgba(255,60,60,0.15)" : "rgba(255,255,255,0.06)"}`,
                             background: sel ? "#fff" : full ? "rgba(255,60,60,0.04)" : "rgba(255,255,255,0.02)",
                             cursor: full ? "not-allowed" : "pointer",
@@ -782,7 +782,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                 ) : (
                   // Show single time type info (FULL_DAY)
                   <div style={{
-                    padding: "14px 16px", borderRadius: "12px",
+                    padding: "14px 16px", borderRadius: 0,
                     border: "1px solid rgba(255,255,255,0.08)",
                     background: "rgba(255,255,255,0.02)",
                     display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -796,11 +796,11 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       </div>
                     </div>
                     {isSlotFull(selectedPkg.timeType) ? (
-                      <div style={{ fontSize: "12px", fontWeight: 700, color: "#ef4444", display: "flex", alignItems: "center", gap: "4px" }}>
+                      <div style={{ fontSize: "12px", fontWeight: 700, color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "4px" }}>
                         <AlertCircle size={14} /> Bu tarih dolu
                       </div>
                     ) : (
-                      <div style={{ fontSize: "12px", fontWeight: 600, color: "#34d399" }}>
+                      <div style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>
                         <Check size={14} /> Uygun
                       </div>
                     )}
@@ -818,7 +818,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                     const on = detailForm.selectedAddons.some(sa => sa.title === a.title);
                     return (
                       <button key={i} onClick={() => toggleDetailAddon(a)} style={{
-                        padding: "10px 16px", borderRadius: "12px", fontSize: "12px", fontWeight: 600,
+                        padding: "10px 16px", borderRadius: 0, fontSize: "12px", fontWeight: 600,
                         border: `1px solid ${on ? "#fff" : "rgba(255,255,255,0.06)"}`,
                         background: on ? "#fff" : "rgba(255,255,255,0.02)",
                         color: on ? "#000" : "rgba(255,255,255,0.35)",
@@ -891,7 +891,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       return (
                         <label key={idx} style={{
                           display: "flex", alignItems: "center", gap: "12px",
-                          padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.015)",
+                          padding: "16px", borderRadius: 0, background: "rgba(255,255,255,0.015)",
                           border: `1px solid ${answer.value ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.06)"}`,
                           cursor: "pointer", transition: "all 0.2s",
                         }}>
@@ -931,7 +931,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
 
             {/* Total + Add to Cart */}
             <div style={{
-              padding: "20px", borderRadius: "16px",
+              padding: "20px", borderRadius: 0,
               border: "1px solid rgba(255,255,255,0.06)",
               background: "rgba(255,255,255,0.015)",
               marginBottom: "20px",
@@ -964,9 +964,9 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                   style={{ display: "flex", flexDirection: "column", gap: "12px" }}
                 >
                   <div style={{
-                    padding: "16px", borderRadius: "12px",
-                    background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.2)",
-                    color: "#34d399", fontSize: "14px", fontWeight: 600,
+                    padding: "16px", borderRadius: 0,
+                    background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+                    color: "rgba(255,255,255,0.7)", fontSize: "14px", fontWeight: 600,
                     textAlign: "center",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                   }}>
@@ -976,7 +976,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                     <button
                       onClick={() => { setAddedFeedback(false); go(1); }}
                       style={{
-                        flex: 1, padding: "14px", borderRadius: "12px",
+                        flex: 1, padding: "14px", borderRadius: 0,
                         border: "1px solid rgba(255,255,255,0.08)", background: "transparent",
                         color: "rgba(255,255,255,0.5)", fontSize: "13px", fontWeight: 600,
                         cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
@@ -987,7 +987,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                     <button
                       onClick={() => { setAddedFeedback(false); cart.setIsOpen(true); }}
                       style={{
-                        flex: 1, padding: "14px", borderRadius: "12px",
+                        flex: 1, padding: "14px", borderRadius: 0,
                         border: "none", background: "#fff", color: "#000",
                         fontSize: "13px", fontWeight: 700, cursor: "pointer",
                         display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",

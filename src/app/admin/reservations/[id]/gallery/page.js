@@ -68,7 +68,7 @@ export default function GalleryManagementPage() {
   return (
     <div className="text-white">
       <div className="flex items-center gap-4 mb-8">
-        <Link href="/admin/reservations" className="p-3 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors">
+        <Link href="/admin/reservations" className="p-3 bg-white/5 rounded-none hover:bg-white/10 transition-colors">
           <ArrowLeft size={20} />
         </Link>
         <div>
@@ -82,7 +82,7 @@ export default function GalleryManagementPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Sol Panel - Yükleme / Actions */}
         <div className="flex flex-col gap-6 lg:col-span-1">
-          <div className="glass-panel p-6 rounded-3xl">
+          <div className="glass-panel p-6 rounded-none">
             <h3 className="font-black text-lg mb-4 flex items-center gap-2">
               <UploadCloud size={18} /> Fotoğraf Ekle
             </h3>
@@ -104,7 +104,7 @@ export default function GalleryManagementPage() {
                 return (
                   <button 
                     onClick={() => open()} 
-                    className="w-full py-4 border-2 border-dashed border-white/20 rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-white/5 hover:border-white/40 transition-all cursor-pointer"
+                    className="w-full py-4 border-2 border-dashed border-white/20 rounded-none flex flex-col items-center justify-center gap-2 hover:bg-white/5 hover:border-white/40 transition-all cursor-pointer"
                   >
                     <UploadCloud size={24} className="text-white/50" />
                     <span className="font-bold text-sm">Buraya Tıkla veya Sürükle</span>
@@ -114,7 +114,7 @@ export default function GalleryManagementPage() {
             </CldUploadWidget>
           </div>
 
-          <div className="glass-panel p-6 rounded-3xl">
+          <div className="glass-panel p-6 rounded-none">
             <h3 className="font-black text-lg mb-4 flex items-center gap-2">
               <Send size={18} /> Yayına Al
             </h3>
@@ -123,16 +123,16 @@ export default function GalleryManagementPage() {
             </p>
             <button 
               onClick={handleDeliveryToggle}
-              className={`w-full py-3 rounded-xl font-bold tracking-tight transition-all flex items-center justify-center gap-2 ${
+              className={`w-full py-3 rounded-none font-bold tracking-tight transition-all flex items-center justify-center gap-2 ${
                 gallery.isDelivered 
                   ? "bg-red-500 text-white hover:bg-red-600" 
-                  : "bg-green-500 text-black hover:bg-green-400"
+                  : "bg-white text-black hover:bg-green-400"
               }`}
             >
               {gallery.isDelivered ? "Erişimi Kapat" : "Müşteriye Aç"}
             </button>
             {gallery.isDelivered && (
-              <p className="text-xs text-center text-green-400 font-bold mt-4">
+              <p className="text-xs text-center text-white/70 font-bold mt-4">
                 Yayında (Seçime Açık)
               </p>
             )}
@@ -140,20 +140,20 @@ export default function GalleryManagementPage() {
         </div>
 
         {/* Sağ Panel - Gallery Grid */}
-        <div className="lg:col-span-3 glass-panel p-8 rounded-3xl">
+        <div className="lg:col-span-3 glass-panel p-8 rounded-none">
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-xl font-black">Yüklenen Fotoğraflar ({gallery.photos.length})</h3>
           </div>
 
           {gallery.photos.length === 0 ? (
-            <div className="text-center py-20 border border-white/5 rounded-2xl bg-white/5">
+            <div className="text-center py-20 border border-white/5 rounded-none bg-white/5">
               <ImageIcon size={48} className="text-white/10 mx-auto mb-4" />
               <p className="text-white/40">Henüz hiç fotoğraf yüklenmemiş.</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {gallery.photos.map((photo) => (
-                <div key={photo.id} className="relative group aspect-square bg-black rounded-2xl overflow-hidden border border-white/10">
+                <div key={photo.id} className="relative group aspect-square bg-black rounded-none overflow-hidden border border-white/10">
                   <Image 
                     src={photo.url} 
                     alt={photo.originalName || "Fotoğraf"} 
@@ -164,12 +164,12 @@ export default function GalleryManagementPage() {
                   
                   {/* Etiketler ve originalName */}
                   <div className="absolute top-2 left-2 right-2 flex justify-between items-start opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="bg-black/80 backdrop-blur-md px-2 py-1 rounded text-[10px] font-mono outline-none text-green-400 font-bold max-w-[70%] truncate">
+                    <span className="bg-black/80 backdrop-blur-md px-2 py-1 rounded-none text-[10px] font-mono outline-none text-white/70 font-bold max-w-[70%] truncate">
                       {photo.originalName}
                     </span>
                     <button 
                       onClick={() => handleDelete(photo.id)}
-                      className="bg-red-500/80 text-white p-1.5 rounded hover:bg-red-500 transition-colors"
+                      className="bg-red-500/80 text-white p-1.5 rounded-none hover:bg-red-500 transition-colors"
                       title="Sil"
                     >
                       <Trash2 size={12} />
@@ -177,7 +177,7 @@ export default function GalleryManagementPage() {
                   </div>
 
                   {photo.isSelected && (
-                    <div className="absolute bottom-2 left-2 bg-green-500 text-black px-2 py-1 rounded text-[10px] font-bold">
+                    <div className="absolute bottom-2 left-2 bg-white text-black px-2 py-1 rounded-none text-[10px] font-bold">
                       Seçildi
                     </div>
                   )}

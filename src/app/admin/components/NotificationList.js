@@ -41,7 +41,7 @@ export default function NotificationList({ notifications }) {
         <h3 style={{ fontWeight: 900, fontSize: "1.2rem", letterSpacing: "-0.02em", color: "#60A5FA", display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <Bell size={18} /> Bildirimler
           {unread.length > 0 && (
-            <span style={{ background: "#EF4444", color: "#fff", fontSize: "0.7rem", padding: "0.2rem 0.5rem", borderRadius: "10px", fontWeight: 900 }}>
+            <span style={{ background: "rgba(255,255,255,0.6)", color: "#fff", fontSize: "0.7rem", padding: "0.2rem 0.5rem", borderRadius: 0, fontWeight: 900 }}>
               {unread.length} YENİ
             </span>
           )}
@@ -68,7 +68,7 @@ export default function NotificationList({ notifications }) {
 
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {unread.map(notif => (
-            <div key={notif.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "1rem 1.5rem", background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: "1rem", gap: "1rem" }}>
+            <div key={notif.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "1rem 1.5rem", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: "1rem", gap: "1rem" }}>
               <div>
                 <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "#93C5FD", marginBottom: "0.25rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   {new Date(notif.createdAt).toLocaleString("tr-TR")}

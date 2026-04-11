@@ -60,7 +60,7 @@ export default async function ProfilePage() {
 
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           {user.reservations.length === 0 ? (
-            <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 20, border: "1px solid rgba(255,255,255,0.06)", padding: "48px 24px", textAlign: "center" }}>
+            <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", padding: "48px 24px", textAlign: "center" }}>
               <Calendar size={36} style={{ color: "rgba(255,255,255,0.2)", margin: "0 auto 12px" }} />
               <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 12 }}>Henüz bir rezervasyonunuz bulunmuyor.</p>
               <Link href="/booking" style={{ color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none" }}>
@@ -94,20 +94,20 @@ export default async function ProfilePage() {
                   
                   {/* Contract Approval Banner */}
                   {!res.contractApproved && (
-                    <div style={{ background: "rgba(250,204,21,0.06)", border: "1px solid rgba(250,204,21,0.3)", borderRadius: 20, padding: "20px 24px" }}>
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, padding: "20px 24px" }}>
                       <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
-                        <div style={{ width: 44, height: 44, background: "rgba(250,204,21,0.15)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          <AlertTriangle size={20} style={{ color: "#facc15" }} />
+                        <div style={{ width: 44, height: 44, background: "rgba(255,255,255,0.1)", borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <AlertTriangle size={20} style={{ color: "rgba(255,255,255,0.7)" }} />
                         </div>
                         <div style={{ flex: 1, minWidth: 200 }}>
-                          <h4 style={{ fontWeight: 700, fontSize: 15, color: "#facc15", marginBottom: 6 }}>Sözleşme Onayı Bekleniyor</h4>
+                          <h4 style={{ fontWeight: 700, fontSize: 15, color: "rgba(255,255,255,0.7)", marginBottom: 6 }}>Sözleşme Onayı Bekleniyor</h4>
                           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, lineHeight: 1.5, marginBottom: 16 }}>
                             Bu rezervasyon ekibimiz tarafından sizin adınıza oluşturulmuştur. Çekim planlaması ve hizmet detaylarının resmi olarak başlayabilmesi için Pinowed mesafeli satış ve hizmet sözleşmesini onaylamanız gerekmektedir.
                           </p>
                           <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
                             <ContractPreviewModal customText={siteConfig?.contractText} />
                             <form action={approveContract.bind(null, res.id)}>
-                              <button type="submit" className="hover:opacity-80" style={{ background: "#facc15", color: "#000", fontWeight: 700, fontSize: 13, padding: "10px 20px", borderRadius: 8, border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, transition: "opacity 0.2s" }}>
+                              <button type="submit" className="hover:opacity-80" style={{ background: "rgba(255,255,255,0.7)", color: "#000", fontWeight: 700, fontSize: 13, padding: "10px 20px", borderRadius: 0, border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, transition: "opacity 0.2s" }}>
                                 <CheckCircle size={16} /> Okudum ve Onaylıyorum
                               </button>
                             </form>
@@ -118,12 +118,12 @@ export default async function ProfilePage() {
                   )}
 
                   {/* ── Main Reservation Card ── */}
-                  <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 20, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden", opacity: !res.contractApproved ? 0.6 : 1, pointerEvents: !res.contractApproved ? "none" : "auto" }}>
+                  <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden", opacity: !res.contractApproved ? 0.6 : 1, pointerEvents: !res.contractApproved ? "none" : "auto" }}>
                     
                     {/* Card Header */}
                     <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
                       <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-                        <div style={{ width: 44, height: 44, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <div style={{ width: 44, height: 44, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                           <Package size={18} style={{ color: "rgba(255,255,255,0.5)" }} />
                         </div>
                         <div>
@@ -133,10 +133,10 @@ export default async function ProfilePage() {
                             </h4>
                             <span style={{
                               fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
-                              padding: "3px 8px", borderRadius: 6,
-                              background: res.status === "CONFIRMED" ? "rgba(74,222,128,0.1)" : "rgba(250,204,21,0.1)",
-                              color: res.status === "CONFIRMED" ? "#4ade80" : "#facc15",
-                              border: `1px solid ${res.status === "CONFIRMED" ? "rgba(74,222,128,0.2)" : "rgba(250,204,21,0.2)"}`,
+                              padding: "3px 8px", borderRadius: 0,
+                              background: res.status === "CONFIRMED" ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.04)",
+                              color: res.status === "CONFIRMED" ? "#fff" : "rgba(255,255,255,0.7)",
+                              border: `1px solid ${res.status === "CONFIRMED" ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.1)"}`,
                             }}>
                               {res.status === "CONFIRMED" ? "Onaylı" : "Bekliyor"}
                             </span>
@@ -150,10 +150,10 @@ export default async function ProfilePage() {
 
                       {/* Delivery Countdown - uses max across all reservations */}
                       {maxDeliveryDate && currentStepIdx < 5 && currentStepIdx >= 0 && (
-                        <div style={{ background: "rgba(255,255,255,0.03)", padding: "10px 16px", borderRadius: 12, textAlign: "right", border: "1px solid rgba(255,255,255,0.06)" }}>
+                        <div style={{ background: "rgba(255,255,255,0.03)", padding: "10px 16px", borderRadius: 0, textAlign: "right", border: "1px solid rgba(255,255,255,0.06)" }}>
                           <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Tahmini Teslim</p>
                           <p style={{ fontSize: 14, fontWeight: 700 }}>{maxDeliveryDate.toLocaleDateString("tr-TR", { day: 'numeric', month: 'short' })}</p>
-                          {maxDaysLeft > 0 && <p style={{ fontSize: 11, fontWeight: 600, color: "#facc15" }}>{maxDaysLeft} gün kaldı</p>}
+                          {maxDaysLeft > 0 && <p style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>{maxDaysLeft} gün kaldı</p>}
                         </div>
                       )}
                     </div>
@@ -170,7 +170,7 @@ export default async function ProfilePage() {
                           const pkgFields = (res.customFieldAnswers || []).filter(a => a.packageName === pkg.name && a.type !== "_hidden");
                           const pkgAddons = (res.selectedAddons || []).filter(a => a.packageName === pkg.name);
                           return (
-                            <div key={pkg.id} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 12, padding: "14px 16px", border: "1px solid rgba(255,255,255,0.06)" }}>
+                            <div key={pkg.id} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, padding: "14px 16px", border: "1px solid rgba(255,255,255,0.06)" }}>
                               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
                                 <div>
                                   <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{pkgIdx + 1}. {pkg.name}</div>
@@ -179,11 +179,11 @@ export default async function ProfilePage() {
                                 <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", flexShrink: 0, marginLeft: 12 }}>{pkg.price}₺</div>
                               </div>
                               <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 6 }}>
-                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(168,85,247,0.1)", color: "#a855f7", padding: "2px 8px", borderRadius: 5 }}>{categoryLabels[pkg.category] || pkg.category}</span>
-                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(59,130,246,0.1)", color: "#60a5fa", padding: "2px 8px", borderRadius: 5 }}>{timeLabels[pkg.timeType] || pkg.timeType}</span>
-                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", padding: "2px 8px", borderRadius: 5 }}>{pkg.deliveryTimeDays || 14} gün içinde teslim</span>
+                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "2px 8px", borderRadius: 0 }}>{categoryLabels[pkg.category] || pkg.category}</span>
+                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "2px 8px", borderRadius: 0 }}>{timeLabels[pkg.timeType] || pkg.timeType}</span>
+                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", padding: "2px 8px", borderRadius: 0 }}>{pkg.deliveryTimeDays || 14} gün içinde teslim</span>
                                 {pkg.postSelectionDays > 0 && (
-                                  <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(250,204,21,0.08)", color: "#facc15", padding: "2px 8px", borderRadius: 5 }}>+{pkg.postSelectionDays} gün seçim süresi</span>
+                                  <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.7)", padding: "2px 8px", borderRadius: 0 }}>+{pkg.postSelectionDays} gün seçim süresi</span>
                                 )}
                               </div>
                               {pkg.features && pkg.features.length > 0 && (
@@ -233,7 +233,7 @@ export default async function ProfilePage() {
                         const unmatchedAddons = (res.selectedAddons || []).filter(a => !a.packageName);
                         if (unmatchedFields.length === 0 && unmatchedAddons.length === 0) return null;
                         return (
-                          <div style={{ marginTop: 10, padding: "10px 14px", background: "rgba(255,255,255,0.02)", borderRadius: 10, border: "1px solid rgba(255,255,255,0.04)" }}>
+                          <div style={{ marginTop: 10, padding: "10px 14px", background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.04)" }}>
                             {unmatchedFields.length > 0 && (
                               <>
                                 <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Çekim Bilgileri</div>
@@ -265,8 +265,8 @@ export default async function ProfilePage() {
                     )}
 
                     {res.notes && (
-                       <div style={{ marginTop: 10, padding: "12px 14px", background: "rgba(250,204,21,0.05)", borderRadius: 10, border: "1px solid rgba(250,204,21,0.15)" }}>
-                          <div style={{ fontSize: 9, fontWeight: 700, color: "#facc15", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Notlar / Açıklama</div>
+                       <div style={{ marginTop: 10, padding: "12px 14px", background: "rgba(255,255,255,0.03)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.1)" }}>
+                          <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.7)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Notlar / Açıklama</div>
                           <div style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", lineHeight: 1.5, whiteSpace: "pre-wrap" }}>
                              {res.notes}
                           </div>
@@ -281,7 +281,7 @@ export default async function ProfilePage() {
                         <div style={{ display: "flex", justifyContent: "space-between", position: "relative", minWidth: 420 }}>
                           {/* Background line */}
                           <div style={{ position: "absolute", top: 13, left: "10%", right: "10%", height: 1, background: "rgba(255,255,255,0.08)" }} />
-                          <div style={{ position: "absolute", top: 13, left: "10%", height: 1, background: "rgba(74,222,128,0.5)", transition: "all 0.7s", width: currentStepIdx >= 0 ? `${(currentStepIdx / 4) * 80}%` : "0%" }} />
+                          <div style={{ position: "absolute", top: 13, left: "10%", height: 1, background: "rgba(255,255,255,0.4)", transition: "all 0.7s", width: currentStepIdx >= 0 ? `${(currentStepIdx / 4) * 80}%` : "0%" }} />
 
                           {workflowSteps.map((step, idx) => {
                             const isCompleted = currentStepIdx > idx;
@@ -290,8 +290,8 @@ export default async function ProfilePage() {
                             return (
                               <div key={step.id} style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, textAlign: "center", flex: 1 }}>
                                 <div style={{
-                                  width: 26, height: 26, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, transition: "all 0.3s",
-                                  ...(isCompleted ? { background: "#4ade80", color: "#000" } :
+                                  width: 26, height: 26, borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, transition: "all 0.3s",
+                                  ...(isCompleted ? { background: "#fff", color: "#000" } :
                                     isCurrent ? { background: "#fff", color: "#000", boxShadow: "0 0 12px rgba(255,255,255,0.3)" } :
                                     { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.35)" })
                                 }}>
@@ -311,12 +311,12 @@ export default async function ProfilePage() {
                       
                       {/* Selection CTA */}
                       {effectiveStatus === "SELECTION_PENDING" && !res.deliveryLink && (
-                        <div style={{ marginTop: 12, background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.12)", borderRadius: 12, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+                        <div style={{ marginTop: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
                           <div>
-                            <h5 style={{ fontWeight: 700, color: "#4ade80", fontSize: 13 }}>Fotoğraflarınız Hazır! 🎉</h5>
+                            <h5 style={{ fontWeight: 700, color: "#fff", fontSize: 13 }}>Fotoğraflarınız Hazır! 🎉</h5>
                             <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 11 }}>Albüme gidecek fotoğrafları seçebilirsiniz.</p>
                           </div>
-                          <Link href="/profile/gallery" style={{ background: "#4ade80", color: "#000", padding: "8px 18px", borderRadius: 8, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap" }}>
+                          <Link href="/profile/gallery" style={{ background: "#fff", color: "#000", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap" }}>
                             Seçimi Başlat
                           </Link>
                         </div>
@@ -327,10 +327,10 @@ export default async function ProfilePage() {
                         // If selection is locked, show confirmation
                         if (res.selectionLocked && res.selectedPhotos) {
                           return (
-                            <div style={{ marginTop: 12, background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.1)", borderRadius: 12, padding: "14px 18px" }}>
+                            <div style={{ marginTop: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "14px 18px" }}>
                               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                <CheckCircle size={16} style={{ color: "#4ade80" }} />
-                                <span style={{ fontWeight: 700, fontSize: 13, color: "#4ade80" }}>Seçiminiz İşleme Alındı</span>
+                                <CheckCircle size={16} style={{ color: "#fff" }} />
+                                <span style={{ fontWeight: 700, fontSize: 13, color: "#fff" }}>Seçiminiz İşleme Alındı</span>
                               </div>
                               <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, marginTop: 6 }}>Fotoğraf seçiminiz onaylanmıştır ve hazırlık aşamasına geçilmiştir.</p>
                             </div>
@@ -357,12 +357,12 @@ export default async function ProfilePage() {
 
                       {/* Delivery Link */}
                       {res.deliveryLink && (
-                        <div style={{ marginTop: 16, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+                        <div style={{ marginTop: 16, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
                           <div>
                             <h5 style={{ fontWeight: 700, color: "#fff", fontSize: 13 }}>Teslimatınız Hazır! 📸</h5>
                             <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 11 }}>Tüm dosyalarınıza aşağıdaki bağlantıdan ulaşabilirsiniz.</p>
                           </div>
-                          <a href={res.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#fff", color: "#000", padding: "8px 18px", borderRadius: 8, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
+                          <a href={res.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#fff", color: "#000", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
                             <ExternalLink size={14} /> Klasöre Git
                           </a>
                         </div>
@@ -441,15 +441,15 @@ export default async function ProfilePage() {
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {user.purchases.length === 0 ? (
-            <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 20, border: "1px solid rgba(255,255,255,0.06)", padding: "48px 24px", textAlign: "center" }}>
+            <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", padding: "48px 24px", textAlign: "center" }}>
               <Package size={36} style={{ color: "rgba(255,255,255,0.2)", margin: "0 auto 12px" }} />
               <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}>Henüz bir dijital ürün satın almadınız.</p>
             </div>
           ) : (
             user.purchases.map((pur) => (
-              <div key={pur.id} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.06)", padding: 16, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div key={pur.id} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", padding: 16, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <div style={{ width: 40, height: 40, background: "rgba(255,255,255,0.04)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div style={{ width: 40, height: 40, background: "rgba(255,255,255,0.04)", borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: "1px solid rgba(255,255,255,0.06)" }}>
                     <FileText size={16} style={{ color: "rgba(255,255,255,0.5)" }} />
                   </div>
                   <div>
@@ -459,7 +459,7 @@ export default async function ProfilePage() {
                     </div>
                   </div>
                 </div>
-                <button style={{ background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: 12, fontWeight: 600, padding: "8px 16px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.06)", cursor: "pointer" }}>
+                <button style={{ background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: 12, fontWeight: 600, padding: "8px 16px", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", cursor: "pointer" }}>
                   Görüntüle
                 </button>
               </div>

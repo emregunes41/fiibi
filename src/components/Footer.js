@@ -13,13 +13,13 @@ export default function Footer() {
             Anılarınızı ölümsüzleştirmek için tutkuyla çalışıyoruz. Her karede bir hikaye, her hikayede bir ömür saklıyoruz.
           </p>
           <div className="flex gap-4">
-            <a href="#" className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all">
+            <a href="#" className="p-2 rounded-none bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all">
               <Instagram size={20} />
             </a>
-            <a href="#" className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all">
+            <a href="#" className="p-2 rounded-none bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all">
               <Twitter size={20} />
             </a>
-            <a href="#" className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all">
+            <a href="#" className="p-2 rounded-none bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all">
               <Mail size={20} />
             </a>
           </div>
@@ -63,9 +63,9 @@ export default function Footer() {
             <input 
               type="email" 
               placeholder="E-posta adresiniz"
-              className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-white w-full focus:outline-none focus:border-white/30"
+              className="bg-white/5 border border-white/10 rounded-none px-4 py-2 text-sm text-white w-full focus:outline-none focus:border-white/30"
             />
-            <button className="bg-white text-black font-bold px-4 py-2 rounded-lg text-sm hover:bg-white/90 transition-all">
+            <button className="bg-white text-black font-bold px-4 py-2 rounded-none text-sm hover:bg-white/90 transition-all">
               Katıl
             </button>
           </div>

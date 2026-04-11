@@ -30,7 +30,7 @@ export default function ResetPasswordButton({ userId }) {
       style={{
         background: loading ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.08)",
         border: "1px solid rgba(255,255,255,0.08)",
-        borderRadius: "4px",
+        borderRadius: 0,
         color: "rgba(255,255,255,0.4)",
         fontSize: "0.55rem",
         padding: "2px 6px",

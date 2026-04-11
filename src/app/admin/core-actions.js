@@ -1149,11 +1149,11 @@ export async function revertToCashPayment(reservationId) {
         const { getNotificationSettings, sendEmailWithResend } = await import('../actions/notify');
         const settings = await getNotificationSettings();
         await sendEmailWithResend(settings, "hello@pinowed.com", "💰 Nakit Ödeme Talebi (Karttan Dönüş)", `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 8px;">
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 0;">
             <h3>Yeni Nakit Ödeme Talebi</h3>
             <p><strong>Müşteri:</strong> ${r.brideName} / ${r.groomName}</p>
             <p><strong>Telefon:</strong> ${r.bridePhone || r.groomPhone}</p>
-            <p>Kredi kartı tercih eden bu kullanıcı, profil üzerinden yeniden <strong style="color: #4ade80;">Nakit Ödeme</strong> yöntemine dönüş yapmayı talep etti. İlgili komisyon (%15) fiyatından düşülüp düzeltildi.</p>
+            <p>Kredi kartı tercih eden bu kullanıcı, profil üzerinden yeniden <strong style="color: #fff;">Nakit Ödeme</strong> yöntemine dönüş yapmayı talep etti. İlgili komisyon (%15) fiyatından düşülüp düzeltildi.</p>
             <p>Müşteriye IBAN bilgilerinizi iletmek için Whatsapp üzerinden iletişime geçebilirsiniz.</p>
             <a href="https://www.pinowed.com/admin/reservations" style="background:#000;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;display:inline-block;margin-top:10px;">Admin Paneline Git</a>
           </div>

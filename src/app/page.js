@@ -47,7 +47,7 @@ export default async function PinowedPage() {
             className="group flex items-center justify-center gap-4 text-white hover:text-white/70 transition-colors no-underline"
           >
             <span className="text-[0.8rem] uppercase tracking-[0.3em] font-jakarta">Galeriyi Keşfet</span>
-            <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+            <div className="w-10 h-10 rounded-none border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
               <ArrowDown size={14} className="group-hover:-rotate-45 transition-transform" />
             </div>
           </Link>
@@ -96,20 +96,20 @@ export default async function PinowedPage() {
                   <div className="text-[10px] uppercase tracking-[0.25em] text-white/25 mb-5 font-semibold">İletişim</div>
                   <div className="flex flex-col gap-3">
                     <a href={`tel:${(siteConfig?.phone || "0539 205 20 41").replace(/\s/g, '')}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0">
+                      <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0">
                         <Phone size={13} strokeWidth={1.5} />
                       </span>
                       {siteConfig?.phone || "0539 205 20 41"}
                     </a>
                     <a href={`mailto:${siteConfig?.email || "hello@pinowed.com"}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0">
+                      <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0">
                         <Mail size={13} strokeWidth={1.5} />
                       </span>
                       {siteConfig?.email || "hello@pinowed.com"}
                     </a>
                     {siteConfig?.address && (
                       <div className="text-[13px] text-white/50 flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center flex-shrink-0">
+                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center flex-shrink-0">
                           <MapPin size={13} strokeWidth={1.5} />
                         </span>
                         {siteConfig.address}
@@ -124,7 +124,7 @@ export default async function PinowedPage() {
                   <div className="flex flex-col gap-3">
                     {siteConfig?.whatsapp && (
                       <a href={`https://wa.me/${siteConfig.whatsapp}?text=Merhaba%2C%20bilgi%20almak%20istiyorum.`} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#25D366]/20 group-hover:border-[#25D366]/30 transition-all flex-shrink-0">
+                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#25D366]/20 group-hover:border-[#25D366]/30 transition-all flex-shrink-0">
                           <MessageCircle size={13} strokeWidth={1.5} />
                         </span>
                         WhatsApp
@@ -132,7 +132,7 @@ export default async function PinowedPage() {
                     )}
                     {siteConfig?.instagram && (
                       <a href={siteConfig.instagram} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#E1306C]/20 group-hover:border-[#E1306C]/30 transition-all flex-shrink-0">
+                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#E1306C]/20 group-hover:border-[#E1306C]/30 transition-all flex-shrink-0">
                           <Instagram size={13} strokeWidth={1.5} />
                         </span>
                         Instagram
@@ -140,7 +140,7 @@ export default async function PinowedPage() {
                     )}
                     {siteConfig?.googleMapsUrl && (
                       <a href={siteConfig.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#4285F4]/20 group-hover:border-[#4285F4]/30 transition-all flex-shrink-0">
+                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#4285F4]/20 group-hover:border-[#4285F4]/30 transition-all flex-shrink-0">
                           <MapPin size={13} strokeWidth={1.5} />
                         </span>
                         Yol Tarifi

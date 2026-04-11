@@ -41,7 +41,7 @@ export default function ProfileLayoutClient({ user, children }) {
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: "2rem" }}>
         {/* Avatar */}
-        <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+        <div style={{ width: 72, height: 72, borderRadius: 0, background: "linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
           <span style={{ fontSize: 24, fontWeight: 700, color: "rgba(255,255,255,0.85)" }}>{getInitials(user?.name)}</span>
         </div>
         <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{user?.name}</h2>
@@ -49,11 +49,11 @@ export default function ProfileLayoutClient({ user, children }) {
         
         {/* Stats */}
         <div style={{ width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-          <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 12, padding: "12px 8px", textAlign: "center" }}>
+          <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 0, padding: "12px 8px", textAlign: "center" }}>
             <span style={{ display: "block", color: "rgba(255,255,255,0.5)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>Randevu</span>
             <span style={{ fontSize: 20, fontWeight: 700 }}>{user?.reservations?.length || 0}</span>
           </div>
-          <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 12, padding: "12px 8px", textAlign: "center" }}>
+          <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 0, padding: "12px 8px", textAlign: "center" }}>
             <span style={{ display: "block", color: "rgba(255,255,255,0.5)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>Puan</span>
             <span style={{ fontSize: 20, fontWeight: 700 }}>0</span>
           </div>

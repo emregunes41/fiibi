@@ -28,7 +28,7 @@ export default async function AdminMembersPage() {
         {users.map((user) => (
           <div key={user.id} style={{
             padding: "10px 12px",
-            borderRadius: "10px",
+            borderRadius: 0,
             border: "1px solid rgba(255,255,255,0.1)",
             background: "rgba(255,255,255,0.08)",
             display: "flex",
@@ -39,12 +39,12 @@ export default async function AdminMembersPage() {
             <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0 }}>
               {/* Avatar Compact */}
               {user.image ? (
-                <div style={{ width: "32px", height: "32px", borderRadius: "50%", overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)", flexShrink: 0 }}>
+                <div style={{ width: "32px", height: "32px", borderRadius: 0, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)", flexShrink: 0 }}>
                   <Image src={user.image} alt="" width={32} height={32} style={{ objectFit: "cover" }} />
                 </div>
               ) : (
                 <div style={{ 
-                  width: "32px", height: "32px", borderRadius: "50%", background: "rgba(255,255,255,0.05)", 
+                  width: "32px", height: "32px", borderRadius: 0, background: "rgba(255,255,255,0.05)", 
                   display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.5)", flexShrink: 0
                 }}>
                   <UserIcon size={14} />
@@ -76,12 +76,12 @@ export default async function AdminMembersPage() {
               {/* Info Tags Compact */}
               <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
                 {user.phone && (
-                  <span style={{ fontSize: "0.6rem", background: "rgba(255,255,255,0.08)", padding: "2px 6px", borderRadius: "4px", color: "rgba(255,255,255,0.4)" }}>
+                  <span style={{ fontSize: "0.6rem", background: "rgba(255,255,255,0.08)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.4)" }}>
                     {user.phone}
                   </span>
                 )}
                 {user.role === "ADMIN" && (
-                  <span style={{ fontSize: "0.6rem", background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: "4px", color: "#fff", fontWeight: 800 }}>
+                  <span style={{ fontSize: "0.6rem", background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: 0, color: "#fff", fontWeight: 800 }}>
                     ADMIN
                   </span>
                 )}

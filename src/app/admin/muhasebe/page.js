@@ -101,7 +101,7 @@ export default async function MuhasebePage() {
   const monthNames = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
   const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale / EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online Ödeme" };
   const methodIcons = { CASH: "💵", BANK_TRANSFER: "🏦", CREDIT_CARD: "💳", ONLINE: "🌐" };
-  const methodColors = { CASH: "#4ade80", BANK_TRANSFER: "#60a5fa", CREDIT_CARD: "#f59e0b", ONLINE: "#a78bfa" };
+  const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(255,255,255,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(255,255,255,0.6)" };
   const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan" };
   const catColors = { DIS_CEKIM: "#f59e0b", DUGUN: "#fb7185", NISAN: "#67e8f9" };
 
@@ -110,8 +110,8 @@ export default async function MuhasebePage() {
       {/* Header */}
       <div style={{ marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(74,222,128,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <PiggyBank size={18} style={{ color: "#4ade80" }} />
+          <div style={{ width: 36, height: 36, borderRadius: 0, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <PiggyBank size={18} style={{ color: "#fff" }} />
           </div>
           <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", margin: 0 }}>Muhasebe</h1>
         </div>
@@ -122,22 +122,22 @@ export default async function MuhasebePage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "10px", marginBottom: "1.5rem" }}>
         
         {/* Toplam Gelir */}
-        <div style={{ background: "linear-gradient(145deg, rgba(74,222,128,0.08) 0%, rgba(0,0,0,0.4) 100%)", border: "1px solid rgba(74,222,128,0.2)", borderRadius: 14, padding: "18px" }}>
-          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(74,222,128,0.6)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
+        <div style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0.4) 100%)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 0, padding: "18px" }}>
+          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
             <TrendingUp size={10} /> Toplam Gelir
           </div>
-          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#4ade80" }}>{fmt(totalCashIn)}<span style={{ fontSize: "0.8rem", opacity: 0.7 }}>₺</span></div>
+          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#fff" }}>{fmt(totalCashIn)}<span style={{ fontSize: "0.8rem", opacity: 0.7 }}>₺</span></div>
           <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", marginTop: 4 }}>{validPayments.length} ödeme işlemi</div>
         </div>
 
         {/* Bu Ay */}
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "18px" }}>
+        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
           <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
             {monthNames[currentMonth]} Geliri
           </div>
           <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#fff" }}>{fmt(thisMonthTotal)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
           {monthChange !== 0 && (
-            <div style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 4, fontSize: "0.6rem", fontWeight: 800, color: monthChange > 0 ? "#4ade80" : "#ef4444" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 4, fontSize: "0.6rem", fontWeight: 800, color: monthChange > 0 ? "#fff" : "rgba(255,255,255,0.5)" }}>
               {monthChange > 0 ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
               %{Math.abs(monthChange)} {monthChange > 0 ? "artış" : "azalış"} · geçen aya göre
             </div>
@@ -145,16 +145,16 @@ export default async function MuhasebePage() {
         </div>
 
         {/* Tahsil Edilecek */}
-        <div style={{ background: "rgba(250,204,21,0.04)", border: "1px solid rgba(250,204,21,0.15)", borderRadius: 14, padding: "18px" }}>
-          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(250,204,21,0.6)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "18px" }}>
+          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
             <Receipt size={10} /> Tahsil Edilecek
           </div>
-          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#facc15" }}>{fmt(totalOutstanding)}<span style={{ fontSize: "0.8rem", opacity: 0.7 }}>₺</span></div>
+          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "rgba(255,255,255,0.7)" }}>{fmt(totalOutstanding)}<span style={{ fontSize: "0.8rem", opacity: 0.7 }}>₺</span></div>
           <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", marginTop: 4 }}>{reservationBalances.length} açık rezervasyon</div>
         </div>
 
         {/* Beklenen Toplam */}
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "18px" }}>
+        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
           <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
             Aktif Toplam Tutar
           </div>
@@ -167,7 +167,7 @@ export default async function MuhasebePage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "10px", marginBottom: "1.5rem" }}>
         
         {/* Aylık Gelir Grafiği */}
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "18px" }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
           <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
             <Calendar size={13} style={{ color: "rgba(255,255,255,0.5)" }} />
             Aylık Gelir — {currentYear}
@@ -178,21 +178,21 @@ export default async function MuhasebePage() {
               const isCurrentMonth = i === currentMonth;
               return (
                 <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                  <div style={{ fontSize: "0.5rem", fontWeight: 800, color: m.total > 0 ? "#4ade80" : "rgba(255,255,255,0.2)" }}>
+                  <div style={{ fontSize: "0.5rem", fontWeight: 800, color: m.total > 0 ? "#fff" : "rgba(255,255,255,0.2)" }}>
                     {m.total > 0 ? `${fmt(m.total / 1000)}K` : ""}
                   </div>
                   <div style={{ 
                     width: "100%", maxWidth: 28, borderRadius: "4px 4px 2px 2px", 
                     height: `${Math.max(h, 2)}%`, minHeight: 3,
                     background: isCurrentMonth 
-                      ? "linear-gradient(180deg, #4ade80, #22c55e)" 
+                      ? "linear-gradient(180deg, #fff, #22c55e)" 
                       : m.total > 0 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.04)",
                     transition: "height 0.5s ease",
                     boxShadow: isCurrentMonth ? "0 0 12px rgba(74,222,128,0.3)" : "none"
                   }} />
                   <div style={{ 
                     fontSize: "0.5rem", fontWeight: 700, 
-                    color: isCurrentMonth ? "#4ade80" : "rgba(255,255,255,0.3)" 
+                    color: isCurrentMonth ? "#fff" : "rgba(255,255,255,0.3)" 
                   }}>
                     {monthNames[i].substring(0, 3)}
                   </div>
@@ -203,7 +203,7 @@ export default async function MuhasebePage() {
         </div>
 
         {/* Ödeme Yöntemi Dağılımı */}
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "18px" }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
           <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
             <Wallet size={13} style={{ color: "rgba(255,255,255,0.5)" }} />
             Ödeme Yöntemi Dağılımı
@@ -211,7 +211,7 @@ export default async function MuhasebePage() {
           
           {/* Pie-like visual bar */}
           {totalCashIn > 0 && (
-            <div style={{ display: "flex", height: 10, borderRadius: 5, overflow: "hidden", marginBottom: 16 }}>
+            <div style={{ display: "flex", height: 10, borderRadius: 0, overflow: "hidden", marginBottom: 16 }}>
               {Object.entries(byMethod).filter(([_, v]) => v > 0).map(([method, amount]) => (
                 <div key={method} style={{ width: `${(amount / totalCashIn) * 100}%`, background: methodColors[method], transition: "width 0.5s" }} />
               ))}
@@ -230,8 +230,8 @@ export default async function MuhasebePage() {
                       <span style={{ fontSize: "0.7rem", fontWeight: 900, color: methodColors[method] }}>{fmt(amount)}₺</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <div style={{ flex: 1, height: 4, borderRadius: 2, background: "rgba(255,255,255,0.06)" }}>
-                        <div style={{ height: "100%", borderRadius: 2, background: methodColors[method], width: `${pct}%`, transition: "width 0.5s" }} />
+                      <div style={{ flex: 1, height: 4, borderRadius: 0, background: "rgba(255,255,255,0.06)" }}>
+                        <div style={{ height: "100%", borderRadius: 0, background: methodColors[method], width: `${pct}%`, transition: "width 0.5s" }} />
                       </div>
                       <span style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", width: 28, textAlign: "right" }}>%{pct}</span>
                     </div>
@@ -248,7 +248,7 @@ export default async function MuhasebePage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "10px", marginBottom: "1.5rem" }}>
 
         {/* Kategoriye Göre Gelir */}
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "18px" }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
           <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 16 }}>Hizmet Kategorisine Göre</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {Object.entries(byCategory).sort((a, b) => b[1] - a[1]).map(([cat, amount]) => {
@@ -259,13 +259,13 @@ export default async function MuhasebePage() {
                 <div key={cat}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <div style={{ width: 10, height: 10, borderRadius: 3, background: color }} />
+                      <div style={{ width: 10, height: 10, borderRadius: 0, background: color }} />
                       <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "rgba(255,255,255,0.8)" }}>{label}</span>
                     </div>
                     <span style={{ fontSize: "0.75rem", fontWeight: 900, color }}>{fmt(amount)}₺</span>
                   </div>
-                  <div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
-                    <div style={{ height: "100%", borderRadius: 3, background: `linear-gradient(90deg, ${color}, ${color}88)`, width: `${pct}%`, transition: "width 0.5s" }} />
+                  <div style={{ height: 6, borderRadius: 0, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                    <div style={{ height: "100%", borderRadius: 0, background: `linear-gradient(90deg, ${color}, ${color}88)`, width: `${pct}%`, transition: "width 0.5s" }} />
                   </div>
                 </div>
               );
@@ -277,8 +277,8 @@ export default async function MuhasebePage() {
         </div>
 
         {/* Açık Bakiyeler */}
-        <div style={{ background: "rgba(250,204,21,0.03)", border: "1px solid rgba(250,204,21,0.12)", borderRadius: 14, padding: "18px" }}>
-          <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 4, color: "#facc15", display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "18px" }}>
+          <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 4, color: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", gap: 6 }}>
             <Receipt size={13} />
             Açık Bakiyeler
           </div>
@@ -288,7 +288,7 @@ export default async function MuhasebePage() {
             {reservationBalances.slice(0, 10).map(r => {
               const paidPct = r.total > 0 ? (r.paid / r.total) * 100 : 0;
               return (
-                <div key={r.id} style={{ padding: "10px 12px", borderRadius: 10, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div key={r.id} style={{ padding: "10px 12px", borderRadius: 0, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
                     <div style={{ minWidth: 0 }}>
                       <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -299,12 +299,12 @@ export default async function MuhasebePage() {
                       </div>
                     </div>
                     <div style={{ textAlign: "right", flexShrink: 0, marginLeft: 8 }}>
-                      <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "#facc15" }}>{fmt(r.remaining)}₺</div>
+                      <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "rgba(255,255,255,0.7)" }}>{fmt(r.remaining)}₺</div>
                       <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.3)" }}>/ {fmt(r.total)}₺</div>
                     </div>
                   </div>
-                  <div style={{ height: 4, borderRadius: 2, background: "rgba(255,255,255,0.06)" }}>
-                    <div style={{ height: "100%", borderRadius: 2, background: paidPct >= 100 ? "#4ade80" : "linear-gradient(90deg, #4ade80, #facc15)", width: `${Math.min(paidPct, 100)}%` }} />
+                  <div style={{ height: 4, borderRadius: 0, background: "rgba(255,255,255,0.06)" }}>
+                    <div style={{ height: "100%", borderRadius: 0, background: paidPct >= 100 ? "#fff" : "linear-gradient(90deg, #fff, rgba(255,255,255,0.7))", width: `${Math.min(paidPct, 100)}%` }} />
                   </div>
                   <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.3)", marginTop: 3, textAlign: "right" }}>%{Math.round(paidPct)} ödendi</div>
                 </div>
@@ -318,7 +318,7 @@ export default async function MuhasebePage() {
       </div>
 
       {/* ═══ TÜM ÖDEME GEÇMİŞİ ═══ */}
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "18px" }}>
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
         <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
           <Banknote size={13} style={{ color: "rgba(255,255,255,0.5)" }} />
           Son 20 Ödeme
@@ -344,13 +344,13 @@ export default async function MuhasebePage() {
                 {new Date(p.createdAt).toLocaleDateString("tr-TR", { day: "numeric", month: "short" })}
               </div>
               <span style={{ 
-                fontSize: "0.55rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4, flexShrink: 0,
+                fontSize: "0.55rem", fontWeight: 700, padding: "2px 6px", borderRadius: 0, flexShrink: 0,
                 background: `${methodColors[p.method] || "#888"}15`, 
                 color: methodColors[p.method] || "#888" 
               }}>
                 {methodLabels[p.method] || p.method}
               </span>
-              <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "#4ade80", flexShrink: 0 }}>
+              <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "#fff", flexShrink: 0 }}>
                 +{fmt(p.amount)}₺
               </div>
             </div>

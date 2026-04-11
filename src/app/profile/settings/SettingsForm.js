@@ -87,11 +87,11 @@ export default function SettingsForm({ user }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 32, maxWidth: 680 }}>
       {/* Profil Form */}
-      <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 24, overflow: "hidden", display: "flex", flexDirection: "column", maxWidth: 680 }}>
+      <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, overflow: "hidden", display: "flex", flexDirection: "column", maxWidth: 680 }}>
         
         {/* Header */}
         <div style={{ padding: "24px 24px 20px 24px", display: "flex", alignItems: "center", gap: 16, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-          <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             <User size={20} style={{ color: "rgba(255,255,255,0.7)" }} />
           </div>
           <div>
@@ -111,7 +111,7 @@ export default function SettingsForm({ user }) {
                 name="name" 
                 defaultValue={user.name} 
                 required
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
               />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -119,7 +119,7 @@ export default function SettingsForm({ user }) {
               <input 
                 disabled 
                 defaultValue={user.email} 
-                style={{ background: "transparent", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: 12, padding: "14px 16px", color: "rgba(255,255,255,0.3)", fontSize: 14, cursor: "not-allowed" }}
+                style={{ background: "transparent", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: 0, padding: "14px 16px", color: "rgba(255,255,255,0.3)", fontSize: 14, cursor: "not-allowed" }}
               />
             </div>
           </div>
@@ -131,7 +131,7 @@ export default function SettingsForm({ user }) {
                 name="phone" 
                 defaultValue={user.phone} 
                 placeholder="05xx xxx xx xx"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -141,7 +141,7 @@ export default function SettingsForm({ user }) {
                   name="age" 
                   type="number"
                   defaultValue={user.age} 
-                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
+                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
                 />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -149,7 +149,7 @@ export default function SettingsForm({ user }) {
                 <select 
                   name="gender" 
                   defaultValue={user.gender || ""} 
-                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", appearance: "none" }}
+                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", appearance: "none" }}
                 >
                   <option value="" style={{ color: "#000" }}>Seçiniz</option>
                   <option value="KADIN" style={{ color: "#000" }}>Kadın</option>
@@ -163,12 +163,12 @@ export default function SettingsForm({ user }) {
           <div className="mt-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div style={{ flex: 1 }}>
               {saveSuccess && (
-                <span style={{ color: "#4ade80", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ color: "#fff", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
                   <CheckCircle2 size={14} /> Değişiklikler kaydedildi.
                 </span>
               )}
               {saveError && (
-                <span style={{ color: "#ef4444", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
                   <AlertCircle size={14} /> {saveError}
                 </span>
               )}
@@ -176,7 +176,7 @@ export default function SettingsForm({ user }) {
             <button 
               type="submit" 
               disabled={isSaving}
-              style={{ background: "#fff", color: "#000", border: "none", borderRadius: 12, padding: "14px 24px", fontSize: 13, fontWeight: 700, transition: "all 0.2s", cursor: isSaving ? "not-allowed" : "pointer", opacity: isSaving ? 0.7 : 1 }}
+              style={{ background: "#fff", color: "#000", border: "none", borderRadius: 0, padding: "14px 24px", fontSize: 13, fontWeight: 700, transition: "all 0.2s", cursor: isSaving ? "not-allowed" : "pointer", opacity: isSaving ? 0.7 : 1 }}
               className="flex items-center justify-center gap-2 w-full md:w-auto"
             >
               <Save size={16} /> {isSaving ? "Kaydediliyor..." : "Kaydet"}
@@ -188,11 +188,11 @@ export default function SettingsForm({ user }) {
 
       {/* Şifre Değiştir Form */}
       {user.password && (
-      <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 24, overflow: "hidden", display: "flex", flexDirection: "column", maxWidth: 680 }}>
+      <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, overflow: "hidden", display: "flex", flexDirection: "column", maxWidth: 680 }}>
         
         {/* Header */}
         <div style={{ padding: "24px 24px 20px 24px", display: "flex", alignItems: "center", gap: 16, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-          <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             <Lock size={20} style={{ color: "rgba(255,255,255,0.7)" }} />
           </div>
           <div>
@@ -214,7 +214,7 @@ export default function SettingsForm({ user }) {
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
               required
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
+              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
             />
           </div>
 
@@ -227,7 +227,7 @@ export default function SettingsForm({ user }) {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
               />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -238,7 +238,7 @@ export default function SettingsForm({ user }) {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
               />
             </div>
           </div>
@@ -246,12 +246,12 @@ export default function SettingsForm({ user }) {
           <div className="mt-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div style={{ flex: 1 }}>
               {pwdStatus === "success" && (
-                <span style={{ color: "#4ade80", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ color: "#fff", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
                   <CheckCircle2 size={14} /> {pwdMessage}
                 </span>
               )}
               {pwdStatus === "error" && (
-                <span style={{ color: "#ef4444", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
                   <AlertCircle size={14} /> {pwdMessage}
                 </span>
               )}
@@ -259,7 +259,7 @@ export default function SettingsForm({ user }) {
             <button 
               type="submit" 
               disabled={isPwdSaving}
-              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff", borderRadius: 12, padding: "14px 24px", fontSize: 13, fontWeight: 700, transition: "all 0.2s", cursor: isPwdSaving ? "not-allowed" : "pointer", opacity: isPwdSaving ? 0.7 : 1 }}
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff", borderRadius: 0, padding: "14px 24px", fontSize: 13, fontWeight: 700, transition: "all 0.2s", cursor: isPwdSaving ? "not-allowed" : "pointer", opacity: isPwdSaving ? 0.7 : 1 }}
               className="flex items-center justify-center gap-2 w-full md:w-auto"
             >
               {isPwdSaving ? "Değiştiriliyor..." : "Şifreyi Güncelle"}
