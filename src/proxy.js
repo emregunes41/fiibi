@@ -35,8 +35,9 @@ export async function proxy(req) {
     }
   }
 
-  // Set tenant slug header
+  // Set tenant slug + pathname headers
   const response = NextResponse.next();
+  response.headers.set("x-next-pathname", pathname);
   if (slug) {
     response.headers.set("x-tenant-slug", slug);
   }
@@ -55,6 +56,7 @@ export async function proxy(req) {
       if (payload.adminId) {
         // Admin auth başarılı — tenant header ile devam
         const authedResponse = NextResponse.next();
+        authedResponse.headers.set("x-next-pathname", pathname);
         if (slug) authedResponse.headers.set("x-tenant-slug", slug);
         return authedResponse;
       }
@@ -72,6 +74,7 @@ export async function proxy(req) {
     try {
       await verifyAuth(userToken);
       const authedResponse = NextResponse.next();
+      authedResponse.headers.set("x-next-pathname", pathname);
       if (slug) authedResponse.headers.set("x-tenant-slug", slug);
       return authedResponse;
     } catch (err) {

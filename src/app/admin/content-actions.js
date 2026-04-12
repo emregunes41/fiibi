@@ -12,7 +12,7 @@ async function getTenantId() {
 export async function getContentBlocks() {
   const tenantId = await getTenantId();
   return await prisma.contentBlock.findMany({
-    where: tenantId ? { tenantId } : {},
+      where: { tenantId: tenantId || "NONE" },
     orderBy: { order: "asc" }
   });
 }
@@ -21,7 +21,7 @@ export async function createContentBlock(data) {
   try {
     const tenantId = await getTenantId();
     const maxOrder = await prisma.contentBlock.aggregate({
-      where: tenantId ? { tenantId } : {},
+        where: { tenantId: tenantId || "NONE" },
       _max: { order: true }
     });
     await prisma.contentBlock.create({

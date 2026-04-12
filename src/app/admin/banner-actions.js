@@ -12,7 +12,7 @@ export async function getBanners() {
   try {
     const tenantId = await getTenantId();
     const banners = await prisma.banner.findMany({
-      where: tenantId ? { tenantId } : {},
+      where: { tenantId: tenantId || "NONE" },
       orderBy: { order: "asc" },
     });
     return banners;
@@ -40,7 +40,7 @@ export async function createBanner({ imageUrl, mediaType, title, subtitle, link 
   try {
     const tenantId = await getTenantId();
     const maxOrder = await prisma.banner.aggregate({
-      where: tenantId ? { tenantId } : {},
+      where: { tenantId: tenantId || "NONE" },
       _max: { order: true }
     });
     const newOrder = (maxOrder._max.order ?? -1) + 1;

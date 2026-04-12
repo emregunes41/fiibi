@@ -8,11 +8,29 @@ import { sendWelcomeEmail } from "../actions/send-welcome";
 import { notifyReservationReceived, notifyReservationConfirmed, notifyManualReservationCreated } from "../actions/notify";
 import { sendDriveLinkEmail } from "../actions/send-drive-link";
 import { getCurrentTenant } from "@/lib/tenant";
+import { cookies } from "next/headers";
+import { verifyAuth } from "@/lib/auth";
 
 // Tenant ID helper — tüm sorguları scope'lamak için
+// 1. Header'dan slug → tenant lookup
+// 2. Fallback: JWT'deki tenantId
+// 3. Son çare: null (sorguları güvenli yap)
 async function getTenantId() {
+  // Önce header-based tenant detection
   const tenant = await getCurrentTenant();
-  return tenant?.id || null;
+  if (tenant?.id) return tenant.id;
+
+  // Fallback: admin JWT'sindeki tenantId
+  try {
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get("admin_token")?.value;
+    if (adminToken) {
+      const payload = await verifyAuth(adminToken);
+      if (payload?.tenantId) return payload.tenantId;
+    }
+  } catch (e) { /* ignore */ }
+
+  return null;
 }
 
 export async function uploadAlbumImage(formData) {
@@ -115,7 +133,7 @@ export async function uploadHeroBg(formData) {
 export async function getAlbumModels() {
   const tenantId = await getTenantId();
   return await prisma.albumModel.findMany({
-    where: tenantId ? { tenantId } : {},
+    where: { tenantId: tenantId || "NONE" },
     orderBy: { createdAt: 'desc' }
   });
 }
@@ -216,7 +234,7 @@ export async function selectAlbumModel(reservationId, albumModelId) {
 export async function getPackages() {
   const tenantId = await getTenantId();
   return await prisma.photographyPackage.findMany({
-    where: tenantId ? { tenantId } : {},
+    where: { tenantId: tenantId || "NONE" },
     orderBy: { createdAt: 'desc' }
   });
 }
@@ -335,7 +353,7 @@ export async function hardDeleteReservation(id) {
 export async function getReservations() {
   const tenantId = await getTenantId();
   return await prisma.reservation.findMany({
-    where: tenantId ? { tenantId } : {},
+    where: { tenantId: tenantId || "NONE" },
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
   });
@@ -740,7 +758,7 @@ export async function getMonthlyPrices(category, year) {
       where: { 
         category: category,
         year: parseInt(year),
-        ...(tenantId ? { tenantId } : {})
+        tenantId: tenantId || "NONE"
       }
     });
   } catch (error) {
@@ -836,7 +854,22 @@ export async function getSlotAvailability(date, categoryValue) {
 export async function getSiteConfig() {
   try {
     // Tenant-aware: önce mevcut tenant'ın ayarlarını bul
-    const tenant = await getCurrentTenant();
+    let tenant = await getCurrentTenant();
+
+    // JWT fallback: header'dan slug gelmezse admin token'dan tenant bul
+    if (!tenant) {
+      try {
+        const cookieStore = await cookies();
+        const adminToken = cookieStore.get("admin_token")?.value;
+        if (adminToken) {
+          const payload = await verifyAuth(adminToken);
+          if (payload?.tenantId) {
+            tenant = await prisma.tenant.findUnique({ where: { id: payload.tenantId } });
+          }
+        }
+      } catch (e) { /* ignore */ }
+    }
+
     let config = null;
 
     if (tenant) {
@@ -845,7 +878,6 @@ export async function getSiteConfig() {
       });
 
       if (!config) {
-        // Tenant var ama ayarı yok → oluştur
         config = await prisma.globalSettings.create({
           data: {
             id: `settings-${tenant.id}`,
@@ -1274,7 +1306,7 @@ export async function getDiscountCodes() {
   try {
     const tenantId = await getTenantId();
     return await prisma.discountCode.findMany({
-      where: tenantId ? { tenantId } : {},
+      where: { tenantId: tenantId || "NONE" },
       orderBy: { createdAt: "desc" }
     });
   } catch {

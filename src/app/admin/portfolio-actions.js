@@ -26,7 +26,7 @@ export async function getPortfolioCategories() {
   try {
     const tenantId = await getTenantId();
     const categories = await prisma.portfolioCategory.findMany({
-      where: tenantId ? { tenantId } : {},
+      where: { tenantId: tenantId || "NONE" },
       include: {
         photos: {
           orderBy: { createdAt: 'desc' }

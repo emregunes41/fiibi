@@ -74,6 +74,8 @@ export async function registerPhotographer(data) {
           businessName,
           email: ownerEmail.toLowerCase(),
           phone: ownerPhone || "",
+          heroBgType: "color",
+          heroBgColor: "#000000",
           emailEnabled: true,
           smsEnabled: false,
           notifyReservation: true,
