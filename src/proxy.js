@@ -42,8 +42,19 @@ export async function proxy(req) {
     response.headers.set("x-tenant-slug", slug);
   }
 
-  if (pathname.startsWith("/onboarding") || pathname.startsWith("/super-admin") || pathname.startsWith("/suspended")) {
+  // Platform sayfaları — slug olmadan erişilebilir
+  const isPlatformPath = pathname.startsWith("/onboarding") || pathname.startsWith("/super-admin") || pathname.startsWith("/suspended") || pathname.startsWith("/api") || pathname.startsWith("/_next");
+  
+  if (isPlatformPath) {
     return response;
+  }
+
+  // Subdomain yoksa → platform landing (onboarding) göster
+  if (!slug) {
+    // Ana domain (localhost:3000) → onboarding'e yönlendir
+    if (pathname === "/" || (!pathname.startsWith("/admin") && !pathname.startsWith("/login") && !pathname.startsWith("/profile"))) {
+      return NextResponse.redirect(new URL("/onboarding", req.url));
+    }
   }
 
   // ─── ADMIN AUTH ────────────────────────────────────────────────

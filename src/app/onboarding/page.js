@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Camera, ArrowRight, Check, Sparkles, Globe } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Camera, ArrowRight, Check, Sparkles, Globe, Zap, BarChart3, Calendar, Shield, Users, CreditCard, ChevronDown, Star, Palette } from "lucide-react";
 import { registerPhotographer } from "../actions/register-photographer";
 
 export default function OnboardingPage() {
+  const [showRegister, setShowRegister] = useState(false);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
+  const [scrollY, setScrollY] = useState(0);
 
   const [form, setForm] = useState({
     businessName: "",
@@ -19,7 +21,12 @@ export default function OnboardingPage() {
     slug: "",
   });
 
-  // Slug otomatik oluştur
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   function handleBusinessName(value) {
     const slug = value
       .toLowerCase()
@@ -34,14 +41,8 @@ export default function OnboardingPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-
     const res = await registerPhotographer(form);
-    if (res.error) {
-      setError(res.error);
-      setLoading(false);
-      return;
-    }
-
+    if (res.error) { setError(res.error); setLoading(false); return; }
     setResult(res.tenant);
     setStep(3);
     setLoading(false);
@@ -51,221 +52,344 @@ export default function OnboardingPage() {
     ? (process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "localhost:3000")
     : "photoapp.co";
 
-  return (
-    <div style={{ minHeight: "100vh", background: "#000", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 16px" }}>
-      <div style={{ width: "100%", maxWidth: 520 }}>
+  const features = [
+    { icon: Calendar, title: "Rezervasyon Yönetimi", desc: "Online randevu, otomatik hatırlatma, takvim" },
+    { icon: CreditCard, title: "Ödeme Takibi", desc: "Taksit, nakit, havale — tüm ödemeler tek yerde" },
+    { icon: BarChart3, title: "Muhasebe", desc: "Gelir analizi, aylık raporlar, bakiye takibi" },
+    { icon: Palette, title: "Portfolyo Sitesi", desc: "Profesyonel site — kendi domain'inizle" },
+    { icon: Users, title: "Müşteri Paneli", desc: "Fotoğraf seçimi, albüm onayı, sözleşme" },
+    { icon: Shield, title: "Bildirimler", desc: "SMS + E-posta ile otomatik müşteri bildirimleri" },
+  ];
 
-        {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 48 }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: "50%", background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.1)", display: "inline-flex",
-            alignItems: "center", justifyContent: "center", marginBottom: 20
+  // ─── Registration Form (Modal-style) ───
+  if (showRegister) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#000", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 16px" }}>
+        <div style={{ width: "100%", maxWidth: 480 }}>
+
+          {/* Back */}
+          <button onClick={() => { setShowRegister(false); setStep(1); }} style={{
+            background: "none", border: "none", color: "rgba(255,255,255,0.4)", fontSize: 13,
+            cursor: "pointer", marginBottom: 24, padding: 0, display: "flex", alignItems: "center", gap: 6
           }}>
-            <Camera size={26} style={{ color: "rgba(255,255,255,0.8)" }} />
+            ← Geri
+          </button>
+
+          {/* Progress */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 32 }}>
+            {[1, 2, 3].map(s => (
+              <div key={s} style={{
+                flex: 1, height: 3,
+                background: s <= step ? "#fff" : "rgba(255,255,255,0.08)",
+                transition: "all 0.4s"
+              }} />
+            ))}
           </div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>
-            Stüdyonuzu Kurun
-          </h1>
-          <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 14, maxWidth: 360, margin: "0 auto" }}>
-            2 dakikada kendi profesyonel CRM'inize sahip olun. Kredi kartı gerekmez.
-          </p>
-        </div>
 
-        {/* Steps Indicator */}
-        <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 36 }}>
-          {[1, 2, 3].map(s => (
-            <div key={s} style={{
-              width: s <= step ? 40 : 24, height: 4, borderRadius: 2,
-              background: s <= step ? "#fff" : "rgba(255,255,255,0.1)",
-              transition: "all 0.3s"
-            }} />
-          ))}
-        </div>
-
-        {step === 3 && result ? (
-          /* Success */
-          <div style={{
-            background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)",
-            padding: 40, textAlign: "center"
-          }}>
-            <div style={{
-              width: 64, height: 64, borderRadius: "50%", background: "rgba(74,222,128,0.1)",
-              border: "2px solid rgba(74,222,128,0.3)", display: "inline-flex",
-              alignItems: "center", justifyContent: "center", marginBottom: 24
-            }}>
-              <Check size={32} style={{ color: "#4ade80" }} />
-            </div>
-            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Tebrikler! 🎉</h2>
-            <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 15, marginBottom: 32 }}>
-              <strong>{result.businessName}</strong> stüdyonuz başarıyla oluşturuldu.
-            </p>
-
-            <div style={{
-              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-              padding: 20, marginBottom: 24
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "center", marginBottom: 8 }}>
-                <Globe size={14} style={{ color: "rgba(255,255,255,0.5)" }} />
-                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Stüdyo Adresiniz</span>
-              </div>
-              <code style={{
-                fontSize: 18, fontWeight: 700, color: "#fff",
-                display: "block", wordBreak: "break-all"
+          {step === 3 && result ? (
+            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: "48px 32px", textAlign: "center" }}>
+              <div style={{
+                width: 72, height: 72, borderRadius: "50%", background: "rgba(74,222,128,0.08)",
+                border: "2px solid rgba(74,222,128,0.25)", display: "inline-flex",
+                alignItems: "center", justifyContent: "center", marginBottom: 24
               }}>
-                {result.slug}.{domain}
-              </code>
+                <Check size={36} style={{ color: "#4ade80" }} />
+              </div>
+              <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>Hazırsınız! 🎉</h2>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 32 }}>
+                <strong style={{ color: "#fff" }}>{result.businessName}</strong> stüdyonuz başarıyla oluşturuldu.
+              </p>
+
+              <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: 20, marginBottom: 16 }}>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Stüdyo Adresiniz</div>
+                <code style={{ fontSize: 18, fontWeight: 700, color: "#fff", wordBreak: "break-all" }}>
+                  {result.slug}.{domain}
+                </code>
+              </div>
+
+              <div style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.12)", padding: 14, marginBottom: 32, fontSize: 13, color: "rgba(245,158,11,0.8)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                <Sparkles size={14} /> 14 gün ücretsiz — tüm özellikler aktif
+              </div>
+
+              <a href={`http://${result.slug}.${domain}/admin/login`} style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                background: "#fff", color: "#000", padding: "14px 36px",
+                fontWeight: 700, fontSize: 14, textDecoration: "none",
+                transition: "transform 0.2s"
+              }}>
+                Admin Paneline Git <ArrowRight size={16} />
+              </a>
             </div>
+          ) : (
+            <form onSubmit={step === 1 ? (e) => { e.preventDefault(); setStep(2); } : handleSubmit}>
+              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
 
-            <div style={{
-              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-              padding: 16, marginBottom: 32, fontSize: 13, color: "rgba(255,255,255,0.55)"
-            }}>
-              <Sparkles size={14} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
-              14 günlük ücretsiz deneme süresi başladı. Tüm özellikler aktif!
-            </div>
+                {step === 1 && (
+                  <>
+                    <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>Stüdyo Bilgileri</h2>
+                    <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>İşletme adınız ve web adresiniz.</p>
 
-            <a
-              href={`http://${result.slug}.${domain}/admin/login`}
-              style={{
-                display: "inline-block", background: "#fff", color: "#000",
-                padding: "14px 32px", fontWeight: 700, fontSize: 14,
-                textDecoration: "none", transition: "opacity 0.2s"
-              }}
-            >
-              Admin Paneline Git →
-            </a>
-          </div>
-        ) : (
-          /* Form */
-          <form onSubmit={step === 1 ? (e) => { e.preventDefault(); setStep(2); } : handleSubmit}>
-            <div style={{
-              background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)",
-              padding: "32px 28px", display: "flex", flexDirection: "column", gap: 20
-            }}>
+                    <div style={{ marginBottom: 20 }}>
+                      <label style={labelStyle}>Stüdyo Adı *</label>
+                      <input type="text" required value={form.businessName} onChange={e => handleBusinessName(e.target.value)} placeholder="Ahmet Photography" style={inputStyle} />
+                      {form.slug && (
+                        <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.35)" }}>
+                          → <span style={{ color: "rgba(255,255,255,0.6)" }}>{form.slug}.{domain}</span>
+                        </div>
+                      )}
+                    </div>
 
-              {step === 1 && (
-                <>
-                  <div>
-                    <label style={labelStyle}>Stüdyo Adı *</label>
-                    <input
-                      type="text" required value={form.businessName}
-                      onChange={e => handleBusinessName(e.target.value)}
-                      placeholder="Ahmet Photography"
-                      style={inputStyle}
-                    />
-                    {form.slug && (
-                      <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
-                        Adresiniz: <span style={{ color: "rgba(255,255,255,0.7)" }}>{form.slug}.{domain}</span>
+                    <div style={{ marginBottom: 24 }}>
+                      <label style={labelStyle}>URL Adresi *</label>
+                      <div style={{ display: "flex" }}>
+                        <input type="text" required value={form.slug} onChange={e => setForm(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') }))} placeholder="ahmet" style={{ ...inputStyle, borderRight: "none", flex: 1 }} />
+                        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "0 14px", display: "flex", alignItems: "center", fontSize: 13, color: "rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>
+                          .{domain}
+                        </div>
+                      </div>
+                    </div>
+
+                    <button type="submit" disabled={!form.businessName || !form.slug} style={{ ...btnStyle, opacity: (!form.businessName || !form.slug) ? 0.4 : 1 }}>
+                      Devam <ArrowRight size={16} />
+                    </button>
+                  </>
+                )}
+
+                {step === 2 && (
+                  <>
+                    <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>Hesap Bilgileri</h2>
+                    <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>Admin paneline giriş bilgileriniz.</p>
+
+                    <div style={{ marginBottom: 16 }}>
+                      <label style={labelStyle}>Ad Soyad *</label>
+                      <input type="text" required value={form.ownerName} onChange={e => setForm(prev => ({ ...prev, ownerName: e.target.value }))} placeholder="Ahmet Yılmaz" style={inputStyle} />
+                    </div>
+                    <div style={{ marginBottom: 16 }}>
+                      <label style={labelStyle}>E-posta *</label>
+                      <input type="email" required value={form.ownerEmail} onChange={e => setForm(prev => ({ ...prev, ownerEmail: e.target.value }))} placeholder="ahmet@gmail.com" style={inputStyle} />
+                    </div>
+                    <div style={{ marginBottom: 16 }}>
+                      <label style={labelStyle}>Telefon</label>
+                      <input type="tel" value={form.ownerPhone} onChange={e => setForm(prev => ({ ...prev, ownerPhone: e.target.value }))} placeholder="0555 123 45 67" style={inputStyle} />
+                    </div>
+                    <div style={{ marginBottom: 24 }}>
+                      <label style={labelStyle}>Şifre *</label>
+                      <input type="password" required minLength={6} value={form.password} onChange={e => setForm(prev => ({ ...prev, password: e.target.value }))} placeholder="En az 6 karakter" style={inputStyle} />
+                    </div>
+
+                    {error && (
+                      <div style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.15)", padding: 14, fontSize: 13, color: "#f87171", textAlign: "center", marginBottom: 16 }}>
+                        {error}
                       </div>
                     )}
-                  </div>
 
-                  <div>
-                    <label style={labelStyle}>Stüdyo Adresi (URL) *</label>
-                    <div style={{ display: "flex", alignItems: "stretch" }}>
-                      <input
-                        type="text" required value={form.slug}
-                        onChange={e => setForm(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') }))}
-                        placeholder="ahmet"
-                        style={{ ...inputStyle, borderRight: "none", flex: 1 }}
-                      />
-                      <div style={{
-                        background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                        padding: "0 14px", display: "flex", alignItems: "center",
-                        fontSize: 13, color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap"
-                      }}>
-                        .{domain}
-                      </div>
+                    <div style={{ display: "flex", gap: 10 }}>
+                      <button type="button" onClick={() => setStep(1)} style={{ ...btnStyle, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.5)", flex: 1 }}>Geri</button>
+                      <button type="submit" disabled={loading} style={{ ...btnStyle, flex: 2, opacity: loading ? 0.5 : 1 }}>
+                        {loading ? "Oluşturuluyor..." : "Stüdyo Oluştur"} {!loading && <Sparkles size={16} />}
+                      </button>
                     </div>
-                  </div>
-
-                  <button type="submit" style={btnStyle}>
-                    Devam Et <ArrowRight size={16} />
-                  </button>
-                </>
-              )}
-
-              {step === 2 && (
-                <>
-                  <div>
-                    <label style={labelStyle}>Adınız Soyadınız *</label>
-                    <input
-                      type="text" required value={form.ownerName}
-                      onChange={e => setForm(prev => ({ ...prev, ownerName: e.target.value }))}
-                      placeholder="Ahmet Yılmaz"
-                      style={inputStyle}
-                    />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>E-posta *</label>
-                    <input
-                      type="email" required value={form.ownerEmail}
-                      onChange={e => setForm(prev => ({ ...prev, ownerEmail: e.target.value }))}
-                      placeholder="ahmet@gmail.com"
-                      style={inputStyle}
-                    />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Telefon</label>
-                    <input
-                      type="tel" value={form.ownerPhone}
-                      onChange={e => setForm(prev => ({ ...prev, ownerPhone: e.target.value }))}
-                      placeholder="0555 123 45 67"
-                      style={inputStyle}
-                    />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Şifre *</label>
-                    <input
-                      type="password" required minLength={6} value={form.password}
-                      onChange={e => setForm(prev => ({ ...prev, password: e.target.value }))}
-                      placeholder="En az 6 karakter"
-                      style={inputStyle}
-                    />
-                  </div>
-
-                  {error && (
-                    <div style={{
-                      background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-                      padding: 14, fontSize: 13, color: "rgba(255,255,255,0.7)", textAlign: "center"
-                    }}>
-                      {error}
-                    </div>
-                  )}
-
-                  <div style={{ display: "flex", gap: 12 }}>
-                    <button type="button" onClick={() => setStep(1)} style={{ ...btnStyle, background: "rgba(255,255,255,0.06)", color: "#fff", flex: 1 }}>
-                      Geri
-                    </button>
-                    <button type="submit" disabled={loading} style={{ ...btnStyle, flex: 2, opacity: loading ? 0.5 : 1 }}>
-                      {loading ? "Oluşturuluyor..." : "Stüdyo Oluştur"} {!loading && <Sparkles size={16} />}
-                    </button>
-                  </div>
-                </>
-              )}
-
-            </div>
-          </form>
-        )}
-
-        <p style={{ textAlign: "center", fontSize: 12, color: "rgba(255,255,255,0.25)", marginTop: 24 }}>
-          Zaten hesabınız var mı? <a href="/admin/login" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "underline" }}>Giriş yapın</a>
-        </p>
+                  </>
+                )}
+              </div>
+            </form>
+          )}
+        </div>
       </div>
+    );
+  }
+
+  // ─── Landing Page ───
+  return (
+    <div style={{ background: "#000", color: "#fff", minHeight: "100vh", overflow: "hidden" }}>
+
+      {/* Navbar */}
+      <nav style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
+        background: scrollY > 50 ? "rgba(0,0,0,0.9)" : "transparent",
+        backdropFilter: scrollY > 50 ? "blur(20px)" : "none",
+        borderBottom: scrollY > 50 ? "1px solid rgba(255,255,255,0.06)" : "none",
+        transition: "all 0.3s", padding: "0 24px"
+      }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{
+              width: 32, height: 32, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+              display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 6
+            }}>
+              <Camera size={16} style={{ color: "#fff" }} />
+            </div>
+            <span style={{ fontWeight: 800, fontSize: 16, letterSpacing: "-0.02em" }}>PhotoStudio</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <a href="/super-admin/login" style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>Yönetici</a>
+            <button onClick={() => setShowRegister(true)} style={{
+              background: "#fff", color: "#000", border: "none", padding: "8px 20px",
+              fontWeight: 700, fontSize: 13, cursor: "pointer", borderRadius: 6
+            }}>
+              Ücretsiz Başla
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section style={{
+        minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
+        textAlign: "center", padding: "120px 24px 80px", position: "relative"
+      }}>
+        {/* Gradient orbs */}
+        <div style={{
+          position: "absolute", top: "10%", left: "20%", width: 400, height: 400,
+          background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)",
+          filter: "blur(60px)", pointerEvents: "none"
+        }} />
+        <div style={{
+          position: "absolute", bottom: "20%", right: "15%", width: 350, height: 350,
+          background: "radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%)",
+          filter: "blur(60px)", pointerEvents: "none"
+        }} />
+
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 700 }}>
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 16px",
+            background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)",
+            borderRadius: 20, fontSize: 12, fontWeight: 600, color: "rgba(245,158,11,0.9)",
+            marginBottom: 28
+          }}>
+            <Sparkles size={13} /> 14 gün ücretsiz dene — kredi kartı gerekmez
+          </div>
+
+          <h1 style={{
+            fontSize: "clamp(36px, 6vw, 64px)", fontWeight: 900,
+            letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 20
+          }}>
+            Stüdyonuzu<br />
+            <span style={{ background: "linear-gradient(135deg, #f59e0b, #8b5cf6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Dijitale Taşıyın
+            </span>
+          </h1>
+
+          <p style={{
+            fontSize: "clamp(15px, 2vw, 18px)", color: "rgba(255,255,255,0.45)",
+            lineHeight: 1.6, maxWidth: 500, margin: "0 auto 40px"
+          }}>
+            Rezervasyon, ödeme, portfolyo, müşteri yönetimi — hepsi tek platformda. 
+            2 dakikada profesyonel stüdyo sitenizi kurun.
+          </p>
+
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <button onClick={() => setShowRegister(true)} style={{
+              background: "#fff", color: "#000", border: "none", padding: "14px 32px",
+              fontWeight: 700, fontSize: 15, cursor: "pointer", borderRadius: 8,
+              display: "flex", alignItems: "center", gap: 8, transition: "transform 0.2s"
+            }}>
+              Hemen Başla <ArrowRight size={18} />
+            </button>
+            <a href="#features" style={{
+              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+              color: "rgba(255,255,255,0.6)", padding: "14px 28px", borderRadius: 8,
+              fontWeight: 600, fontSize: 15, textDecoration: "none",
+              display: "flex", alignItems: "center", gap: 8
+            }}>
+              Özellikleri Gör <ChevronDown size={16} />
+            </a>
+          </div>
+
+          {/* Social proof */}
+          <div style={{ marginTop: 48, display: "flex", alignItems: "center", justifyContent: "center", gap: 24, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: 2 }}>
+              {[1,2,3,4,5].map(i => <Star key={i} size={14} fill="#f59e0b" style={{ color: "#f59e0b" }} />)}
+            </div>
+            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.35)" }}>Fotoğrafçılar tarafından tercih ediliyor</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section id="features" style={{ padding: "80px 24px 100px" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 12 }}>
+              İhtiyacınız Olan Her Şey
+            </h2>
+            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 15, maxWidth: 460, margin: "0 auto" }}>
+              Stüdyonuzu profesyonelce yönetmek için güçlü araçlar.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
+            {features.map((f, i) => (
+              <div key={i} style={{
+                background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+                padding: 28, transition: "border-color 0.3s, background 0.3s",
+                cursor: "default"
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.background = "rgba(255,255,255,0.02)"; }}
+              >
+                <div style={{
+                  width: 40, height: 40, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+                  display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16, borderRadius: 8
+                }}>
+                  <f.icon size={18} style={{ color: "rgba(255,255,255,0.6)" }} />
+                </div>
+                <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{f.title}</h3>
+                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", lineHeight: 1.5, margin: 0 }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{ padding: "60px 24px 100px" }}>
+        <div style={{
+          maxWidth: 600, margin: "0 auto", textAlign: "center",
+          background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+          padding: "56px 32px"
+        }}>
+          <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 12 }}>
+            Hemen Başlayın
+          </h2>
+          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14, marginBottom: 32 }}>
+            2 dakikada stüdyonuzu kurun. 14 gün ücretsiz deneyin.
+          </p>
+          <button onClick={() => setShowRegister(true)} style={{
+            background: "#fff", color: "#000", border: "none", padding: "14px 36px",
+            fontWeight: 700, fontSize: 15, cursor: "pointer", borderRadius: 8,
+            display: "inline-flex", alignItems: "center", gap: 8
+          }}>
+            Ücretsiz Dene <ArrowRight size={18} />
+          </button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer style={{
+        borderTop: "1px solid rgba(255,255,255,0.06)", padding: "24px",
+        textAlign: "center", fontSize: 12, color: "rgba(255,255,255,0.2)"
+      }}>
+        © {new Date().getFullYear()} PhotoStudio Platform
+      </footer>
+
+      <style jsx global>{`
+        html { scroll-behavior: smooth; }
+      `}</style>
     </div>
   );
 }
 
 const labelStyle = {
-  display: "block", fontSize: 12, fontWeight: 600,
-  color: "rgba(255,255,255,0.5)", marginBottom: 6,
-  textTransform: "uppercase", letterSpacing: "0.05em"
+  display: "block", fontSize: 11, fontWeight: 600,
+  color: "rgba(255,255,255,0.45)", marginBottom: 6,
+  textTransform: "uppercase", letterSpacing: "0.06em"
 };
 
 const inputStyle = {
-  width: "100%", background: "rgba(255,255,255,0.04)",
-  border: "1px solid rgba(255,255,255,0.1)", padding: "12px 14px",
+  width: "100%", boxSizing: "border-box",
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(255,255,255,0.08)", padding: "13px 14px",
   color: "#fff", fontSize: 14, outline: "none",
   transition: "border-color 0.2s"
 };
@@ -274,5 +398,5 @@ const btnStyle = {
   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
   width: "100%", background: "#fff", color: "#000",
   border: "none", padding: "14px 24px", fontWeight: 700,
-  fontSize: 14, cursor: "pointer", transition: "opacity 0.2s"
+  fontSize: 14, cursor: "pointer"
 };
