@@ -3,22 +3,30 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/session";
+import { getCurrentTenant } from "@/lib/tenant";
+
+async function getTenantId() {
+  const tenant = await getCurrentTenant();
+  return tenant?.id || null;
+}
 
 // Kategori (Konsept) oluştururken stringi slug formata çevirme yardımcı fonksiyonu
 function slugify(text) {
   return text
     .toString()
     .toLowerCase()
-    .replace(/\s+/g, '-')           // Boşlukları tireyle değiştir
-    .replace(/[^\w\-]+/g, '')       // Alfanümerik olmayanları sil
-    .replace(/\-\-+/g, '-')         // Çoklu tireleri teke indir
-    .replace(/^-+/, '')             // Baştaki tireleri sil
-    .replace(/-+$/, '');            // Sondaki tireleri sil
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
 }
 
 export async function getPortfolioCategories() {
   try {
+    const tenantId = await getTenantId();
     const categories = await prisma.portfolioCategory.findMany({
+      where: tenantId ? { tenantId } : {},
       include: {
         photos: {
           orderBy: { createdAt: 'desc' }
@@ -36,11 +44,13 @@ export async function createPortfolioCategory(name) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
+    const tenantId = await getTenantId();
     const slug = slugify(name) || `kategori-${Date.now()}`;
     const category = await prisma.portfolioCategory.create({
       data: {
         name,
-        slug
+        slug,
+        tenantId,
       }
     });
     
@@ -48,7 +58,6 @@ export async function createPortfolioCategory(name) {
     revalidatePath("/gallery");
     return { success: true, category };
   } catch (error) {
-    // Özel hata (Örn: P2002 Unique constraint failed = aynı slug var)
     if (error.code === 'P2002') {
       return { error: "Bu isimde bir kategori zaten mevcut." };
     }

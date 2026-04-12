@@ -1,10 +1,18 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { getCurrentTenant } from "@/lib/tenant";
+
+async function getTenantId() {
+  const tenant = await getCurrentTenant();
+  return tenant?.id || null;
+}
 
 export async function getBanners() {
   try {
+    const tenantId = await getTenantId();
     const banners = await prisma.banner.findMany({
+      where: tenantId ? { tenantId } : {},
       orderBy: { order: "asc" },
     });
     return banners;
@@ -16,8 +24,9 @@ export async function getBanners() {
 
 export async function getActiveBanners() {
   try {
+    const tenantId = await getTenantId();
     const banners = await prisma.banner.findMany({
-      where: { isActive: true },
+      where: tenantId ? { isActive: true, tenantId } : { isActive: true },
       orderBy: { order: "asc" },
     });
     return banners;
@@ -29,8 +38,11 @@ export async function getActiveBanners() {
 
 export async function createBanner({ imageUrl, mediaType, title, subtitle, link }) {
   try {
-    // Get max order
-    const maxOrder = await prisma.banner.aggregate({ _max: { order: true } });
+    const tenantId = await getTenantId();
+    const maxOrder = await prisma.banner.aggregate({
+      where: tenantId ? { tenantId } : {},
+      _max: { order: true }
+    });
     const newOrder = (maxOrder._max.order ?? -1) + 1;
 
     const banner = await prisma.banner.create({
@@ -41,6 +53,7 @@ export async function createBanner({ imageUrl, mediaType, title, subtitle, link 
         subtitle: subtitle || null,
         link: link || null,
         order: newOrder,
+        tenantId,
       },
     });
     return { success: true, banner };

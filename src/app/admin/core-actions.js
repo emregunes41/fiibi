@@ -9,6 +9,12 @@ import { notifyReservationReceived, notifyReservationConfirmed, notifyManualRese
 import { sendDriveLinkEmail } from "../actions/send-drive-link";
 import { getCurrentTenant } from "@/lib/tenant";
 
+// Tenant ID helper — tüm sorguları scope'lamak için
+async function getTenantId() {
+  const tenant = await getCurrentTenant();
+  return tenant?.id || null;
+}
+
 export async function uploadAlbumImage(formData) {
   
   const auth = await requireAdmin();
@@ -107,7 +113,9 @@ export async function uploadHeroBg(formData) {
 // --- ALBUM MODEL ACTIONS ---
 
 export async function getAlbumModels() {
+  const tenantId = await getTenantId();
   return await prisma.albumModel.findMany({
+    where: tenantId ? { tenantId } : {},
     orderBy: { createdAt: 'desc' }
   });
 }
@@ -118,8 +126,9 @@ export async function createAlbumModel(data) {
   if (auth?.error) return auth;
   try {
     const { name, imageUrl, description } = data;
+    const tenantId = await getTenantId();
     await prisma.albumModel.create({
-      data: { name, imageUrl, description }
+      data: { name, imageUrl, description, tenantId }
     });
     revalidatePath('/admin/album-models');
     revalidatePath('/profile');
@@ -205,7 +214,9 @@ export async function selectAlbumModel(reservationId, albumModelId) {
 // --- PACKAGE ACTIONS ---
 
 export async function getPackages() {
+  const tenantId = await getTenantId();
   return await prisma.photographyPackage.findMany({
+    where: tenantId ? { tenantId } : {},
     orderBy: { createdAt: 'desc' }
   });
 }
@@ -216,6 +227,7 @@ export async function createPackage(data) {
   if (auth?.error) return auth;
   try {
     const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, customFields, availableSlots } = data;
+    const tenantId = await getTenantId();
     await prisma.photographyPackage.create({
       data: {
         name,
@@ -230,6 +242,7 @@ export async function createPackage(data) {
         addons: addons || [],
         customFields: customFields || [],
         availableSlots: availableSlots || [],
+        tenantId,
       }
     });
     revalidatePath('/admin/packages');
@@ -320,7 +333,9 @@ export async function hardDeleteReservation(id) {
 }
 
 export async function getReservations() {
+  const tenantId = await getTenantId();
   return await prisma.reservation.findMany({
+    where: tenantId ? { tenantId } : {},
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
   });
@@ -420,6 +435,7 @@ export async function savePendingReservation(data) {
       userId = user.id;
     }
 
+    const tenantId = await getTenantId();
     const reservation = await prisma.reservation.create({
       data: {
         ...(userId ? { user: { connect: { id: userId } } } : {}),
@@ -442,7 +458,8 @@ export async function savePendingReservation(data) {
         status: "PENDING",
         paymentStatus: "UNPAID",
         workflowStatus: "PENDING",
-        deliveryDate: deliveryDateObj
+        deliveryDate: deliveryDateObj,
+        tenantId,
       }
     });
 
@@ -718,10 +735,12 @@ export async function lockSelection(reservationId) {
 
 export async function getMonthlyPrices(category, year) {
   try {
+    const tenantId = await getTenantId();
     return await prisma.monthlyPriceConfig.findMany({
       where: { 
         category: category,
-        year: parseInt(year)
+        year: parseInt(year),
+        ...(tenantId ? { tenantId } : {})
       }
     });
   } catch (error) {
@@ -741,12 +760,14 @@ export async function updateMonthlyPrice(data) {
     const dp = parseInt(discountPercentage) || 0;
     
     // Prisma upsert with specific fields
+    const tenantId = await getTenantId();
     await prisma.monthlyPriceConfig.upsert({
       where: {
-        category_month_year: {
+        category_month_year_tenantId: {
           category,
           month: m,
-          year: y
+          year: y,
+          tenantId: tenantId || ""
         }
       },
       update: { 
@@ -758,7 +779,8 @@ export async function updateMonthlyPrice(data) {
         month: m,
         year: y,
         discountPercentage: dp,
-        minPrice: minPrice ? parseInt(minPrice) : null
+        minPrice: minPrice ? parseInt(minPrice) : null,
+        tenantId
       }
     });
     revalidatePath('/admin/packages');
@@ -1250,7 +1272,11 @@ export async function revertToCashPayment(reservationId) {
 
 export async function getDiscountCodes() {
   try {
-    return await prisma.discountCode.findMany({ orderBy: { createdAt: "desc" } });
+    const tenantId = await getTenantId();
+    return await prisma.discountCode.findMany({
+      where: tenantId ? { tenantId } : {},
+      orderBy: { createdAt: "desc" }
+    });
   } catch {
     return [];
   }
@@ -1265,12 +1291,14 @@ export async function createDiscountCode(data) {
     if (!code || !discountPercent) return { error: "Kod ve yüzde zorunludur." };
     const existing = await prisma.discountCode.findUnique({ where: { code: code.toUpperCase() } });
     if (existing) return { error: "Bu kod zaten mevcut." };
+    const tenantId = await getTenantId();
     await prisma.discountCode.create({
       data: {
         code: code.toUpperCase(),
         discountPercent: parseInt(discountPercent),
         maxUses: parseInt(maxUses) || 0,
         description: description || null,
+        tenantId,
       }
     });
     revalidatePath('/admin/settings');
