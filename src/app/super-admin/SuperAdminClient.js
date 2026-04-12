@@ -1,0 +1,234 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Shield, Users, Building2, CreditCard, Snowflake, Trash2,
+  RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check
+} from "lucide-react";
+import {
+  getAllTenants, getPlatformStats, toggleTenantFreeze,
+  changeTenantPlan, deleteTenant, superAdminLogout
+} from "@/app/actions/super-admin";
+
+export default function SuperAdminClient() {
+  const [tenants, setTenants] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(null);
+  const router = useRouter();
+
+  const domain = process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "localhost:3000";
+
+  async function loadData() {
+    setLoading(true);
+    const [t, s] = await Promise.all([getAllTenants(), getPlatformStats()]);
+    if (!t.error) setTenants(t);
+    if (!s.error) setStats(s);
+    setLoading(false);
+  }
+
+  useEffect(() => { loadData(); }, []);
+
+  async function handleFreeze(id) {
+    setActionLoading(id);
+    await toggleTenantFreeze(id);
+    await loadData();
+    setActionLoading(null);
+  }
+
+  async function handlePlanChange(id, plan) {
+    setActionLoading(id);
+    await changeTenantPlan(id, plan);
+    await loadData();
+    setActionLoading(null);
+  }
+
+  async function handleDelete(id, name) {
+    if (!confirm(`"${name}" tenant'ını ve TÜM verilerini kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz!`)) return;
+    if (!confirm("Son kez onaylayın: Bu tenant'a ait tüm rezervasyonlar, müşteriler, paketler ve ayarlar silinecek.")) return;
+    setActionLoading(id);
+    await deleteTenant(id);
+    await loadData();
+    setActionLoading(null);
+  }
+
+  async function handleLogout() {
+    await superAdminLogout();
+    router.push("/super-admin/login");
+  }
+
+  const planColors = {
+    trial: { bg: "rgba(250,204,21,0.1)", border: "rgba(250,204,21,0.2)", text: "#facc15" },
+    standard: { bg: "rgba(59,130,246,0.1)", border: "rgba(59,130,246,0.2)", text: "#3b82f6" },
+    pro: { bg: "rgba(139,92,246,0.1)", border: "rgba(139,92,246,0.2)", text: "#8b5cf6" },
+  };
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#0a0a0a", color: "#fff", padding: "24px 16px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+
+        {/* Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: "50%", background: "rgba(139,92,246,0.1)",
+              border: "1px solid rgba(139,92,246,0.2)", display: "flex",
+              alignItems: "center", justifyContent: "center"
+            }}>
+              <Shield size={20} style={{ color: "#8b5cf6" }} />
+            </div>
+            <div>
+              <h1 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>Super Admin</h1>
+              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", margin: 0 }}>Platform Yönetim Paneli</p>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={loadData} style={iconBtn}><RefreshCw size={16} /></button>
+            <button onClick={handleLogout} style={{ ...iconBtn, color: "#f87171" }}><LogOut size={16} /></button>
+          </div>
+        </div>
+
+        {/* Stats */}
+        {stats && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 32 }}>
+            {[
+              { label: "Toplam Stüdyo", value: stats.tenantCount, icon: Building2, color: "#8b5cf6" },
+              { label: "Aktif", value: stats.activeCount, icon: Check, color: "#4ade80" },
+              { label: "Dondurulmuş", value: stats.frozenCount, icon: Snowflake, color: "#38bdf8" },
+              { label: "Trial", value: stats.trialCount, icon: CreditCard, color: "#facc15" },
+              { label: "Toplam Rez.", value: stats.totalReservations, icon: Crown, color: "#f472b6" },
+              { label: "Toplam Üye", value: stats.totalUsers, icon: Users, color: "#a78bfa" },
+            ].map((s, i) => (
+              <div key={i} style={{
+                background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
+                padding: "16px 18px"
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                  <s.icon size={14} style={{ color: s.color }} />
+                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</span>
+                </div>
+                <div style={{ fontSize: 24, fontWeight: 800 }}>{s.value}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Tenant List */}
+        <div style={{ marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h2 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Stüdyolar</h2>
+          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>{tenants.length} kayıt</span>
+        </div>
+
+        {loading ? (
+          <div style={{ textAlign: "center", padding: 48, color: "rgba(255,255,255,0.3)" }}>Yükleniyor...</div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {tenants.map(t => {
+              const pc = planColors[t.plan] || planColors.trial;
+              const daysLeft = t.planExpiresAt ? Math.ceil((new Date(t.planExpiresAt) - new Date()) / (1000*60*60*24)) : null;
+              const isExpired = daysLeft !== null && daysLeft <= 0;
+
+              return (
+                <div key={t.id} style={{
+                  background: t.isFrozen ? "rgba(56,189,248,0.03)" : "rgba(255,255,255,0.02)",
+                  border: `1px solid ${t.isFrozen ? "rgba(56,189,248,0.15)" : "rgba(255,255,255,0.06)"}`,
+                  padding: "16px 20px", display: "flex", flexWrap: "wrap",
+                  gap: "12px 20px", alignItems: "center"
+                }}>
+                  {/* Info */}
+                  <div style={{ flex: "1 1 220px", minWidth: 200 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                      <span style={{ fontWeight: 700, fontSize: 15 }}>{t.businessName}</span>
+                      {t.isFrozen && <Snowflake size={14} style={{ color: "#38bdf8" }} />}
+                      {isExpired && <AlertTriangle size={14} style={{ color: "#f87171" }} />}
+                    </div>
+                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", display: "flex", gap: 12, flexWrap: "wrap" }}>
+                      <span>{t.slug}.{domain}</span>
+                      <span>{t.ownerEmail}</span>
+                    </div>
+                  </div>
+
+                  {/* Stats */}
+                  <div style={{ display: "flex", gap: 16, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
+                    <span>{t.reservationCount} rez</span>
+                    <span>{t.userCount} üye</span>
+                    <span>{t.packageCount} paket</span>
+                  </div>
+
+                  {/* Plan Badge */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{
+                      background: pc.bg, border: `1px solid ${pc.border}`, color: pc.text,
+                      padding: "4px 10px", fontSize: 11, fontWeight: 700,
+                      textTransform: "uppercase", letterSpacing: "0.05em"
+                    }}>
+                      {t.plan}
+                    </span>
+                    {daysLeft !== null && (
+                      <span style={{ fontSize: 11, color: isExpired ? "#f87171" : "rgba(255,255,255,0.3)" }}>
+                        {isExpired ? "Süresi doldu" : `${daysLeft}g`}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Actions */}
+                  <div style={{ display: "flex", gap: 6 }}>
+                    <a href={`http://${t.slug}.${domain}/admin`} target="_blank" rel="noopener" style={smallBtn}>
+                      <ExternalLink size={13} />
+                    </a>
+                    <select
+                      value={t.plan}
+                      onChange={e => handlePlanChange(t.id, e.target.value)}
+                      disabled={actionLoading === t.id}
+                      style={{ ...smallBtn, width: 80, cursor: "pointer", appearance: "none", textAlign: "center" }}
+                    >
+                      <option value="trial">Trial</option>
+                      <option value="standard">Standard</option>
+                      <option value="pro">Pro</option>
+                    </select>
+                    <button
+                      onClick={() => handleFreeze(t.id)}
+                      disabled={actionLoading === t.id}
+                      title={t.isFrozen ? "Aktifleştir" : "Dondur"}
+                      style={{ ...smallBtn, color: t.isFrozen ? "#4ade80" : "#38bdf8" }}
+                    >
+                      <Snowflake size={13} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(t.id, t.businessName)}
+                      disabled={actionLoading === t.id}
+                      title="Sil"
+                      style={{ ...smallBtn, color: "#f87171" }}
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+
+            {tenants.length === 0 && (
+              <div style={{ textAlign: "center", padding: 48, color: "rgba(255,255,255,0.3)", fontSize: 14 }}>
+                Henüz hiç stüdyo oluşturulmamış.
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const iconBtn = {
+  background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)",
+  color: "rgba(255,255,255,0.5)", padding: 8, cursor: "pointer",
+  display: "flex", alignItems: "center", justifyContent: "center"
+};
+
+const smallBtn = {
+  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+  color: "rgba(255,255,255,0.5)", padding: "6px 10px", cursor: "pointer",
+  fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center",
+  textDecoration: "none"
+};
