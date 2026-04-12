@@ -89,11 +89,11 @@ export default function OnboardingPage() {
           {step === 3 && result ? (
             <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: "48px 32px", textAlign: "center" }}>
               <div style={{
-                width: 72, height: 72, borderRadius: "50%", background: "rgba(74,222,128,0.08)",
-                border: "2px solid rgba(74,222,128,0.25)", display: "inline-flex",
+                width: 72, height: 72, borderRadius: 0, background: "rgba(255,255,255,0.04)",
+                border: "2px solid rgba(255,255,255,0.15)", display: "inline-flex",
                 alignItems: "center", justifyContent: "center", marginBottom: 24
               }}>
-                <Check size={36} style={{ color: "#4ade80" }} />
+                <Check size={36} style={{ color: "#fff" }} />
               </div>
               <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>Hazırsınız! 🎉</h2>
               <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 32 }}>
@@ -107,7 +107,7 @@ export default function OnboardingPage() {
                 </code>
               </div>
 
-              <div style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.12)", padding: 14, marginBottom: 32, fontSize: 13, color: "rgba(245,158,11,0.8)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: 14, marginBottom: 32, fontSize: 13, color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                 <Sparkles size={14} /> 14 gün ücretsiz — tüm özellikler aktif
               </div>
 
@@ -215,7 +215,7 @@ export default function OnboardingPage() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{
               width: 32, height: 32, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
-              display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 6
+              display: "flex", alignItems: "center", justifyContent: "center"
             }}>
               <Camera size={16} style={{ color: "#fff" }} />
             </div>
@@ -225,7 +225,7 @@ export default function OnboardingPage() {
             <a href="/super-admin/login" style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>Yönetici</a>
             <button onClick={() => setShowRegister(true)} style={{
               background: "#fff", color: "#000", border: "none", padding: "8px 20px",
-              fontWeight: 700, fontSize: 13, cursor: "pointer", borderRadius: 6
+              fontWeight: 700, fontSize: 13, cursor: "pointer"
             }}>
               Ücretsiz Başla
             </button>
@@ -238,26 +238,16 @@ export default function OnboardingPage() {
         minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
         textAlign: "center", padding: "120px 24px 80px", position: "relative"
       }}>
-        {/* Gradient orbs */}
-        <div style={{
-          position: "absolute", top: "10%", left: "20%", width: 400, height: 400,
-          background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)",
-          filter: "blur(60px)", pointerEvents: "none"
-        }} />
-        <div style={{
-          position: "absolute", bottom: "20%", right: "15%", width: 350, height: 350,
-          background: "radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%)",
-          filter: "blur(60px)", pointerEvents: "none"
-        }} />
+
 
         <div style={{ position: "relative", zIndex: 1, maxWidth: 700 }}>
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 16px",
-            background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)",
-            borderRadius: 20, fontSize: 12, fontWeight: 600, color: "rgba(245,158,11,0.9)",
-            marginBottom: 28
+            background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
+            fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)",
+            marginBottom: 28, textTransform: "uppercase", letterSpacing: "0.05em"
           }}>
-            <Sparkles size={13} /> 14 gün ücretsiz dene — kredi kartı gerekmez
+            14 gün ücretsiz dene — kredi kartı gerekmez
           </div>
 
           <h1 style={{
@@ -265,7 +255,7 @@ export default function OnboardingPage() {
             letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 20
           }}>
             Stüdyonuzu<br />
-            <span style={{ background: "linear-gradient(135deg, #f59e0b, #8b5cf6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            <span style={{ color: "rgba(255,255,255,0.5)" }}>
               Dijitale Taşıyın
             </span>
           </h1>
@@ -281,14 +271,14 @@ export default function OnboardingPage() {
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
             <button onClick={() => setShowRegister(true)} style={{
               background: "#fff", color: "#000", border: "none", padding: "14px 32px",
-              fontWeight: 700, fontSize: 15, cursor: "pointer", borderRadius: 8,
-              display: "flex", alignItems: "center", gap: 8, transition: "transform 0.2s"
+              fontWeight: 700, fontSize: 15, cursor: "pointer",
+              display: "flex", alignItems: "center", gap: 8
             }}>
               Hemen Başla <ArrowRight size={18} />
             </button>
             <a href="#features" style={{
-              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-              color: "rgba(255,255,255,0.6)", padding: "14px 28px", borderRadius: 8,
+              background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+              color: "rgba(255,255,255,0.5)", padding: "14px 28px",
               fontWeight: 600, fontSize: 15, textDecoration: "none",
               display: "flex", alignItems: "center", gap: 8
             }}>
@@ -296,13 +286,7 @@ export default function OnboardingPage() {
             </a>
           </div>
 
-          {/* Social proof */}
-          <div style={{ marginTop: 48, display: "flex", alignItems: "center", justifyContent: "center", gap: 24, flexWrap: "wrap" }}>
-            <div style={{ display: "flex", gap: 2 }}>
-              {[1,2,3,4,5].map(i => <Star key={i} size={14} fill="#f59e0b" style={{ color: "#f59e0b" }} />)}
-            </div>
-            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.35)" }}>Fotoğrafçılar tarafından tercih ediliyor</span>
-          </div>
+
         </div>
       </section>
 
@@ -329,10 +313,10 @@ export default function OnboardingPage() {
               onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; e.currentTarget.style.background = "rgba(255,255,255,0.02)"; }}
               >
                 <div style={{
-                  width: 40, height: 40, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-                  display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16, borderRadius: 8
+                  width: 36, height: 36, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+                  display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16
                 }}>
-                  <f.icon size={18} style={{ color: "rgba(255,255,255,0.6)" }} />
+                  <f.icon size={16} style={{ color: "rgba(255,255,255,0.5)" }} />
                 </div>
                 <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{f.title}</h3>
                 <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", lineHeight: 1.5, margin: 0 }}>{f.desc}</p>
@@ -357,7 +341,7 @@ export default function OnboardingPage() {
           </p>
           <button onClick={() => setShowRegister(true)} style={{
             background: "#fff", color: "#000", border: "none", padding: "14px 36px",
-            fontWeight: 700, fontSize: 15, cursor: "pointer", borderRadius: 8,
+            fontWeight: 700, fontSize: 15, cursor: "pointer",
             display: "inline-flex", alignItems: "center", gap: 8
           }}>
             Ücretsiz Dene <ArrowRight size={18} />
