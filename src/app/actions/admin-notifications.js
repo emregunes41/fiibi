@@ -2,25 +2,47 @@
 
 import { getNotificationSettings, sendEmailWithResend } from "./notify";
 
-const ADMIN_EMAIL = "hello@pinowed.com";
+const ADMIN_EMAIL_FALLBACK = "hello@pinowed.com";
 
-const emailWrapper = (title, content) => `
+async function getAdminEmail() {
+  const settings = await getNotificationSettings();
+  return settings.email || settings._tenant?.ownerEmail || ADMIN_EMAIL_FALLBACK;
+}
+
+async function getAdminContext() {
+  const settings = await getNotificationSettings();
+  const tenant = settings._tenant;
+  const businessName = settings.businessName || tenant?.businessName || "Studio";
+  const domain = process.env.PLATFORM_DOMAIN || "localhost:3000";
+  const protocol = domain.includes("localhost") ? "http" : "https";
+  const siteUrl = tenant?.customDomain
+    ? `https://${tenant.customDomain}`
+    : tenant?.slug
+      ? `${protocol}://${tenant.slug}.${domain}`
+      : `${protocol}://${domain}`;
+  return { settings, businessName, siteUrl };
+}
+
+const emailWrapper = async (title, content) => {
+  const { businessName, siteUrl } = await getAdminContext();
+  return `
 <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
   <div style="background: #000; color: #fff; padding: 24px 30px; text-align: center; border-radius: 10px 10px 0 0;">
-    <h1 style="margin: 0; font-size: 18px; font-weight: 700; letter-spacing: 1px;">PINOWED <span style="opacity:0.4;font-weight:400;">CRM</span></h1>
+    <h1 style="margin: 0; font-size: 18px; font-weight: 700; letter-spacing: 1px;">${businessName.toUpperCase()} <span style="opacity:0.4;font-weight:400;">CRM</span></h1>
     <p style="margin: 6px 0 0; font-size: 12px; opacity: 0.5;">Admin Bildirim Sistemi</p>
   </div>
   <div style="padding: 28px 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
     <h2 style="color: #333; font-size: 18px; margin: 0 0 16px;">${title}</h2>
     ${content}
     <div style="margin-top: 32px; text-align: center;">
-      <a href="https://www.pinowed.com/admin/reservations" style="background-color: #000; color: #fff; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: 700; display: inline-block; font-size: 13px;">Admin Panele Git</a>
+      <a href="${siteUrl}/admin/reservations" style="background-color: #000; color: #fff; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: 700; display: inline-block; font-size: 13px;">Admin Panele Git</a>
     </div>
     <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #eee; text-align: center;">
-      <p style="color: #bbb; font-size: 11px; margin: 0;">Bu bir otomatik bildirimdir · pinowed.com</p>
+      <p style="color: #bbb; font-size: 11px; margin: 0;">Bu bir otomatik bildirimdir · ${businessName}</p>
     </div>
   </div>
 </div>`;
+};
 
 const infoRow = (label, value) => `
 <tr>
@@ -49,7 +71,7 @@ export async function notifyAdminNewReservation(reservation) {
       </table>
     `;
 
-    await sendEmailWithResend(settings, ADMIN_EMAIL, "📋 Yeni Rezervasyon Talebi!", emailWrapper("Yeni Rezervasyon Talebi", content));
+    await sendEmailWithResend(settings, await getAdminEmail(), "📋 Yeni Rezervasyon Talebi!", await emailWrapper("Yeni Rezervasyon Talebi", content));
   } catch (err) {
     console.error("Admin notification error (new reservation):", err);
   }
@@ -81,7 +103,7 @@ export async function notifyAdminPaymentReceived({ brideName, bridePhone, amount
     `;
 
     const emoji = remaining <= 0 ? "🎉" : "💵";
-    await sendEmailWithResend(settings, ADMIN_EMAIL, `${emoji} Ödeme Alındı: ${brideName} (+${amount.toLocaleString('tr-TR')}₺)`, emailWrapper("Ödeme Bilgisi", content));
+    await sendEmailWithResend(settings, await getAdminEmail(), `${emoji} Ödeme Alındı: ${brideName} (+${amount.toLocaleString('tr-TR')}₺)`, await emailWrapper("Ödeme Bilgisi", content));
   } catch (err) {
     console.error("Admin notification error (payment):", err);
   }
@@ -103,7 +125,7 @@ export async function notifyAdminContractApproved({ brideName, bridePhone, bride
         ${infoRow("📋 Durum", "Sözleşme Onaylandı ✅")}
       </table>
     `;
-    await sendEmailWithResend(settings, ADMIN_EMAIL, `📝 Sözleşme Onaylandı: ${brideName}`, emailWrapper("Sözleşme Onayı", content));
+    await sendEmailWithResend(settings, await getAdminEmail(), `📝 Sözleşme Onaylandı: ${brideName}`, await emailWrapper("Sözleşme Onayı", content));
   } catch (err) {
     console.error("Admin notification error (contract):", err);
   }
@@ -126,7 +148,7 @@ export async function notifyAdminPhotoSelectionSubmitted({ brideName, bridePhone
         ${infoRow("📞 Telefon", bridePhone)}
       </table>
     `;
-    await sendEmailWithResend(settings, ADMIN_EMAIL, `📷 Fotoğraf Seçimi: ${brideName} (${selectedCount} fotoğraf)`, emailWrapper("Fotoğraf Seçimi Tamamlandı", content));
+    await sendEmailWithResend(settings, await getAdminEmail(), `📷 Fotoğraf Seçimi: ${brideName} (${selectedCount} fotoğraf)`, await emailWrapper("Fotoğraf Seçimi Tamamlandı", content));
   } catch (err) {
     console.error("Admin notification error (photo selection):", err);
   }
@@ -146,7 +168,7 @@ export async function notifyAdminAlbumSelected({ brideName, bridePhone, modelNam
         ${infoRow("📒 Albüm", modelName)}
       </table>
     `;
-    await sendEmailWithResend(settings, ADMIN_EMAIL, `📒 Albüm Seçimi: ${brideName} → ${modelName}`, emailWrapper("Albüm Modeli Seçildi", content));
+    await sendEmailWithResend(settings, await getAdminEmail(), `📒 Albüm Seçimi: ${brideName} → ${modelName}`, await emailWrapper("Albüm Modeli Seçildi", content));
   } catch (err) {
     console.error("Admin notification error (album):", err);
   }
@@ -173,7 +195,7 @@ export async function notifyAdminPaymentPreferenceChanged({ brideName, bridePhon
       </table>
       ${!isCard ? '<p style="color:#666;font-size:13px;">Müşteriye IBAN bilgilerinizi iletmek için WhatsApp üzerinden iletişime geçebilirsiniz.</p>' : ''}
     `;
-    await sendEmailWithResend(settings, ADMIN_EMAIL, `${isCard ? '💳' : '💵'} ${brideName}: ${isCard ? 'Karta Geçiş' : 'Nakite Dönüş'}`, emailWrapper("Ödeme Tercihi Değişikliği", content));
+    await sendEmailWithResend(settings, await getAdminEmail(), `${isCard ? '💳' : '💵'} ${brideName}: ${isCard ? 'Karta Geçiş' : 'Nakite Dönüş'}`, await emailWrapper("Ödeme Tercihi Değişikliği", content));
   } catch (err) {
     console.error("Admin notification error (preference change):", err);
   }

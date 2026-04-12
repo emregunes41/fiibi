@@ -1,22 +1,17 @@
 "use server";
 
-import { Resend } from "resend";
+import { getNotificationSettings, sendEmailWithResend } from "./notify";
 
 export async function sendGalleryReadyEmail(email, name, galleryUrl) {
   try {
-    const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) {
-      console.warn("RESEND_API_KEY bulunamadı, e-posta gönderilemiyor.");
-      return { success: false, error: "API Key missing" };
-    }
-
-    const resend = new Resend(apiKey);
+    const settings = await getNotificationSettings();
+    const businessName = settings.businessName || settings._tenant?.businessName || "Studio";
 
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #000; letter-spacing: -1px;">PINOWED</h1>
-          <p style="color: #666; font-size: 14px;">Profesyonel Fotoğrafçılık Çözümleri</p>
+          <h1 style="color: #000; letter-spacing: -1px;">${businessName.toUpperCase()}</h1>
+          <p style="color: #666; font-size: 14px;">Profesyonel Fotoğrafçılık</p>
         </div>
         
         <h2 style="color: #000;">Harika Haberler, ${name}! 🎉</h2>
@@ -39,19 +34,12 @@ export async function sendGalleryReadyEmail(email, name, galleryUrl) {
         
         <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
         <p style="font-size: 12px; color: #999; text-align: center;">
-          Bu e-posta otomatik olarak oluşturulmuştur. Lütfen bu adrese doğrudan yanıt vermeyiniz.
+          Bu e-posta ${businessName} tarafından otomatik olarak oluşturulmuştur.
         </p>
       </div>
     `;
 
-    const data = await resend.emails.send({
-      from: "Pinowed CRM <hello@pinowed.com>", 
-      to: email, 
-      subject: "Fotoğraflarınız Seçim İçin Hazır! 📸 - Pinowed",
-      html: htmlContent,
-    });
-
-    return { success: true, data };
+    return await sendEmailWithResend(settings, email, `Fotoğraflarınız Seçim İçin Hazır! 📸 - ${businessName}`, htmlContent);
   } catch (error) {
     console.error("Gallery Ready Email Error:", error);
     return { success: false, error: error.message };
