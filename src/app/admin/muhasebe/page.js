@@ -1,13 +1,28 @@
 import { prisma } from "@/lib/prisma";
 import { Wallet, TrendingUp, ArrowUpRight, ArrowDownRight, Banknote, CreditCard, PiggyBank, Receipt, Calendar, Users } from "lucide-react";
+import { getCurrentTenant } from "@/lib/tenant";
+import { cookies } from "next/headers";
+import { verifyAuth } from "@/lib/auth";
+
+async function getFinanceTenantId() {
+  const tenant = await getCurrentTenant();
+  if (tenant?.id) return tenant.id;
+  try {
+    const cookieStore = await cookies();
+    const t = cookieStore.get("admin_token")?.value;
+    if (t) { const p = await verifyAuth(t); if (p?.tenantId) return p.tenantId; }
+  } catch (e) {}
+  return "NONE";
+}
 
 export default async function MuhasebePage() {
+  const tenantId = await getFinanceTenantId();
   const now = new Date();
   const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth(); // 0-indexed
+  const currentMonth = now.getMonth();
 
-  // ─── ALL PAYMENTS ───
   const allPayments = await prisma.payment.findMany({
+    where: { reservation: { tenantId } },
     include: { 
       reservation: { 
         select: { status: true, brideName: true, groomName: true, totalAmount: true, paymentPreference: true, packages: { select: { name: true, category: true } } } 
@@ -62,7 +77,7 @@ export default async function MuhasebePage() {
 
   // ─── KALAN BAKİYELER ───
   const activeReservations = await prisma.reservation.findMany({
-    where: { status: { in: ["PENDING", "CONFIRMED"] } },
+    where: { tenantId, status: { in: ["PENDING", "CONFIRMED"] } },
     select: { 
       id: true, brideName: true, groomName: true, totalAmount: true, 
       paymentPreference: true, eventDate: true, 

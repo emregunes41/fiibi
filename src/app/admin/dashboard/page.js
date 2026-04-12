@@ -2,27 +2,49 @@ import { Users, Package, Calendar, Clock, ChevronRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import NotificationList from "../components/NotificationList";
+import { getCurrentTenant } from "@/lib/tenant";
+import { cookies } from "next/headers";
+import { verifyAuth } from "@/lib/auth";
+
+async function getDashboardTenantId() {
+  const tenant = await getCurrentTenant();
+  if (tenant?.id) return tenant.id;
+  try {
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get("admin_token")?.value;
+    if (adminToken) {
+      const payload = await verifyAuth(adminToken);
+      if (payload?.tenantId) return payload.tenantId;
+    }
+  } catch (e) {}
+  return "NONE";
+}
 
 export default async function AdminDashboard() {
-  const totalPackages = await prisma.photographyPackage.count();
-  const totalReservations = await prisma.reservation.count({ where: { status: { not: "DELETED" } } });
-  const pendingReservations = await prisma.reservation.count({ where: { status: "PENDING" } });
-  const totalMembers = await prisma.user.count();
+  const tenantId = await getDashboardTenantId();
+  const tenantFilter = { tenantId };
+
+  const totalPackages = await prisma.photographyPackage.count({ where: tenantFilter });
+  const totalReservations = await prisma.reservation.count({ where: { ...tenantFilter, status: { not: "DELETED" } } });
+  const pendingReservations = await prisma.reservation.count({ where: { ...tenantFilter, status: "PENDING" } });
+  const totalMembers = await prisma.user.count({ where: tenantFilter });
 
   const recentReservations = await prisma.reservation.findMany({
-    where: { status: { not: "DELETED" } },
+    where: { ...tenantFilter, status: { not: "DELETED" } },
     take: 5,
     orderBy: { createdAt: "desc" },
     include: { packages: true }
   });
 
   const notifications = await prisma.adminNotification.findMany({
+    where: tenantFilter,
     orderBy: { createdAt: "desc" },
     take: 10
   });
 
   const upcomingDeliveries = await prisma.reservation.findMany({
     where: { 
+      ...tenantFilter,
       status: "CONFIRMED", 
       workflowStatus: { not: "COMPLETED" },
       deliveryDate: { not: null }
@@ -32,12 +54,12 @@ export default async function AdminDashboard() {
     include: { packages: true }
   });
 
-  // Upcoming shoots (events in the next 30 days)
   const now = new Date();
   const thirtyDaysLater = new Date(now);
   thirtyDaysLater.setDate(thirtyDaysLater.getDate() + 30);
   const upcomingShoots = await prisma.reservation.findMany({
     where: {
+      ...tenantFilter,
       status: "CONFIRMED",
       eventDate: { gte: now, lte: thirtyDaysLater }
     },

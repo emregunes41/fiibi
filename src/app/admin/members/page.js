@@ -1,12 +1,28 @@
 import { prisma } from "@/lib/prisma";
 import { User as UserIcon, Mail, Phone, Calendar } from "lucide-react";
 import Image from "next/image";
+import { getCurrentTenant } from "@/lib/tenant";
+import { cookies } from "next/headers";
+import { verifyAuth } from "@/lib/auth";
 
 import ResetPasswordButton from "./ResetPasswordButton";
 import DeleteUserButton from "./DeleteUserButton";
 
+async function getMembersTenantId() {
+  const tenant = await getCurrentTenant();
+  if (tenant?.id) return tenant.id;
+  try {
+    const cookieStore = await cookies();
+    const t = cookieStore.get("admin_token")?.value;
+    if (t) { const p = await verifyAuth(t); if (p?.tenantId) return p.tenantId; }
+  } catch (e) {}
+  return "NONE";
+}
+
 export default async function AdminMembersPage() {
+  const tenantId = await getMembersTenantId();
   const users = await prisma.user.findMany({
+    where: { tenantId },
     include: { reservations: true },
     orderBy: { createdAt: "desc" },
   });
