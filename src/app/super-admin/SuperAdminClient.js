@@ -60,7 +60,6 @@ export default function SuperAdminClient() {
 
   const planColors = {
     trial: { bg: "rgba(250,204,21,0.1)", border: "rgba(250,204,21,0.2)", text: "#facc15" },
-    standard: { bg: "rgba(59,130,246,0.1)", border: "rgba(59,130,246,0.2)", text: "#3b82f6" },
     pro: { bg: "rgba(139,92,246,0.1)", border: "rgba(139,92,246,0.2)", text: "#8b5cf6" },
   };
 
@@ -184,7 +183,6 @@ export default function SuperAdminClient() {
                       style={{ ...smallBtn, width: 80, cursor: "pointer", appearance: "none", textAlign: "center" }}
                     >
                       <option value="trial">Trial</option>
-                      <option value="standard">Standard</option>
                       <option value="pro">Pro</option>
                     </select>
                     <button

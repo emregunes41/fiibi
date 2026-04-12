@@ -128,7 +128,7 @@ export async function toggleTenantFreeze(tenantId) {
 export async function changeTenantPlan(tenantId, newPlan) {
   if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
 
-  const validPlans = ["trial", "standard", "pro"];
+  const validPlans = ["trial", "pro"];
   if (!validPlans.includes(newPlan)) return { error: "Geçersiz plan" };
 
   // Plan süresini belirle

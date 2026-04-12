@@ -5,8 +5,7 @@ import { Crown, Clock, Zap, Check, AlertTriangle, Shield } from "lucide-react";
 
 const PLAN_DETAILS = {
   trial: { name: "Deneme", color: "#38bdf8", features: ["14 gün ücretsiz", "Tüm özellikler aktif", "Sınırsız rezervasyon"] },
-  standard: { name: "Standard", color: "#a78bfa", features: ["Sınırsız rezervasyon", "E-posta bildirimleri", "Portfolyo yönetimi", "Online ödeme"] },
-  pro: { name: "Pro", color: "#f59e0b", features: ["Tüm Standard özellikler", "Custom domain", "Özel e-posta domain", "Öncelikli destek", "Gelişmiş analitik"] },
+  pro: { name: "Pro", color: "#f59e0b", features: ["Sınırsız rezervasyon", "Custom domain", "E-posta bildirimleri", "Portfolyo yönetimi", "Online ödeme", "Öncelikli destek"] },
 };
 
 export default function SubscriptionPage() {
@@ -94,24 +93,6 @@ export default function SubscriptionPage() {
       {/* Upgrade Options */}
       {plan !== "pro" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {plan === "trial" && (
-            <div style={{
-              background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.15)",
-              padding: 24, display: "flex", justifyContent: "space-between", alignItems: "center"
-            }}>
-              <div>
-                <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Standard Plan</div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Sınırsız kullanım, tüm temel özellikler.</div>
-              </div>
-              <button style={{
-                padding: "10px 20px", background: "#a78bfa", color: "#000", border: "none",
-                fontWeight: 800, fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 6
-              }}>
-                <Zap size={14} /> Yükselt
-              </button>
-            </div>
-          )}
-
           <div style={{
             background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.15)",
             padding: 24, display: "flex", justifyContent: "space-between", alignItems: "center"
@@ -120,7 +101,7 @@ export default function SubscriptionPage() {
               <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
                 Pro Plan <Shield size={14} style={{ color: "#f59e0b" }} />
               </div>
-              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Custom domain, özel e-posta, öncelikli destek.</div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Sınırsız kullanım, custom domain, öncelikli destek.</div>
             </div>
             <button style={{
               padding: "10px 20px", background: "#f59e0b", color: "#000", border: "none",

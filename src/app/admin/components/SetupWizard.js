@@ -23,11 +23,11 @@ export default function SetupWizard({ config, onComplete }) {
 
   async function handleFinish() {
     setSaving(true);
-    await updateSiteConfig({ ...config, ...form, setupCompleted: true });
+    const result = await updateSiteConfig({ ...config, ...form, setupCompleted: true });
     setSaving(false);
-    if (onComplete) onComplete();
-    router.push("/admin/dashboard");
-    router.refresh();
+    if (result?.success) {
+      window.location.href = "/admin/dashboard";
+    }
   }
 
   const stepStyle = {
