@@ -37,7 +37,7 @@ export default function AdminLogin() {
       >
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <div style={{ fontWeight: 800, fontSize: '1.5rem', letterSpacing: '-0.03em', marginBottom: '0.5rem' }}>
-            PINOWED.
+            STUDIO.
           </div>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Yönetici Paneline Giriş Yap</p>
         </div>

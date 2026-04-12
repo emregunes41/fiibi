@@ -102,7 +102,7 @@ export default async function ProfilePage() {
                         <div style={{ flex: 1, minWidth: 200 }}>
                           <h4 style={{ fontWeight: 700, fontSize: 15, color: "rgba(255,255,255,0.7)", marginBottom: 6 }}>Sözleşme Onayı Bekleniyor</h4>
                           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, lineHeight: 1.5, marginBottom: 16 }}>
-                            Bu rezervasyon ekibimiz tarafından sizin adınıza oluşturulmuştur. Çekim planlaması ve hizmet detaylarının resmi olarak başlayabilmesi için Pinowed mesafeli satış ve hizmet sözleşmesini onaylamanız gerekmektedir.
+                            Bu rezervasyon ekibimiz tarafından sizin adınıza oluşturulmuştur. Çekim planlaması ve hizmet detaylarının resmi olarak başlayabilmesi için mesafeli satış ve hizmet sözleşmesini onaylamanız gerekmektedir.
                           </p>
                           <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
                             <ContractPreviewModal customText={siteConfig?.contractText} />

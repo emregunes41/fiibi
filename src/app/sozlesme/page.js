@@ -3,10 +3,14 @@ import { ArrowLeft, FileText, CheckCircle2 } from "lucide-react";
 
 import { getSiteConfig } from "../admin/core-actions";
 
-export const metadata = {
-  title: "Hizmet Sözleşmesi | Pinowed",
-  description: "Pinowed Fotoğrafçılık genel hizmet ve satış sözleşmesi.",
-};
+export async function generateMetadata() {
+  const siteConfig = await getSiteConfig();
+  const biz = siteConfig?.businessName || "Studio";
+  return {
+    title: `Hizmet Sözleşmesi | ${biz}`,
+    description: `${biz} genel hizmet ve satış sözleşmesi.`,
+  };
+}
 
 export default async function SozlesmePage() {
   const siteConfig = await getSiteConfig();
@@ -25,7 +29,7 @@ export default async function SozlesmePage() {
           </div>
           <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>Hizmet Sözleşmesi</h1>
         </div>
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 15, marginBottom: 40, marginLeft: 64 }}>Pinowed Fotoğrafçılık hizmet ve satış koşulları</p>
+        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 15, marginBottom: 40, marginLeft: 64 }}>{siteConfig?.businessName || "Studio"} hizmet ve satış koşulları</p>
 
         <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "clamp(24px, 5vw, 48px)" }}>
           <div style={{ color: "rgba(255,255,255,0.8)", fontSize: 15, lineHeight: 1.7, display: "flex", flexDirection: "column", gap: 24 }}>
@@ -34,7 +38,7 @@ export default async function SozlesmePage() {
                 <div style={{ whiteSpace: "pre-wrap" }}>{siteConfig.contractText}</div>
             ) : (
               <>
-                <p>Bu sözleşme, <strong>Pinowed Fotoğrafçılık</strong> ("Hizmet Sağlayıcı") ile rezervasyon sahibi ("Müşteri") arasında, aşağıda belirtilen koşullar çerçevesinde düzenlenmiştir.</p>
+                <p>Bu sözleşme, <strong>{siteConfig?.businessName || "Studio"}</strong> ("Hizmet Sağlayıcı") ile rezervasyon sahibi ("Müşteri") arasında, aşağıda belirtilen koşullar çerçevesinde düzenlenmiştir.</p>
 
                 <section>
                   <h3 style={{ fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>1.</span> HİZMETİN KAPSAMI</h3>
@@ -90,7 +94,7 @@ export default async function SozlesmePage() {
                 <section>
                   <h3 style={{ fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>7.</span> TELİF HAKKI VE KULLANIM</h3>
                   <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
-                    <li style={{ display: "flex", gap: 12 }}><span style={{ color: "rgba(255,255,255,0.3)" }}>—</span> Çekilen fotoğrafların telif hakkı Pinowed Fotoğrafçılık'a aittir.</li>
+                    <li style={{ display: "flex", gap: 12 }}><span style={{ color: "rgba(255,255,255,0.3)" }}>—</span> Çekilen fotoğrafların telif hakkı hizmet sağlayıcıya aittir.</li>
                     <li style={{ display: "flex", gap: 12 }}><span style={{ color: "rgba(255,255,255,0.3)" }}>—</span> Müşteri, teslim edilen fotoğrafları kişisel kullanım amacıyla serbestçe kullanabilir.</li>
                     <li style={{ display: "flex", gap: 12 }}><span style={{ color: "rgba(255,255,255,0.3)" }}>—</span> Hizmet sağlayıcı, çekilen fotoğrafları portfolyosunda, web sitesinde ve sosyal medya hesaplarında tanıtım amacıyla kullanma hakkına sahiptir. Özel gizlilik talebi müşterinin sorumluluğundadır.</li>
                   </ul>
@@ -110,7 +114,7 @@ export default async function SozlesmePage() {
               <CheckCircle2 style={{ color: "#fff", flexShrink: 0 }} />
               <div>
                 <p style={{ margin: 0, color: "rgba(255,255,255,0.8)", fontSize: 14 }}>
-                  Pinowed müşteri paneli üzerinden "Okudum ve Onaylıyorum" butonuna tıklayarak veya müşteri temsilcisi gözetiminde kapora onayı verdiğinizde yukarıdaki tüm maddeleri okuduğunuzu ve kabul ettiğinizi beyan edersiniz.
+                  Müşteri paneli üzerinden "Okudum ve Onaylıyorum" butonuna tıklayarak veya müşteri temsilcisi gözetiminde kapora onayı verdiğinizde yukarıdaki tüm maddeleri okuduğunuzu ve kabul ettiğinizi beyan edersiniz.
                 </p>
               </div>
             </div>

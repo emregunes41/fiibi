@@ -19,7 +19,7 @@ export async function sendTestSMS(phone) {
 
     const result = await sendSMS(
       phone,
-      "Pinowed SMS test mesajı ✅ Entegrasyonunuz başarıyla çalışıyor!",
+      "SMS test mesajı ✅ Entegrasyonunuz başarıyla çalışıyor!",
       settings
     );
 

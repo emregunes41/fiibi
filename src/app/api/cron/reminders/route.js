@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getNotificationSettings, sendEmailWithResend } from "@/app/actions/notify";
 
-const ADMIN_EMAIL = "hello@pinowed.com";
+
 
 /**
  * Cron endpoint — Vercel'de /api/cron/reminders -> her gün çalıştır
@@ -19,6 +19,12 @@ export async function GET(req) {
 
   try {
     const settings = await getNotificationSettings();
+    const adminEmail = settings.email || settings._tenant?.ownerEmail || "admin@studio.com";
+    const businessName = settings.businessName || "Studio";
+    const domain = process.env.PLATFORM_DOMAIN || "localhost:3000";
+    const protocol = domain.includes("localhost") ? "http" : "https";
+    const tenant = settings._tenant;
+    const siteUrl = tenant?.customDomain ? `https://${tenant.customDomain}` : tenant?.slug ? `${protocol}://${tenant.slug}.${domain}` : `${protocol}://${domain}`;
     const now = new Date();
     const twoDaysLater = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
     
@@ -39,10 +45,10 @@ export async function GET(req) {
       const daysLeft = Math.ceil((new Date(r.deliveryDate) - now) / (1000*60*60*24));
       const packageNames = r.packages.map(p => p.name).join(", ") || "Çekim";
       
-      await sendEmailWithResend(settings, ADMIN_EMAIL, `⏰ Teslim Hatırlatma: ${r.brideName} (${daysLeft} gün kaldı!)`, `
+      await sendEmailWithResend(settings, adminEmail, `⏰ Teslim Hatırlatma: ${r.brideName} (${daysLeft} gün kaldı!)`, `
         <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
           <div style="background: #000; color: #fff; padding: 24px 30px; text-align: center; border-radius: 10px 10px 0 0;">
-            <h1 style="margin: 0; font-size: 18px; font-weight: 700;">PINOWED <span style="opacity:0.4;font-weight:400;">CRM</span></h1>
+            <h1 style="margin: 0; font-size: 18px; font-weight: 700;">${businessName.toUpperCase()} <span style="opacity:0.4;font-weight:400;">CRM</span></h1>
           </div>
           <div style="padding: 28px 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
             <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 6px; margin-bottom: 20px;">
@@ -56,7 +62,7 @@ export async function GET(req) {
               <tr><td style="padding:6px 0;color:#999;font-size:13px;">⏳ Kalan</td><td style="padding:6px 0;color:#ef4444;font-size:13px;font-weight:700;">${daysLeft} gün</td></tr>
             </table>
             <div style="margin-top:24px;text-align:center;">
-              <a href="https://www.pinowed.com/admin/reservations" style="background:#000;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;display:inline-block;font-size:13px;">Link Yükle</a>
+              <a href="${siteUrl}/admin/reservations" style="background:#000;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;display:inline-block;font-size:13px;">Link Yükle</a>
             </div>
           </div>
         </div>
@@ -79,10 +85,10 @@ export async function GET(req) {
       const daysOverdue = Math.ceil((now - new Date(r.deliveryDate)) / (1000*60*60*24));
       const packageNames = r.packages.map(p => p.name).join(", ") || "Çekim";
       
-      await sendEmailWithResend(settings, ADMIN_EMAIL, `🚨 Teslim Gecikti: ${r.brideName} (${daysOverdue} gün geçti!)`, `
+      await sendEmailWithResend(settings, adminEmail, `🚨 Teslim Gecikti: ${r.brideName} (${daysOverdue} gün geçti!)`, `
         <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
           <div style="background: #7f1d1d; color: #fff; padding: 24px 30px; text-align: center; border-radius: 10px 10px 0 0;">
-            <h1 style="margin: 0; font-size: 18px; font-weight: 700;">PINOWED <span style="opacity:0.4;font-weight:400;">CRM</span></h1>
+            <h1 style="margin: 0; font-size: 18px; font-weight: 700;">${businessName.toUpperCase()} <span style="opacity:0.4;font-weight:400;">CRM</span></h1>
             <p style="margin: 6px 0 0; font-size: 12px; opacity: 0.7;">Gecikmiş Teslim Uyarısı</p>
           </div>
           <div style="padding: 28px 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
@@ -98,7 +104,7 @@ export async function GET(req) {
               <tr><td style="padding:6px 0;color:#999;font-size:13px;">🔴 Gecikme</td><td style="padding:6px 0;color:#dc2626;font-size:14px;font-weight:800;">${daysOverdue} gün</td></tr>
             </table>
             <div style="margin-top:24px;text-align:center;">
-              <a href="https://www.pinowed.com/admin/reservations" style="background:#dc2626;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;display:inline-block;font-size:13px;">Hemen Link Yükle</a>
+              <a href="${siteUrl}/admin/reservations" style="background:#dc2626;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;display:inline-block;font-size:13px;">Hemen Link Yükle</a>
             </div>
             <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; text-align: center;">
               <p style="color: #bbb; font-size: 11px; margin: 0;">Bu hatırlatma, teslim linki yüklenene kadar her gün gönderilir.</p>

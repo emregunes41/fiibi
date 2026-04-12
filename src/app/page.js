@@ -159,11 +159,11 @@ export default async function PinowedPage() {
                       </span>
                       {siteConfig?.phone || "0539 205 20 41"}
                     </a>
-                    <a href={`mailto:${siteConfig?.email || "hello@pinowed.com"}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
+                    <a href={`mailto:${siteConfig?.email || ""}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
                       <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0">
                         <Mail size={13} strokeWidth={1.5} />
                       </span>
-                      {siteConfig?.email || "hello@pinowed.com"}
+                      {siteConfig?.email || ""}
                     </a>
                     {siteConfig?.address && (
                       <div className="text-[13px] text-white/50 flex items-center gap-3">

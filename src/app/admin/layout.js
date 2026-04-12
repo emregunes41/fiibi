@@ -34,7 +34,7 @@ export default function AdminLayout({ children }) {
   const sidebarContent = (
     <>
       <div style={{ fontWeight: 900, fontSize: "1.75rem", letterSpacing: "-0.04em", marginBottom: "3.5rem", paddingLeft: "0.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span>PINOWED.<span style={{ color: "rgba(255,255,255,0.4)", fontSize: "1.1rem" }}>admin</span></span>
+        <span>STUDIO.<span style={{ color: "rgba(255,255,255,0.4)", fontSize: "1.1rem" }}>admin</span></span>
         {/* Close button only on mobile */}
         <button
           onClick={() => setSidebarOpen(false)}
@@ -81,7 +81,7 @@ export default function AdminLayout({ children }) {
   );
 
   return (
-    <div className="pinowed-theme" style={{ display: "flex", minHeight: "100vh", background: "#000", color: "#fff" }}>
+    <div className="admin-theme" style={{ display: "flex", minHeight: "100vh", background: "#000", color: "#fff" }}>
       
       {/* Mobile Top Bar */}
       <div className="md:hidden" style={{
@@ -97,7 +97,7 @@ export default function AdminLayout({ children }) {
           <Menu size={22} />
         </button>
         <span style={{ fontWeight: 800, fontSize: "0.9rem", letterSpacing: "-0.02em" }}>
-          PINOWED<span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>.admin</span>
+          STUDIO<span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>.admin</span>
         </span>
         <div style={{ width: "30px" }} /> {/* spacer */}
       </div>

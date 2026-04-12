@@ -60,7 +60,7 @@ export default async function AdminDashboard() {
     <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
       <div style={{ marginBottom: "1.5rem" }}>
         <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: "4px" }}>Genel Bakış</h1>
-        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem" }}>Pinowed yönetim paneli</p>
+        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem" }}>Yönetim Paneli</p>
       </div>
 
       {/* Stats Grid */}

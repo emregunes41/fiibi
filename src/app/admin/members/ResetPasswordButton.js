@@ -8,7 +8,7 @@ export default function ResetPasswordButton({ userId }) {
   const [loading, setLoading] = useState(false);
 
   async function handleReset() {
-    const newPassword = prompt("Lütfen yeni şifreyi giriniz (veya varsayılan için boş bırakın):", "Pinowed123!");
+    const newPassword = prompt("Lütfen yeni şifreyi giriniz (veya varsayılan için boş bırakın):", "Studio123!");
     if (!newPassword) return;
 
     if (confirm(`Üyenin şifresini "${newPassword}" olarak sıfırlamak istediğinize emin misiniz?`)) {

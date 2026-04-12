@@ -33,7 +33,7 @@ export default function ContractPreviewModal({ customText }) {
                 </div>
                 <div>
                   <h3 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>Hizmet Sözleşmesi</h3>
-                  <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 12, margin: 0 }}>Pinowed Fotoğrafçılık</p>
+                  <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 12, margin: 0 }}>Profesyonel Fotoğrafçılık</p>
                 </div>
               </div>
               <button onClick={() => setIsOpen(false)} style={{ background: "rgba(255,255,255,0.05)", border: "none", color: "rgba(255,255,255,0.6)", padding: 8, borderRadius: 0, cursor: "pointer", display: "flex" }} className="hover:bg-white/10 hover:text-white">
@@ -48,7 +48,7 @@ export default function ContractPreviewModal({ customText }) {
                 <div style={{ whiteSpace: "pre-wrap" }}>{customText}</div>
               ) : (
                 <>
-                  <p style={{ margin: 0 }}>Bu sözleşme, <strong>Pinowed Fotoğrafçılık</strong> ile siz değerli müşterimiz arasında yürürlüktedir.</p>
+                  <p style={{ margin: 0 }}>Bu sözleşme, <strong>Stüdyo</strong> ile siz değerli müşterimiz arasında yürürlüktedir.</p>
 
                   <div>
                     <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>1.</span> Hizmetin Kapsamı</h4>
@@ -77,7 +77,7 @@ export default function ContractPreviewModal({ customText }) {
 
                   <div>
                     <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>6.</span> Teslim Süresi ve Telif</h4>
-                    <p style={{ margin: 0 }}>Çekilen fotoğrafların telif hakkı Pinowed'e aittir. Tanıtım amaçlı kullanılmasını istemediğinizi yazılı olarak bildirebilirsiniz.</p>
+                    <p style={{ margin: 0 }}>Çekilen fotoğrafların telif hakkı stüdyoya aittir. Tanıtım amaçlı kullanılmasını istemediğinizi yazılı olarak bildirebilirsiniz.</p>
                   </div>
                 </>
               )}

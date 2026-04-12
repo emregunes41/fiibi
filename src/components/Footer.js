@@ -8,7 +8,7 @@ export default function Footer() {
         
         {/* Brand */}
         <div className="col-span-1 md:col-span-1">
-          <div className="font-black text-2xl tracking-tighter text-white mb-6">PINOWED.</div>
+          <div className="font-black text-2xl tracking-tighter text-white mb-6">STUDIO.</div>
           <p className="text-white/50 text-sm leading-relaxed mb-8">
             Anılarınızı ölümsüzleştirmek için tutkuyla çalışıyoruz. Her karede bir hikaye, her hikayede bir ömür saklıyoruz.
           </p>
@@ -50,7 +50,7 @@ export default function Footer() {
             </li>
             <li className="flex items-center gap-3 text-white/50 text-sm">
               <Mail size={18} className="text-white shrink-0" />
-              <span>merhaba@pinowed.com</span>
+              <span>info@studio.com</span>
             </li>
           </ul>
         </div>
@@ -74,7 +74,7 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto border-t border-white/5 mt-16 pt-8 text-center text-white/30 text-xs">
-        © 2026 PINOWED Photography. Tüm hakları saklıdır.
+                © {new Date().getFullYear()} Studio Photography. Tüm hakları saklıdır.
       </div>
     </footer>
   );

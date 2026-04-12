@@ -59,7 +59,7 @@ export default function RegisterPage() {
         <div style={{ background: "rgba(255,255,255,0.05)", backdropFilter: "blur(40px)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.1)", padding: "40px 36px", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
           <div style={{ textAlign: "center", marginBottom: 32 }}>
             <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 8 }}>Hesap Oluştur</h1>
-            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14 }}>Pinowed dünyasına katılın</p>
+            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14 }}>Hesap oluşturun</p>
           </div>
 
           <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: 16 }}>

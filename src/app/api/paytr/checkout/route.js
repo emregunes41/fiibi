@@ -54,7 +54,7 @@ export async function POST(req) {
       .update(hashStr)
       .digest("base64");
 
-    const baseUrl = process.env.NEXT_PUBLIC_URL || "https://www.pinowed.com";
+    const baseUrl = process.env.NEXT_PUBLIC_URL || process.env.NEXT_PUBLIC_BASE_URL || "https://localhost:3000";
 
     const formData = new URLSearchParams();
     formData.append("merchant_id", merchant_id);
