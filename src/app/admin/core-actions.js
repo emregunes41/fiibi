@@ -7,6 +7,7 @@ import { requireAdmin, getServerAuthSession } from "@/lib/session";
 import { sendWelcomeEmail } from "../actions/send-welcome";
 import { notifyReservationReceived, notifyReservationConfirmed, notifyManualReservationCreated } from "../actions/notify";
 import { sendDriveLinkEmail } from "../actions/send-drive-link";
+import { getCurrentTenant } from "@/lib/tenant";
 
 export async function uploadAlbumImage(formData) {
   
@@ -812,26 +813,59 @@ export async function getSlotAvailability(date, categoryValue) {
 
 export async function getSiteConfig() {
   try {
-    let config = await prisma.globalSettings.findUnique({
-      where: { id: "global-settings" }
-    });
-    
+    // Tenant-aware: önce mevcut tenant'ın ayarlarını bul
+    const tenant = await getCurrentTenant();
+    let config = null;
+
+    if (tenant) {
+      config = await prisma.globalSettings.findFirst({
+        where: { tenantId: tenant.id }
+      });
+
+      if (!config) {
+        // Tenant var ama ayarı yok → oluştur
+        config = await prisma.globalSettings.create({
+          data: {
+            id: `settings-${tenant.id}`,
+            tenantId: tenant.id,
+            businessName: tenant.businessName,
+          }
+        });
+      }
+    } else {
+      // Fallback: eski global settings (geçiş dönemi)
+      config = await prisma.globalSettings.findUnique({
+        where: { id: "global-settings" }
+      });
+    }
+
     if (!config) {
       config = await prisma.globalSettings.create({
         data: { id: "global-settings" }
       });
     }
     
+    // Tenant bilgisini config'e ekle
+    if (tenant) {
+      config._tenant = {
+        id: tenant.id,
+        slug: tenant.slug,
+        businessName: tenant.businessName,
+        plan: tenant.plan,
+        customDomain: tenant.customDomain,
+      };
+    }
+
     return config;
   } catch (error) {
     console.error("Get Site Config Error:", error);
-    // Return a default object if DB fails to prevent UI crash
     return {
       heroTitle: "Anları Sanata \n Dönüştürüyoruz",
       heroSubtitle: "Premium Photography Service",
+      businessName: "Studio",
       address: "",
-      phone: "+90 555 000 00 00",
-      email: "hello@pinowed.com",
+      phone: "",
+      email: "",
       instagram: "",
       whatsapp: "",
       cashPromoText: "",
@@ -848,9 +882,18 @@ export async function updateSiteConfig(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions } = data;
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions, businessName, logoUrl, faviconUrl, footerTagline, seoTitle, seoDescription, accentColor, fontFamily, paymentMode, paytrMerchantId, paytrApiKey, paytrSecretKey } = data;
+
+    // Tenant-aware: mevcut tenant'ın settings ID'sini bul
+    const tenant = await getCurrentTenant();
+    let settingsId = "global-settings";
+    if (tenant) {
+      const existing = await prisma.globalSettings.findFirst({ where: { tenantId: tenant.id } });
+      if (existing) settingsId = existing.id;
+    }
+
     await prisma.globalSettings.update({
-      where: { id: "global-settings" },
+      where: { id: settingsId },
       data: {
         heroTitle,
         heroSubtitle,
@@ -877,6 +920,19 @@ export async function updateSiteConfig(data) {
         googleMapsUrl: googleMapsUrl || "",
         chatbotEnabled: chatbotEnabled ?? true,
         chatbotInstructions: chatbotInstructions || "",
+        // Yeni SaaS alanları
+        businessName: businessName || "Studio",
+        logoUrl: logoUrl || null,
+        faviconUrl: faviconUrl || null,
+        footerTagline: footerTagline || "",
+        seoTitle: seoTitle || null,
+        seoDescription: seoDescription || null,
+        accentColor: accentColor || "#ffffff",
+        fontFamily: fontFamily || "geist",
+        paymentMode: paymentMode || "cash",
+        paytrMerchantId: paytrMerchantId || "",
+        paytrApiKey: paytrApiKey || "",
+        paytrSecretKey: paytrSecretKey || "",
       }
     });
     revalidatePath('/');

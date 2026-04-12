@@ -7,14 +7,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ─── TENANT (Kiracı) ─────────────────────────────────────────────
+model Tenant {
+  id              String    @id @default(cuid())
+  slug            String    @unique           // "ahmet" → ahmet.photoapp.co
+  customDomain    String?   @unique           // "www.ahmetfoto.com"
+  businessName    String                      // "Ahmet Photography"
+  ownerName       String
+  ownerEmail      String    @unique
+  ownerPhone      String?
+  password        String                      // bcrypt hash
+
+  // Abonelik
+  plan            String    @default("trial") // trial, standard, pro
+  planExpiresAt   DateTime?
+  iyzicoSubId     String?                     // iyzico abonelik referansı
+
+  // Durum
+  isActive        Boolean   @default(true)
+  isFrozen        Boolean   @default(false)   // Ödeme alamadığında dondurulur
+  frozenAt        DateTime?
+  failedPayments  Int       @default(0)       // Ardışık başarısız ödeme sayısı
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // İlişkiler
+  settings          GlobalSettings?
+  admins            Admin[]
+  packages          PhotographyPackage[]
+  reservations      Reservation[]
+  users             User[]
+  portfolioCategories PortfolioCategory[]
+  banners           Banner[]
+  contentBlocks     ContentBlock[]
+  albumModels       AlbumModel[]
+  discountCodes     DiscountCode[]
+  monthlyPrices     MonthlyPriceConfig[]
+  notifications     AdminNotification[]
+}
+
+// ─── ADMIN ────────────────────────────────────────────────────────
 model Admin {
   id        String   @id @default(cuid())
   username  String   @unique
   password  String
+  tenantId  String?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
 }
 
+// ─── PAKETLER ─────────────────────────────────────────────────────
 model PhotographyPackage {
   id           String        @id @default(cuid())
   name         String
@@ -30,11 +76,16 @@ model PhotographyPackage {
   deliveryTimeDays Int           @default(14)
   postSelectionDays Int          @default(0)
   isActive     Boolean       @default(true)
+  tenantId     String?
+  tenant       Tenant?       @relation(fields: [tenantId], references: [id])
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   reservations Reservation[] @relation("PhotographyPackageToReservation")
+
+  @@index([tenantId])
 }
 
+// ─── REZERVASYON ──────────────────────────────────────────────────
 model Reservation {
   id             String               @id @default(cuid())
   brideName      String
@@ -52,11 +103,13 @@ model Reservation {
   paidAmount     String?
   selectedAddons     Json?
   customFieldAnswers Json?
-  paymentPreference  String?            // CASH or CARD
+  paymentPreference  String?
   notes              String?
   venueName          String?
   paymentLogs        Json?
   contractApproved   Boolean              @default(true)
+  tenantId       String?
+  tenant         Tenant?              @relation(fields: [tenantId], references: [id])
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
   userId         String?
@@ -71,18 +124,22 @@ model Reservation {
   albumModelId   String?
   albumModel     AlbumModel?          @relation(fields: [albumModelId], references: [id])
   payments       Payment[]
+
+  @@index([tenantId])
 }
 
+// ─── ÖDEME ────────────────────────────────────────────────────────
 model Payment {
   id            String      @id @default(cuid())
   reservationId String
   amount        Float
-  method        String      // CASH, BANK_TRANSFER, CREDIT_CARD, ONLINE
+  method        String
   note          String?
   createdAt     DateTime    @default(now())
   reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 }
 
+// ─── KULLANICI (Müşteri) ──────────────────────────────────────────
 model User {
   id            String        @id @default(cuid())
   name          String?
@@ -94,14 +151,19 @@ model User {
   age           Int?
   phone         String?
   role          String        @default("MEMBER")
+  tenantId      String?
+  tenant        Tenant?       @relation(fields: [tenantId], references: [id])
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   accounts      Account[]
   purchases     Purchase[]
   reservations  Reservation[]
   sessions      Session[]
+
+  @@index([tenantId])
 }
 
+// ─── SATIN ALMA ───────────────────────────────────────────────────
 model Purchase {
   id           String   @id @default(cuid())
   userId       String
@@ -113,6 +175,7 @@ model Purchase {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// ─── AUTH ─────────────────────────────────────────────────────────
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -139,6 +202,7 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// ─── FOTOĞRAF GALERİ ──────────────────────────────────────────────
 model PhotoGallery {
   id              String      @id @default(cuid())
   reservationId   String      @unique
@@ -155,38 +219,52 @@ model Photo {
   galleryId    String
   gallery      PhotoGallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
   photoNumber  Int
-  originalName String?      // Changed from photoNumber implicitly, or adding it alongside. Let me re-read plan. "Orijinal isim alanı ekle". We can keep photoNumber if needed for sorting, but add originalName.
+  originalName String?
   url          String
   isSelected   Boolean      @default(false)
   createdAt    DateTime     @default(now())
 }
 
+// ─── ADMİN BİLDİRİMLERİ ──────────────────────────────────────────
 model AdminNotification {
   id        String   @id @default(cuid())
   message   String
-  type      String   @default("INFO") // SELECTION_DONE, REMINDER vb.
+  type      String   @default("INFO")
   isRead    Boolean  @default(false)
+  tenantId  String?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
   createdAt DateTime @default(now())
+
+  @@index([tenantId])
 }
 
+// ─── ALBÜM MODELLERİ ─────────────────────────────────────────────
 model AlbumModel {
   id          String        @id @default(cuid())
   name        String
   description String?
   imageUrl    String
   isActive    Boolean       @default(true)
+  tenantId    String?
+  tenant      Tenant?       @relation(fields: [tenantId], references: [id])
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  
   reservations Reservation[]
+
+  @@index([tenantId])
 }
 
+// ─── PORTFOLYO ────────────────────────────────────────────────────
 model PortfolioCategory {
   id        String           @id @default(cuid())
   name      String
   slug      String           @unique
+  tenantId  String?
+  tenant    Tenant?          @relation(fields: [tenantId], references: [id])
   createdAt DateTime         @default(now())
   photos    PortfolioPhoto[]
+
+  @@index([tenantId])
 }
 
 model PortfolioPhoto {
@@ -198,79 +276,112 @@ model PortfolioPhoto {
   createdAt   DateTime          @default(now())
 }
 
+// ─── FİYATLANDIRMA ───────────────────────────────────────────────
 model MonthlyPriceConfig {
   id                 String   @id @default(cuid())
-  category           String   // DIŞ ÇEKİM, DÜĞÜN, NİŞAN gibi
-  month              Int      // 1-12
-  year               Int      // 2024, 2025 vb.
-  minPrice           Int?     // Opsiyonel taban fiyat
-  discountPercentage Int      @default(0) // -10: %10 indirim, 10: %10 zam
+  category           String
+  month              Int
+  year               Int
+  minPrice           Int?
+  discountPercentage Int      @default(0)
+  tenantId           String?
+  tenant             Tenant?  @relation(fields: [tenantId], references: [id])
   updatedAt          DateTime @updatedAt
 
-  @@unique([category, month, year])
+  @@unique([category, month, year, tenantId])
+  @@index([tenantId])
 }
 
+// ─── GENEL AYARLAR ────────────────────────────────────────────────
 model GlobalSettings {
   id           String   @id @default("global-settings")
+  tenantId     String?  @unique
+  tenant       Tenant?  @relation(fields: [tenantId], references: [id])
+
+  // İşletme bilgileri (YENİ)
+  businessName    String   @default("Studio")
+  logoUrl         String?
+  faviconUrl      String?
+  footerTagline   String   @default("Hayatınızın en özel anlarını ölümsüzleştiriyoruz.")
+  seoTitle        String?
+  seoDescription  String?
+  accentColor     String   @default("#ffffff")
+  fontFamily      String   @default("geist")
+
+  // Mevcut alanlar
   heroTitle    String   @default("Anları Sanata Dönüştürüyoruz")
   heroSubtitle String   @default("Premium Photography Service")
-  address      String   @default("Moda, Kadıköy / İstanbul")
-  phone        String   @default("+90 555 000 00 00")
-  email        String   @default("hello@pinowed.com")
+  address      String   @default("")
+  phone        String   @default("")
+  email        String   @default("")
   instagram    String   @default("")
   whatsapp     String   @default("")
   cashPromoText String  @default("")
   heroBgType   String   @default("video")
   heroBgUrl    String   @default("/assets/hero.mp4")
   heroBgColor  String   @default("#000000")
-  // Sözleşme
   contractText String   @default("")
+
   // Bildirim kanalları
   emailEnabled Boolean  @default(true)
   smsEnabled   Boolean  @default(false)
-  // Resend API (E-posta)
   resendApiKey    String @default("")
-  // Netgsm API (SMS)
   netgsmUsercode  String @default("")
   netgsmPassword  String @default("")
   netgsmMsgHeader String @default("")
-  // Bildirim tercihleri (hangileri gönderilsin)
   notifyReservation  Boolean @default(true)
   notifyPayment      Boolean @default(true)
   notifyReminder     Boolean @default(true)
   notifyPhotosReady  Boolean @default(true)
   googleMapsUrl  String   @default("")
-  // AI Chatbot
   chatbotEnabled      Boolean @default(true)
   chatbotInstructions String  @default("")
+
+  // Ödeme ayarları (YENİ — fotoğrafçının kendi müşterilerinden ödeme alması)
+  paymentMode     String   @default("cash")   // cash, card, both
+  paytrMerchantId String   @default("")
+  paytrApiKey     String   @default("")
+  paytrSecretKey  String   @default("")
+
   updatedAt    DateTime @updatedAt
 }
 
+// ─── İNDİRİM KODLARI ─────────────────────────────────────────────
 model DiscountCode {
   id              String   @id @default(cuid())
   code            String   @unique
-  discountPercent Int      // e.g. 10 = %10
+  discountPercent Int
   isActive        Boolean  @default(true)
-  maxUses         Int      @default(0)   // 0 = unlimited
+  maxUses         Int      @default(0)
   usedCount       Int      @default(0)
   description     String?
+  tenantId        String?
+  tenant          Tenant?  @relation(fields: [tenantId], references: [id])
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  @@index([tenantId])
 }
 
+// ─── BANNER ───────────────────────────────────────────────────────
 model Banner {
   id        String   @id @default(cuid())
   imageUrl  String
-  mediaType String   @default("image") // "image" or "video"
+  mediaType String   @default("image")
   title     String?
   subtitle  String?
   link      String?
   order     Int      @default(0)
   isActive  Boolean  @default(true)
+  tenantId  String?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
 }
 
+// ─── İÇERİK BLOKLARI ─────────────────────────────────────────────
 model ContentBlock {
   id          String   @id @default(cuid())
   title       String?
@@ -278,6 +389,10 @@ model ContentBlock {
   imageUrls   String[]
   order       Int      @default(0)
   isActive    Boolean  @default(true)
+  tenantId    String?
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([tenantId])
 }
