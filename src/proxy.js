@@ -41,8 +41,7 @@ export async function proxy(req) {
     response.headers.set("x-tenant-slug", slug);
   }
 
-  // ─── PLATFORM PATHS (skip auth) ───────────────────────────────
-  if (pathname.startsWith("/platform") || pathname.startsWith("/superadmin/login")) {
+  if (pathname.startsWith("/onboarding") || pathname.startsWith("/super-admin") || pathname.startsWith("/suspended")) {
     return response;
   }
 
