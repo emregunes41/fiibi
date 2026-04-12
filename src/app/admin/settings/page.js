@@ -144,6 +144,8 @@ export default function SettingsPage() {
       <div style={{ display: "flex", gap: 0, marginBottom: 24, borderBottom: "1px solid rgba(255,255,255,0.08)", overflowX: "auto" }}>
         {[
           { id: "genel", label: "Genel" },
+          { id: "marka", label: "Marka" },
+          { id: "odeme", label: "Ödeme" },
           { id: "icerik", label: "İçerik" },
           { id: "bildirim", label: "Bildirimler" },
           { id: "sozlesme", label: "Sözleşme" },
@@ -1199,6 +1201,126 @@ export default function SettingsPage() {
           </button>
         </div>
       </div>}
+
+        {/* ═══ MARKA SEKME ═══ */}
+        {activeTab === "marka" && <div style={sectionCard}>
+          {sectionHeader(Palette, "Marka & Kimlik", "Logo, renkler ve yazı tipi ayarları.")}
+
+          {/* Logo */}
+          <div style={{ marginBottom: 20 }}>
+            <label style={label}>Logo</label>
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              {config.logoUrl ? (
+                <div style={{ width: 64, height: 64, border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                  <img src={config.logoUrl} alt="Logo" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                </div>
+              ) : (
+                <div style={{ width: 64, height: 64, border: "1px dashed rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <ImageIcon size={20} style={{ color: "rgba(255,255,255,0.2)" }} />
+                </div>
+              )}
+              <CldUploadWidget
+                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                options={{ maxFiles: 1, resourceType: "image", folder: "logos" }}
+                onSuccess={(result) => setConfig({ ...config, logoUrl: result.info.secure_url })}
+              >
+                {({ open }) => (
+                  <button type="button" onClick={() => open()} style={{
+                    padding: "8px 16px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
+                    color: "rgba(255,255,255,0.6)", fontSize: 12, fontWeight: 700, cursor: "pointer", borderRadius: 0,
+                    display: "flex", alignItems: "center", gap: 6
+                  }}>
+                    <Upload size={13} /> Yükle
+                  </button>
+                )}
+              </CldUploadWidget>
+              {config.logoUrl && (
+                <button type="button" onClick={() => setConfig({ ...config, logoUrl: "" })} style={{
+                  padding: "8px", background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer"
+                }}>
+                  <Trash2 size={14} />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* İşletme Adı */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={label}>İşletme Adı</label>
+            <input type="text" value={config.businessName || ""} onChange={e => setConfig({ ...config, businessName: e.target.value })} style={inp} placeholder="Studio" />
+          </div>
+
+          {/* Footer Slogan */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={label}>Footer Sloganı</label>
+            <input type="text" value={config.footerTagline || ""} onChange={e => setConfig({ ...config, footerTagline: e.target.value })} style={inp} placeholder="Hayatınızın en özel anlarını ölümsüzleştiriyoruz." />
+          </div>
+
+          {/* Accent Color */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={label}>Vurgu Rengi</label>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <input type="color" value={config.accentColor || "#ffffff"} onChange={e => setConfig({ ...config, accentColor: e.target.value })} style={{ width: 40, height: 40, border: "1px solid rgba(255,255,255,0.15)", background: "none", cursor: "pointer", padding: 2 }} />
+              <input type="text" value={config.accentColor || "#ffffff"} onChange={e => setConfig({ ...config, accentColor: e.target.value })} style={{ ...inp, maxWidth: 140 }} placeholder="#ffffff" />
+            </div>
+          </div>
+
+          {/* SEO */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={label}>SEO Başlık</label>
+            <input type="text" value={config.seoTitle || ""} onChange={e => setConfig({ ...config, seoTitle: e.target.value })} style={inp} placeholder="İşletme Adı | Profesyonel Fotoğrafçılık" />
+          </div>
+          <div>
+            <label style={label}>SEO Açıklama</label>
+            <textarea value={config.seoDescription || ""} onChange={e => setConfig({ ...config, seoDescription: e.target.value })} style={{ ...inp, minHeight: 70, resize: "vertical" }} placeholder="Profesyonel fotoğrafçılık hizmetleri..." />
+          </div>
+        </div>}
+
+        {/* ═══ ÖDEME SEKME ═══ */}
+        {activeTab === "odeme" && <div style={sectionCard}>
+          {sectionHeader(Banknote, "Ödeme Ayarları", "Müşterilerinizden online ödeme almak için API bilgilerinizi girin.")}
+
+          {/* Payment Mode */}
+          <div style={{ marginBottom: 24 }}>
+            <label style={label}>Ödeme Modu</label>
+            <div style={{ display: "flex", gap: 8 }}>
+              {[{ id: "cash", label: "Nakit / Havale" }, { id: "card", label: "Kredi Kartı" }, { id: "both", label: "Her İkisi" }].map(m => (
+                <button key={m.id} type="button" onClick={() => setConfig({ ...config, paymentMode: m.id })} style={{
+                  padding: "10px 18px", fontSize: 12, fontWeight: 700, cursor: "pointer", borderRadius: 0,
+                  border: config.paymentMode === m.id ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.1)",
+                  background: config.paymentMode === m.id ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.03)",
+                  color: config.paymentMode === m.id ? "#fff" : "rgba(255,255,255,0.4)",
+                }}>{m.label}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* PayTR Keys */}
+          {(config.paymentMode === "card" || config.paymentMode === "both") && <>
+            <div style={{ padding: "12px 16px", background: "rgba(255,200,0,0.05)", border: "1px solid rgba(255,200,0,0.15)", marginBottom: 20 }}>
+              <p style={{ fontSize: 12, color: "rgba(255,200,0,0.7)", margin: 0 }}>⚠️ PayTR hesabınızdan Merchant ID, API Key ve Secret Key bilgilerinizi girin. Bu bilgiler olmadan kredi kartı ödemesi alamazsınız.</p>
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <label style={label}>PayTR Merchant ID</label>
+              <input type="text" value={config.paytrMerchantId || ""} onChange={e => setConfig({ ...config, paytrMerchantId: e.target.value })} style={inp} placeholder="123456" />
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <label style={label}>PayTR API Key</label>
+              <input type="text" value={config.paytrApiKey || ""} onChange={e => setConfig({ ...config, paytrApiKey: e.target.value })} style={inp} placeholder="PayTR API anahtarınız" />
+            </div>
+            <div>
+              <label style={label}>PayTR Secret Key</label>
+              <input type="password" value={config.paytrSecretKey || ""} onChange={e => setConfig({ ...config, paytrSecretKey: e.target.value })} style={inp} placeholder="••••••••" />
+            </div>
+          </>}
+
+          {config.paymentMode === "cash" && (
+            <div style={{ padding: "20px", textAlign: "center", color: "rgba(255,255,255,0.3)", fontSize: 13 }}>
+              Müşterileriniz nakit veya havale ile ödeme yapacak. Online ödeme almak için modunu değiştirin.
+            </div>
+          )}
+        </div>}
+
     </div>
   );
 }

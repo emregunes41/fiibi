@@ -5,6 +5,8 @@ import NotificationList from "../components/NotificationList";
 import { getCurrentTenant } from "@/lib/tenant";
 import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth";
+import { getSiteConfig } from "../core-actions";
+import DashboardClient from "./DashboardClient";
 
 async function getDashboardTenantId() {
   const tenant = await getCurrentTenant();
@@ -22,6 +24,13 @@ async function getDashboardTenantId() {
 
 export default async function AdminDashboard() {
   const tenantId = await getDashboardTenantId();
+
+  // Setup wizard kontrolü
+  const siteConfig = await getSiteConfig();
+  if (siteConfig && !siteConfig.setupCompleted) {
+    return <DashboardClient config={siteConfig} />;
+  }
+
   const tenantFilter = { tenantId };
 
   const totalPackages = await prisma.photographyPackage.count({ where: tenantFilter });

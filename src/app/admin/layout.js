@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, CalendarDays, LogOut, Book, Users, Image, Menu, X, Settings, Plus, Wallet } from "lucide-react";
+import { LayoutDashboard, Package, CalendarDays, LogOut, Book, Users, Image, Menu, X, Settings, Plus, Wallet, Crown } from "lucide-react";
 import { logoutAdmin } from "@/app/admin/actions";
 import { useState, useEffect } from "react";
 
@@ -29,6 +29,7 @@ export default function AdminLayout({ children }) {
     { name: "Portfolyo", href: "/admin/portfolio", icon: Image },
     { name: "Üyeler", href: "/admin/members", icon: Users },
     { name: "Ayarlar", href: "/admin/settings", icon: Settings },
+    { name: "Abonelik", href: "/admin/subscription", icon: Crown },
   ];
 
   const sidebarContent = (

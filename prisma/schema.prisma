@@ -343,6 +343,9 @@ model GlobalSettings {
   paytrApiKey     String   @default("")
   paytrSecretKey  String   @default("")
 
+  // Setup wizard
+  setupCompleted  Boolean  @default(false)
+
   updatedAt    DateTime @updatedAt
 }
 

@@ -936,10 +936,20 @@ export async function updateSiteConfig(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions, businessName, logoUrl, faviconUrl, footerTagline, seoTitle, seoDescription, accentColor, fontFamily, paymentMode, paytrMerchantId, paytrApiKey, paytrSecretKey } = data;
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions, businessName, logoUrl, faviconUrl, footerTagline, seoTitle, seoDescription, accentColor, fontFamily, paymentMode, paytrMerchantId, paytrApiKey, paytrSecretKey, setupCompleted } = data;
 
     // Tenant-aware: mevcut tenant'ın settings ID'sini bul
-    const tenant = await getCurrentTenant();
+    let tenant = await getCurrentTenant();
+    if (!tenant) {
+      try {
+        const cookieStore = await cookies();
+        const adminToken = cookieStore.get("admin_token")?.value;
+        if (adminToken) {
+          const payload = await verifyAuth(adminToken);
+          if (payload?.tenantId) tenant = await prisma.tenant.findUnique({ where: { id: payload.tenantId } });
+        }
+      } catch (e) {}
+    }
     let settingsId = "global-settings";
     if (tenant) {
       const existing = await prisma.globalSettings.findFirst({ where: { tenantId: tenant.id } });
@@ -987,6 +997,7 @@ export async function updateSiteConfig(data) {
         paytrMerchantId: paytrMerchantId || "",
         paytrApiKey: paytrApiKey || "",
         paytrSecretKey: paytrSecretKey || "",
+        ...(setupCompleted !== undefined ? { setupCompleted } : {}),
       }
     });
     revalidatePath('/');
