@@ -5,23 +5,48 @@ import { signToken } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
+import { getTenantSlug, getTenantBySlug } from "@/lib/tenant";
 
 export async function loginAdmin(username, password) {
   try {
-    // 1. Find Admin
-    let admin = await prisma.admin.findUnique({
-      where: { username },
-    });
+    const slug = await getTenantSlug();
+    let tenantId = null;
 
-    // Setup override for first time login if no admins exist
-    if (!admin && username === 'pinowed_admin') {
-      const allAdmins = await prisma.admin.count();
-      if (allAdmins === 0) {
-        // Create first admin
-        const hashedPassword = await bcrypt.hash(password, 10);
-        admin = await prisma.admin.create({
-          data: { username, password: hashedPassword }
-        });
+    // Tenant varsa, o tenant'ın admin'ini kontrol et
+    if (slug) {
+      const tenant = await getTenantBySlug(slug);
+      if (!tenant) return { error: "Stüdyo bulunamadı." };
+      if (tenant.isFrozen) return { error: "Bu hesap askıya alınmıştır." };
+      if (!tenant.isActive) return { error: "Bu hesap devre dışıdır." };
+      tenantId = tenant.id;
+    }
+
+    // Admin'i bul
+    let admin;
+    if (tenantId) {
+      // Tenant-scoped admin arama
+      admin = await prisma.admin.findFirst({
+        where: { username, tenantId }
+      });
+    } else {
+      // Legacy: slug yoksa global arama
+      admin = await prisma.admin.findUnique({
+        where: { username }
+      });
+    }
+
+    // İlk kurulum: tenant varsa ama admin yoksa, tenant sahibinin şifresini kontrol et
+    if (!admin && tenantId) {
+      const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
+      if (tenant && username === `${slug}_admin`) {
+        const isOwnerPassword = await bcrypt.compare(password, tenant.password);
+        if (isOwnerPassword) {
+          // Admin henüz oluşturulmamışsa oluştur
+          const hashedPassword = await bcrypt.hash(password, 10);
+          admin = await prisma.admin.create({
+            data: { username, password: hashedPassword, tenantId }
+          });
+        }
       }
     }
 
@@ -29,26 +54,28 @@ export async function loginAdmin(username, password) {
       return { error: "Kullanıcı adı veya şifre hatalı." };
     }
 
-    // 2. Verify password
+    // Şifre kontrolü
     const isValid = await bcrypt.compare(password, admin.password);
     if (!isValid) {
       return { error: "Kullanıcı adı veya şifre hatalı." };
     }
 
-    // 3. Create Session JWT
-    const token = await signToken({ adminId: admin.id, username: admin.username });
+    // Session JWT
+    const token = await signToken({
+      adminId: admin.id,
+      username: admin.username,
+      tenantId: admin.tenantId || null,
+    });
     
-    // 4. Set HttpOnly Cookie
     const cookieStore = await cookies();
     cookieStore.set("admin_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24, // 24 hours
+      maxAge: 60 * 60 * 24,
       path: "/",
     });
 
-    // Do NOT return redirect inside try/catch if it causes issues, but Next.js expects it to throw
   } catch (error) {
     console.error("Login Error:", error);
     return { error: `Sistem hatası: ${error.message}` };
