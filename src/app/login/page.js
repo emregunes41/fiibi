@@ -79,7 +79,7 @@ export default function LoginPage() {
               {/* Login Form */}
               <div style={{ textAlign: "center", marginBottom: 32 }}>
                 <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 8 }}>Giriş Yap</h1>
-                <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>Pinowed hesabınıza giriş yapın</p>
+                <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>Hesabınıza giriş yapın</p>
               </div>
 
               <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 16 }}>

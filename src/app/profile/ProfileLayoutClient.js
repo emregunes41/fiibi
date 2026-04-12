@@ -31,7 +31,7 @@ export default function ProfileLayoutClient({ user, children }) {
           {/* Left: Logo */}
           <Link href="/" style={{ textDecoration: "none", color: "inherit", fontWeight: 800, fontSize: "0.9rem", letterSpacing: "-0.02em", display: "flex", alignItems: "center", gap: 8 }}>
             <Home size={14} style={{ color: "rgba(255,255,255,0.4)" }} />
-            PINOWED
+            STUDIO
           </Link>
 
           {/* Center: Nav Items */}

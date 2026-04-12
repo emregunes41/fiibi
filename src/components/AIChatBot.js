@@ -165,7 +165,7 @@ export default function AIChatBot() {
                   <MessageCircle size={15} style={{ color: "#fff" }} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>Pinowed</div>
+                  <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>Asistan</div>
                   <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", gap: 4 }}>
                     <div style={{ width: 5, height: 5, borderRadius: 0, background: "#fff" }} />
                     Çevrimiçi

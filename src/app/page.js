@@ -138,10 +138,10 @@ export default async function PinowedPage() {
             {/* Left — Brand */}
             <div className="md:col-span-5">
               <h3 className="font-serif text-4xl md:text-5xl tracking-tight text-white mb-4" style={{ lineHeight: 1.1 }}>
-                Pinowed<span className="text-white/20">.</span>
+                {siteConfig?.businessName || "Studio"}<span className="text-white/20">.</span>
               </h3>
               <p className="text-white/25 text-[13px] leading-relaxed max-w-[280px]">
-                Hayatınızın en özel anlarını, sanatsal bir dokunuşla ölümsüzleştiriyoruz.
+                {siteConfig?.footerTagline || "Hayatınızın en özel anlarını, sanatsal bir dokunuşla ölümsüzleştiriyoruz."}
               </p>
             </div>
 
@@ -216,8 +216,8 @@ export default async function PinowedPage() {
         {/* Copyright Bar */}
         <div className="border-t border-white/[0.04]">
           <div className="section-container py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <span className="text-[10px] text-white/20 uppercase tracking-[0.2em]">© 2026 Pinowed Studio</span>
-            <span className="text-[10px] text-white/10 tracking-wider">pinowed.com</span>
+            <span className="text-[10px] text-white/20 uppercase tracking-[0.2em]">© {new Date().getFullYear()} {siteConfig?.businessName || "Studio"}</span>
+            <span className="text-[10px] text-white/10 tracking-wider">{siteConfig?._tenant?.slug ? `${siteConfig._tenant.slug}.${process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || 'photoapp.co'}` : ''}</span>
           </div>
         </div>
       </footer>

@@ -6,7 +6,7 @@ import { User, UserCircle, Menu, X as CloseIcon, ShoppingBag } from "lucide-reac
 import { useState, useEffect } from "react";
 import { useCart } from "./CartContext";
 
-export default function Navbar() {
+export default function Navbar({ businessName = "Studio", logoUrl = null }) {
   const pathname = usePathname();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -88,13 +88,17 @@ export default function Navbar() {
                 }}
                 className="group-hover:rotate-12"
               >
-                P
+                {logoUrl ? (
+                  <img src={logoUrl} alt={businessName} style={{ width: 40, height: 40, objectFit: 'contain' }} />
+                ) : (
+                  businessName?.charAt(0)?.toUpperCase() || "S"
+                )}
               </div>
               <span
                 className="hidden sm:block"
                 style={{ fontFamily: "serif", fontSize: 24, letterSpacing: "0.2em", color: "#fff", textTransform: "uppercase" }}
               >
-                Pinowed
+                {businessName}
               </span>
             </Link>
           </div>

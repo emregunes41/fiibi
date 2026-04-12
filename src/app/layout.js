@@ -16,10 +16,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "Pinowed Photography | Profesyonel Düğün ve Dış Çekim",
-  description: "Anılarınızı ölümsüzleştiren profesyonel fotoğrafçılık hizmetleri. Düğün hikayesi, dış çekim ve daha fazlası.",
-};
+export async function generateMetadata() {
+  const siteConfig = await getSiteConfig();
+  const businessName = siteConfig?.businessName || "Studio";
+  const seoTitle = siteConfig?.seoTitle || `${businessName} | Profesyonel Fotoğrafçılık`;
+  const seoDescription = siteConfig?.seoDescription || "Profesyonel fotoğrafçılık hizmetleri.";
+  
+  return {
+    title: seoTitle,
+    description: seoDescription,
+  };
+}
 
 export default async function RootLayout({ children }) {
   const siteConfig = await getSiteConfig();
@@ -38,7 +45,7 @@ export default async function RootLayout({ children }) {
         />
 
         <CartWrapper>
-          <Navbar />
+          <Navbar businessName={siteConfig?.businessName || "Studio"} logoUrl={siteConfig?.logoUrl} />
           {children}
           {/* Global Mobile Bottom Spacer for Floating CTA */}
           <div className="md:hidden h-32 shrink-0 w-full" />
@@ -47,4 +54,3 @@ export default async function RootLayout({ children }) {
     </html>
   );
 }
-
