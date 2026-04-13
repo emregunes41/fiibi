@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import GalleryClient from "@/app/gallery/GalleryClient";
+import BannerCarousel from "@/components/BannerCarousel";
+import ContentBlockCarousel from "@/components/ContentBlockCarousel";
 
 export default function BoldTheme({ siteConfig, categories, packages, banners, contentBlocks, preloadUrls, FooterSection }) {
   const accent = siteConfig?.accentColor || "#fff";
@@ -18,12 +20,9 @@ export default function BoldTheme({ siteConfig, categories, packages, banners, c
           {lines.map((line, i) => (
             <h1 key={i} style={{
               fontSize: "clamp(3.5rem, 12vw, 10rem)",
-              fontWeight: 900,
-              letterSpacing: "-0.05em",
-              lineHeight: 0.95,
+              fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 0.95,
               color: i === 0 ? "#fff" : "rgba(255,255,255,0.15)",
-              margin: 0,
-              textTransform: "uppercase",
+              margin: 0, textTransform: "uppercase",
             }}>
               {line}
             </h1>
@@ -41,7 +40,6 @@ export default function BoldTheme({ siteConfig, categories, packages, banners, c
             border: `1px solid ${accent}`, color: accent,
             fontSize: 11, fontWeight: 700, textDecoration: "none",
             letterSpacing: "0.2em", textTransform: "uppercase",
-            transition: "all 0.3s"
           }}>
             Randevu Al
           </Link>
@@ -64,8 +62,40 @@ export default function BoldTheme({ siteConfig, categories, packages, banners, c
         </div>
       </section>
 
+      {/* Banner Carousel */}
+      {banners && banners.length > 0 && (
+        <section className="py-12 pb-8 border-t border-white/5">
+          <div className="section-container">
+            <BannerCarousel banners={banners} />
+          </div>
+        </section>
+      )}
+
+      {/* Content Blocks */}
+      {contentBlocks && contentBlocks.filter(b => b.isActive).length > 0 && (
+        <section style={{ paddingTop: 20, paddingBottom: 40, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          <div className="section-container">
+            <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+              {contentBlocks.filter(b => b.isActive).map((block, idx) => (
+                <div key={block.id} style={{ display: "flex", flexDirection: idx % 2 === 0 ? "row" : "row-reverse", gap: "2.5rem", alignItems: "center", flexWrap: "wrap" }}>
+                  {block.imageUrls && block.imageUrls.length > 0 && (
+                    <div style={{ flex: "1 1 300px", minWidth: 0 }}><ContentBlockCarousel images={block.imageUrls} /></div>
+                  )}
+                  {(block.title || block.description) && (
+                    <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+                      {block.title && <h3 style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.02em", color: "#fff", margin: "0 0 1rem", lineHeight: 1.2 }}>{block.title}</h3>}
+                      {block.description && <p style={{ fontSize: "0.9rem", lineHeight: 1.8, color: "rgba(255,255,255,0.45)", margin: 0, whiteSpace: "pre-line" }}>{block.description}</p>}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Portfolyo */}
-      <section id="portfolio" style={{ padding: "100px 5vw", }}>
+      <section id="portfolio" style={{ padding: "100px 5vw" }}>
         <div style={{ marginBottom: 64 }}>
           <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.2)", display: "block", marginBottom: 12 }}>Portfolio</span>
           <h2 style={{ fontSize: "clamp(2rem, 5vw, 4rem)", fontWeight: 900, letterSpacing: "-0.04em", textTransform: "uppercase" }}>Çalışmalar</h2>

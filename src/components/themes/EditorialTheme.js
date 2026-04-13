@@ -3,7 +3,9 @@
 import Link from "next/link";
 import GalleryClient from "@/app/gallery/GalleryClient";
 import Image from "next/image";
-import { optimizeCloudinaryUrl, thumbnailUrl } from "@/lib/image-utils";
+import { optimizeCloudinaryUrl } from "@/lib/image-utils";
+import BannerCarousel from "@/components/BannerCarousel";
+import ContentBlockCarousel from "@/components/ContentBlockCarousel";
 
 export default function EditorialTheme({ siteConfig, categories, packages, banners, contentBlocks, preloadUrls, FooterSection }) {
   const accent = siteConfig?.accentColor || "#fff";
@@ -17,7 +19,6 @@ export default function EditorialTheme({ siteConfig, categories, packages, banne
 
       {/* Editorial Hero — sol metin, sağ görsel */}
       <section style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
-        {/* Sol — metin */}
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "80px 5vw 80px 5vw" }}>
           <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.3)", marginBottom: 20 }}>
             {siteConfig?.heroSubtitle || "Photography Studio"}
@@ -37,23 +38,47 @@ export default function EditorialTheme({ siteConfig, categories, packages, banne
             </Link>
           </div>
         </div>
-
-        {/* Sağ — görsel */}
         <div style={{ position: "relative", overflow: "hidden" }}>
           {coverUrl ? (
-            <Image
-              src={optimizeCloudinaryUrl(coverUrl, 1200)}
-              alt="Hero"
-              fill
-              style={{ objectFit: "cover" }}
-              priority
-            />
+            <Image src={optimizeCloudinaryUrl(coverUrl, 1200)} alt="Hero" fill style={{ objectFit: "cover" }} priority />
           ) : (
             <div style={{ width: "100%", height: "100%", background: "rgba(255,255,255,0.03)" }} />
           )}
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 30%)" }} />
         </div>
       </section>
+
+      {/* Banner Carousel */}
+      {banners && banners.length > 0 && (
+        <section className="py-12 pb-8 border-t border-white/5">
+          <div className="section-container">
+            <BannerCarousel banners={banners} />
+          </div>
+        </section>
+      )}
+
+      {/* Content Blocks */}
+      {contentBlocks && contentBlocks.filter(b => b.isActive).length > 0 && (
+        <section style={{ paddingTop: 20, paddingBottom: 40, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          <div className="section-container">
+            <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+              {contentBlocks.filter(b => b.isActive).map((block, idx) => (
+                <div key={block.id} style={{ display: "flex", flexDirection: idx % 2 === 0 ? "row" : "row-reverse", gap: "2.5rem", alignItems: "center", flexWrap: "wrap" }}>
+                  {block.imageUrls && block.imageUrls.length > 0 && (
+                    <div style={{ flex: "1 1 300px", minWidth: 0 }}><ContentBlockCarousel images={block.imageUrls} /></div>
+                  )}
+                  {(block.title || block.description) && (
+                    <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+                      {block.title && <h3 style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.02em", color: "#fff", margin: "0 0 1rem", lineHeight: 1.2 }}>{block.title}</h3>}
+                      {block.description && <p style={{ fontSize: "0.9rem", lineHeight: 1.8, color: "rgba(255,255,255,0.45)", margin: 0, whiteSpace: "pre-line" }}>{block.description}</p>}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Portfolyo */}
       <section id="portfolio" style={{ padding: "80px 5vw", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
