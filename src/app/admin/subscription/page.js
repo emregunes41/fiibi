@@ -3,60 +3,54 @@
 import { useState, useEffect } from "react";
 import { Crown, Clock, Zap, Check, Shield, Star, Infinity } from "lucide-react";
 
-const PLANS = [
-  {
-    id: "monthly",
-    name: "Aylık",
-    price: 2499,
-    period: "/ay",
-    color: "#8b5cf6",
-    popular: false,
-    savings: null,
-    features: [
-      "Tüm özellikler aktif",
-      "Sınırsız rezervasyon",
-      "Portfolyo yönetimi",
-      "E-posta & SMS bildirimleri",
-      "Online ödeme entegrasyonu",
-      "Destek",
-    ],
-  },
-  {
-    id: "yearly",
-    name: "Yıllık",
-    price: 24999,
-    period: "/yıl",
-    monthlyEquiv: Math.round(24999 / 12),
-    color: "#f59e0b",
-    popular: true,
-    savings: Math.round(100 - (24999 / (2499 * 12)) * 100),
-    features: [
-      "Tüm aylık özellikler",
-      "Custom domain desteği",
-      "Öncelikli destek",
-      "AI Chatbot",
-      "Gelişmiş analitik",
-      "Yıllık fatura ile tasarruf",
-    ],
-  },
-  {
-    id: "lifetime",
-    name: "Ömürlük",
-    price: 69500,
-    period: "tek seferlik",
-    color: "#4ade80",
-    popular: false,
-    savings: null,
-    features: [
-      "Tüm yıllık özellikler",
-      "Ömür boyu erişim",
-      "Tüm gelecek güncellemeler",
-      "VIP destek",
-      "Sınırsız kullanım süresi",
-      "Abonelik derdi yok",
-    ],
-  },
-];
+const PLAN_FEATURES = {
+  monthly: [
+    "Tüm özellikler aktif",
+    "Sınırsız rezervasyon",
+    "Portfolyo yönetimi",
+    "E-posta & SMS bildirimleri",
+    "Online ödeme entegrasyonu",
+    "Destek",
+  ],
+  yearly: [
+    "Tüm aylık özellikler",
+    "Custom domain desteği",
+    "Öncelikli destek",
+    "AI Chatbot",
+    "Gelişmiş analitik",
+    "Yıllık fatura ile tasarruf",
+  ],
+  lifetime: [
+    "Tüm yıllık özellikler",
+    "Ömür boyu erişim",
+    "Tüm gelecek güncellemeler",
+    "VIP destek",
+    "Sınırsız kullanım süresi",
+    "Abonelik derdi yok",
+  ],
+};
+
+function buildPlans(prices) {
+  return [
+    {
+      id: "monthly", name: "Aylık", price: prices.monthly,
+      period: "/ay", color: "#8b5cf6", popular: false, savings: null,
+      features: PLAN_FEATURES.monthly,
+    },
+    {
+      id: "yearly", name: "Yıllık", price: prices.yearly,
+      period: "/yıl", monthlyEquiv: Math.round(prices.yearly / 12),
+      color: "#f59e0b", popular: true,
+      savings: Math.round(100 - (prices.yearly / (prices.monthly * 12)) * 100),
+      features: PLAN_FEATURES.yearly,
+    },
+    {
+      id: "lifetime", name: "Ömürlük", price: prices.lifetime,
+      period: "tek seferlik", color: "#4ade80", popular: false, savings: null,
+      features: PLAN_FEATURES.lifetime,
+    },
+  ];
+}
 
 const PLAN_DETAILS = {
   trial: { name: "Deneme", color: "#38bdf8" },
@@ -65,16 +59,25 @@ const PLAN_DETAILS = {
 
 export default function SubscriptionPage() {
   const [tenantInfo, setTenantInfo] = useState(null);
+  const [plans, setPlans] = useState(buildPlans({ monthly: 2499, yearly: 24999, lifetime: 69500 }));
   const [loading, setLoading] = useState(true);
   const [selectedPlan, setSelectedPlan] = useState(null);
 
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/auth/session");
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        setTenantInfo(data.tenant || null);
+        const [sessionRes, pricingRes] = await Promise.all([
+          fetch("/api/auth/session"),
+          fetch("/api/pricing"),
+        ]);
+        if (sessionRes.ok) {
+          const data = await sessionRes.json();
+          setTenantInfo(data.tenant || null);
+        }
+        if (pricingRes.ok) {
+          const prices = await pricingRes.json();
+          setPlans(buildPlans(prices));
+        }
       } catch (e) {}
       setLoading(false);
     }
@@ -136,7 +139,7 @@ export default function SubscriptionPage() {
 
       {/* Plans Grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
-        {PLANS.map((p) => (
+        {plans.map((p) => (
           <div key={p.id} style={{
             background: selectedPlan === p.id ? `${p.color}08` : "rgba(255,255,255,0.02)",
             border: selectedPlan === p.id ? `2px solid ${p.color}40` : p.popular ? `2px solid ${p.color}25` : "1px solid rgba(255,255,255,0.06)",

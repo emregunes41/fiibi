@@ -414,3 +414,11 @@ model PageView {
   @@index([tenantId])
   @@index([date])
 }
+
+// ─── PLATFORM AYARLARI (Super Admin) ──────────────────────────────
+model PlatformConfig {
+  id        String   @id @default("main")
+  pricing   Json     @default("{}")   // { monthly: 2499, yearly: 24999, lifetime: 69500 }
+  config    Json     @default("{}")   // Ek platform ayarları
+  updatedAt DateTime @updatedAt
+}

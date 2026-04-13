@@ -4,11 +4,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Shield, Users, Building2, CreditCard, Snowflake, Trash2,
-  RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check, BarChart, Database, Cloud, Mail, HardDrive, Image, Zap
+  RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check, BarChart, Database, Cloud, Mail, HardDrive, Image, Zap, DollarSign, Save
 } from "lucide-react";
 import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
-  changeTenantPlan, deleteTenant, superAdminLogout
+  changeTenantPlan, deleteTenant, superAdminLogout,
+  getPlatformPricing, updatePlatformPricing
 } from "@/app/actions/super-admin";
 import { getCloudinaryUsage, getDbUsage, getResendUsage, getVercelUsage } from "@/app/actions/platform-usage";
 
@@ -16,6 +17,8 @@ export default function SuperAdminClient() {
   const [tenants, setTenants] = useState([]);
   const [stats, setStats] = useState(null);
   const [usage, setUsage] = useState(null);
+  const [pricing, setPricing] = useState({ monthly: 2499, yearly: 24999, lifetime: 69500 });
+  const [pricingSaved, setPricingSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
   const router = useRouter();
@@ -24,13 +27,15 @@ export default function SuperAdminClient() {
 
   async function loadData() {
     setLoading(true);
-    const [t, s, cloudinary, db, resend, vercel] = await Promise.all([
+    const [t, s, cloudinary, db, resend, vercel, pr] = await Promise.all([
       getAllTenants(), getPlatformStats(),
-      getCloudinaryUsage(), getDbUsage(), getResendUsage(), getVercelUsage()
+      getCloudinaryUsage(), getDbUsage(), getResendUsage(), getVercelUsage(),
+      getPlatformPricing()
     ]);
     if (!t.error) setTenants(t);
     if (!s.error) setStats(s);
     setUsage({ cloudinary, db, resend, vercel });
+    if (!pr.error) setPricing(pr);
     setLoading(false);
   }
 
@@ -252,6 +257,59 @@ export default function SuperAdminClient() {
             </div>
           </div>
         )}
+
+        {/* Fiyatlandırma */}
+        <div style={{ marginBottom: 32 }}>
+          <h2 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+            <DollarSign size={15} style={{ color: "rgba(255,255,255,0.4)" }} />
+            Abonelik Fiyatları
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 12 }}>
+            {[
+              { key: "monthly", label: "Aylık", suffix: "₺/ay", color: "#8b5cf6" },
+              { key: "yearly", label: "Yıllık", suffix: "₺/yıl", color: "#f59e0b" },
+              { key: "lifetime", label: "Ömürlük", suffix: "₺", color: "#4ade80" },
+            ].map((p) => (
+              <div key={p.key} style={{
+                background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+                padding: "16px 18px"
+              }}>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  {p.label}
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <input
+                    type="number"
+                    value={pricing[p.key]}
+                    onChange={(e) => { setPricing({ ...pricing, [p.key]: e.target.value }); setPricingSaved(false); }}
+                    style={{
+                      background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+                      color: "#fff", padding: "8px 12px", width: "100%", fontSize: 18, fontWeight: 800,
+                      outline: "none"
+                    }}
+                  />
+                  <span style={{ fontSize: 12, color: p.color, whiteSpace: "nowrap", fontWeight: 600 }}>{p.suffix}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={async () => {
+              const res = await updatePlatformPricing(pricing);
+              if (res.success) { setPricingSaved(true); setTimeout(() => setPricingSaved(false), 3000); }
+            }}
+            style={{
+              background: pricingSaved ? "rgba(74,222,128,0.15)" : "rgba(255,255,255,0.06)",
+              border: pricingSaved ? "1px solid rgba(74,222,128,0.3)" : "1px solid rgba(255,255,255,0.1)",
+              color: pricingSaved ? "#4ade80" : "#fff",
+              padding: "10px 20px", fontSize: 12, fontWeight: 700, cursor: "pointer",
+              display: "flex", alignItems: "center", gap: 6, transition: "all 0.2s"
+            }}
+          >
+            {pricingSaved ? <Check size={14} /> : <Save size={14} />}
+            {pricingSaved ? "Kaydedildi!" : "Fiyatları Kaydet"}
+          </button>
+        </div>
 
         {/* Tenant List */}
         <div style={{ marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>

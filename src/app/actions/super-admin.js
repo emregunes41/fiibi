@@ -188,3 +188,39 @@ export async function deleteTenant(tenantId) {
 
   return { success: true };
 }
+
+/**
+ * Platform fiyatlandırma al
+ */
+export async function getPlatformPricing() {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  const config = await prisma.platformConfig.findUnique({ where: { id: "main" } });
+  
+  // Varsayılan fiyatlar
+  const defaults = { monthly: 2499, yearly: 24999, lifetime: 69500 };
+  
+  if (!config) return defaults;
+  
+  const pricing = typeof config.pricing === "string" ? JSON.parse(config.pricing) : config.pricing;
+  return { ...defaults, ...pricing };
+}
+
+/**
+ * Platform fiyatlandırma güncelle
+ */
+export async function updatePlatformPricing(pricing) {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  const { monthly, yearly, lifetime } = pricing;
+  if (!monthly || !yearly || !lifetime) return { error: "Tüm fiyatlar gerekli" };
+
+  await prisma.platformConfig.upsert({
+    where: { id: "main" },
+    update: { pricing: { monthly: Number(monthly), yearly: Number(yearly), lifetime: Number(lifetime) } },
+    create: { id: "main", pricing: { monthly: Number(monthly), yearly: Number(yearly), lifetime: Number(lifetime) } },
+  });
+
+  return { success: true };
+}
+
