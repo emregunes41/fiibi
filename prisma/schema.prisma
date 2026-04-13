@@ -20,6 +20,7 @@ model Tenant {
 
   // Abonelik
   plan            String    @default("trial") // trial, standard, pro
+  selectedPlan    String?                     // "monthly", "yearly", "lifetime" — deneme sonrası
   planExpiresAt   DateTime?
   iyzicoSubId     String?                     // iyzico abonelik referansı
 

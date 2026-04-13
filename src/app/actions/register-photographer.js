@@ -8,7 +8,7 @@ import bcrypt from "bcryptjs";
  */
 export async function registerPhotographer(data) {
   try {
-    const { businessName, ownerName, ownerEmail, ownerPhone, password, slug } = data;
+    const { businessName, ownerName, ownerEmail, ownerPhone, password, slug, selectedPlan } = data;
 
     // Validasyon
     if (!businessName || !ownerName || !ownerEmail || !password || !slug) {
@@ -53,7 +53,8 @@ export async function registerPhotographer(data) {
           ownerPhone: ownerPhone || null,
           password: hashedPassword,
           plan: "trial",
-          planExpiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 gün trial
+          selectedPlan: selectedPlan || "monthly", // Deneme sonrası geçilecek plan
+          planExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 gün trial
         }
       });
 
