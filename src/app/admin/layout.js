@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, CalendarDays, LogOut, Book, Users, Image, Menu, X, Settings, Plus, Wallet, Crown } from "lucide-react";
+import { LayoutDashboard, Package, CalendarDays, LogOut, Book, Users, Image, Menu, X, Settings, Plus, Wallet, Crown, AlertTriangle } from "lucide-react";
 import { logoutAdmin } from "@/app/admin/actions";
 import { useState, useEffect } from "react";
 
@@ -10,11 +10,16 @@ export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [brandName, setBrandName] = useState("STUDIO");
+  const [trialDays, setTrialDays] = useState(null);
 
   useEffect(() => {
     fetch("/api/auth/session").then(r => r.json()).then(data => {
       const name = data?.tenant?.businessName || "STUDIO";
       setBrandName(name.toUpperCase());
+      if (data?.tenant?.plan === "trial" && data?.tenant?.planExpiresAt) {
+        const days = Math.ceil((new Date(data.tenant.planExpiresAt) - new Date()) / (1000*60*60*24));
+        setTrialDays(Math.max(0, days));
+      }
     }).catch(() => {});
   }, []);
 
@@ -159,6 +164,23 @@ export default function AdminLayout({ children }) {
       }}>
         {/* Mobile top padding for the top bar */}
         <div className="md:hidden" style={{ height: "72px" }} />
+        {trialDays !== null && (
+          <Link href="/admin/subscription" style={{ textDecoration: "none" }}>
+            <div style={{
+              background: trialDays <= 2 ? "rgba(248,113,113,0.1)" : "rgba(250,204,21,0.08)",
+              borderBottom: `1px solid ${trialDays <= 2 ? "rgba(248,113,113,0.2)" : "rgba(250,204,21,0.15)"}`,
+              padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              fontSize: 13, fontWeight: 600, cursor: "pointer",
+              color: trialDays <= 2 ? "#f87171" : "#facc15"
+            }}>
+              <AlertTriangle size={14} />
+              {trialDays === 0
+                ? "Deneme süreniz doldu! Plan seçmek için tıklayın."
+                : `Deneme süreniz ${trialDays} gün sonra bitiyor. Plan seçin →`
+              }
+            </div>
+          </Link>
+        )}
         <div style={{ padding: "clamp(16px, 4vw, 56px)", maxWidth: "1200px", margin: "0 auto" }}>
           {children}
         </div>
