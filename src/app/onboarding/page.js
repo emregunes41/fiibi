@@ -80,7 +80,7 @@ export default function OnboardingPage() {
   // ─── Registration Flow ───
   if (showRegister) {
     return (
-      <div style={{ minHeight: "100vh", background: "#000", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 16px" }}>
+      <div style={{ minHeight: "100vh", background: "#0a0a0a", color: "#f5f5f5", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 16px" }}>
         <div style={{ width: "100%", maxWidth: step === 1 ? 720 : 480 }}>
 
           <button onClick={() => { if (step > 1) setStep(step - 1); else { setShowRegister(false); setStep(1); } }}
@@ -218,12 +218,12 @@ export default function OnboardingPage() {
 
   // ─── Landing Page ───
   return (
-    <div style={{ background: "#000", color: "#fff", minHeight: "100vh" }}>
+    <div style={{ background: "#0a0a0a", color: "#f5f5f5", minHeight: "100vh" }}>
 
       {/* Navbar */}
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        background: scrollY > 50 ? "rgba(0,0,0,0.95)" : "transparent",
+        background: scrollY > 50 ? "rgba(10,10,10,0.95)" : "transparent",
         backdropFilter: scrollY > 50 ? "blur(16px)" : "none",
         borderBottom: scrollY > 50 ? "1px solid rgba(255,255,255,0.05)" : "none",
         transition: "all 0.3s", padding: "0 24px"
@@ -247,14 +247,14 @@ export default function OnboardingPage() {
       {/* Hero */}
       <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "140px 24px 80px", maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ maxWidth: 620 }}>
-          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 24 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 24 }}>
             Fotoğrafçılar için iş yönetim platformu
           </div>
           <h1 style={{ fontSize: "clamp(38px, 5.5vw, 60px)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.08, marginBottom: 24 }}>
             Çekimlerinize<br />odaklanın,<br />
-            <span style={{ color: "rgba(255,255,255,0.35)" }}>gerisini biz halledelim.</span>
+            <span style={{ color: "rgba(255,255,255,0.45)" }}>gerisini biz halledelim.</span>
           </h1>
-          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.4)", lineHeight: 1.7, maxWidth: 440, marginBottom: 36 }}>
+          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: 440, marginBottom: 36 }}>
             Rezervasyon, ödeme takibi, müşteri yönetimi ve portfolyo sitesi — tek platformda. Kurulum 2 dakika.
           </p>
           <div style={{ display: "flex", gap: 12 }}>
@@ -272,7 +272,7 @@ export default function OnboardingPage() {
       </section>
 
       {/* Sayılar */}
-      <section style={{ borderTop: "1px solid rgba(255,255,255,0.05)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+      <section style={{ borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
           {[
             { val: "2 dk", label: "Kurulum süresi" },
@@ -291,7 +291,7 @@ export default function OnboardingPage() {
       {/* Nasıl Çalışır */}
       <section id="nasil" style={{ padding: "100px 24px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Başlamak çok kolay</div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Başlamak çok kolay</div>
           <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>Üç adımda hazır.</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 1, background: "rgba(255,255,255,0.05)" }}>
             {[
@@ -299,7 +299,7 @@ export default function OnboardingPage() {
               { num: "02", title: "Özelleştirin", desc: "Paketlerinizi ekleyin, fiyatlarınızı belirleyin, portfolyonuzu yükleyin." },
               { num: "03", title: "Yayına alın", desc: "Müşterileriniz online rezervasyon yapsın, siz sadece çekim yapın." },
             ].map((s, i) => (
-              <div key={i} style={{ background: "#000", padding: "36px 28px" }}>
+              <div key={i} style={{ background: "#0a0a0a", padding: "36px 28px" }}>
                 <div style={{ fontSize: 32, fontWeight: 800, color: "rgba(255,255,255,0.06)", marginBottom: 16, letterSpacing: "-0.03em" }}>{s.num}</div>
                 <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{s.title}</h3>
                 <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", lineHeight: 1.6, margin: 0 }}>{s.desc}</p>
@@ -312,7 +312,7 @@ export default function OnboardingPage() {
       {/* Özellikler */}
       <section style={{ padding: "60px 24px 100px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Özellikler</div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Özellikler</div>
           <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>İhtiyacınız olan her şey, tek yerde.</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
             {features.map((f, i) => (
@@ -321,7 +321,7 @@ export default function OnboardingPage() {
                   <f.icon size={16} style={{ color: "rgba(255,255,255,0.3)" }} />
                   <h3 style={{ fontSize: 15, fontWeight: 700, margin: 0 }}>{f.title}</h3>
                 </div>
-                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", lineHeight: 1.6, margin: 0, paddingLeft: 28 }}>{f.desc}</p>
+                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, margin: 0, paddingLeft: 28 }}>{f.desc}</p>
               </div>
             ))}
           </div>
@@ -331,7 +331,7 @@ export default function OnboardingPage() {
       {/* Sosyal Kanıt */}
       <section style={{ padding: "80px 24px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Kullanıcı Görüşleri</div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Kullanıcı Görüşleri</div>
           <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>Fotoğrafçılar ne diyor?</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
             {[
@@ -340,7 +340,7 @@ export default function OnboardingPage() {
               { name: "Selin A.", role: "Dış Çekim · İzmir", text: "Rezervasyon karmaşası bitti. Müşteri online seçip tarih alıyor, ben sadece çekime odaklanıyorum. Tam istediğim şeydi." },
             ].map((t, i) => (
               <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", padding: "28px 24px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, margin: "0 0 24px 0", fontStyle: "italic" }}>"{t.text}"</p>
+                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, margin: "0 0 24px 0", fontStyle: "italic" }}>"{t.text}"</p>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 700 }}>{t.name}</div>
                   <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{t.role}</div>
@@ -355,13 +355,13 @@ export default function OnboardingPage() {
       <section id="fiyat" style={{ padding: "80px 24px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Fiyatlandırma</div>
+            <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Fiyatlandırma</div>
             <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>Basit, şeffaf fiyatlar.</h2>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.35)" }}>Tüm planlar aynı özellikleri içerir. Fark yalnızca süre.</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 1, background: "rgba(255,255,255,0.05)" }}>
             {plans.map((p) => (
-              <div key={p.id} style={{ background: "#000", padding: "32px 24px", position: "relative", borderTop: p.popular ? "2px solid #fff" : "none" }}>
+              <div key={p.id} style={{ background: "#0a0a0a", padding: "32px 24px", position: "relative", borderTop: p.popular ? "2px solid #fff" : "none" }}>
                 {p.popular && <div style={{ position: "absolute", top: -1, right: 20, background: "#fff", color: "#000", fontSize: 9, fontWeight: 800, padding: "3px 10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Popüler</div>}
                 <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.4)", marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.06em" }}>{p.name}</div>
                 <div style={{ marginBottom: 4 }}>
@@ -384,7 +384,7 @@ export default function OnboardingPage() {
       {/* SSS */}
       <section id="sss" style={{ padding: "80px 24px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Sıkça Sorulan Sorular</div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Sıkça Sorulan Sorular</div>
           <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 36 }}>Merak edilenler.</h2>
           {[
             { q: "Ücretsiz deneme nasıl çalışıyor?", a: "Kayıt olduktan sonra 7 gün boyunca tüm özellikleri ücretsiz kullanabilirsiniz. Kredi kartı gerekmez. 7 gün sonunda ödeme yapmazsanız hesabınız dondurulur, verileriniz silinmez." },
@@ -424,7 +424,7 @@ export default function OnboardingPage() {
               <Camera size={16} style={{ color: "rgba(255,255,255,0.4)" }} />
               <span style={{ fontWeight: 700, fontSize: 14 }}>photostudio</span>
             </div>
-            <p style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", lineHeight: 1.6, maxWidth: 240 }}>Fotoğrafçılar için profesyonel iş yönetim platformu.</p>
+            <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", lineHeight: 1.6, maxWidth: 240 }}>Fotoğrafçılar için profesyonel iş yönetim platformu.</p>
           </div>
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Platform</div>
