@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Camera, ArrowRight, Check, Sparkles, Globe, Zap, BarChart3, Calendar, Shield, Users, CreditCard, ChevronDown, Star, Palette, Infinity, Lock } from "lucide-react";
+import { Camera, ArrowRight, Check, Sparkles, Globe, Zap, BarChart3, Calendar, Shield, Users, CreditCard, ChevronDown, Star, Palette, Infinity } from "lucide-react";
 import { registerPhotographer } from "../actions/register-photographer";
 
 function buildPlans(prices) {
@@ -29,10 +29,6 @@ export default function OnboardingPage() {
     password: "",
     slug: "",
     selectedPlan: "",
-    cardNumber: "",
-    cardExpiry: "",
-    cardCvc: "",
-    cardName: "",
   });
 
   useEffect(() => {
@@ -53,17 +49,6 @@ export default function OnboardingPage() {
       .replace(/^-|-$/g, '')
       .slice(0, 30);
     setForm(prev => ({ ...prev, businessName: value, slug }));
-  }
-
-  function formatCardNumber(val) {
-    const digits = val.replace(/\D/g, '').slice(0, 16);
-    return digits.replace(/(\d{4})(?=\d)/g, '$1 ');
-  }
-
-  function formatExpiry(val) {
-    const digits = val.replace(/\D/g, '').slice(0, 4);
-    if (digits.length >= 3) return digits.slice(0, 2) + '/' + digits.slice(2);
-    return digits;
   }
 
   async function handleSubmit(e) {
@@ -235,14 +220,13 @@ export default function OnboardingPage() {
             </form>
           )}
 
-          {/* ─── Step 3: Hesap + Kart ─── */}
+          {/* ─── Step 3: Hesap Bilgileri ─── */}
           {step === 3 && (
             <form onSubmit={handleSubmit}>
               <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
-                <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>Hesap & Ödeme Bilgileri</h2>
-                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>Giriş bilgileriniz ve kart kaydı. 7 gün içinde ödeme çekilmez.</p>
+                <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>Hesap Bilgileri</h2>
+                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>Admin paneline giriş bilgileriniz.</p>
 
-                {/* Hesap */}
                 <div style={{ marginBottom: 16 }}>
                   <label style={labelStyle}>Ad Soyad *</label>
                   <input type="text" required value={form.ownerName} onChange={e => setForm(prev => ({ ...prev, ownerName: e.target.value }))} placeholder="Ahmet Yılmaz" style={inputStyle} />
@@ -251,7 +235,7 @@ export default function OnboardingPage() {
                   <label style={labelStyle}>E-posta *</label>
                   <input type="email" required value={form.ownerEmail} onChange={e => setForm(prev => ({ ...prev, ownerEmail: e.target.value }))} placeholder="ahmet@gmail.com" style={inputStyle} />
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
                   <div>
                     <label style={labelStyle}>Telefon</label>
                     <input type="tel" value={form.ownerPhone} onChange={e => setForm(prev => ({ ...prev, ownerPhone: e.target.value }))} placeholder="0555 123 45 67" style={inputStyle} />
@@ -262,40 +246,12 @@ export default function OnboardingPage() {
                   </div>
                 </div>
 
-                {/* Kart Bilgileri */}
-                <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 20, paddingTop: 20 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-                    <Lock size={13} style={{ color: "rgba(255,255,255,0.3)" }} />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Kart Bilgileri</span>
-                    <span style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", marginLeft: "auto" }}>SSL ile korunuyor</span>
-                  </div>
-
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={labelStyle}>Kart Üzerindeki İsim *</label>
-                    <input type="text" required value={form.cardName} onChange={e => setForm(prev => ({ ...prev, cardName: e.target.value }))} placeholder="AHMET YILMAZ" style={{ ...inputStyle, textTransform: "uppercase" }} />
-                  </div>
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={labelStyle}>Kart Numarası *</label>
-                    <input type="text" required value={form.cardNumber} onChange={e => setForm(prev => ({ ...prev, cardNumber: formatCardNumber(e.target.value) }))} placeholder="4242 4242 4242 4242" maxLength={19} style={inputStyle} />
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
-                    <div>
-                      <label style={labelStyle}>Son Kullanma *</label>
-                      <input type="text" required value={form.cardExpiry} onChange={e => setForm(prev => ({ ...prev, cardExpiry: formatExpiry(e.target.value) }))} placeholder="AA/YY" maxLength={5} style={inputStyle} />
-                    </div>
-                    <div>
-                      <label style={labelStyle}>CVC *</label>
-                      <input type="text" required value={form.cardCvc} onChange={e => setForm(prev => ({ ...prev, cardCvc: e.target.value.replace(/\D/g, '').slice(0, 4) }))} placeholder="123" maxLength={4} style={inputStyle} />
-                    </div>
-                  </div>
-                </div>
-
                 {/* Seçilen plan özeti */}
                 {selectedPlanObj && (
                   <div style={{ background: `${selectedPlanObj.color}08`, border: `1px solid ${selectedPlanObj.color}20`, padding: "14px 16px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
                       <div style={{ fontSize: 12, fontWeight: 700, color: selectedPlanObj.color }}>{selectedPlanObj.name} Plan</div>
-                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>7 gün ücretsiz, sonra otomatik çekim</div>
+                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>7 gün ücretsiz deneme</div>
                     </div>
                     <div style={{ fontSize: 18, fontWeight: 800 }}>
                       {selectedPlanObj.price.toLocaleString("tr-TR")} <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>₺{selectedPlanObj.period}</span>
@@ -314,7 +270,7 @@ export default function OnboardingPage() {
                 </button>
 
                 <div style={{ textAlign: "center", marginTop: 12, fontSize: 11, color: "rgba(255,255,255,0.2)" }}>
-                  Deneme süresi içinde iptal ederseniz kartınızdan ücret çekilmez.
+                  Ödeme bilgileri deneme süresi sonunda istenecektir.
                 </div>
               </div>
             </form>
