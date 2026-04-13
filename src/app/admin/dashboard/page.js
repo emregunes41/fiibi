@@ -77,6 +77,49 @@ export default async function AdminDashboard() {
     include: { packages: true }
   });
 
+  // ─── Gelir İstatistikleri ───
+  const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+
+  const thisMonthPayments = await prisma.payment.findMany({
+    where: { reservation: tenantFilter, createdAt: { gte: thisMonthStart } },
+  });
+  const lastMonthPayments = await prisma.payment.findMany({
+    where: { reservation: tenantFilter, createdAt: { gte: lastMonthStart, lte: lastMonthEnd } },
+  });
+
+  const thisMonthIncome = thisMonthPayments.reduce((sum, p) => sum + p.amount, 0);
+  const lastMonthIncome = lastMonthPayments.reduce((sum, p) => sum + p.amount, 0);
+  const incomeChange = lastMonthIncome > 0 ? Math.round(((thisMonthIncome - lastMonthIncome) / lastMonthIncome) * 100) : thisMonthIncome > 0 ? 100 : 0;
+
+  // Son 6 ay gelir verileri
+  const monthlyRevenue = [];
+  for (let i = 5; i >= 0; i--) {
+    const mStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const mEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0, 23, 59, 59);
+    const payments = await prisma.payment.findMany({
+      where: { reservation: tenantFilter, createdAt: { gte: mStart, lte: mEnd } },
+    });
+    const total = payments.reduce((s, p) => s + p.amount, 0);
+    monthlyRevenue.push({
+      label: mStart.toLocaleDateString("tr-TR", { month: "short" }),
+      total,
+    });
+  }
+  const maxRevenue = Math.max(...monthlyRevenue.map(m => m.total), 1);
+
+  // Ödenmemiş bakiye
+  const allRes = await prisma.reservation.findMany({
+    where: { ...tenantFilter, status: { not: "DELETED" } },
+    select: { totalAmount: true, paidAmount: true },
+  });
+  const unpaidBalance = allRes.reduce((sum, r) => {
+    const total = parseFloat(r.totalAmount || "0");
+    const paid = parseFloat(r.paidAmount || "0");
+    return sum + Math.max(0, total - paid);
+  }, 0);
+
   const getDaysLeftInfo = (date) => {
     if (!date) return { text: "-", color: "gray" };
     const diffTime = new Date(date).getTime() - now.getTime();
@@ -87,11 +130,13 @@ export default async function AdminDashboard() {
     return { text: `${diffDays} GÜN KALDI`, color: "rgba(255,255,255,0.6)" };
   };
 
+  const monthNames = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
+
   return (
     <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
       <div style={{ marginBottom: "1.5rem" }}>
         <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: "4px" }}>Genel Bakış</h1>
-        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem" }}>Yönetim Paneli</p>
+        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem" }}>Yönetim Paneli · {monthNames[now.getMonth()]} {now.getFullYear()}</p>
       </div>
 
       {/* Stats Grid */}
@@ -122,6 +167,57 @@ export default async function AdminDashboard() {
             <Clock size={11} /> Bekleyen
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{pendingReservations}</div>
+        </div>
+      </div>
+
+      {/* Gelir Analizi */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "8px", marginBottom: "1.5rem" }}>
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "16px" }}>
+          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 8 }}>Bu Ay Gelir</div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+            <span style={{ fontSize: "1.8rem", fontWeight: 900 }}>{thisMonthIncome.toLocaleString("tr-TR")}</span>
+            <span style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.35)" }}>₺</span>
+          </div>
+          {incomeChange !== 0 && (
+            <div style={{ fontSize: 11, marginTop: 4, color: incomeChange > 0 ? "#4ade80" : "#f87171" }}>
+              {incomeChange > 0 ? "↑" : "↓"} %{Math.abs(incomeChange)} geçen aya göre
+            </div>
+          )}
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "16px" }}>
+          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 8 }}>Geçen Ay</div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+            <span style={{ fontSize: "1.8rem", fontWeight: 900, color: "rgba(255,255,255,0.5)" }}>{lastMonthIncome.toLocaleString("tr-TR")}</span>
+            <span style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.25)" }}>₺</span>
+          </div>
+        </div>
+        <div style={{ background: unpaidBalance > 0 ? "rgba(248,113,113,0.06)" : "rgba(255,255,255,0.05)", border: `1px solid ${unpaidBalance > 0 ? "rgba(248,113,113,0.15)" : "rgba(255,255,255,0.08)"}`, padding: "16px" }}>
+          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: unpaidBalance > 0 ? "#f87171" : "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 8 }}>Ödenmemiş Bakiye</div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+            <span style={{ fontSize: "1.8rem", fontWeight: 900, color: unpaidBalance > 0 ? "#f87171" : "rgba(255,255,255,0.5)" }}>{unpaidBalance.toLocaleString("tr-TR")}</span>
+            <span style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.25)" }}>₺</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Son 6 Ay Gelir Grafiği */}
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "20px", marginBottom: "1.5rem" }}>
+        <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 16 }}>Son 6 Ay Gelir</div>
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 100 }}>
+          {monthlyRevenue.map((m, i) => (
+            <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)" }}>
+                {m.total > 0 ? `${(m.total / 1000).toFixed(0)}k` : ""}
+              </div>
+              <div style={{
+                width: "100%", minHeight: 4,
+                height: `${Math.max(4, (m.total / maxRevenue) * 80)}px`,
+                background: i === 5 ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.12)",
+                transition: "height 0.5s ease"
+              }} />
+              <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.25)" }}>{m.label}</div>
+            </div>
+          ))}
         </div>
       </div>
 
