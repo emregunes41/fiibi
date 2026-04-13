@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Shield, Users, Building2, CreditCard, Snowflake, Trash2,
-  RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check, BarChart, Database, Cloud, Mail, HardDrive, Image
+  RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check, BarChart, Database, Cloud, Mail, HardDrive, Image, Zap
 } from "lucide-react";
 import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
   changeTenantPlan, deleteTenant, superAdminLogout
 } from "@/app/actions/super-admin";
-import { getCloudinaryUsage, getDbUsage, getResendUsage } from "@/app/actions/platform-usage";
+import { getCloudinaryUsage, getDbUsage, getResendUsage, getVercelUsage } from "@/app/actions/platform-usage";
 
 export default function SuperAdminClient() {
   const [tenants, setTenants] = useState([]);
@@ -24,13 +24,13 @@ export default function SuperAdminClient() {
 
   async function loadData() {
     setLoading(true);
-    const [t, s, cloudinary, db, resend] = await Promise.all([
+    const [t, s, cloudinary, db, resend, vercel] = await Promise.all([
       getAllTenants(), getPlatformStats(),
-      getCloudinaryUsage(), getDbUsage(), getResendUsage()
+      getCloudinaryUsage(), getDbUsage(), getResendUsage(), getVercelUsage()
     ]);
     if (!t.error) setTenants(t);
     if (!s.error) setStats(s);
-    setUsage({ cloudinary, db, resend });
+    setUsage({ cloudinary, db, resend, vercel });
     setLoading(false);
   }
 
@@ -155,6 +155,30 @@ export default function SuperAdminClient() {
               Kaynak Kullanımı
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
+
+              {/* Vercel */}
+              {usage.vercel && !usage.vercel.error && (
+                <>
+                  {renderUsageBar("Vercel Bandwidth", HardDrive, "#4ade80",
+                    usage.vercel.bandwidth.usedGB, usage.vercel.bandwidth.limitGB, "GB",
+                    `${usage.vercel.plan === "pro" ? "Pro" : "Hobby"} · ~${usage.vercel.estimatedPageViews.toLocaleString("tr-TR")} sayfa/ay`,
+                    usage.vercel.bandwidth.pct
+                  )}
+                  <div style={usageCard}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <Zap size={14} style={{ color: "#4ade80" }} />
+                        <span style={usageLabel}>Serverless Functions</span>
+                      </div>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>tahmini</span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
+                      <span>~{usage.vercel.functions.estimated} çağrı/ay</span>
+                      <span>Limit: {usage.vercel.functions.limitLabel}</span>
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/* Cloudinary Storage */}
               {usage.cloudinary?.error ? (

@@ -172,3 +172,69 @@ export async function getDbUsage() {
     return { error: err.message };
   }
 }
+
+/**
+ * Vercel kullanım tahmini (API yok — DB verisinden hesaplama)
+ * 
+ * Hesaplama mantığı:
+ * - Her aktif tenant ≈ 500 ziyaretçi/ay (ortalama)
+ * - Her ziyaretçi ≈ 3 sayfa görür
+ * - Her sayfa ≈ 500KB Vercel bandwidth (görseller Cloudinary'den)
+ * - Her sayfa = 1 serverless function invocation
+ * - Bu aya ait rezervasyonlar ve kullanıcılar ek trafik göstergesi
+ */
+export async function getVercelUsage() {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  try {
+    const { prisma } = await import("@/lib/prisma");
+
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const [activeTenants, totalUsers, reservationsThisMonth, paymentsThisMonth] = await Promise.all([
+      prisma.tenant.count({ where: { isActive: true, isFrozen: false } }),
+      prisma.user.count(),
+      prisma.reservation.count({ where: { createdAt: { gte: startOfMonth } } }),
+      prisma.payment.count({ where: { paidAt: { gte: startOfMonth } } }),
+    ]);
+
+    // Tahmin: Her tenant ≈ 500 ziyaretçi/ay × 3 sayfa = 1500 sayfa/ay
+    // + her müşteri giriş yapınca 5 sayfa (profil, fotoğraf seçimi vs)
+    // + her yeni rezervasyon 10 sayfa (form, API calls)
+    const estimatedPageViews = (activeTenants * 1500) + (totalUsers * 5) + (reservationsThisMonth * 10);
+    
+    // Bandwidth: sayfa × 500KB
+    const estimatedBandwidthGB = ((estimatedPageViews * 500) / 1024 / 1024 / 1024);
+    
+    // Function invocations: sayfa views × 1.5 (API calls dahil)
+    const estimatedFunctions = Math.round(estimatedPageViews * 1.5);
+
+    // Plan: env'den oku, yoksa hobby varsay
+    const plan = process.env.VERCEL_PLAN || "hobby";
+    const bandwidthLimitGB = plan === "pro" ? 1000 : 100; // Pro: 1TB, Hobby: 100GB
+    const functionLimitHrs = plan === "pro" ? 1000 : 100;  // GB-saat
+
+    const bwPct = Math.min(100, Math.round((estimatedBandwidthGB / bandwidthLimitGB) * 100));
+
+    return {
+      bandwidth: {
+        usedGB: estimatedBandwidthGB.toFixed(2),
+        limitGB: bandwidthLimitGB,
+        pct: bwPct,
+      },
+      functions: {
+        estimated: estimatedFunctions.toLocaleString("tr-TR"),
+        limitLabel: `${functionLimitHrs} GB-saat`,
+      },
+      estimatedPageViews,
+      activeTenants,
+      reservationsThisMonth,
+      paymentsThisMonth,
+      plan,
+    };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
