@@ -5,8 +5,9 @@ import GalleryClient from "@/app/gallery/GalleryClient";
 import Image from "next/image";
 import { optimizeCloudinaryUrl, thumbnailUrl } from "@/lib/image-utils";
 
-export default function EditorialTheme({ siteConfig, categories, packages, banners, contentBlocks, renderTitle, preloadUrls, FooterSection }) {
+export default function EditorialTheme({ siteConfig, categories, packages, banners, contentBlocks, preloadUrls, FooterSection }) {
   const accent = siteConfig?.accentColor || "#fff";
+  const renderTitle = (text) => text.split('\n').map((line, i) => <span key={i}>{line}{i !== text.split('\n').length - 1 && <br />}</span>);
   const firstCat = categories?.[0];
   const coverUrl = firstCat?.photos?.[0]?.url;
 

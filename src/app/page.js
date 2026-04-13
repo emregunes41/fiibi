@@ -115,7 +115,7 @@ export default async function PinowedPage() {
     </>
   );
 
-  const themeProps = { siteConfig, categories, packages, banners, contentBlocks, renderTitle, preloadUrls, FooterSection };
+  const themeProps = { siteConfig, categories, packages, banners, contentBlocks, preloadUrls, FooterSection };
 
   // Tema yönlendirmesi
   if (theme === "minimal") return <MinimalTheme {...themeProps} />;

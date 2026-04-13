@@ -4,8 +4,9 @@ import { ArrowDown } from "lucide-react";
 import Link from "next/link";
 import GalleryClient from "@/app/gallery/GalleryClient";
 
-export default function MinimalTheme({ siteConfig, categories, packages, banners, contentBlocks, renderTitle, preloadUrls, FooterSection }) {
+export default function MinimalTheme({ siteConfig, categories, packages, banners, contentBlocks, preloadUrls, FooterSection }) {
   const accent = siteConfig?.accentColor || "#fff";
+  const renderTitle = (text) => text.split('\n').map((line, i) => <span key={i}>{line}{i !== text.split('\n').length - 1 && <br />}</span>);
 
   return (
     <main className="relative min-h-screen w-full">

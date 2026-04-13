@@ -3,7 +3,7 @@
 import Link from "next/link";
 import GalleryClient from "@/app/gallery/GalleryClient";
 
-export default function BoldTheme({ siteConfig, categories, packages, banners, contentBlocks, renderTitle, preloadUrls, FooterSection }) {
+export default function BoldTheme({ siteConfig, categories, packages, banners, contentBlocks, preloadUrls, FooterSection }) {
   const accent = siteConfig?.accentColor || "#fff";
   const title = siteConfig?.heroTitle || "Anları Sanata\nDönüştürüyoruz";
   const lines = title.split("\n");
