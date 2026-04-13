@@ -173,11 +173,11 @@ export default function SuperAdminClient() {
               ) : (
                 <>
                   {renderUsageBar("Cloudinary Depolama", Cloud, "#f472b6",
-                    usage.cloudinary.storage.usedMB, usage.cloudinary.storage.limitMB, "MB",
+                    usage.cloudinary.storage.usedGB, usage.cloudinary.storage.limitGB, "GB",
                     `Plan: ${usage.cloudinary.plan}`, usage.cloudinary.storage.pct
                   )}
                   {renderUsageBar("Cloudinary Bandwidth", HardDrive, "#a78bfa",
-                    usage.cloudinary.bandwidth.usedMB, usage.cloudinary.bandwidth.limitMB, "MB",
+                    usage.cloudinary.bandwidth.usedGB, usage.cloudinary.bandwidth.limitGB, "GB",
                     "Aylık transfer", usage.cloudinary.bandwidth.pct
                   )}
                   {renderUsageBar("Dönüşümler", Image, "#38bdf8",

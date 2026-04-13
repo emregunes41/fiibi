@@ -30,25 +30,37 @@ export async function getCloudinaryUsage() {
 
     const data = await res.json();
 
+    // Free tier fallback limitleri (Cloudinary bazen limit=0 döner)
+    const STORAGE_LIMIT_FREE = 25 * 1024 * 1024 * 1024;      // 25GB
+    const BW_LIMIT_FREE = 25 * 1024 * 1024 * 1024;            // 25GB
+    const TRANSFORM_LIMIT_FREE = 25000;
+
+    const storageLimit = data.storage?.limit || STORAGE_LIMIT_FREE;
+    const bwLimit = data.bandwidth?.limit || BW_LIMIT_FREE;
+    const transformLimit = data.transformations?.limit || TRANSFORM_LIMIT_FREE;
+
+    const storageUsed = data.storage?.usage || 0;
+    const bwUsed = data.bandwidth?.usage || 0;
+
     return {
       storage: {
-        used: data.storage?.usage || 0,       // bytes
-        limit: data.storage?.limit || 0,       // bytes
-        usedMB: Math.round((data.storage?.usage || 0) / 1024 / 1024),
-        limitMB: Math.round((data.storage?.limit || 0) / 1024 / 1024),
-        pct: data.storage?.used_percent || 0,
+        used: storageUsed,
+        limit: storageLimit,
+        usedGB: (storageUsed / 1024 / 1024 / 1024).toFixed(2),
+        limitGB: (storageLimit / 1024 / 1024 / 1024).toFixed(1),
+        pct: data.storage?.used_percent || Math.round((storageUsed / storageLimit) * 100),
       },
       bandwidth: {
-        used: data.bandwidth?.usage || 0,
-        limit: data.bandwidth?.limit || 0,
-        usedMB: Math.round((data.bandwidth?.usage || 0) / 1024 / 1024),
-        limitMB: Math.round((data.bandwidth?.limit || 0) / 1024 / 1024),
-        pct: data.bandwidth?.used_percent || 0,
+        used: bwUsed,
+        limit: bwLimit,
+        usedGB: (bwUsed / 1024 / 1024 / 1024).toFixed(2),
+        limitGB: (bwLimit / 1024 / 1024 / 1024).toFixed(1),
+        pct: data.bandwidth?.used_percent || Math.round((bwUsed / bwLimit) * 100),
       },
       transformations: {
         used: data.transformations?.usage || 0,
-        limit: data.transformations?.limit || 0,
-        pct: data.transformations?.used_percent || 0,
+        limit: transformLimit,
+        pct: data.transformations?.used_percent || Math.round(((data.transformations?.usage || 0) / transformLimit) * 100),
       },
       objects: {
         used: data.objects?.usage || 0,
