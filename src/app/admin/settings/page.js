@@ -1257,11 +1257,52 @@ export default function SettingsPage() {
           </div>
 
           {/* Accent Color */}
-          <div style={{ marginBottom: 16 }}>
-            <label style={label}>Vurgu Rengi</label>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <input type="color" value={config.accentColor || "#ffffff"} onChange={e => setConfig({ ...config, accentColor: e.target.value })} style={{ width: 40, height: 40, border: "1px solid rgba(255,255,255,0.15)", background: "none", cursor: "pointer", padding: 2 }} />
+          <div style={{ marginBottom: 24 }}>
+            <label style={label}>Tema Rengi</label>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+              <input type="color" value={config.accentColor || "#ffffff"} onChange={e => setConfig({ ...config, accentColor: e.target.value })} style={{ width: 44, height: 44, border: "1px solid rgba(255,255,255,0.15)", background: "none", cursor: "pointer", padding: 2 }} />
               <input type="text" value={config.accentColor || "#ffffff"} onChange={e => setConfig({ ...config, accentColor: e.target.value })} style={{ ...inp, maxWidth: 140 }} placeholder="#ffffff" />
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {["#ffffff", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6", "#10b981", "#ec4899", "#f97316"].map(c => (
+                <button key={c} onClick={() => setConfig({ ...config, accentColor: c })} style={{
+                  width: 28, height: 28, background: c, border: config.accentColor === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.15)",
+                  cursor: "pointer", padding: 0
+                }} />
+              ))}
+            </div>
+          </div>
+
+          {/* Font Seçimi */}
+          <div style={{ marginBottom: 24 }}>
+            <label style={label}>Yazı Tipi</label>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 8 }}>
+              {[
+                { id: "geist", name: "Geist", sample: "Modern & Temiz", css: "system-ui, sans-serif" },
+                { id: "inter", name: "Inter", sample: "Okunaklı & Net", css: "'Inter', sans-serif" },
+                { id: "playfair", name: "Playfair", sample: "Zarif & Klasik", css: "'Playfair Display', serif" },
+                { id: "poppins", name: "Poppins", sample: "Yuvarlak & Samimi", css: "'Poppins', sans-serif" },
+                { id: "montserrat", name: "Montserrat", sample: "Güçlü & Cesur", css: "'Montserrat', sans-serif" },
+                { id: "lora", name: "Lora", sample: "Edebî & Rafine", css: "'Lora', serif" },
+                { id: "raleway", name: "Raleway", sample: "İnce & Şık", css: "'Raleway', sans-serif" },
+                { id: "cormorant", name: "Cormorant", sample: "Lüks & Sofistike", css: "'Cormorant Garamond', serif" },
+              ].map(f => (
+                <button key={f.id} onClick={() => setConfig({ ...config, fontFamily: f.id })} style={{
+                  padding: "16px 14px", background: (config.fontFamily || "geist") === f.id ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
+                  border: (config.fontFamily || "geist") === f.id ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.08)",
+                  cursor: "pointer", textAlign: "left"
+                }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 4, fontFamily: f.css }}>{f.name}</div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontFamily: f.css }}>{f.sample}</div>
+                </button>
+              ))}
+            </div>
+            <div style={{ marginTop: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "16px" }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 8 }}>Önizleme</div>
+              <div style={{ fontFamily: ({ geist: "system-ui", inter: "'Inter'", playfair: "'Playfair Display'", poppins: "'Poppins'", montserrat: "'Montserrat'", lora: "'Lora'", raleway: "'Raleway'", cormorant: "'Cormorant Garamond'" })[config.fontFamily || "geist"] || "system-ui" }}>
+                <div style={{ fontSize: 22, fontWeight: 700, color: config.accentColor || "#fff", marginBottom: 6 }}>Stüdyo Başlığı</div>
+                <div style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>Profesyonel fotoğrafçılık hizmetleri ile en özel anlarınızı ölümsüzleştiriyoruz.</div>
+              </div>
             </div>
           </div>
 

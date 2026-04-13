@@ -66,12 +66,49 @@ export default async function RootLayout({ children }) {
   // Studio sayfaları: Navbar + Hero + Cart
   const siteConfig = await getSiteConfig();
 
+  const accentColor = siteConfig?.accentColor || "#ffffff";
+  const fontFamily = siteConfig?.fontFamily || "geist";
+
+  const fontMap = {
+    geist: "var(--font-geist-sans), system-ui, sans-serif",
+    inter: "'Inter', system-ui, sans-serif",
+    playfair: "'Playfair Display', Georgia, serif",
+    poppins: "'Poppins', system-ui, sans-serif",
+    montserrat: "'Montserrat', system-ui, sans-serif",
+    lora: "'Lora', Georgia, serif",
+    raleway: "'Raleway', system-ui, sans-serif",
+    cormorant: "'Cormorant Garamond', Georgia, serif",
+  };
+  const fontCSS = fontMap[fontFamily] || fontMap.geist;
+
+  // Google Fonts URL
+  const googleFonts = {
+    inter: "Inter:wght@300;400;500;600;700;800;900",
+    playfair: "Playfair+Display:wght@400;500;600;700;800;900",
+    poppins: "Poppins:wght@300;400;500;600;700;800;900",
+    montserrat: "Montserrat:wght@300;400;500;600;700;800;900",
+    lora: "Lora:wght@400;500;600;700",
+    raleway: "Raleway:wght@300;400;500;600;700;800;900",
+    cormorant: "Cormorant+Garamond:wght@300;400;500;600;700",
+  };
+  const googleFontUrl = googleFonts[fontFamily] ? `https://fonts.googleapis.com/css2?family=${googleFonts[fontFamily]}&display=swap` : null;
+
   return (
     <html
       lang="tr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col text-white font-sans">
+      <head>
+        {googleFontUrl && <link rel="stylesheet" href={googleFontUrl} />}
+      </head>
+      <body
+        className="min-h-full flex flex-col text-white font-sans"
+        style={{
+          fontFamily: fontCSS,
+          ["--accent"]: accentColor,
+          ["--font-site"]: fontCSS,
+        }}
+      >
         <HeroBackground 
           bgType={siteConfig?.heroBgType || (siteConfig?.heroBgUrl ? "video" : "color")} 
           bgUrl={siteConfig?.heroBgUrl || ""} 
@@ -80,7 +117,7 @@ export default async function RootLayout({ children }) {
 
         <CartWrapper>
           <PageTracker />
-          <Navbar businessName={siteConfig?.businessName || "Studio"} logoUrl={siteConfig?.logoUrl} />
+          <Navbar businessName={siteConfig?.businessName || "Studio"} logoUrl={siteConfig?.logoUrl} accentColor={accentColor} />
           {children}
           <div className="md:hidden h-32 shrink-0 w-full" />
         </CartWrapper>

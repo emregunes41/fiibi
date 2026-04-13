@@ -50,14 +50,14 @@ body {
 }
 
 body {
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-site, var(--font-sans, system-ui, sans-serif));
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, .font-serif, .font-jakarta {
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-site, var(--font-sans, system-ui, sans-serif));
   font-weight: 700;
   letter-spacing: -0.02em;
 }
@@ -94,7 +94,7 @@ h1, h2, h3, h4, .font-serif, .font-jakarta {
 }
 
 ::selection {
-  background: #fff;
+  background: var(--accent, #fff);
   color: #000;
 }
 
