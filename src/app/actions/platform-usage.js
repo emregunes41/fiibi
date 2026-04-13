@@ -197,7 +197,7 @@ export async function getVercelUsage() {
       prisma.tenant.count({ where: { isActive: true, isFrozen: false } }),
       prisma.user.count(),
       prisma.reservation.count({ where: { createdAt: { gte: startOfMonth } } }),
-      prisma.payment.count({ where: { paidAt: { gte: startOfMonth } } }),
+      prisma.payment.count({ where: { createdAt: { gte: startOfMonth } } }),
     ]);
 
     // Tahmin: Her tenant ≈ 500 ziyaretçi/ay × 3 sayfa = 1500 sayfa/ay
