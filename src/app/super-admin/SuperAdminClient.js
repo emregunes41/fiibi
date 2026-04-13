@@ -4,16 +4,18 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Shield, Users, Building2, CreditCard, Snowflake, Trash2,
-  RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check, BarChart
+  RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check, BarChart, Database, Cloud, Mail, HardDrive, Image
 } from "lucide-react";
 import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
   changeTenantPlan, deleteTenant, superAdminLogout
 } from "@/app/actions/super-admin";
+import { getCloudinaryUsage, getDbUsage, getResendUsage } from "@/app/actions/platform-usage";
 
 export default function SuperAdminClient() {
   const [tenants, setTenants] = useState([]);
   const [stats, setStats] = useState(null);
+  const [usage, setUsage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
   const router = useRouter();
@@ -22,9 +24,13 @@ export default function SuperAdminClient() {
 
   async function loadData() {
     setLoading(true);
-    const [t, s] = await Promise.all([getAllTenants(), getPlatformStats()]);
+    const [t, s, cloudinary, db, resend] = await Promise.all([
+      getAllTenants(), getPlatformStats(),
+      getCloudinaryUsage(), getDbUsage(), getResendUsage()
+    ]);
     if (!t.error) setTenants(t);
     if (!s.error) setStats(s);
+    setUsage({ cloudinary, db, resend });
     setLoading(false);
   }
 
@@ -62,6 +68,34 @@ export default function SuperAdminClient() {
     trial: { bg: "rgba(250,204,21,0.1)", border: "rgba(250,204,21,0.2)", text: "#facc15" },
     pro: { bg: "rgba(139,92,246,0.1)", border: "rgba(139,92,246,0.2)", text: "#8b5cf6" },
   };
+
+  function renderUsageBar(label, Icon, color, current, limit, unit, sub, pct) {
+    const p = Math.min(100, Math.round(pct || (limit ? (current / limit) * 100 : 0)));
+    const isWarning = p > 70;
+    const isDanger = p > 90;
+    return (
+      <div style={usageCard}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Icon size={14} style={{ color }} />
+            <span style={usageLabel}>{label}</span>
+          </div>
+          <span style={{ fontSize: 11, fontWeight: 700, color: isDanger ? "#f87171" : isWarning ? "#fbbf24" : "rgba(255,255,255,0.4)" }}>
+            {p}%
+          </span>
+        </div>
+        <div style={{ height: 4, background: "rgba(255,255,255,0.06)", marginBottom: 8 }}>
+          <div style={{ height: "100%", width: `${p}%`, background: isDanger ? "#f87171" : isWarning ? "#fbbf24" : color, transition: "width 0.5s ease" }} />
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
+            {current?.toLocaleString("tr-TR")}{unit ? ` ${unit}` : ""} / {limit?.toLocaleString("tr-TR")}{unit ? ` ${unit}` : ""}
+          </span>
+          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>{sub}</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: "100vh", background: "#0a0a0a", color: "#fff", padding: "24px 16px" }}>
@@ -113,53 +147,82 @@ export default function SuperAdminClient() {
           </div>
         )}
 
-        {/* Kaynak Kullanımı */}
-        {stats && (
+        {/* Kaynak Kullanımı — Gerçek API Verileri */}
+        {usage && (
           <div style={{ marginBottom: 32 }}>
             <h2 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
               <BarChart size={15} style={{ color: "rgba(255,255,255,0.4)" }} />
               Kaynak Kullanımı
             </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
-              {[
-                { label: "Veritabanı Satırları", current: stats.totalRows, limit: 100000, unit: "", color: "#8b5cf6", sub: "Supabase Free: 500MB" },
-                { label: "Stüdyolar", current: stats.tenantCount, limit: 50, unit: "", color: "#4ade80", sub: "Platform kapasitesi" },
-                { label: "Fotoğraflar", current: stats.totalPhotos, limit: 10000, unit: "", color: "#f472b6", sub: "Cloudinary: 25GB" },
-                { label: "Rezervasyonlar", current: stats.totalReservations, limit: 5000, unit: "", color: "#facc15", sub: "Toplam platform" },
-                { label: "Paketler", current: stats.totalPackages, limit: 500, unit: "", color: "#38bdf8", sub: "Tüm stüdyolar" },
-                { label: "Ödemeler", current: stats.totalPayments, limit: 10000, unit: "", color: "#a78bfa", sub: "İşlem kayıtları" },
-              ].map((item, i) => {
-                const pct = Math.min(100, Math.round((item.current / item.limit) * 100));
-                const isWarning = pct > 70;
-                const isDanger = pct > 90;
-                return (
-                  <div key={i} style={{
-                    background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
-                    padding: "16px 18px"
-                  }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)" }}>{item.label}</span>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: isDanger ? "#f87171" : isWarning ? "#fbbf24" : "rgba(255,255,255,0.4)" }}>
-                        {pct}%
-                      </span>
-                    </div>
-                    {/* Progress bar */}
-                    <div style={{ height: 4, background: "rgba(255,255,255,0.06)", marginBottom: 8 }}>
-                      <div style={{
-                        height: "100%", width: `${pct}%`,
-                        background: isDanger ? "#f87171" : isWarning ? "#fbbf24" : item.color,
-                        transition: "width 0.5s ease"
-                      }} />
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
-                        {item.current.toLocaleString("tr-TR")} / {item.limit.toLocaleString("tr-TR")}
-                      </span>
-                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>{item.sub}</span>
-                    </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
+
+              {/* Cloudinary Storage */}
+              {usage.cloudinary?.error ? (
+                <div style={usageCard}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                    <Cloud size={14} style={{ color: "#f472b6" }} />
+                    <span style={usageLabel}>Cloudinary Depolama</span>
+                    <span style={{ fontSize: 9, color: "#f87171", marginLeft: "auto", textTransform: "uppercase" }}>
+                      {usage.cloudinary.missing ? "API Bağlı Değil" : "Hata"}
+                    </span>
                   </div>
-                );
-              })}
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.25)" }}>
+                    .env dosyasına CLOUDINARY_API_KEY ve CLOUDINARY_API_SECRET ekleyin
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {renderUsageBar("Cloudinary Depolama", Cloud, "#f472b6",
+                    usage.cloudinary.storage.usedMB, usage.cloudinary.storage.limitMB, "MB",
+                    `Plan: ${usage.cloudinary.plan}`, usage.cloudinary.storage.pct
+                  )}
+                  {renderUsageBar("Cloudinary Bandwidth", HardDrive, "#a78bfa",
+                    usage.cloudinary.bandwidth.usedMB, usage.cloudinary.bandwidth.limitMB, "MB",
+                    "Aylık transfer", usage.cloudinary.bandwidth.pct
+                  )}
+                  {renderUsageBar("Dönüşümler", Image, "#38bdf8",
+                    usage.cloudinary.transformations.used, usage.cloudinary.transformations.limit, "",
+                    `${usage.cloudinary.objects.used} dosya`, usage.cloudinary.transformations.pct
+                  )}
+                </>
+              )}
+
+              {/* DB */}
+              {usage.db?.error ? (
+                <div style={usageCard}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <Database size={14} style={{ color: "#8b5cf6" }} />
+                    <span style={usageLabel}>Veritabanı</span>
+                    <span style={{ fontSize: 9, color: "#f87171", marginLeft: "auto" }}>Hata</span>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {renderUsageBar("Veritabanı Boyutu", Database, "#8b5cf6",
+                    usage.db.estimatedSizeMB, usage.db.limitMB, "MB",
+                    `${usage.db.totalRows.toLocaleString("tr-TR")} satır`, usage.db.pct
+                  )}
+                </>
+              )}
+
+              {/* Resend */}
+              {usage.resend?.error ? (
+                <div style={usageCard}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <Mail size={14} style={{ color: "#facc15" }} />
+                    <span style={usageLabel}>E-posta (Resend)</span>
+                    <span style={{ fontSize: 9, color: "#f87171", marginLeft: "auto", textTransform: "uppercase" }}>
+                      {usage.resend.missing ? "API Bağlı Değil" : "Hata"}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                renderUsageBar("E-posta (Resend)", Mail, "#facc15",
+                  usage.resend.emailsThisMonth, usage.resend.monthlyLimit, "",
+                  `Günlük limit: ${usage.resend.dailyLimit}`, usage.resend.pct
+                )
+              )}
+
             </div>
           </div>
         )}
@@ -280,4 +343,13 @@ const smallBtn = {
   color: "rgba(255,255,255,0.5)", padding: "6px 10px", cursor: "pointer",
   fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center",
   textDecoration: "none"
+};
+
+const usageCard = {
+  background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+  padding: "16px 18px"
+};
+
+const usageLabel = {
+  fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)"
 };
