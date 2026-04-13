@@ -161,7 +161,9 @@ export default function SuperAdminClient() {
                 <>
                   {renderUsageBar("Vercel Bandwidth", HardDrive, "#4ade80",
                     usage.vercel.bandwidth.usedGB, usage.vercel.bandwidth.limitGB, "GB",
-                    `${usage.vercel.plan === "pro" ? "Pro" : "Hobby"} · ~${usage.vercel.estimatedPageViews.toLocaleString("tr-TR")} sayfa/ay`,
+                    usage.vercel.hasRealData 
+                      ? `${usage.vercel.totalPageViews.toLocaleString("tr-TR")} sayfa (gerçek veri)`
+                      : `~tahmini · ${usage.vercel.activeTenants} aktif stüdyo`,
                     usage.vercel.bandwidth.pct
                   )}
                   <div style={usageCard}>

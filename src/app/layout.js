@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import CartWrapper from "@/components/CartWrapper";
 import HeroBackground from "@/components/HeroBackground";
+import PageTracker from "@/components/PageTracker";
 import { getSiteConfig } from "@/app/admin/core-actions";
 import { headers } from "next/headers";
 
@@ -55,6 +56,7 @@ export default async function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       >
         <body style={{ margin: 0, background: "#000", color: "#fff", fontFamily: "var(--font-geist-sans), system-ui, sans-serif" }}>
+          <PageTracker />
           {children}
         </body>
       </html>
@@ -77,6 +79,7 @@ export default async function RootLayout({ children }) {
         />
 
         <CartWrapper>
+          <PageTracker />
           <Navbar businessName={siteConfig?.businessName || "Studio"} logoUrl={siteConfig?.logoUrl} />
           {children}
           <div className="md:hidden h-32 shrink-0 w-full" />

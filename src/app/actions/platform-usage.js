@@ -192,31 +192,67 @@ export async function getVercelUsage() {
     const startOfMonth = new Date();
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
+    const dateStr = startOfMonth.toISOString().split("T")[0]; // "2026-04-01"
 
-    const [activeTenants, totalUsers, reservationsThisMonth, paymentsThisMonth] = await Promise.all([
+    const [activeTenants, reservationsThisMonth, paymentsThisMonth, pageViewRows] = await Promise.all([
       prisma.tenant.count({ where: { isActive: true, isFrozen: false } }),
-      prisma.user.count(),
       prisma.reservation.count({ where: { createdAt: { gte: startOfMonth } } }),
       prisma.payment.count({ where: { createdAt: { gte: startOfMonth } } }),
+      prisma.pageView.findMany({
+        where: { date: { gte: dateStr } },
+        select: { path: true, count: true },
+      }),
     ]);
 
-    // Tahmin: Her tenant ≈ 500 ziyaretçi/ay × 3 sayfa = 1500 sayfa/ay
-    // + her müşteri giriş yapınca 5 sayfa (profil, fotoğraf seçimi vs)
-    // + her yeni rezervasyon 10 sayfa (form, API calls)
-    const estimatedPageViews = (activeTenants * 1500) + (totalUsers * 5) + (reservationsThisMonth * 10);
-    
-    // Bandwidth: sayfa × 500KB
-    const estimatedBandwidthGB = ((estimatedPageViews * 500) / 1024 / 1024 / 1024);
-    
-    // Function invocations: sayfa views × 1.5 (API calls dahil)
-    const estimatedFunctions = Math.round(estimatedPageViews * 1.5);
+    // Gerçek sayfa görüntüleme verisi varsa kullan
+    const realPageViews = pageViewRows.reduce((sum, r) => sum + r.count, 0);
+    const hasRealData = realPageViews > 0;
 
-    // Plan: env'den oku, yoksa hobby varsay
+    // Sayfa boyutu tahmini (KB)
+    const PAGE_SIZES = {
+      "/": 600,
+      "/booking": 450,
+      "/profile": 350,
+      "/gallery": 500,
+      "/login": 200,
+      "/register": 200,
+    };
+    const DEFAULT_PAGE_SIZE = 400; // KB
+
+    // Gerçek veri varsa: her sayfa × kendi boyutu
+    let estimatedBandwidthKB = 0;
+    if (hasRealData) {
+      for (const row of pageViewRows) {
+        const sizeKB = PAGE_SIZES[row.path] || DEFAULT_PAGE_SIZE;
+        estimatedBandwidthKB += row.count * sizeKB;
+      }
+    } else {
+      // Gerçek veri yoksa eski tahmin
+      const estimatedViews = (activeTenants * 1500) + (reservationsThisMonth * 10);
+      estimatedBandwidthKB = estimatedViews * 500;
+    }
+
+    const estimatedBandwidthGB = estimatedBandwidthKB / 1024 / 1024;
+    const estimatedFunctions = hasRealData 
+      ? Math.round(realPageViews * 1.5)
+      : Math.round((activeTenants * 1500 + reservationsThisMonth * 10) * 1.5);
+
+    // Plan
     const plan = process.env.VERCEL_PLAN || "hobby";
-    const bandwidthLimitGB = plan === "pro" ? 1000 : 100; // Pro: 1TB, Hobby: 100GB
-    const functionLimitHrs = plan === "pro" ? 1000 : 100;  // GB-saat
+    const bandwidthLimitGB = plan === "pro" ? 1000 : 100;
 
     const bwPct = Math.min(100, Math.round((estimatedBandwidthGB / bandwidthLimitGB) * 100));
+
+    // Sayfa bazlı breakdown
+    const pageBreakdown = pageViewRows
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10)
+      .map(r => ({
+        path: r.path,
+        views: r.count,
+        sizeKB: PAGE_SIZES[r.path] || DEFAULT_PAGE_SIZE,
+        bandwidthMB: Math.round((r.count * (PAGE_SIZES[r.path] || DEFAULT_PAGE_SIZE)) / 1024),
+      }));
 
     return {
       bandwidth: {
@@ -226,12 +262,14 @@ export async function getVercelUsage() {
       },
       functions: {
         estimated: estimatedFunctions.toLocaleString("tr-TR"),
-        limitLabel: `${functionLimitHrs} GB-saat`,
+        limitLabel: plan === "pro" ? "1.000 GB-saat" : "100 GB-saat",
       },
-      estimatedPageViews,
+      totalPageViews: hasRealData ? realPageViews : null,
+      hasRealData,
       activeTenants,
       reservationsThisMonth,
       paymentsThisMonth,
+      pageBreakdown,
       plan,
     };
   } catch (err) {

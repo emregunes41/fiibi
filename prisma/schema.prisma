@@ -45,6 +45,7 @@ model Tenant {
   discountCodes     DiscountCode[]
   monthlyPrices     MonthlyPriceConfig[]
   notifications     AdminNotification[]
+  pageViews         PageView[]
 }
 
 // ─── ADMIN ────────────────────────────────────────────────────────
@@ -398,4 +399,18 @@ model ContentBlock {
   updatedAt   DateTime @updatedAt
 
   @@index([tenantId])
+}
+
+// ─── SAYFA GÖRÜNTÜLEME ────────────────────────────────────────────
+model PageView {
+  id        String   @id @default(cuid())
+  path      String                         // "/", "/booking", "/profile"
+  date      String                         // "2026-04-13" (günlük grupla)
+  count     Int      @default(1)
+  tenantId  String?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
+
+  @@unique([path, date, tenantId])
+  @@index([tenantId])
+  @@index([date])
 }
