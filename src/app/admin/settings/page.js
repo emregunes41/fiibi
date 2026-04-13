@@ -1204,7 +1204,68 @@ export default function SettingsPage() {
 
         {/* ═══ MARKA SEKME ═══ */}
         {activeTab === "marka" && <div style={sectionCard}>
-          {sectionHeader(Palette, "Marka & Kimlik", "Logo, renkler ve yazı tipi ayarları.")}
+          {sectionHeader(Palette, "Marka & Kimlik", "Tema, logo, renkler ve yazı tipi ayarları.")}
+
+          {/* Site Teması */}
+          <div style={{ marginBottom: 28 }}>
+            <label style={label}>Site Teması</label>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
+              {[
+                { id: "cinematic", name: "Sinematik", desc: "Tam ekran hero, ortalanmış başlık, portfolyo grid", preview: (
+                  <div style={{ height: 100, background: "rgba(255,255,255,0.03)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                    <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 4 }}>
+                      <div style={{ width: 60, height: 3, background: "rgba(255,255,255,0.3)" }} />
+                      <div style={{ width: 40, height: 2, background: "rgba(255,255,255,0.15)" }} />
+                      <div style={{ fontSize: 8, color: "rgba(255,255,255,0.2)", marginTop: 4 }}>▼</div>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 2, padding: "4px 8px 8px" }}>
+                      {[1,2,3].map(i => <div key={i} style={{ height: 16, background: "rgba(255,255,255,0.08)" }} />)}
+                    </div>
+                  </div>
+                )},
+                { id: "minimal", name: "Minimal", desc: "Temiz, bol beyaz alan, sade tipografi", preview: (
+                  <div style={{ height: 100, background: "rgba(255,255,255,0.03)", display: "flex", flexDirection: "column", padding: "12px 16px", gap: 8 }}>
+                    <div style={{ width: 50, height: 2, background: "rgba(255,255,255,0.2)" }} />
+                    <div style={{ width: 30, height: 1, background: "rgba(255,255,255,0.1)" }} />
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3, flex: 1 }}>
+                      {[1,2,3,4].map(i => <div key={i} style={{ background: "rgba(255,255,255,0.06)" }} />)}
+                    </div>
+                  </div>
+                )},
+                { id: "editorial", name: "Editorial", desc: "Dergi tarzı, sol metin sağ görsel, bölünmüş düzen", preview: (
+                  <div style={{ height: 100, background: "rgba(255,255,255,0.03)", display: "flex", gap: 3, padding: 8 }}>
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 4 }}>
+                      <div style={{ width: "80%", height: 3, background: "rgba(255,255,255,0.25)" }} />
+                      <div style={{ width: "60%", height: 3, background: "rgba(255,255,255,0.25)" }} />
+                      <div style={{ width: "50%", height: 2, background: "rgba(255,255,255,0.1)", marginTop: 4 }} />
+                    </div>
+                    <div style={{ flex: 1, background: "rgba(255,255,255,0.08)" }} />
+                  </div>
+                )},
+                { id: "bold", name: "Cesur", desc: "Dev tipografi, dramatik boşluk, dikkat çekici", preview: (
+                  <div style={{ height: 100, background: "rgba(255,255,255,0.03)", display: "flex", alignItems: "center", padding: "8px 12px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      <div style={{ width: 90, height: 6, background: "rgba(255,255,255,0.3)" }} />
+                      <div style={{ width: 70, height: 6, background: "rgba(255,255,255,0.2)" }} />
+                      <div style={{ width: 50, height: 6, background: "rgba(255,255,255,0.1)" }} />
+                    </div>
+                  </div>
+                )},
+              ].map(t => (
+                <button key={t.id} onClick={() => setConfig({ ...config, siteTheme: t.id })} style={{
+                  padding: 0, background: (config.siteTheme || "cinematic") === t.id ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.01)",
+                  border: (config.siteTheme || "cinematic") === t.id ? "2px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.08)",
+                  cursor: "pointer", textAlign: "left", overflow: "hidden"
+                }}>
+                  {t.preview}
+                  <div style={{ padding: "10px 12px" }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{t.name}</div>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", lineHeight: 1.4 }}>{t.desc}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Logo */}
           <div style={{ marginBottom: 20 }}>

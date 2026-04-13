@@ -314,6 +314,7 @@ model GlobalSettings {
   seoDescription  String?
   accentColor     String   @default("#ffffff")
   fontFamily      String   @default("geist")
+  siteTheme       String   @default("cinematic") // cinematic, minimal, editorial, bold
 
   // Mevcut alanlar
   heroTitle    String   @default("Anları Sanata Dönüştürüyoruz")

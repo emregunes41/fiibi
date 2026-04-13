@@ -936,7 +936,7 @@ export async function updateSiteConfig(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions, businessName, logoUrl, faviconUrl, footerTagline, seoTitle, seoDescription, accentColor, fontFamily, paymentMode, paytrMerchantId, paytrApiKey, paytrSecretKey, setupCompleted } = data;
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions, businessName, logoUrl, faviconUrl, footerTagline, seoTitle, seoDescription, accentColor, fontFamily, siteTheme, paymentMode, paytrMerchantId, paytrApiKey, paytrSecretKey, setupCompleted } = data;
 
     // Tenant-aware: mevcut tenant'ın settings ID'sini bul
     let tenant = await getCurrentTenant();
@@ -993,6 +993,7 @@ export async function updateSiteConfig(data) {
         seoDescription: seoDescription || null,
         accentColor: accentColor || "#ffffff",
         fontFamily: fontFamily || "geist",
+        siteTheme: siteTheme || "cinematic",
         paymentMode: paymentMode || "cash",
         paytrMerchantId: paytrMerchantId || "",
         paytrApiKey: paytrApiKey || "",

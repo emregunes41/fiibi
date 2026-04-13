@@ -11,6 +11,9 @@ import BannerCarousel from "@/components/BannerCarousel";
 import ContentBlockCarousel from "@/components/ContentBlockCarousel";
 import { optimizeCloudinaryUrl, thumbnailUrl } from "@/lib/image-utils";
 import { ArrowDown, Instagram, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
+import MinimalTheme from "@/components/themes/MinimalTheme";
+import EditorialTheme from "@/components/themes/EditorialTheme";
+import BoldTheme from "@/components/themes/BoldTheme";
 
 export const revalidate = 60; // cache for 60 seconds
 
@@ -38,9 +41,90 @@ export default async function PinowedPage() {
     return null;
   }).filter(Boolean);
 
+  const theme = siteConfig?.siteTheme || "cinematic";
+
+  // Footer (tüm temalar için ortak)
+  const FooterSection = (
+    <>
+      <footer id="contact" className="border-t border-white/[0.06]">
+        <div className="section-container py-20">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8">
+            <div className="md:col-span-5">
+              <h3 className="font-serif text-4xl md:text-5xl tracking-tight text-white mb-4" style={{ lineHeight: 1.1 }}>
+                {siteConfig?.businessName || "Studio"}<span className="text-white/20">.</span>
+              </h3>
+              <p className="text-white/25 text-[13px] leading-relaxed max-w-[280px]">
+                {siteConfig?.footerTagline || "Hayatınızın en özel anlarını, sanatsal bir dokunuşla ölümsüzleştiriyoruz."}
+              </p>
+            </div>
+            <div className="md:col-span-7">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.25em] text-white/25 mb-5 font-semibold">İletişim</div>
+                  <div className="flex flex-col gap-3">
+                    <a href={`tel:${(siteConfig?.phone || "").replace(/\s/g, '')}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
+                      <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0"><Phone size={13} strokeWidth={1.5} /></span>
+                      {siteConfig?.phone || ""}
+                    </a>
+                    <a href={`mailto:${siteConfig?.email || ""}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
+                      <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0"><Mail size={13} strokeWidth={1.5} /></span>
+                      {siteConfig?.email || ""}
+                    </a>
+                    {siteConfig?.address && (
+                      <div className="text-[13px] text-white/50 flex items-center gap-3">
+                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center flex-shrink-0"><MapPin size={13} strokeWidth={1.5} /></span>
+                        {siteConfig.address}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.25em] text-white/25 mb-5 font-semibold">Bağlantılar</div>
+                  <div className="flex flex-col gap-3">
+                    {siteConfig?.whatsapp && (
+                      <a href={`https://wa.me/${siteConfig.whatsapp}?text=Merhaba%2C%20bilgi%20almak%20istiyorum.`} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
+                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#25D366]/20 group-hover:border-[#25D366]/30 transition-all flex-shrink-0"><MessageCircle size={13} strokeWidth={1.5} /></span>
+                        WhatsApp
+                      </a>
+                    )}
+                    {siteConfig?.instagram && (
+                      <a href={siteConfig.instagram} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
+                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#E1306C]/20 group-hover:border-[#E1306C]/30 transition-all flex-shrink-0"><Instagram size={13} strokeWidth={1.5} /></span>
+                        Instagram
+                      </a>
+                    )}
+                    {siteConfig?.googleMapsUrl && (
+                      <a href={siteConfig.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
+                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#4285F4]/20 group-hover:border-[#4285F4]/30 transition-all flex-shrink-0"><MapPin size={13} strokeWidth={1.5} /></span>
+                        Yol Tarifi
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-white/[0.04]">
+          <div className="section-container py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <span className="text-[10px] text-white/20 uppercase tracking-[0.2em]">© {new Date().getFullYear()} {siteConfig?.businessName || "Studio"}</span>
+          </div>
+        </div>
+      </footer>
+      {siteConfig?.chatbotEnabled !== false && <AIChatBot />}
+    </>
+  );
+
+  const themeProps = { siteConfig, categories, packages, banners, contentBlocks, renderTitle, preloadUrls, FooterSection };
+
+  // Tema yönlendirmesi
+  if (theme === "minimal") return <MinimalTheme {...themeProps} />;
+  if (theme === "editorial") return <EditorialTheme {...themeProps} />;
+  if (theme === "bold") return <BoldTheme {...themeProps} />;
+
+  // Default: Sinematik (mevcut tasarım)
   return (
     <main className="relative min-h-screen w-full">
-      {/* Preload portfolio images */}
       {preloadUrls.map((url, i) => (
         <link key={i} rel="preload" as="image" href={url} />
       ))}
@@ -129,103 +213,9 @@ export default async function PinowedPage() {
         </div>
       </section>
 
-      {/* 4. Contact & Footer */}
-      <footer id="contact" className="border-t border-white/[0.06]">
-        {/* Main Footer Content */}
-        <div className="section-container py-20">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8">
-
-            {/* Left — Brand */}
-            <div className="md:col-span-5">
-              <h3 className="font-serif text-4xl md:text-5xl tracking-tight text-white mb-4" style={{ lineHeight: 1.1 }}>
-                {siteConfig?.businessName || "Studio"}<span className="text-white/20">.</span>
-              </h3>
-              <p className="text-white/25 text-[13px] leading-relaxed max-w-[280px]">
-                {siteConfig?.footerTagline || "Hayatınızın en özel anlarını, sanatsal bir dokunuşla ölümsüzleştiriyoruz."}
-              </p>
-            </div>
-
-            {/* Right — Contact */}
-            <div className="md:col-span-7">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-                
-                {/* İletişim */}
-                <div>
-                  <div className="text-[10px] uppercase tracking-[0.25em] text-white/25 mb-5 font-semibold">İletişim</div>
-                  <div className="flex flex-col gap-3">
-                    <a href={`tel:${(siteConfig?.phone || "0539 205 20 41").replace(/\s/g, '')}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0">
-                        <Phone size={13} strokeWidth={1.5} />
-                      </span>
-                      {siteConfig?.phone || "0539 205 20 41"}
-                    </a>
-                    <a href={`mailto:${siteConfig?.email || ""}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0">
-                        <Mail size={13} strokeWidth={1.5} />
-                      </span>
-                      {siteConfig?.email || ""}
-                    </a>
-                    {siteConfig?.address && (
-                      <div className="text-[13px] text-white/50 flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center flex-shrink-0">
-                          <MapPin size={13} strokeWidth={1.5} />
-                        </span>
-                        {siteConfig.address}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Bağlantılar */}
-                <div>
-                  <div className="text-[10px] uppercase tracking-[0.25em] text-white/25 mb-5 font-semibold">Bağlantılar</div>
-                  <div className="flex flex-col gap-3">
-                    {siteConfig?.whatsapp && (
-                      <a href={`https://wa.me/${siteConfig.whatsapp}?text=Merhaba%2C%20bilgi%20almak%20istiyorum.`} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#25D366]/20 group-hover:border-[#25D366]/30 transition-all flex-shrink-0">
-                          <MessageCircle size={13} strokeWidth={1.5} />
-                        </span>
-                        WhatsApp
-                      </a>
-                    )}
-                    {siteConfig?.instagram && (
-                      <a href={siteConfig.instagram} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#E1306C]/20 group-hover:border-[#E1306C]/30 transition-all flex-shrink-0">
-                          <Instagram size={13} strokeWidth={1.5} />
-                        </span>
-                        Instagram
-                      </a>
-                    )}
-                    {siteConfig?.googleMapsUrl && (
-                      <a href={siteConfig.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#4285F4]/20 group-hover:border-[#4285F4]/30 transition-all flex-shrink-0">
-                          <MapPin size={13} strokeWidth={1.5} />
-                        </span>
-                        Yol Tarifi
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        {/* Copyright Bar */}
-        <div className="border-t border-white/[0.04]">
-          <div className="section-container py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <span className="text-[10px] text-white/20 uppercase tracking-[0.2em]">© {new Date().getFullYear()} {siteConfig?.businessName || "Studio"}</span>
-            <span className="text-[10px] text-white/10 tracking-wider">{siteConfig?._tenant?.slug ? `${siteConfig._tenant.slug}.${process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || 'photoapp.co'}` : ''}</span>
-          </div>
-        </div>
-      </footer>
-
-      {/* Floating Chat - sadece anasayfada, settings'den aktifse */}
-      {siteConfig?.chatbotEnabled !== false && <AIChatBot />}
+      {/* Footer */}
+      {FooterSection}
 
     </main>
   );
 }
-
