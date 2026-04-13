@@ -173,7 +173,7 @@ export default function OnboardingPage() {
                 <div style={{ marginBottom: 20 }}>
                   <label style={labelStyle}>Referans Kodu <span style={{ fontWeight: 400, textTransform: "none", fontSize: 10 }}>(varsa)</span></label>
                   <input type="text" value={form.referralCode} onChange={e => setForm(prev => ({ ...prev, referralCode: e.target.value.toUpperCase() }))} placeholder="ABC123" maxLength={6} style={{ ...inputStyle, letterSpacing: "0.1em", textTransform: "uppercase" }} />
-                  {form.referralCode && <div style={{ marginTop: 6, fontSize: 11, color: "rgba(74,222,128,0.7)" }}>✓ Referans ile her iki tarafa 30 gün bonus</div>}
+                  {form.referralCode && <div style={{ marginTop: 6, fontSize: 11, color: "rgba(74,222,128,0.7)" }}>✓ Referans kodu girildi</div>}
                 </div>
                 {selectedPlanObj && (
                   <div style={{ background: `${selectedPlanObj.color}08`, border: `1px solid ${selectedPlanObj.color}20`, padding: "14px 16px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>

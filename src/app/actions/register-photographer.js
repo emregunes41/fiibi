@@ -59,8 +59,6 @@ export async function registerPhotographer(data) {
       newReferralCode = genCode();
     }
 
-    const trialDays = referringTenant ? 37 : 7; // 30 gün bonus + 7 gün normal
-
     // Transaction: Tenant + Admin + GlobalSettings
     const result = await prisma.$transaction(async (tx) => {
       const tenant = await tx.tenant.create({
@@ -73,7 +71,7 @@ export async function registerPhotographer(data) {
           password: hashedPassword,
           plan: "trial",
           selectedPlan: selectedPlan || "monthly",
-          planExpiresAt: new Date(Date.now() + trialDays * 24 * 60 * 60 * 1000),
+          planExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 gün trial
           referralCode: newReferralCode,
           referredBy: referringTenant?.id || null,
         }
@@ -107,18 +105,7 @@ export async function registerPhotographer(data) {
         }
       });
 
-      // Referans veren kişiye de 30 gün bonus ekle
-      if (referringTenant) {
-        const currentExpiry = referringTenant.planExpiresAt || new Date();
-        const baseDate = currentExpiry > new Date() ? currentExpiry : new Date();
-        await tx.tenant.update({
-          where: { id: referringTenant.id },
-          data: {
-            planExpiresAt: new Date(baseDate.getTime() + 30 * 24 * 60 * 60 * 1000),
-            referralCount: { increment: 1 },
-          }
-        });
-      }
+      // NOT: Referans bonusu (30 gün) ilk ödeme sonrası verilecek (iyzico entegrasyonunda)
 
       return tenant;
     });

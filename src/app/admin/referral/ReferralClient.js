@@ -23,7 +23,7 @@ export default function ReferralClient({ tenant, referrals }) {
           Arkadaşını Getir
         </h1>
         <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}>
-          Referans kodunuzu paylaşın, her iki tarafa da <strong style={{ color: "#fff" }}>30 gün ücretsiz</strong> kullanım.
+          Referans kodunuzu paylaşın. Davet ettiğiniz kişi ilk ödemesini yaptığında size <strong style={{ color: "#fff" }}>30 gün ücretsiz</strong> kullanım.
         </p>
       </div>
 
@@ -66,7 +66,7 @@ export default function ReferralClient({ tenant, referrals }) {
         {[
           { step: "1", title: "Kodu Paylaşın", desc: "Referans kodunuzu veya linkinizi fotoğrafçı arkadaşlarınıza gönderin." },
           { step: "2", title: "Kayıt Olsunlar", desc: "Arkadaşınız kayıt olurken referans kodunu girsin." },
-          { step: "3", title: "30 Gün Bonus", desc: "Her iki tarafa da 30 gün ücretsiz kullanım eklenir." },
+          { step: "3", title: "30 Gün Bonus", desc: "Davet ettiğiniz kişi ilk ödemesini yaptığında hesabınıza 30 gün eklenir." },
         ].map((s, i) => (
           <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", padding: "20px 16px" }}>
             <div style={{ fontSize: 24, fontWeight: 800, color: "rgba(255,255,255,0.06)", marginBottom: 8 }}>0{s.step}</div>

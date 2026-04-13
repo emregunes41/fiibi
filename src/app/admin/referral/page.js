@@ -22,10 +22,23 @@ export default async function ReferralPage() {
   const tenantId = await getTenantId();
   if (!tenantId) return <p>Yetkisiz erişim</p>;
 
-  const tenant = await prisma.tenant.findUnique({
+  let tenant = await prisma.tenant.findUnique({
     where: { id: tenantId },
     select: { referralCode: true, referralCount: true, slug: true },
   });
+
+  // Mevcut tenant'ın kodu yoksa otomatik oluştur
+  if (tenant && !tenant.referralCode) {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let code = "";
+    for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+    // Çakışma kontrolü
+    const exists = await prisma.tenant.findUnique({ where: { referralCode: code } });
+    if (!exists) {
+      await prisma.tenant.update({ where: { id: tenantId }, data: { referralCode: code } });
+      tenant = { ...tenant, referralCode: code };
+    }
+  }
 
   // Bu tenant'ı referans koduyle kaydolan kişiler
   const referrals = await prisma.tenant.findMany({
