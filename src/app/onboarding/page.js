@@ -23,8 +23,15 @@ export default function OnboardingPage() {
   const [faq, setFaq] = useState(null);
 
   const [form, setForm] = useState({
-    businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "",
+    businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "", referralCode: "",
   });
+
+  // URL'den referans kodu al
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref) setForm(prev => ({ ...prev, referralCode: ref.toUpperCase() }));
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -49,7 +56,8 @@ export default function OnboardingPage() {
     setError("");
     const res = await registerPhotographer({
       businessName: form.businessName, ownerName: form.ownerName, ownerEmail: form.ownerEmail,
-      ownerPhone: form.ownerPhone, password: form.password, slug: form.slug, selectedPlan: form.selectedPlan,
+      ownerPhone: form.ownerPhone, password: form.password, slug: form.slug,
+      selectedPlan: form.selectedPlan, referralCode: form.referralCode,
     });
     if (res.error) { setError(res.error); setLoading(false); return; }
     setResult(res.tenant);
@@ -161,6 +169,11 @@ export default function OnboardingPage() {
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
                   <div><label style={labelStyle}>Telefon</label><input type="tel" value={form.ownerPhone} onChange={e => setForm(prev => ({ ...prev, ownerPhone: e.target.value }))} placeholder="0555 123 45 67" style={inputStyle} /></div>
                   <div><label style={labelStyle}>Şifre *</label><input type="password" required minLength={6} value={form.password} onChange={e => setForm(prev => ({ ...prev, password: e.target.value }))} placeholder="En az 6 karakter" style={inputStyle} /></div>
+                </div>
+                <div style={{ marginBottom: 20 }}>
+                  <label style={labelStyle}>Referans Kodu <span style={{ fontWeight: 400, textTransform: "none", fontSize: 10 }}>(varsa)</span></label>
+                  <input type="text" value={form.referralCode} onChange={e => setForm(prev => ({ ...prev, referralCode: e.target.value.toUpperCase() }))} placeholder="ABC123" maxLength={6} style={{ ...inputStyle, letterSpacing: "0.1em", textTransform: "uppercase" }} />
+                  {form.referralCode && <div style={{ marginTop: 6, fontSize: 11, color: "rgba(74,222,128,0.7)" }}>✓ Referans ile her iki tarafa 30 gün bonus</div>}
                 </div>
                 {selectedPlanObj && (
                   <div style={{ background: `${selectedPlanObj.color}08`, border: `1px solid ${selectedPlanObj.color}20`, padding: "14px 16px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>

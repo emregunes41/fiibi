@@ -8,7 +8,7 @@ import bcrypt from "bcryptjs";
  */
 export async function registerPhotographer(data) {
   try {
-    const { businessName, ownerName, ownerEmail, ownerPhone, password, slug, selectedPlan } = data;
+    const { businessName, ownerName, ownerEmail, ownerPhone, password, slug, selectedPlan, referralCode: inputReferral } = data;
 
     // Validasyon
     if (!businessName || !ownerName || !ownerEmail || !password || !slug) {
@@ -41,9 +41,28 @@ export async function registerPhotographer(data) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
+    // Referans kodu kontrolü
+    let referringTenant = null;
+    if (inputReferral) {
+      referringTenant = await prisma.tenant.findUnique({ where: { referralCode: inputReferral.toUpperCase() } });
+    }
+
+    // Benzersiz referans kodu oluştur
+    function genCode() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let code = "";
+      for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+      return code;
+    }
+    let newReferralCode = genCode();
+    while (await prisma.tenant.findUnique({ where: { referralCode: newReferralCode } })) {
+      newReferralCode = genCode();
+    }
+
+    const trialDays = referringTenant ? 37 : 7; // 30 gün bonus + 7 gün normal
+
     // Transaction: Tenant + Admin + GlobalSettings
     const result = await prisma.$transaction(async (tx) => {
-      // 1. Tenant oluştur
       const tenant = await tx.tenant.create({
         data: {
           slug: cleanSlug,
@@ -53,8 +72,10 @@ export async function registerPhotographer(data) {
           ownerPhone: ownerPhone || null,
           password: hashedPassword,
           plan: "trial",
-          selectedPlan: selectedPlan || "monthly", // Deneme sonrası geçilecek plan
-          planExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 gün trial
+          selectedPlan: selectedPlan || "monthly",
+          planExpiresAt: new Date(Date.now() + trialDays * 24 * 60 * 60 * 1000),
+          referralCode: newReferralCode,
+          referredBy: referringTenant?.id || null,
         }
       });
 
@@ -85,6 +106,19 @@ export async function registerPhotographer(data) {
           notifyPhotosReady: true,
         }
       });
+
+      // Referans veren kişiye de 30 gün bonus ekle
+      if (referringTenant) {
+        const currentExpiry = referringTenant.planExpiresAt || new Date();
+        const baseDate = currentExpiry > new Date() ? currentExpiry : new Date();
+        await tx.tenant.update({
+          where: { id: referringTenant.id },
+          data: {
+            planExpiresAt: new Date(baseDate.getTime() + 30 * 24 * 60 * 60 * 1000),
+            referralCount: { increment: 1 },
+          }
+        });
+      }
 
       return tenant;
     });
