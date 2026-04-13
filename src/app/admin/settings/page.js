@@ -1206,64 +1206,39 @@ export default function SettingsPage() {
         {activeTab === "marka" && <div style={sectionCard}>
           {sectionHeader(Palette, "Marka & Kimlik", "Tema, logo, renkler ve yazı tipi ayarları.")}
 
-          {/* Site Teması */}
+          {/* Renk Paleti */}
           <div style={{ marginBottom: 28 }}>
-            <label style={label}>Site Teması</label>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
+            <label style={label}>Renk Paleti</label>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 8 }}>
               {[
-                { id: "cinematic", name: "Sinematik", desc: "Tam ekran hero, ortalanmış başlık, portfolyo grid", preview: (
-                  <div style={{ height: 100, background: "rgba(255,255,255,0.03)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-                    <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 4 }}>
-                      <div style={{ width: 60, height: 3, background: "rgba(255,255,255,0.3)" }} />
-                      <div style={{ width: 40, height: 2, background: "rgba(255,255,255,0.15)" }} />
-                      <div style={{ fontSize: 8, color: "rgba(255,255,255,0.2)", marginTop: 4 }}>▼</div>
+                { id: "dark",   name: "Gece",     desc: "Klasik siyah",     colors: ["#0a0a0a", "#161616", "#ffffff"] },
+                { id: "slate",  name: "Antrasit",  desc: "Koyu gri tonlar",  colors: ["#1a1d21", "#24282e", "#e8eaed"] },
+                { id: "coffee", name: "Kahve",     desc: "Sıcak kahverengi", colors: ["#16110d", "#201a14", "#f0e6d8"] },
+                { id: "ocean",  name: "Okyanus",   desc: "Derin lacivert",   colors: ["#0c1525", "#131f35", "#dce4f0"] },
+                { id: "forest", name: "Orman",     desc: "Koyu yeşil",       colors: ["#0d1710", "#142018", "#ddeee2"] },
+                { id: "wine",   name: "Şarap",     desc: "Bordo tonlar",     colors: ["#1a0d12", "#25141a", "#f0e0e5"] },
+                { id: "light",  name: "Aydınlık",  desc: "Temiz beyaz",      colors: ["#f8f8f6", "#f0f0ee", "#1a1a1a"] },
+                { id: "cream",  name: "Krem",      desc: "Sıcak bej",        colors: ["#f5f0e6", "#ebe5da", "#2a2520"] },
+              ].map(p => {
+                const selected = (config.siteTheme || "dark") === p.id;
+                return (
+                  <button key={p.id} onClick={() => setConfig({ ...config, siteTheme: p.id })} style={{
+                    padding: 0, background: selected ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.01)",
+                    border: selected ? "2px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.08)",
+                    cursor: "pointer", textAlign: "left", overflow: "hidden"
+                  }}>
+                    <div style={{ display: "flex", height: 40 }}>
+                      <div style={{ flex: 2, background: p.colors[0] }} />
+                      <div style={{ flex: 1, background: p.colors[1] }} />
+                      <div style={{ flex: 0.5, background: p.colors[2] }} />
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 2, padding: "4px 8px 8px" }}>
-                      {[1,2,3].map(i => <div key={i} style={{ height: 16, background: "rgba(255,255,255,0.08)" }} />)}
+                    <div style={{ padding: "8px 10px" }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{p.name}</div>
+                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>{p.desc}</div>
                     </div>
-                  </div>
-                )},
-                { id: "minimal", name: "Minimal", desc: "Temiz, bol beyaz alan, sade tipografi", preview: (
-                  <div style={{ height: 100, background: "rgba(255,255,255,0.03)", display: "flex", flexDirection: "column", padding: "12px 16px", gap: 8 }}>
-                    <div style={{ width: 50, height: 2, background: "rgba(255,255,255,0.2)" }} />
-                    <div style={{ width: 30, height: 1, background: "rgba(255,255,255,0.1)" }} />
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3, flex: 1 }}>
-                      {[1,2,3,4].map(i => <div key={i} style={{ background: "rgba(255,255,255,0.06)" }} />)}
-                    </div>
-                  </div>
-                )},
-                { id: "editorial", name: "Editorial", desc: "Dergi tarzı, sol metin sağ görsel, bölünmüş düzen", preview: (
-                  <div style={{ height: 100, background: "rgba(255,255,255,0.03)", display: "flex", gap: 3, padding: 8 }}>
-                    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 4 }}>
-                      <div style={{ width: "80%", height: 3, background: "rgba(255,255,255,0.25)" }} />
-                      <div style={{ width: "60%", height: 3, background: "rgba(255,255,255,0.25)" }} />
-                      <div style={{ width: "50%", height: 2, background: "rgba(255,255,255,0.1)", marginTop: 4 }} />
-                    </div>
-                    <div style={{ flex: 1, background: "rgba(255,255,255,0.08)" }} />
-                  </div>
-                )},
-                { id: "bold", name: "Cesur", desc: "Dev tipografi, dramatik boşluk, dikkat çekici", preview: (
-                  <div style={{ height: 100, background: "rgba(255,255,255,0.03)", display: "flex", alignItems: "center", padding: "8px 12px" }}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                      <div style={{ width: 90, height: 6, background: "rgba(255,255,255,0.3)" }} />
-                      <div style={{ width: 70, height: 6, background: "rgba(255,255,255,0.2)" }} />
-                      <div style={{ width: 50, height: 6, background: "rgba(255,255,255,0.1)" }} />
-                    </div>
-                  </div>
-                )},
-              ].map(t => (
-                <button key={t.id} onClick={() => setConfig({ ...config, siteTheme: t.id })} style={{
-                  padding: 0, background: (config.siteTheme || "cinematic") === t.id ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.01)",
-                  border: (config.siteTheme || "cinematic") === t.id ? "2px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.08)",
-                  cursor: "pointer", textAlign: "left", overflow: "hidden"
-                }}>
-                  {t.preview}
-                  <div style={{ padding: "10px 12px" }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{t.name}</div>
-                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", lineHeight: 1.4 }}>{t.desc}</div>
-                  </div>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
