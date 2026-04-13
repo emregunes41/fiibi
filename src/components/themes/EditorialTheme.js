@@ -6,10 +6,12 @@ import Image from "next/image";
 import { optimizeCloudinaryUrl } from "@/lib/image-utils";
 import BannerCarousel from "@/components/BannerCarousel";
 import ContentBlockCarousel from "@/components/ContentBlockCarousel";
+import { useRef } from "react";
 
 export default function EditorialTheme({ siteConfig, categories, packages, banners, contentBlocks, preloadUrls, FooterSection }) {
   const accent = siteConfig?.accentColor || "#fff";
-  const renderTitle = (text) => text.split('\n').map((line, i) => <span key={i}>{line}{i !== text.split('\n').length - 1 && <br />}</span>);
+  const scrollRef = useRef(null);
+
   const firstCat = categories?.[0];
   const coverUrl = firstCat?.photos?.[0]?.url;
 
@@ -17,24 +19,25 @@ export default function EditorialTheme({ siteConfig, categories, packages, banne
     <main className="relative min-h-screen w-full">
       {preloadUrls.map((url, i) => <link key={i} rel="preload" as="image" href={url} />)}
 
-      {/* Editorial Hero — sol metin, sağ görsel */}
-      <section style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "80px 5vw 80px 5vw" }}>
-          <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.3)", marginBottom: 20 }}>
-            {siteConfig?.heroSubtitle || "Photography Studio"}
-          </span>
-          <h1 style={{ fontSize: "clamp(2.5rem, 4vw, 4rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1.1, color: "#fff", marginBottom: 24 }}>
-            {renderTitle(siteConfig?.heroTitle || "Anları Sanata\nDönüştürüyoruz")}
+      {/* Editorial Hero — bölünmüş: sol metin, sağ fotoğraf */}
+      <section style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "120px 60px 80px" }}>
+          <div style={{ fontSize: 9, letterSpacing: "0.4em", textTransform: "uppercase", color: "rgba(255,255,255,0.2)", marginBottom: 24 }}>
+            Sayı 01 — {new Date().getFullYear()}
+          </div>
+          <h1 style={{ fontSize: "clamp(2.5rem, 4vw, 4rem)", fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1.08, color: "#fff", marginBottom: 24 }}>
+            {(siteConfig?.heroTitle || "Anları Sanata\nDönüştürüyoruz").split('\n').map((l, i) => <span key={i}>{l}{i === 0 && <br />}</span>)}
           </h1>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.7, maxWidth: 360, marginBottom: 32 }}>
-            {siteConfig?.footerTagline || "Profesyonel fotoğrafçılık hizmetleri ile en özel anlarınızı ölümsüzleştiriyoruz."}
+          <div style={{ width: 50, height: 1, background: accent, marginBottom: 24, opacity: 0.5 }} />
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", lineHeight: 1.8, maxWidth: 320, marginBottom: 40 }}>
+            {siteConfig?.footerTagline || "Profesyonel fotoğrafçılık hizmetleri."}
           </p>
-          <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-            <Link href="/booking" style={{ padding: "12px 24px", background: accent, color: "#000", fontSize: 12, fontWeight: 700, textDecoration: "none", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-              Randevu Al
+          <div style={{ display: "flex", gap: 16 }}>
+            <Link href="/booking" style={{ padding: "12px 28px", background: "#fff", color: "#000", fontSize: 10, fontWeight: 800, textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase" }}>
+              Randevu
             </Link>
-            <Link href="#portfolio" style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase" }}>
-              Portfolio →
+            <Link href="#portfolio" style={{ padding: "12px 28px", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.5)", fontSize: 10, fontWeight: 700, textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase" }}>
+              Portfolyo
             </Link>
           </div>
         </div>
@@ -42,54 +45,77 @@ export default function EditorialTheme({ siteConfig, categories, packages, banne
           {coverUrl ? (
             <Image src={optimizeCloudinaryUrl(coverUrl, 1200)} alt="Hero" fill style={{ objectFit: "cover" }} priority />
           ) : (
-            <div style={{ width: "100%", height: "100%", background: "rgba(255,255,255,0.03)" }} />
+            <div style={{ width: "100%", height: "100%", background: "rgba(255,255,255,0.02)" }} />
           )}
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 30%)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 40%)" }} />
+          <div style={{ position: "absolute", bottom: 30, left: 30, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: "0.2em", textTransform: "uppercase" }}>
+            {firstCat?.name || ""}
+          </div>
         </div>
       </section>
 
-      {/* Banner Carousel */}
+      {/* Banner */}
       {banners && banners.length > 0 && (
-        <section className="py-12 pb-8 border-t border-white/5">
-          <div className="section-container">
-            <BannerCarousel banners={banners} />
-          </div>
+        <section className="py-12 border-t border-white/5">
+          <div className="section-container"><BannerCarousel banners={banners} /></div>
         </section>
       )}
 
-      {/* Content Blocks */}
+      {/* Content Blocks — dergi sayfası stili: numara + başlık + açıklama */}
       {contentBlocks && contentBlocks.filter(b => b.isActive).length > 0 && (
-        <section style={{ paddingTop: 20, paddingBottom: 40, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-          <div className="section-container">
-            <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
-              {contentBlocks.filter(b => b.isActive).map((block, idx) => (
-                <div key={block.id} style={{ display: "flex", flexDirection: idx % 2 === 0 ? "row" : "row-reverse", gap: "2.5rem", alignItems: "center", flexWrap: "wrap" }}>
-                  {block.imageUrls && block.imageUrls.length > 0 && (
-                    <div style={{ flex: "1 1 300px", minWidth: 0 }}><ContentBlockCarousel images={block.imageUrls} /></div>
-                  )}
-                  {(block.title || block.description) && (
-                    <div style={{ flex: "1 1 300px", minWidth: 0 }}>
-                      {block.title && <h3 style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.02em", color: "#fff", margin: "0 0 1rem", lineHeight: 1.2 }}>{block.title}</h3>}
-                      {block.description && <p style={{ fontSize: "0.9rem", lineHeight: 1.8, color: "rgba(255,255,255,0.45)", margin: 0, whiteSpace: "pre-line" }}>{block.description}</p>}
-                    </div>
-                  )}
-                </div>
-              ))}
+        <section style={{ padding: "60px 0", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          {contentBlocks.filter(b => b.isActive).map((block, idx) => (
+            <div key={block.id} style={{ display: "grid", gridTemplateColumns: "80px 1fr 1fr", gap: 0, borderBottom: "1px solid rgba(255,255,255,0.04)", minHeight: 300 }}>
+              {/* Sol: numara */}
+              <div style={{ borderRight: "1px solid rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ fontSize: 32, fontWeight: 200, color: "rgba(255,255,255,0.08)" }}>{String(idx + 1).padStart(2, "0")}</span>
+              </div>
+              {/* Orta: metin */}
+              <div style={{ padding: "40px 32px", display: "flex", flexDirection: "column", justifyContent: "center", borderRight: "1px solid rgba(255,255,255,0.04)" }}>
+                {block.title && <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 12, color: "#fff" }}>{block.title}</h3>}
+                {block.description && <p style={{ fontSize: 13, lineHeight: 1.8, color: "rgba(255,255,255,0.4)", margin: 0, whiteSpace: "pre-line" }}>{block.description}</p>}
+              </div>
+              {/* Sağ: görsel */}
+              <div style={{ position: "relative", overflow: "hidden" }}>
+                {block.imageUrls?.[0] ? (
+                  <Image src={optimizeCloudinaryUrl(block.imageUrls[0], 800)} alt={block.title || ""} fill style={{ objectFit: "cover" }} />
+                ) : (
+                  <div style={{ width: "100%", height: "100%", background: "rgba(255,255,255,0.02)" }} />
+                )}
+              </div>
             </div>
-          </div>
+          ))}
         </section>
       )}
 
-      {/* Portfolyo */}
-      <section id="portfolio" style={{ padding: "80px 5vw", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-        <div style={{ marginBottom: 48 }}>
-          <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.25em", color: "rgba(255,255,255,0.25)", display: "block", marginBottom: 8 }}>Çalışmalar</span>
-          <h2 style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)", fontWeight: 700, letterSpacing: "-0.03em" }}>Portfolyo</h2>
+      {/* Portfolyo — yatay scroll galeri */}
+      <section id="portfolio" style={{ padding: "80px 0 80px 5vw", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40, paddingRight: "5vw" }}>
+          <div>
+            <div style={{ fontSize: 9, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.2)", marginBottom: 8 }}>Koleksiyon</div>
+            <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.5rem)", fontWeight: 700, letterSpacing: "-0.03em" }}>Portfolyo</h2>
+          </div>
+          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", letterSpacing: "0.15em" }}>KAYDIR →</span>
         </div>
-        <GalleryClient categories={categories} />
+        <div ref={scrollRef} style={{ display: "flex", gap: 16, overflowX: "auto", paddingBottom: 20, scrollbarWidth: "none" }}>
+          {categories?.map(cat => {
+            const photo = cat.photos?.[0]?.url;
+            return (
+              <Link key={cat.id} href={`/gallery/${cat.id}`} style={{ flexShrink: 0, width: 320, textDecoration: "none", color: "inherit" }}>
+                {photo && (
+                  <div style={{ position: "relative", width: 320, height: 420, overflow: "hidden", marginBottom: 12 }}>
+                    <Image src={optimizeCloudinaryUrl(photo, 700)} alt={cat.name} fill style={{ objectFit: "cover", transition: "transform 0.5s" }} />
+                  </div>
+                )}
+                <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>{cat.name}</div>
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>{cat.photos?.length || 0} fotoğraf</div>
+              </Link>
+            );
+          })}
+          <div style={{ flexShrink: 0, width: 100 }} />
+        </div>
       </section>
 
-      {/* Footer */}
       {FooterSection}
     </main>
   );
