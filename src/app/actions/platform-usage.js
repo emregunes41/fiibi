@@ -273,6 +273,7 @@ export async function getVercelUsage() {
       plan,
     };
   } catch (err) {
+    console.error("Vercel usage error:", err);
     return { error: err.message };
   }
 }

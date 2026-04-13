@@ -10,27 +10,33 @@ export async function POST(req) {
     }
 
     const tenant = await getCurrentTenant();
-    const today = new Date().toISOString().split("T")[0]; // "2026-04-13"
-    const cleanPath = path.split("?")[0].split("#")[0]; // query/hash temizle
+    const tenantId = tenant?.id || null;
+    const today = new Date().toISOString().split("T")[0];
+    const cleanPath = path.split("?")[0].split("#")[0];
 
-    await prisma.pageView.upsert({
-      where: {
-        path_date_tenantId: {
-          path: cleanPath,
-          date: today,
-          tenantId: tenant?.id || "platform",
-        },
-      },
-      update: {
-        count: { increment: 1 },
-      },
-      create: {
-        path: cleanPath,
-        date: today,
-        tenantId: tenant?.id || null,
-        count: 1,
-      },
-    });
+    // Nullable tenantId ile @@unique çalışmadığı için raw query kullan
+    if (tenantId) {
+      await prisma.$executeRaw`
+        INSERT INTO "PageView" (id, path, date, "tenantId", count)
+        VALUES (gen_random_uuid()::text, ${cleanPath}, ${today}, ${tenantId}, 1)
+        ON CONFLICT (path, date, "tenantId") DO UPDATE SET count = "PageView".count + 1
+      `;
+    } else {
+      // tenantId null ise ayrı query (NULL unique davranışı)
+      const existing = await prisma.pageView.findFirst({
+        where: { path: cleanPath, date: today, tenantId: null }
+      });
+      if (existing) {
+        await prisma.pageView.update({
+          where: { id: existing.id },
+          data: { count: { increment: 1 } }
+        });
+      } else {
+        await prisma.pageView.create({
+          data: { path: cleanPath, date: today, tenantId: null, count: 1 }
+        });
+      }
+    }
 
     return NextResponse.json({ ok: true });
   } catch (err) {
