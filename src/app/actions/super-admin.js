@@ -83,14 +83,24 @@ export async function getAllTenants() {
 export async function getPlatformStats() {
   if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
 
-  const [tenantCount, activeCount, frozenCount, trialCount, totalReservations, totalUsers] = await Promise.all([
+  const [tenantCount, activeCount, frozenCount, trialCount, totalReservations, totalUsers, totalPackages, totalPhotos, totalPayments, totalBanners, totalAlbumModels, totalSettings, totalAdmins] = await Promise.all([
     prisma.tenant.count(),
     prisma.tenant.count({ where: { isActive: true, isFrozen: false } }),
     prisma.tenant.count({ where: { isFrozen: true } }),
     prisma.tenant.count({ where: { plan: "trial" } }),
     prisma.reservation.count(),
     prisma.user.count(),
+    prisma.photographyPackage.count(),
+    prisma.portfolioPhoto.count(),
+    prisma.payment.count(),
+    prisma.banner.count(),
+    prisma.albumModel.count(),
+    prisma.globalSettings.count(),
+    prisma.admin.count(),
   ]);
+
+  // Toplam DB satır tahmini
+  const totalRows = totalReservations + totalUsers + totalPackages + totalPhotos + totalPayments + totalBanners + totalAlbumModels + totalSettings + totalAdmins + tenantCount;
 
   return {
     tenantCount,
@@ -99,6 +109,10 @@ export async function getPlatformStats() {
     trialCount,
     totalReservations,
     totalUsers,
+    totalPackages,
+    totalPhotos,
+    totalPayments,
+    totalRows,
   };
 }
 

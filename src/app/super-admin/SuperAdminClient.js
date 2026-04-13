@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Shield, Users, Building2, CreditCard, Snowflake, Trash2,
-  RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check
+  RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check, BarChart
 } from "lucide-react";
 import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
@@ -110,6 +110,57 @@ export default function SuperAdminClient() {
                 <div style={{ fontSize: 24, fontWeight: 800 }}>{s.value}</div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Kaynak Kullanımı */}
+        {stats && (
+          <div style={{ marginBottom: 32 }}>
+            <h2 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+              <BarChart size={15} style={{ color: "rgba(255,255,255,0.4)" }} />
+              Kaynak Kullanımı
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
+              {[
+                { label: "Veritabanı Satırları", current: stats.totalRows, limit: 100000, unit: "", color: "#8b5cf6", sub: "Supabase Free: 500MB" },
+                { label: "Stüdyolar", current: stats.tenantCount, limit: 50, unit: "", color: "#4ade80", sub: "Platform kapasitesi" },
+                { label: "Fotoğraflar", current: stats.totalPhotos, limit: 10000, unit: "", color: "#f472b6", sub: "Cloudinary: 25GB" },
+                { label: "Rezervasyonlar", current: stats.totalReservations, limit: 5000, unit: "", color: "#facc15", sub: "Toplam platform" },
+                { label: "Paketler", current: stats.totalPackages, limit: 500, unit: "", color: "#38bdf8", sub: "Tüm stüdyolar" },
+                { label: "Ödemeler", current: stats.totalPayments, limit: 10000, unit: "", color: "#a78bfa", sub: "İşlem kayıtları" },
+              ].map((item, i) => {
+                const pct = Math.min(100, Math.round((item.current / item.limit) * 100));
+                const isWarning = pct > 70;
+                const isDanger = pct > 90;
+                return (
+                  <div key={i} style={{
+                    background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+                    padding: "16px 18px"
+                  }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)" }}>{item.label}</span>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: isDanger ? "#f87171" : isWarning ? "#fbbf24" : "rgba(255,255,255,0.4)" }}>
+                        {pct}%
+                      </span>
+                    </div>
+                    {/* Progress bar */}
+                    <div style={{ height: 4, background: "rgba(255,255,255,0.06)", marginBottom: 8 }}>
+                      <div style={{
+                        height: "100%", width: `${pct}%`,
+                        background: isDanger ? "#f87171" : isWarning ? "#fbbf24" : item.color,
+                        transition: "width 0.5s ease"
+                      }} />
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
+                        {item.current.toLocaleString("tr-TR")} / {item.limit.toLocaleString("tr-TR")}
+                      </span>
+                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>{item.sub}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 
