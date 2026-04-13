@@ -27,15 +27,34 @@ export default function SuperAdminClient() {
 
   async function loadData() {
     setLoading(true);
-    const [t, s, cloudinary, db, resend, vercel, pr] = await Promise.all([
-      getAllTenants(), getPlatformStats(),
-      getCloudinaryUsage(), getDbUsage(), getResendUsage(), getVercelUsage(),
-      getPlatformPricing()
-    ]);
-    if (!t.error) setTenants(t);
-    if (!s.error) setStats(s);
-    setUsage({ cloudinary, db, resend, vercel });
-    if (!pr.error) setPricing(pr);
+    try {
+      const results = await Promise.allSettled([
+        getAllTenants(),         // 0
+        getPlatformStats(),     // 1
+        getCloudinaryUsage(),   // 2
+        getDbUsage(),           // 3
+        getResendUsage(),       // 4
+        getVercelUsage(),       // 5
+        getPlatformPricing(),   // 6
+      ]);
+
+      const val = (i) => results[i].status === "fulfilled" ? results[i].value : null;
+
+      const t = val(0);
+      const s = val(1);
+      if (t && !t.error) setTenants(t);
+      if (s && !s.error) setStats(s);
+      setUsage({
+        cloudinary: val(2) || { error: "yüklenemedi" },
+        db: val(3) || { error: "yüklenemedi" },
+        resend: val(4) || { error: "yüklenemedi" },
+        vercel: val(5) || { error: "yüklenemedi" },
+      });
+      const pr = val(6);
+      if (pr && !pr.error) setPricing(pr);
+    } catch (err) {
+      console.error("Super admin loadData error:", err);
+    }
     setLoading(false);
   }
 
