@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Lock, User } from "lucide-react";
 import { loginAdmin } from "@/app/admin/actions";
@@ -10,6 +10,14 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [brandName, setBrandName] = useState("STUDIO");
+
+  useEffect(() => {
+    fetch("/api/auth/session").then(r => r.json()).then(data => {
+      const name = data?.tenant?.businessName;
+      if (name) setBrandName(name.toUpperCase());
+    }).catch(() => {});
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +45,7 @@ export default function AdminLogin() {
       >
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <div style={{ fontWeight: 800, fontSize: '1.5rem', letterSpacing: '-0.03em', marginBottom: '0.5rem' }}>
-            STUDIO.
+            {brandName}.
           </div>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Yönetici Paneline Giriş Yap</p>
         </div>

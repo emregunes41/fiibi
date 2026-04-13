@@ -542,7 +542,7 @@ export default function SettingsPage() {
                   value={config.email}
                   onChange={(e) => setConfig({ ...config, email: e.target.value })}
                   style={inpIcon}
-                  placeholder="hello@pinowed.com"
+                  placeholder="info@studio.com"
                   required
                 />
               </div>
@@ -564,7 +564,7 @@ export default function SettingsPage() {
                   value={config.instagram}
                   onChange={(e) => setConfig({ ...config, instagram: e.target.value })}
                   style={inpIcon}
-                  placeholder="https://instagram.com/pinowed"
+                  placeholder="https://instagram.com/studyonuz"
                 />
               </div>
             </div>
@@ -720,7 +720,7 @@ export default function SettingsPage() {
                   <label style={label}>Mesaj Başlığı</label>
                   <input type="text" value={config.netgsmMsgHeader || ""}
                     onChange={(e) => setConfig({ ...config, netgsmMsgHeader: e.target.value })}
-                    style={inp} placeholder="PINOWED"
+                    style={inp} placeholder="STUDYO ADI"
                   />
                 </div>
               </div>

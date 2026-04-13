@@ -9,6 +9,14 @@ import { useState, useEffect } from "react";
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [brandName, setBrandName] = useState("STUDIO");
+
+  useEffect(() => {
+    fetch("/api/auth/session").then(r => r.json()).then(data => {
+      const name = data?.tenant?.businessName || "STUDIO";
+      setBrandName(name.toUpperCase());
+    }).catch(() => {});
+  }, []);
 
   // Close sidebar on route change
   useEffect(() => {
@@ -35,7 +43,7 @@ export default function AdminLayout({ children }) {
   const sidebarContent = (
     <>
       <div style={{ fontWeight: 900, fontSize: "1.75rem", letterSpacing: "-0.04em", marginBottom: "3.5rem", paddingLeft: "0.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span>STUDIO.<span style={{ color: "rgba(255,255,255,0.4)", fontSize: "1.1rem" }}>admin</span></span>
+        <span>{brandName}<span style={{ color: "rgba(255,255,255,0.4)", fontSize: "1.1rem" }}>.admin</span></span>
         {/* Close button only on mobile */}
         <button
           onClick={() => setSidebarOpen(false)}

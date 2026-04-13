@@ -2,7 +2,7 @@
 
 import { getNotificationSettings, sendEmailWithResend } from "./notify";
 
-const ADMIN_EMAIL_FALLBACK = "hello@pinowed.com";
+const ADMIN_EMAIL_FALLBACK = "noreply@studio.com";
 
 async function getAdminEmail() {
   const settings = await getNotificationSettings();
