@@ -1,0 +1,542 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── TENANT (Kiracı) ─────────────────────────────────────────────
+model Tenant {
+  id              String    @id @default(cuid())
+  businessType    String    @default("photographer") // photographer, doctor, psychologist, dietitian, coach, beauty, veterinarian, dentist, physiotherapist, tutor, lawyer, consultant, other
+  slug            String    @unique           // "ahmet" → ahmet.photoapp.co
+  customDomain    String?   @unique           // "www.ahmetfoto.com"
+  businessName    String                      // "Ahmet Photography"
+  ownerName       String
+  ownerEmail      String    @unique
+  ownerPhone      String?
+  password        String                      // bcrypt hash
+
+  // Abonelik
+  plan            String    @default("trial") // trial, standard, pro
+  selectedPlan    String?                     // "monthly", "yearly", "lifetime" — deneme sonrası
+  planExpiresAt   DateTime?
+  iyzicoSubId     String?                     // iyzico abonelik referansı
+
+  // Durum
+  isActive        Boolean   @default(true)
+  isFrozen        Boolean   @default(false)   // Ödeme alamadığında dondurulur
+  frozenAt        DateTime?
+  failedPayments  Int       @default(0)       // Ardışık başarısız ödeme sayısı
+
+  // Referans
+  referralCode    String?   @unique           // "ABC123" — paylaşım kodu
+  referredBy      String?                     // Davet eden tenant ID
+  referralCount   Int       @default(0)       // Kaç kişi davet edildi
+
+  // Sub-Merchant (Alt Üye İşyeri) bilgileri
+  legalName       String?                     // Resmi unvan
+  legalType       String    @default("personal") // personal, sole_proprietorship, limited, joint_stock
+  taxId           String?                     // TCKN veya VKN
+  taxOffice       String?                     // Vergi dairesi
+  iban            String?                     // IBAN
+  legalAddress    String?                     // Resmi adres
+  commissionRate  Float     @default(5)       // Platform komisyon oranı (%)
+  subMerchantStatus String  @default("NOT_STARTED") // NOT_STARTED, PENDING, APPROVED, REJECTED
+  subMerchantKey  String?                     // PayTR sub-merchant key (onay sonrası)
+  sellerAgreementAccepted Boolean @default(false) // Satıcı sözleşmesi onayı
+  sellerAgreementDate     DateTime?           // Sözleşme onay tarihi
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // İlişkiler
+  settings          GlobalSettings?
+  admins            Admin[]
+  packages          PhotographyPackage[]
+  reservations      Reservation[]
+  users             User[]
+  portfolioCategories PortfolioCategory[]
+  banners           Banner[]
+  contentBlocks     ContentBlock[]
+  events            Event[]
+  eventRegistrations EventRegistration[]
+  albumModels       AlbumModel[]
+  discountCodes     DiscountCode[]
+  monthlyPrices     MonthlyPriceConfig[]
+  notifications        AdminNotification[]
+  pageViews            PageView[]
+  products             Product[]
+  productCategories    ProductCategory[]
+}
+
+// ─── ADMIN ────────────────────────────────────────────────────────
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  tenantId  String?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+}
+
+// ─── PAKETLER ─────────────────────────────────────────────────────
+model PhotographyPackage {
+  id           String        @id @default(cuid())
+  name         String
+  description  String
+  price        String
+  category     String        @default("STANDARD")
+  timeType     String        @default("FULL_DAY")
+  maxCapacity  Int           @default(1)
+  features     String[]
+  addons       Json?
+  customFields Json?
+  availableSlots Json?
+  workingDays    Json?          // [0,1,2,3,4,5,6] — 0=Pazar, 1=Pazartesi...
+  deliveryTimeDays Int           @default(14)
+  postSelectionDays Int          @default(0)
+  meetingLink  String?
+  isActive     Boolean       @default(true)
+  tenantId     String?
+  tenant       Tenant?       @relation(fields: [tenantId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  reservations Reservation[] @relation("PhotographyPackageToReservation")
+
+  @@index([tenantId])
+}
+
+// ─── REZERVASYON / SİPARİŞ (Hibrid) ──────────────────────────────────────────────────
+model Reservation {
+  id             String               @id @default(cuid())
+  brideName      String
+  bridePhone     String
+  brideEmail     String
+  groomName      String?
+  groomPhone     String?
+  groomEmail     String?
+  eventDate      DateTime?
+  eventTime      String?
+  status         String               @default("PENDING")
+  contractLog    String?
+  paymentStatus  String               @default("UNPAID")
+  totalAmount    String?
+  paidAmount     String?
+  selectedAddons     Json?
+  customFieldAnswers Json?
+  paymentPreference  String?
+  notes              String?
+  venueName          String?
+  paymentLogs        Json?
+  contractApproved   Boolean              @default(true)
+  tenantId       String?
+  tenant         Tenant?              @relation(fields: [tenantId], references: [id])
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  userId         String?
+  
+  // E-Ticaret Alanları
+  orderType      String               @default("SERVICE") // SERVICE, PRODUCT, MIXED
+  shippingAddress String?
+  purchasedProducts Json?             // Sipariş edilen fiziki/dijital ürün detayları
+
+  selectedPhotos String?
+  selectionLocked Boolean              @default(false)
+  workflowStatus String               @default("PENDING")
+  deliveryDate   DateTime?
+  deliveryLink   String?
+  meetingLink    String?
+  user           User?                @relation(fields: [userId], references: [id])
+  gallery        PhotoGallery?
+  packages       PhotographyPackage[] @relation("PhotographyPackageToReservation")
+  albumModelId   String?
+  albumModel     AlbumModel?          @relation(fields: [albumModelId], references: [id])
+  payments       Payment[]
+
+  @@index([tenantId])
+}
+
+// ─── ETKİNLİK (Grup Dersi / Seminer) ────────────────────────────────
+model Event {
+  id              String   @id @default(cuid())
+  title           String
+  description     String
+  date            DateTime
+  durationMinutes Int      @default(60)
+  price           String   @default("0") // "0" means free
+  maxParticipants Int      @default(10)
+  meetingLink     String?  // for online
+  location        String?  // for offline
+  imageUrl        String?  // cover photo
+  isActive        Boolean  @default(true)
+  tenantId        String?
+  tenant          Tenant?  @relation(fields: [tenantId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  registrations   EventRegistration[]
+
+  @@index([tenantId])
+}
+
+model EventRegistration {
+  id              String   @id @default(cuid())
+  eventId         String
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name            String
+  email           String
+  phone           String
+  socialMedia     String?
+  notes           String?
+  status          String   @default("CONFIRMED") // PENDING, CONFIRMED, CANCELLED
+  paymentStatus   String   @default("UNPAID")    // UNPAID, PAID (always PAID if free)
+  tenantId        String?
+  tenant          Tenant?  @relation(fields: [tenantId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([eventId])
+}
+
+// ─── ÖDEME ────────────────────────────────────────────────────────
+model Payment {
+  id            String      @id @default(cuid())
+  reservationId String
+  amount        Float
+  method        String
+  note          String?
+  createdAt     DateTime    @default(now())
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+}
+
+// ─── KULLANICI (Müşteri) ──────────────────────────────────────────
+model User {
+  id            String        @id @default(cuid())
+  name          String?
+  email         String?       @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  gender        String?
+  age           Int?
+  phone         String?
+  role          String        @default("MEMBER")
+  tenantId      String?
+  tenant        Tenant?       @relation(fields: [tenantId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  accounts      Account[]
+  purchases     Purchase[]
+  reservations  Reservation[]
+  sessions      Session[]
+
+  @@index([tenantId])
+}
+
+// ─── SATIN ALMA ───────────────────────────────────────────────────
+model Purchase {
+  id           String   @id @default(cuid())
+  userId       String
+  productName  String
+  productType  String
+  price        String
+  purchaseDate DateTime @default(now())
+  status       String   @default("COMPLETED")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── AUTH ─────────────────────────────────────────────────────────
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── FOTOĞRAF GALERİ ──────────────────────────────────────────────
+model PhotoGallery {
+  id              String      @id @default(cuid())
+  reservationId   String      @unique
+  reservation     Reservation @relation(fields: [reservationId], references: [id])
+  photos          Photo[]
+  isDelivered     Boolean     @default(false)
+  deliveredAt     DateTime?
+  selectionLimit  Int         @default(50)
+  createdAt       DateTime    @default(now())
+}
+
+model Photo {
+  id           String       @id @default(cuid())
+  galleryId    String
+  gallery      PhotoGallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  photoNumber  Int
+  originalName String?
+  url          String
+  isSelected   Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+}
+
+// ─── ADMİN BİLDİRİMLERİ ──────────────────────────────────────────
+model AdminNotification {
+  id        String   @id @default(cuid())
+  message   String
+  type      String   @default("INFO")
+  isRead    Boolean  @default(false)
+  tenantId  String?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([tenantId])
+}
+
+// ─── ALBÜM MODELLERİ ─────────────────────────────────────────────
+model AlbumModel {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  imageUrl    String
+  isActive    Boolean       @default(true)
+  tenantId    String?
+  tenant      Tenant?       @relation(fields: [tenantId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  reservations Reservation[]
+
+  @@index([tenantId])
+}
+
+// ─── PORTFOLYO ────────────────────────────────────────────────────
+model PortfolioCategory {
+  id        String           @id @default(cuid())
+  name      String
+  slug      String           @unique
+  tenantId  String?
+  tenant    Tenant?          @relation(fields: [tenantId], references: [id])
+  createdAt DateTime         @default(now())
+  photos    PortfolioPhoto[]
+
+  @@index([tenantId])
+}
+
+model PortfolioPhoto {
+  id          String            @id @default(cuid())
+  url         String
+  publicId    String?
+  categoryId  String
+  category    PortfolioCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime          @default(now())
+}
+
+// ─── FİYATLANDIRMA ───────────────────────────────────────────────
+model MonthlyPriceConfig {
+  id                 String   @id @default(cuid())
+  category           String
+  month              Int
+  year               Int
+  minPrice           Int?
+  discountPercentage Int      @default(0)
+  tenantId           String?
+  tenant             Tenant?  @relation(fields: [tenantId], references: [id])
+  updatedAt          DateTime @updatedAt
+
+  @@unique([category, month, year, tenantId])
+  @@index([tenantId])
+}
+
+// ─── GENEL AYARLAR ────────────────────────────────────────────────
+model GlobalSettings {
+  id           String   @id @default("global-settings")
+  tenantId     String?  @unique
+  tenant       Tenant?  @relation(fields: [tenantId], references: [id])
+
+  // İşletme bilgileri (YENİ)
+  businessName    String   @default("Studio")
+  logoUrl         String?
+  faviconUrl      String?
+  footerTagline   String   @default("")
+  seoTitle        String?
+  seoDescription  String?
+  accentColor     String   @default("#1a1a1a")
+  fontFamily      String   @default("geist")
+  siteTheme       String   @default("dark") // dark, slate, coffee, ocean, forest, wine
+  forceDarkMode   Boolean  @default(false)
+
+  // Mevcut alanlar
+  heroTitle    String   @default("")
+  heroSubtitle String   @default("")
+  address      String   @default("")
+  phone        String   @default("")
+  email        String   @default("")
+  instagram    String   @default("")
+  whatsapp     String   @default("")
+  cashPromoText String  @default("")
+  heroBgType   String   @default("video")
+  heroBgUrl    String   @default("/assets/hero.mp4")
+  heroBgColor  String   @default("#f5f0e8")
+  contractText String   @default("")
+
+  // Bildirim kanalları
+  emailEnabled Boolean  @default(true)
+  smsEnabled   Boolean  @default(false)
+  resendApiKey    String @default("")
+  netgsmUsercode  String @default("")
+  netgsmPassword  String @default("")
+  netgsmMsgHeader String @default("")
+  notifyReservation  Boolean @default(true)
+  notifyPayment      Boolean @default(true)
+  notifyReminder     Boolean @default(true)
+  notifyPhotosReady  Boolean @default(true)
+  googleMapsUrl  String   @default("")
+  chatbotEnabled      Boolean @default(false)
+  chatbotInstructions String  @default("")
+
+  // Ödeme ve E-Ticaret Ayarları
+  paymentMode     String   @default("cash")   // cash, card, both
+  shippingPayer   String   @default("seller") // seller, buyer
+  flatShippingRate String  @default("0")      // alıcı ödüyorsa eklenecek tutar
+
+  // Setup wizard
+  setupCompleted  Boolean  @default(false)
+
+  // Kapalı günler (randevu alınamaz)
+  blockedDays     Json     @default("[]")   // ["2026-04-15", "2026-04-20"]
+
+  updatedAt    DateTime @updatedAt
+}
+
+// ─── İNDİRİM KODLARI ─────────────────────────────────────────────
+model DiscountCode {
+  id              String   @id @default(cuid())
+  code            String   @unique
+  discountPercent Int
+  isActive        Boolean  @default(true)
+  maxUses         Int      @default(0)
+  usedCount       Int      @default(0)
+  description     String?
+  tenantId        String?
+  tenant          Tenant?  @relation(fields: [tenantId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([tenantId])
+}
+
+// ─── E-TİCARET ÜRÜN KATEGORİSİ ──────────────────────────────────
+model ProductCategory {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String
+  tenantId    String?
+  tenant      Tenant?   @relation(fields: [tenantId], references: [id])
+  products    Product[]
+  createdAt   DateTime  @default(now())
+
+  @@unique([slug, tenantId])
+  @@index([tenantId])
+}
+
+// ─── ÜRÜNLER (E-TİCARET) ─────────────────────────────────────────
+model Product {
+  id                 String   @id @default(cuid())
+  name               String
+  description        String?  // Kısa açıklama
+  detailedDescription String? // Zengin/Uzun detaylar (HTML/Text)
+  price              String
+  hasStock           Boolean  @default(true) 
+  stock              Int      @default(0)
+  isDigital          Boolean  @default(false)
+  downloadUrl        String?  
+  imageUrls          String[]
+  isActive           Boolean  @default(true)
+  discountPercentage Int      @default(0) 
+  tenantId           String?
+  tenant             Tenant?  @relation(fields: [tenantId], references: [id])
+  categoryId         String?
+  category           ProductCategory? @relation(fields: [categoryId], references: [id])
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([categoryId])
+}
+
+// ─── BANNER ───────────────────────────────────────────────────────
+model Banner {
+  id        String   @id @default(cuid())
+  imageUrl  String
+  mediaType String   @default("image")
+  title     String?
+  subtitle  String?
+  link      String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  tenantId  String?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+}
+
+// ─── İÇERİK BLOKLARI ─────────────────────────────────────────────
+model ContentBlock {
+  id          String   @id @default(cuid())
+  title       String?
+  description String?
+  imageUrls   String[]
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  tenantId    String?
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([tenantId])
+}
+
+// ─── SAYFA GÖRÜNTÜLEME ────────────────────────────────────────────
+model PageView {
+  id        String   @id @default(cuid())
+  path      String                         // "/", "/booking", "/profile"
+  date      String                         // "2026-04-13" (günlük grupla)
+  count     Int      @default(1)
+  tenantId  String?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
+
+  @@unique([path, date, tenantId])
+  @@index([tenantId])
+  @@index([date])
+}
+
+// ─── PLATFORM AYARLARI (Super Admin) ──────────────────────────────
+model PlatformConfig {
+  id        String   @id @default("main")
+  pricing   Json     @default("{}")   // { monthly: 2499, yearly: 24999, lifetime: 69500 }
+  config    Json     @default("{}")   // Ek platform ayarları
+  updatedAt DateTime @updatedAt
+}

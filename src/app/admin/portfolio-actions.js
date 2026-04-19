@@ -1,0 +1,118 @@
+"use server";
+
+import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/session";
+import { getCurrentTenant } from "@/lib/tenant";
+
+async function getTenantId() {
+  const tenant = await getCurrentTenant();
+  return tenant?.id || null;
+}
+
+// Kategori (Konsept) oluştururken stringi slug formata çevirme yardımcı fonksiyonu
+function slugify(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
+}
+
+export async function getPortfolioCategories() {
+  try {
+    const tenantId = await getTenantId();
+    const categories = await prisma.portfolioCategory.findMany({
+      where: { tenantId: tenantId || "NONE" },
+      include: {
+        photos: {
+          orderBy: { createdAt: 'desc' }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    return { success: true, categories };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function createPortfolioCategory(name) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    const tenantId = await getTenantId();
+    const slug = slugify(name) || `kategori-${Date.now()}`;
+    const category = await prisma.portfolioCategory.create({
+      data: {
+        name,
+        slug,
+        tenantId,
+      }
+    });
+    
+    revalidatePath("/admin/portfolio");
+    revalidatePath("/gallery");
+    return { success: true, category };
+  } catch (error) {
+    if (error.code === 'P2002') {
+      return { error: "Bu isimde bir kategori zaten mevcut." };
+    }
+    return { error: error.message };
+  }
+}
+
+export async function deletePortfolioCategory(id) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    await prisma.portfolioCategory.delete({
+      where: { id }
+    });
+    
+    revalidatePath("/admin/portfolio");
+    revalidatePath("/gallery");
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function addPhotoToPortfolio(categoryId, url, publicId) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    const photo = await prisma.portfolioPhoto.create({
+      data: {
+        categoryId,
+        url,
+        publicId: publicId || null
+      }
+    });
+    
+    revalidatePath("/admin/portfolio");
+    revalidatePath("/gallery");
+    return { success: true, photo };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function deletePortfolioPhoto(id) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    await prisma.portfolioPhoto.delete({
+      where: { id }
+    });
+    
+    revalidatePath("/admin/portfolio");
+    revalidatePath("/gallery");
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
