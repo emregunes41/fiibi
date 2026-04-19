@@ -5,7 +5,7 @@ import { getBusinessType } from "@/lib/business-types";
 import ContractPreviewModal from "./ContractPreviewModal";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Calendar, Package, Clock, CheckCircle, FileText, ExternalLink, Banknote, CreditCard, Tag, AlertTriangle } from "lucide-react";
+import { Calendar, Package, Clock, CheckCircle, FileText, ExternalLink, Banknote, CreditCard, Tag, AlertTriangle, Ban } from "lucide-react";
 import PhotoSelectionForm from "./PhotoSelectionForm";
 import AlbumSelectionForm from "./AlbumSelectionForm";
 import PaymentSection from "./PaymentSection";
@@ -590,7 +590,6 @@ export default async function ProfilePage() {
             </section>
           );
         })()}
-      </section>
     </div>
   );
 }
