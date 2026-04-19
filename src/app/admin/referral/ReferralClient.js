@@ -7,7 +7,7 @@ export default function ReferralClient({ tenant, referrals }) {
   const [copied, setCopied] = useState(false);
 
   const code = tenant?.referralCode || "—";
-  const domain = process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "photostudio.co";
+  const domain = process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "fiibi.co";
   const referralLink = `https://${domain}/onboarding?ref=${code}`;
 
   const handleCopy = (text) => {

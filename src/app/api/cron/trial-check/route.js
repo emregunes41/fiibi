@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-const FROM = process.env.RESEND_FROM || "PhotoStudio <noreply@photostudio.co>";
+const FROM = process.env.RESEND_FROM || "Fiibi <noreply@fiibi.co>";
 
 export async function GET(req) {
   // Basit güvenlik (Vercel Cron veya manuel tetikleme)
@@ -80,7 +80,7 @@ async function sendEmail(tenant, type, daysLeft) {
           <strong>${tenant.businessName}</strong> stüdyonuzun deneme süresi ${daysLeft} gün içinde sona erecek.
           Kesintisiz kullanmaya devam etmek için bir plan seçin.
         </p>
-        <a href="http://${tenant.slug}.${process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "photostudio.co"}/admin/subscription"
+        <a href="http://${tenant.slug}.${process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "fiibi.co"}/admin/subscription"
            style="display:inline-block;background:#000;color:#fff;padding:12px 24px;text-decoration:none;font-weight:700;font-size:14px;margin-top:16px;">
           Plan Seç →
         </a>
@@ -95,7 +95,7 @@ async function sendEmail(tenant, type, daysLeft) {
           <strong>${tenant.businessName}</strong> stüdyonuzun deneme süresi <strong>yarın</strong> sona erecek.
           Hesabınız dondurulmadan önce bir plan seçin — verileriniz kaybolmaz.
         </p>
-        <a href="http://${tenant.slug}.${process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "photostudio.co"}/admin/subscription"
+        <a href="http://${tenant.slug}.${process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "fiibi.co"}/admin/subscription"
            style="display:inline-block;background:#dc2626;color:#fff;padding:12px 24px;text-decoration:none;font-weight:700;font-size:14px;margin-top:16px;">
           Hemen Plan Seç →
         </a>
@@ -109,7 +109,7 @@ async function sendEmail(tenant, type, daysLeft) {
           <strong>${tenant.businessName}</strong> stüdyonuzun deneme süresi doldu ve hesabınız donduruldu.
           Verileriniz güvende — bir plan seçerek hemen aktifleştirebilirsiniz.
         </p>
-        <a href="http://${tenant.slug}.${process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "photostudio.co"}/admin/subscription"
+        <a href="http://${tenant.slug}.${process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "fiibi.co"}/admin/subscription"
            style="display:inline-block;background:#000;color:#fff;padding:12px 24px;text-decoration:none;font-weight:700;font-size:14px;margin-top:16px;">
           Hesabımı Aktifleştir →
         </a>

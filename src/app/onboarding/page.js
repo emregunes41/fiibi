@@ -70,7 +70,7 @@ export default function OnboardingPage() {
     setLoading(false);
   }
 
-  const domain = typeof window !== "undefined" ? (process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "localhost:3000") : "photoapp.co";
+  const domain = typeof window !== "undefined" ? (process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "fiibi.co") : "fiibi.co";
   const selectedPlanObj = plans.find(p => p.id === form.selectedPlan);
 
   const features = [
@@ -228,9 +228,9 @@ export default function OnboardingPage() {
                 <Check size={36} style={{ color: "#fff" }} />
               </div>
               <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>Hazırsınız! 🎉</h2>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 32 }}><strong style={{ color: "#fff" }}>{result.businessName}</strong> stüdyonuz oluşturuldu.</p>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 32 }}><strong style={{ color: "#fff" }}>{result.businessName}</strong> işletmeniz oluşturuldu.</p>
               <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: 20, marginBottom: 16 }}>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Stüdyo Adresiniz</div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>İşletme Adresiniz</div>
                 <code style={{ fontSize: 18, fontWeight: 700, color: "#fff", wordBreak: "break-all" }}>{result.slug}.{domain}</code>
               </div>
               <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: 14, marginBottom: 32, fontSize: 13, color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
@@ -260,8 +260,7 @@ export default function OnboardingPage() {
       }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Camera size={18} style={{ color: "#fff" }} />
-            <span style={{ fontWeight: 800, fontSize: 15, letterSpacing: "-0.02em" }}>photostudio</span>
+            <span style={{ fontWeight: 900, fontSize: 18, letterSpacing: "-0.02em" }}>fiibi</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
             <a href="#nasil" style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", textDecoration: "none" }}>Nasıl Çalışır</a>
@@ -434,7 +433,7 @@ export default function OnboardingPage() {
           <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 36 }}>Merak edilenler.</h2>
           {[
             { q: "Ücretsiz deneme nasıl çalışıyor?", a: "Kayıt olduktan sonra 7 gün boyunca tüm özellikleri ücretsiz kullanabilirsiniz. Kredi kartı gerekmez. 7 gün sonunda ödeme yapmazsanız hesabınız dondurulur, verileriniz silinmez." },
-            { q: "Müşterilerim siteyi nasıl görecek?", a: "Kayıt olduğunuzda size özel bir adres verilir (ornek.photostudio.co). Müşterileriniz bu adresten portfolyonuzu görebilir ve online rezervasyon yapabilir." },
+            { q: "Müşterilerim siteyi nasıl görecek?", a: "Kayıt olduğunuzda size özel bir adres verilir (ornek.fiibi.co). Müşterileriniz bu adresten portfolyonuzu görebilir ve online rezervasyon yapabilir." },
             { q: "Kendi domain'imi kullanabilir miyim?", a: "Yıllık ve ömürlük planlarda custom domain desteği bulunuyor. Mevcut domain'inizi yönlendirmeniz yeterli." },
             { q: "Kaç paket ve rezervasyon ekleyebilirim?", a: "Tüm planlarda sınırsız paket ve sınırsız rezervasyon hakkınız var." },
             { q: "Verilerim güvende mi?", a: "Tüm veriler şifreli bağlantı üzerinden iletilir ve güvenli sunucularda saklanır. KVKK uyumlu çalışıyoruz." },
@@ -467,10 +466,9 @@ export default function OnboardingPage() {
         <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 32 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-              <Camera size={16} style={{ color: "rgba(255,255,255,0.4)" }} />
-              <span style={{ fontWeight: 700, fontSize: 14 }}>photostudio</span>
+              <span style={{ fontWeight: 900, fontSize: 16 }}>fiibi</span>
             </div>
-            <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", lineHeight: 1.6, maxWidth: 240 }}>Fotoğrafçılar için profesyonel iş yönetim platformu.</p>
+            <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", lineHeight: 1.6, maxWidth: 240 }}>Randevuyla çalışan profesyoneller için iş yönetim platformu.</p>
           </div>
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Platform</div>
@@ -491,13 +489,13 @@ export default function OnboardingPage() {
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>İletişim</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.2)" }}>destek@photostudio.co</span>
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.2)" }}>destek@fiibi.co</span>
               <a href="/super-admin/login" style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", textDecoration: "none" }}>Yönetici Girişi</a>
             </div>
           </div>
         </div>
         <div style={{ maxWidth: 900, margin: "32px auto 0", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 20, textAlign: "center", fontSize: 11, color: "rgba(255,255,255,0.15)" }}>
-          © {new Date().getFullYear()} photostudio — Tüm hakları saklıdır.
+          © {new Date().getFullYear()} fiibi — Tüm hakları saklıdır.
         </div>
       </footer>
 
