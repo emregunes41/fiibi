@@ -1,5 +1,7 @@
 import { getCurrentUser } from "../user-actions";
 import { getAlbumModels, getSiteConfig } from "../admin/core-actions";
+import { getCurrentTenant } from "@/lib/tenant";
+import { getBusinessType } from "@/lib/business-types";
 import ContractPreviewModal from "./ContractPreviewModal";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -13,6 +15,9 @@ export default async function ProfilePage() {
   const user = await getCurrentUser();
   const albumModels = await getAlbumModels();
   const siteConfig = await getSiteConfig();
+  const tenant = await getCurrentTenant();
+  const bt = getBusinessType(tenant?.businessType || "photographer");
+  const { features, terms } = bt;
 
   if (!user) {
     redirect("/login");
@@ -54,23 +59,26 @@ export default async function ProfilePage() {
       {/* Reservations */}
       <section>
         <div style={{ marginBottom: 20 }}>
-          <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>Rezervasyonlarım</h3>
-          <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>Geçmiş ve gelecek tüm çekim randevularınız</p>
+          <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>{terms.appointments + "\u0131m"}</h3>
+          <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>Geçmiş ve gelecek tüm {terms.appointment.toLowerCase()} kayıtlarınız</p>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          {user.reservations.length === 0 ? (
-            <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", padding: "48px 24px", textAlign: "center" }}>
-              <Calendar size={36} style={{ color: "rgba(255,255,255,0.2)", margin: "0 auto 12px" }} />
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 12 }}>Henüz bir rezervasyonunuz bulunmuyor.</p>
-              <Link href="/booking" style={{ color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none" }}>
-                Paketleri İncele →
-              </Link>
-            </div>
-          ) : (
-            (() => {
-              // Find the furthest delivery date across ALL reservations
-              const allDeliveryDates = user.reservations
+          {(() => {
+            const appointments = user.reservations.filter(r => r.orderType !== "PRODUCT");
+            if (appointments.length === 0) {
+              return (
+                <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", padding: "48px 24px", textAlign: "center" }}>
+                  <Calendar size={36} style={{ color: "rgba(255,255,255,0.2)", margin: "0 auto 12px" }} />
+                  <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 12 }}>Henüz bir {terms.appointment.toLowerCase()} kaydınız bulunmuyor.</p>
+                  <Link href="/booking" style={{ color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none" }}>
+                    {terms.services}i İncele →
+                  </Link>
+                </div>
+              );
+            }
+
+            const allDeliveryDates = appointments
                 .filter(r => r.deliveryDate)
                 .map(r => new Date(r.deliveryDate));
               const maxDeliveryDate = allDeliveryDates.length > 0
@@ -80,7 +88,7 @@ export default async function ProfilePage() {
                 ? Math.max(0, Math.ceil((maxDeliveryDate - new Date()) / (1000 * 60 * 60 * 24))) 
                 : null;
 
-              return user.reservations.map((res) => {
+              return appointments.map((res) => {
               const effectiveStatus = getEffectiveStatus(res);
               const currentStepIdx = getWorkflowStepIndex(effectiveStatus);
 
@@ -164,7 +172,7 @@ export default async function ProfilePage() {
                       <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 10 }}>Paket Detayları ({res.packages.length})</p>
                       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                         {res.packages.map((pkg, pkgIdx) => {
-                          const categoryLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart" };
+                          const categoryLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart", CUSTOM_DURATION: "Randevu" };
                           const timeLabels = { SLOT_2H: "2 Saatlik Çekim", SLOT_4H: "4 Saatlik Çekim", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
                           // Filter custom field answers and addons for THIS package
                           const pkgFields = (res.customFieldAnswers || []).filter(a => a.packageName === pkg.name && a.type !== "_hidden");
@@ -184,6 +192,11 @@ export default async function ProfilePage() {
                                 <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", padding: "2px 8px", borderRadius: 0 }}>{pkg.deliveryTimeDays || 14} gün içinde teslim</span>
                                 {pkg.postSelectionDays > 0 && (
                                   <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.7)", padding: "2px 8px", borderRadius: 0 }}>+{pkg.postSelectionDays} gün seçim süresi</span>
+                                )}
+                                {pkg.meetingLink && (
+                                  <a href={pkg.meetingLink} target="_blank" rel="noreferrer" style={{ fontSize: 10, fontWeight: 700, background: "rgba(167, 139, 250, 0.15)", color: "#c4b5fd", padding: "2px 8px", borderRadius: 0, textDecoration: "none", border: "1px solid rgba(167, 139, 250, 0.3)", display: "flex", alignItems: "center", gap: 4 }}>
+                                    Online Görüşme ↗
+                                  </a>
                                 )}
                               </div>
                               {pkg.features && pkg.features.length > 0 && (
@@ -273,7 +286,8 @@ export default async function ProfilePage() {
                        </div>
                     )}
 
-                    {/* Workflow Progress */}
+                    {/* Workflow Progress — only for photographers */}
+                    {features.workflow && (
                     <div style={{ padding: "20px 24px" }}>
                       <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 20 }}>İşlem Gidişatı</p>
                       
@@ -345,8 +359,8 @@ export default async function ProfilePage() {
                         return null;
                       })()}
 
-                      {/* Album Selection (Only after photo selection is done) */}
-                      {!!res.selectedPhotos && (
+                      {/* Album Selection (Only for photographers after photo selection) */}
+                      {features.albumModels && !!res.selectedPhotos && (
                         <AlbumSelectionForm 
                           reservationId={res.id}
                           initialSelectedId={res.albumModelId}
@@ -368,15 +382,162 @@ export default async function ProfilePage() {
                         </div>
                       )}
                     </div>
+                    )}
+
+                    {/* Simple status for non-photographer sectors */}
+                    {!features.workflow && (
+                      <div style={{ padding: "20px 24px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <div style={{ width: 32, height: 32, background: res.status === "CONFIRMED" ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            {res.status === "CONFIRMED" ? <CheckCircle size={16} style={{ color: "#fff" }} /> : <Clock size={16} style={{ color: "rgba(255,255,255,0.4)" }} />}
+                          </div>
+                          <div>
+                            <p style={{ fontWeight: 700, fontSize: 13 }}>{res.status === "CONFIRMED" ? `${terms.appointment} Onayl\u0131` : "Onay Bekleniyor"}</p>
+                            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>{new Date(res.eventDate).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                 </div>
               );
             });
             })()
-          )}
+          }
         </div>
+      </section>
 
+      {/* E-Commerce Orders */}
+      {(() => {
+        const ecomOrders = user.reservations.filter(r => r.orderType === "PRODUCT" || r.orderType === "MIXED");
+        if (ecomOrders.length === 0) return null;
+
+        return (
+          <section>
+            <div style={{ marginBottom: 20 }}>
+              <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>Kargo & Siparişlerim</h3>
+              <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>Satın aldığınız ürünlerin paketleme ve kargo durumları</p>
+            </div>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+              {ecomOrders.map(order => {
+                const dateStr = new Date(order.createdAt).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', year: 'numeric' });
+                
+                let productList = [];
+                try {
+                  if (order.purchasedProducts) {
+                    productList = Array.isArray(order.purchasedProducts) ? order.purchasedProducts : JSON.parse(order.purchasedProducts);
+                  }
+                } catch(e) {}
+                
+                const shippingSteps = [
+                  { id: "PENDING", title: "Sipariş Alındı" },
+                  { id: "CONFIRMED", title: "Hazırlanıyor" },
+                  { id: "SHIPPED", title: "Kargoya Verildi" },
+                  { id: "COMPLETED", title: "Teslim Edildi" }
+                ];
+                
+                let currentStatus = order.status;
+                if (currentStatus === "CANCELED") currentStatus = "PENDING"; // Just for visual flow if canceled
+                const currentIndex = shippingSteps.findIndex(s => s.id === currentStatus) !== -1 ? shippingSteps.findIndex(s => s.id === currentStatus) : 0;
+
+                return (
+                  <div key={order.id} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                    
+                    {/* Header */}
+                    <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+                      <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+                        <div style={{ width: 44, height: 44, background: "rgba(96,165,250,0.1)", border: "1px solid rgba(96,165,250,0.2)", borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <Package size={18} style={{ color: "#60a5fa" }} />
+                        </div>
+                        <div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+                            <h4 style={{ fontWeight: 700, fontSize: 16 }}>Sevkiyat Takibi</h4>
+                            <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", padding: "3px 8px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                              {dateStr}
+                            </span>
+                          </div>
+                          <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 12 }}>Sipariş No: #{order.id.split('-')[0].toUpperCase()}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Progress Bar */}
+                    {order.status !== "CANCELED" ? (
+                      <div style={{ padding: "24px 24px 16px" }}>
+                        <div style={{ paddingBottom: 16, overflowX: "auto" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", position: "relative", minWidth: 380 }}>
+                            <div style={{ position: "absolute", top: 13, left: "12%", right: "12%", height: 2, background: "rgba(255,255,255,0.08)" }} />
+                            <div style={{ position: "absolute", top: 13, left: "12%", height: 2, background: "#60a5fa", transition: "all 0.7s", width: `${(currentIndex / 3) * 76}%` }} />
+
+                            {shippingSteps.map((step, idx) => {
+                              const isCompleted = currentIndex >= idx;
+                              const isCurrent = currentIndex === idx;
+                              
+                              return (
+                                <div key={step.id} style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 8, textAlign: "center", flex: 1 }}>
+                                  <div style={{
+                                    width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, transition: "all 0.3s",
+                                    ...(isCompleted ? { background: "#60a5fa", color: "#000", boxShadow: "0 0 12px rgba(96,165,250,0.4)" } :
+                                      { background: "#111", border: "2px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.3)" })
+                                  }}>
+                                    {isCompleted ? <CheckCircle size={14} /> : (idx + 1)}
+                                  </div>
+                                  <div>
+                                    <p style={{ fontSize: 12, fontWeight: isCurrent ? 700 : 600, color: isCompleted ? "#fff" : "rgba(255,255,255,0.3)" }}>
+                                      {step.title}
+                                    </p>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ padding: "20px 24px", color: "#ef4444", fontSize: "14px", fontWeight: "600", display: "flex", alignItems: "center", gap: "8px" }}>
+                        <Ban size={18} /> Bu Sipariş İptal Edildi
+                      </div>
+                    )}
+
+                    {/* Cargo Action Button */}
+                    {order.deliveryLink && (
+                      <div style={{ padding: "0 24px 20px" }}>
+                        <div style={{ background: "rgba(96,165,250,0.1)", border: "1px solid rgba(96,165,250,0.2)", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+                          <div>
+                            <h5 style={{ fontWeight: 700, color: "#60a5fa", fontSize: 13, marginBottom: "4px" }}>Paketiniz Yola Çıktı!</h5>
+                            <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 12 }}>Aşağıdaki bağlantıyı kullanarak kargo durumunuzu sorgulayabilirsiniz.</p>
+                          </div>
+                          <a href={order.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#60a5fa", color: "#000", padding: "10px 20px", fontWeight: 800, fontSize: 13, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 8 }}>
+                            Kargo Takip Sayfası
+                          </a>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Products Content Log */}
+                    <div style={{ padding: "16px 24px", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Sipariş Edilen Ürünler</p>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        {productList.map((prod, pIdx) => (
+                          <div key={pIdx} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13, background: "rgba(255,255,255,0.02)", padding: "12px", border: "1px solid rgba(255,255,255,0.03)" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                              {prod.isDigital ? <FileText size={16} color="rgba(255,255,255,0.4)" /> : <Package size={16} color="rgba(255,255,255,0.4)" />}
+                              <span style={{ color: "#fff", fontWeight: 600 }}>{prod.name}</span>
+                            </div>
+                            <span style={{ color: "rgba(255,255,255,0.5)", fontWeight: 700 }}>{prod.purchasedPrice ?? prod.price}₺</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })()}
          {user.reservations.length > 0 && (() => {
           // Build a unified reservation object
           const unifiedTotalNumeric = user.reservations.reduce((sum, r) => {

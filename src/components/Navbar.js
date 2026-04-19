@@ -12,6 +12,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isPhotographer, setIsPhotographer] = useState(false);
   const { itemCount, setIsOpen: openCart } = useCart();
 
   useEffect(() => {
@@ -29,6 +30,9 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
           setUser(session.user);
         } else {
           setUser(null);
+        }
+        if (session?.tenant?.businessType) {
+          setIsPhotographer(session.tenant.businessType === "photographer");
         }
       } catch (err) {
         console.error("Session fetch error:", err);
@@ -116,7 +120,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               gap: 6,
             }}
           >
-            <Link href="/#portfolio" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:!text-white">Portfolyo</Link>
+            {isPhotographer && <Link href="/#portfolio" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:!text-white">Portfolyo</Link>}
             <Link href="/#contact" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:!text-white">İletişim</Link>
             <Link
               href="/booking"
@@ -145,7 +149,8 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
 
             {/* Desktop Right Items */}
             <div className="hidden md:flex" style={{ alignItems: "center", gap: 16 }}>
-              {/* Cart */}
+              {/* Cart - only for photographers */}
+              {isPhotographer && (
               <button
                 onClick={() => openCart(true)}
                 style={{
@@ -177,10 +182,10 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                   </span>
                 )}
               </button>
+              )}
 
               {/* Login / Panel */}
-              {!loading && (
-                user ? (
+              {!loading && user && (
                   <Link
                     href="/profile"
                     style={{
@@ -199,28 +204,13 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                   >
                     <UserCircle size={14} /> Panel
                   </Link>
-                ) : (
-                  <Link
-                    href="/login"
-                    style={{
-                      display: "flex", alignItems: "center", gap: 8,
-                      fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.2em",
-                      color: "rgba(255,255,255,0.4)",
-                      textDecoration: "none",
-                      whiteSpace: "nowrap",
-                      transition: "all 0.3s",
-                    }}
-                    className="hover:!text-white"
-                  >
-                    <User size={14} /> Müşteri Girişi
-                  </Link>
-                )
               )}
             </div>
 
             {/* Mobile Right Items */}
             <div className="flex md:hidden" style={{ alignItems: "center", gap: 10 }}>
-              {/* Cart */}
+              {/* Cart - only for photographers */}
+              {isPhotographer && (
               <button
                 onClick={() => openCart(true)}
                 style={{
@@ -247,6 +237,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                   </span>
                 )}
               </button>
+              )}
 
               {/* Hamburger */}
               <button
@@ -283,26 +274,26 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               Online Rezervasyon
             </Link>
 
+            {isPhotographer && (
             <Link href="/#portfolio" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", textDecoration: "none" }}>
               Portfolyo
             </Link>
+            )}
 
             <Link href="/#contact" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", textDecoration: "none" }}>
               İletişim
             </Link>
 
+            {isPhotographer && (
             <button
               onClick={() => { setIsMenuOpen(false); openCart(true); }}
               style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}
             >
               <ShoppingBag size={18} /> Sepetim {itemCount > 0 && `(${itemCount})`}
             </button>
-
-            {!loading && !user && (
-              <Link href="/login" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>
-                Müşteri Girişi
-              </Link>
             )}
+
+
             {user && (
               <Link href="/profile" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "#fff", textDecoration: "none" }}>
                 Hesabım

@@ -14,8 +14,18 @@ export async function POST(req) {
       hash
     } = data;
 
-    const merchant_key = process.env.PAYTR_MERCHANT_KEY;
-    const merchant_salt = process.env.PAYTR_MERCHANT_SALT;
+    const reservationId = merchant_oid.split('X')[0];
+    const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    
+    if (!reservation) {
+      console.error(`PAYTR CALLBACK ERROR: Reservation not found for ${reservationId}`);
+      return new Response("OK"); // Respond OK to prevent PayTR looping failure
+    }
+
+    const config = await prisma.globalSettings.findFirst({ where: { tenantId: reservation.tenantId } });
+
+    const merchant_key = config?.paytrApiKey || process.env.PAYTR_MERCHANT_KEY;
+    const merchant_salt = config?.paytrSecretKey || process.env.PAYTR_MERCHANT_SALT;
 
     const isVerified = verifyPaytrCallback({
       merchant_oid,
@@ -32,8 +42,6 @@ export async function POST(req) {
 
     if (status === "success") {
       const paidAmountTL = parseFloat(total_amount) / 100; // PayTR sends kuruş
-
-      const reservationId = merchant_oid.split('X')[0];
 
       // IDEMPOTENCY CHECK: Race Condition and Replay Protection
       const existingPayment = await prisma.payment.findFirst({
@@ -59,7 +67,6 @@ export async function POST(req) {
       const payments = await prisma.payment.findMany({ where: { reservationId: reservationId } });
       const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
 
-      const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
       const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
 
       let paymentStatus = "UNPAID";

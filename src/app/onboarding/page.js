@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { Camera, ArrowRight, Check, Sparkles, BarChart3, Calendar, Shield, Users, CreditCard, Star, Palette } from "lucide-react";
-import { registerPhotographer } from "../actions/register-photographer";
+import { registerBusiness } from "../actions/register-photographer";
+import { getBusinessTypeList, getBusinessType } from "@/lib/business-types";
 
 function buildPlans(prices) {
   return [
-    { id: "monthly", name: "Aylık", price: prices.monthly, period: "/ay", color: "#8b5cf6", popular: false, savings: null },
-    { id: "yearly", name: "Yıllık", price: prices.yearly, period: "/yıl", monthlyEquiv: Math.round(prices.yearly / 12), color: "#f59e0b", popular: true, savings: Math.round(100 - (prices.yearly / (prices.monthly * 12)) * 100) },
-    { id: "lifetime", name: "Ömürlük", price: prices.lifetime, period: "tek seferlik", color: "#4ade80", popular: false, savings: null },
+    { id: "monthly", name: "Aylık", price: prices.monthly, period: "/ay", color: "rgba(255,255,255,0.5)", popular: false, savings: null },
+    { id: "yearly", name: "Yıllık", price: prices.yearly, period: "/yıl", monthlyEquiv: Math.round(prices.yearly / 12), color: "#fff", popular: true, savings: Math.round(100 - (prices.yearly / (prices.monthly * 12)) * 100) },
+    { id: "lifetime", name: "Ömürlük", price: prices.lifetime, period: "tek seferlik", color: "rgba(255,255,255,0.6)", popular: false, savings: null },
   ];
 }
 
@@ -23,8 +24,11 @@ export default function OnboardingPage() {
   const [faq, setFaq] = useState(null);
 
   const [form, setForm] = useState({
-    businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "", referralCode: "",
+    businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "", referralCode: "", businessType: "",
   });
+
+  const allBusinessTypes = getBusinessTypeList();
+  const selectedBT = form.businessType ? getBusinessType(form.businessType) : null;
 
   // URL'den referans kodu al
   useEffect(() => {
@@ -54,14 +58,15 @@ export default function OnboardingPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const res = await registerPhotographer({
+    const res = await registerBusiness({
       businessName: form.businessName, ownerName: form.ownerName, ownerEmail: form.ownerEmail,
       ownerPhone: form.ownerPhone, password: form.password, slug: form.slug,
       selectedPlan: form.selectedPlan, referralCode: form.referralCode,
+      businessType: form.businessType,
     });
     if (res.error) { setError(res.error); setLoading(false); return; }
     setResult(res.tenant);
-    setStep(4);
+    setStep(5);
     setLoading(false);
   }
 
@@ -69,11 +74,11 @@ export default function OnboardingPage() {
   const selectedPlanObj = plans.find(p => p.id === form.selectedPlan);
 
   const features = [
-    { icon: Calendar, title: "Rezervasyon Yönetimi", desc: "Online randevu, otomatik hatırlatma, takvim" },
+    { icon: Calendar, title: "Randevu Yönetimi", desc: "Online randevu, otomatik hatırlatma, takvim" },
     { icon: CreditCard, title: "Ödeme Takibi", desc: "Taksit, nakit, havale — tüm ödemeler tek yerde" },
     { icon: BarChart3, title: "Muhasebe", desc: "Gelir analizi, aylık raporlar, bakiye takibi" },
-    { icon: Palette, title: "Portfolyo Sitesi", desc: "Profesyonel site — kendi domain'inizle" },
-    { icon: Users, title: "Müşteri Paneli", desc: "Fotoğraf seçimi, albüm onayı, sözleşme" },
+    { icon: Palette, title: "Profesyonel Site", desc: "Kendi markanızla web sitesi — özel domain desteği" },
+    { icon: Users, title: "Müşteri Paneli", desc: "Müşterileriniz randevularını ve ödemelerini takip etsin" },
     { icon: Shield, title: "Bildirimler", desc: "SMS + E-posta ile otomatik müşteri bildirimleri" },
   ];
 
@@ -89,13 +94,38 @@ export default function OnboardingPage() {
           </button>
 
           <div style={{ display: "flex", gap: 6, marginBottom: 32 }}>
-            {[1, 2, 3, 4].map(s => (
+            {[1, 2, 3, 4, 5].map(s => (
               <div key={s} style={{ flex: 1, height: 3, background: s <= step ? "#fff" : "rgba(255,255,255,0.06)", transition: "all 0.4s" }} />
             ))}
           </div>
 
-          {/* Step 1: Paket */}
+          {/* Step 1: Sektör Seçimi */}
           {step === 1 && (
+            <>
+              <h2 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 4 }}>Sektörünüzü Seçin</h2>
+              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>Size özel bir deneyim oluşturalım.</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 8, marginBottom: 24 }}>
+                {allBusinessTypes.map((bt) => {
+                  const sel = form.businessType === bt.id;
+                  return (
+                    <div key={bt.id} onClick={() => setForm(prev => ({ ...prev, businessType: bt.id }))}
+                      style={{ background: sel ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)", border: sel ? "2px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.06)", cursor: "pointer", transition: "all 0.2s", padding: "16px 14px", textAlign: "center", position: "relative" }}>
+                      <div style={{ fontSize: 28, marginBottom: 8 }}>{bt.icon}</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: sel ? "#fff" : "rgba(255,255,255,0.7)", marginBottom: 4 }}>{bt.name}</div>
+                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", lineHeight: 1.4 }}>{bt.desc}</div>
+                      {sel && <div style={{ position: "absolute", top: 8, right: 8 }}><div style={{ width: 18, height: 18, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}><Check size={12} style={{ color: "#000" }} /></div></div>}
+                    </div>
+                  );
+                })}
+              </div>
+              <button onClick={() => form.businessType && setStep(2)} disabled={!form.businessType} style={{ ...btnStyle, opacity: form.businessType ? 1 : 0.3 }}>
+                Devam <ArrowRight size={16} />
+              </button>
+            </>
+          )}
+
+          {/* Step 2: Paket */}
+          {step === 2 && (
             <>
               <h2 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 4 }}>Planınızı Seçin</h2>
               <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>7 gün ücretsiz deneyin, beğenmezseniz ödeme çekilmez.</p>
@@ -104,9 +134,9 @@ export default function OnboardingPage() {
                   const sel = form.selectedPlan === p.id;
                   return (
                     <div key={p.id} onClick={() => setForm(prev => ({ ...prev, selectedPlan: p.id }))}
-                      style={{ background: sel ? `${p.color}08` : "rgba(255,255,255,0.02)", border: sel ? `2px solid ${p.color}50` : p.popular ? `2px solid ${p.color}20` : "1px solid rgba(255,255,255,0.06)", cursor: "pointer", transition: "all 0.2s", position: "relative" }}>
+                      style={{ background: sel ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)", border: sel ? "2px solid rgba(255,255,255,0.4)" : p.popular ? "2px solid rgba(255,255,255,0.15)" : "1px solid rgba(255,255,255,0.06)", cursor: "pointer", transition: "all 0.2s", position: "relative" }}>
                       {p.popular && (
-                        <div style={{ background: p.color, color: "#000", fontSize: 10, fontWeight: 800, padding: "4px 12px", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                        <div style={{ background: "#fff", color: "#000", fontSize: 10, fontWeight: 800, padding: "4px 12px", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                           <Star size={9} style={{ marginRight: 4, verticalAlign: "middle" }} /> En Popüler
                         </div>
                       )}
@@ -117,9 +147,9 @@ export default function OnboardingPage() {
                           <span style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginLeft: 4 }}>₺</span>
                           <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginLeft: 6 }}>{p.period}</span>
                         </div>
-                        {p.monthlyEquiv && <div style={{ fontSize: 11, color: p.color, marginBottom: 2 }}>~{p.monthlyEquiv.toLocaleString("tr-TR")} ₺/ay</div>}
-                        {p.savings && <div style={{ display: "inline-block", background: `${p.color}15`, border: `1px solid ${p.color}25`, padding: "2px 8px", fontSize: 10, fontWeight: 700, color: p.color, marginTop: 4 }}>%{p.savings} TASARRUF</div>}
-                        {sel && <div style={{ position: "absolute", top: p.popular ? 32 : 10, right: 10 }}><div style={{ width: 22, height: 22, background: p.color, display: "flex", alignItems: "center", justifyContent: "center" }}><Check size={14} style={{ color: "#000" }} /></div></div>}
+                        {p.monthlyEquiv && <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 2 }}>~{p.monthlyEquiv.toLocaleString("tr-TR")} ₺/ay</div>}
+                        {p.savings && <div style={{ display: "inline-block", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", padding: "2px 8px", fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.6)", marginTop: 4 }}>%{p.savings} TASARRUF</div>}
+                        {sel && <div style={{ position: "absolute", top: p.popular ? 32 : 10, right: 10 }}><div style={{ width: 22, height: 22, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}><Check size={14} style={{ color: "#000" }} /></div></div>}
                       </div>
                     </div>
                   );
@@ -129,21 +159,21 @@ export default function OnboardingPage() {
                 <Shield size={14} style={{ flexShrink: 0 }} />
                 <span>7 gün ücretsiz deneme. İptal ederseniz <strong style={{ color: "#fff" }}>hiçbir ücret çekilmez</strong>.</span>
               </div>
-              <button onClick={() => form.selectedPlan && setStep(2)} disabled={!form.selectedPlan} style={{ ...btnStyle, opacity: form.selectedPlan ? 1 : 0.3 }}>
+              <button onClick={() => form.selectedPlan && setStep(3)} disabled={!form.selectedPlan} style={{ ...btnStyle, opacity: form.selectedPlan ? 1 : 0.3 }}>
                 Devam <ArrowRight size={16} />
               </button>
             </>
           )}
 
-          {/* Step 2: Stüdyo */}
-          {step === 2 && (
-            <form onSubmit={(e) => { e.preventDefault(); setStep(3); }}>
+          {/* Step 3: İşletme */}
+          {step === 3 && (
+            <form onSubmit={(e) => { e.preventDefault(); setStep(4); }}>
               <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
-                <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>Stüdyo Bilgileri</h2>
+                <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>İşletme Bilgileri</h2>
                 <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>İşletme adınız ve web adresiniz.</p>
                 <div style={{ marginBottom: 20 }}>
-                  <label style={labelStyle}>Stüdyo Adı *</label>
-                  <input type="text" required value={form.businessName} onChange={e => handleBusinessName(e.target.value)} placeholder="Ahmet Photography" style={inputStyle} />
+                  <label style={labelStyle}>İşletme Adı *</label>
+                  <input type="text" required value={form.businessName} onChange={e => handleBusinessName(e.target.value)} placeholder={selectedBT ? `Örn: ${selectedBT.terms.provider} Mehmet` : "İşletme adınız"} style={inputStyle} />
                   {form.slug && <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.35)" }}>→ <span style={{ color: "rgba(255,255,255,0.6)" }}>{form.slug}.{domain}</span></div>}
                 </div>
                 <div style={{ marginBottom: 24 }}>
@@ -158,8 +188,8 @@ export default function OnboardingPage() {
             </form>
           )}
 
-          {/* Step 3: Hesap */}
-          {step === 3 && (
+          {/* Step 4: Hesap */}
+          {step === 4 && (
             <form onSubmit={handleSubmit}>
               <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
                 <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>Hesap Bilgileri</h2>
@@ -173,26 +203,26 @@ export default function OnboardingPage() {
                 <div style={{ marginBottom: 20 }}>
                   <label style={labelStyle}>Referans Kodu <span style={{ fontWeight: 400, textTransform: "none", fontSize: 10 }}>(varsa)</span></label>
                   <input type="text" value={form.referralCode} onChange={e => setForm(prev => ({ ...prev, referralCode: e.target.value.toUpperCase() }))} placeholder="ABC123" maxLength={6} style={{ ...inputStyle, letterSpacing: "0.1em", textTransform: "uppercase" }} />
-                  {form.referralCode && <div style={{ marginTop: 6, fontSize: 11, color: "rgba(74,222,128,0.7)" }}>✓ Referans kodu girildi</div>}
+                  {form.referralCode && <div style={{ marginTop: 6, fontSize: 11, color: "rgba(255,255,255,0.5)" }}>✓ Referans kodu girildi</div>}
                 </div>
                 {selectedPlanObj && (
-                  <div style={{ background: `${selectedPlanObj.color}08`, border: `1px solid ${selectedPlanObj.color}20`, padding: "14px 16px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: "14px 16px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: selectedPlanObj.color }}>{selectedPlanObj.name} Plan</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>{selectedPlanObj.name} Plan</div>
                       <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>7 gün ücretsiz deneme</div>
                     </div>
                     <div style={{ fontSize: 18, fontWeight: 800 }}>{selectedPlanObj.price.toLocaleString("tr-TR")} <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>₺{selectedPlanObj.period}</span></div>
                   </div>
                 )}
-                {error && <div style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.15)", padding: 14, fontSize: 13, color: "#f87171", textAlign: "center", marginBottom: 16 }}>{error}</div>}
+                {error && <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: 14, fontSize: 13, color: "rgba(255,255,255,0.6)", textAlign: "center", marginBottom: 16 }}>{error}</div>}
                 <button type="submit" disabled={loading} style={{ ...btnStyle, opacity: loading ? 0.5 : 1 }}>{loading ? "Oluşturuluyor..." : "7 Gün Ücretsiz Başla"} {!loading && <Sparkles size={16} />}</button>
                 <div style={{ textAlign: "center", marginTop: 12, fontSize: 11, color: "rgba(255,255,255,0.2)" }}>Ödeme bilgileri deneme süresi sonunda istenecektir.</div>
               </div>
             </form>
           )}
 
-          {/* Step 4: Başarılı */}
-          {step === 4 && result && (
+          {/* Step 5: Başarılı */}
+          {step === 5 && result && (
             <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: "48px 32px", textAlign: "center" }}>
               <div style={{ width: 72, height: 72, background: "rgba(255,255,255,0.04)", border: "2px solid rgba(255,255,255,0.15)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 24 }}>
                 <Check size={36} style={{ color: "#fff" }} />
@@ -248,14 +278,14 @@ export default function OnboardingPage() {
       <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "140px 24px 80px", maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ maxWidth: 620 }}>
           <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 24 }}>
-            Fotoğrafçılar için iş yönetim platformu
+            Randevuyla çalışan profesyoneller için iş yönetim platformu
           </div>
           <h1 style={{ fontSize: "clamp(38px, 5.5vw, 60px)", fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.08, marginBottom: 24 }}>
-            Çekimlerinize<br />odaklanın,<br />
+            İşinize<br />odaklanın,<br />
             <span style={{ color: "rgba(255,255,255,0.45)" }}>gerisini biz halledelim.</span>
           </h1>
           <p style={{ fontSize: 16, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: 440, marginBottom: 36 }}>
-            Rezervasyon, ödeme takibi, müşteri yönetimi ve portfolyo sitesi — tek platformda. Kurulum 2 dakika.
+            Randevu, ödeme takibi, müşteri yönetimi ve profesyonel web sitesi — tek platformda. Kurulum 2 dakika.
           </p>
           <div style={{ display: "flex", gap: 12 }}>
             <button onClick={() => setShowRegister(true)} style={{
@@ -295,9 +325,9 @@ export default function OnboardingPage() {
           <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>Üç adımda hazır.</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 1, background: "rgba(255,255,255,0.05)" }}>
             {[
-              { num: "01", title: "Kayıt olun", desc: "Stüdyo adınızı girin, URL'inizi seçin. E-posta ve şifre ile admin hesabınız hazır." },
-              { num: "02", title: "Özelleştirin", desc: "Paketlerinizi ekleyin, fiyatlarınızı belirleyin, portfolyonuzu yükleyin." },
-              { num: "03", title: "Yayına alın", desc: "Müşterileriniz online rezervasyon yapsın, siz sadece çekim yapın." },
+              { num: "01", title: "Kayıt olun", desc: "İşletme adınızı girin, URL'inizi seçin. E-posta ve şifre ile admin hesabınız hazır." },
+              { num: "02", title: "Özelleştirin", desc: "Hizmetlerinizi ekleyin, fiyatlarınızı belirleyin, sayfanızı düzenleyin." },
+              { num: "03", title: "Yayına alın", desc: "Müşterileriniz online randevu alsın, siz işinize odaklanın." },
             ].map((s, i) => (
               <div key={i} style={{ background: "#0a0a0a", padding: "36px 28px" }}>
                 <div style={{ fontSize: 32, fontWeight: 800, color: "rgba(255,255,255,0.06)", marginBottom: 16, letterSpacing: "-0.03em" }}>{s.num}</div>
@@ -328,16 +358,32 @@ export default function OnboardingPage() {
         </div>
       </section>
 
+      {/* Hangi Sektörler */}
+      <section style={{ padding: "80px 24px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Tüm Sektörler</div>
+          <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>Randevuyla çalışan herkes için.</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 8 }}>
+            {getBusinessTypeList().filter(b => b.id !== "other").map((bt) => (
+              <div key={bt.id} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", padding: "20px 16px", textAlign: "center" }}>
+                <div style={{ fontSize: 28, marginBottom: 8 }}>{bt.icon}</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>{bt.name}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Sosyal Kanıt */}
       <section style={{ padding: "80px 24px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Kullanıcı Görüşleri</div>
-          <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>Fotoğrafçılar ne diyor?</h2>
+          <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>Profesyoneller ne diyor?</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
             {[
-              { name: "Elif K.", role: "Düğün Fotoğrafçısı · İstanbul", text: "Eskiden Excel'de takip ediyordum her şeyi. Artık müşteri kendi fotoğraflarını seçiyor, ödemeleri görüyorum, albüm sürecini takip ediyorum. Hayat kurtarıcı." },
-              { name: "Burak M.", role: "Doğum Fotoğrafçısı · Ankara", text: "Müşterilerime profesyonel bir site sunabilmek çok fark yarattı. 10 dakikada kurdum, o günden beri kullanıyorum." },
-              { name: "Selin A.", role: "Dış Çekim · İzmir", text: "Rezervasyon karmaşası bitti. Müşteri online seçip tarih alıyor, ben sadece çekime odaklanıyorum. Tam istediğim şeydi." },
+              { name: "Elif K.", role: "Düğün Fotoğrafçısı · İstanbul", text: "Eskiden Excel'de takip ediyordum her şeyi. Artık müşteri kendi fotoğraflarını seçiyor, ödemeleri görüyorum. Hayat kurtarıcı." },
+              { name: "Dr. Ahmet Y.", role: "Psikolog · Ankara", text: "Danışanlarım artık kendileri online seans alıyor. Telefon trafiği neredeyse sıfıra indi, seanslara odaklanabiliyorum." },
+              { name: "Selin A.", role: "Diyetisyen · İzmir", text: "Randevu karmaşası bitti. Danışanlar boş saatleri görüp direkt randevu alıyor. Tam istediğim şeydi." },
             ].map((t, i) => (
               <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", padding: "28px 24px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, margin: "0 0 24px 0", fontStyle: "italic" }}>"{t.text}"</p>

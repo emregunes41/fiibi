@@ -48,22 +48,6 @@ export const PALETTES = {
     isDark: true,
     preview: ["#1a0d12", "#25141a", "#f0e0e5"],
   },
-  light: {
-    name: "Aydınlık",
-    desc: "Temiz beyaz",
-    bg: "#f8f8f6",
-    text: "#1a1a1a",
-    isDark: false,
-    preview: ["#f8f8f6", "#f0f0ee", "#1a1a1a"],
-  },
-  cream: {
-    name: "Krem",
-    desc: "Sıcak bej",
-    bg: "#f5f0e6",
-    text: "#2a2520",
-    isDark: false,
-    preview: ["#f5f0e6", "#ebe5da", "#2a2520"],
-  },
 };
 
 export function getPalette(id) {

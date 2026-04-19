@@ -13,6 +13,7 @@ import {
   getSlotAvailability,
 } from "@/app/admin/core-actions";
 import { useCart } from "./CartContext";
+import { getBusinessType } from "@/lib/business-types";
 
 /* ─── constants ─── */
 const CATS = [
@@ -52,15 +53,16 @@ const WEDDING_OPTIONS = [
 
 const TIME_TYPE_LABELS = {
   FULL_DAY: "Tüm Gün",
-  SLOT_2H: "2 Saatlik Çekim",
-  SLOT_4H: "4 Saatlik Çekim",
+  SLOT_2H: "2 Saatlik",
+  SLOT_4H: "4 Saatlik",
   WEDDING: "Düğün Boyunca",
+  CUSTOM_DURATION: "Süreye Göre",
   GUNDUZ: "Gündüz",
   AKSAM: "Akşam",
   // Legacy support
   MORNING: "Gündüz (08:00-14:00)",
   EVENING: "Akşam (16:00-22:00)",
-  FIVE_HOURS: "5 Saatlik Çekim",
+  FIVE_HOURS: "5 Saatlik",
   SLOT: "2 Saatlik Periyot",
 };
 
@@ -136,12 +138,16 @@ const S = {
 /* ─── component ─── */
 export default function BookingFlow({ initialPackages, isAdmin = false }) {
   const cart = useCart();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(null); // null until businessType loads
   const [cat, setCat] = useState(null);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(null);
   const [prices, setPrices] = useState([]);
   const [selectedPkg, setSelectedPkg] = useState(null);
+  const [businessType, setBusinessType] = useState(null);
+
+  const bt = getBusinessType(businessType || "photographer");
+  const hasCategories = bt.features.categories;
 
   // Auto-fill from URL parameters (Upsell integration)
   useEffect(() => {
@@ -167,6 +173,24 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
     }
   }, [initialPackages]);
 
+  // Load business type
+  useEffect(() => {
+    fetch("/api/auth/session").then(r => r.json()).then(data => {
+      const bType = data?.tenant?.businessType || "photographer";
+      setBusinessType(bType);
+      const btConfig = getBusinessType(bType);
+      // Set initial step based on sector
+      if (btConfig.features.categories) {
+        setStep(1); // photographer: start with category selection
+      } else {
+        setStep(2); // others: skip to month/package selection
+      }
+    }).catch(() => {
+      setBusinessType("photographer");
+      setStep(1);
+    });
+  }, []);
+
   // Details form state (step 3)
   const [detailForm, setDetailForm] = useState({
     date: "", time: "", notes: "",
@@ -176,9 +200,12 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
   const [slotAvail, setSlotAvail] = useState(null);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [addedFeedback, setAddedFeedback] = useState(false);
+  // Free calendar navigation for non-photographer sectors (when month is null)
+  const [calMonth, setCalMonth] = useState(new Date().getMonth() + 1);
+  const [calYear, setCalYear] = useState(new Date().getFullYear());
 
   const fmt = (n) => n.toLocaleString("tr-TR");
-  const packs = initialPackages.filter((p) => p.category === cat);
+  const packs = hasCategories ? initialPackages.filter((p) => p.category === cat) : initialPackages;
   const disc = (m) => isAdmin ? 0 : (prices.find((p) => p.month === m)?.discountPercentage || 0);
 
   // O ayın en ucuz paket fiyatını hesapla
@@ -320,6 +347,16 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
   // ──────────────────────────────────────
   //  RENDER
   // ──────────────────────────────────────
+  // Wait for businessType to load before rendering
+  if (step === null) {
+    return (
+      <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(255,255,255,0.3)" }}>
+        <div style={{ width: 24, height: 24, border: "2px solid rgba(255,255,255,0.1)", borderTopColor: "rgba(255,255,255,0.5)", borderRadius: "50%", margin: "0 auto 16px", animation: "spin 0.8s linear infinite" }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
   return (
     <div style={{ width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
 
@@ -392,11 +429,11 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
 
       <AnimatePresence mode="wait">
 
-        {/* ═══ STEP 1: Hizmet Seçimi ═══ */}
-        {step === 1 && (
+        {/* ═══ STEP 1: Hizmet Seçimi (sadece fotoğrafçılar) ═══ */}
+        {step === 1 && hasCategories && (
           <motion.div key="s1" {...anim}>
             <div style={S.section}>
-              <div style={S.label}>Çekim Türü</div>
+              <div style={S.label}>Hizmet Türü</div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
                 {CATS.map((c) => {
                   const on = cat === c.value;
@@ -514,21 +551,25 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
           <motion.div key="s2" {...anim}>
             {/* breadcrumb */}
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "32px", flexWrap: "wrap" }}>
-              <button onClick={() => go(1)} style={{
-                background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: "13px",
-              }}>← Geri</button>
-              <span style={{ color: "rgba(255,255,255,0.08)" }}>|</span>
-              <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)" }}>{CATS.find(c => c.value === cat)?.label}</span>
-              <span style={{ color: "rgba(255,255,255,0.08)" }}>·</span>
-              <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.65)", fontWeight: 600 }}>{MF[month - 1]} {year}</span>
-              {disc(month) !== 0 && (
-                <span style={{
-                  ...S.tag,
-                  background: disc(month) < 0 ? "rgba(255,255,255,0.06)" : "rgba(251,146,60,0.1)",
-                  color: disc(month) < 0 ? "rgba(255,255,255,0.7)" : "#fb923c",
-                }}>
-                  {disc(month) < 0 ? `%${Math.abs(disc(month))} İndirim` : `+%${disc(month)}`}
-                </span>
+              {hasCategories && (
+                <>
+                  <button onClick={() => go(1)} style={{
+                    background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: "13px",
+                  }}>← Geri</button>
+                  <span style={{ color: "rgba(255,255,255,0.08)" }}>|</span>
+                  <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)" }}>{CATS.find(c => c.value === cat)?.label}</span>
+                  <span style={{ color: "rgba(255,255,255,0.08)" }}>·</span>
+                  <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.65)", fontWeight: 600 }}>{MF[month - 1]} {year}</span>
+                  {disc(month) !== 0 && (
+                    <span style={{
+                      ...S.tag,
+                      background: disc(month) < 0 ? "rgba(255,255,255,0.06)" : "rgba(251,146,60,0.1)",
+                      color: disc(month) < 0 ? "rgba(255,255,255,0.7)" : "#fb923c",
+                    }}>
+                      {disc(month) < 0 ? `%${Math.abs(disc(month))} İndirim` : `+%${disc(month)}`}
+                    </span>
+                  )}
+                </>
               )}
             </div>
 
@@ -626,13 +667,15 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
             <div style={{
               padding: "20px", borderRadius: 0, marginBottom: "32px",
               border: "1px solid rgba(255,255,255,0.08)",
-              background: `linear-gradient(135deg, ${CATS.find(c => c.value === cat)?.color || "#888"}12 0%, transparent 60%)`,
+              background: `linear-gradient(135deg, ${(hasCategories ? CATS.find(c => c.value === cat)?.color : null) || "#888"}12 0%, transparent 60%)`,
               display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12,
             }}>
               <div>
-                <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: CATS.find(c => c.value === cat)?.color, opacity: 0.7, marginBottom: "4px" }}>
-                  {CATS.find(c => c.value === cat)?.label} · {MF[month - 1]} {year}
-                </div>
+                {hasCategories && (
+                  <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: CATS.find(c => c.value === cat)?.color, opacity: 0.7, marginBottom: "4px" }}>
+                    {CATS.find(c => c.value === cat)?.label} · {MF[month - 1]} {year}
+                  </div>
+                )}
                 <div style={{ fontSize: "18px", fontWeight: 700, color: "#fff" }}>{selectedPkg.name}</div>
               </div>
               <div style={{ fontSize: "22px", fontWeight: 700, color: "#fff" }}>
@@ -645,86 +688,76 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
               Bu paket için gerekli bilgileri doldurun, ardından sepetinize ekleyin.
             </p>
 
-            {/* Date — Custom inline calendar for selected month only */}
+            {/* Date — Calendar */}
             <div style={{ marginBottom: "24px", maxWidth: "100%", overflow: "hidden" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
                 <Calendar size={14} style={{ color: "rgba(255,255,255,0.25)" }} />
-                <span style={S.label}>Etkinlik Tarihi *</span>
+                <span style={S.label}>{bt.terms.appointment} Tarihi *</span>
               </div>
 
-              {/* Month header */}
-              <div style={{ textAlign: "center", marginBottom: "12px", fontSize: "14px", fontWeight: 700, color: "#fff" }}>
-                {MF[month - 1]} {year}
-              </div>
-
-              {/* Day-of-week headers */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "4px", marginBottom: "6px" }}>
-                {["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"].map(d => (
-                  <div key={d} style={{ textAlign: "center", fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.25)", padding: "4px 0" }}>{d}</div>
-                ))}
-              </div>
-
-              {/* Day cells */}
+              {/* Month header with nav */}
               {(() => {
-                const y = year;
-                const m = month;
-                const totalDays = new Date(y, m, 0).getDate();
-                // Day of week for 1st of month (0=Sun, convert to Mon-start: Mon=0..Sun=6)
-                const firstDow = new Date(y, m - 1, 1).getDay();
-                const startOffset = firstDow === 0 ? 6 : firstDow - 1; // Mon-based offset
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
+                const cm = month || calMonth;
+                const cy = month ? year : calYear;
+                const canGoBack = !month;
+                const canGoForward = !month;
+
+                const goCalPrev = () => { if (cm === 1) { setCalMonth(12); setCalYear(cy - 1); } else { setCalMonth(cm - 1); } };
+                const goCalNext = () => { if (cm === 12) { setCalMonth(1); setCalYear(cy + 1); } else { setCalMonth(cm + 1); } };
+
+                const totalDays = new Date(cy, cm, 0).getDate();
+                const firstDow = new Date(cy, cm - 1, 1).getDay();
+                const startOffset = firstDow === 0 ? 6 : firstDow - 1;
                 const minBookable = new Date();
-                minBookable.setDate(minBookable.getDate() + 2);
+                minBookable.setDate(minBookable.getDate() + (isAdmin ? 0 : 2));
                 minBookable.setHours(0, 0, 0, 0);
 
+                // Working days filter
+                const workingDays = selectedPkg?.workingDays || null;
+
                 const cells = [];
-                // Empty cells before 1st
-                for (let i = 0; i < startOffset; i++) {
-                  cells.push(<div key={`e${i}`} />);
-                }
-                // Day cells
+                for (let i = 0; i < startOffset; i++) cells.push(<div key={`e${i}`} />);
                 for (let day = 1; day <= totalDays; day++) {
-                  const dateObj = new Date(y, m - 1, day);
-                  const dateStr = `${y}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                  const dateObj = new Date(cy, cm - 1, day);
+                  const dateStr = `${cy}-${String(cm).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                   const isPast = dateObj < minBookable;
                   const isSelected = detailForm.date === dateStr;
                   const isSunday = dateObj.getDay() === 0;
+                  const dayOfWeek = dateObj.getDay();
+                  const isDisabledDay = workingDays && !workingDays.includes(dayOfWeek);
 
                   cells.push(
                     <button
                       key={day}
-                      disabled={isPast}
-                      onClick={() => {
-                        if (!isPast) {
-                          setDetailForm(p => ({ ...p, date: dateStr, time: "" }));
-                        }
-                      }}
+                      disabled={isPast || isDisabledDay}
+                      onClick={() => { if (!isPast && !isDisabledDay) setDetailForm(p => ({ ...p, date: dateStr, time: "" })); }}
                       style={{
-                        aspectRatio: "1",
-                        borderRadius: 0,
+                        aspectRatio: "1", borderRadius: 0,
                         border: isSelected ? "2px solid #fff" : "1px solid rgba(255,255,255,0.06)",
-                        background: isSelected ? "#fff" : isPast ? "transparent" : "rgba(255,255,255,0.03)",
-                        color: isSelected ? "#000" : isPast ? "rgba(255,255,255,0.12)" : isSunday ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.7)",
-                        fontSize: "13px",
-                        fontWeight: isSelected ? 800 : 600,
-                        cursor: isPast ? "not-allowed" : "pointer",
-                        transition: "all 0.15s",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: 0,
+                        background: isSelected ? "#fff" : (isPast || isDisabledDay) ? "transparent" : "rgba(255,255,255,0.03)",
+                        color: isSelected ? "#000" : (isPast || isDisabledDay) ? "rgba(255,255,255,0.12)" : isSunday ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.7)",
+                        fontSize: "13px", fontWeight: isSelected ? 800 : 600,
+                        cursor: (isPast || isDisabledDay) ? "not-allowed" : "pointer",
+                        transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center", padding: 0,
                       }}
-                    >
-                      {day}
-                    </button>
+                    >{day}</button>
                   );
                 }
 
                 return (
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "4px" }}>
-                    {cells}
-                  </div>
+                  <>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: "12px" }}>
+                      {canGoBack && <button onClick={goCalPrev} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 4 }}><ChevronLeft size={16} /></button>}
+                      <span style={{ fontSize: "14px", fontWeight: 700, color: "#fff", minWidth: 120, textAlign: "center" }}>{MF[cm - 1]} {cy}</span>
+                      {canGoForward && <button onClick={goCalNext} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 4 }}><ChevronRight size={16} /></button>}
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "4px", marginBottom: "6px" }}>
+                      {["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"].map(d => (
+                        <div key={d} style={{ textAlign: "center", fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.25)", padding: "4px 0" }}>{d}</div>
+                      ))}
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "4px" }}>{cells}</div>
+                  </>
                 );
               })()}
 

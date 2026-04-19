@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ShoppingBag, Trash2, ArrowRight, ArrowLeft,
   Camera, Heart, Gem, Calendar, Clock,
-  FileText, User, Phone, Mail, CreditCard, Instagram, Banknote, Wallet, Lock, Eye, EyeOff, Plus, Sparkles, Tag, Check,
+  FileText, User, Phone, Mail, CreditCard, Instagram, Banknote, Wallet, Lock, Eye, EyeOff, Plus, Sparkles, Tag, Check, Box,
 } from "lucide-react";
 import { savePendingReservation, getPackages, validateDiscountCode, incrementDiscountCodeUsage } from "@/app/admin/core-actions";
 import { getSiteConfig } from "@/app/admin/core-actions";
@@ -15,6 +15,7 @@ const CAT_META = {
   DIS_CEKIM: { label: "Dış Çekim", Icon: Camera, color: "#f59e0b", gradient: "linear-gradient(135deg, #f59e0b22 0%, transparent 60%)" },
   DUGUN: { label: "Düğün", Icon: Heart, color: "#fb7185", gradient: "linear-gradient(135deg, #fb718522 0%, transparent 60%)" },
   NISAN: { label: "Nişan", Icon: Gem, color: "#67e8f9", gradient: "linear-gradient(135deg, #67e8f922 0%, transparent 60%)" },
+  _DEFAULT: { label: "Hizmet", Icon: ShoppingBag, color: "#a78bfa", gradient: "linear-gradient(135deg, #a78bfa22 0%, transparent 60%)" },
 };
 
 const MF = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
@@ -51,7 +52,7 @@ export default function CartDrawer() {
   const [contactForm, setContactForm] = useState({
     brideName: "", bridePhone: "", brideEmail: "",
     groomName: "", groomPhone: "", socialMedia: "",
-    password: "", passwordConfirm: "",
+    password: "", passwordConfirm: "", shippingAddress: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,6 +63,7 @@ export default function CartDrawer() {
   const [contractAccepted, setContractAccepted] = useState(false);
   const [showUpsell, setShowUpsell] = useState(false);
   const [allPackages, setAllPackages] = useState([]);
+  const [paymentMode, setPaymentMode] = useState("cash");
 
   // Discount code state
   const [discountCode, setDiscountCode] = useState("");
@@ -73,6 +75,7 @@ export default function CartDrawer() {
   useEffect(() => {
     getSiteConfig().then(cfg => {
       if (cfg?.contractText) setContractText(cfg.contractText);
+      setPaymentMode(cfg?.paymentMode || "cash");
     });
     getPackages().then(pkgs => setAllPackages(pkgs || []));
   }, []);
@@ -94,6 +97,9 @@ export default function CartDrawer() {
     const formatted = formatPhone(e.target.value);
     setContactForm(p => ({ ...p, [field]: formatted }));
   };
+  const hasService = items.some(i => i.pkg?.type !== "PRODUCT");
+  const hasProduct = items.some(i => i.pkg?.type === "PRODUCT");
+  const hasPhysicalProduct = items.some(i => i.pkg?.type === "PRODUCT" && !i.pkg?.isDigital);
 
   // Validasyonlar
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -105,8 +111,10 @@ export default function CartDrawer() {
   const groomPhoneValid = isValidPhone(contactForm.groomPhone);
   const brideNameValid = isValidName(contactForm.brideName);
   const groomNameValid = isValidName(contactForm.groomName);
+  const shippingAddressValid = !hasPhysicalProduct || contactForm.shippingAddress.trim().length >= 10;
 
-  const isContactValid = brideNameValid && bridePhoneValid && emailValid && groomNameValid && groomPhoneValid && passwordsMatch;
+  const isContactValid = brideNameValid && bridePhoneValid && emailValid && passwordsMatch && shippingAddressValid &&
+    (!hasService || (groomNameValid && groomPhoneValid));
 
   // Calculate totals with discount applied
   const rawTotal = cartTotal();
@@ -129,49 +137,51 @@ export default function CartDrawer() {
     setDiscountLoading(false);
   };
 
-  // Akıllı upsell önerileri - spesifik paket bulur
+  // Akıllı upsell önerileri - sadece fotoğrafçılık sektörü için
   const cartCategories = items.map(i => i.category);
-  const UPSELL_MAP = {
-    // Düğün alan kişiye → Dış Çekim öner
-    DUGUN: ["DIS_CEKIM"],
-    // Nişan alan kişiye → Dış Çekim öner
-    NISAN: ["DIS_CEKIM"],
-    // Dış Çekim alan kişiye → Düğün öner
-    DIS_CEKIM: ["DUGUN"],
-  };
-
   const upsellSuggestions = [];
   const addedKeys = new Set();
+  const hasPhotographyCategories = cartCategories.some(c => ["DIS_CEKIM", "DUGUN", "NISAN"].includes(c));
   
-  // Sadece sepete eklenen ILK (ana) pakete göre öneri yap, zincirleme önermeyi engelle
-  const primaryCat = cartCategories[0];
-  if (primaryCat) {
-    const suggestedCats = UPSELL_MAP[primaryCat] || [];
-    suggestedCats.forEach(sCat => {
-      if (!cartCategories.includes(sCat) && !addedKeys.has(sCat)) {
-        // En uygun fiyatlı paketi bul
-        const catPkgs = allPackages.filter(p => p.category === sCat);
-        if (catPkgs.length > 0) {
-          catPkgs.sort((a,b) => (parseInt(a.price.replace(/\D/g,""))||0) - (parseInt(b.price.replace(/\D/g,""))||0));
-          const bestPkg = catPkgs[0];
-          
-          let title = "Bunu da Ekleyin!";
-          if (primaryCat === "DUGUN" && sCat === "DIS_CEKIM") title = "Dış Çekim İster misiniz?";
-          if (primaryCat === "NISAN" && sCat === "DIS_CEKIM") title = "Özel Dış Çekim İster misiniz?";
-          if (primaryCat === "DIS_CEKIM" && sCat === "DUGUN") title = "Düğün Çekimi de İster misiniz?";
+  if (hasPhotographyCategories) {
+    const UPSELL_MAP = {
+      DUGUN: ["DIS_CEKIM"],
+      NISAN: ["DIS_CEKIM"],
+      DIS_CEKIM: ["DUGUN"],
+    };
 
-          upsellSuggestions.push({
-            pkg: bestPkg,
-            key: sCat,
-            title,
-            desc: bestPkg.name,
-            color: CAT_META[sCat].color,
-            Icon: CAT_META[sCat].Icon,
-          });
+    const primaryCat = cartCategories[0];
+    if (primaryCat) {
+      const suggestedCats = UPSELL_MAP[primaryCat] || [];
+      suggestedCats.forEach(sCat => {
+        if (!cartCategories.includes(sCat) && !addedKeys.has(sCat)) {
+          const catPkgs = allPackages.filter(p => p.category === sCat);
+          if (catPkgs.length > 0) {
+            catPkgs.sort((a,b) => {
+              const pA = typeof a.price === 'number' ? a.price : parseInt((a.price||"").replace(/\D/g,"")) || 0;
+              const pB = typeof b.price === 'number' ? b.price : parseInt((b.price||"").replace(/\D/g,"")) || 0;
+              return pA - pB;
+            });
+            const bestPkg = catPkgs[0];
+            
+            let title = "Bunu da Ekleyin!";
+            if (primaryCat === "DUGUN" && sCat === "DIS_CEKIM") title = "Dış Çekim İster misiniz?";
+            if (primaryCat === "NISAN" && sCat === "DIS_CEKIM") title = "Özel Dış Çekim İster misiniz?";
+            if (primaryCat === "DIS_CEKIM" && sCat === "DUGUN") title = "Düğün Çekimi de İster misiniz?";
+
+            upsellSuggestions.push({
+              pkg: bestPkg,
+              key: sCat,
+              title,
+              desc: bestPkg.name,
+              color: CAT_META[sCat]?.color || "#a78bfa",
+              Icon: CAT_META[sCat]?.Icon || ShoppingBag,
+            });
           addedKeys.add(sCat);
         }
       }
     });
+  }
   }
 
   const buildReservationData = (amount) => {
@@ -206,7 +216,10 @@ export default function CartDrawer() {
       password: contactForm.password,
       date: firstItem?.details?.date || new Date().toISOString().split("T")[0],
       time: firstItem?.details?.time || "",
-      packageIds: items.map(i => i.pkg.id),
+      packageIds: items.filter(i => i.pkg?.type !== "PRODUCT").map(i => i.pkg.id),
+      purchasedProducts: items.filter(i => i.pkg?.type === "PRODUCT").map(i => ({ ...i.pkg.productData, purchasedPrice: i.price ?? i.pkg.price })),
+      orderType: hasService && hasProduct ? "MIXED" : hasProduct ? "PRODUCT" : "SERVICE",
+      shippingAddress: contactForm.shippingAddress || "",
       notes: allNotes,
       totalAmount: fmt(amount),
       paidAmount: "0",
@@ -229,7 +242,13 @@ export default function CartDrawer() {
     }
     setIsSubmitting(false);
     if (result.success) {
-      setSubmitResult({ success: true, type: "cash", message: "Rezervasyonunuz başarıyla oluşturuldu!" });
+      const isMix = items.some(i => i.pkg?.type === "PRODUCT") && items.some(i => i.pkg?.type !== "PRODUCT");
+      const isProduct = items.every(i => i.pkg?.type === "PRODUCT");
+      let msg = "Rezervasyonunuz başarıyla oluşturuldu!";
+      if (isProduct) msg = "Siparişiniz başarıyla alındı!";
+      if (isMix) msg = "Sipariş ve Rezervasyonunuz başarıyla alındı!";
+      
+      setSubmitResult({ success: true, type: "cash", message: msg });
       clearCart();
     } else {
       setSubmitResult({ success: false, message: "Bir hata oluştu: " + (result.error || "Bilinmeyen hata") });
@@ -288,7 +307,29 @@ export default function CartDrawer() {
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen && (() => {
+        // Dinamik Metin Kararları
+        let textContactInfo = "İletişim Bilgileri";
+        let textContactStep = "Adım 1/2 — İletişim bilgileri";
+        let textStatusMsg = "Siparişinizi takip edebilmeniz için bir şifre belirleyin.";
+        let textSuccessTitle = "Siparişiniz Başarıyla Oluşturuldu!";
+        let textContinueBtn = "Alışverişi Tamamla";
+
+        if (hasService && !hasProduct) {
+          textContactInfo = "Rezervasyon Bilgileri";
+          textContactStep = "Adım 1/2 — Rezervasyon bilgileri";
+          textStatusMsg = "Rezervasyon durumunuzu takip edebilmeniz için bir şifre belirleyin.";
+          textSuccessTitle = "Rezervasyonunuz Oluşturuldu!";
+          textContinueBtn = "Rezervasyona Devam Et";
+        } else if (hasService && hasProduct) {
+          textContactInfo = "Sipariş & Rezervasyon Bilgileri";
+          textContactStep = "Adım 1/2 — S/R bilgileri";
+          textStatusMsg = "Durumunuzu takip edebilmeniz için bir şifre belirleyin.";
+          textSuccessTitle = "Sipariş ve Rezervasyonunuz Alındı!";
+          textContinueBtn = "Siparişe ve Rezervasyona Devam Et";
+        }
+
+        return (
         <>
           {/* Backdrop */}
           <motion.div
@@ -342,10 +383,10 @@ export default function CartDrawer() {
                 )}
                 <div>
                   <div style={{ fontSize: "16px", fontWeight: 700, color: "#fff" }}>
-                    {submitResult ? (submitResult.success ? "Tamamlandı" : "Hata") : iframeToken ? "Kart ile Ödeme" : !checkoutMode ? "Sepetim" : checkoutStep === "contact" ? "Rezervasyon Bilgileri" : "Ödeme Yöntemi"}
+                    {submitResult ? (submitResult.success ? "Tamamlandı" : "Hata") : iframeToken ? "Kart ile Ödeme" : !checkoutMode ? "Sepetim" : checkoutStep === "contact" ? textContactInfo : "Ödeme Yöntemi"}
                   </div>
                   <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
-                    {submitResult ? "" : iframeToken ? "Güvenli ödeme" : !checkoutMode ? `${itemCount} paket` : checkoutStep === "contact" ? "Adım 1/2 — İletişim bilgileri" : "Adım 2/2 — Ödeme seçin"}
+                    {submitResult ? "" : iframeToken ? "Güvenli ödeme" : !checkoutMode ? `${itemCount} ürün/paket` : checkoutStep === "contact" ? textContactStep : "Adım 2/2 — Ödeme seçin"}
                   </div>
                 </div>
               </div>
@@ -374,8 +415,11 @@ export default function CartDrawer() {
                         {items.map((item) => {
                           const meta = CAT_META[item.category] || { label: item.category, color: "#aaa", gradient: "none" };
                           const Icon = meta.Icon || ShoppingBag;
-                          const pkgPrice = item.price ?? (parseInt(item.pkg.price?.replace(/\D/g, "")) || 0);
-                          const addonPrice = item.addons.reduce((s, a) => s + (parseInt(a.price) || 0), 0);
+                          const rawPrice = item.price ?? item.pkg?.price;
+                          let pkgPrice = 0;
+                          if (typeof rawPrice === 'number') { pkgPrice = rawPrice; }
+                          else if (typeof rawPrice === 'string') { pkgPrice = parseInt(rawPrice.replace(/\D/g, "")) || 0; }
+                          const addonPrice = (item.addons || []).reduce((s, a) => s + (parseInt(a.price) || 0), 0);
 
                           return (
                             <div key={item.pkg.id} style={{
@@ -526,7 +570,9 @@ export default function CartDrawer() {
                               <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>{suggestion.title}</div>
                                 <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", fontWeight: 600, marginBottom: 2 }}>{suggestion.desc}</div>
-                                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>{suggestion.pkg.price}</div>
+                                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
+                                  {typeof suggestion.pkg.price === 'number' ? `${suggestion.pkg.price} ₺` : suggestion.pkg.price}
+                                </div>
                               </div>
                               <div style={{
                                 width: 32, height: 32, borderRadius: 0,
@@ -572,8 +618,11 @@ export default function CartDrawer() {
                         Sipariş Özeti
                       </div>
                       {items.map((item) => {
-                        const p = item.price ?? (parseInt(item.pkg.price?.replace(/\D/g, "")) || 0);
-                        const ad = item.addons.reduce((s, a) => s + (parseInt(a.price) || 0), 0);
+                        const rawPrice = item.price ?? item.pkg?.price;
+                        let p = 0;
+                        if (typeof rawPrice === 'number') { p = rawPrice; }
+                        else if (typeof rawPrice === 'string') { p = parseInt(rawPrice.replace(/\D/g, "")) || 0; }
+                        const ad = (item.addons || []).reduce((s, a) => s + (parseInt(a.price) || 0), 0);
                         return (
                           <div key={item.pkg.id} style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", marginBottom: "6px" }}>
                             <span style={{ color: "rgba(255,255,255,0.6)" }}>{item.pkg.name}</span>
@@ -656,7 +705,7 @@ export default function CartDrawer() {
                     <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                       <div>
                         <label style={labelStyle}>
-                          <User size={10} style={{ display: "inline", marginRight: "4px" }} /> Gelin Adı *
+                          <User size={10} style={{ display: "inline", marginRight: "4px" }} /> {hasService ? "Gelin Adı *" : "Ad Soyad *"}
                         </label>
                         <input type="text" value={contactForm.brideName}
                           onChange={(e) => setContactForm(p => ({ ...p, brideName: e.target.value }))}
@@ -670,27 +719,29 @@ export default function CartDrawer() {
                         )}
                       </div>
 
-                      <div>
-                        <label style={labelStyle}>
-                          <User size={10} style={{ display: "inline", marginRight: "4px" }} /> Damat Adı *
-                        </label>
-                        <input type="text" value={contactForm.groomName}
-                          onChange={(e) => setContactForm(p => ({ ...p, groomName: e.target.value }))}
-                          placeholder="Ad Soyad" style={{
-                            ...inputStyle,
-                            borderColor: contactForm.groomName && !groomNameValid ? "rgba(248,113,113,0.4)" : undefined,
-                          }}
-                        />
-                        {contactForm.groomName && !groomNameValid && (
-                          <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
-                        )}
-                      </div>
+                      {hasService && (
+                        <div>
+                          <label style={labelStyle}>
+                            <User size={10} style={{ display: "inline", marginRight: "4px" }} /> Damat Adı *
+                          </label>
+                          <input type="text" value={contactForm.groomName}
+                            onChange={(e) => setContactForm(p => ({ ...p, groomName: e.target.value }))}
+                            placeholder="Ad Soyad" style={{
+                              ...inputStyle,
+                              borderColor: contactForm.groomName && !groomNameValid ? "rgba(248,113,113,0.4)" : undefined,
+                            }}
+                          />
+                          {contactForm.groomName && !groomNameValid && (
+                            <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
+                          )}
+                        </div>
+                      )}
                       
-                      <div style={{ height: "1px", background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
+                      {hasService && <div style={{ height: "1px", background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />}
 
                       <div>
                         <label style={labelStyle}>
-                          <Phone size={10} style={{ display: "inline", marginRight: "4px" }} /> 1. Telefon Numarası *
+                          <Phone size={10} style={{ display: "inline", marginRight: "4px" }} /> {hasService ? "1. Telefon Numarası *" : "Telefon Numarası *"}
                         </label>
                         <input type="tel" value={contactForm.bridePhone}
                           onChange={handlePhoneChange("bridePhone")}
@@ -705,22 +756,24 @@ export default function CartDrawer() {
                         )}
                       </div>
 
-                      <div>
-                        <label style={labelStyle}>
-                          <Phone size={10} style={{ display: "inline", marginRight: "4px" }} /> 2. Telefon Numarası *
-                        </label>
-                        <input type="tel" value={contactForm.groomPhone}
-                          onChange={handlePhoneChange("groomPhone")}
-                          placeholder="0(5XX) XXX XX XX" style={{
-                            ...inputStyle,
-                            borderColor: contactForm.groomPhone && !groomPhoneValid ? "rgba(248,113,113,0.4)" : undefined,
-                          }}
-                          maxLength={16}
-                        />
-                        {contactForm.groomPhone && !groomPhoneValid && (
-                          <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
-                        )}
-                      </div>
+                      {hasService && (
+                        <div>
+                          <label style={labelStyle}>
+                            <Phone size={10} style={{ display: "inline", marginRight: "4px" }} /> 2. Telefon Numarası *
+                          </label>
+                          <input type="tel" value={contactForm.groomPhone}
+                            onChange={handlePhoneChange("groomPhone")}
+                            placeholder="0(5XX) XXX XX XX" style={{
+                              ...inputStyle,
+                              borderColor: contactForm.groomPhone && !groomPhoneValid ? "rgba(248,113,113,0.4)" : undefined,
+                            }}
+                            maxLength={16}
+                          />
+                          {contactForm.groomPhone && !groomPhoneValid && (
+                            <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
+                          )}
+                        </div>
+                      )}
 
                       <div style={{ height: "1px", background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
 
@@ -740,6 +793,29 @@ export default function CartDrawer() {
                         )}
                       </div>
 
+                      {hasPhysicalProduct && (
+                        <>
+                          <div style={{ height: "1px", background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
+                          <div>
+                            <label style={labelStyle}>
+                              <Box size={10} style={{ display: "inline", marginRight: "4px" }} /> Kargo Adresi *
+                            </label>
+                            <textarea value={contactForm.shippingAddress}
+                              onChange={(e) => setContactForm(p => ({ ...p, shippingAddress: e.target.value }))}
+                              placeholder="Teslimat adresi giriniz..." style={{
+                                ...inputStyle, minHeight: 80, resize: "vertical",
+                                borderColor: contactForm.shippingAddress && !shippingAddressValid ? "rgba(248,113,113,0.4)" : undefined,
+                              }}
+                            />
+                            {contactForm.shippingAddress && !shippingAddressValid && (
+                              <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.6)", margin: "4px 0 0" }}>Tam ve açık bir adres girin (en az 10 karakter)</p>
+                            )}
+                          </div>
+                        </>
+                      )}
+
+                      <div style={{ height: "1px", background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
+
                       <div>
                         <label style={labelStyle}>
                           <Instagram size={10} style={{ display: "inline", marginRight: "4px" }} /> Instagram Kullanıcı Adı
@@ -757,7 +833,7 @@ export default function CartDrawer() {
                         🔐 Hesap Şifresi Belirleyin
                       </div>
                       <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", margin: "0 0 8px", lineHeight: 1.5 }}>
-                        Rezervasyon durumunuzu ve fotoğraflarınızı takip edebilmeniz için bir şifre belirleyin.
+                        {textStatusMsg}
                       </p>
 
                       <div>
@@ -806,62 +882,45 @@ export default function CartDrawer() {
                       </p>
                     </div>
 
-                    {/* Sözleşme */}
-                    {contractText && (
-                      <div style={{ marginBottom: 20 }}>
+                    {/* Sözleşmeler */}
+                    <div style={{ marginBottom: 20 }}>
+                      <div
+                        onClick={() => setContractAccepted(!contractAccepted)}
+                        style={{
+                          display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer",
+                          padding: "16px", borderRadius: 0,
+                          background: contractAccepted ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
+                          border: `1px solid ${contractAccepted ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
+                          transition: "all 0.2s",
+                        }}
+                      >
                         <div style={{
-                          background: "rgba(255,255,255,0.03)",
-                          border: "1px solid rgba(255,255,255,0.1)",
-                          borderRadius: 0, padding: 16,
-                          maxHeight: 180, overflowY: "auto",
-                          marginBottom: 12,
+                          width: 20, height: 20, borderRadius: 0, flexShrink: 0, marginTop: 1,
+                          border: `2px solid ${contractAccepted ? "#fff" : "rgba(255,255,255,0.25)"}`,
+                          background: contractAccepted ? "#fff" : "transparent",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          transition: "all 0.2s",
                         }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                            <FileText size={14} style={{ color: "rgba(255,255,255,0.5)" }} />
-                            <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Hizmet Sözleşmesi</span>
-                          </div>
-                          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.8, margin: 0, whiteSpace: "pre-wrap" }}>
-                            {contractText}
-                          </p>
+                          {contractAccepted && (
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          )}
                         </div>
-                        <div
-                          onClick={() => setContractAccepted(!contractAccepted)}
-                          style={{
-                            display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer",
-                            padding: "12px 14px", borderRadius: 0,
-                            background: contractAccepted ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
-                            border: `1px solid ${contractAccepted ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
-                            transition: "all 0.2s",
-                          }}
-                        >
-                          <div style={{
-                            width: 20, height: 20, borderRadius: 0, flexShrink: 0, marginTop: 1,
-                            border: `2px solid ${contractAccepted ? "#fff" : "rgba(255,255,255,0.25)"}`,
-                            background: contractAccepted ? "#fff" : "transparent",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            transition: "all 0.2s",
-                          }}>
-                            {contractAccepted && (
-                              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                            )}
-                          </div>
-                          <span style={{ fontSize: 12, color: contractAccepted ? "#fff" : "rgba(255,255,255,0.5)", lineHeight: 1.5, transition: "all 0.2s" }}>
-                            Hizmet sözleşmesini okudum ve kabul ediyorum. *
-                          </span>
-                        </div>
+                        <span style={{ fontSize: 13, color: contractAccepted ? "#fff" : "rgba(255,255,255,0.5)", lineHeight: 1.5, transition: "all 0.2s" }}>
+                          Siparişimi tamamlayarak, <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Hizmet Sözleşmesi</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okuduğumu ve kabul ettiğimi onaylıyorum. *
+                        </span>
                       </div>
-                    )}
+                    </div>
 
                     {/* Cash Option */}
                     <button
                       onClick={handleCashCheckout}
-                      disabled={isSubmitting || (contractText && !contractAccepted)}
+                      disabled={isSubmitting || !contractAccepted}
                       style={{
                         width: "100%", padding: "20px", borderRadius: 0, marginBottom: 12,
                         background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)",
-                        cursor: (isSubmitting || (contractText && !contractAccepted)) ? "not-allowed" : "pointer", textAlign: "left",
+                        cursor: (isSubmitting || !contractAccepted) ? "not-allowed" : "pointer", textAlign: "left",
                         transition: "all 0.2s", color: "#fff",
-                        opacity: (contractText && !contractAccepted) ? 0.4 : 1,
+                        opacity: (!contractAccepted) ? 0.4 : 1,
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -880,15 +939,16 @@ export default function CartDrawer() {
                     </button>
 
                     {/* Card Option */}
+                    {paymentMode !== "cash" && (
                     <button
                       onClick={handleCardCheckout}
-                      disabled={isSubmitting || (contractText && !contractAccepted)}
+                      disabled={isSubmitting || !contractAccepted}
                       style={{
                         width: "100%", padding: "20px", borderRadius: 0, marginBottom: 12,
                         background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.2)",
-                        cursor: (isSubmitting || (contractText && !contractAccepted)) ? "not-allowed" : "pointer", textAlign: "left",
+                        cursor: (isSubmitting || !contractAccepted) ? "not-allowed" : "pointer", textAlign: "left",
                         transition: "all 0.2s", color: "#fff",
-                        opacity: (contractText && !contractAccepted) ? 0.4 : 1,
+                        opacity: (!contractAccepted) ? 0.4 : 1,
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -905,6 +965,7 @@ export default function CartDrawer() {
                         </div>
                       </div>
                     </button>
+                    )}
 
                     {/* Info note */}
                     <div style={{ marginTop: 16, padding: "12px 14px", borderRadius: 0, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
@@ -972,7 +1033,7 @@ export default function CartDrawer() {
                         color: submitResult.success ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.5)",
                         marginBottom: "12px",
                       }}>
-                        {submitResult.success ? "Rezervasyonunuz Oluşturuldu!" : "Hata"}
+                        {submitResult.success ? textSuccessTitle : "Hata"}
                       </div>
                       <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: 320, margin: "0 auto 24px" }}>
                         {submitResult.message}
@@ -1076,7 +1137,7 @@ export default function CartDrawer() {
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                       transition: "all 0.2s",
                     }}>
-                      <ArrowRight size={14} /> Rezervasyona Devam Et
+                      <ArrowRight size={14} /> {textContinueBtn}
                     </button>
                   </div>
                 ) : checkoutStep === "contact" ? (
@@ -1101,7 +1162,8 @@ export default function CartDrawer() {
             )}
           </motion.div>
         </>
-      )}
+        );
+      })()}
     </AnimatePresence>
   );
 }

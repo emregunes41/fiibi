@@ -1,15 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode } from "../core-actions";
+import { useRouter } from "next/navigation";
+import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode, getSubMerchantInfo, updateSubMerchantInfo } from "../core-actions";
 import { getBanners, createBanner, updateBanner, deleteBanner, reorderBanners } from "../banner-actions";
 import { getContentBlocks, createContentBlock, updateContentBlock, deleteContentBlock } from "../content-actions";
+import { getPortfolioCategories, createPortfolioCategory, deletePortfolioCategory, addPhotoToPortfolio, deletePortfolioPhoto } from "../portfolio-actions";
 import { sendTestSMS } from "../test-sms-action";
+import { getBusinessType } from "@/lib/business-types";
+import { useAdminSession } from "../AdminSessionContext";
 import { CldUploadWidget } from "next-cloudinary";
-import { 
+import {
   Save, Home, Phone, Mail, Instagram, MessageCircle, MapPin,
-  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot, Image as ImageIcon, ArrowUp, ArrowDown, Eye, EyeOff, UploadCloud
+  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot, Image as ImageIcon, ArrowUp, ArrowDown, Eye, EyeOff, UploadCloud, Building2, Shield, CreditCard
 } from "lucide-react";
+import { PLATFORM, LEGAL_TYPES } from "@/lib/constants";
 
 const inp = {
   width: "100%", boxSizing: "border-box",
@@ -47,13 +52,19 @@ const sectionHeader = (Icon, title, desc) => (
 );
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [config, setConfig] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [uploadingBg, setUploadingBg] = useState(false);
-  const [activeTab, setActiveTab] = useState("genel");
+  const [activeTab, setActiveTab] = useState("tema");
+  const { session: adminSession } = useAdminSession();
+  const businessType = adminSession?.tenant?.businessType || null;
+  const bt = getBusinessType(businessType);
+  const { features, terms } = bt;
+  const isPhotographer = businessType === "photographer";
 
   // Discount codes
   const [discountCodes, setDiscountCodes] = useState([]);
@@ -78,6 +89,20 @@ export default function SettingsPage() {
   const [cbForm, setCbForm] = useState({ title: "", description: "", imageUrls: [] });
   const [cbUploading, setCbUploading] = useState(false);
 
+  // Portfolio
+  const [portfolioCategories, setPortfolioCategories] = useState([]);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [portfolioUploading, setPortfolioUploading] = useState(false);
+
+  // Sub-Merchant
+  const [smForm, setSmForm] = useState({ legalName: "", legalType: "personal", taxId: "", taxOffice: "", iban: "", legalAddress: "", sellerAgreementAccepted: false });
+  const [smSaving, setSmSaving] = useState(false);
+  const [smMessage, setSmMessage] = useState("");
+  const [smError, setSmError] = useState(false);
+  const [smStatus, setSmStatus] = useState("NOT_STARTED");
+  const [smCommission, setSmCommission] = useState(5);
+  const [smLoaded, setSmLoaded] = useState(false);
+
   useEffect(() => {
     async function loadConfig() {
       const data = await getSiteConfig();
@@ -88,10 +113,34 @@ export default function SettingsPage() {
       const codes = await getDiscountCodes();
       setDiscountCodes(codes);
     }
-    loadConfig();
+    Promise.all([
+      getSiteConfig(),
+    ]).then(([data]) => {
+      if (data) setConfig(data);
+      setLoading(false);
+    });
+
     loadDiscountCodes();
     getBanners().then(setBanners);
     getContentBlocks().then(setContentBlocks);
+    getPortfolioCategories().then(setPortfolioCategories);
+    // Load sub-merchant info
+    getSubMerchantInfo().then((info) => {
+      if (info && !info.error) {
+        setSmForm({
+          legalName: info.legalName || "",
+          legalType: info.legalType || "personal",
+          taxId: info.taxId || "",
+          taxOffice: info.taxOffice || "",
+          iban: info.iban || "",
+          legalAddress: info.legalAddress || "",
+          sellerAgreementAccepted: info.sellerAgreementAccepted || false,
+        });
+        setSmStatus(info.subMerchantStatus || "NOT_STARTED");
+        setSmCommission(info.commissionRate ?? 5);
+      }
+      setSmLoaded(true);
+    });
   }, []);
 
   async function handleSubmit(e) {
@@ -102,6 +151,7 @@ export default function SettingsPage() {
     const res = await updateSiteConfig(config);
     if (res.success) {
       setMessage("Ayarlar başarıyla güncellendi.");
+      router.refresh();
       setTimeout(() => setMessage(""), 3000);
     } else {
       setMessage("Hata: " + res.error);
@@ -143,12 +193,11 @@ export default function SettingsPage() {
       {/* Tab Bar */}
       <div style={{ display: "flex", gap: 0, marginBottom: 24, borderBottom: "1px solid rgba(255,255,255,0.08)", overflowX: "auto" }}>
         {[
-          { id: "genel", label: "Genel" },
-          { id: "marka", label: "Marka" },
-          { id: "odeme", label: "Ödeme" },
-          { id: "icerik", label: "İçerik" },
-          { id: "bildirim", label: "Bildirimler" },
-          { id: "sozlesme", label: "Sözleşme" },
+          { id: "tema", label: "TEMA" },
+          { id: "icerik", label: "İÇERİK" },
+          { id: "odeme", label: "ÖDEME" },
+          { id: "bildirim", label: "BİLDİRİM" },
+          { id: "sozlesme", label: "SÖZLEŞME" },
           { id: "ai", label: "AI" },
         ].map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
@@ -163,7 +212,7 @@ export default function SettingsPage() {
       <form onSubmit={handleSubmit}>
 
         {/* 1. Hero Başlıkları */}
-        {activeTab === "genel" && <div style={sectionCard}>
+        {activeTab === "tema" && <div style={sectionCard}>
           {sectionHeader(Type, "Sinematik Başlıklar", "Anasayfada görünen büyük başlık ve slogan.")}
 
           <div style={{ marginBottom: 16 }}>
@@ -187,14 +236,14 @@ export default function SettingsPage() {
               value={config.heroSubtitle}
               onChange={(e) => setConfig({ ...config, heroSubtitle: e.target.value })}
               style={inp}
-              placeholder="Premium Photography Service"
+              placeholder={bt.heroSub || "Alt Başlık"}
               required
             />
           </div>
         </div>}
 
         {/* 2. Preview Card */}
-        {activeTab === "genel" && <div style={{ ...sectionCard, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
+        {activeTab === "tema" && <div style={{ ...sectionCard, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
             <Layout size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
             <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Canlı Önizleme</span>
@@ -207,10 +256,10 @@ export default function SettingsPage() {
             <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 200, height: 200, background: "rgba(255,255,255,0.04)", borderRadius: 0, filter: "blur(60px)", pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1 }}>
               <span style={{ display: "block", fontSize: 8, textTransform: "uppercase", letterSpacing: "0.4em", color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>
-                {config.heroSubtitle || "Premium Photography Service"}
+                {config.heroSubtitle || bt.heroSub || ""}
               </span>
               <h1 style={{ fontSize: 22, fontFamily: "Georgia, serif", color: "#fff", lineHeight: 1.4, margin: "0 0 14px", whiteSpace: "pre-line" }}>
-                {config.heroTitle || "Anları Sanata\nDönüştürüyoruz"}
+                {config.heroTitle || bt.heroTitle || ""}
               </h1>
               <div style={{ width: 40, height: 1, background: "rgba(255,255,255,0.2)", margin: "0 auto" }} />
             </div>
@@ -391,7 +440,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 2.5 Hero Arka Plan */}
-        {activeTab === "genel" && <div style={sectionCard}>
+        {activeTab === "tema" && <div style={sectionCard}>
           {sectionHeader(Monitor, "Arka Plan Ayarı", "Anasayfadaki hero bölümünün arka planını değiştirin.")}
 
           {/* Type Selector */}
@@ -503,17 +552,17 @@ export default function SettingsPage() {
         </div>}
 
         {/* 3. Stüdyo & İletişim */}
-        {activeTab === "genel" && <div style={sectionCard}>
-          {sectionHeader(Home, "Stüdyo & İletişim", "Alt panelde yer alan adres ve iletişim detayları.")}
+        {activeTab === "tema" && <div style={sectionCard}>
+          {sectionHeader(Home, `${terms.placeName || "İşletme"} & İletişim`, "Alt panelde yer alan adres ve iletişim detayları.")}
 
           <div style={{ marginBottom: 16 }}>
-            <label style={label}>Stüdyo Adresi</label>
+            <label style={label}>{terms.placeName || "İşletme"} Adresi</label>
             <input
               type="text"
               value={config.address}
               onChange={(e) => setConfig({ ...config, address: e.target.value })}
               style={inp}
-              placeholder="Stüdyo adresi"
+              placeholder={`${terms.placeName || "İşletme"} adresi`}
               required
             />
           </div>
@@ -542,7 +591,7 @@ export default function SettingsPage() {
                   value={config.email}
                   onChange={(e) => setConfig({ ...config, email: e.target.value })}
                   style={inpIcon}
-                  placeholder="info@studio.com"
+                  placeholder="info@isletme.com"
                   required
                 />
               </div>
@@ -551,7 +600,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 4. Sosyal Kanallar */}
-        {activeTab === "genel" && <div style={sectionCard}>
+        {activeTab === "tema" && <div style={sectionCard}>
           {sectionHeader(Instagram, "Sosyal Kanallar", "Müşterilerinizin size ulaşabileceği linkler.")}
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -790,10 +839,10 @@ export default function SettingsPage() {
           <div style={{ marginTop: 8 }}>
             <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Bildirim Tercihleri</p>
             {[
-              { key: "notifyReservation", icon: "📅", text: "Rezervasyon onayı", desc: "Rezervasyon oluşturulduğunda" },
+              { key: "notifyReservation", icon: "📅", text: "Randevu onayı", desc: "Randevu oluşturulduğunda" },
               { key: "notifyPayment", icon: "💰", text: "Ödeme alındı", desc: "Ödeme başarılı olduğunda" },
-              { key: "notifyReminder", icon: "⏰", text: "Etkinlik hatırlatma", desc: "Çekime 1 hafta kala" },
-              { key: "notifyPhotosReady", icon: "📸", text: "Fotoğraflar hazır", desc: "Fotoğraflar teslim edildiğinde" },
+              { key: "notifyReminder", icon: "⏰", text: "Hatırlatma", desc: "Randevuya 1 hafta kala" },
+              ...(businessType === "photographer" ? [{ key: "notifyPhotosReady", icon: "📸", text: "Fotoğraflar hazır", desc: "Fotoğraflar teslim edildiğinde" }] : []),
             ].map((item) => (
               <div
                 key={item.key}
@@ -850,7 +899,9 @@ export default function SettingsPage() {
                 lineHeight: 1.7,
                 fontFamily: "inherit",
               }}
-              placeholder={"Örnek:\n\nRezervasyonunuzu onaylayarak aşağıdaki koşulları kabul etmiş olursunuz:\n\n1. Çekim tarihi değişikliği en geç 7 gün öncesinden bildirilmelidir.\n2. İptal durumunda kapora iade edilmez.\n3. Fotoğraf teslim süresi paket detaylarında belirtilmiştir."}
+              placeholder={isPhotographer
+                ? "Örnek:\n\nRezervasyonunuzu onaylayarak aşağıdaki koşulları kabul etmiş olursunuz:\n\n1. Çekim tarihi değişikliği en geç 7 gün öncesinden bildirilmelidir.\n2. İptal durumunda kapora iade edilmez.\n3. Fotoğraf teslim süresi paket detaylarında belirtilmiştir."
+                : "Örnek:\n\nRandevunuzu onaylayarak aşağıdaki koşulları kabul etmiş olursunuz:\n\n1. Randevu iptali en geç 24 saat öncesinden bildirilmelidir.\n2. İptal edilmeyen randevular ücretlendirilir.\n3. Muayene ücreti hizmet sonrası tahsil edilir."}
             />
             <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 8, lineHeight: 1.6 }}>
               💡 Boş bırakırsanız sözleşme adımı gösterilmez. Doldurursanız müşteri ödeme öncesi bu metni onaylamak zorundadır.
@@ -1046,7 +1097,8 @@ export default function SettingsPage() {
                   lineHeight: 1.7,
                   fontFamily: "inherit",
                 }}
-                placeholder={`Buraya AI'ın nasıl davranmasını istediğini yaz. Örnekler:
+                placeholder={isPhotographer
+                  ? `Buraya AI'ın nasıl davranmasını istediğini yaz. Örnekler:
 
 • Kendini "Emre" olarak tanıt, samimi ol
 • Müşterilere önce dış çekim paketini öner
@@ -1056,7 +1108,18 @@ export default function SettingsPage() {
 • Kısa ve öz cevaplar ver, uzun yazma
 • Müşteriye her zaman "siz" diye hitap et
 • Şaka yap, emoji kullan
-• Bütçesi düşükse taksit seçeneğini belirt`}
+• Bütçesi düşükse taksit seçeneğini belirt`
+                  : `Buraya AI'ın nasıl davranmasını istediğini yaz. Örnekler:
+
+• Kendini "${terms?.provider || 'Asistan'}" olarak tanıt
+• Hastaları/müşterileri kısa ve net bilgilendir
+• ${terms?.appointment || 'Randevu'} saatleri ve ücretler hakkında bilgi ver
+• Acil durumlar için 112'yi aramalarını söyle
+• ${terms?.services || 'Hizmetler'} hakkında detaylı bilgi ver
+• Rakipleri kötüleme
+• Kısa ve öz cevaplar ver
+• Her zaman "siz" diye hitap et
+• Samimi ama profesyonel ol`}
               />
               <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 10, lineHeight: 1.8 }}>
                 💡 <strong style={{ color: "rgba(255,255,255,0.5)" }}>Nasıl çalışır:</strong> Buraya yazdığın her şey AI'ın "beynine" eklenir. Paket bilgileri ve iletişim bilgileri zaten otomatik olarak AI'a verilir — sen sadece davranışını, üslubunu ve özel kurallarını belirle.
@@ -1070,7 +1133,7 @@ export default function SettingsPage() {
                     "💵 Nakit/kart seçenekleri",
                     "🗓️ Rezervasyon yönlendirmesi",
                   ].map((item, i) => (
-                    <span key={i} style={{ fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", color: "rgba(74,222,128,0.7)", border: "1px solid rgba(255,255,255,0.06)" }}>{item}</span>
+                    <span key={i} style={{ fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.06)" }}>{item}</span>
                   ))}
                 </div>
               </div>
@@ -1192,7 +1255,7 @@ export default function SettingsPage() {
             setCbUploading(false);
           }} style={{
             padding: "12px 20px", borderRadius: 0, border: "none",
-            background: (cbForm.title || cbForm.imageUrls.length > 0) ? "#22c55e" : "rgba(255,255,255,0.06)",
+            background: (cbForm.title || cbForm.imageUrls.length > 0) ? "#fff" : "rgba(255,255,255,0.06)",
             color: (cbForm.title || cbForm.imageUrls.length > 0) ? "#000" : "rgba(255,255,255,0.3)",
             fontWeight: 800, fontSize: 12, cursor: (cbForm.title || cbForm.imageUrls.length > 0) ? "pointer" : "not-allowed",
             display: "flex", alignItems: "center", gap: 8, width: "fit-content",
@@ -1202,9 +1265,163 @@ export default function SettingsPage() {
         </div>
       </div>}
 
+      {/* ── Portfolyo Yönetimi ── */}
+      {activeTab === "icerik" && <div style={sectionCard}>
+        {sectionHeader(ImageIcon, "Portfolyo", "Anasayfada gösterilecek portfolyo fotoğraflarını yönetin.")}
+
+        {/* Yeni Kategori Ekle */}
+        <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+          <input
+            type="text"
+            value={newCategoryName}
+            onChange={(e) => setNewCategoryName(e.target.value)}
+            placeholder="Yeni kategori adı"
+            style={{ ...inp, flex: 1 }}
+          />
+          <button
+            type="button"
+            disabled={!newCategoryName.trim()}
+            onClick={async () => {
+              const res = await createPortfolioCategory(newCategoryName.trim());
+              if (res.success) {
+                setPortfolioCategories(await getPortfolioCategories());
+                setNewCategoryName("");
+              }
+            }}
+            style={{
+              padding: "10px 18px", borderRadius: 0, border: "none",
+              background: newCategoryName.trim() ? "#fff" : "rgba(255,255,255,0.06)",
+              color: newCategoryName.trim() ? "#000" : "rgba(255,255,255,0.3)",
+              fontWeight: 800, fontSize: 12, cursor: newCategoryName.trim() ? "pointer" : "not-allowed",
+              display: "flex", alignItems: "center", gap: 6, flexShrink: 0,
+            }}
+          >
+            <Plus size={14} /> Ekle
+          </button>
+        </div>
+
+        {/* Kategoriler ve Fotoğraflar */}
+        {portfolioCategories.length > 0 ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {portfolioCategories.map((cat) => (
+              <div key={cat.id} style={{
+                background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: 14,
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: "#fff" }}>{cat.name}</span>
+                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    <CldUploadWidget
+                      uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                      options={{ maxFiles: 5, resourceType: "image", folder: "portfolio" }}
+                      onSuccess={async (result) => {
+                        if (result.event === "success") {
+                          await addPhotoToPortfolio(cat.id, result.info.secure_url, result.info.public_id);
+                          setPortfolioCategories(await getPortfolioCategories());
+                        }
+                      }}
+                    >
+                      {({ open }) => (
+                        <button type="button" onClick={() => open()} style={{
+                          padding: "4px 10px", borderRadius: 0, border: "1px solid rgba(255,255,255,0.12)",
+                          background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)",
+                          fontSize: 11, fontWeight: 700, cursor: "pointer",
+                          display: "flex", alignItems: "center", gap: 4,
+                        }}>
+                          <UploadCloud size={12} /> Yükle
+                        </button>
+                      )}
+                    </CldUploadWidget>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (confirm(`"${cat.name}" kategorisini ve tüm fotoğraflarını silmek istediğinize emin misiniz?`)) {
+                          await deletePortfolioCategory(cat.id);
+                          setPortfolioCategories(await getPortfolioCategories());
+                        }
+                      }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(255,255,255,0.3)" }}
+                    ><Trash2 size={14} /></button>
+                  </div>
+                </div>
+
+                {/* Photos Grid */}
+                {cat.photos && cat.photos.length > 0 ? (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))", gap: 6 }}>
+                    {cat.photos.map((photo) => (
+                      <div key={photo.id} style={{ position: "relative", aspectRatio: "1", overflow: "hidden" }}>
+                        <img src={photo.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            await deletePortfolioPhoto(photo.id);
+                            setPortfolioCategories(await getPortfolioCategories());
+                          }}
+                          style={{
+                            position: "absolute", top: 2, right: 2, background: "rgba(0,0,0,0.7)",
+                            border: "none", color: "#ff6b6b", cursor: "pointer", padding: 2, borderRadius: 0,
+                          }}
+                        ><Trash2 size={10} /></button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ textAlign: "center", padding: 16, color: "rgba(255,255,255,0.25)", fontSize: 11 }}>
+                    Henüz fotoğraf yok. Yüklemek için yukarıdaki butonu kullanın.
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(255,255,255,0.25)", fontSize: 12 }}>
+            Henüz portfolyo kategorisi eklenmemiş.
+          </div>
+        )}
+      </div>}
+
         {/* ═══ MARKA SEKME ═══ */}
-        {activeTab === "marka" && <div style={sectionCard}>
+        {activeTab === "tema" && <div style={sectionCard}>
           {sectionHeader(Palette, "Marka & Kimlik", "Tema, logo, renkler ve yazı tipi ayarları.")}
+
+          {/* Gece / Gündüz Toggle */}
+          <div style={{ marginBottom: 28 }}>
+            <label style={label}>Site Teması</label>
+            <div style={{ 
+              display: "flex", alignItems: "center", gap: 16, 
+              padding: "16px 20px", borderRadius: 12,
+              background: config.forceDarkMode ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.1)"
+            }}>
+              <span style={{ fontSize: 28 }}>{config.forceDarkMode ? "🌙" : "☀️"}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>
+                  {config.forceDarkMode ? "Gece Modu" : "Gündüz Modu"}
+                </div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>
+                  {config.forceDarkMode 
+                    ? "Koyu arka plan, beyaz yazılar" 
+                    : "Aydınlık arka plan, sektör görseli aktif"}
+                </div>
+              </div>
+              <button 
+                onClick={() => setConfig({ ...config, forceDarkMode: !config.forceDarkMode })}
+                style={{
+                  position: "relative", width: 56, height: 30, borderRadius: 15,
+                  background: config.forceDarkMode ? "rgba(255,255,255,0.15)" : "#4ade80",
+                  border: "none", cursor: "pointer", transition: "all 0.3s ease",
+                  padding: 0,
+                }}
+              >
+                <div style={{
+                  position: "absolute", top: 3, 
+                  left: config.forceDarkMode ? 3 : 29,
+                  width: 24, height: 24, borderRadius: "50%",
+                  background: "#fff", transition: "left 0.3s ease",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                }} />
+              </button>
+            </div>
+          </div>
 
           {/* Renk Paleti */}
           <div style={{ marginBottom: 28 }}>
@@ -1217,8 +1434,6 @@ export default function SettingsPage() {
                 { id: "ocean",  name: "Okyanus",   desc: "Derin lacivert",   colors: ["#0c1525", "#131f35", "#dce4f0"] },
                 { id: "forest", name: "Orman",     desc: "Koyu yeşil",       colors: ["#0d1710", "#142018", "#ddeee2"] },
                 { id: "wine",   name: "Şarap",     desc: "Bordo tonlar",     colors: ["#1a0d12", "#25141a", "#f0e0e5"] },
-                { id: "light",  name: "Aydınlık",  desc: "Temiz beyaz",      colors: ["#f8f8f6", "#f0f0ee", "#1a1a1a"] },
-                { id: "cream",  name: "Krem",      desc: "Sıcak bej",        colors: ["#f5f0e6", "#ebe5da", "#2a2520"] },
               ].map(p => {
                 const selected = (config.siteTheme || "dark") === p.id;
                 return (
@@ -1289,7 +1504,7 @@ export default function SettingsPage() {
           {/* Footer Slogan */}
           <div style={{ marginBottom: 16 }}>
             <label style={label}>Footer Sloganı</label>
-            <input type="text" value={config.footerTagline || ""} onChange={e => setConfig({ ...config, footerTagline: e.target.value })} style={inp} placeholder="Hayatınızın en özel anlarını ölümsüzleştiriyoruz." />
+            <input type="text" value={config.footerTagline || ""} onChange={e => setConfig({ ...config, footerTagline: e.target.value })} style={inp} placeholder={(() => { try { const { getBusinessType: gbt } = require("@/lib/business-types"); return gbt(businessType).defaultSlogan; } catch { return "İşletmenizin sloganı"; } })()} />
           </div>
 
           {/* Accent Color */}
@@ -1336,8 +1551,8 @@ export default function SettingsPage() {
             <div style={{ marginTop: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "16px" }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 8 }}>Önizleme</div>
               <div style={{ fontFamily: ({ geist: "system-ui", inter: "'Inter'", playfair: "'Playfair Display'", poppins: "'Poppins'", montserrat: "'Montserrat'", lora: "'Lora'", raleway: "'Raleway'", cormorant: "'Cormorant Garamond'" })[config.fontFamily || "geist"] || "system-ui" }}>
-                <div style={{ fontSize: 22, fontWeight: 700, color: config.accentColor || "#fff", marginBottom: 6 }}>Stüdyo Başlığı</div>
-                <div style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>Profesyonel fotoğrafçılık hizmetleri ile en özel anlarınızı ölümsüzleştiriyoruz.</div>
+                <div style={{ fontSize: 22, fontWeight: 700, color: config.accentColor || "#fff", marginBottom: 6 }}>{terms.placeName || "İşletme"} Başlığı</div>
+                <div style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>Profesyonel hizmetlerimiz ile en iyi çözümleri sunuyoruz.</div>
               </div>
             </div>
           </div>
@@ -1345,17 +1560,17 @@ export default function SettingsPage() {
           {/* SEO */}
           <div style={{ marginBottom: 16 }}>
             <label style={label}>SEO Başlık</label>
-            <input type="text" value={config.seoTitle || ""} onChange={e => setConfig({ ...config, seoTitle: e.target.value })} style={inp} placeholder="İşletme Adı | Profesyonel Fotoğrafçılık" />
+            <input type="text" value={config.seoTitle || ""} onChange={e => setConfig({ ...config, seoTitle: e.target.value })} style={inp} placeholder={`İşletme Adı | ${bt.name} Hizmetleri`} />
           </div>
           <div>
             <label style={label}>SEO Açıklama</label>
-            <textarea value={config.seoDescription || ""} onChange={e => setConfig({ ...config, seoDescription: e.target.value })} style={{ ...inp, minHeight: 70, resize: "vertical" }} placeholder="Profesyonel fotoğrafçılık hizmetleri..." />
+            <textarea value={config.seoDescription || ""} onChange={e => setConfig({ ...config, seoDescription: e.target.value })} style={{ ...inp, minHeight: 70, resize: "vertical" }} placeholder={`Profesyonel ${terms.service.toLowerCase()} hizmetleri...`} />
           </div>
         </div>}
 
         {/* ═══ ÖDEME SEKME ═══ */}
         {activeTab === "odeme" && <div style={sectionCard}>
-          {sectionHeader(Banknote, "Ödeme Ayarları", "Müşterilerinizden online ödeme almak için API bilgilerinizi girin.")}
+          {sectionHeader(Banknote, "Ödeme Ayarları", "Müşterilerinizden online ödeme almak için pazaryeri kaydınızı tamamlayın.")}
 
           {/* Payment Mode */}
           <div style={{ marginBottom: 24 }}>
@@ -1372,30 +1587,247 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* PayTR Keys */}
-          {(config.paymentMode === "card" || config.paymentMode === "both") && <>
-            <div style={{ padding: "12px 16px", background: "rgba(255,200,0,0.05)", border: "1px solid rgba(255,200,0,0.15)", marginBottom: 20 }}>
-              <p style={{ fontSize: 12, color: "rgba(255,200,0,0.7)", margin: 0 }}>⚠️ PayTR hesabınızdan Merchant ID, API Key ve Secret Key bilgilerinizi girin. Bu bilgiler olmadan kredi kartı ödemesi alamazsınız.</p>
-            </div>
-            <div style={{ marginBottom: 16 }}>
-              <label style={label}>PayTR Merchant ID</label>
-              <input type="text" value={config.paytrMerchantId || ""} onChange={e => setConfig({ ...config, paytrMerchantId: e.target.value })} style={inp} placeholder="123456" />
-            </div>
-            <div style={{ marginBottom: 16 }}>
-              <label style={label}>PayTR API Key</label>
-              <input type="text" value={config.paytrApiKey || ""} onChange={e => setConfig({ ...config, paytrApiKey: e.target.value })} style={inp} placeholder="PayTR API anahtarınız" />
-            </div>
-            <div>
-              <label style={label}>PayTR Secret Key</label>
-              <input type="password" value={config.paytrSecretKey || ""} onChange={e => setConfig({ ...config, paytrSecretKey: e.target.value })} style={inp} placeholder="••••••••" />
-            </div>
-          </>}
-
           {config.paymentMode === "cash" && (
             <div style={{ padding: "20px", textAlign: "center", color: "rgba(255,255,255,0.3)", fontSize: 13 }}>
               Müşterileriniz nakit veya havale ile ödeme yapacak. Online ödeme almak için modunu değiştirin.
             </div>
           )}
+
+          {/* E-Ticaret / Kargo Ayarları */}
+          <div style={{ marginTop: 32, paddingTop: 32, borderTop: "1px dashed rgba(255,255,255,0.1)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+              <Package size={20} style={{ color: "#fff" }} />
+              <div style={{ fontSize: 16, fontWeight: 800 }}>E-Ticaret & Kargo Ayarları</div>
+            </div>
+
+            <div style={{ display: "flex", gap: "24px", flexDirection: "column" }}>
+              <div>
+                <label style={label}>Kargo Ücreti Kim Tarafından Ödenir?</label>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {[{ id: "seller", label: "Satıcı Öder (Ücretsiz Kargo)" }, { id: "buyer", label: "Alıcı Öder (+Kargo Ücreti)" }].map(m => (
+                    <button key={m.id} type="button" onClick={() => setConfig({ ...config, shippingPayer: m.id })} style={{
+                      padding: "10px 18px", fontSize: 12, fontWeight: 700, cursor: "pointer", borderRadius: 0,
+                      border: config.shippingPayer === m.id ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.1)",
+                      background: config.shippingPayer === m.id ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.03)",
+                      color: config.shippingPayer === m.id ? "#fff" : "rgba(255,255,255,0.4)",
+                    }}>{m.label}</button>
+                  ))}
+                </div>
+              </div>
+
+              {config.shippingPayer === "buyer" && (
+                <div>
+                  <label style={label}>Sabit Kargo Ücreti (₺)</label>
+                  <input type="text" value={config.flatShippingRate || "0"} onChange={e => setConfig({ ...config, flatShippingRate: e.target.value.replace(/[^0-9]/g, "") })} style={inp} placeholder="Örn: 79" />
+                  <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", margin: "6px 0 0" }}>Fiziksel ürün alındığında ödeme tutarına bu rakam eklenir.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>}
+
+        {/* Alt Üye İşyeri Kayıt Formu */}
+        {activeTab === "odeme" && (config.paymentMode === "card" || config.paymentMode === "both") && <div style={sectionCard}>
+          {sectionHeader(Building2, "Alt Üye İşyeri Kaydı", `${PLATFORM.name} pazaryeri üzerinden kredi kartı ile ödeme alabilmeniz için yasal bilgilerinizi girin.`)}
+
+          {/* Durum Göstergesi */}
+          {smStatus !== "NOT_STARTED" && (
+            <div style={{
+              padding: "14px 18px", marginBottom: 20,
+              background: smStatus === "APPROVED" ? "rgba(74,222,128,0.08)" : smStatus === "REJECTED" ? "rgba(239,68,68,0.08)" : "rgba(250,204,21,0.08)",
+              border: `1px solid ${smStatus === "APPROVED" ? "rgba(74,222,128,0.2)" : smStatus === "REJECTED" ? "rgba(239,68,68,0.2)" : "rgba(250,204,21,0.2)"}`,
+              display: "flex", alignItems: "center", gap: 12,
+            }}>
+              {smStatus === "APPROVED" ? <CheckCircle2 size={18} style={{ color: "#4ade80" }} /> :
+               smStatus === "REJECTED" ? <AlertCircle size={18} style={{ color: "#ef4444" }} /> :
+               <Shield size={18} style={{ color: "#facc15" }} /> }
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>
+                  {smStatus === "APPROVED" ? "✅ Onaylandı" : smStatus === "REJECTED" ? "❌ Reddedildi" : "⏳ İnceleniyor"}
+                </div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
+                  {smStatus === "APPROVED"
+                    ? "Alt üye işyeri kaydınız onaylandı. Kredi kartı ödemesi alabilirsiniz."
+                    : smStatus === "REJECTED"
+                    ? "Başvurunuz reddedildi. Bilgilerinizi kontrol edip tekrar gönderin."
+                    : "Başvurunuz inceleniyor. Onay sonuçları size e-posta ile bildirilecek."}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Komisyon Bilgisi */}
+          <div style={{
+            padding: "14px 18px", marginBottom: 20,
+            background: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            display: "flex", alignItems: "center", gap: 12,
+          }}>
+            <CreditCard size={18} style={{ color: "rgba(255,255,255,0.5)" }} />
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>
+                Platform Komisyonu: %{smCommission}
+              </div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
+                Her başarılı kredi kartı ödemesinden platform %{smCommission} komisyon keser, kalan tutarı IBAN hesabınıza aktarır.
+              </div>
+            </div>
+          </div>
+
+          {/* İşletme Türü */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={label}>İşletme Türü</label>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
+              {LEGAL_TYPES.map(lt => (
+                <button key={lt.value} type="button"
+                  onClick={() => setSmForm(p => ({ ...p, legalType: lt.value }))}
+                  style={{
+                    padding: "12px 14px", textAlign: "left", cursor: "pointer",
+                    background: smForm.legalType === lt.value ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
+                    border: smForm.legalType === lt.value ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: 0,
+                  }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: smForm.legalType === lt.value ? "#fff" : "rgba(255,255,255,0.5)" }}>{lt.label}</div>
+                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>{lt.description}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Resmi Ad */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={label}>{smForm.legalType === "personal" ? "Ad Soyad" : "Resmi Unvan"} *</label>
+            <input type="text" value={smForm.legalName}
+              onChange={e => setSmForm(p => ({ ...p, legalName: e.target.value }))}
+              style={inp}
+              placeholder={smForm.legalType === "personal" ? "Örn: Ahmet Yılmaz" : "Örn: XYZ Teknoloji Ltd. Şti."}
+            />
+          </div>
+
+          {/* TCKN / VKN */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={label}>{smForm.legalType === "personal" ? "T.C. Kimlik No (TCKN)" : "Vergi Kimlik No (VKN)"} *</label>
+            <input type="text" value={smForm.taxId}
+              onChange={e => setSmForm(p => ({ ...p, taxId: e.target.value.replace(/[^0-9]/g, "").slice(0, 11) }))}
+              style={inp}
+              placeholder={smForm.legalType === "personal" ? "11 haneli TCKN" : "10 haneli VKN"}
+              maxLength={11}
+            />
+          </div>
+
+          {/* Vergi Dairesi */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={label}>Vergi Dairesi</label>
+            <input type="text" value={smForm.taxOffice}
+              onChange={e => setSmForm(p => ({ ...p, taxOffice: e.target.value }))}
+              style={inp}
+              placeholder="Örn: Kadıköy"
+            />
+          </div>
+
+          {/* IBAN */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={label}>IBAN *</label>
+            <input type="text" value={smForm.iban}
+              onChange={e => {
+                let v = e.target.value.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+                // Format: TR00 0000 0000 0000 0000 0000 00
+                if (v.length > 26) v = v.slice(0, 26);
+                const formatted = v.replace(/(.{4})/g, "$1 ").trim();
+                setSmForm(p => ({ ...p, iban: formatted }));
+              }}
+              style={{ ...inp, fontFamily: "monospace", letterSpacing: "0.05em" }}
+              placeholder="TR00 0000 0000 0000 0000 0000 00"
+              maxLength={32}
+            />
+          </div>
+
+          {/* Adres */}
+          <div style={{ marginBottom: 20 }}>
+            <label style={label}>Resmi Adres</label>
+            <textarea value={smForm.legalAddress}
+              onChange={e => setSmForm(p => ({ ...p, legalAddress: e.target.value }))}
+              style={{ ...inp, minHeight: 70, resize: "vertical" }}
+              placeholder="İşletmenizin resmi tebligat adresi"
+            />
+          </div>
+
+          {/* Sözleşme Onayı */}
+          <div
+            onClick={() => setSmForm(p => ({ ...p, sellerAgreementAccepted: !p.sellerAgreementAccepted }))}
+            style={{
+              display: "flex", alignItems: "flex-start", gap: 12, padding: "16px",
+              marginBottom: 20, cursor: "pointer",
+              background: smForm.sellerAgreementAccepted ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
+              border: `1px solid ${smForm.sellerAgreementAccepted ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.06)"}`,
+              transition: "all 0.2s",
+            }}>
+            <div style={{
+              width: 22, height: 22, borderRadius: 0, flexShrink: 0, marginTop: 1,
+              border: `2px solid ${smForm.sellerAgreementAccepted ? "#fff" : "rgba(255,255,255,0.2)"}`,
+              background: smForm.sellerAgreementAccepted ? "#fff" : "transparent",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "all 0.2s",
+            }}>
+              {smForm.sellerAgreementAccepted && <CheckCircle2 size={14} style={{ color: "#000" }} />}
+            </div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: smForm.sellerAgreementAccepted ? "#fff" : "rgba(255,255,255,0.5)", marginBottom: 4 }}>
+                Satıcı Hizmet Sözleşmesini okudum ve kabul ediyorum *
+              </div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: 1.6 }}>
+                <a href="/sozlesme" target="_blank" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "underline" }}>Satıcı Hizmet Sözleşmesi</a>,{" "}
+                <a href="/sozlesme" target="_blank" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "underline" }}>KVKK Aydınlatma Metni</a> ve{" "}
+                <a href="/sozlesme" target="_blank" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "underline" }}>Mesafeli Satış Sözleşmesi</a> şartlarını kabul ediyorum.
+              </div>
+            </div>
+          </div>
+
+          {/* Durum Mesajı */}
+          {smMessage && (
+            <div style={{
+              padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 10,
+              background: smError ? "rgba(255,68,68,0.06)" : "rgba(255,255,255,0.04)",
+              border: `1px solid ${smError ? "rgba(255,68,68,0.15)" : "rgba(255,255,255,0.1)"}`,
+              color: smError ? "#ff8a8a" : "#fff",
+            }}>
+              {smError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
+              <span style={{ fontSize: 12, fontWeight: 700 }}>{smMessage}</span>
+            </div>
+          )}
+
+          {/* Kaydet Butonu */}
+          <button
+            type="button"
+            disabled={smSaving || !smForm.legalName || !smForm.taxId || !smForm.iban || !smForm.sellerAgreementAccepted}
+            onClick={async () => {
+              setSmSaving(true);
+              setSmMessage("");
+              setSmError(false);
+              const res = await updateSubMerchantInfo(smForm);
+              if (res.success) {
+                setSmMessage("Başvurunuz alındı. İnceleme sonucu size bildirilecek.");
+                setSmStatus("PENDING");
+                setTimeout(() => setSmMessage(""), 5000);
+              } else {
+                setSmMessage(res.error || "Bir hata oluştu.");
+                setSmError(true);
+              }
+              setSmSaving(false);
+            }}
+            style={{
+              width: "100%", padding: 16, borderRadius: 0, border: "none",
+              background: (smForm.legalName && smForm.taxId && smForm.iban && smForm.sellerAgreementAccepted) ? "#fff" : "rgba(255,255,255,0.06)",
+              color: (smForm.legalName && smForm.taxId && smForm.iban && smForm.sellerAgreementAccepted) ? "#000" : "rgba(255,255,255,0.3)",
+              fontWeight: 800, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.08em",
+              cursor: (smForm.legalName && smForm.taxId && smForm.iban && smForm.sellerAgreementAccepted) ? "pointer" : "not-allowed",
+              opacity: smSaving ? 0.5 : 1,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+              transition: "all 0.2s",
+            }}>
+            {smSaving ? <Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} /> : <Shield size={16} />}
+            {smSaving ? "Gönderiliyor..." : smStatus === "PENDING" ? "Bilgileri Güncelle" : "Başvuruyu Gönder"}
+          </button>
         </div>}
 
     </div>

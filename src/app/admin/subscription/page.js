@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Crown, Clock, Zap, Check, Shield, Star, Infinity } from "lucide-react";
+import { useAdminSession } from "../AdminSessionContext";
 
 const PLAN_FEATURES = {
   monthly: [
@@ -58,7 +59,8 @@ const PLAN_DETAILS = {
 };
 
 export default function SubscriptionPage() {
-  const [tenantInfo, setTenantInfo] = useState(null);
+  const { session: adminSession } = useAdminSession();
+  const tenantInfo = adminSession?.tenant || null;
   const [plans, setPlans] = useState(buildPlans({ monthly: 2499, yearly: 24999, lifetime: 69500 }));
   const [loading, setLoading] = useState(true);
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -66,14 +68,7 @@ export default function SubscriptionPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [sessionRes, pricingRes] = await Promise.all([
-          fetch("/api/auth/session"),
-          fetch("/api/pricing"),
-        ]);
-        if (sessionRes.ok) {
-          const data = await sessionRes.json();
-          setTenantInfo(data.tenant || null);
-        }
+        const pricingRes = await fetch("/api/pricing");
         if (pricingRes.ok) {
           const prices = await pricingRes.json();
           setPlans(buildPlans(prices));
@@ -227,6 +222,36 @@ export default function SubscriptionPage() {
         Tüm planlar KDV dahildir. Ödeme işlemleri güvenli altyapı üzerinden gerçekleşir.<br />
         İptal ve iade koşulları için destek ile iletişime geçin.
       </div>
+
+      {/* Referral Section */}
+      {tenantInfo?.referralCode && (
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: "24px", marginTop: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+            <div style={{ width: 36, height: 36, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>🎁</div>
+            <div>
+              <h3 style={{ fontSize: 14, fontWeight: 800, margin: 0 }}>Arkadaşını Getir</h3>
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", margin: 0 }}>Her başarılı kayıt için ek süre kazanın.</p>
+            </div>
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 4 }}>Referans Kodunuz</div>
+              <div style={{ fontSize: 18, fontWeight: 900, letterSpacing: "0.1em" }}>{tenantInfo.referralCode}</div>
+            </div>
+            <button 
+              onClick={() => navigator.clipboard.writeText(tenantInfo.referralCode).then(() => alert("Kod kopyalandı!"))}
+              style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff", padding: "8px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}
+            >
+              Kopyala
+            </button>
+          </div>
+          {tenantInfo.referralCount > 0 && (
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
+              Şu ana kadar <strong style={{ color: "#fff" }}>{tenantInfo.referralCount}</strong> kişi sizin referansınızla katıldı.
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

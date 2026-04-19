@@ -5,7 +5,7 @@ import { CreditCard, Banknote, X, AlertTriangle, CheckCircle2, Circle } from "lu
 // Payment preference toggling is handled by @/app/actions/payment-preferences
 
 const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale/EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online" };
-const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(255,255,255,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(255,255,255,0.6)" };
+const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(255,255,255,0.5)", CREDIT_CARD: "rgba(255,255,255,0.7)", ONLINE: "rgba(255,255,255,0.6)" };
 
 export default function PaymentSection({ reservation, compactMode = false }) {
   const [showPayModal, setShowPayModal] = useState(false);
@@ -345,7 +345,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
       <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "20px 24px", overflow: "hidden", position: "relative" }}>
         {/* Is Converted Overlay/Indicator */}
         {isCashOnly && isConvertedToCard && (
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, rgba(255,255,255,0.7), #f59e0b)" }} />
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "rgba(255,255,255,0.15)" }} />
         )}
         
         {/* Summary */}
@@ -362,7 +362,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
             <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Toplam</div>
             <div style={{ fontSize: 16, fontWeight: 800, color: "#fff" }}>{currentTotalAmount.toLocaleString('tr-TR')}₺</div>
           </div>
-          <div style={{ textAlign: "center", background: "rgba(74,222,128,0.05)", borderRadius: 0, padding: "10px 6px" }}>
+          <div style={{ textAlign: "center", background: "rgba(255,255,255,0.05)", borderRadius: 0, padding: "10px 6px" }}>
             <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Ödenen</div>
             <div style={{ fontSize: 16, fontWeight: 800, color: "#fff" }}>{totalPaid.toLocaleString('tr-TR')}₺</div>
           </div>
@@ -447,7 +447,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
                case "ADD_PAYMENT": return <CreditCard size={12} style={{ color: "#fff" }} />;
                case "DELETE_PAYMENT": return <X size={12} style={{ color: "rgba(255,255,255,0.5)" }} />;
                case "CARD_CONVERSION": return <CreditCard size={12} style={{ color: "rgba(255,255,255,0.7)" }} />;
-               case "EXTRA_FEE": return <AlertTriangle size={12} style={{ color: "#f97316" }} />;
+               case "EXTRA_FEE": return <AlertTriangle size={12} style={{ color: "rgba(255,255,255,0.5)" }} />;
                case "CASH_REVERSION": return <Banknote size={12} style={{ color: "rgba(255,255,255,0.6)" }} />;
                default: return <Circle size={12} style={{ color: "#888" }} />;
              }
@@ -488,7 +488,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
                           <span style={{color:"rgba(255,255,255,0.2)"}}>TOPLAM:</span> {Math.round(log._dynamicTotal || 0).toLocaleString('tr-TR')}₺
                         </div>
                         <div style={{ fontSize: 9, fontWeight: 700, color: "#fff" }}>
-                          <span style={{color:"rgba(74,222,128,0.4)"}}>ÖDENEN:</span> {Math.round(log._dynamicPaid || 0).toLocaleString('tr-TR')}₺
+                          <span style={{color:"rgba(255,255,255,0.4)"}}>ÖDENEN:</span> {Math.round(log._dynamicPaid || 0).toLocaleString('tr-TR')}₺
                         </div>
                         <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>
                           <span style={{color:"rgba(255,255,255,0.35)"}}>KALAN:</span> {Math.max(0, Math.round((log._dynamicTotal || 0) - (log._dynamicPaid || 0))).toLocaleString('tr-TR')}₺
@@ -536,8 +536,8 @@ export default function PaymentSection({ reservation, compactMode = false }) {
               <button
                 onClick={() => setShowRevertConfirm(true)}
                 style={{
-                  width: "100%", padding: 12, borderRadius: 0, border: "1px solid rgba(74,222,128,0.3)",
-                  background: "rgba(74,222,128,0.05)", color: "#fff", fontWeight: 700, fontSize: 13,
+                  width: "100%", padding: 12, borderRadius: 0, border: "1px solid rgba(255,255,255,0.15)",
+                  background: "rgba(255,255,255,0.04)", color: "#fff", fontWeight: 700, fontSize: 13,
                   cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                   transition: "all 0.2s",
                 }}

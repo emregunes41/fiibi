@@ -1,15 +1,27 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { getCurrentTenant, getTenantSiteConfig } from "@/lib/tenant";
 import { prisma } from "@/lib/prisma";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let openai;
+function getOpenAI() {
+  if (!openai) openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  return openai;
+}
+
+// Tenant-aware site config çek
+async function getTenantConfig() {
+  const tenant = await getCurrentTenant();
+  if (tenant) {
+    const config = await getTenantSiteConfig(tenant.id);
+    if (config) return config;
+  }
+  // Fallback: eski global-settings
+  return prisma.globalSettings.findUnique({ where: { id: "global-settings" } });
+}
 
 // Build dynamic system prompt
-async function buildSystemPrompt() {
-  const siteConfig = await prisma.globalSettings.findUnique({
-    where: { id: "global-settings" }
-  });
-
+async function buildSystemPrompt(siteConfig) {
   const customInstructions = siteConfig?.chatbotInstructions?.trim() 
     ? `\n## ÖZEL TALİMATLAR (Sahibinden)\n${siteConfig.chatbotInstructions}\n`
     : "";
@@ -19,7 +31,7 @@ async function buildSystemPrompt() {
   return `Sen ${businessName} stüdyonun sanal asistanısın. ${businessName}, premium bir düğün ve etkinlik fotoğrafçılığı stüdyosüdur.
 
 ## KİMLİĞİN
-- Sen ${businessName} yapıy zeka asistanısın. Müşterilere samimi, sıcak ve profesyonel şekilde cevap ver.
+- Sen ${businessName} yapay zeka asistanısın. Müşterilere samimi, sıcak ve profesyonel şekilde cevap ver.
 - Konuşma tarzın: dostça ama profesyonel, emoji kullan ama abartma, kısa ve net cevaplar ver.
 - Kendinizi "biz" olarak tanıt (ekip olarak konuş).
 - Türkçe konuş. Müşteri İngilizce yazarsa İngilizce cevap ver.
@@ -46,19 +58,19 @@ export async function POST(request) {
       return NextResponse.json({ error: "Mesaj formatı hatalı." }, { status: 400 });
     }
 
-    // Check if chatbot is enabled
-    const settings = await prisma.globalSettings.findUnique({ where: { id: "global-settings" } });
+    // Tenant-aware config çek
+    const settings = await getTenantConfig();
     if (settings && settings.chatbotEnabled === false) {
       return NextResponse.json({ error: "Chatbot şu anda devre dışı." }, { status: 403 });
     }
 
-    const systemPrompt = await buildSystemPrompt();
+    const systemPrompt = await buildSystemPrompt(settings);
 
-    const completion = await openai.chat.completions.create({
+    const completion = await getOpenAI().chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: systemPrompt },
-        ...messages.slice(-10) // Son 10 mesajı gönder (context window için)
+        ...messages.slice(-10)
       ],
       temperature: 0.7,
       max_tokens: 300,
@@ -73,7 +85,7 @@ export async function POST(request) {
       suggestedPackage = suggestionMatch[1].trim();
     }
 
-    // Clean the reply (remove the JSON tag from visible text)
+    // Clean the reply
     const cleanReply = reply.replace(/\[PACKAGE_SUGGESTION:.+?\]/g, "").trim();
 
     return NextResponse.json({ 

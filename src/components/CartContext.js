@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { PLATFORM } from "@/lib/constants";
 
 const CartContext = createContext(null);
 
@@ -13,7 +14,7 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     try {
-      const saved = sessionStorage.getItem("pinowed_cart");
+      const saved = sessionStorage.getItem(PLATFORM.cartStorageKey);
       if (saved) setItems(JSON.parse(saved));
     } catch {}
     setHydrated(true);
@@ -22,15 +23,15 @@ export function CartProvider({ children }) {
   useEffect(() => {
     if (!hydrated) return;
     try {
-      sessionStorage.setItem("pinowed_cart", JSON.stringify(items));
+      sessionStorage.setItem(PLATFORM.cartStorageKey, JSON.stringify(items));
     } catch {}
   }, [items, hydrated]);
 
-  const addItem = useCallback((pkg, category, month, year, priceOverride, addons = [], details = {}) => {
+  const addItem = useCallback((pkgOrProduct, category, month, year, priceOverride, addons = [], details = {}) => {
     setItems((prev) => {
-      // Remove existing item with same package ID (replace with updated details)
-      const filtered = prev.filter((i) => i.pkg.id !== pkg.id);
-      return [...filtered, { pkg, category, month, year, price: priceOverride ?? null, addons, details }];
+      // Remove existing item with same ID (replace with updated details)
+      const filtered = prev.filter((i) => i.pkg.id !== pkgOrProduct.id);
+      return [...filtered, { pkg: pkgOrProduct, category, month, year, price: priceOverride ?? null, addons: addons || [], details: details || {} }];
     });
   }, []);
 
@@ -42,12 +43,13 @@ export function CartProvider({ children }) {
     setItems((prev) =>
       prev.map((item) => {
         if (item.pkg.id !== pkgId) return item;
-        const has = item.addons.find((a) => a.title === addon.title);
+        const currentAddons = item.addons || [];
+        const has = currentAddons.find((a) => a.title === addon.title);
         return {
           ...item,
           addons: has
-            ? item.addons.filter((a) => a.title !== addon.title)
-            : [...item.addons, addon],
+            ? currentAddons.filter((a) => a.title !== addon.title)
+            : [...currentAddons, addon],
         };
       })
     );
@@ -65,9 +67,20 @@ export function CartProvider({ children }) {
 
   const cartTotal = useCallback(() => {
     return items.reduce((sum, item) => {
-      const pkgPrice = item.price ?? (parseInt(item.pkg.price?.replace(/\D/g, "")) || 0);
-      const addonPrice = item.addons.reduce((s, a) => s + (parseInt(a.price) || 0), 0);
-      return sum + pkgPrice + addonPrice;
+      let rawPrice = item.price !== null ? item.price : item.pkg?.price;
+      let numericPrice = 0;
+      if (typeof rawPrice === 'number') {
+        numericPrice = rawPrice;
+      } else if (typeof rawPrice === 'string') {
+        numericPrice = parseInt(rawPrice.replace(/\D/g, "")) || 0;
+      }
+      
+      const addonPrice = (item.addons || []).reduce((s, a) => {
+        const p = typeof a.price === 'number' ? a.price : parseInt((a.price || "").toString().replace(/\D/g, "")) || 0;
+        return s + p;
+      }, 0);
+      
+      return sum + numericPrice + addonPrice;
     }, 0);
   }, [items]);
 

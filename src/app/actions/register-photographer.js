@@ -2,17 +2,23 @@
 
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { getBusinessType } from "@/lib/business-types";
 
 /**
- * Yeni fotoğrafçı kaydı — tenant + admin + globalSettings oluşturur
+ * Yeni işletme kaydı — tenant + admin + globalSettings oluşturur
+ * Tüm sektörler için ortak kayıt fonksiyonu
  */
-export async function registerPhotographer(data) {
+export async function registerBusiness(data) {
   try {
-    const { businessName, ownerName, ownerEmail, ownerPhone, password, slug, selectedPlan, referralCode: inputReferral } = data;
+    const { businessName, ownerName, ownerEmail, ownerPhone, password, slug, selectedPlan, referralCode: inputReferral, businessType } = data;
 
     // Validasyon
     if (!businessName || !ownerName || !ownerEmail || !password || !slug) {
       return { error: "Tüm alanları doldurunuz." };
+    }
+
+    if (!businessType) {
+      return { error: "Lütfen sektörünüzü seçiniz." };
     }
 
     // Slug format kontrolü
@@ -59,11 +65,15 @@ export async function registerPhotographer(data) {
       newReferralCode = genCode();
     }
 
+    // Sektöre uygun varsayılan içerikler
+    const bt = getBusinessType(businessType);
+
     // Transaction: Tenant + Admin + GlobalSettings
     const result = await prisma.$transaction(async (tx) => {
       const tenant = await tx.tenant.create({
         data: {
           slug: cleanSlug,
+          businessType: businessType || "photographer",
           businessName,
           ownerName,
           ownerEmail: ownerEmail.toLowerCase(),
@@ -86,16 +96,19 @@ export async function registerPhotographer(data) {
         }
       });
 
-      // 3. GlobalSettings oluştur (varsayılan)
+      // 3. Sektöre uygun varsayılanlar ile GlobalSettings oluştur
       await tx.globalSettings.create({
         data: {
           id: `settings-${tenant.id}`,
           tenantId: tenant.id,
           businessName,
+          heroTitle: bt.heroTitle,
+          heroSubtitle: bt.heroSub,
+          footerTagline: bt.defaultSlogan,
           email: ownerEmail.toLowerCase(),
           phone: ownerPhone || "",
           heroBgType: "color",
-          heroBgColor: "#000000",
+          heroBgColor: "#f5f0e8",
           emailEnabled: true,
           smsEnabled: false,
           notifyReservation: true,
@@ -104,8 +117,6 @@ export async function registerPhotographer(data) {
           notifyPhotosReady: true,
         }
       });
-
-      // NOT: Referans bonusu (30 gün) ilk ödeme sonrası verilecek (iyzico entegrasyonunda)
 
       return tenant;
     });
@@ -116,14 +127,18 @@ export async function registerPhotographer(data) {
         id: result.id,
         slug: result.slug,
         businessName: result.businessName,
+        businessType: result.businessType,
       }
     };
 
   } catch (err) {
-    console.error("Photographer registration error:", err);
+    console.error("Business registration error:", err);
     if (err.code === 'P2002') {
       return { error: "Bu bilgilerle zaten bir hesap kayıtlı." };
     }
     return { error: "Kayıt sırasında bir hata oluştu." };
   }
 }
+
+// Geriye uyumluluk için eski fonksiyon adını da export et
+export const registerPhotographer = registerBusiness;

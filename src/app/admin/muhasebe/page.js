@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Wallet, TrendingUp, ArrowUpRight, ArrowDownRight, Banknote, CreditCard, PiggyBank, Receipt, Calendar, Users } from "lucide-react";
 import { getCurrentTenant } from "@/lib/tenant";
+import { getBusinessType } from "@/lib/business-types";
 import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth";
 
@@ -17,6 +18,8 @@ async function getFinanceTenantId() {
 
 export default async function MuhasebePage() {
   const tenantId = await getFinanceTenantId();
+  const tenant = await getCurrentTenant();
+  const isPhotographer = (tenant?.businessType || "photographer") === "photographer";
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth();
@@ -307,7 +310,7 @@ export default async function MuhasebePage() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
                     <div style={{ minWidth: 0 }}>
                       <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {r.brideName} {r.groomName ? `& ${r.groomName}` : ''}
+                        {r.brideName}{isPhotographer && r.groomName ? ` & ${r.groomName}` : ''}
                       </div>
                       <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.4)" }}>
                         {new Date(r.eventDate).toLocaleDateString("tr-TR")} · {r.packages?.map(p => p.name).join(', ')}

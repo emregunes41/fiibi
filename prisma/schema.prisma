@@ -10,6 +10,7 @@ datasource db {
 // ─── TENANT (Kiracı) ─────────────────────────────────────────────
 model Tenant {
   id              String    @id @default(cuid())
+  businessType    String    @default("photographer") // photographer, doctor, psychologist, dietitian, coach, beauty, veterinarian, dentist, physiotherapist, tutor, lawyer, consultant, other
   slug            String    @unique           // "ahmet" → ahmet.photoapp.co
   customDomain    String?   @unique           // "www.ahmetfoto.com"
   businessName    String                      // "Ahmet Photography"
@@ -35,6 +36,19 @@ model Tenant {
   referredBy      String?                     // Davet eden tenant ID
   referralCount   Int       @default(0)       // Kaç kişi davet edildi
 
+  // Sub-Merchant (Alt Üye İşyeri) bilgileri
+  legalName       String?                     // Resmi unvan
+  legalType       String    @default("personal") // personal, sole_proprietorship, limited, joint_stock
+  taxId           String?                     // TCKN veya VKN
+  taxOffice       String?                     // Vergi dairesi
+  iban            String?                     // IBAN
+  legalAddress    String?                     // Resmi adres
+  commissionRate  Float     @default(5)       // Platform komisyon oranı (%)
+  subMerchantStatus String  @default("NOT_STARTED") // NOT_STARTED, PENDING, APPROVED, REJECTED
+  subMerchantKey  String?                     // PayTR sub-merchant key (onay sonrası)
+  sellerAgreementAccepted Boolean @default(false) // Satıcı sözleşmesi onayı
+  sellerAgreementDate     DateTime?           // Sözleşme onay tarihi
+
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
@@ -47,11 +61,15 @@ model Tenant {
   portfolioCategories PortfolioCategory[]
   banners           Banner[]
   contentBlocks     ContentBlock[]
+  events            Event[]
+  eventRegistrations EventRegistration[]
   albumModels       AlbumModel[]
   discountCodes     DiscountCode[]
   monthlyPrices     MonthlyPriceConfig[]
-  notifications     AdminNotification[]
-  pageViews         PageView[]
+  notifications        AdminNotification[]
+  pageViews            PageView[]
+  products             Product[]
+  productCategories    ProductCategory[]
 }
 
 // ─── ADMIN ────────────────────────────────────────────────────────
@@ -80,8 +98,10 @@ model PhotographyPackage {
   addons       Json?
   customFields Json?
   availableSlots Json?
+  workingDays    Json?          // [0,1,2,3,4,5,6] — 0=Pazar, 1=Pazartesi...
   deliveryTimeDays Int           @default(14)
   postSelectionDays Int          @default(0)
+  meetingLink  String?
   isActive     Boolean       @default(true)
   tenantId     String?
   tenant       Tenant?       @relation(fields: [tenantId], references: [id])
@@ -92,7 +112,7 @@ model PhotographyPackage {
   @@index([tenantId])
 }
 
-// ─── REZERVASYON ──────────────────────────────────────────────────
+// ─── REZERVASYON / SİPARİŞ (Hibrid) ──────────────────────────────────────────────────
 model Reservation {
   id             String               @id @default(cuid())
   brideName      String
@@ -101,7 +121,7 @@ model Reservation {
   groomName      String?
   groomPhone     String?
   groomEmail     String?
-  eventDate      DateTime
+  eventDate      DateTime?
   eventTime      String?
   status         String               @default("PENDING")
   contractLog    String?
@@ -120,11 +140,18 @@ model Reservation {
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
   userId         String?
+  
+  // E-Ticaret Alanları
+  orderType      String               @default("SERVICE") // SERVICE, PRODUCT, MIXED
+  shippingAddress String?
+  purchasedProducts Json?             // Sipariş edilen fiziki/dijital ürün detayları
+
   selectedPhotos String?
   selectionLocked Boolean              @default(false)
   workflowStatus String               @default("PENDING")
   deliveryDate   DateTime?
   deliveryLink   String?
+  meetingLink    String?
   user           User?                @relation(fields: [userId], references: [id])
   gallery        PhotoGallery?
   packages       PhotographyPackage[] @relation("PhotographyPackageToReservation")
@@ -133,6 +160,48 @@ model Reservation {
   payments       Payment[]
 
   @@index([tenantId])
+}
+
+// ─── ETKİNLİK (Grup Dersi / Seminer) ────────────────────────────────
+model Event {
+  id              String   @id @default(cuid())
+  title           String
+  description     String
+  date            DateTime
+  durationMinutes Int      @default(60)
+  price           String   @default("0") // "0" means free
+  maxParticipants Int      @default(10)
+  meetingLink     String?  // for online
+  location        String?  // for offline
+  imageUrl        String?  // cover photo
+  isActive        Boolean  @default(true)
+  tenantId        String?
+  tenant          Tenant?  @relation(fields: [tenantId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  registrations   EventRegistration[]
+
+  @@index([tenantId])
+}
+
+model EventRegistration {
+  id              String   @id @default(cuid())
+  eventId         String
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name            String
+  email           String
+  phone           String
+  socialMedia     String?
+  notes           String?
+  status          String   @default("CONFIRMED") // PENDING, CONFIRMED, CANCELLED
+  paymentStatus   String   @default("UNPAID")    // UNPAID, PAID (always PAID if free)
+  tenantId        String?
+  tenant          Tenant?  @relation(fields: [tenantId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([eventId])
 }
 
 // ─── ÖDEME ────────────────────────────────────────────────────────
@@ -309,16 +378,17 @@ model GlobalSettings {
   businessName    String   @default("Studio")
   logoUrl         String?
   faviconUrl      String?
-  footerTagline   String   @default("Hayatınızın en özel anlarını ölümsüzleştiriyoruz.")
+  footerTagline   String   @default("")
   seoTitle        String?
   seoDescription  String?
-  accentColor     String   @default("#ffffff")
+  accentColor     String   @default("#1a1a1a")
   fontFamily      String   @default("geist")
-  siteTheme       String   @default("cinematic") // cinematic, minimal, editorial, bold
+  siteTheme       String   @default("dark") // dark, slate, coffee, ocean, forest, wine
+  forceDarkMode   Boolean  @default(false)
 
   // Mevcut alanlar
-  heroTitle    String   @default("Anları Sanata Dönüştürüyoruz")
-  heroSubtitle String   @default("Premium Photography Service")
+  heroTitle    String   @default("")
+  heroSubtitle String   @default("")
   address      String   @default("")
   phone        String   @default("")
   email        String   @default("")
@@ -327,7 +397,7 @@ model GlobalSettings {
   cashPromoText String  @default("")
   heroBgType   String   @default("video")
   heroBgUrl    String   @default("/assets/hero.mp4")
-  heroBgColor  String   @default("#000000")
+  heroBgColor  String   @default("#f5f0e8")
   contractText String   @default("")
 
   // Bildirim kanalları
@@ -342,17 +412,19 @@ model GlobalSettings {
   notifyReminder     Boolean @default(true)
   notifyPhotosReady  Boolean @default(true)
   googleMapsUrl  String   @default("")
-  chatbotEnabled      Boolean @default(true)
+  chatbotEnabled      Boolean @default(false)
   chatbotInstructions String  @default("")
 
-  // Ödeme ayarları (YENİ — fotoğrafçının kendi müşterilerinden ödeme alması)
+  // Ödeme ve E-Ticaret Ayarları
   paymentMode     String   @default("cash")   // cash, card, both
-  paytrMerchantId String   @default("")
-  paytrApiKey     String   @default("")
-  paytrSecretKey  String   @default("")
+  shippingPayer   String   @default("seller") // seller, buyer
+  flatShippingRate String  @default("0")      // alıcı ödüyorsa eklenecek tutar
 
   // Setup wizard
   setupCompleted  Boolean  @default(false)
+
+  // Kapalı günler (randevu alınamaz)
+  blockedDays     Json     @default("[]")   // ["2026-04-15", "2026-04-20"]
 
   updatedAt    DateTime @updatedAt
 }
@@ -372,6 +444,45 @@ model DiscountCode {
   updatedAt       DateTime @updatedAt
 
   @@index([tenantId])
+}
+
+// ─── E-TİCARET ÜRÜN KATEGORİSİ ──────────────────────────────────
+model ProductCategory {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String
+  tenantId    String?
+  tenant      Tenant?   @relation(fields: [tenantId], references: [id])
+  products    Product[]
+  createdAt   DateTime  @default(now())
+
+  @@unique([slug, tenantId])
+  @@index([tenantId])
+}
+
+// ─── ÜRÜNLER (E-TİCARET) ─────────────────────────────────────────
+model Product {
+  id                 String   @id @default(cuid())
+  name               String
+  description        String?  // Kısa açıklama
+  detailedDescription String? // Zengin/Uzun detaylar (HTML/Text)
+  price              String
+  hasStock           Boolean  @default(true) 
+  stock              Int      @default(0)
+  isDigital          Boolean  @default(false)
+  downloadUrl        String?  
+  imageUrls          String[]
+  isActive           Boolean  @default(true)
+  discountPercentage Int      @default(0) 
+  tenantId           String?
+  tenant             Tenant?  @relation(fields: [tenantId], references: [id])
+  categoryId         String?
+  category           ProductCategory? @relation(fields: [categoryId], references: [id])
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([categoryId])
 }
 
 // ─── BANNER ───────────────────────────────────────────────────────

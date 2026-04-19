@@ -14,13 +14,26 @@ export async function POST(req) {
       user_basket
     } = await req.json();
 
+    const { getCurrentTenant, getCurrentSiteConfig, getTenantUrl } = await import("@/lib/tenant");
+    const tenant = await getCurrentTenant();
+    if (!tenant) {
+      return NextResponse.json({ error: "Tenant bulunamadı" }, { status: 400 });
+    }
+    
+    const config = await getCurrentSiteConfig();
+    
+    // Check if the tenant has actually entered their keys
+    const merchant_id = config?.paytrMerchantId || process.env.PAYTR_MERCHANT_ID;
+    const merchant_key = config?.paytrApiKey || process.env.PAYTR_MERCHANT_KEY;
+    const merchant_salt = config?.paytrSecretKey || process.env.PAYTR_MERCHANT_SALT;
+
+    if (!merchant_id || !merchant_key || !merchant_salt) {
+      return NextResponse.json({ error: "PayTR ayarları yapılandırılmamış." }, { status: 400 });
+    }
+
     const headersList = await headers();
     const forwarded = headersList.get("x-forwarded-for");
     const user_ip = forwarded ? forwarded.split(",")[0].trim() : "127.0.0.1";
-
-    const merchant_id = process.env.PAYTR_MERCHANT_ID;
-    const merchant_key = process.env.PAYTR_MERCHANT_KEY;
-    const merchant_salt = process.env.PAYTR_MERCHANT_SALT;
 
     // Ensure all values are strings for PayTR
     const paymentAmountStr = String(Math.round(Number(payment_amount)));
@@ -54,7 +67,7 @@ export async function POST(req) {
       .update(hashStr)
       .digest("base64");
 
-    const baseUrl = process.env.NEXT_PUBLIC_URL || process.env.NEXT_PUBLIC_BASE_URL || "https://localhost:3000";
+    const baseUrl = await getTenantUrl(tenant);
 
     const formData = new URLSearchParams();
     formData.append("merchant_id", merchant_id);

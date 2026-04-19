@@ -257,32 +257,7 @@ export default function GalleryClient({ categories }) {
           marginBottom: "6rem",
         }}
       >
-        {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-          <div style={{
-            display: "inline-block",
-            fontSize: "0.65rem",
-            fontWeight: 700,
-            letterSpacing: "0.3em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.5)",
-            marginBottom: "1rem",
-            padding: "0.4rem 1rem",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 0,
-          }}>
-            Portfolyo
-          </div>
-          <h2 style={{
-            fontSize: "clamp(1.2rem, 3vw, 1.8rem)",
-            fontWeight: 800,
-            letterSpacing: "-0.04em",
-            marginBottom: "0.75rem",
-            lineHeight: 1.15,
-          }}>
-            Portfolyo
-          </h2>
-        </div>
+
 
         {/* Category Grid — Responsive Gallery */}
         <div style={{

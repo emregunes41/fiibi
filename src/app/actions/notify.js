@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { sendReservationReceivedEmail, sendReservationConfirmedEmail } from "./send-reservation-success";
 import { sendSMS } from "./send-sms";
 import { getCurrentTenant, getTenantUrl } from "@/lib/tenant";
+import { PLATFORM } from "@/lib/constants";
 
 /**
  * Bildirim ayarlarını yükle (tenant-aware)
@@ -33,10 +34,10 @@ export async function getNotificationSettings() {
  */
 function getEmailFrom(settings) {
   const tenant = settings._tenant;
-  const businessName = settings.businessName || tenant?.businessName || "Studio";
-  const domain = process.env.PLATFORM_DOMAIN || "localhost";
+  const businessName = settings.businessName || tenant?.businessName || PLATFORM.name;
+  const emailDomain = process.env.EMAIL_DOMAIN || process.env.PLATFORM_DOMAIN || "localhost";
   const slug = tenant?.slug || "noreply";
-  return `${businessName} <${slug}@${domain}>`;
+  return `${businessName} <${slug}@${emailDomain}>`;
 }
 
 /**
@@ -89,7 +90,7 @@ function emailFooter(settings, siteUrl) {
   const businessName = settings.businessName || settings._tenant?.businessName || "Studio";
   return `
     <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
-      <p style="color: #999; font-size: 12px; margin: 0;">${businessName} — Profesyonel Fotoğrafçılık</p>
+      <p style="color: #999; font-size: 12px; margin: 0;">${businessName}</p>
     </div>
   `;
 }
@@ -102,7 +103,7 @@ function emailHeader(settings) {
   return `
     <div style="background: #000; color: #fff; padding: 32px 30px; text-align: center; border-radius: 10px 10px 0 0;">
       <h1 style="margin: 0; font-size: 22px; font-weight: 700;">${businessName.toUpperCase()}</h1>
-      <p style="margin: 8px 0 0; font-size: 13px; opacity: 0.6;">Profesyonel Fotoğrafçılık</p>
+      <p style="margin: 8px 0 0; font-size: 13px; opacity: 0.6;">Profesyonel Hizmet</p>
     </div>
   `;
 }
@@ -134,7 +135,7 @@ export async function notifyReservationReceived(email, phone, name, reservationD
 /**
  * 1b. Rezervasyon ONAYLANDI Bildirimi
  */
-export async function notifyReservationConfirmed(email, phone, name, date, totalAmount) {
+export async function notifyReservationConfirmed(email, phone, name, date, totalAmount, meetingLinks = []) {
   const settings = await getNotificationSettings();
   if (!settings.notifyReservation) return { email: null, sms: null };
 
@@ -143,7 +144,7 @@ export async function notifyReservationConfirmed(email, phone, name, date, total
   const siteUrl = await getSiteUrl(settings);
 
   if (settings.emailEnabled) {
-    results.email = await sendReservationConfirmedEmail(email, name, date, totalAmount);
+    results.email = await sendReservationConfirmedEmail(email, name, date, totalAmount, meetingLinks);
   }
 
   if (settings.smsEnabled && phone) {
@@ -248,13 +249,13 @@ export async function notifyEventReminder(email, phone, name, date, packageName)
   const businessName = settings.businessName || "Studio";
 
   if (settings.emailEnabled && email) {
-    results.email = await sendEmailWithResend(settings, email, "Çekiminize 1 Hafta Kaldı! 📸", `
+    results.email = await sendEmailWithResend(settings, email, "Randevunuza 1 Hafta Kaldı! 📅", `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #eee; border-radius: 10px;">
         <h2 style="color: #333;">Merhaba ${name}! 🎉</h2>
-        <p style="color: #555; font-size: 16px;">Çekiminize sadece <strong>1 hafta</strong> kaldı!</p>
+        <p style="color: #555; font-size: 16px;">Randevunuza sadece <strong>1 hafta</strong> kaldı!</p>
         <div style="background: #f9f9fb; border-left: 4px solid #facc15; padding: 20px; margin: 20px 0;">
           <p style="margin: 0 0 8px;"><strong>Tarih:</strong> ${formattedDate}</p>
-          <p style="margin: 0;"><strong>Paket:</strong> ${packageName || "Fotoğraf Çekimi"}</p>
+          <p style="margin: 0;"><strong>Hizmet:</strong> ${packageName || "Randevu"}</p>
         </div>
         <p style="color: #555;">Hazırlıklarınızı tamamladığınızdan emin olun. Sorularınız için bize ulaşabilirsiniz.</p>
       </div>
@@ -262,7 +263,7 @@ export async function notifyEventReminder(email, phone, name, date, packageName)
   }
 
   if (settings.smsEnabled && phone) {
-    const message = `Merhaba ${name}, çekiminize 1 hafta kaldı! Tarih: ${formattedDate} | Hazırlıklarınızı tamamlayın. ${businessName}`;
+    const message = `Merhaba ${name}, randevunuza 1 hafta kaldi! Tarih: ${formattedDate} | Hazirliklarinizi tamamlayin. ${businessName}`;
     results.sms = await sendSMS(phone, message, settings);
   }
 
@@ -280,19 +281,19 @@ export async function notifyPhotosReady(email, phone, name) {
   const siteUrl = await getSiteUrl(settings);
 
   if (settings.emailEnabled && email) {
-    results.email = await sendEmailWithResend(settings, email, "Fotoğraflarınız Hazır! 📷✨", `
+    results.email = await sendEmailWithResend(settings, email, "Dosyalarınız Hazır! ✨", `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #eee; border-radius: 10px;">
         <h2 style="color: #333;">Merhaba ${name}! 🎉</h2>
-        <p style="color: #555; font-size: 16px;">Fotoğraflarınız hazır ve panelinize yüklendi!</p>
-        <p style="color: #555;">Hemen giriş yaparak fotoğraflarınızı görüntüleyebilir ve seçiminizi yapabilirsiniz.</p>
-        <a href="${siteUrl}/profile" style="background: #000; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 6px; display: inline-block; margin-top: 16px; font-weight: bold;">Fotoğraflarımı Gör</a>
+        <p style="color: #555; font-size: 16px;">Dosyalarınız hazır ve panelinize yüklendi!</p>
+        <p style="color: #555;">Hemen giriş yaparak dosyalarınızı görüntüleyebilirsiniz.</p>
+        <a href="${siteUrl}/profile" style="background: #000; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 6px; display: inline-block; margin-top: 16px; font-weight: bold;">Dosyalarımı Gör</a>
       </div>
     `);
   }
 
   if (settings.smsEnabled && phone) {
     const businessName = settings.businessName || "Studio";
-    const message = `Merhaba ${name}, fotoğraflarınız hazır! Giriş yaparak görüntüleyin ve seçiminizi yapın. ${businessName}`;
+    const message = `Merhaba ${name}, dosyalariniz hazir! Giris yaparak goruntuleyin. ${businessName}`;
     results.sms = await sendSMS(phone, message, settings);
   }
 

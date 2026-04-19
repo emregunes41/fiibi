@@ -17,7 +17,9 @@ async function getEmailContext() {
       : `${protocol}://${domain}`;
   const whatsapp = settings.whatsapp || "";
   const googleMapsUrl = settings.googleMapsUrl || "";
-  return { settings, businessName, siteUrl, whatsapp, googleMapsUrl };
+  const bt = tenant?.businessType || "photographer";
+  const showProfileButton = bt === "photographer";
+  return { settings, businessName, siteUrl, whatsapp, googleMapsUrl, showProfileButton };
 }
 
 /**
@@ -25,8 +27,8 @@ async function getEmailContext() {
  */
 export async function sendReservationReceivedEmail(email, name, reservationDetails) {
   try {
-    const { settings, businessName, siteUrl, whatsapp, googleMapsUrl } = await getEmailContext();
-    const { date, totalAmount, packages, groomName, bridePhone, eventTime, paymentPreference, notes } = reservationDetails;
+    const { settings, businessName, siteUrl, whatsapp, googleMapsUrl, showProfileButton } = await getEmailContext();
+    const { date, totalAmount, packages, groomName, bridePhone, eventTime, paymentPreference, notes, meetingLinks = [] } = reservationDetails;
     const formattedDate = new Date(date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
     const paymentLabel = paymentPreference === "CARD" ? "Kredi Kartı" : "Nakit / Havale";
 
@@ -34,7 +36,7 @@ export async function sendReservationReceivedEmail(email, name, reservationDetai
       <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
         <div style="background: #000; color: #fff; padding: 32px 30px; text-align: center; border-radius: 10px 10px 0 0;">
           <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.03em;">${businessName.toUpperCase()}</h1>
-          <p style="margin: 8px 0 0; font-size: 13px; opacity: 0.6;">Profesyonel Fotoğrafçılık</p>
+          <p style="margin: 8px 0 0; font-size: 13px; opacity: 0.6;">Profesyonel Hizmet</p>
         </div>
 
         <div style="padding: 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
@@ -58,6 +60,20 @@ export async function sendReservationReceivedEmail(email, name, reservationDetai
               ${packages ? `<tr><td style="padding: 8px 0; font-size: 14px; color: #888; border-top: 1px solid #eee;">Paket(ler)</td><td style="padding: 8px 0; font-size: 14px; color: #222; font-weight: 600; text-align: right; border-top: 1px solid #eee;">${packages}</td></tr>` : ''}
               <tr><td style="padding: 8px 0; font-size: 14px; color: #888; border-top: 1px solid #eee;">Ödeme Yöntemi</td><td style="padding: 8px 0; font-size: 14px; color: #222; font-weight: 600; text-align: right; border-top: 1px solid #eee;">${paymentLabel}</td></tr>
             </table>
+            
+            ${meetingLinks.length > 0 ? `
+            <div style="margin-top: 20px; background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 16px; text-align: center;">
+              <div style="font-size: 13px; color: #6d28d9; font-weight: 700; margin-bottom: 12px;">📹 Bu Bir Online Görüşmedir</div>
+              ${meetingLinks.map(l => `
+                <div style="margin-bottom: 8px;">
+                  <div style="font-size: 12px; color: #5b21b6; margin-bottom: 4px;">${l.name}</div>
+                  <a href="${l.link}" target="_blank" style="background-color: #8b5cf6; color: #fff; text-decoration: none; padding: 10px 24px; border-radius: 6px; font-weight: 600; display: inline-block; font-size: 13px;">Görüşmeye Katıl</a>
+                </div>
+              `).join('')}
+              <div style="font-size: 11px; color: #8b5cf6; margin-top: 8px;">Randevu saatinizde linke tıklayarak katılabilirsiniz.</div>
+            </div>
+            ` : ''}
+
             <div style="margin-top: 16px; padding-top: 16px; border-top: 2px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
               <span style="font-size: 14px; font-weight: 700; color: #666;">Toplam Tutar</span>
               <span style="font-size: 22px; font-weight: 800; color: #000;">${totalAmount} ₺</span>
@@ -71,9 +87,11 @@ export async function sendReservationReceivedEmail(email, name, reservationDetai
             <div style="font-size: 12px; color: #a16207; margin-top: 6px;">Kapora ödemesi sonrası rezervasyonunuz onaylanacaktır.</div>
           </div>
           
+          ${showProfileButton ? `
           <div style="text-align: center; margin-top: 24px;">
             <a href="${siteUrl}/profile" style="background-color: #000; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; display: inline-block; font-size: 14px;">Profilime Git</a>
           </div>
+          ` : ''}
 
           ${whatsapp ? `<div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;"><a href="https://wa.me/${whatsapp.replace(/\D/g,'')}" style="display: inline-block; padding: 12px 24px; border-radius: 8px; background: #25D366; color: #fff; text-decoration: none; font-weight: 700; font-size: 13px;">💬 WhatsApp ile İletişim</a></div>` : ''}
           ${googleMapsUrl ? `<div style="margin-top: 10px; display: flex; gap: 12px; justify-content: center;"><a href="${googleMapsUrl}" style="display: inline-block; padding: 12px 24px; border-radius: 8px; background: #4285F4; color: #fff; text-decoration: none; font-weight: 700; font-size: 13px;">📍 Yol Tarifi Al</a></div>` : ''}
@@ -95,7 +113,7 @@ export async function sendReservationReceivedEmail(email, name, reservationDetai
 /**
  * Rezervasyon ONAYLANDI bildirimi
  */
-export async function sendReservationConfirmedEmail(email, name, date, totalAmount) {
+export async function sendReservationConfirmedEmail(email, name, date, totalAmount, meetingLinks = []) {
   try {
     const { settings, businessName, siteUrl, whatsapp, googleMapsUrl } = await getEmailContext();
     const formattedDate = new Date(date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' });
@@ -104,7 +122,7 @@ export async function sendReservationConfirmedEmail(email, name, date, totalAmou
       <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
         <div style="background: #000; color: #fff; padding: 32px 30px; text-align: center; border-radius: 10px 10px 0 0;">
           <h1 style="margin: 0; font-size: 22px; font-weight: 700;">${businessName.toUpperCase()}</h1>
-          <p style="margin: 8px 0 0; font-size: 13px; opacity: 0.6;">Profesyonel Fotoğrafçılık</p>
+          <p style="margin: 8px 0 0; font-size: 13px; opacity: 0.6;">Profesyonel Hizmet</p>
         </div>
         <div style="padding: 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
           <div style="text-align: center; margin-bottom: 24px;">
@@ -112,24 +130,39 @@ export async function sendReservationConfirmedEmail(email, name, date, totalAmou
           </div>
           <h2 style="color: #333; font-size: 22px; margin: 0 0 12px; text-align: center;">Harika haber, ${name}!</h2>
           <p style="color: #555; font-size: 15px; line-height: 1.7; text-align: center; margin: 0 0 24px;">
-            Kapora ödemeniz alındı ve rezervasyonunuz <strong style="color: #059669;">resmi olarak onaylandı!</strong>
-            Çekim günü sizinle harika anılar biriktirmek için sabırsızlanıyoruz.
+            Rezervasyonunuz <strong style="color: #059669;">resmi olarak onaylandı!</strong>
+            Sizinle görüşmek için sabırsızlanıyoruz.
           </p>
           
           <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 24px;">
-            <div style="font-size: 13px; color: #065f46; font-weight: 600;">📅 Çekim Tarihi</div>
+            <div style="font-size: 13px; color: #065f46; font-weight: 600;">📅 Randevu Tarihi</div>
             <div style="font-size: 18px; color: #000; font-weight: 800; margin-top: 6px;">${formattedDate}</div>
           </div>
 
+          ${meetingLinks.length > 0 ? `
+          <div style="background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 24px;">
+            <div style="font-size: 13px; color: #6d28d9; font-weight: 700; margin-bottom: 12px;">📹 Bu Bir Online Görüşmedir</div>
+            ${meetingLinks.map(l => `
+              <div style="margin-bottom: 8px;">
+                <div style="font-size: 12px; color: #5b21b6; margin-bottom: 4px;">${l.name}</div>
+                <a href="${l.link}" target="_blank" style="background-color: #8b5cf6; color: #fff; text-decoration: none; padding: 10px 24px; border-radius: 6px; font-weight: 600; display: inline-block; font-size: 13px;">Görüşmeye Katıl</a>
+              </div>
+            `).join('')}
+            <div style="font-size: 11px; color: #8b5cf6; margin-top: 10px;">Randevu saatinizde linke tıklayarak katılabilirsiniz.</div>
+          </div>
+          ` : ''}
+
+          ${showProfileButton ? `
           <div style="text-align: center; margin-top: 24px;">
             <a href="${siteUrl}/profile" style="background-color: #000; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; display: inline-block; font-size: 14px;">Profilime Git</a>
           </div>
+          ` : ''}
 
           ${whatsapp ? `<div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;"><a href="https://wa.me/${whatsapp.replace(/\D/g,'')}" style="display: inline-block; padding: 12px 24px; border-radius: 8px; background: #25D366; color: #fff; text-decoration: none; font-weight: 700; font-size: 13px;">💬 WhatsApp ile İletişim</a></div>` : ''}
           ${googleMapsUrl ? `<div style="margin-top: 10px; display: flex; gap: 12px; justify-content: center;"><a href="${googleMapsUrl}" style="display: inline-block; padding: 12px 24px; border-radius: 8px; background: #4285F4; color: #fff; text-decoration: none; font-weight: 700; font-size: 13px;">📍 Yol Tarifi Al</a></div>` : ''}
           
           <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
-            <p style="color: #999; font-size: 12px; margin: 0;">${businessName} — Profesyonel Fotoğrafçılık</p>
+            <p style="color: #999; font-size: 12px; margin: 0;">${businessName} — Profesyonel Hizmet</p>
           </div>
         </div>
       </div>

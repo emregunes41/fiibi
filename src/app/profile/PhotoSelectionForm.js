@@ -60,7 +60,7 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
         <h5 style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Fotoğraf Seçimi Yapın</h5>
         <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>
           Lütfen Drive üzerinden seçtiğiniz fotoğrafların dosya numaralarını araya virgül koyarak yazınız.
-          <span style={{ display: "block", color: "#f59e0b", fontSize: 12, marginTop: 6, fontWeight: 700 }}>⚠️ Toplam 30 adet fotoğraf seçmeniz gerekmektedir.</span>
+          <span style={{ display: "block", color: "rgba(255,255,255,0.6)", fontSize: 12, marginTop: 6, fontWeight: 700 }}>⚠️ Toplam 30 adet fotoğraf seçmeniz gerekmektedir.</span>
           <span style={{ display: "block", color: "rgba(255,255,255,0.45)", fontSize: 11, marginTop: 4 }}>Örn: DSC_0124, DSC_0245, DSC_0567...</span>
         </p>
       </div>

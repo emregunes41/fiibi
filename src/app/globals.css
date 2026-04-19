@@ -12,9 +12,6 @@
 @theme inline {
   --color-background: var(--bg, #0a0a0a);
   --color-foreground: var(--text, #ffffff);
-  /* Tailwind'in white/black'ini palette'e bağla */
-  --color-white: var(--text, #ffffff);
-  --color-black: var(--bg, #000000);
   --font-serif: var(--font-geist-sans);
   --font-jakarta: var(--font-geist-sans);
   --font-sans: var(--font-geist-sans);
@@ -30,6 +27,69 @@
 
 html {
   background: var(--bg, #0a0a0a) !important;
+  color-scheme: dark;
+}
+
+html[data-light] {
+  color-scheme: light;
+  background: #ffffff !important;
+}
+
+/* ─── LIGHT MODE: Force dark text/borders over white backgrounds ─── */
+html[data-light] body,
+html[data-light] body * {
+  color: var(--text, #1a1a1a) !important;
+}
+
+/* Override inline rgba(255,255,255,...) styles — navbar, cards, sections */
+html[data-light] [style*="rgba(255"] {
+  color: var(--text, #1a1a1a) !important;
+}
+
+/* Borders in light mode */
+html[data-light] [style*="border"] {
+  border-color: rgba(0,0,0,0.1) !important;
+}
+
+/* Backgrounds that were semi-transparent white → semi-transparent black */
+html[data-light] [style*="background: rgba(255"] {
+  background: rgba(0,0,0,0.03) !important;
+}
+html[data-light] [style*="background:rgba(255"] {
+  background: rgba(0,0,0,0.03) !important;
+}
+html[data-light] [style*="backgroundColor"] {
+  /* handled by var(--bg) already */
+}
+
+/* Specific component overrides */
+html[data-light] nav,
+html[data-light] nav * {
+  color: var(--text, #1a1a1a) !important;
+}
+html[data-light] nav [style*="background"] {
+  background: rgba(255,255,255,0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+html[data-light] footer,
+html[data-light] footer * {
+  color: var(--text, #1a1a1a) !important;
+}
+
+/* Glass panels in light mode */
+html[data-light] .glass-panel {
+  background: rgba(255,255,255,0.7) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+/* Scrollbar */
+html[data-light] ::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15) !important;
+}
+html[data-light] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.3) !important;
 }
 
 html, body {
@@ -57,6 +117,55 @@ h1, h2, h3, h4, .font-serif, .font-jakarta {
   font-weight: 700;
   letter-spacing: -0.02em;
 }
+
+/* ─────── PALETTE OVERRIDES ─────── */
+/* Tailwind text-white → palette text rengi */
+.text-white { color: var(--text) !important; }
+
+/* Opacity varyasyonları */
+.text-white\/5  { color: color-mix(in srgb, var(--text) 5%, transparent) !important; }
+.text-white\/10 { color: color-mix(in srgb, var(--text) 10%, transparent) !important; }
+.text-white\/15 { color: color-mix(in srgb, var(--text) 15%, transparent) !important; }
+.text-white\/20 { color: color-mix(in srgb, var(--text) 20%, transparent) !important; }
+.text-white\/25 { color: color-mix(in srgb, var(--text) 25%, transparent) !important; }
+.text-white\/30 { color: color-mix(in srgb, var(--text) 30%, transparent) !important; }
+.text-white\/40 { color: color-mix(in srgb, var(--text) 40%, transparent) !important; }
+.text-white\/50 { color: color-mix(in srgb, var(--text) 50%, transparent) !important; }
+.text-white\/60 { color: color-mix(in srgb, var(--text) 60%, transparent) !important; }
+.text-white\/70 { color: color-mix(in srgb, var(--text) 70%, transparent) !important; }
+.text-white\/80 { color: color-mix(in srgb, var(--text) 80%, transparent) !important; }
+.text-white\/90 { color: color-mix(in srgb, var(--text) 90%, transparent) !important; }
+
+/* bg-white varyasyonları */
+.bg-white { background-color: var(--text) !important; }
+.bg-white\/5 { background-color: color-mix(in srgb, var(--text) 5%, transparent) !important; }
+.bg-white\/10 { background-color: color-mix(in srgb, var(--text) 10%, transparent) !important; }
+.bg-white\/20 { background-color: color-mix(in srgb, var(--text) 20%, transparent) !important; }
+
+/* border-white varyasyonları */
+.border-white { border-color: var(--text) !important; }
+.border-white\/5  { border-color: color-mix(in srgb, var(--text) 5%, transparent) !important; }
+.border-white\/10 { border-color: color-mix(in srgb, var(--text) 10%, transparent) !important; }
+.border-white\/20 { border-color: color-mix(in srgb, var(--text) 20%, transparent) !important; }
+.border-white\/30 { border-color: color-mix(in srgb, var(--text) 30%, transparent) !important; }
+
+/* bg-black → palette bg */
+.bg-black { background-color: var(--bg) !important; }
+.text-black { color: var(--bg) !important; }
+
+/* hover varyasyonları */
+.hover\:text-white:hover { color: var(--text) !important; }
+.hover\:bg-white:hover { background-color: var(--text) !important; }
+.group-hover\:bg-white:is(:where(.group):hover *) { background-color: var(--text) !important; }
+.group-hover\:text-black:is(:where(.group):hover *) { color: var(--bg) !important; }
+
+/* Tailwind arbitrary values — [0.04] gibi — bunlar sınıf adında köşeli parantez kullanır */
+[class*="bg-white\\/\\["] { background-color: color-mix(in srgb, var(--text) 4%, transparent) !important; }
+[class*="border-white\\/\\["] { border-color: color-mix(in srgb, var(--text) 6%, transparent) !important; }
+[class*="text-white\\/\\["] { color: color-mix(in srgb, var(--text) 13%, transparent) !important; }
+[class*="from-white\\/"] { --tw-gradient-from: color-mix(in srgb, var(--text) 40%, transparent) !important; }
+
+/* ─────── END PALETTE OVERRIDES ─────── */
 
 .text-justify-balanced {
   text-wrap: balance;

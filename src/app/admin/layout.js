@@ -2,26 +2,30 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, CalendarDays, LogOut, Book, Users, Image, Menu, X, Settings, Plus, Wallet, Crown, AlertTriangle, Gift } from "lucide-react";
+import { LayoutDashboard, Package, CalendarDays, LogOut, Book, Users, Image, Menu, X, Settings, Plus, Wallet, Crown, AlertTriangle, Gift, Ticket, ShoppingBag, Box } from "lucide-react";
 import { logoutAdmin } from "@/app/admin/actions";
 import { useState, useEffect } from "react";
+import { getBusinessType } from "@/lib/business-types";
+import { AdminSessionProvider, useAdminSession } from "./AdminSessionContext";
 
 export default function AdminLayout({ children }) {
+  return (
+    <AdminSessionProvider>
+      <AdminLayoutInner>{children}</AdminLayoutInner>
+    </AdminSessionProvider>
+  );
+}
+
+function AdminLayoutInner({ children }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [brandName, setBrandName] = useState("STUDIO");
-  const [trialDays, setTrialDays] = useState(null);
+  const { session, loading: sessionLoading } = useAdminSession();
 
-  useEffect(() => {
-    fetch("/api/auth/session").then(r => r.json()).then(data => {
-      const name = data?.tenant?.businessName || "STUDIO";
-      setBrandName(name.toUpperCase());
-      if (data?.tenant?.plan === "trial" && data?.tenant?.planExpiresAt) {
-        const days = Math.ceil((new Date(data.tenant.planExpiresAt) - new Date()) / (1000*60*60*24));
-        setTrialDays(Math.max(0, days));
-      }
-    }).catch(() => {});
-  }, []);
+  const brandName = (session?.tenant?.businessName || "STUDIO").toUpperCase();
+  const businessType = session?.tenant?.businessType || null;
+  const trialDays = (session?.tenant?.planExpiresAt && session?.tenant?.plan === "trial")
+    ? Math.max(0, Math.ceil((new Date(session.tenant.planExpiresAt) - new Date()) / (1000*60*60*24)))
+    : null;
 
   // Close sidebar on route change
   useEffect(() => {
@@ -33,23 +37,40 @@ export default function AdminLayout({ children }) {
     return <>{children}</>;
   }
 
-  const navItems = [
+  // Wait for session before rendering any sector-specific UI
+  if (sessionLoading) {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#0a0a0a" }}>
+        <div style={{ width: 20, height: 20, border: "2px solid rgba(255,255,255,0.1)", borderTop: "2px solid rgba(255,255,255,0.5)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
+  const bt = getBusinessType(businessType);
+  const { features, terms } = bt;
+
+  const navItems = businessType ? [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-    { name: "Paketler", href: "/admin/packages", icon: Package },
-    { name: "Albüm Modelleri", href: "/admin/album-models", icon: Book },
-    { name: "Rezervasyonlar", href: "/admin/reservations", icon: CalendarDays },
+    { name: terms.services, href: "/admin/packages", icon: Package },
+    { name: "Mağaza & Ürünler", href: "/admin/products", icon: ShoppingBag },
+    { name: "Siparişler", href: "/admin/orders", icon: Box },
+    features.events && { name: "Etkinlikler", href: "/admin/events", icon: Ticket },
+    features.albumModels && { name: "Albüm Modelleri", href: "/admin/album-models", icon: Book },
+    { name: terms.appointments, href: "/admin/reservations", icon: CalendarDays },
     { name: "Muhasebe", href: "/admin/muhasebe", icon: Wallet },
-    { name: "Portfolyo", href: "/admin/portfolio", icon: Image },
-    { name: "Üyeler", href: "/admin/members", icon: Users },
+    { name: terms.clients, href: "/admin/members", icon: Users },
     { name: "Ayarlar", href: "/admin/settings", icon: Settings },
     { name: "Abonelik", href: "/admin/subscription", icon: Crown },
-    { name: "Arkadaşını Getir", href: "/admin/referral", icon: Gift },
+  ].filter(Boolean) : [
+    { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+    { name: "Ayarlar", href: "/admin/settings", icon: Settings },
   ];
 
   const sidebarContent = (
     <>
       <div style={{ fontWeight: 900, fontSize: "1.75rem", letterSpacing: "-0.04em", marginBottom: "3.5rem", paddingLeft: "0.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span>{brandName}<span style={{ color: "rgba(255,255,255,0.4)", fontSize: "1.1rem" }}>.admin</span></span>
+        <span>{brandName}<span style={{ color: "rgba(255,255,255,0.4)", fontSize: "1.1rem" }}>.{terms.brandSuffix}</span></span>
         {/* Close button only on mobile */}
         <button
           onClick={() => setSidebarOpen(false)}
@@ -96,12 +117,12 @@ export default function AdminLayout({ children }) {
   );
 
   return (
-    <div className="admin-theme" style={{ display: "flex", minHeight: "100vh", background: "#000", color: "#fff" }}>
+    <div className="admin-theme" style={{ display: "flex", minHeight: "100vh", background: "var(--bg, #0a0a0a)", color: "var(--text, #fff)" }}>
       
       {/* Mobile Top Bar */}
       <div className="md:hidden" style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
-        background: "#000", borderBottom: "1px solid rgba(255,255,255,0.08)",
+        background: "var(--bg, #0a0a0a)", borderBottom: "1px solid rgba(255,255,255,0.08)",
         padding: "14px 16px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
@@ -112,7 +133,7 @@ export default function AdminLayout({ children }) {
           <Menu size={22} />
         </button>
         <span style={{ fontWeight: 800, fontSize: "0.9rem", letterSpacing: "-0.02em" }}>
-          STUDIO<span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>.admin</span>
+          {brandName}<span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>.{bt?.terms?.brandSuffix || "panel"}</span>
         </span>
         <div style={{ width: "30px" }} /> {/* spacer */}
       </div>
@@ -131,7 +152,7 @@ export default function AdminLayout({ children }) {
 
       {/* Desktop Sidebar Background */}
       <div className="hidden md:block" style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: "280px", zIndex: 0, overflow: "hidden", borderRight: "1px solid rgba(255,255,255,0.1)" }}>
-         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.95))", zIndex: 1 }} />
+         <div style={{ position: "absolute", inset: 0, background: "var(--bg, #0a0a0a)", opacity: 0.95, zIndex: 1 }} />
       </div>
 
       {/* Sidebar Content - Desktop: static, Mobile: slide-over */}
@@ -144,7 +165,7 @@ export default function AdminLayout({ children }) {
           zIndex: 60,
           padding: "2.5rem 1.5rem", 
           display: "flex", flexDirection: "column",
-          background: "#000",
+          background: "var(--bg, #0a0a0a)",
           borderRight: "1px solid rgba(255,255,255,0.08)",
           transition: "transform 0.3s ease",
           overflowY: "auto",

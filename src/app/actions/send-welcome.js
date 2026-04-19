@@ -19,10 +19,10 @@ export async function sendWelcomeEmail(email, name, password) {
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #eee; border-radius: 10px;">
         <h2 style="color: #333; font-size: 24px;">Merhaba ${name},</h2>
         <p style="color: #555; font-size: 16px; line-height: 1.6;">
-          Rezervasyonunuz başarıyla alındı ve fotoğraf çekim sürecinizi takip edebilmeniz için size özel bir müşteri paneli oluşturuldu.
+          Rezervasyonunuz başarıyla alındı ve sürecinizi takip edebilmeniz için size özel bir müşteri paneli oluşturuldu.
         </p>
         <p style="color: #555; font-size: 16px; line-height: 1.6;">
-          Sisteme giriş yaparak siparişinizin hangi aşamada olduğunu görebilir ve fotoğraflarınız hazır olduğunda seçiminizi yapabilirsiniz.
+          Sisteme giriş yaparak randevunuzun hangi aşamada olduğunu görebilirsiniz.
         </p>
         
         <div style="background-color: #f9f9fb; border-left: 4px solid #000; padding: 20px; margin: 30px 0;">

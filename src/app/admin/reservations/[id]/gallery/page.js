@@ -87,7 +87,7 @@ export default function GalleryManagementPage() {
               <UploadCloud size={18} /> Fotoğraf Ekle
             </h3>
             <p className="text-white/40 text-xs mb-6">
-              Sadece dış çekimler veya seçime sunacağınız orijinal fotoğrafları yükleyin. Cloudinary fotoğrafları filigranla veya optimize ederek saklayacaktır. Orijinal isimler korunur.
+              Paylaşmak istediğiniz görselleri yükleyin. Cloudinary fotoğrafları optimize ederek saklayacaktır.
             </p>
             
             <CldUploadWidget 

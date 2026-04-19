@@ -71,6 +71,8 @@ export async function getAllTenants() {
     isActive: t.isActive,
     isFrozen: t.isFrozen,
     createdAt: t.createdAt,
+    commissionRate: t.commissionRate,
+    subMerchantStatus: t.subMerchantStatus,
     reservationCount: t._count.reservations,
     userCount: t._count.users,
     packageCount: t._count.packages,
@@ -224,3 +226,38 @@ export async function updatePlatformPricing(pricing) {
   return { success: true };
 }
 
+/**
+ * Tenant komisyon oranını güncelle
+ */
+export async function updateTenantCommission(tenantId, commissionRate) {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  const rate = parseFloat(commissionRate);
+  if (isNaN(rate) || rate < 0 || rate > 100) {
+    return { error: "Komisyon oranı 0-100 arasında olmalıdır." };
+  }
+
+  await prisma.tenant.update({
+    where: { id: tenantId },
+    data: { commissionRate: rate }
+  });
+
+  return { success: true };
+}
+
+/**
+ * Tenant sub-merchant durumunu güncelle (onay/red)
+ */
+export async function updateSubMerchantStatus(tenantId, status) {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  const validStatuses = ["NOT_STARTED", "PENDING", "APPROVED", "REJECTED"];
+  if (!validStatuses.includes(status)) return { error: "Geçersiz durum" };
+
+  await prisma.tenant.update({
+    where: { id: tenantId },
+    data: { subMerchantStatus: status }
+  });
+
+  return { success: true };
+}

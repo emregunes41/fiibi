@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Calendar, Phone, Settings2, X, Edit2, Eye, Mail, User, Package, Clock, FileText, CreditCard, ChevronDown, ChevronUp, Instagram, ExternalLink, Trash2, Banknote, DollarSign, List, CalendarDays, ChevronLeft, ChevronRight, ArrowUpDown, Filter, Search, Star } from "lucide-react";
-import { getReservations, getPackages, createManualReservation, updateReservation, updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment, softDeleteReservation, hardDeleteReservation, createQuickEvent } from "../core-actions";
+import { Plus, Calendar, Phone, Settings2, X, Edit2, Eye, Mail, User, Package, Clock, FileText, CreditCard, ChevronDown, ChevronUp, Instagram, ExternalLink, Trash2, Banknote, DollarSign, List, CalendarDays, ChevronLeft, ChevronRight, ArrowUpDown, Filter, Search, Star, Ban } from "lucide-react";
+import { getReservations, getPackages, createManualReservation, updateReservation, updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment, softDeleteReservation, hardDeleteReservation, createQuickEvent, getBlockedDays, toggleBlockedDay, getSiteConfig } from "../core-actions";
 import { sendContractReminder, resendCredentials } from "../reminder-actions";
+import { getBusinessType } from "@/lib/business-types";
+import { useAdminSession } from "../AdminSessionContext";
 import Link from "next/link";
 
 const inp = {
@@ -22,7 +24,7 @@ export default function ReservationsPage() {
     groomName: "", groomPhone: "", groomEmail: "",
     eventDate: "", eventTime: "", packageIds: [], notes: "",
     selectedAddons: [], customFieldAnswers: [], totalAmount: "",
-    venueName: ""
+    venueName: "", meetingLink: ""
   });
   const [workflowModal, setWorkflowModal] = useState({ isOpen: false, data: null });
   const [editModal, setEditModal] = useState({ isOpen: false, data: null });
@@ -41,16 +43,34 @@ export default function ReservationsPage() {
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [quickEventModal, setQuickEventModal] = useState(false);
-  const [quickEventForm, setQuickEventForm] = useState({ venueName: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
+  const [quickEventForm, setQuickEventForm] = useState({ venueName: "", phone: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
   const [quickEventLoading, setQuickEventLoading] = useState(false);
   const [reminderLoading, setReminderLoading] = useState("");
   const [reminderResult, setReminderResult] = useState(null);
-  const [dayPopup, setDayPopup] = useState(null); // { day, reservations, x, y }
+  const [dayPopup, setDayPopup] = useState(null);
+  const [blockedDays, setBlockedDays] = useState([]);
+  const [dayActionMenu, setDayActionMenu] = useState(null); // { dateStr, x, y }
+  const { session: adminSession } = useAdminSession();
+  const businessType = adminSession?.tenant?.businessType || null;
+
+  const bt = getBusinessType(businessType);
+  const { terms } = bt;
+  const isPhotographer = businessType === "photographer";
+  const [paymentMode, setPaymentMode] = useState("cash");
 
   async function loadData() {
-    const [resData, pkgData] = await Promise.all([getReservations(), getPackages()]);
-    setReservations(resData);
-    setPackages(pkgData);
+    try {
+      const [resData, pkgData, blocked, sc] = await Promise.all([
+        getReservations(),
+        getPackages(),
+        getBlockedDays(),
+        getSiteConfig()
+      ]);
+      setReservations(resData || []);
+      setPackages(pkgData || []);
+      setBlockedDays(blocked || []);
+      setPaymentMode(sc?.paymentMode || "cash");
+    } catch (e) {}
   }
 
   const toggleSelectionExpand = (id) => {
@@ -59,7 +79,15 @@ export default function ReservationsPage() {
     );
   };
 
-  useEffect(() => { loadData(); }, []);
+  const displayName = (r) => {
+    if (isPhotographer) return `${r.brideName}${r.groomName ? ` & ${r.groomName}` : ''}`;
+    return r.brideName || '';
+  };
+
+  useEffect(() => {
+    loadData();
+    getBlockedDays().then(setBlockedDays).catch(() => {});
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,7 +102,7 @@ export default function ReservationsPage() {
     if (res.success) {
       setIsModalOpen(false);
       setEditModal({ isOpen: false, data: null });
-      setFormData({ brideName: "", bridePhone: "", brideEmail: "", groomName: "", groomPhone: "", groomEmail: "", eventDate: "", eventTime: "", packageIds: [], notes: "", selectedAddons: [], customFieldAnswers: [], totalAmount: "", venueName: "" });
+      setFormData({ brideName: "", bridePhone: "", brideEmail: "", groomName: "", groomPhone: "", groomEmail: "", eventDate: "", eventTime: "", packageIds: [], notes: "", selectedAddons: [], customFieldAnswers: [], totalAmount: "", venueName: "", meetingLink: "" });
       loadData();
     } else { alert("Hata: " + res.error); }
     setIsLoading(false);
@@ -112,7 +140,8 @@ export default function ReservationsPage() {
         return cfa;
       }).filter(cfa => cfa.type !== "_hidden"),
       totalAmount: res.totalAmount || "",
-      venueName: res.venueName || ""
+      venueName: res.venueName || "",
+      meetingLink: res.meetingLink || ""
     });
     setEditModal({ isOpen: true, data: res });
   };
@@ -259,7 +288,7 @@ export default function ReservationsPage() {
                 </button>
               </div>
               <div style={{ display: "flex", gap: 6 }}>
-                <button onClick={() => { setQuickEventForm({ venueName: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" }); setQuickEventModal(true); }} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "5px 12px", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                <button onClick={() => { setQuickEventForm({ venueName: "", phone: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" }); setQuickEventModal(true); }} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "5px 12px", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
                   <Star size={11} /> Olay Ekle
                 </button>
                 <button onClick={goToday} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "5px 12px", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", fontWeight: 700 }}>
@@ -285,21 +314,23 @@ export default function ReservationsPage() {
                 const dayRes = resByDay[day] || [];
                 const hasRes = dayRes.length > 0;
                 const todayStyle = isToday(day);
+                const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isDayBlocked = blockedDays.includes(dateStr);
 
                 return (
-                  <div key={day} onClick={() => {
-                    const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    setQuickEventForm({ venueName: "", eventDate: dateStr, startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
-                    setQuickEventModal(true);
+                  <div key={day} onClick={(e) => {
+                    e.stopPropagation();
+                    setDayActionMenu({ dateStr, x: e.clientX, y: e.clientY, day });
                   }} style={{
                     height: "100%", borderRadius: 0, padding: "3px 4px",
-                    background: todayStyle ? "rgba(255,255,255,0.04)" : hasRes ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
-                    border: todayStyle ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(255,255,255,0.04)",
+                    background: isDayBlocked ? "rgba(255,60,60,0.06)" : todayStyle ? "rgba(255,255,255,0.04)" : hasRes ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
+                    border: isDayBlocked ? "1px solid rgba(255,60,60,0.2)" : todayStyle ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(255,255,255,0.04)",
                     cursor: "pointer", overflow: "hidden",
-                    transition: "all 0.15s",
+                    transition: "all 0.15s", position: "relative",
                   }}>
-                    <div style={{ fontSize: "0.7rem", fontWeight: todayStyle ? 800 : 600, color: todayStyle ? "rgba(255,255,255,0.5)" : hasRes ? "#fff" : "rgba(255,255,255,0.3)", marginBottom: 3 }}>
+                    <div style={{ fontSize: "0.7rem", fontWeight: todayStyle ? 800 : 600, color: isDayBlocked ? "rgba(255,80,80,0.7)" : todayStyle ? "rgba(255,255,255,0.5)" : hasRes ? "#fff" : "rgba(255,255,255,0.3)", marginBottom: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                       {day}
+                      {isDayBlocked && <span style={{ fontSize: "0.45rem", fontWeight: 900, color: "rgba(255,80,80,0.6)", textTransform: "uppercase" }}>KAPALI</span>}
                     </div>
                     {dayRes.slice(0, dayRes.length <= 3 ? 3 : 2).map((r) => {
                       const sc = statusColor(r.status);
@@ -315,17 +346,19 @@ export default function ReservationsPage() {
                             transition: "all 0.15s",
                           }}
                           title={(() => {
+                            if (!isPhotographer) return displayName(r);
                             const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede", "alanı", "alan"];
                             const cfa = r.customFieldAnswers || [];
                             const venueField = cfa.find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
-                            return venueField?.value || r.venueName || "";
+                            return venueField?.value || r.venueName || displayName(r);
                           })()}
                         >
                           {(() => {
+                            if (!isPhotographer) return displayName(r);
                             const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede", "alanı", "alan"];
                             const cfa = r.customFieldAnswers || [];
                             const venueField = cfa.find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
-                            return venueField?.value || r.venueName || "-";
+                            return venueField?.value || r.venueName || displayName(r);
                           })()}
                         </div>
                       );
@@ -368,7 +401,7 @@ export default function ReservationsPage() {
                           whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
                           transition: "all 0.15s",
                         }}>
-                        {r.brideName}{r.groomName ? ` & ${r.groomName}` : ""}
+                        {displayName(r)}
                         {r.eventTime && <span style={{ color: "rgba(255,255,255,0.3)", marginLeft: 6 }}>{r.eventTime}</span>}
                       </div>
                     );
@@ -415,7 +448,7 @@ export default function ReservationsPage() {
                             </div>
                             <div style={{ minWidth: 0 }}>
                               <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                {r.brideName}{r.groomName ? ` & ${r.groomName}` : ""}
+                                {displayName(r)}
                               </div>
                               <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)" }}>
                                 {r.eventTime || ""} · {(() => {
@@ -467,8 +500,8 @@ export default function ReservationsPage() {
         </div>
         {[
           { key: "newest", label: "En Yeni" },
-          { key: "event_soon", label: "📅 Randevu Yakın" },
-          { key: "delivery_soon", label: "📦 Teslim Yakın" },
+          { key: "event_soon", label: `📅 ${isPhotographer ? "Etkinlik" : terms.appointment} Yakın` },
+          ...(isPhotographer ? [{ key: "delivery_soon", label: "📦 Teslim Yakın" }] : []),
           { key: "amount_high", label: "💰 Yüksek Tutar" },
         ].map(s => (
           <button
@@ -582,14 +615,14 @@ export default function ReservationsPage() {
                   style={{ fontWeight: 700, fontSize: "0.85rem", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}
                 >
                   <Eye size={12} style={{ opacity: 0.4, flexShrink: 0 }} />
-                  {res.brideName} {res.groomName ? `& ${res.groomName}` : ""}
+                  {displayName(res)}
                 </div>
                 <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-                  {res.contractApproved ? (
+                  {isPhotographer && (res.contractApproved ? (
                     <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(74,222,128,0.3)" }}>📝 Sözleşme ✓</span>
                   ) : (
                     <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.12)" }}>📝 Onay Yok</span>
-                  )}
+                  ))}
                   {res.paymentPreference === "CREDIT_CARD" && (
                     <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(245,158,11,0.15)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}>💳 Kart</span>
                   )}
@@ -797,34 +830,40 @@ export default function ReservationsPage() {
             </div>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
 
-              {/* Mekan Adı */}
+              {/* Mekan / Detay */}
               <div>
-                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Mekan Adı</div>
-                <input placeholder="Opsiyonel: Salon adı, konum vb." style={inp} value={formData.venueName} onChange={(e) => setFormData({...formData, venueName: e.target.value})} />
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{isPhotographer ? "Mekan Adı" : "Detay / Not"}</div>
+                <input placeholder={isPhotographer ? "Opsiyonel: Salon adı, konum vb." : "Opsiyonel not"} style={inp} value={formData.venueName} onChange={(e) => setFormData({...formData, venueName: e.target.value})} />
+              </div>
+
+              {/* Online Görüşme Linki */}
+              <div>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Online Görüşme Linki</div>
+                <input placeholder="Örn: https://zoom.us/j/... veya Google Meet linki" style={inp} value={formData.meetingLink} onChange={(e) => setFormData({...formData, meetingLink: e.target.value})} />
               </div>
 
               {/* İletişim Bilgileri */}
               <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "-4px" }}>İletişim Bilgileri</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
-                <input placeholder="Gelin Adı *" required style={inp} value={formData.brideName} onChange={(e) => setFormData({...formData, brideName: e.target.value})} />
-                <input placeholder="Damat Adı *" required style={inp} value={formData.groomName} onChange={(e) => setFormData({...formData, groomName: e.target.value})} />
+                <input placeholder={isPhotographer ? "Gelin Adı *" : `${terms.client} Adı *`} required style={inp} value={formData.brideName} onChange={(e) => setFormData({...formData, brideName: e.target.value})} />
+                <input placeholder={isPhotographer ? "Damat Adı *" : "İkinci Kişi Adı"} required={isPhotographer} style={inp} value={formData.groomName} onChange={(e) => setFormData({...formData, groomName: e.target.value})} />
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
-                <input placeholder="Gelin Telefon *" required style={inp} value={formData.bridePhone} onChange={(e) => setFormData({...formData, bridePhone: e.target.value})} />
-                <input placeholder="Damat Telefon" style={inp} value={formData.groomPhone} onChange={(e) => setFormData({...formData, groomPhone: e.target.value})} />
+                <input placeholder={isPhotographer ? "Gelin Telefon *" : `${terms.client} Telefon *`} required style={inp} value={formData.bridePhone} onChange={(e) => setFormData({...formData, bridePhone: e.target.value})} />
+                <input placeholder={isPhotographer ? "Damat Telefon" : "İkinci Kişi Telefon"} style={inp} value={formData.groomPhone} onChange={(e) => setFormData({...formData, groomPhone: e.target.value})} />
               </div>
-              <input placeholder="Gelin E-posta *" type="email" required style={inp} value={formData.brideEmail} onChange={(e) => setFormData({...formData, brideEmail: e.target.value})} />
+              <input placeholder={isPhotographer ? "Gelin E-posta *" : `${terms.client} E-posta *`} type="email" required style={inp} value={formData.brideEmail} onChange={(e) => setFormData({...formData, brideEmail: e.target.value})} />
 
               {/* Tarih */}
-              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Etkinlik Tarihi</div>
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>{isPhotographer ? "Etkinlik Tarihi" : `${terms.appointment} Tarihi`}</div>
               <input type="date" required style={{ ...inp, colorScheme: "dark" }} value={formData.eventDate} onChange={(e) => setFormData({...formData, eventDate: e.target.value})} />
 
               {/* Paket Seçimi - Detaylı */}
               <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Paket Seçimi</div>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 {(() => {
-                  const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart" };
-                  const timeLabels = { SLOT_2H: "2 Saatlik", SLOT_4H: "4 Saatlik", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün" };
+                  const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart", CUSTOM_DURATION: "Randevu" };
+                  const timeLabels = { SLOT_2H: "2 Saatlik", SLOT_4H: "4 Saatlik", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün", CUSTOM_DURATION: "Süreye Göre" };
                   const grouped = {};
                   packages.forEach(pkg => {
                     const cat = catLabels[pkg.category] || pkg.category;
@@ -936,7 +975,7 @@ export default function ReservationsPage() {
               {/* Custom Field Alanları (seçilen paketlerin özel alanları) */}
               {formData.customFieldAnswers.length > 0 && (
                 <>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Çekim Bilgileri</div>
+                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>{isPhotographer ? "Çekim Bilgileri" : "Ek Bilgiler"}</div>
                   {formData.customFieldAnswers.map((cfa, idx) => (
                     <div key={idx}>
                       <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", marginBottom: "3px" }}>
@@ -1044,7 +1083,7 @@ export default function ReservationsPage() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
               <div>
                 <h2 style={{ fontSize: "1rem", fontWeight: 900, margin: 0 }}>İş Akışı</h2>
-                <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.72rem", margin: "2px 0 0" }}>{workflowModal.data.brideName} & {workflowModal.data.groomName}</p>
+                <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.72rem", margin: "2px 0 0" }}>{displayName(workflowModal.data)}</p>
               </div>
               <button onClick={() => setWorkflowModal({isOpen: false, data: null})} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={16} /></button>
             </div>
@@ -1082,12 +1121,16 @@ export default function ReservationsPage() {
       {/* ── DETAIL MODAL ── */}
       {detailModal.isOpen && detailModal.data && (() => {
         const r = detailModal.data;
-        const wfLabels = {
+        const wfLabels = isPhotographer ? {
           PENDING: "Çekim Bekleniyor",
           EDITING: "Düzenleniyor", SELECTION_PENDING: "Seçim Bekleniyor",
           PREPARING: "Hazırlanıyor", COMPLETED: "Teslim Edildi",
-          // Legacy mappings
           SHOT_DONE: "Düzenleniyor", ALBUM_PREPARING: "Hazırlanıyor", DELIVERED: "Teslim Edildi",
+        } : {
+          PENDING: "Bekleniyor",
+          EDITING: "İşleniyor", SELECTION_PENDING: "Bekleniyor",
+          PREPARING: "Hazırlanıyor", COMPLETED: "Tamamlandı",
+          SHOT_DONE: "İşleniyor", ALBUM_PREPARING: "Hazırlanıyor", DELIVERED: "Tamamlandı",
         };
         const statusLabels = { PENDING: "Bekleyen", CONFIRMED: "Onaylı", COMPLETED: "Tamamlandı", CANCELLED: "İptal" };
         const sc = statusColor(r.status);
@@ -1140,18 +1183,19 @@ export default function ReservationsPage() {
                 <div>
                 {/* İletişim */}
                 <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 2px" }}>İletişim</div>
-                <DetailRow icon={User} label="Gelin" value={r.brideName} color="#4ade80" />
-                <DetailRow icon={Phone} label="Gelin Telefon" value={r.bridePhone} color="#4ade80" />
-                <DetailRow icon={Mail} label="Gelin E-posta" value={r.brideEmail} color="#4ade80" />
-                <DetailRow icon={User} label="Damat" value={r.groomName} color="rgba(255,255,255,0.5)" />
-                <DetailRow icon={Phone} label="Damat Telefon" value={r.groomPhone} color="rgba(255,255,255,0.5)" />
+                <DetailRow icon={User} label={isPhotographer ? "Gelin" : terms.client} value={r.brideName} color="#4ade80" />
+                <DetailRow icon={Phone} label={isPhotographer ? "Gelin Telefon" : `${terms.client} Telefon`} value={r.bridePhone} color="#4ade80" />
+                <DetailRow icon={Mail} label={isPhotographer ? "Gelin E-posta" : `${terms.client} E-posta`} value={r.brideEmail} color="#4ade80" />
+                {isPhotographer && <DetailRow icon={User} label="Damat" value={r.groomName} color="rgba(255,255,255,0.5)" />}
+                {isPhotographer && <DetailRow icon={Phone} label="Damat Telefon" value={r.groomPhone} color="rgba(255,255,255,0.5)" />}
 
-                {/* Etkinlik */}
-                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 2px" }}>Etkinlik</div>
+                {/* Etkinlik / Randevu */}
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 2px" }}>{isPhotographer ? "Etkinlik" : terms.appointment}</div>
                 <DetailRow icon={Calendar} label="Tarih" value={new Date(r.eventDate).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' })} />
                 <DetailRow icon={Clock} label="Saat" value={r.eventTime} />
                 <DetailRow icon={CreditCard} label="Toplam Tutar" value={r.totalAmount ? `${r.totalAmount} TL` : null} />
                 <DetailRow icon={CreditCard} label="Ödenen Tutar" value={r.paidAmount && r.paidAmount !== "0" ? `${r.paidAmount} TL` : null} />
+                {isPhotographer && (
                 <div style={{ display: "flex", alignItems: "center", padding: "8px 0", gap: 10, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
                   <FileText size={13} style={{ color: r.contractApproved ? "#fff" : "rgba(255,255,255,0.5)", flexShrink: 0 }} />
                   <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", minWidth: 110 }}>Sözleşme</span>
@@ -1161,6 +1205,7 @@ export default function ReservationsPage() {
                     <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>⚠️ Henüz Onaylanmadı</span>
                   )}
                 </div>
+                )}
                 <DetailRow icon={FileText} label="Notlar" value={r.notes} />
 
                 {/* ── SAĞ KOLON: Paketler + Ödeme ── */}
@@ -1171,8 +1216,8 @@ export default function ReservationsPage() {
                 {r.packages && r.packages.length > 0 ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                     {(() => {
-                      const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart" };
-                      const timeLabels = { SLOT_2H: "2 Saatlik Çekim", SLOT_4H: "4 Saatlik Çekim", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
+                      const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart", CUSTOM_DURATION: "Randevu" };
+                      const timeLabels = { SLOT_2H: "2 Saatlik", SLOT_4H: "4 Saatlik", WEDDING: "Düğün Boyunca", FULL_DAY: "Tam Gün", CUSTOM_DURATION: "Süreye Göre", MORNING: "Sabah", EVENING: "Akşam", FIVE_HOURS: "5 Saat", SLOT: "Randevu" };
                       return r.packages.map((pkg, pkgIdx) => {
                         const pkgFields = (r.customFieldAnswers || []).filter(a => a.packageName === pkg.name && a.type !== "_hidden");
                         const pkgAddons = (r.selectedAddons || []).filter(a => a.packageName === pkg.name);
@@ -1188,9 +1233,14 @@ export default function ReservationsPage() {
                           <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: 8 }}>
                             <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 0 }}>{catLabels[pkg.category] || pkg.category}</span>
                             <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 0 }}>{timeLabels[pkg.timeType] || pkg.timeType}</span>
-                            <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 0 }}>{pkg.deliveryTimeDays || 14} gün içinde teslim</span>
+                            {isPhotographer && <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 0 }}>{pkg.deliveryTimeDays || 14} gün içinde teslim</span>}
                             {pkg.postSelectionDays > 0 && (
                               <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.7)", padding: "3px 8px", borderRadius: 0 }}>+{pkg.postSelectionDays} gün seçim süresi</span>
+                            )}
+                            {pkg.meetingLink && (
+                              <a href={pkg.meetingLink} target="_blank" rel="noreferrer" style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(167, 139, 250, 0.15)", color: "#c4b5fd", padding: "3px 8px", borderRadius: 0, textDecoration: "none", border: "1px solid rgba(167, 139, 250, 0.3)", display: "flex", alignItems: "center", gap: 4 }}>
+                                Online Görüşme Bağlantısı ↗
+                              </a>
                             )}
                           </div>
                           {pkg.features && pkg.features.length > 0 && (
@@ -1203,7 +1253,7 @@ export default function ReservationsPage() {
                           {/* Package-specific custom fields */}
                           {pkgFields.length > 0 && (
                             <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                              <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 4 }}>Çekim Bilgileri</div>
+                              <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 4 }}>{isPhotographer ? "Çekim Bilgileri" : "Ek Bilgiler"}</div>
                               {pkgFields.map((answer, i) => (
                                 <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
                                   <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.45)", fontWeight: 600 }}>{answer.label}</span>
@@ -1244,7 +1294,7 @@ export default function ReservationsPage() {
                     <>
                       {unmatchedFields.length > 0 && (
                         <>
-                          <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📝 Çekim Bilgileri</div>
+                          <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>{isPhotographer ? "📝 Çekim Bilgileri" : "📝 Ek Bilgiler"}</div>
                           <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                             {unmatchedFields.map((answer, i) => (
                               <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "10px 14px" }}>
@@ -1394,8 +1444,8 @@ export default function ReservationsPage() {
                           >
                             <option value="CASH">Nakit</option>
                             <option value="BANK_TRANSFER">Havale/EFT</option>
-                            <option value="CREDIT_CARD">Kredi Kartı</option>
-                            <option value="ONLINE">Online</option>
+                            {paymentMode !== "cash" && <option value="CREDIT_CARD">Kredi Kartı</option>}
+                            {paymentMode !== "cash" && <option value="ONLINE">Online</option>}
                           </select>
                         </div>
                         <div style={{ display: "flex", gap: "8px" }}>
@@ -1553,6 +1603,8 @@ export default function ReservationsPage() {
                 <div className="detail-full">
 
                 {/* ── İş Akışı (Progress Bar) ── */}
+                {isPhotographer && (
+                <>
                 <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 4px" }}>İş Akışı</div>
                 {(() => {
                   const wfSteps = [
@@ -1645,11 +1697,13 @@ export default function ReservationsPage() {
                     </div>
                   </>
                 )}
+                </>
+                )}{/* end isPhotographer workflow/delivery/photos/album */}
 
                 {/* ── Hatırlatma Gönder ── */}
                 <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 4px" }}>Hatırlatma</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  {!r.contractApproved && (
+                  {isPhotographer && !r.contractApproved && (
                     <button
                       disabled={reminderLoading === "contract"}
                       onClick={async () => {
@@ -1675,6 +1729,7 @@ export default function ReservationsPage() {
                       </div>
                     </button>
                   )}
+                  {isPhotographer && (
                   <button
                     disabled={reminderLoading === "credentials"}
                     onClick={async () => {
@@ -1700,6 +1755,7 @@ export default function ReservationsPage() {
                       <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.35)", fontWeight: 500 }}>Yeni şifre oluşturur ve e-posta ile gönderir</div>
                     </div>
                   </button>
+                  )}
                   {reminderResult && (
                     <div style={{
                       padding: "8px 12px", fontSize: "0.72rem", fontWeight: 600,
@@ -1725,6 +1781,39 @@ export default function ReservationsPage() {
         );
       })()}
 
+      {/* ── Day Action Menu ── */}
+      {dayActionMenu && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 999 }} onClick={() => setDayActionMenu(null)}>
+          <div style={{
+            position: "fixed",
+            left: Math.min(dayActionMenu.x, window.innerWidth - 200),
+            top: Math.min(dayActionMenu.y, window.innerHeight - 120),
+            background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.15)",
+            padding: "4px", minWidth: 180, zIndex: 1001,
+          }} onClick={(e) => e.stopPropagation()}>
+            <button onClick={() => {
+              setQuickEventForm({ venueName: "", phone: "", eventDate: dayActionMenu.dateStr, startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
+              setQuickEventModal(true);
+              setDayActionMenu(null);
+            }} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", color: "#fff", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 8 }}>
+              <Plus size={14} style={{ color: "rgba(255,255,255,0.4)" }} />
+              {isPhotographer ? "Olay Ekle" : `${terms.appointment} Ekle`}
+            </button>
+            <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "2px 0" }} />
+            <button onClick={async () => {
+              const res = await toggleBlockedDay(dayActionMenu.dateStr);
+              if (res.success) {
+                setBlockedDays(res.blockedDays);
+              }
+              setDayActionMenu(null);
+            }} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", color: blockedDays.includes(dayActionMenu.dateStr) ? "rgba(100,255,100,0.8)" : "rgba(255,100,100,0.8)", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 8 }}>
+              <Ban size={14} />
+              {blockedDays.includes(dayActionMenu.dateStr) ? "Günü Aç" : "Günü Kapat"}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ── Quick Event Modal ── */}
       {quickEventModal && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
@@ -1732,7 +1821,7 @@ export default function ReservationsPage() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>
                 <Star size={16} style={{ marginRight: 6, verticalAlign: "middle", color: "rgba(255,255,255,0.5)" }} />
-                Hızlı Olay Ekle
+                {isPhotographer ? "Hızlı Olay Ekle" : `Hızlı ${terms.appointment} Ekle`}
               </h2>
               <button onClick={() => setQuickEventModal(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={18} /></button>
             </div>
@@ -1742,7 +1831,7 @@ export default function ReservationsPage() {
               const res = await createQuickEvent(quickEventForm);
               if (res.success) {
                 setQuickEventModal(false);
-                setQuickEventForm({ venueName: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
+                setQuickEventForm({ venueName: "", phone: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
                 loadData();
               } else {
                 alert("Hata: " + res.error);
@@ -1750,8 +1839,14 @@ export default function ReservationsPage() {
               setQuickEventLoading(false);
             }} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               <div>
-                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Başlık / Mekan Adı *</label>
-                <input required placeholder="Örn: Hilton Düğün Salonu" style={inp} value={quickEventForm.venueName} onChange={(e) => setQuickEventForm({...quickEventForm, venueName: e.target.value})} />
+                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>
+                  {isPhotographer ? "Başlık / Mekan Adı *" : `${terms.client} Adı *`}
+                </label>
+                <input required placeholder={isPhotographer ? "Örn: Mekan Adı" : `Örn: ${terms.client} adı`} style={inp} value={quickEventForm.venueName} onChange={(e) => setQuickEventForm({...quickEventForm, venueName: e.target.value})} />
+              </div>
+              <div>
+                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Telefon</label>
+                <input type="tel" placeholder="05XX XXX XX XX" style={inp} value={quickEventForm.phone} onChange={(e) => setQuickEventForm({...quickEventForm, phone: e.target.value})} />
               </div>
               <div>
                 <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Tarih *</label>
@@ -1790,7 +1885,7 @@ export default function ReservationsPage() {
                     {[
                       { v: "CASH", l: "💵 Nakit" },
                       { v: "BANK_TRANSFER", l: "🏦 Havale" },
-                      { v: "CREDIT_CARD", l: "💳 Kart" },
+                      ...(paymentMode !== "cash" ? [{ v: "CREDIT_CARD", l: "💳 Kart" }] : []),
                     ].map(m => (
                       <button key={m.v} type="button" onClick={() => setQuickEventForm({...quickEventForm, paymentMethod: m.v})}
                         style={{

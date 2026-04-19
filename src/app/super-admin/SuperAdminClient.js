@@ -6,12 +6,13 @@ import {
   Shield, Users, Building2, CreditCard, Snowflake, Trash2,
   RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check,
   BarChart, Database, Cloud, Mail, HardDrive, Image, Zap,
-  DollarSign, Save, LayoutDashboard
+  DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock
 } from "lucide-react";
 import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
   changeTenantPlan, deleteTenant, superAdminLogout,
-  getPlatformPricing, updatePlatformPricing
+  getPlatformPricing, updatePlatformPricing,
+  updateTenantCommission, updateSubMerchantStatus
 } from "@/app/actions/super-admin";
 import { getCloudinaryUsage, getDbUsage, getResendUsage, getVercelUsage } from "@/app/actions/platform-usage";
 
@@ -69,6 +70,15 @@ export default function SuperAdminClient() {
     setActionLoading(id); await deleteTenant(id); await loadData(); setActionLoading(null);
   }
   async function handleLogout() { await superAdminLogout(); router.push("/super-admin/login"); }
+  async function handleCommission(id, rate) { setActionLoading(id); await updateTenantCommission(id, rate); await loadData(); setActionLoading(null); }
+  async function handleSubMerchantStatus(id, status) { setActionLoading(id); await updateSubMerchantStatus(id, status); await loadData(); setActionLoading(null); }
+
+  const smStatusConfig = {
+    NOT_STARTED: { label: "Başvuru Yok", color: "rgba(255,255,255,0.3)", bg: "rgba(255,255,255,0.03)", border: "rgba(255,255,255,0.06)" },
+    PENDING: { label: "İnceleniyor", color: "#facc15", bg: "rgba(250,204,21,0.08)", border: "rgba(250,204,21,0.2)" },
+    APPROVED: { label: "Onaylı", color: "#4ade80", bg: "rgba(74,222,128,0.08)", border: "rgba(74,222,128,0.2)" },
+    REJECTED: { label: "Reddedildi", color: "#f87171", bg: "rgba(248,113,113,0.08)", border: "rgba(248,113,113,0.2)" },
+  };
 
   const planColors = {
     trial: { bg: "rgba(250,204,21,0.1)", border: "rgba(250,204,21,0.2)", text: "#facc15" },
@@ -339,52 +349,120 @@ export default function SuperAdminClient() {
                   const pc = planColors[t.plan] || planColors.trial;
                   const daysLeft = t.planExpiresAt ? Math.ceil((new Date(t.planExpiresAt) - new Date()) / (1000*60*60*24)) : null;
                   const isExpired = daysLeft !== null && daysLeft <= 0;
+                  const sm = smStatusConfig[t.subMerchantStatus] || smStatusConfig.NOT_STARTED;
                   return (
                     <div key={t.id} style={{
                       background: t.isFrozen ? "rgba(56,189,248,0.03)" : "rgba(255,255,255,0.02)",
                       border: `1px solid ${t.isFrozen ? "rgba(56,189,248,0.15)" : "rgba(255,255,255,0.06)"}`,
-                      padding: "16px 20px", display: "flex", flexWrap: "wrap", gap: "12px 20px", alignItems: "center"
+                      padding: "16px 20px",
                     }}>
-                      <div style={{ flex: "1 1 220px", minWidth: 200 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                          <span style={{ fontWeight: 700, fontSize: 15 }}>{t.businessName}</span>
-                          {t.isFrozen && <Snowflake size={14} style={{ color: "#38bdf8" }} />}
-                          {isExpired && <AlertTriangle size={14} style={{ color: "#f87171" }} />}
+                      {/* Üst satır: İsim + Plan + Aksiyonlar */}
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "12px 20px", alignItems: "center", marginBottom: 12 }}>
+                        <div style={{ flex: "1 1 220px", minWidth: 200 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                            <span style={{ fontWeight: 700, fontSize: 15 }}>{t.businessName}</span>
+                            {t.isFrozen && <Snowflake size={14} style={{ color: "#38bdf8" }} />}
+                            {isExpired && <AlertTriangle size={14} style={{ color: "#f87171" }} />}
+                          </div>
+                          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", display: "flex", gap: 12, flexWrap: "wrap" }}>
+                            <span>{t.slug}.{domain}</span>
+                            <span>{t.ownerEmail}</span>
+                          </div>
                         </div>
-                        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", display: "flex", gap: 12, flexWrap: "wrap" }}>
-                          <span>{t.slug}.{domain}</span>
-                          <span>{t.ownerEmail}</span>
+                        <div style={{ display: "flex", gap: 16, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
+                          <span>{t.reservationCount} rez</span>
+                          <span>{t.userCount} üye</span>
+                          <span>{t.packageCount} paket</span>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <span style={{
+                            background: pc.bg, border: `1px solid ${pc.border}`, color: pc.text,
+                            padding: "4px 10px", fontSize: 11, fontWeight: 700,
+                            textTransform: "uppercase", letterSpacing: "0.05em"
+                          }}>{t.plan}</span>
+                          {daysLeft !== null && (
+                            <span style={{ fontSize: 11, color: isExpired ? "#f87171" : "rgba(255,255,255,0.3)" }}>
+                              {isExpired ? "Süresi doldu" : `${daysLeft}g`}
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ display: "flex", gap: 6 }}>
+                          <a href={`http://${t.slug}.${domain}/admin`} target="_blank" rel="noopener" style={smallBtn}><ExternalLink size={13} /></a>
+                          <select value={t.plan} onChange={e => handlePlanChange(t.id, e.target.value)} disabled={actionLoading === t.id} style={{ ...smallBtn, width: 80, cursor: "pointer", appearance: "none", textAlign: "center" }}>
+                            <option value="trial">Trial</option>
+                            <option value="pro">Pro</option>
+                          </select>
+                          <button onClick={() => handleFreeze(t.id)} disabled={actionLoading === t.id} title={t.isFrozen ? "Aktifleştir" : "Dondur"} style={{ ...smallBtn, color: t.isFrozen ? "#4ade80" : "#38bdf8" }}>
+                            <Snowflake size={13} />
+                          </button>
+                          <button onClick={() => handleDelete(t.id, t.businessName)} disabled={actionLoading === t.id} title="Sil" style={{ ...smallBtn, color: "#f87171" }}>
+                            <Trash2 size={13} />
+                          </button>
                         </div>
                       </div>
-                      <div style={{ display: "flex", gap: 16, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
-                        <span>{t.reservationCount} rez</span>
-                        <span>{t.userCount} üye</span>
-                        <span>{t.packageCount} paket</span>
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <span style={{
-                          background: pc.bg, border: `1px solid ${pc.border}`, color: pc.text,
-                          padding: "4px 10px", fontSize: 11, fontWeight: 700,
-                          textTransform: "uppercase", letterSpacing: "0.05em"
-                        }}>{t.plan}</span>
-                        {daysLeft !== null && (
-                          <span style={{ fontSize: 11, color: isExpired ? "#f87171" : "rgba(255,255,255,0.3)" }}>
-                            {isExpired ? "Süresi doldu" : `${daysLeft}g`}
+
+                      {/* Alt satır: Komisyon + Sub-Merchant Durumu */}
+                      <div style={{
+                        display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center",
+                        paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.04)",
+                      }}>
+                        {/* Komisyon Oranı */}
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <Percent size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
+                          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap" }}>Komisyon:</span>
+                          <input
+                            type="number"
+                            defaultValue={t.commissionRate ?? 5}
+                            min={0} max={100} step={0.5}
+                            onBlur={e => {
+                              const val = parseFloat(e.target.value);
+                              if (!isNaN(val) && val !== t.commissionRate) handleCommission(t.id, val);
+                            }}
+                            onKeyDown={e => { if (e.key === "Enter") e.target.blur(); }}
+                            disabled={actionLoading === t.id}
+                            style={{
+                              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+                              color: "#fff", padding: "4px 8px", width: 56, fontSize: 13, fontWeight: 700,
+                              textAlign: "center", outline: "none",
+                            }}
+                          />
+                          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>%</span>
+                        </div>
+
+                        {/* Sub-Merchant Durumu */}
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
+                          <span style={{
+                            background: sm.bg, border: `1px solid ${sm.border}`, color: sm.color,
+                            padding: "3px 10px", fontSize: 10, fontWeight: 700,
+                            textTransform: "uppercase", letterSpacing: "0.04em",
+                            display: "flex", alignItems: "center", gap: 4,
+                          }}>
+                            {t.subMerchantStatus === "APPROVED" ? <CheckCircle2 size={10} /> :
+                             t.subMerchantStatus === "REJECTED" ? <XCircle size={10} /> :
+                             t.subMerchantStatus === "PENDING" ? <Clock size={10} /> : null}
+                            {sm.label}
                           </span>
-                        )}
-                      </div>
-                      <div style={{ display: "flex", gap: 6 }}>
-                        <a href={`http://${t.slug}.${domain}/admin`} target="_blank" rel="noopener" style={smallBtn}><ExternalLink size={13} /></a>
-                        <select value={t.plan} onChange={e => handlePlanChange(t.id, e.target.value)} disabled={actionLoading === t.id} style={{ ...smallBtn, width: 80, cursor: "pointer", appearance: "none", textAlign: "center" }}>
-                          <option value="trial">Trial</option>
-                          <option value="pro">Pro</option>
-                        </select>
-                        <button onClick={() => handleFreeze(t.id)} disabled={actionLoading === t.id} title={t.isFrozen ? "Aktifleştir" : "Dondur"} style={{ ...smallBtn, color: t.isFrozen ? "#4ade80" : "#38bdf8" }}>
-                          <Snowflake size={13} />
-                        </button>
-                        <button onClick={() => handleDelete(t.id, t.businessName)} disabled={actionLoading === t.id} title="Sil" style={{ ...smallBtn, color: "#f87171" }}>
-                          <Trash2 size={13} />
-                        </button>
+                          {t.subMerchantStatus === "PENDING" && (
+                            <>
+                              <button
+                                onClick={() => handleSubMerchantStatus(t.id, "APPROVED")}
+                                disabled={actionLoading === t.id}
+                                title="Onayla"
+                                style={{ ...smallBtn, color: "#4ade80", padding: "4px 8px" }}
+                              >
+                                <CheckCircle2 size={13} />
+                              </button>
+                              <button
+                                onClick={() => handleSubMerchantStatus(t.id, "REJECTED")}
+                                disabled={actionLoading === t.id}
+                                title="Reddet"
+                                style={{ ...smallBtn, color: "#f87171", padding: "4px 8px" }}
+                              >
+                                <XCircle size={13} />
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                   );

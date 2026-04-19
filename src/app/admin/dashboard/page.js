@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import NotificationList from "../components/NotificationList";
 import { getCurrentTenant } from "@/lib/tenant";
+import { getBusinessType } from "@/lib/business-types";
 import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth";
 import { getSiteConfig } from "../core-actions";
@@ -24,6 +25,10 @@ async function getDashboardTenantId() {
 
 export default async function AdminDashboard() {
   const tenantId = await getDashboardTenantId();
+  const tenant = await getCurrentTenant();
+  const bt = getBusinessType(tenant?.businessType || "photographer");
+  const { features, terms } = bt;
+  const isPhotographer = (tenant?.businessType || "photographer") === "photographer";
 
   // Setup wizard kontrolü
   const siteConfig = await getSiteConfig();
@@ -143,21 +148,21 @@ export default async function AdminDashboard() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "8px", marginBottom: "1.5rem" }}>
         <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: 0 }}>
           <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
-            <Package size={11} /> Paket
+            <Package size={11} /> {terms.service}
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalPackages}</div>
         </div>
 
         <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: 0 }}>
           <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
-            <Calendar size={11} /> Randevu
+            <Calendar size={11} /> {terms.appointment}
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalReservations}</div>
         </div>
 
         <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: 0 }}>
           <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
-            <Users size={11} /> Üye
+            <Users size={11} /> {terms.client}
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalMembers}</div>
         </div>
@@ -231,7 +236,7 @@ export default async function AdminDashboard() {
         <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "14px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
             <Calendar size={13} style={{ color: "rgba(255,255,255,0.6)" }} />
-            <span style={{ fontWeight: 900, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)" }}>Yaklaşan Çekimler</span>
+            <span style={{ fontWeight: 900, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)" }}>{terms.upcoming}</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             {upcomingShoots.map((res) => {
@@ -239,7 +244,7 @@ export default async function AdminDashboard() {
               return (
                 <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.brideName} {res.groomName ? `& ${res.groomName}` : ''}</div>
+                    <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.brideName}{isPhotographer && res.groomName ? ` & ${res.groomName}` : ''}</div>
                     <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)" }}>
                       {new Date(res.eventDate).toLocaleDateString("tr-TR", { day: "numeric", month: "long", weekday: "short" })}
                       {res.eventTime ? ` · ${res.eventTime}` : ''}
@@ -250,7 +255,7 @@ export default async function AdminDashboard() {
               );
             })}
             {upcomingShoots.length === 0 && (
-              <div style={{ padding: "1.5rem", textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: "0.7rem" }}>Yaklaşan çekim yok</div>
+              <div style={{ padding: "1.5rem", textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: "0.7rem" }}>Yaklaşan {terms.appointment.toLowerCase()} yok</div>
             )}
           </div>
         </div>
@@ -258,7 +263,7 @@ export default async function AdminDashboard() {
         {/* Son Rezervasyonlar */}
         <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "14px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-            <span style={{ fontWeight: 900, fontSize: "0.8rem" }}>Son Rezervasyonlar</span>
+            <span style={{ fontWeight: 900, fontSize: "0.8rem" }}>Son {terms.appointments}</span>
             <Link href="/admin/reservations" style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.6rem", fontWeight: 800, textDecoration: "none", display: "flex", alignItems: "center", gap: "2px" }}>
               TÜMÜ <ChevronRight size={10} />
             </Link>
@@ -284,7 +289,8 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* Yaklaşan Teslimatlar */}
+      {/* Yaklaşan Teslimatlar — only for photographers */}
+      {features.galleryDelivery && (
       <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "14px", marginBottom: "1.25rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
           <Calendar size={13} style={{ color: "rgba(255,255,255,0.6)" }} />
@@ -297,7 +303,7 @@ export default async function AdminDashboard() {
             return (
               <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.brideName} {res.groomName ? `& ${res.groomName}` : ''}</div>
+                  <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.brideName}{isPhotographer && res.groomName ? ` & ${res.groomName}` : ''}</div>
                   <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)" }}>
                     {new Date(res.eventDate).toLocaleDateString("tr-TR")} → {new Date(res.deliveryDate).toLocaleDateString("tr-TR")}
                   </div>
@@ -314,6 +320,7 @@ export default async function AdminDashboard() {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 }

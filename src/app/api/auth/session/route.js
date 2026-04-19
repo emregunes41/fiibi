@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { verifyAuth } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getCurrentTenant } from "@/lib/tenant";
 
 export async function GET() {
   try {
@@ -15,7 +16,9 @@ export async function GET() {
         where: { id: payload.userId },
         select: { id: true, name: true, email: true, role: true }
       });
-      return NextResponse.json({ user: user || null });
+      // Also include tenant info for navbar
+      const tenant = await getCurrentTenant();
+      return NextResponse.json({ user: user || null, tenant: tenant ? { businessType: tenant.businessType } : null });
     }
 
     // Admin auth — tenant bilgisi döndür
@@ -26,13 +29,15 @@ export async function GET() {
       if (payload.tenantId) {
         tenant = await prisma.tenant.findUnique({
           where: { id: payload.tenantId },
-          select: { id: true, slug: true, businessName: true, plan: true, planExpiresAt: true, isFrozen: true, createdAt: true }
+          select: { id: true, slug: true, businessName: true, businessType: true, plan: true, planExpiresAt: true, isFrozen: true, createdAt: true, referralCode: true, referralCount: true }
         });
       }
       return NextResponse.json({ user: null, admin: { id: payload.adminId, username: payload.username }, tenant });
     }
 
-    return NextResponse.json({ user: null });
+    // No auth — still return tenant businessType for navbar
+    const tenant = await getCurrentTenant();
+    return NextResponse.json({ user: null, tenant: tenant ? { businessType: tenant.businessType } : null });
   } catch (error) {
     return NextResponse.json({ user: null });
   }

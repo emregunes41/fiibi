@@ -5,15 +5,27 @@ import { Sparkles, Camera, Phone, Mail, Upload, ArrowRight, Check } from "lucide
 import { updateSiteConfig } from "../core-actions";
 import { CldUploadWidget } from "next-cloudinary";
 import { useRouter } from "next/navigation";
+import { getBusinessType } from "@/lib/business-types";
 
 export default function SetupWizard({ config, onComplete }) {
   const [step, setStep] = useState(1);
+  const [businessType, setBusinessType] = useState("photographer");
+
+  // Load business type from session
+  useState(() => {
+    fetch("/api/auth/session").then(r => r.json()).then(data => {
+      if (data?.tenant?.businessType) setBusinessType(data.tenant.businessType);
+    }).catch(() => {});
+  });
+
+  const bt = getBusinessType(businessType);
+
   const [form, setForm] = useState({
     businessName: config?.businessName || "",
     phone: config?.phone || "",
     email: config?.email || "",
-    heroTitle: config?.heroTitle || "Anları Sanata\nDönüştürüyoruz",
-    heroSubtitle: config?.heroSubtitle || "Premium Photography Service",
+    heroTitle: config?.heroTitle || bt.heroTitle || "",
+    heroSubtitle: config?.heroSubtitle || bt.heroSub || "",
     logoUrl: config?.logoUrl || "",
   });
   const [saving, setSaving] = useState(false);
@@ -66,11 +78,11 @@ export default function SetupWizard({ config, onComplete }) {
           <div style={{ textAlign: "center", marginBottom: 28 }}>
             <Sparkles size={28} style={{ color: "rgba(255,255,255,0.5)", marginBottom: 12 }} />
             <h2 style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 6 }}>Hoş Geldiniz! 🎉</h2>
-            <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13 }}>Birkaç bilgi ile stüdyonuzu kuralım.</p>
+            <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13 }}>Birkaç bilgi ile işletmenizi kuralım.</p>
           </div>
 
           <label style={label}>İşletme Adı</label>
-          <input type="text" value={form.businessName} onChange={e => setForm({ ...form, businessName: e.target.value })} style={inp} placeholder="Ahmet Photography" />
+          <input type="text" value={form.businessName} onChange={e => setForm({ ...form, businessName: e.target.value })} style={inp} placeholder={bt.terms?.packageNamePlaceholder ? bt.name + " Kliniği" : "İşletme Adı"} />
 
           <label style={label}>Telefon</label>
           <input type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} style={inp} placeholder="0555 123 4567" />
@@ -125,10 +137,10 @@ export default function SetupWizard({ config, onComplete }) {
           </div>
 
           <label style={label}>Ana Başlık</label>
-          <textarea value={form.heroTitle} onChange={e => setForm({ ...form, heroTitle: e.target.value })} style={{ ...inp, minHeight: 80, resize: "vertical" }} placeholder={"Anları Sanata\nDönüştürüyoruz"} />
+          <textarea value={form.heroTitle} onChange={e => setForm({ ...form, heroTitle: e.target.value })} style={{ ...inp, minHeight: 80, resize: "vertical" }} placeholder={bt.heroTitle || "Ana Başlık"} />
 
           <label style={label}>Üst Başlık</label>
-          <input type="text" value={form.heroSubtitle} onChange={e => setForm({ ...form, heroSubtitle: e.target.value })} style={inp} placeholder="Premium Photography Service" />
+          <input type="text" value={form.heroSubtitle} onChange={e => setForm({ ...form, heroSubtitle: e.target.value })} style={inp} placeholder={bt.heroSub || "Alt Başlık"} />
 
           <div style={{ display: "flex", gap: 8 }}>
             <button type="button" onClick={() => setStep(1)} style={{

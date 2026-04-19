@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Plus, Trash2, Edit2, Package as PackageIcon, PlusCircle, X } from "lucide-react";
 import { getPackages, createPackage, updatePackage, deletePackage } from "../core-actions";
 import MonthlyPriceManager from "./MonthlyPriceManager";
+import { getBusinessType } from "@/lib/business-types";
+import { useAdminSession } from "../AdminSessionContext";
 
 const CATEGORIES = [
   { value: "DIS_CEKIM", label: "Dış Çekim", icon: "🌿" },
@@ -11,11 +13,27 @@ const CATEGORIES = [
   { value: "NISAN", label: "Nişan", icon: "💎" },
 ];
 
-const TIME_TYPES = [
+const TIME_TYPES_PHOTO = [
   { value: "SLOT_2H", label: "2 Saatlik" },
   { value: "SLOT_4H", label: "4 Saatlik" },
   { value: "WEDDING", label: "Düğün Boyunca" },
   { value: "FULL_DAY", label: "Tüm Gün" },
+];
+
+const TIME_TYPES_GENERAL = [
+  { value: "CUSTOM_DURATION", label: "Süreye Göre" },
+  { value: "SLOT_2H", label: "2 Saatlik" },
+  { value: "FULL_DAY", label: "Tüm Gün" },
+];
+
+const DURATION_OPTIONS = [
+  { value: "10", label: "10 Dakika" },
+  { value: "15", label: "15 Dakika" },
+  { value: "20", label: "20 Dakika" },
+  { value: "30", label: "30 Dakika" },
+  { value: "45", label: "45 Dakika" },
+  { value: "60", label: "60 Dakika" },
+  { value: "90", label: "90 Dakika" },
 ];
 
 const ALL_SLOTS_2H = [
@@ -38,8 +56,8 @@ const ALL_SLOTS_4H = [
 ];
 
 const getCategoryLabel = (val) => CATEGORIES.find(c => c.value === val)?.label || val;
-const getCategoryIcon = (val) => CATEGORIES.find(c => c.value === val)?.icon || "📷";
-const getTimeTypeLabel = (val) => TIME_TYPES.find(t => t.value === val)?.label || val;
+const getCategoryIcon = (val) => CATEGORIES.find(c => c.value === val)?.icon || "📋";
+const getTimeTypeLabel = (val) => [...TIME_TYPES_PHOTO, ...TIME_TYPES_GENERAL].find(t => t.value === val)?.label || val;
 
 const inp = {
   width: "100%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)",
@@ -55,31 +73,51 @@ const sel = {
 
 const lbl = { display: "block", fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", marginBottom: "5px", letterSpacing: "0.04em" };
 
-const emptyForm = { 
+const emptyFormBase = { 
   name: "", description: "", price: "", features: "", 
-  category: "DIS_CEKIM", timeType: "SLOT_2H", maxCapacity: "1", 
-  addons: [], customFields: [], deliveryTimeDays: "14", postSelectionDays: "0", availableSlots: []
+  category: "STANDARD", timeType: "CUSTOM_DURATION", maxCapacity: "1", 
+  sessionDuration: "30",
+  addons: [], customFields: [], deliveryTimeDays: "14", postSelectionDays: "0", availableSlots: [], meetingLink: "",
+  workingDays: [1, 2, 3, 4, 5] // Varsayılan: Pazartesi-Cuma
 };
 
 export default function PackagesPage() {
   const [packages, setPackages] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ ...emptyForm });
+  const [formData, setFormData] = useState({ ...emptyFormBase });
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState(null);
+  const [submitError, setSubmitError] = useState(null);
+  const { session } = useAdminSession();
+  const businessType = session?.tenant?.businessType || null;
+
+  const bt = getBusinessType(businessType);
+  const { features, terms } = bt;
+
+  const emptyForm = { ...emptyFormBase, category: features.categories ? "DIS_CEKIM" : "STANDARD" };
 
   async function loadPackages() { setPackages(await getPackages()); }
-  useEffect(() => { loadPackages(); }, []);
+  useEffect(() => {
+    loadPackages();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const res = editingId ? await updatePackage(editingId, formData) : await createPackage(formData);
-    if (res.success) {
-      setIsModalOpen(false); setEditingId(null);
-      setFormData({ ...emptyForm });
-      loadPackages();
+    setSubmitError(null);
+    try {
+      const res = editingId ? await updatePackage(editingId, formData) : await createPackage(formData);
+      if (res.success) {
+        setIsModalOpen(false); setEditingId(null);
+        setFormData({ ...emptyForm });
+        setSubmitError(null);
+        loadPackages();
+      } else {
+        setSubmitError(res.error || JSON.stringify(res));
+      }
+    } catch (err) {
+      setSubmitError(err.message || String(err));
     }
     setIsLoading(false);
   };
@@ -93,7 +131,9 @@ export default function PackagesPage() {
       addons: pkg.addons || [], customFields: pkg.customFields || [], 
       deliveryTimeDays: pkg.deliveryTimeDays?.toString() || "14",
       postSelectionDays: pkg.postSelectionDays?.toString() || "0",
-      availableSlots: pkg.availableSlots || []
+      meetingLink: pkg.meetingLink || "",
+      availableSlots: pkg.availableSlots || [],
+      workingDays: pkg.workingDays || [1, 2, 3, 4, 5]
     });
     setIsModalOpen(true);
   };
@@ -132,8 +172,12 @@ export default function PackagesPage() {
     return [];
   };
 
-  const groupedPackages = CATEGORIES.map(cat => ({ ...cat, items: packages.filter(p => p.category === cat.value) })).filter(g => g.items.length > 0);
-  const ungrouped = packages.filter(p => !CATEGORIES.some(c => c.value === p.category));
+  const groupedPackages = features.categories 
+    ? CATEGORIES.map(cat => ({ ...cat, items: packages.filter(p => p.category === cat.value) })).filter(g => g.items.length > 0)
+    : [];
+  const ungrouped = features.categories 
+    ? packages.filter(p => !CATEGORIES.some(c => c.value === p.category))
+    : packages;
 
   return (
     <div style={{ color: "#fff" }}>
@@ -149,8 +193,8 @@ export default function PackagesPage() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", gap: "0.75rem", flexWrap: "wrap" }}>
         <div>
-          <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>Paket Yönetimi</h1>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.75rem", margin: "4px 0 0" }}>{packages.length} paket</p>
+          <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>{terms.service} Yönetimi</h1>
+          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.75rem", margin: "4px 0 0" }}>{packages.length} {terms.service.toLowerCase()}</p>
         </div>
         <button onClick={openNew} style={{
           background: "#fff", color: "#000", padding: "0.5rem 1rem", borderRadius: 0,
@@ -158,7 +202,7 @@ export default function PackagesPage() {
         }}><Plus size={14} /> YENİ</button>
       </div>
 
-      <MonthlyPriceManager />
+      {businessType && features.discountMonths && <MonthlyPriceManager />}
 
       {/* Package Groups */}
       {groupedPackages.map((group) => (
@@ -217,6 +261,11 @@ export default function PackagesPage() {
                       🕐{pkg.availableSlots.length} slot
                     </span>
                   )}
+                  {pkg.workingDays && pkg.workingDays.length > 0 && pkg.workingDays.length < 7 && (
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(59,130,246,0.08)", padding: "2px 6px", borderRadius: 0, color: "rgba(147,197,253,0.7)" }}>
+                      📅{pkg.workingDays.length} gün
+                    </span>
+                  )}
                   {pkg.addons && pkg.addons.length > 0 && (
                     <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.4)" }}>
                       +{pkg.addons.length} ek hizmet
@@ -236,17 +285,59 @@ export default function PackagesPage() {
 
       {ungrouped.length > 0 && (
         <div style={{ marginBottom: "1.5rem" }}>
-          <h2 style={{ fontSize: "0.9rem", fontWeight: 900, marginBottom: "10px" }}>📷 Diğer</h2>
+          {features.categories && <h2 style={{ fontSize: "0.9rem", fontWeight: 900, marginBottom: "10px" }}>📋 Diğer</h2>}
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {ungrouped.map((pkg) => (
-              <div key={pkg.id} style={{ padding: "12px 14px", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: "0.85rem" }}>{pkg.name}</div>
-                  <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.3)" }}>{pkg.price}₺</div>
+              <div key={pkg.id} style={{
+                padding: "12px 14px", borderRadius: 0,
+                border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.05)",
+              }}>
+                {/* Row 1: Name + Price + Actions */}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", minWidth: 0 }}>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pkg.name}</div>
+                      <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.55)" }}>{pkg.description?.substring(0, 60)}{pkg.description?.length > 60 ? "..." : ""}</div>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
+                    <span style={{ fontWeight: 900, fontSize: "0.9rem" }}>{pkg.price}₺</span>
+                    <button onClick={() => startEdit(pkg)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
+                      <Edit2 size={12} />
+                    </button>
+                    <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(255,68,68,0.05)", border: "1px solid rgba(255,68,68,0.15)", color: "#ff6b6b", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
                 </div>
-                <div style={{ display: "flex", gap: "6px" }}>
-                  <button onClick={() => startEdit(pkg)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}><Edit2 size={12} /></button>
-                  <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(255,68,68,0.05)", border: "1px solid rgba(255,68,68,0.15)", color: "#ff6b6b", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}><Trash2 size={12} /></button>
+                {/* Row 2: Tags */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                    {getTimeTypeLabel(pkg.timeType)}
+                  </span>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                    {pkg.maxCapacity}/periyot
+                  </span>
+                  {pkg.sessionDuration && (
+                    <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                      ⏱{pkg.sessionDuration}dk
+                    </span>
+                  )}
+                  {pkg.availableSlots && pkg.availableSlots.length > 0 && (
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.5)" }}>
+                      🕐{pkg.availableSlots.length} slot
+                    </span>
+                  )}
+                  {pkg.addons && pkg.addons.length > 0 && (
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.4)" }}>
+                      +{pkg.addons.length} ek hizmet
+                    </span>
+                  )}
+                  {pkg.customFields && pkg.customFields.length > 0 && (
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.4)" }}>
+                      📝{pkg.customFields.length} alan
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
@@ -273,23 +364,168 @@ export default function PackagesPage() {
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
               <div>
                 <div style={lbl}>Paket Adı</div>
-                <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required style={inp} placeholder="Elit Düğün Hikayesi" />
+                <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required style={inp} placeholder={terms.packageNamePlaceholder || "Hizmet Adı"} />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: features.categories ? "1fr 1fr" : "1fr", gap: "0.6rem" }}>
+                {features.categories && (
                 <div>
                   <div style={lbl}>Kategori</div>
                   <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} style={sel}>
                     {CATEGORIES.map(c => <option key={c.value} value={c.value} style={{ background: "#111" }}>{c.icon} {c.label}</option>)}
                   </select>
                 </div>
+                )}
                 <div>
                   <div style={lbl}>Zaman Tipi</div>
                   <select value={formData.timeType} onChange={(e) => setFormData({...formData, timeType: e.target.value, availableSlots: []})} style={sel}>
-                    {TIME_TYPES.map(t => <option key={t.value} value={t.value} style={{ background: "#111" }}>{t.label}</option>)}
+                    {(features.categories ? TIME_TYPES_PHOTO : TIME_TYPES_GENERAL).map(t => <option key={t.value} value={t.value} style={{ background: "#111" }}>{t.label}</option>)}
                   </select>
                 </div>
               </div>
+
+              {/* Custom Duration Configuration */}
+              {formData.timeType === "CUSTOM_DURATION" && (() => {
+                const generateSlots = (dur, startH, startM, endH, endM, lunchEnabled, lunchStartH, lunchStartM, lunchEndH, lunchEndM) => {
+                  const slots = [];
+                  let h = startH, m = startM;
+                  while (h < endH || (h === endH && m < endM)) {
+                    const slotEnd = m + dur;
+                    const endSlotH = h + Math.floor(slotEnd / 60);
+                    const endSlotM = slotEnd % 60;
+                    // Check if slot exceeds end time
+                    if (endSlotH > endH || (endSlotH === endH && endSlotM > endM)) break;
+                    // Check lunch break overlap
+                    if (lunchEnabled) {
+                      const slotStart = h * 60 + m;
+                      const slotEndMin = endSlotH * 60 + endSlotM;
+                      const lunchStart = lunchStartH * 60 + lunchStartM;
+                      const lunchEnd = lunchEndH * 60 + lunchEndM;
+                      if (slotStart < lunchEnd && slotEndMin > lunchStart) {
+                        // Skip — overlaps with lunch
+                        m += dur;
+                        if (m >= 60) { h += Math.floor(m / 60); m = m % 60; }
+                        continue;
+                      }
+                    }
+                    slots.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+                    m += dur;
+                    if (m >= 60) { h += Math.floor(m / 60); m = m % 60; }
+                  }
+                  return slots;
+                };
+
+                const parseTime = (t) => { const [h, m] = (t || "09:00").split(":").map(Number); return { h, m }; };
+
+                const workStart = formData.workStartTime || "09:00";
+                const workEnd = formData.workEndTime || "18:00";
+                const lunchEnabled = formData.lunchBreakEnabled || false;
+                const lunchStart = formData.lunchStartTime || "12:00";
+                const lunchEnd = formData.lunchEndTime || "13:00";
+
+                const regenSlots = (updates) => {
+                  const merged = { ...formData, ...updates };
+                  const ws = parseTime(merged.workStartTime || "09:00");
+                  const we = parseTime(merged.workEndTime || "18:00");
+                  const ls = parseTime(merged.lunchStartTime || "12:00");
+                  const le = parseTime(merged.lunchEndTime || "13:00");
+                  const dur = parseInt(merged.sessionDuration || "30");
+                  const slots = generateSlots(dur, ws.h, ws.m, we.h, we.m, merged.lunchBreakEnabled, ls.h, ls.m, le.h, le.m);
+                  setFormData({ ...merged, availableSlots: slots });
+                };
+
+                const HOURS = [];
+                for (let h = 7; h <= 22; h++) {
+                  HOURS.push(`${String(h).padStart(2, '0')}:00`);
+                  HOURS.push(`${String(h).padStart(2, '0')}:30`);
+                }
+
+                return (
+                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "12px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {/* Duration */}
+                  <div>
+                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: "6px" }}>
+                      ⏱ Seans Süresi
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+                      {DURATION_OPTIONS.map(d => {
+                        const active = formData.sessionDuration === d.value;
+                        return (
+                          <button key={d.value} type="button"
+                            onClick={() => regenSlots({ sessionDuration: d.value })}
+                            style={{
+                              padding: "7px 12px", borderRadius: 0, fontSize: "0.7rem", fontWeight: 700,
+                              cursor: "pointer", transition: "all 0.15s",
+                              border: active ? "1px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.08)",
+                              background: active ? "rgba(168,85,247,0.2)" : "rgba(255,255,255,0.03)",
+                              color: active ? "#c084fc" : "rgba(255,255,255,0.35)",
+                            }}
+                          >
+                            {active ? "✓ " : ""}{d.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Working Hours */}
+                  <div>
+                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: "6px" }}>
+                      🕐 Çalışma Saatleri
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <select value={workStart} onChange={(e) => regenSlots({ workStartTime: e.target.value })}
+                        style={{ ...sel, flex: 1, padding: "7px 8px", fontSize: "0.75rem" }}>
+                        {HOURS.map(h => <option key={h} value={h} style={{ background: "#111" }}>{h}</option>)}
+                      </select>
+                      <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem", fontWeight: 700 }}>→</span>
+                      <select value={workEnd} onChange={(e) => regenSlots({ workEndTime: e.target.value })}
+                        style={{ ...sel, flex: 1, padding: "7px 8px", fontSize: "0.75rem" }}>
+                        {HOURS.map(h => <option key={h} value={h} style={{ background: "#111" }}>{h}</option>)}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Lunch Break */}
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                      <label style={{ display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" }}>
+                        <input type="checkbox" checked={lunchEnabled}
+                          onChange={(e) => regenSlots({ lunchBreakEnabled: e.target.checked })}
+                          style={{ width: 14, height: 14 }} />
+                        <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase" }}>
+                          🍽 Öğle Arası
+                        </span>
+                      </label>
+                    </div>
+                    {lunchEnabled && (
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <select value={lunchStart} onChange={(e) => regenSlots({ lunchStartTime: e.target.value })}
+                          style={{ ...sel, flex: 1, padding: "7px 8px", fontSize: "0.75rem" }}>
+                          {HOURS.map(h => <option key={h} value={h} style={{ background: "#111" }}>{h}</option>)}
+                        </select>
+                        <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem", fontWeight: 700 }}>→</span>
+                        <select value={lunchEnd} onChange={(e) => regenSlots({ lunchEndTime: e.target.value })}
+                          style={{ ...sel, flex: 1, padding: "7px 8px", fontSize: "0.75rem" }}>
+                          {HOURS.map(h => <option key={h} value={h} style={{ background: "#111" }}>{h}</option>)}
+                        </select>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Generated Slots Preview */}
+                  {(formData.availableSlots || []).length > 0 && (
+                    <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)", padding: "8px", fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", lineHeight: 1.8 }}>
+                      <span style={{ fontWeight: 800, color: "rgba(255,255,255,0.5)" }}>
+                        {formData.availableSlots.length} slot oluşturuldu:
+                      </span>{" "}
+                      {formData.availableSlots.slice(0, 12).join(", ")}
+                      {formData.availableSlots.length > 12 && ` ... +${formData.availableSlots.length - 12} daha`}
+                    </div>
+                  )}
+                </div>
+                );
+              })()}
 
               {/* Slot Configuration for SLOT_2H / SLOT_4H */}
               {(formData.timeType === "SLOT_2H" || formData.timeType === "SLOT_4H") && (
@@ -326,11 +562,58 @@ export default function PackagesPage() {
                 </div>
               )}
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "0.6rem" }}>
+              {/* Çalışma Günleri */}
+              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "10px" }}>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: "8px" }}>
+                  📅 Çalışma Günleri
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+                  {[
+                    { value: 1, label: "Pzt" },
+                    { value: 2, label: "Sal" },
+                    { value: 3, label: "Çar" },
+                    { value: 4, label: "Per" },
+                    { value: 5, label: "Cum" },
+                    { value: 6, label: "Cmt" },
+                    { value: 0, label: "Paz" },
+                  ].map(day => {
+                    const active = (formData.workingDays || []).includes(day.value);
+                    return (
+                      <button
+                        key={day.value}
+                        type="button"
+                        onClick={() => {
+                          const current = formData.workingDays || [];
+                          const next = active
+                            ? current.filter(d => d !== day.value)
+                            : [...current, day.value];
+                          setFormData({ ...formData, workingDays: next });
+                        }}
+                        style={{
+                          padding: "8px 14px", borderRadius: 0, fontSize: "0.75rem", fontWeight: 700,
+                          cursor: "pointer", transition: "all 0.15s", minWidth: 44, textAlign: "center",
+                          border: active ? "1px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.08)",
+                          background: active ? "rgba(59,130,246,0.2)" : "rgba(255,255,255,0.03)",
+                          color: active ? "#93c5fd" : "rgba(255,255,255,0.35)",
+                        }}
+                      >
+                        {active ? "✓ " : ""}{day.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                {(formData.workingDays || []).length === 0 && (
+                  <p style={{ fontSize: "0.65rem", color: "rgba(255,100,100,0.5)", marginTop: "6px", textAlign: "center" }}>
+                    ⚠ Hiç gün seçilmedi — bu paket için randevu alınamaz
+                  </p>
+                )}
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: features.galleryDelivery ? "1fr 1fr 1fr 1fr" : "1fr 1fr", gap: "0.6rem" }}>
                 <div><div style={lbl}>Fiyat</div><input type="text" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} required style={inp} placeholder="15.000" /></div>
                 <div><div style={lbl}>Kapasite</div><input type="number" value={formData.maxCapacity} onChange={(e) => setFormData({...formData, maxCapacity: e.target.value})} required style={inp} /></div>
-                <div><div style={lbl}>Teslim (Gün)</div><input type="number" value={formData.deliveryTimeDays} onChange={(e) => setFormData({...formData, deliveryTimeDays: e.target.value})} required style={inp} placeholder="7" /></div>
-                <div><div style={lbl}>Seçim Sonrası (Gün)</div><input type="number" value={formData.postSelectionDays} onChange={(e) => setFormData({...formData, postSelectionDays: e.target.value})} style={inp} placeholder="28" /></div>
+                {features.galleryDelivery && <div><div style={lbl}>Teslim (Gün)</div><input type="number" value={formData.deliveryTimeDays} onChange={(e) => setFormData({...formData, deliveryTimeDays: e.target.value})} required style={inp} placeholder="7" /></div>}
+                {features.galleryDelivery && <div><div style={lbl}>Seçim Sonrası (Gün)</div><input type="number" value={formData.postSelectionDays} onChange={(e) => setFormData({...formData, postSelectionDays: e.target.value})} style={inp} placeholder="28" /></div>}
               </div>
 
               <div>
@@ -339,8 +622,13 @@ export default function PackagesPage() {
               </div>
 
               <div>
+                <div style={{...lbl, color: "rgba(167, 139, 250, 0.9)"}}>📹 Online Görüşme Linki (İsteğe Bağlı)</div>
+                <input type="url" value={formData.meetingLink} onChange={(e) => setFormData({...formData, meetingLink: e.target.value})} style={{...inp, borderColor: formData.meetingLink ? "rgba(167, 139, 250, 0.3)" : "rgba(255,255,255,0.08)", background: formData.meetingLink ? "rgba(167, 139, 250, 0.02)" : "rgba(255,255,255,0.03)"}} placeholder="https://zoom.us/... (Eğer bu hizmet online ise girin)" />
+              </div>
+
+              <div>
                 <div style={lbl}>Özellikler (virgülle)</div>
-                <input type="text" value={formData.features} onChange={(e) => setFormData({...formData, features: e.target.value})} style={inp} placeholder="200 fotoğraf, albüm, drone" />
+                <input type="text" value={formData.features} onChange={(e) => setFormData({...formData, features: e.target.value})} style={inp} placeholder={terms.packageFeaturesPlaceholder || "Özellikler"} />
               </div>
 
               {/* Addons */}
@@ -405,6 +693,13 @@ export default function PackagesPage() {
                   </div>
                 )}
               </div>
+
+              {/* Error Display */}
+              {submitError && (
+                <div style={{ background: "rgba(255,60,60,0.08)", border: "1px solid rgba(255,60,60,0.2)", padding: "10px 14px", fontSize: "0.7rem", color: "rgba(255,120,120,0.9)", lineHeight: 1.6, wordBreak: "break-all", userSelect: "text" }}>
+                  <strong>Hata:</strong> {submitError}
+                </div>
+              )}
 
               {/* Buttons */}
               <div style={{ display: "flex", gap: "0.5rem", marginTop: "4px" }}>

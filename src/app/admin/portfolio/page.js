@@ -246,7 +246,7 @@ export default function PortfolioAdminPage() {
                 <label style={lbl}>Konsept Adı</label>
                 <input 
                   autoFocus
-                  placeholder="Örn: Düğün, Dış Çekim, Nişan..."
+                  placeholder="Örn: Hizmetlerimiz, Çalışmalar, Galeri..."
                   style={inp} 
                   value={newCatName} 
                   onChange={(e) => setNewCatName(e.target.value)} 

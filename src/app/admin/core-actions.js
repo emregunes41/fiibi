@@ -244,7 +244,7 @@ export async function createPackage(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, customFields, availableSlots } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, meetingLink, customFields, availableSlots, workingDays } = data;
     const tenantId = await getTenantId();
     await prisma.photographyPackage.create({
       data: {
@@ -256,10 +256,12 @@ export async function createPackage(data) {
         maxCapacity: parseInt(maxCapacity) || 1,
         deliveryTimeDays: parseInt(deliveryTimeDays) || 14,
         postSelectionDays: parseInt(postSelectionDays) || 0,
+        meetingLink: meetingLink || null,
         features: Array.isArray(features) ? features : features.split(',').map(f => f.trim()).filter(f => f !== ""),
         addons: addons || [],
         customFields: customFields || [],
         availableSlots: availableSlots || [],
+        workingDays: workingDays || [1, 2, 3, 4, 5],
         tenantId,
       }
     });
@@ -275,7 +277,7 @@ export async function updatePackage(id, data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, customFields, availableSlots } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, meetingLink, customFields, availableSlots, workingDays } = data;
     await prisma.photographyPackage.update({
       where: { id },
       data: {
@@ -287,10 +289,12 @@ export async function updatePackage(id, data) {
         maxCapacity: parseInt(maxCapacity),
         deliveryTimeDays: parseInt(deliveryTimeDays) || 14,
         postSelectionDays: parseInt(postSelectionDays) || 0,
+        meetingLink: meetingLink || null,
         features: Array.isArray(features) ? features : features.split(',').map(f => f.trim()).filter(f => f !== ""),
         addons,
         customFields: customFields || [],
         availableSlots: availableSlots || [],
+        workingDays: workingDays || [1, 2, 3, 4, 5],
       }
     });
     revalidatePath('/admin/packages');
@@ -353,7 +357,22 @@ export async function hardDeleteReservation(id) {
 export async function getReservations() {
   const tenantId = await getTenantId();
   return await prisma.reservation.findMany({
-    where: { tenantId: tenantId || "NONE" },
+    where: { 
+      tenantId: tenantId || "NONE",
+      NOT: { orderType: "PRODUCT" }
+    },
+    include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
+    orderBy: { createdAt: 'desc' }
+  });
+}
+
+export async function getOrders() {
+  const tenantId = await getTenantId();
+  return await prisma.reservation.findMany({
+    where: { 
+      tenantId: tenantId || "NONE",
+      orderType: { in: ["PRODUCT", "MIXED"] }
+    },
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
   });
@@ -361,7 +380,7 @@ export async function getReservations() {
 
 export async function checkAvailability(date, packageId, time = null) {
   try {
-    const pkg = await prisma.photographyPackage.findUnique({ where: { id: packageId } });
+    const pkg = await prisma.photographyPackage.findUnique({ where: { id: packageId }, include: { tenant: true } });
     if (!pkg) return { error: "Paket bulunamadı." };
 
     const selectedDate = new Date(date);
@@ -370,47 +389,69 @@ export async function checkAvailability(date, packageId, time = null) {
     const nextDate = new Date(selectedDate);
     nextDate.setDate(selectedDate.getDate() + 1);
 
-    // DIS_CEKIM: Tek fotoğrafçı — tüm dış çekim paketleri aynı saat dilimini paylaşır
-    // Diğer kategoriler: paket bazlı kapasite kontrolü
-    const isDisCekim = pkg.category === "DIS_CEKIM";
+    // Kendi tenant'ı içindeki tüm rezervasyonları kontrol edeceğiz
+    const tenantId = pkg.tenantId;
+
+    // Solo iş modelleri için:
+    const singlePractitionerTypes = ["psychologist", "dietitian", "doctor", "dentist", "consultant"];
+    const isSinglePractitioner = pkg.tenant?.businessType && singlePractitionerTypes.includes(pkg.tenant.businessType);
+
+    // DIS_CEKIM veya Solo Pratisyen: tüm paketler aynı saat dilimini paylaşır
+    const isSharedCapacity = isSinglePractitioner || pkg.category === "DIS_CEKIM";
 
     // Find reservations on that day for the relevant scope
     const existingReservations = await prisma.reservation.findMany({
       where: {
+        tenantId: tenantId || "NONE",
         eventDate: { gte: selectedDate, lt: nextDate },
         status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] },
         packages: {
-          some: isDisCekim
-            ? { category: "DIS_CEKIM" } // Tüm dış çekim paketlerini say
+          some: isSharedCapacity
+            ? (pkg.category === "DIS_CEKIM" ? { category: "DIS_CEKIM" } : {}) // for single practitioner count all packages
             : { id: packageId }          // Sadece aynı paketi say
         }
       }
     });
 
-    if (isDisCekim) {
-      // Dış çekim: tek fotoğrafçı, kapasite = 1
-      if (pkg.timeType === "SLOT_2H" || pkg.timeType === "SLOT_4H" || pkg.timeType === "SLOT") {
-        // Slot bazlı: aynı saat diliminde herhangi bir dış çekim var mı?
-        const count = existingReservations.filter(r => r.eventTime === time).length;
-        return { available: count < 1, count, max: 1 };
+    // Collect all booked time slots for this date so the UI can mark them disabled
+    const bookedSlots = [];
+    const slotCounts = {};
+    const maxCap = isSharedCapacity ? 1 : (pkg.maxCapacity || 1);
+    
+    for (const r of existingReservations) {
+      const t = r.eventTime;
+      if (t) {
+        slotCounts[t] = (slotCounts[t] || 0) + 1;
+        if (slotCounts[t] >= maxCap && !bookedSlots.includes(t)) {
+          bookedSlots.push(t);
+        }
       }
-      // Full day / morning / evening: o gün herhangi bir dış çekim var mı?
+    }
+
+    if (isSharedCapacity) {
+      // Ortak Kapasite (Tek Kişi): kapasite = 1
+      if (pkg.timeType === "SLOT_2H" || pkg.timeType === "SLOT_4H" || pkg.timeType === "SLOT") {
+        // Slot bazlı: aynı saat diliminde herhangi bir randevu var mı?
+        const count = existingReservations.filter(r => r.eventTime === time).length;
+        return { available: count < 1, count, max: 1, bookedSlots };
+      }
+      // Full day / morning / evening: o gün herhangi bir randevu var mı?
       const count = existingReservations.length;
-      return { available: count < 1, count, max: 1 };
+      return { available: count < 1, count, max: 1, bookedSlots };
     }
 
     // Diğer kategoriler (Düğün, Nişan vb.): paket bazlı kapasite
     if (pkg.timeType === "FULL_DAY" || pkg.timeType === "MORNING" || pkg.timeType === "EVENING" || pkg.timeType === "FIVE_HOURS" || pkg.timeType === "WEDDING") {
       const count = existingReservations.length;
-      return { available: count < pkg.maxCapacity, count, max: pkg.maxCapacity };
+      return { available: count < pkg.maxCapacity, count, max: pkg.maxCapacity, bookedSlots };
     }
 
     if (pkg.timeType === "SLOT" || pkg.timeType === "SLOT_2H" || pkg.timeType === "SLOT_4H") {
       const count = existingReservations.filter(r => r.eventTime === time).length;
-      return { available: count < pkg.maxCapacity, count, max: pkg.maxCapacity };
+      return { available: count < pkg.maxCapacity, count, max: pkg.maxCapacity, bookedSlots };
     }
 
-    return { available: true };
+    return { available: true, bookedSlots };
   } catch (error) {
     return { error: error.message };
   }
@@ -421,6 +462,25 @@ export async function savePendingReservation(data) {
     const packagesData = await prisma.photographyPackage.findMany({
       where: { id: { in: data.packageIds } }
     });
+
+    // Site config'den ödeme modunu oku
+    const tenantId = await getTenantId();
+    const siteConfig = await prisma.globalSettings.findFirst({ where: { tenantId }, select: { paymentMode: true } });
+    const paymentMode = siteConfig?.paymentMode || "cash";
+    const paymentPref = data.paymentPreference || (paymentMode === "cash" ? "CASH" : paymentMode === "card" ? "CREDIT_CARD" : "CASH");
+
+    // ── SUNUCU TARAFI MÜSAİTLİK KONTROLÜ ──
+    // Çift rezervasyonu önlemek için kayıt öncesi kontrol
+    for (const pkg of packagesData) {
+      const avail = await checkAvailability(data.date, pkg.id, data.time || null);
+      if (avail?.error) {
+        return { error: avail.error };
+      }
+      if (avail && avail.available === false) {
+        return { error: `Seçilen tarih/saat dolu. Lütfen başka bir zaman dilimi seçin. (${pkg.name})` };
+      }
+    }
+
     const maxDays = packagesData.reduce((max, pkg) => Math.max(max, pkg.deliveryTimeDays || 14), 0);
     const eventDateObj = new Date(data.date);
     const deliveryDateObj = new Date(eventDateObj);
@@ -431,11 +491,8 @@ export async function savePendingReservation(data) {
     if (data.brideEmail) {
       let user = await prisma.user.findUnique({ where: { email: data.brideEmail } });
       if (user) {
-        // Müşteri hesabı sistemde mevcut. O hesap sahibi bu işlemi mi yapıyor teyit et:
-        const auth = await getServerAuthSession();
-        if (!auth || auth.userId !== user.id) {
-           return { error: "Bu e-posta adresi sistemimizde kayıtlı. Mevcut hesabınıza yeni bir randevu eklemek için lütfen giriş yaptıktan sonra tekrar deneyiniz." };
-        }
+        // Mevcut kullanıcıya bağla
+        userId = user.id;
       } else {
         // Yeni kullanıcı oluştur
         const password = data.password || Math.random().toString(36).slice(-8);
@@ -449,11 +506,10 @@ export async function savePendingReservation(data) {
             role: "MEMBER"
           }
         });
+        userId = user.id;
       }
-      userId = user.id;
     }
 
-    const tenantId = await getTenantId();
     const reservation = await prisma.reservation.create({
       data: {
         ...(userId ? { user: { connect: { id: userId } } } : {}),
@@ -465,9 +521,14 @@ export async function savePendingReservation(data) {
         groomEmail: data.groomEmail,
         eventDate: eventDateObj,
         eventTime: data.time,
-        packages: {
-          connect: data.packageIds.map(id => ({ id }))
-        },
+        ...(data.packageIds?.length > 0 ? {
+          packages: {
+            connect: data.packageIds.map(id => ({ id }))
+          }
+        } : {}),
+        orderType: data.orderType || "SERVICE",
+        shippingAddress: data.shippingAddress || null,
+        purchasedProducts: data.purchasedProducts || [],
         notes: data.notes,
         totalAmount: data.totalAmount,
         paidAmount: data.paidAmount,
@@ -475,9 +536,10 @@ export async function savePendingReservation(data) {
         customFieldAnswers: data.customFieldAnswers || [],
         status: "PENDING",
         paymentStatus: "UNPAID",
+        paymentPreference: paymentPref,
         workflowStatus: "PENDING",
         deliveryDate: deliveryDateObj,
-        tenantId,
+        tenant: { connect: { id: tenantId } },
       }
     });
 
@@ -588,6 +650,8 @@ export async function createManualReservation(data) {
       }
     }
 
+    const tenantId = await getTenantId();
+
     await prisma.reservation.create({
       data: {
         ...(userId ? { user: { connect: { id: userId } } } : {}),
@@ -608,6 +672,7 @@ export async function createManualReservation(data) {
         workflowStatus: "PENDING",
         deliveryDate: deliveryDateObj,
         contractApproved: false,
+        ...(tenantId ? { tenant: { connect: { id: tenantId } } } : {}),
         ...(numericInitialPayment > 0 ? {
           payments: {
             create: [
@@ -634,7 +699,7 @@ export async function updateReservation(id, data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds = [], notes, selectedAddons = [], customFieldAnswers, totalAmount = "", venueName } = data;
+    const { brideName, bridePhone, brideEmail, groomName, groomPhone, groomEmail, eventDate, eventTime, packageIds = [], notes, selectedAddons = [], customFieldAnswers, totalAmount = "", venueName, meetingLink } = data;
     
     const packagesData = packageIds.length > 0 ? await prisma.photographyPackage.findMany({
       where: { id: { in: packageIds } }
@@ -675,6 +740,7 @@ export async function updateReservation(id, data) {
         totalAmount,
         selectedAddons,
         venueName: venueName || null,
+        meetingLink: meetingLink || null,
         deliveryDate: deliveryDateObj,
         customFieldAnswers: updatedCFA
       }
@@ -698,7 +764,27 @@ export async function updateReservationStatus(id, status) {
       data: { status }
     });
     revalidatePath('/admin/reservations');
+    revalidatePath('/admin/orders');
     revalidatePath('/admin/dashboard');
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function updateOrderShipping(id, status, trackingUrl) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    const data = { status };
+    if (trackingUrl !== undefined) {
+      data.deliveryLink = trackingUrl;
+    }
+    await prisma.reservation.update({
+      where: { id },
+      data
+    });
+    revalidatePath('/admin/orders');
     return { success: true };
   } catch (error) {
     return { error: error.message };
@@ -813,6 +899,8 @@ export async function updateMonthlyPrice(data) {
 
 export async function getSlotAvailability(date, categoryValue) {
   try {
+    const tenantId = await getTenantId();
+
     const selectedDate = new Date(date);
     selectedDate.setHours(0, 0, 0, 0);
     const nextDate = new Date(selectedDate);
@@ -820,6 +908,7 @@ export async function getSlotAvailability(date, categoryValue) {
 
     const reservations = await prisma.reservation.findMany({
       where: {
+        tenantId: tenantId || "NONE",
         eventDate: { gte: selectedDate, lt: nextDate },
         status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] },
         packages: { some: { category: categoryValue } }
@@ -905,18 +994,24 @@ export async function getSiteConfig() {
         id: tenant.id,
         slug: tenant.slug,
         businessName: tenant.businessName,
+        businessType: tenant.businessType,
         plan: tenant.plan,
         customDomain: tenant.customDomain,
       };
+    }
+
+    // Eski "cinematic" değerini "dark"a migrate et
+    if (config.siteTheme === "cinematic") {
+      config.siteTheme = "dark";
     }
 
     return config;
   } catch (error) {
     console.error("Get Site Config Error:", error);
     return {
-      heroTitle: "Anları Sanata \n Dönüştürüyoruz",
-      heroSubtitle: "Premium Photography Service",
-      businessName: "Studio",
+      heroTitle: "",
+      heroSubtitle: "",
+      businessName: "",
       address: "",
       phone: "",
       email: "",
@@ -936,7 +1031,7 @@ export async function updateSiteConfig(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions, businessName, logoUrl, faviconUrl, footerTagline, seoTitle, seoDescription, accentColor, fontFamily, siteTheme, paymentMode, paytrMerchantId, paytrApiKey, paytrSecretKey, setupCompleted } = data;
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions, businessName, logoUrl, faviconUrl, footerTagline, seoTitle, seoDescription, accentColor, fontFamily, siteTheme, forceDarkMode, paymentMode, setupCompleted } = data;
 
     // Tenant-aware: mevcut tenant'ın settings ID'sini bul
     let tenant = await getCurrentTenant();
@@ -993,19 +1088,99 @@ export async function updateSiteConfig(data) {
         seoDescription: seoDescription || null,
         accentColor: accentColor || "#ffffff",
         fontFamily: fontFamily || "geist",
-        siteTheme: siteTheme || "cinematic",
+        siteTheme: siteTheme || "dark",
+        forceDarkMode: forceDarkMode === true || forceDarkMode === "true" ? true : false,
         paymentMode: paymentMode || "cash",
-        paytrMerchantId: paytrMerchantId || "",
-        paytrApiKey: paytrApiKey || "",
-        paytrSecretKey: paytrSecretKey || "",
         ...(setupCompleted !== undefined ? { setupCompleted } : {}),
       }
     });
-    revalidatePath('/');
+    revalidatePath('/', 'layout');
     revalidatePath('/admin/settings');
     return { success: true };
   } catch (error) {
     console.error("Update Site Config Error:", error);
+    return { error: error.message };
+  }
+}
+
+// --- SUB-MERCHANT (ALT ÜYE İŞYERİ) ACTIONS ---
+
+export async function getSubMerchantInfo() {
+  try {
+    const tenantId = await getTenantId();
+    if (!tenantId) return { error: "Tenant bulunamadı." };
+
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: tenantId },
+      select: {
+        legalName: true,
+        legalType: true,
+        taxId: true,
+        taxOffice: true,
+        iban: true,
+        legalAddress: true,
+        commissionRate: true,
+        subMerchantStatus: true,
+        subMerchantKey: true,
+        sellerAgreementAccepted: true,
+        sellerAgreementDate: true,
+        businessName: true,
+      }
+    });
+
+    return tenant || {};
+  } catch (error) {
+    console.error("Get Sub-Merchant Info Error:", error);
+    return { error: error.message };
+  }
+}
+
+export async function updateSubMerchantInfo(data) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    const tenantId = await getTenantId();
+    if (!tenantId) return { error: "Tenant bulunamadı." };
+
+    const { legalName, legalType, taxId, taxOffice, iban, legalAddress, sellerAgreementAccepted } = data;
+
+    // Validasyon
+    if (!legalName || !legalName.trim()) return { error: "Resmi unvan gereklidir." };
+    if (!taxId || !taxId.trim()) return { error: "TCKN/VKN gereklidir." };
+    if (!iban || !iban.trim()) return { error: "IBAN gereklidir." };
+    if (!sellerAgreementAccepted) return { error: "Satıcı sözleşmesini onaylamanız gerekiyor." };
+
+    // IBAN format kontrolü (TR + 24 rakam)
+    const cleanIBAN = iban.replace(/\s/g, "").toUpperCase();
+    if (!/^TR\d{24}$/.test(cleanIBAN)) {
+      return { error: "Geçersiz IBAN formatı. TR ile başlamalı ve 26 karakter olmalıdır." };
+    }
+
+    // TCKN (11 haneli) veya VKN (10 haneli) kontrolü
+    const cleanTaxId = taxId.replace(/\s/g, "");
+    if (!/^\d{10,11}$/.test(cleanTaxId)) {
+      return { error: "Geçersiz TCKN/VKN. 10 veya 11 haneli olmalıdır." };
+    }
+
+    await prisma.tenant.update({
+      where: { id: tenantId },
+      data: {
+        legalName: legalName.trim(),
+        legalType: legalType || "personal",
+        taxId: cleanTaxId,
+        taxOffice: taxOffice?.trim() || null,
+        iban: cleanIBAN,
+        legalAddress: legalAddress?.trim() || null,
+        sellerAgreementAccepted: true,
+        sellerAgreementDate: new Date(),
+        subMerchantStatus: "PENDING",
+      }
+    });
+
+    revalidatePath('/admin/settings');
+    return { success: true };
+  } catch (error) {
+    console.error("Update Sub-Merchant Info Error:", error);
     return { error: error.message };
   }
 }
@@ -1054,7 +1229,7 @@ export async function addPayment(reservationId, data) {
     const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
 
     // Get reservation to check totalAmount
-    const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    const reservation = await prisma.reservation.findUnique({ where: { id: reservationId }, include: { packages: true } });
     const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
 
     // Determine payment status
@@ -1087,12 +1262,14 @@ export async function addPayment(reservationId, data) {
     // Send confirmation email if this was the first payment (deposit)
     if (reservation.status === "PENDING") {
       try {
+        const meetingLinks = reservation.packages?.filter(p => !!p.meetingLink).map(p => ({ name: p.name, link: p.meetingLink })) || [];
         await notifyReservationConfirmed(
           reservation.brideEmail, 
           reservation.bridePhone, 
           reservation.brideName, 
           reservation.eventDate, 
-          reservation.totalAmount
+          reservation.totalAmount,
+          meetingLinks
         );
       } catch (emailErr) {
         console.error("Confirmation email error:", emailErr);
@@ -1410,7 +1587,7 @@ export async function createQuickEvent(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { venueName, eventDate, startTime, endTime, notes, totalAmount, initialPaymentAmount, paymentMethod } = data;
+    const { venueName, phone, eventDate, startTime, endTime, notes, totalAmount, initialPaymentAmount, paymentMethod } = data;
 
     const eventDateObj = new Date(eventDate);
     const eventTime = startTime && endTime ? `${startTime}-${endTime}` : startTime || null;
@@ -1426,7 +1603,7 @@ export async function createQuickEvent(data) {
     await prisma.reservation.create({
       data: {
         brideName: venueName,
-        bridePhone: "-",
+        bridePhone: phone || "-",
         brideEmail: "",
         venueName,
         eventDate: eventDateObj,
@@ -1454,3 +1631,41 @@ export async function createQuickEvent(data) {
   }
 }
 
+// ─── KAPALI GÜNLER ───────────────────────────────────────────────
+export async function getBlockedDays() {
+  const auth = await requireAdmin();
+  if (auth?.error) return [];
+  try {
+    const tenantId = await getTenantId();
+    const config = await prisma.globalSettings.findFirst({ where: { tenantId } });
+    return config?.blockedDays || [];
+  } catch {
+    return [];
+  }
+}
+
+export async function toggleBlockedDay(dateStr) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    const tenantId = await getTenantId();
+    const config = await prisma.globalSettings.findFirst({ where: { tenantId } });
+    if (!config) return { error: "Ayarlar bulunamadı" };
+
+    const current = Array.isArray(config.blockedDays) ? config.blockedDays : [];
+    const isBlocked = current.includes(dateStr);
+    const updated = isBlocked
+      ? current.filter(d => d !== dateStr)
+      : [...current, dateStr];
+
+    await prisma.globalSettings.update({
+      where: { id: config.id },
+      data: { blockedDays: updated }
+    });
+
+    revalidatePath('/admin/reservations');
+    return { success: true, blocked: !isBlocked, blockedDays: updated };
+  } catch (error) {
+    return { error: error.message };
+  }
+}

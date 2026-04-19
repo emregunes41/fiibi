@@ -10,7 +10,7 @@ export default function Footer({ businessName = "Studio", phone = "", email = ""
         <div className="col-span-1 md:col-span-1">
           <div className="font-black text-2xl tracking-tighter text-white mb-6">{businessName}.</div>
           <p className="text-white/50 text-sm leading-relaxed mb-8">
-            {footerTagline || "Anılarınızı ölümsüzleştirmek için tutkuyla çalışıyoruz."}
+            {footerTagline || "Profesyonel hizmet anlayışıyla yanınızdayız."}
           </p>
           <div className="flex gap-4">
             {instagram && (

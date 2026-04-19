@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CartProvider, useCart } from "@/components/CartContext";
 import BookingFlow from "@/components/BookingFlow";
 import { createManualReservation } from "@/app/admin/core-actions";
 import { motion, AnimatePresence } from "framer-motion";
+import { getBusinessType } from "@/lib/business-types";
+import { useAdminSession } from "../AdminSessionContext";
 import {
   X, ShoppingBag, Trash2, ArrowRight,
   Camera, Heart, Gem, Calendar, Clock,
@@ -15,6 +17,7 @@ const CAT_META = {
   DIS_CEKIM: { label: "Dış Çekim", Icon: Camera, color: "#f59e0b" },
   DUGUN: { label: "Düğün", Icon: Heart, color: "#fb7185" },
   NISAN: { label: "Nişan", Icon: Gem, color: "#67e8f9" },
+  _DEFAULT: { label: "Hizmet", Icon: ShoppingBag, color: "#a78bfa" },
 };
 const MF = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
 const fmt = (n) => n.toLocaleString("tr-TR");
@@ -41,8 +44,15 @@ function AdminCartDrawer() {
   const [showContact, setShowContact] = useState(false);
   const [manualDiscount, setManualDiscount] = useState("");
   const [initialPaymentAmount, setInitialPaymentAmount] = useState("");
+  const { session: adminSession } = useAdminSession();
+  const businessType = adminSession?.tenant?.businessType || null;
 
-  const isContactValid = contactForm.brideName && contactForm.bridePhone && contactForm.brideEmail && contactForm.groomName && contactForm.groomPhone;
+  const bt = getBusinessType(businessType);
+  const isPhotographer = businessType === "photographer";
+
+  const isContactValid = isPhotographer
+    ? (contactForm.brideName && contactForm.bridePhone && contactForm.brideEmail && contactForm.groomName && contactForm.groomPhone)
+    : (contactForm.brideName && contactForm.bridePhone && contactForm.brideEmail);
 
   const handleSave = async () => {
     if (isSubmitting || !isContactValid) return;
@@ -156,16 +166,16 @@ function AdminCartDrawer() {
               ) : showContact ? (
                 /* Contact Form */
                 <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                  <div><label style={labelStyle}><User size={10} style={{ display: "inline", marginRight: 4 }} /> Gelin Adı *</label>
+                  <div><label style={labelStyle}><User size={10} style={{ display: "inline", marginRight: 4 }} /> {isPhotographer ? "Gelin" : bt.terms.client} Adı *</label>
                     <input type="text" value={contactForm.brideName} onChange={(e) => setContactForm(p => ({ ...p, brideName: e.target.value }))} placeholder="Ad Soyad" style={inputStyle} /></div>
-                  <div><label style={labelStyle}><Phone size={10} style={{ display: "inline", marginRight: 4 }} /> Gelin Telefon *</label>
+                  <div><label style={labelStyle}><Phone size={10} style={{ display: "inline", marginRight: 4 }} /> {isPhotographer ? "Gelin" : bt.terms.client} Telefon *</label>
                     <input type="tel" value={contactForm.bridePhone} onChange={(e) => setContactForm(p => ({ ...p, bridePhone: e.target.value }))} placeholder="05XX XXX XX XX" style={inputStyle} /></div>
-                  <div><label style={labelStyle}><Mail size={10} style={{ display: "inline", marginRight: 4 }} /> Gelin E-posta *</label>
+                  <div><label style={labelStyle}><Mail size={10} style={{ display: "inline", marginRight: 4 }} /> {isPhotographer ? "Gelin" : bt.terms.client} E-posta *</label>
                     <input type="email" value={contactForm.brideEmail} onChange={(e) => setContactForm(p => ({ ...p, brideEmail: e.target.value }))} placeholder="ornek@email.com" style={inputStyle} /></div>
                   <div style={{ height: 1, background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
-                  <div><label style={labelStyle}><User size={10} style={{ display: "inline", marginRight: 4 }} /> Damat Adı *</label>
+                  <div><label style={labelStyle}><User size={10} style={{ display: "inline", marginRight: 4 }} /> {isPhotographer ? "Damat" : "İkinci Kişi"} Adı {isPhotographer ? "*" : ""}</label>
                     <input type="text" value={contactForm.groomName} onChange={(e) => setContactForm(p => ({ ...p, groomName: e.target.value }))} placeholder="Ad Soyad" style={inputStyle} /></div>
-                  <div><label style={labelStyle}><Phone size={10} style={{ display: "inline", marginRight: 4 }} /> Damat Telefon *</label>
+                  <div><label style={labelStyle}><Phone size={10} style={{ display: "inline", marginRight: 4 }} /> {isPhotographer ? "Damat" : "İkinci Kişi"} Telefon {isPhotographer ? "*" : ""}</label>
                     <input type="tel" value={contactForm.groomPhone} onChange={(e) => setContactForm(p => ({ ...p, groomPhone: e.target.value }))} placeholder="05XX XXX XX XX" style={inputStyle} /></div>
                   <div style={{ height: 1, background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
                   <div><label style={labelStyle}><Instagram size={10} style={{ display: "inline", marginRight: 4 }} /> Sosyal Medya</label>
@@ -193,7 +203,7 @@ function AdminCartDrawer() {
                 ) : (
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {items.map((item) => {
-                      const meta = CAT_META[item.category] || { label: item.category, color: "#aaa" };
+                      const meta = CAT_META[item.category] || CAT_META._DEFAULT;
                       const Icon = meta.Icon || ShoppingBag;
                       const pkgPrice = item.price ?? (parseInt(item.pkg.price?.replace(/\D/g, "")) || 0);
                       const addonPrice = item.addons.reduce((s, a) => s + (parseInt(a.price) || 0), 0);

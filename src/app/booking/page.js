@@ -1,11 +1,31 @@
-import { getPackages } from "../admin/core-actions";
+import { getPackages, getSiteConfig } from "../admin/core-actions";
+import { getCurrentTenant } from "@/lib/tenant";
+import { getBusinessType } from "@/lib/business-types";
 import BookingFlow from "@/components/BookingFlow";
+import SimpleBookingFlow from "@/components/SimpleBookingFlow";
 import Link from "next/link";
+
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export default async function BookingPage() {
-  const packages = await getPackages();
+  const tenant = await getCurrentTenant();
+  const activeTenantId = tenant?.id || "NONE";
+  
+  const packages = await prisma.photographyPackage.findMany({
+    where: { tenantId: activeTenantId },
+    orderBy: { createdAt: 'desc' }
+  });
+  
+  const siteConfig = await prisma.globalSettings.findFirst({
+    where: { tenantId: activeTenantId }
+  });
+  
+  const blockedDays = siteConfig?.blockedDays || [];
+  const bt = getBusinessType(tenant?.businessType || "photographer");
+  const { terms, features } = bt;
+  const isPhotographer = (tenant?.businessType || "photographer") === "photographer";
 
   return (
     <main
@@ -44,7 +64,7 @@ export default async function BookingPage() {
               color: "#fff",
             }}
           >
-            Randevunuzu Oluşturun
+            {terms.appointment}nuzu Oluşturun
           </h1>
           <p
             style={{
@@ -54,12 +74,18 @@ export default async function BookingPage() {
               maxWidth: "480px",
             }}
           >
-            Çekim türünüzü, döneminizi ve paketinizi seçerek birkaç dakikada
-            randevunuzu tamamlayabilirsiniz.
+            {isPhotographer
+              ? `${terms.service} türünüzü, döneminizi ve tercihlerinizi seçerek birkaç dakikada ${terms.appointment.toLowerCase()}nuzu tamamlayabilirsiniz.`
+              : `Uygun ${terms.service.toLowerCase()}nizi seçerek birkaç dakikada ${terms.appointment.toLowerCase()}nuzu oluşturabilirsiniz.`
+            }
           </p>
         </div>
 
-        <BookingFlow initialPackages={packages} />
+        {isPhotographer ? (
+          <BookingFlow initialPackages={packages} blockedDays={blockedDays} paymentMode={siteConfig?.paymentMode || 'cash'} />
+        ) : (
+          <SimpleBookingFlow initialPackages={packages} blockedDays={blockedDays} paymentMode={siteConfig?.paymentMode || 'cash'} />
+        )}
       </div>
     </main>
   );
