@@ -120,8 +120,8 @@ export default async function AdminDashboard() {
     select: { totalAmount: true, paidAmount: true },
   });
   const unpaidBalance = allRes.reduce((sum, r) => {
-    const total = parseFloat(r.totalAmount || "0");
-    const paid = parseFloat(r.paidAmount || "0");
+    const total = parseFloat((r.totalAmount || "0").replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, ''));
+    const paid = parseFloat((r.paidAmount || "0").replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, ''));
     return sum + Math.max(0, total - paid);
   }, 0);
 
