@@ -54,7 +54,12 @@ export async function generateMetadata() {
     };
   }
 
-  const siteConfig = await getSiteConfig();
+  let siteConfig = null;
+  try {
+    siteConfig = await getSiteConfig();
+  } catch (e) {
+    console.error("Metadata getSiteConfig error:", e);
+  }
   const businessName = siteConfig?.businessName || "Studio";
   const seoTitle = siteConfig?.seoTitle || businessName;
   const seoDescription = siteConfig?.seoDescription || `${businessName} — Online randevu ve hizmet yönetimi.`;
@@ -78,7 +83,13 @@ export default async function RootLayout({ children }) {
     );
   }
 
-  const siteConfig = await getSiteConfig();
+  let siteConfig = null;
+  try {
+    siteConfig = await getSiteConfig();
+  } catch (e) {
+    console.error("Layout getSiteConfig error:", e);
+  }
+
   const accentColor = siteConfig?.accentColor || "#ffffff";
   const fontFamily = siteConfig?.fontFamily || "geist";
   const fontCSS = FONT_MAP[fontFamily] || FONT_MAP.geist;

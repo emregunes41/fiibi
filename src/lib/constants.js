@@ -6,10 +6,10 @@
 
 export const PLATFORM = {
   // Temel bilgiler
-  name: "Pinowed",
-  legalName: "Pinowed Teknoloji A.Ş.",
-  domain: "pinowed.com",
-  supportEmail: "destek@pinowed.com",
+  name: "fiibi",
+  legalName: "fiibi Teknoloji",
+  domain: "fiibi.co",
+  supportEmail: "destek@fiibi.co",
   supportPhone: "+90 (212) 000 00 00",
   address: "İstanbul, Türkiye",
 
@@ -24,7 +24,7 @@ export const PLATFORM = {
   
   // Teknik
   sessionCookieName: "admin_token",
-  cartStorageKey: "pinowed_cart",
+  cartStorageKey: "fiibi_cart",
 };
 
 /**

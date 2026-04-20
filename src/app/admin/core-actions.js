@@ -1284,7 +1284,7 @@ export async function addPayment(reservationId, data) {
       await notifyAdminPaymentReceived({
         brideName: reservation.brideName,
         bridePhone: reservation.bridePhone,
-        amount: numericAmount,
+        amount: parsedAmount,
         method,
         totalAmount,
         totalPaid,

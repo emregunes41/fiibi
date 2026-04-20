@@ -590,7 +590,6 @@ export default async function ProfilePage() {
             </section>
           );
         })()}
-      </section>
     </div>
   );
 }

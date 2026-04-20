@@ -22,54 +22,86 @@ import { ArrowDown, Instagram, Mail, Phone, MapPin, MessageCircle, Calendar, Clo
 export const revalidate = 60; // cache for 60 seconds
 
 export default async function HomePage() {
-  const tenant = await getCurrentTenant();
+  let tenant = null;
+  try {
+    tenant = await getCurrentTenant();
+  } catch (e) {
+    console.error("Tenant detection error:", e);
+  }
   const activeTenantId = tenant?.id || "NONE";
 
-  const packages = await prisma.photographyPackage.findMany({
-    where: { tenantId: activeTenantId },
-    orderBy: { createdAt: 'desc' }
-  });
+  let packages = [];
+  try {
+    packages = await prisma.photographyPackage.findMany({
+      where: { tenantId: activeTenantId },
+      orderBy: { createdAt: 'desc' }
+    });
+  } catch (e) { console.error("Packages query error:", e); }
 
-  const portfolioRes = await prisma.portfolioCategory.findMany({
-    where: { tenantId: activeTenantId },
-    include: { images: true },
-    orderBy: { order: "asc" }
-  });
-  const categories = portfolioRes || [];
+  let categories = [];
+  try {
+    categories = await prisma.portfolioCategory.findMany({
+      where: { tenantId: activeTenantId },
+      include: { photos: true },
+      orderBy: { createdAt: "asc" }
+    }) || [];
+  } catch (e) { console.error("Portfolio query error:", e); }
 
-  const siteConfig = await prisma.globalSettings.findFirst({
-    where: { tenantId: activeTenantId }
-  });
+  let siteConfig = null;
+  try {
+    siteConfig = await prisma.globalSettings.findFirst({
+      where: { tenantId: activeTenantId }
+    });
+  } catch (e) { console.error("SiteConfig query error:", e); }
 
-  const banners = await prisma.banner.findMany({
-    where: { isActive: true, tenantId: activeTenantId },
-    orderBy: { order: "asc" },
-  });
+  let banners = [];
+  try {
+    banners = await prisma.banner.findMany({
+      where: { isActive: true, tenantId: activeTenantId },
+      orderBy: { order: "asc" },
+    });
+  } catch (e) { console.error("Banners query error:", e); }
 
-  const contentBlocks = await prisma.contentBlock.findMany({
-    where: { isActive: true, tenantId: activeTenantId },
-    orderBy: { order: "asc" },
-  });
+  let contentBlocks = [];
+  try {
+    contentBlocks = await prisma.contentBlock.findMany({
+      where: { isActive: true, tenantId: activeTenantId },
+      orderBy: { order: "asc" },
+    });
+  } catch (e) { console.error("ContentBlocks query error:", e); }
 
-  const events = await prisma.event.findMany({
-    where: { tenantId: activeTenantId },
-    orderBy: { date: "asc" }
-  });
+  let events = [];
+  try {
+    events = await prisma.event.findMany({
+      where: { tenantId: activeTenantId },
+      orderBy: { date: "asc" }
+    });
+  } catch (e) { console.error("Events query error:", e); }
 
   const upcomingEvents = (events || []).filter(e => e.isActive && new Date(e.date) >= new Date());
   const bt = getBusinessType(tenant?.businessType || "photographer");
   const { features, terms } = bt;
 
-  const products = tenant ? await prisma.product.findMany({
-    where: { tenantId: tenant.id, isActive: true },
-    include: { category: true },
-    orderBy: { createdAt: 'desc' }
-  }) : [];
+  let products = [];
+  try {
+    if (tenant) {
+      products = await prisma.product.findMany({
+        where: { tenantId: tenant.id, isActive: true },
+        include: { category: true },
+        orderBy: { createdAt: 'desc' }
+      });
+    }
+  } catch (e) { console.error("Products query error:", e); }
 
-  const productCategories = tenant ? await prisma.productCategory.findMany({
-    where: { tenantId: tenant.id },
-    orderBy: { createdAt: 'desc' }
-  }) : [];
+  let productCategories = [];
+  try {
+    if (tenant) {
+      productCategories = await prisma.productCategory.findMany({
+        where: { tenantId: tenant.id },
+        orderBy: { createdAt: 'desc' }
+      });
+    }
+  } catch (e) { console.error("ProductCategories query error:", e); }
 
   // Hero text: use DB values directly, fallback to sector defaults only if empty
   const heroSubtitle = siteConfig?.heroSubtitle || bt.heroSub;
