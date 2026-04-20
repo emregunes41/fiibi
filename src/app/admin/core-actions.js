@@ -1020,7 +1020,7 @@ export async function getSiteConfig() {
       cashPromoText: "",
       heroBgType: "video",
       heroBgUrl: "/assets/hero.mp4",
-      heroBgColor: "var(--bg)",
+      heroBgColor: "#000000",
       googleMapsUrl: "",
     };
   }
