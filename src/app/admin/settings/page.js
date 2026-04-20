@@ -19,7 +19,7 @@ import { PLATFORM, LEGAL_TYPES } from "@/lib/constants";
 const inp = {
   width: "100%", boxSizing: "border-box",
   background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
-  borderRadius: 0, padding: "14px 16px", fontSize: 14, color: "#fff",
+  borderRadius: 0, padding: "14px 16px", fontSize: 14, color: "var(--text)",
   outline: "none", transition: "all 0.2s",
 };
 
@@ -45,7 +45,7 @@ const sectionHeader = (Icon, title, desc) => (
       <Icon size={16} style={{ color: "rgba(255,255,255,0.6)" }} />
     </div>
     <div>
-      <h2 style={{ fontSize: 14, fontWeight: 800, color: "#fff", margin: "0 0 3px", letterSpacing: "0.02em" }}>{title}</h2>
+      <h2 style={{ fontSize: 14, fontWeight: 800, color: "var(--text)", margin: "0 0 3px", letterSpacing: "0.02em" }}>{title}</h2>
       <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", margin: 0 }}>{desc}</p>
     </div>
   </div>
@@ -172,7 +172,7 @@ export default function SettingsPage() {
         <AlertCircle size={32} style={{ color: "rgba(255,255,255,0.4)", margin: "0 auto 12px" }} />
         <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Bağlantı Kesildi</h2>
         <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 20 }}>Ayarları yükleyemiyoruz.</p>
-        <button onClick={() => window.location.reload()} style={{ background: "#fff", color: "#000", border: "none", borderRadius: 0, padding: "10px 24px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+        <button onClick={() => window.location.reload()} style={{ background: "var(--text)", color: "var(--bg)", border: "none", borderRadius: 0, padding: "10px 24px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
           Yenile
         </button>
       </div>
@@ -202,8 +202,8 @@ export default function SettingsPage() {
         ].map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
             padding: "10px 18px", fontSize: 12, fontWeight: activeTab === tab.id ? 800 : 500,
-            color: activeTab === tab.id ? "#fff" : "rgba(255,255,255,0.4)",
-            background: "none", border: "none", borderBottom: activeTab === tab.id ? "2px solid #fff" : "2px solid transparent",
+            color: activeTab === tab.id ? "var(--text)" : "rgba(255,255,255,0.4)",
+            background: "none", border: "none", borderBottom: activeTab === tab.id ? "2px solid var(--text)" : "2px solid transparent",
             cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap",
           }}>{tab.label}</button>
         ))}
@@ -249,7 +249,7 @@ export default function SettingsPage() {
             <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Canlı Önizleme</span>
           </div>
           <div style={{
-            background: "#000", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)",
+            background: "var(--bg)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)",
             padding: "40px 24px", textAlign: "center", position: "relative", overflow: "hidden",
           }}>
             {/* Glow */}
@@ -258,7 +258,7 @@ export default function SettingsPage() {
               <span style={{ display: "block", fontSize: 8, textTransform: "uppercase", letterSpacing: "0.4em", color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>
                 {config.heroSubtitle || bt.heroSub || ""}
               </span>
-              <h1 style={{ fontSize: 22, fontFamily: "Georgia, serif", color: "#fff", lineHeight: 1.4, margin: "0 0 14px", whiteSpace: "pre-line" }}>
+              <h1 style={{ fontSize: 22, fontFamily: "Georgia, serif", color: "var(--text)", lineHeight: 1.4, margin: "0 0 14px", whiteSpace: "pre-line" }}>
                 {config.heroTitle || bt.heroTitle || ""}
               </h1>
               <div style={{ width: 40, height: 1, background: "rgba(255,255,255,0.2)", margin: "0 auto" }} />
@@ -350,7 +350,7 @@ export default function SettingsPage() {
                   }}
                   style={{
                     padding: "10px 20px", borderRadius: 0, border: "none",
-                    background: "#fff", color: "#000", fontWeight: 800, fontSize: 12,
+                    background: "var(--text)", color: "var(--bg)", fontWeight: 800, fontSize: 12,
                     cursor: "pointer", display: "flex", alignItems: "center", gap: 6,
                   }}
                 >
@@ -381,7 +381,7 @@ export default function SettingsPage() {
                       <span style={{ fontSize: 10, padding: "1px 5px", borderRadius: 0, background: b.mediaType === "video" ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.06)", color: b.mediaType === "video" ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.4)", fontWeight: 800 }}>
                         {b.mediaType === "video" ? "🎬" : "🖼️"}
                       </span>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {b.title || "(Başlıksız)"}
                       </span>
                     </div>
@@ -416,7 +416,7 @@ export default function SettingsPage() {
                         await updateBanner(b.id, { isActive: !b.isActive });
                         setBanners(await getBanners());
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: b.isActive ? "#fff" : "rgba(255,255,255,0.25)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: b.isActive ? "var(--text)" : "rgba(255,255,255,0.25)" }}
                     >{b.isActive ? <Eye size={14} /> : <EyeOff size={14} />}</button>
                     {/* Delete */}
                     <button type="button"
@@ -460,7 +460,7 @@ export default function SettingsPage() {
                     flex: 1, padding: "12px 8px", borderRadius: 0, border: "1px solid",
                     borderColor: config.heroBgType === opt.value ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.08)",
                     background: config.heroBgType === opt.value ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
-                    color: config.heroBgType === opt.value ? "#fff" : "rgba(255,255,255,0.5)",
+                    color: config.heroBgType === opt.value ? "var(--text)" : "rgba(255,255,255,0.5)",
                     cursor: "pointer", fontSize: 12, fontWeight: 700, textAlign: "center",
                     transition: "all 0.2s"
                   }}
@@ -521,7 +521,7 @@ export default function SettingsPage() {
               {uploadingBg && <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", marginTop: 6 }}>Yükleniyor... (büyük dosyalar biraz sürebilir)</p>}
               {config.heroBgUrl && (
                 <div style={{ marginTop: 8, fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
-                  Mevcut: <span style={{ color: "#fff" }}>{config.heroBgUrl.length > 60 ? config.heroBgUrl.slice(0, 60) + "..." : config.heroBgUrl}</span>
+                  Mevcut: <span style={{ color: "var(--text)" }}>{config.heroBgUrl.length > 60 ? config.heroBgUrl.slice(0, 60) + "..." : config.heroBgUrl}</span>
                 </div>
               )}
             </div>
@@ -663,15 +663,15 @@ export default function SettingsPage() {
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Mail size={16} style={{ color: config.emailEnabled ? "#fff" : "rgba(255,255,255,0.3)" }} />
-                  <span style={{ fontSize: 13, fontWeight: 800, color: config.emailEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>E-Posta</span>
+                  <Mail size={16} style={{ color: config.emailEnabled ? "var(--text)" : "rgba(255,255,255,0.3)" }} />
+                  <span style={{ fontSize: 13, fontWeight: 800, color: config.emailEnabled ? "var(--text)" : "rgba(255,255,255,0.5)" }}>E-Posta</span>
                 </div>
                 <div style={{
                   width: 40, height: 22, borderRadius: 0, position: "relative",
-                  background: config.emailEnabled ? "#fff" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
+                  background: config.emailEnabled ? "var(--text)" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
                 }}>
                   <div style={{
-                    width: 18, height: 18, borderRadius: 0, background: "#fff",
+                    width: 18, height: 18, borderRadius: 0, background: "var(--text)",
                     position: "absolute", top: 2, transition: "all 0.2s",
                     left: config.emailEnabled ? 20 : 2,
                     boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
@@ -693,15 +693,15 @@ export default function SettingsPage() {
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Phone size={16} style={{ color: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.3)" }} />
-                  <span style={{ fontSize: 13, fontWeight: 800, color: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>SMS</span>
+                  <Phone size={16} style={{ color: config.smsEnabled ? "var(--text)" : "rgba(255,255,255,0.3)" }} />
+                  <span style={{ fontSize: 13, fontWeight: 800, color: config.smsEnabled ? "var(--text)" : "rgba(255,255,255,0.5)" }}>SMS</span>
                 </div>
                 <div style={{
                   width: 40, height: 22, borderRadius: 0, position: "relative",
-                  background: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
+                  background: config.smsEnabled ? "var(--text)" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
                 }}>
                   <div style={{
-                    width: 18, height: 18, borderRadius: 0, background: "#fff",
+                    width: 18, height: 18, borderRadius: 0, background: "var(--text)",
                     position: "absolute", top: 2, transition: "all 0.2s",
                     left: config.smsEnabled ? 20 : 2,
                     boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
@@ -811,8 +811,8 @@ export default function SettingsPage() {
                   }}
                   style={{
                     padding: "10px 18px", borderRadius: 0, border: "none", flexShrink: 0,
-                    background: testPhone.trim() && !testSmsLoading ? "#fff" : "rgba(255,255,255,0.06)",
-                    color: testPhone.trim() && !testSmsLoading ? "#000" : "rgba(255,255,255,0.3)",
+                    background: testPhone.trim() && !testSmsLoading ? "var(--text)" : "rgba(255,255,255,0.06)",
+                    color: testPhone.trim() && !testSmsLoading ? "var(--bg)" : "rgba(255,255,255,0.3)",
                     fontWeight: 800, fontSize: 11, cursor: testPhone.trim() && !testSmsLoading ? "pointer" : "not-allowed",
                     height: 42,
                   }}
@@ -824,7 +824,7 @@ export default function SettingsPage() {
                 <div style={{
                   marginTop: 10, padding: "8px 12px", borderRadius: 0, fontSize: 11, fontWeight: 600,
                   background: testSmsResult.success ? "rgba(255,255,255,0.06)" : "rgba(255,68,68,0.1)",
-                  color: testSmsResult.success ? "#fff" : "#ff6b6b",
+                  color: testSmsResult.success ? "var(--text)" : "#ff6b6b",
                   border: `1px solid ${testSmsResult.success ? "rgba(255,255,255,0.12)" : "rgba(255,68,68,0.2)"}`,
                 }}>
                   {testSmsResult.success
@@ -857,25 +857,25 @@ export default function SettingsPage() {
                 {/* Checkbox */}
                 <div style={{
                   width: 20, height: 20, borderRadius: 0, flexShrink: 0,
-                  border: `2px solid ${config[item.key] ? "#fff" : "rgba(255,255,255,0.2)"}`,
-                  background: config[item.key] ? "#fff" : "transparent",
+                  border: `2px solid ${config[item.key] ? "var(--text)" : "rgba(255,255,255,0.2)"}`,
+                  background: config[item.key] ? "var(--text)" : "transparent",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   transition: "all 0.2s",
                 }}>
                   {config[item.key] && (
-                    <CheckCircle2 size={12} style={{ color: "#000" }} />
+                    <CheckCircle2 size={12} style={{ color: "var(--bg)" }} />
                   )}
                 </div>
 
                 <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
 
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: config[item.key] ? "#fff" : "rgba(255,255,255,0.4)", transition: "all 0.2s" }}>{item.text}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: config[item.key] ? "var(--text)" : "rgba(255,255,255,0.4)", transition: "all 0.2s" }}>{item.text}</div>
                   <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{item.desc}</div>
                 </div>
 
                 <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
-                  {config.emailEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(255,255,255,0.1)", color: "#fff", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>EMAIL</span>}
+                  {config.emailEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(255,255,255,0.1)", color: "var(--text)", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>EMAIL</span>}
                   {config.smsEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>SMS</span>}
                 </div>
               </div>
@@ -977,8 +977,8 @@ export default function SettingsPage() {
               }}
               style={{
                 padding: "12px 20px", borderRadius: 0, border: "none",
-                background: (dcForm.code && dcForm.discountPercent) ? "#fff" : "rgba(255,255,255,0.06)",
-                color: (dcForm.code && dcForm.discountPercent) ? "#000" : "rgba(255,255,255,0.3)",
+                background: (dcForm.code && dcForm.discountPercent) ? "var(--text)" : "rgba(255,255,255,0.06)",
+                color: (dcForm.code && dcForm.discountPercent) ? "var(--bg)" : "rgba(255,255,255,0.3)",
                 fontWeight: 700, fontSize: 12, cursor: (dcForm.code && dcForm.discountPercent) ? "pointer" : "not-allowed",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
               }}
@@ -986,7 +986,7 @@ export default function SettingsPage() {
               <Plus size={14} />
               {dcLoading ? "Oluşturuluyor..." : "İndirim Kodu Ekle"}
             </button>
-            {dcMessage && <div style={{ fontSize: 12, fontWeight: 600, color: dcMessage.includes("✅") ? "#fff" : "rgba(255,255,255,0.6)" }}>{dcMessage}</div>}
+            {dcMessage && <div style={{ fontSize: 12, fontWeight: 600, color: dcMessage.includes("✅") ? "var(--text)" : "rgba(255,255,255,0.6)" }}>{dcMessage}</div>}
           </div>
 
           {/* Existing codes */}
@@ -1003,11 +1003,11 @@ export default function SettingsPage() {
                 }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                      <span style={{ fontSize: 14, fontWeight: 800, color: "#fff", fontFamily: "monospace", letterSpacing: "0.05em" }}>{dc.code}</span>
+                      <span style={{ fontSize: 14, fontWeight: 800, color: "var(--text)", fontFamily: "monospace", letterSpacing: "0.05em" }}>{dc.code}</span>
                       <span style={{
                         fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 0,
                         background: dc.isActive ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.06)",
-                        color: dc.isActive ? "#fff" : "rgba(255,255,255,0.3)",
+                        color: dc.isActive ? "var(--text)" : "rgba(255,255,255,0.3)",
                       }}>
                         %{dc.discountPercent} İndirim
                       </span>
@@ -1025,7 +1025,7 @@ export default function SettingsPage() {
                         setDiscountCodes(await getDiscountCodes());
                       }}
                       title={dc.isActive ? "Pasifleştir" : "Aktifleştir"}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: dc.isActive ? "#fff" : "rgba(255,255,255,0.25)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: dc.isActive ? "var(--text)" : "rgba(255,255,255,0.25)" }}
                     >
                       <Power size={14} />
                     </button>
@@ -1064,15 +1064,15 @@ export default function SettingsPage() {
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Bot size={16} style={{ color: config.chatbotEnabled ? "#fff" : "rgba(255,255,255,0.3)" }} />
-                <span style={{ fontSize: 13, fontWeight: 800, color: config.chatbotEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>Chatbot Aktif</span>
+                <Bot size={16} style={{ color: config.chatbotEnabled ? "var(--text)" : "rgba(255,255,255,0.3)" }} />
+                <span style={{ fontSize: 13, fontWeight: 800, color: config.chatbotEnabled ? "var(--text)" : "rgba(255,255,255,0.5)" }}>Chatbot Aktif</span>
               </div>
               <div style={{
                 width: 40, height: 22, borderRadius: 0, position: "relative",
-                background: config.chatbotEnabled ? "#fff" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
+                background: config.chatbotEnabled ? "var(--text)" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
               }}>
                 <div style={{
-                  width: 18, height: 18, borderRadius: 0, background: "#fff",
+                  width: 18, height: 18, borderRadius: 0, background: "var(--text)",
                   position: "absolute", top: 2, transition: "all 0.2s",
                   left: config.chatbotEnabled ? 20 : 2,
                   boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
@@ -1147,7 +1147,7 @@ export default function SettingsPage() {
             padding: "12px 16px", borderRadius: 0, display: "flex", alignItems: "center", gap: 10, marginBottom: 16,
             background: isError ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.04)",
             border: `1px solid ${isError ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.1)"}`,
-            color: isError ? "rgba(255,255,255,0.6)" : "#fff",
+            color: isError ? "rgba(255,255,255,0.6)" : "var(--text)",
           }}>
             {isError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
             <span style={{ fontSize: 12, fontWeight: 700 }}>{message}</span>
@@ -1160,7 +1160,7 @@ export default function SettingsPage() {
           disabled={saving}
           style={{
             width: "100%", padding: 16, borderRadius: 0, border: "none",
-            background: "#fff", color: "#000", fontWeight: 800, fontSize: 13,
+            background: "var(--text)", color: "var(--bg)", fontWeight: 800, fontSize: 13,
             textTransform: "uppercase", letterSpacing: "0.08em",
             cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.5 : 1,
             display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
@@ -1195,7 +1195,7 @@ export default function SettingsPage() {
                   </div>
                 )}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{cb.title || "(Başlıksız)"}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", marginBottom: 2 }}>{cb.title || "(Başlıksız)"}</div>
                   <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cb.description || ""} — {cb.imageUrls?.length || 0} görsel</div>
                 </div>
                 <button onClick={async () => {
@@ -1223,7 +1223,7 @@ export default function SettingsPage() {
                 {cbForm.imageUrls.map((url, i) => (
                   <div key={i} style={{ position: "relative", width: 56, height: 56 }}>
                     <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    <button onClick={() => setCbForm(p => ({ ...p, imageUrls: p.imageUrls.filter((_, idx) => idx !== i) }))} style={{ position: "absolute", top: -4, right: -4, width: 16, height: 16, borderRadius: "50%", background: "#ef4444", border: "none", color: "#fff", fontSize: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1, padding: 0 }}>×</button>
+                    <button onClick={() => setCbForm(p => ({ ...p, imageUrls: p.imageUrls.filter((_, idx) => idx !== i) }))} style={{ position: "absolute", top: -4, right: -4, width: 16, height: 16, borderRadius: "50%", background: "#ef4444", border: "none", color: "var(--text)", fontSize: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1, padding: 0 }}>×</button>
                   </div>
                 ))}
               </div>
@@ -1255,8 +1255,8 @@ export default function SettingsPage() {
             setCbUploading(false);
           }} style={{
             padding: "12px 20px", borderRadius: 0, border: "none",
-            background: (cbForm.title || cbForm.imageUrls.length > 0) ? "#fff" : "rgba(255,255,255,0.06)",
-            color: (cbForm.title || cbForm.imageUrls.length > 0) ? "#000" : "rgba(255,255,255,0.3)",
+            background: (cbForm.title || cbForm.imageUrls.length > 0) ? "var(--text)" : "rgba(255,255,255,0.06)",
+            color: (cbForm.title || cbForm.imageUrls.length > 0) ? "var(--bg)" : "rgba(255,255,255,0.3)",
             fontWeight: 800, fontSize: 12, cursor: (cbForm.title || cbForm.imageUrls.length > 0) ? "pointer" : "not-allowed",
             display: "flex", alignItems: "center", gap: 8, width: "fit-content",
           }}>
@@ -1290,8 +1290,8 @@ export default function SettingsPage() {
             }}
             style={{
               padding: "10px 18px", borderRadius: 0, border: "none",
-              background: newCategoryName.trim() ? "#fff" : "rgba(255,255,255,0.06)",
-              color: newCategoryName.trim() ? "#000" : "rgba(255,255,255,0.3)",
+              background: newCategoryName.trim() ? "var(--text)" : "rgba(255,255,255,0.06)",
+              color: newCategoryName.trim() ? "var(--bg)" : "rgba(255,255,255,0.3)",
               fontWeight: 800, fontSize: 12, cursor: newCategoryName.trim() ? "pointer" : "not-allowed",
               display: "flex", alignItems: "center", gap: 6, flexShrink: 0,
             }}
@@ -1308,7 +1308,7 @@ export default function SettingsPage() {
                 background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: 14,
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                  <span style={{ fontSize: 13, fontWeight: 800, color: "#fff" }}>{cat.name}</span>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: "var(--text)" }}>{cat.name}</span>
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                     <CldUploadWidget
                       uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
@@ -1394,7 +1394,7 @@ export default function SettingsPage() {
             }}>
               <span style={{ fontSize: 28 }}>{config.forceDarkMode ? "🌙" : "☀️"}</span>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)" }}>
                   {config.forceDarkMode ? "Gece Modu" : "Gündüz Modu"}
                 </div>
                 <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>
@@ -1416,7 +1416,7 @@ export default function SettingsPage() {
                   position: "absolute", top: 3, 
                   left: config.forceDarkMode ? 3 : 29,
                   width: 24, height: 24, borderRadius: "50%",
-                  background: "#fff", transition: "left 0.3s ease",
+                  background: "var(--text)", transition: "left 0.3s ease",
                   boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
                 }} />
               </button>
@@ -1448,7 +1448,7 @@ export default function SettingsPage() {
                       <div style={{ flex: 0.5, background: p.colors[2] }} />
                     </div>
                     <div style={{ padding: "8px 10px" }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{p.name}</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text)", marginBottom: 2 }}>{p.name}</div>
                       <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>{p.desc}</div>
                     </div>
                   </button>
@@ -1517,7 +1517,7 @@ export default function SettingsPage() {
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {["#ffffff", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6", "#10b981", "#ec4899", "#f97316"].map(c => (
                 <button key={c} onClick={() => setConfig({ ...config, accentColor: c })} style={{
-                  width: 28, height: 28, background: c, border: config.accentColor === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.15)",
+                  width: 28, height: 28, background: c, border: config.accentColor === c ? "2px solid var(--text)" : "1px solid rgba(255,255,255,0.15)",
                   cursor: "pointer", padding: 0
                 }} />
               ))}
@@ -1543,7 +1543,7 @@ export default function SettingsPage() {
                   border: (config.fontFamily || "geist") === f.id ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.08)",
                   cursor: "pointer", textAlign: "left"
                 }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 4, fontFamily: f.css }}>{f.name}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 4, fontFamily: f.css }}>{f.name}</div>
                   <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontFamily: f.css }}>{f.sample}</div>
                 </button>
               ))}
@@ -1581,7 +1581,7 @@ export default function SettingsPage() {
                   padding: "10px 18px", fontSize: 12, fontWeight: 700, cursor: "pointer", borderRadius: 0,
                   border: config.paymentMode === m.id ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.1)",
                   background: config.paymentMode === m.id ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.03)",
-                  color: config.paymentMode === m.id ? "#fff" : "rgba(255,255,255,0.4)",
+                  color: config.paymentMode === m.id ? "var(--text)" : "rgba(255,255,255,0.4)",
                 }}>{m.label}</button>
               ))}
             </div>
@@ -1596,7 +1596,7 @@ export default function SettingsPage() {
           {/* E-Ticaret / Kargo Ayarları */}
           <div style={{ marginTop: 32, paddingTop: 32, borderTop: "1px dashed rgba(255,255,255,0.1)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-              <Package size={20} style={{ color: "#fff" }} />
+              <Package size={20} style={{ color: "var(--text)" }} />
               <div style={{ fontSize: 16, fontWeight: 800 }}>E-Ticaret & Kargo Ayarları</div>
             </div>
 
@@ -1609,7 +1609,7 @@ export default function SettingsPage() {
                       padding: "10px 18px", fontSize: 12, fontWeight: 700, cursor: "pointer", borderRadius: 0,
                       border: config.shippingPayer === m.id ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.1)",
                       background: config.shippingPayer === m.id ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.03)",
-                      color: config.shippingPayer === m.id ? "#fff" : "rgba(255,255,255,0.4)",
+                      color: config.shippingPayer === m.id ? "var(--text)" : "rgba(255,255,255,0.4)",
                     }}>{m.label}</button>
                   ))}
                 </div>
@@ -1642,7 +1642,7 @@ export default function SettingsPage() {
                smStatus === "REJECTED" ? <AlertCircle size={18} style={{ color: "#ef4444" }} /> :
                <Shield size={18} style={{ color: "#facc15" }} /> }
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>
                   {smStatus === "APPROVED" ? "✅ Onaylandı" : smStatus === "REJECTED" ? "❌ Reddedildi" : "⏳ İnceleniyor"}
                 </div>
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
@@ -1665,7 +1665,7 @@ export default function SettingsPage() {
           }}>
             <CreditCard size={18} style={{ color: "rgba(255,255,255,0.5)" }} />
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>
                 Platform Komisyonu: %{smCommission}
               </div>
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
@@ -1687,7 +1687,7 @@ export default function SettingsPage() {
                     border: smForm.legalType === lt.value ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.08)",
                     borderRadius: 0,
                   }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: smForm.legalType === lt.value ? "#fff" : "rgba(255,255,255,0.5)" }}>{lt.label}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: smForm.legalType === lt.value ? "var(--text)" : "rgba(255,255,255,0.5)" }}>{lt.label}</div>
                   <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>{lt.description}</div>
                 </button>
               ))}
@@ -1764,15 +1764,15 @@ export default function SettingsPage() {
             }}>
             <div style={{
               width: 22, height: 22, borderRadius: 0, flexShrink: 0, marginTop: 1,
-              border: `2px solid ${smForm.sellerAgreementAccepted ? "#fff" : "rgba(255,255,255,0.2)"}`,
-              background: smForm.sellerAgreementAccepted ? "#fff" : "transparent",
+              border: `2px solid ${smForm.sellerAgreementAccepted ? "var(--text)" : "rgba(255,255,255,0.2)"}`,
+              background: smForm.sellerAgreementAccepted ? "var(--text)" : "transparent",
               display: "flex", alignItems: "center", justifyContent: "center",
               transition: "all 0.2s",
             }}>
-              {smForm.sellerAgreementAccepted && <CheckCircle2 size={14} style={{ color: "#000" }} />}
+              {smForm.sellerAgreementAccepted && <CheckCircle2 size={14} style={{ color: "var(--bg)" }} />}
             </div>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: smForm.sellerAgreementAccepted ? "#fff" : "rgba(255,255,255,0.5)", marginBottom: 4 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: smForm.sellerAgreementAccepted ? "var(--text)" : "rgba(255,255,255,0.5)", marginBottom: 4 }}>
                 Satıcı Hizmet Sözleşmesini okudum ve kabul ediyorum *
               </div>
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: 1.6 }}>
@@ -1789,7 +1789,7 @@ export default function SettingsPage() {
               padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 10,
               background: smError ? "rgba(255,68,68,0.06)" : "rgba(255,255,255,0.04)",
               border: `1px solid ${smError ? "rgba(255,68,68,0.15)" : "rgba(255,255,255,0.1)"}`,
-              color: smError ? "#ff8a8a" : "#fff",
+              color: smError ? "#ff8a8a" : "var(--text)",
             }}>
               {smError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
               <span style={{ fontSize: 12, fontWeight: 700 }}>{smMessage}</span>
@@ -1817,8 +1817,8 @@ export default function SettingsPage() {
             }}
             style={{
               width: "100%", padding: 16, borderRadius: 0, border: "none",
-              background: (smForm.legalName && smForm.taxId && smForm.iban && smForm.sellerAgreementAccepted) ? "#fff" : "rgba(255,255,255,0.06)",
-              color: (smForm.legalName && smForm.taxId && smForm.iban && smForm.sellerAgreementAccepted) ? "#000" : "rgba(255,255,255,0.3)",
+              background: (smForm.legalName && smForm.taxId && smForm.iban && smForm.sellerAgreementAccepted) ? "var(--text)" : "rgba(255,255,255,0.06)",
+              color: (smForm.legalName && smForm.taxId && smForm.iban && smForm.sellerAgreementAccepted) ? "var(--bg)" : "rgba(255,255,255,0.3)",
               fontWeight: 800, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.08em",
               cursor: (smForm.legalName && smForm.taxId && smForm.iban && smForm.sellerAgreementAccepted) ? "pointer" : "not-allowed",
               opacity: smSaving ? 0.5 : 1,

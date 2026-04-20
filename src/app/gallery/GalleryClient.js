@@ -100,7 +100,7 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
       transition={{ duration: 0.2 }}
       style={{
         position: "fixed", inset: 0, zIndex: 9999,
-        background: "#000",
+        background: "var(--bg)",
         display: "flex", flexDirection: "column",
         userSelect: "none",
       }}
@@ -120,7 +120,7 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
             background: "rgba(255,255,255,0.15)", overflow: "hidden",
           }}>
             <div style={{
-              height: "100%", borderRadius: 0, background: "#fff",
+              height: "100%", borderRadius: 0, background: "var(--text)",
               width: i < currentIndex ? "100%" : i === currentIndex ? `${progress}%` : "0%",
               transition: i === currentIndex ? "none" : "width 0.3s ease",
             }} />
@@ -134,7 +134,7 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ color: "#fff", fontSize: "14px", fontWeight: 700 }}>{categoryName}</span>
+          <span style={{ color: "var(--text)", fontSize: "14px", fontWeight: 700 }}>{categoryName}</span>
           <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "12px", fontFamily: "monospace" }}>
             {currentIndex + 1}/{photos.length}
           </span>
@@ -145,7 +145,7 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
             background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)",
             border: "none", borderRadius: 0, width: "36px", height: "36px",
             display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: "pointer", color: "#fff",
+            cursor: "pointer", color: "var(--text)",
           }}
         >
           <X size={18} />
@@ -297,7 +297,7 @@ export default function GalleryClient({ categories }) {
                     borderRadius: 0,
                     overflow: "hidden",
                     aspectRatio: "3 / 4",
-                    background: "#111",
+                    background: "var(--bg)",
                   }}
                 >
                   {coverPhoto ? (
@@ -324,7 +324,7 @@ export default function GalleryClient({ categories }) {
                     justifyContent: "flex-end",
                     padding: "1rem"
                   }}>
-                    <h3 style={{ fontSize: "0.9rem", fontWeight: 700, margin: 0, color: "#fff" }}>{cat.name}</h3>
+                    <h3 style={{ fontSize: "0.9rem", fontWeight: 700, margin: 0, color: "var(--text)" }}>{cat.name}</h3>
                     <p style={{ fontSize: "0.65rem", opacity: 0.5, margin: 0 }}>{photoCount} Görsel</p>
                   </div>
                 </motion.div>

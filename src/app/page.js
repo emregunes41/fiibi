@@ -218,7 +218,7 @@ export default async function HomePage() {
                   {pkg.description && <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, marginBottom: 16 }}>{pkg.description}</p>}
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontSize: 22, fontWeight: 900 }}>{pkg.price?.toLocaleString("tr-TR")} ₺</span>
-                    <Link href="/booking" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", padding: "8px 18px", color: "#fff", fontSize: 12, fontWeight: 700, textDecoration: "none" }}>
+                    <Link href="/booking" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", padding: "8px 18px", color: "var(--text)", fontSize: 12, fontWeight: 700, textDecoration: "none" }}>
                       {terms.appointment} Al
                     </Link>
                   </div>
@@ -233,7 +233,7 @@ export default async function HomePage() {
               ))}
             </div>
             <div style={{ textAlign: "center", marginTop: 40 }}>
-              <Link href="/booking" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", color: "#000", padding: "14px 32px", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+              <Link href="/booking" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--text)", color: "var(--bg)", padding: "14px 32px", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
                 <Calendar size={16} /> {terms.appointment} Oluştur
               </Link>
             </div>

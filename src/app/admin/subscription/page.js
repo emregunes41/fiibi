@@ -81,7 +81,7 @@ export default function SubscriptionPage() {
 
   if (loading) return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh" }}>
-      <div style={{ width: 24, height: 24, border: "2px solid rgba(255,255,255,0.1)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+      <div style={{ width: 24, height: 24, border: "2px solid rgba(255,255,255,0.1)", borderTop: "2px solid var(--text)", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
     </div>
   );
 
@@ -91,7 +91,7 @@ export default function SubscriptionPage() {
   const daysLeft = expiresAt ? Math.max(0, Math.ceil((expiresAt - now) / (1000 * 60 * 60 * 24))) : null;
 
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", color: "#fff" }}>
+    <div style={{ maxWidth: 900, margin: "0 auto", color: "var(--text)" }}>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 4 }}>Abonelik</h1>
@@ -145,7 +145,7 @@ export default function SubscriptionPage() {
             {/* Popular badge */}
             {p.popular && (
               <div style={{
-                background: p.color, color: "#000", fontSize: 10, fontWeight: 800,
+                background: p.color, color: "var(--bg)", fontSize: 10, fontWeight: 800,
                 padding: "5px 14px", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.08em"
               }}>
                 <Star size={10} style={{ marginRight: 4, verticalAlign: "middle" }} />
@@ -203,7 +203,7 @@ export default function SubscriptionPage() {
                 style={{
                   width: "100%", marginTop: 24, padding: "12px 0",
                   background: selectedPlan === p.id ? p.color : "rgba(255,255,255,0.06)",
-                  color: selectedPlan === p.id ? "#000" : "#fff",
+                  color: selectedPlan === p.id ? "var(--bg)" : "var(--text)",
                   border: `1px solid ${selectedPlan === p.id ? p.color : "rgba(255,255,255,0.1)"}`,
                   fontSize: 13, fontWeight: 800, cursor: "pointer", transition: "all 0.2s",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 6
@@ -240,14 +240,14 @@ export default function SubscriptionPage() {
             </div>
             <button 
               onClick={() => navigator.clipboard.writeText(tenantInfo.referralCode).then(() => alert("Kod kopyalandı!"))}
-              style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff", padding: "8px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}
+              style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", color: "var(--text)", padding: "8px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}
             >
               Kopyala
             </button>
           </div>
           {tenantInfo.referralCount > 0 && (
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
-              Şu ana kadar <strong style={{ color: "#fff" }}>{tenantInfo.referralCount}</strong> kişi sizin referansınızla katıldı.
+              Şu ana kadar <strong style={{ color: "var(--text)" }}>{tenantInfo.referralCount}</strong> kişi sizin referansınızla katıldı.
             </div>
           )}
         </div>

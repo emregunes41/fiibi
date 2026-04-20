@@ -37,7 +37,7 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
       <div style={{ marginTop: 24, padding: 20, background: "rgba(255,255,255,0.05)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 12 }}>
           <div>
-            <h5 style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 4 }}>Yaptığınız Seçim</h5>
+            <h5 style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>Yaptığınız Seçim</h5>
             <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Bu numaralar düzenleme için iletildi.</p>
           </div>
           <button 
@@ -57,7 +57,7 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
   return (
     <div style={{ marginTop: 24, padding: 24, background: "rgba(255,255,255,0.05)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)" }}>
       <div style={{ marginBottom: 16 }}>
-        <h5 style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Fotoğraf Seçimi Yapın</h5>
+        <h5 style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", marginBottom: 6 }}>Fotoğraf Seçimi Yapın</h5>
         <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>
           Lütfen Drive üzerinden seçtiğiniz fotoğrafların dosya numaralarını araya virgül koyarak yazınız.
           <span style={{ display: "block", color: "rgba(255,255,255,0.6)", fontSize: 12, marginTop: 6, fontWeight: 700 }}>⚠️ Toplam 30 adet fotoğraf seçmeniz gerekmektedir.</span>
@@ -71,13 +71,13 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
           onChange={(e) => setSelection(e.target.value)}
           placeholder="Fotoğraf numaralarını buraya girin..."
           required
-          style={{ width: "100%", minHeight: 120, padding: 16, background: "rgba(0,0,0,0.2)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s", resize: "none" }}
+          style={{ width: "100%", minHeight: 120, padding: 16, background: "rgba(0,0,0,0.2)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, color: "var(--text)", fontSize: 14, outline: "none", transition: "all 0.2s", resize: "none" }}
           onFocus={(e) => e.target.style.borderColor = "rgba(255,255,255,0.3)"}
           onBlur={(e) => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
         />
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          {message && <span style={{ fontSize: 12, color: message.includes("Hata") ? "rgba(255,255,255,0.6)" : "#fff", fontWeight: 600 }}>{message}</span>}
+          {message && <span style={{ fontSize: 12, color: message.includes("Hata") ? "rgba(255,255,255,0.6)" : "var(--text)", fontWeight: 600 }}>{message}</span>}
           <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
             {initialSelection && (
               <button 
@@ -91,7 +91,7 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
             <button
               type="submit"
               disabled={loading || !selection.trim()}
-              style={{ background: "#fff", color: "#000", padding: "10px 24px", borderRadius: 0, fontWeight: 700, fontSize: 13, border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s", opacity: loading ? 0.6 : 1 }}
+              style={{ background: "var(--text)", color: "var(--bg)", padding: "10px 24px", borderRadius: 0, fontWeight: 700, fontSize: 13, border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s", opacity: loading ? 0.6 : 1 }}
             >
               {loading ? "Kaydediliyor..." : <><Send size={14} /> Seçimi Kaydet</>}
             </button>

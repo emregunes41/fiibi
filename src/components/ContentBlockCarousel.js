@@ -104,7 +104,7 @@ export default function ContentBlockCarousel({ images }) {
             {i === current && (
               <div style={{
                 position: "absolute", top: 0, left: 0, height: "100%",
-                background: "#fff", width: `${progress}%`,
+                background: "var(--text)", width: `${progress}%`,
                 transition: "none",
               }} />
             )}

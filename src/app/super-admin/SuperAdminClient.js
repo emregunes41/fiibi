@@ -121,7 +121,7 @@ export default function SuperAdminClient() {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0a0a0a", color: "#fff" }}>
+    <div style={{ minHeight: "100vh", background: "#0a0a0a", color: "var(--text)" }}>
 
       {/* Top Bar */}
       <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "16px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -148,7 +148,7 @@ export default function SuperAdminClient() {
                 padding: "12px 20px", border: "none", cursor: "pointer",
                 background: tab === t.id ? "rgba(139,92,246,0.08)" : "transparent",
                 borderRight: tab === t.id ? "2px solid #8b5cf6" : "2px solid transparent",
-                color: tab === t.id ? "#fff" : "rgba(255,255,255,0.4)",
+                color: tab === t.id ? "var(--text)" : "rgba(255,255,255,0.4)",
                 fontSize: 13, fontWeight: tab === t.id ? 700 : 500,
                 transition: "all 0.15s",
               }}
@@ -303,7 +303,7 @@ export default function SuperAdminClient() {
                         onChange={(e) => { setPricing({ ...pricing, [p.key]: e.target.value }); setPricingSaved(false); }}
                         style={{
                           background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                          color: "#fff", padding: "10px 14px", width: "100%", fontSize: 22, fontWeight: 800,
+                          color: "var(--text)", padding: "10px 14px", width: "100%", fontSize: 22, fontWeight: 800,
                           outline: "none"
                         }}
                       />
@@ -325,7 +325,7 @@ export default function SuperAdminClient() {
                 style={{
                   background: pricingSaved ? "rgba(74,222,128,0.15)" : "rgba(255,255,255,0.06)",
                   border: pricingSaved ? "1px solid rgba(74,222,128,0.3)" : "1px solid rgba(255,255,255,0.1)",
-                  color: pricingSaved ? "#4ade80" : "#fff",
+                  color: pricingSaved ? "#4ade80" : "var(--text)",
                   padding: "12px 24px", fontSize: 13, fontWeight: 700, cursor: "pointer",
                   display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s"
                 }}
@@ -422,7 +422,7 @@ export default function SuperAdminClient() {
                             disabled={actionLoading === t.id}
                             style={{
                               background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                              color: "#fff", padding: "4px 8px", width: 56, fontSize: 13, fontWeight: 700,
+                              color: "var(--text)", padding: "4px 8px", width: 56, fontSize: 13, fontWeight: 700,
                               textAlign: "center", outline: "none",
                             }}
                           />
@@ -495,5 +495,5 @@ const cardStyle = {
   padding: "16px 18px"
 };
 const sectionTitle = {
-  fontSize: 16, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 20, color: "#fff"
+  fontSize: 16, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 20, color: "var(--text)"
 };

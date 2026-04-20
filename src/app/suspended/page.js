@@ -18,7 +18,7 @@ export default function SuspendedPage() {
           <Snowflake size={32} style={{ color: "#38bdf8" }} />
         </div>
 
-        <h1 style={{ color: "#fff", fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 12 }}>
+        <h1 style={{ color: "var(--text)", fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 12 }}>
           Hesap Askıya Alındı
         </h1>
         <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 15, lineHeight: 1.7, marginBottom: 32 }}>

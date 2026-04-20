@@ -70,7 +70,7 @@ export default async function RootLayout({ children }) {
   if (isPlatform) {
     return (
       <html lang="tr" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-        <body style={{ margin: 0, background: "#000", color: "#fff", fontFamily: "var(--font-geist-sans), system-ui, sans-serif" }}>
+        <body style={{ margin: 0, background: "var(--bg)", color: "var(--text)", fontFamily: "var(--font-geist-sans), system-ui, sans-serif" }}>
           <PageTracker />
           {children}
         </body>
@@ -96,7 +96,7 @@ export default async function RootLayout({ children }) {
   
   // Sektör texture'ları beyaz arka planlı → otomatik light mode (forceDarkMode kapalıysa)
   if (usingSectorTexture && !forceDark) {
-    palette = { bg: "#ffffff", text: "#1a1a1a", isDark: false };
+    palette = { bg: "var(--text)", text: "#1a1a1a", isDark: false };
   }
 
   return (

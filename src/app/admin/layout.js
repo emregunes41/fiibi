@@ -89,12 +89,12 @@ function AdminLayoutInner({ children }) {
               <div style={{
                 display: "flex", alignItems: "center", gap: "1rem", padding: "1rem 1.25rem", borderRadius: 0,
                 background: isActive ? "rgba(255,255,255,0.1)" : "transparent",
-                color: isActive ? "#fff" : "rgba(255,255,255,0.65)",
+                color: isActive ? "var(--text)" : "rgba(255,255,255,0.65)",
                 fontWeight: isActive ? 700 : 500,
                 transition: "all 0.2s",
                 border: isActive ? "1px solid rgba(255,255,255,0.1)" : "1px solid transparent"
               }} className="hover:bg-white/5">
-                <item.icon size={20} color={isActive ? "#fff" : "rgba(255,255,255,0.5)"} />
+                <item.icon size={20} color={isActive ? "var(--text)" : "rgba(255,255,255,0.5)"} />
                 {item.name}
               </div>
             </Link>
@@ -128,7 +128,7 @@ function AdminLayoutInner({ children }) {
       }}>
         <button
           onClick={() => setSidebarOpen(true)}
-          style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", padding: "4px" }}
+          style={{ background: "none", border: "none", color: "var(--text)", cursor: "pointer", padding: "4px" }}
         >
           <Menu size={22} />
         </button>

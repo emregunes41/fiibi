@@ -17,7 +17,7 @@ const card = (on) => ({
 const inp = {
   width: "100%", boxSizing: "border-box",
   background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)",
-  padding: "14px 16px", fontSize: "14px", color: "#fff", outline: "none",
+  padding: "14px 16px", fontSize: "14px", color: "var(--text)", outline: "none",
 };
 const lbl = {
   fontSize: "11px", fontWeight: 700, color: "rgba(255,255,255,0.45)",
@@ -25,8 +25,8 @@ const lbl = {
 };
 const btn = (active) => ({
   width: "100%", padding: "16px", border: "none",
-  background: active ? "#fff" : "rgba(255,255,255,0.04)",
-  color: active ? "#000" : "rgba(255,255,255,0.15)",
+  background: active ? "var(--text)" : "rgba(255,255,255,0.04)",
+  color: active ? "var(--bg)" : "rgba(255,255,255,0.15)",
   fontSize: "14px", fontWeight: 700, cursor: active ? "pointer" : "not-allowed",
   display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
 });
@@ -160,7 +160,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                   <div key={pkg.id} onClick={() => setSelectedPkg(pkg)} style={card(on)}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                       <div>
-                        <div style={{ fontSize: "15px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+                        <div style={{ fontSize: "15px", fontWeight: 700, color: "var(--text)", marginBottom: "4px" }}>
                           {on && <Check size={14} style={{ marginRight: 6, verticalAlign: "middle" }} />}
                           {pkg.name}
                         </div>
@@ -183,7 +183,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                         </div>
                       </div>
                       <div style={{ textAlign: "right", flexShrink: 0 }}>
-                        <div style={{ fontSize: "18px", fontWeight: 700, color: "#fff" }}>{fmt(price)}₺</div>
+                        <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--text)" }}>{fmt(price)}₺</div>
                       </div>
                     </div>
                   </div>
@@ -211,7 +211,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
             </button>
 
             <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "16px", marginBottom: "24px" }}>
-              <div style={{ fontSize: "14px", fontWeight: 700, color: "#fff" }}>{selectedPkg?.name}</div>
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--text)" }}>{selectedPkg?.name}</div>
               <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: "4px" }}>
                 {fmt(parseInt(selectedPkg?.price?.replace(/\D/g, "") || "0"))}₺
                 {selectedPkg?.sessionDuration && ` • ${selectedPkg.sessionDuration} dk`}
@@ -279,7 +279,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                             cursor: isBooked ? "not-allowed" : "pointer",
                             transition: "all 0.15s",
                             background: isSelected ? "rgba(255,255,255,0.15)" : isBooked ? "rgba(255,0,0,0.05)" : "rgba(255,255,255,0.03)",
-                            color: isSelected ? "#fff" : isBooked ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.5)",
+                            color: isSelected ? "var(--text)" : isBooked ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.5)",
                             border: isSelected ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.06)",
                             textDecoration: isBooked ? "line-through" : "none",
                           }}
@@ -310,7 +310,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
 
             {/* Summary */}
             <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "16px", marginBottom: "24px" }}>
-              <div style={{ fontSize: "14px", fontWeight: 700, color: "#fff", marginBottom: "8px" }}>{selectedPkg?.name}</div>
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--text)", marginBottom: "8px" }}>{selectedPkg?.name}</div>
               <div style={{ display: "flex", gap: "16px", fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>
                 <span><Calendar size={11} style={{ verticalAlign: "middle", marginRight: 4 }} />
                   {new Date(selectedDate).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
@@ -374,13 +374,13 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                 ].map((r, i) => (
                   <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", padding: "4px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
                     <span style={{ color: "rgba(255,255,255,0.4)" }}>{r.l}</span>
-                    <span style={{ color: "#fff", fontWeight: 600, textAlign: "right" }}>{r.v}</span>
+                    <span style={{ color: "var(--text)", fontWeight: 600, textAlign: "right" }}>{r.v}</span>
                   </div>
                 ))}
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "16px", paddingTop: "12px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
                 <span style={{ fontSize: "13px", fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>TOPLAM</span>
-                <span style={{ fontSize: "20px", fontWeight: 700, color: "#fff" }}>
+                <span style={{ fontSize: "20px", fontWeight: 700, color: "var(--text)" }}>
                   {fmt(parseInt(selectedPkg?.price?.replace(/\D/g, "") || "0"))}₺
                 </span>
               </div>
@@ -401,7 +401,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                       flex: 1, padding: "16px", cursor: "pointer",
                       border: paymentMethod === m.value ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.08)",
                       background: paymentMethod === m.value ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)",
-                      color: paymentMethod === m.value ? "#fff" : "rgba(255,255,255,0.4)",
+                      color: paymentMethod === m.value ? "var(--text)" : "rgba(255,255,255,0.4)",
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                       fontSize: "13px", fontWeight: 600, transition: "all 0.2s",
                     }}
@@ -421,9 +421,9 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
 
             <div style={{ marginBottom: 24, padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
               <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", marginBottom: 0 }}>
-                <input type="checkbox" checked={agreedToTerms} onChange={e => setAgreedToTerms(e.target.checked)} style={{ width: 18, height: 18, accentColor: "#000", marginTop: 2, cursor: "pointer" }} />
+                <input type="checkbox" checked={agreedToTerms} onChange={e => setAgreedToTerms(e.target.checked)} style={{ width: 18, height: 18, accentColor: "var(--bg)", marginTop: 2, cursor: "pointer" }} />
                 <span style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>
-                  <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "#fff", textDecoration: "underline" }}>Hizmet Sözleşmesi</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "#fff", textDecoration: "underline" }}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okudum, onaylıyorum.
+                  <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "var(--text)", textDecoration: "underline" }}>Hizmet Sözleşmesi</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "var(--text)", textDecoration: "underline" }}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okudum, onaylıyorum.
                 </span>
               </label>
             </div>
@@ -449,7 +449,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
               }}>
                 ✅
               </div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#fff", marginBottom: "12px" }}>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "var(--text)", marginBottom: "12px" }}>
                 {terms.appointment}nuz Alındı!
               </h2>
               <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: "400px", margin: "0 auto 24px" }}>
@@ -463,7 +463,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
               </div>
               <a href="/" style={{
                 display: "inline-flex", alignItems: "center", gap: "8px",
-                padding: "14px 32px", background: "#fff", color: "#000",
+                padding: "14px 32px", background: "var(--text)", color: "var(--bg)",
                 textDecoration: "none", fontSize: "14px", fontWeight: 700,
               }}>
                 Ana Sayfaya Dön

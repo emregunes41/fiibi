@@ -32,7 +32,7 @@ export default function SozlesmeClient({ tenant }) {
   const CurrentIcon = currentTab?.icon || FileText;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#000", color: "#fff", padding: "60px 24px" }}>
+    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text)", padding: "60px 24px" }}>
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         
         <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.5)", textDecoration: "none", marginBottom: 32, fontSize: 14, fontWeight: 500, transition: "color 0.2s" }}>
@@ -66,9 +66,9 @@ export default function SozlesmeClient({ tenant }) {
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   padding: "12px 20px", fontSize: 12, fontWeight: isActive ? 800 : 500,
-                  color: isActive ? "#fff" : "rgba(255,255,255,0.4)",
+                  color: isActive ? "var(--text)" : "rgba(255,255,255,0.4)",
                   background: "none", border: "none",
-                  borderBottom: isActive ? "2px solid #fff" : "2px solid transparent",
+                  borderBottom: isActive ? "2px solid var(--text)" : "2px solid transparent",
                   cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap",
                   display: "flex", alignItems: "center", gap: 8,
                   textTransform: "uppercase", letterSpacing: "0.06em",
@@ -100,7 +100,7 @@ export default function SozlesmeClient({ tenant }) {
               <CurrentIcon size={16} style={{ color: "rgba(255,255,255,0.6)" }} />
             </div>
             <div>
-              <h2 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: "0 0 2px" }}>
+              <h2 style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", margin: "0 0 2px" }}>
                 {currentTab?.label}
               </h2>
               <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", margin: 0 }}>

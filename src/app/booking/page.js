@@ -61,7 +61,7 @@ export default async function BookingPage() {
               letterSpacing: "-0.02em",
               lineHeight: 1.2,
               marginBottom: "12px",
-              color: "#fff",
+              color: "var(--text)",
             }}
           >
             {terms.appointment}nuzu Oluşturun

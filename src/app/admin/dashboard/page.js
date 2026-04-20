@@ -138,7 +138,7 @@ export default async function AdminDashboard() {
   const monthNames = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
 
   return (
-    <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
+    <div style={{ color: "var(--text)", maxWidth: "100%", overflowX: "hidden" }}>
       <div style={{ marginBottom: "1.5rem" }}>
         <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: "4px" }}>Genel Bakış</h1>
         <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem" }}>Yönetim Paneli · {monthNames[now.getMonth()]} {now.getFullYear()}</p>
@@ -168,7 +168,7 @@ export default async function AdminDashboard() {
         </div>
 
         <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", padding: "12px", borderRadius: 0 }}>
-          <div style={{ color: "#fff", fontSize: "0.6rem", fontWeight: 900, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
+          <div style={{ color: "var(--text)", fontSize: "0.6rem", fontWeight: 900, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
             <Clock size={11} /> Bekleyen
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{pendingReservations}</div>

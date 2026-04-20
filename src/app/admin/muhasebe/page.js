@@ -119,17 +119,17 @@ export default async function MuhasebePage() {
   const monthNames = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
   const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale / EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online Ödeme" };
   const methodIcons = { CASH: "💵", BANK_TRANSFER: "🏦", CREDIT_CARD: "💳", ONLINE: "🌐" };
-  const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(255,255,255,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(255,255,255,0.6)" };
+  const methodColors = { CASH: "var(--text)", BANK_TRANSFER: "rgba(255,255,255,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(255,255,255,0.6)" };
   const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan" };
   const catColors = { DIS_CEKIM: "#f59e0b", DUGUN: "#fb7185", NISAN: "#67e8f9" };
 
   return (
-    <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
+    <div style={{ color: "var(--text)", maxWidth: "100%", overflowX: "hidden" }}>
       {/* Header */}
       <div style={{ marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
           <div style={{ width: 36, height: 36, borderRadius: 0, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <PiggyBank size={18} style={{ color: "#fff" }} />
+            <PiggyBank size={18} style={{ color: "var(--text)" }} />
           </div>
           <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", margin: 0 }}>Muhasebe</h1>
         </div>
@@ -144,7 +144,7 @@ export default async function MuhasebePage() {
           <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
             <TrendingUp size={10} /> Toplam Gelir
           </div>
-          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#fff" }}>{fmt(totalCashIn)}<span style={{ fontSize: "0.8rem", opacity: 0.7 }}>₺</span></div>
+          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--text)" }}>{fmt(totalCashIn)}<span style={{ fontSize: "0.8rem", opacity: 0.7 }}>₺</span></div>
           <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", marginTop: 4 }}>{validPayments.length} ödeme işlemi</div>
         </div>
 
@@ -153,9 +153,9 @@ export default async function MuhasebePage() {
           <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
             {monthNames[currentMonth]} Geliri
           </div>
-          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#fff" }}>{fmt(thisMonthTotal)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
+          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--text)" }}>{fmt(thisMonthTotal)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
           {monthChange !== 0 && (
-            <div style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 4, fontSize: "0.6rem", fontWeight: 800, color: monthChange > 0 ? "#fff" : "rgba(255,255,255,0.5)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 4, fontSize: "0.6rem", fontWeight: 800, color: monthChange > 0 ? "var(--text)" : "rgba(255,255,255,0.5)" }}>
               {monthChange > 0 ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
               %{Math.abs(monthChange)} {monthChange > 0 ? "artış" : "azalış"} · geçen aya göre
             </div>
@@ -176,7 +176,7 @@ export default async function MuhasebePage() {
           <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
             Aktif Toplam Tutar
           </div>
-          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#fff" }}>{fmt(totalExpected)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
+          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--text)" }}>{fmt(totalExpected)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
           <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", marginTop: 4 }}>Aktif rezervasyonlar toplamı</div>
         </div>
       </div>
@@ -196,7 +196,7 @@ export default async function MuhasebePage() {
               const isCurrentMonth = i === currentMonth;
               return (
                 <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                  <div style={{ fontSize: "0.5rem", fontWeight: 800, color: m.total > 0 ? "#fff" : "rgba(255,255,255,0.2)" }}>
+                  <div style={{ fontSize: "0.5rem", fontWeight: 800, color: m.total > 0 ? "var(--text)" : "rgba(255,255,255,0.2)" }}>
                     {m.total > 0 ? `${fmt(m.total / 1000)}K` : ""}
                   </div>
                   <div style={{ 
@@ -210,7 +210,7 @@ export default async function MuhasebePage() {
                   }} />
                   <div style={{ 
                     fontSize: "0.5rem", fontWeight: 700, 
-                    color: isCurrentMonth ? "#fff" : "rgba(255,255,255,0.3)" 
+                    color: isCurrentMonth ? "var(--text)" : "rgba(255,255,255,0.3)" 
                   }}>
                     {monthNames[i].substring(0, 3)}
                   </div>
@@ -322,7 +322,7 @@ export default async function MuhasebePage() {
                     </div>
                   </div>
                   <div style={{ height: 4, borderRadius: 0, background: "rgba(255,255,255,0.06)" }}>
-                    <div style={{ height: "100%", borderRadius: 0, background: paidPct >= 100 ? "#fff" : "linear-gradient(90deg, #fff, rgba(255,255,255,0.7))", width: `${Math.min(paidPct, 100)}%` }} />
+                    <div style={{ height: "100%", borderRadius: 0, background: paidPct >= 100 ? "var(--text)" : "linear-gradient(90deg, #fff, rgba(255,255,255,0.7))", width: `${Math.min(paidPct, 100)}%` }} />
                   </div>
                   <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.3)", marginTop: 3, textAlign: "right" }}>%{Math.round(paidPct)} ödendi</div>
                 </div>
@@ -368,7 +368,7 @@ export default async function MuhasebePage() {
               }}>
                 {methodLabels[p.method] || p.method}
               </span>
-              <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "#fff", flexShrink: 0 }}>
+              <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "var(--text)", flexShrink: 0 }}>
                 +{fmt(p.amount)}₺
               </div>
             </div>

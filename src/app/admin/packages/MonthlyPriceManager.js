@@ -84,7 +84,7 @@ export default function MonthlyPriceManager() {
           {message && (
             <span style={{ 
               fontSize: "0.65rem", 
-              color: message.type === "success" ? "#fff" : "rgba(255,255,255,0.6)",
+              color: message.type === "success" ? "var(--text)" : "rgba(255,255,255,0.6)",
               fontWeight: 700,
               marginLeft: "10px"
             }}>
@@ -101,8 +101,8 @@ export default function MonthlyPriceManager() {
                 onClick={() => setActiveCategory(cat.value)}
                 style={{
                   padding: "4px 8px", borderRadius: 0, fontSize: "0.65rem", fontWeight: 700, border: "none", cursor: "pointer", transition: "all 0.2s",
-                  background: activeCategory === cat.value ? "#fff" : "transparent",
-                  color: activeCategory === cat.value ? "#000" : "rgba(255,255,255,0.4)"
+                  background: activeCategory === cat.value ? "var(--text)" : "transparent",
+                  color: activeCategory === cat.value ? "var(--bg)" : "rgba(255,255,255,0.4)"
                 }}
               >
                 {cat.label}
@@ -144,7 +144,7 @@ export default function MonthlyPriceManager() {
                   placeholder="0"
                   style={{ 
                     width: "100%", background: "transparent", border: "none", borderBottom: "1px solid rgba(255,255,255,0.1)", 
-                    color: val < 0 ? "#fff" : val > 0 ? "#fbbf24" : "#fff",
+                    color: val < 0 ? "var(--text)" : val > 0 ? "#fbbf24" : "var(--text)",
                     fontSize: "0.85rem", fontWeight: 800, outline: "none", padding: "2px 0"
                   }}
                 />

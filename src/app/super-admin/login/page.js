@@ -35,7 +35,7 @@ export default function SuperAdminLoginPage() {
           }}>
             <Shield size={22} style={{ color: "#8b5cf6" }} />
           </div>
-          <h1 style={{ color: "#fff", fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 4 }}>
+          <h1 style={{ color: "var(--text)", fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 4 }}>
             Platform Yönetimi
           </h1>
           <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13 }}>Super Admin erişimi</p>
@@ -53,14 +53,14 @@ export default function SuperAdminLoginPage() {
             style={{
               width: "100%", background: "rgba(255,255,255,0.04)",
               border: "1px solid rgba(255,255,255,0.1)", padding: "12px 14px",
-              color: "#fff", fontSize: 14, outline: "none"
+              color: "var(--text)", fontSize: 14, outline: "none"
             }}
           />
           {error && (
             <div style={{ fontSize: 13, color: "#f87171", textAlign: "center" }}>{error}</div>
           )}
           <button type="submit" disabled={loading} style={{
-            background: "#8b5cf6", color: "#fff", border: "none",
+            background: "#8b5cf6", color: "var(--text)", border: "none",
             padding: "12px 24px", fontWeight: 700, fontSize: 14,
             cursor: "pointer", display: "flex", alignItems: "center",
             justifyContent: "center", gap: 8, opacity: loading ? 0.5 : 1

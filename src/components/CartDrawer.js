@@ -28,7 +28,7 @@ const inputStyle = {
   borderRadius: 0,
   padding: "14px 16px",
   fontSize: "13px",
-  color: "#fff",
+  color: "var(--text)",
   outline: "none",
   boxSizing: "border-box",
 };
@@ -382,7 +382,7 @@ export default function CartDrawer() {
                   </button>
                 )}
                 <div>
-                  <div style={{ fontSize: "16px", fontWeight: 700, color: "#fff" }}>
+                  <div style={{ fontSize: "16px", fontWeight: 700, color: "var(--text)" }}>
                     {submitResult ? (submitResult.success ? "Tamamlandı" : "Hata") : iframeToken ? "Kart ile Ödeme" : !checkoutMode ? "Sepetim" : checkoutStep === "contact" ? textContactInfo : "Ödeme Yöntemi"}
                   </div>
                   <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
@@ -449,7 +449,7 @@ export default function CartDrawer() {
                               </div>
 
                               {/* Package name + month */}
-                              <div style={{ fontSize: "14px", fontWeight: 600, color: "#fff", marginBottom: "4px" }}>
+                              <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text)", marginBottom: "4px" }}>
                                 {item.pkg.name}
                               </div>
                               <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)", marginBottom: "12px" }}>
@@ -506,7 +506,7 @@ export default function CartDrawer() {
 
                               {/* Price */}
                               <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline", gap: "4px" }}>
-                                <span style={{ fontSize: "16px", fontWeight: 700, color: "#fff" }}>
+                                <span style={{ fontSize: "16px", fontWeight: 700, color: "var(--text)" }}>
                                   {fmt(pkgPrice + addonPrice)}
                                 </span>
                                 <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>₺</span>
@@ -532,7 +532,7 @@ export default function CartDrawer() {
                       }}>
                         <Sparkles size={24} style={{ color: "#f59e0b" }} />
                       </div>
-                      <h3 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: "0 0 6px" }}>Bir Şey Eksik Olmasın!</h3>
+                      <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", margin: "0 0 6px" }}>Bir Şey Eksik Olmasın!</h3>
                       <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", margin: 0, lineHeight: 1.5 }}>
                         Bu hizmetleri de eklemek ister misiniz?
                       </p>
@@ -556,7 +556,7 @@ export default function CartDrawer() {
                               background: `linear-gradient(135deg, ${suggestion.color}11 0%, transparent 60%)`,
                               border: `1px solid ${suggestion.color}33`,
                               cursor: "pointer", textAlign: "left",
-                              transition: "all 0.2s", color: "#fff",
+                              transition: "all 0.2s", color: "var(--text)",
                             }}
                           >
                             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -596,7 +596,7 @@ export default function CartDrawer() {
                       style={{
                         width: "100%", marginTop: 20, padding: "14px",
                         borderRadius: 0, border: "none",
-                        background: "#fff", color: "#000",
+                        background: "var(--text)", color: "var(--bg)",
                         fontSize: 13, fontWeight: 700, cursor: "pointer",
                         display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                       }}
@@ -626,13 +626,13 @@ export default function CartDrawer() {
                         return (
                           <div key={item.pkg.id} style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", marginBottom: "6px" }}>
                             <span style={{ color: "rgba(255,255,255,0.6)" }}>{item.pkg.name}</span>
-                            <span style={{ color: "#fff", fontWeight: 600 }}>{fmt(p + ad)}₺</span>
+                            <span style={{ color: "var(--text)", fontWeight: 600 }}>{fmt(p + ad)}₺</span>
                           </div>
                         );
                       })}
                       <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", marginTop: "10px", paddingTop: "10px", display: "flex", justifyContent: "space-between" }}>
                         <span style={{ fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)" }}>Toplam</span>
-                        <span style={{ fontSize: "18px", fontWeight: 700, color: "#fff" }}>{fmt(cartTotal())}₺</span>
+                        <span style={{ fontSize: "18px", fontWeight: 700, color: "var(--text)" }}>{fmt(cartTotal())}₺</span>
                       </div>
                     </div>
 
@@ -644,8 +644,8 @@ export default function CartDrawer() {
                       transition: "all 0.3s",
                     }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                        <Tag size={12} style={{ color: discountResult ? "#fff" : "rgba(255,255,255,0.4)" }} />
-                        <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: discountResult ? "#fff" : "rgba(255,255,255,0.4)" }}>
+                        <Tag size={12} style={{ color: discountResult ? "var(--text)" : "rgba(255,255,255,0.4)" }} />
+                        <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: discountResult ? "var(--text)" : "rgba(255,255,255,0.4)" }}>
                           {discountResult ? "İndirim Uygulandı!" : "İndirim Kodunuz Var Mı?"}
                         </span>
                       </div>
@@ -668,8 +668,8 @@ export default function CartDrawer() {
                             disabled={discountLoading || !discountCode.trim()}
                             style={{
                               padding: "0 18px", borderRadius: 0, border: "none",
-                              background: discountCode.trim() ? "#fff" : "rgba(255,255,255,0.06)",
-                              color: discountCode.trim() ? "#000" : "rgba(255,255,255,0.2)",
+                              background: discountCode.trim() ? "var(--text)" : "rgba(255,255,255,0.06)",
+                              color: discountCode.trim() ? "var(--bg)" : "rgba(255,255,255,0.2)",
                               fontWeight: 700, fontSize: 12, cursor: discountCode.trim() ? "pointer" : "not-allowed",
                               flexShrink: 0, transition: "all 0.2s",
                             }}
@@ -681,9 +681,9 @@ export default function CartDrawer() {
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <div>
                             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <Check size={14} style={{ color: "#fff" }} />
-                              <span style={{ fontSize: 14, fontWeight: 800, color: "#fff", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: "#fff" }}>%{discountResult.discountPercent}</span>
+                              <Check size={14} style={{ color: "var(--text)" }} />
+                              <span style={{ fontSize: 14, fontWeight: 800, color: "var(--text)", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: "var(--text)" }}>%{discountResult.discountPercent}</span>
                             </div>
                             {discountResult.description && (
                               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4, marginLeft: 22 }}>{discountResult.description}</div>
@@ -896,8 +896,8 @@ export default function CartDrawer() {
                       >
                         <div style={{
                           width: 20, height: 20, borderRadius: 0, flexShrink: 0, marginTop: 1,
-                          border: `2px solid ${contractAccepted ? "#fff" : "rgba(255,255,255,0.25)"}`,
-                          background: contractAccepted ? "#fff" : "transparent",
+                          border: `2px solid ${contractAccepted ? "var(--text)" : "rgba(255,255,255,0.25)"}`,
+                          background: contractAccepted ? "var(--text)" : "transparent",
                           display: "flex", alignItems: "center", justifyContent: "center",
                           transition: "all 0.2s",
                         }}>
@@ -905,7 +905,7 @@ export default function CartDrawer() {
                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                           )}
                         </div>
-                        <span style={{ fontSize: 13, color: contractAccepted ? "#fff" : "rgba(255,255,255,0.5)", lineHeight: 1.5, transition: "all 0.2s" }}>
+                        <span style={{ fontSize: 13, color: contractAccepted ? "var(--text)" : "rgba(255,255,255,0.5)", lineHeight: 1.5, transition: "all 0.2s" }}>
                           Siparişimi tamamlayarak, <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Hizmet Sözleşmesi</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okuduğumu ve kabul ettiğimi onaylıyorum. *
                         </span>
                       </div>
@@ -919,20 +919,20 @@ export default function CartDrawer() {
                         width: "100%", padding: "20px", borderRadius: 0, marginBottom: 12,
                         background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)",
                         cursor: (isSubmitting || !contractAccepted) ? "not-allowed" : "pointer", textAlign: "left",
-                        transition: "all 0.2s", color: "#fff",
+                        transition: "all 0.2s", color: "var(--text)",
                         opacity: (!contractAccepted) ? 0.4 : 1,
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                         <div style={{ width: 48, height: 48, borderRadius: 0, background: "rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          <Banknote size={22} style={{ color: "#fff" }} />
+                          <Banknote size={22} style={{ color: "var(--text)" }} />
                         </div>
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Nakit / Havale</div>
                           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.4 }}>Sizinle telefonla iletişime geçeceğiz</div>
                         </div>
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontSize: 20, fontWeight: 800, color: "#fff" }}>{fmt(effectiveTotal)}₺</div>
+                          <div style={{ fontSize: 20, fontWeight: 800, color: "var(--text)" }}>{fmt(effectiveTotal)}₺</div>
                           <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 600, textTransform: "uppercase" }}>{discountResult ? `%${discountResult.discountPercent} indirimli` : "Aynı fiyat"}</div>
                         </div>
                       </div>
@@ -947,7 +947,7 @@ export default function CartDrawer() {
                         width: "100%", padding: "20px", borderRadius: 0, marginBottom: 12,
                         background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.2)",
                         cursor: (isSubmitting || !contractAccepted) ? "not-allowed" : "pointer", textAlign: "left",
-                        transition: "all 0.2s", color: "#fff",
+                        transition: "all 0.2s", color: "var(--text)",
                         opacity: (!contractAccepted) ? 0.4 : 1,
                       }}
                     >
@@ -1046,22 +1046,22 @@ export default function CartDrawer() {
                         <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.12)", display: "flex", alignItems: "flex-start", gap: 12 }}>
                           <Mail size={18} style={{ color: "rgba(255,255,255,0.5)", flexShrink: 0, marginTop: 2 }} />
                           <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>
-                            Belirlediğiniz <strong style={{ color: "#fff" }}>giriş şifresi</strong> ile hesabınıza giriş yapabilir ve rezervasyon durumunuzu takip edebilirsiniz.
+                            Belirlediğiniz <strong style={{ color: "var(--text)" }}>giriş şifresi</strong> ile hesabınıza giriş yapabilir ve rezervasyon durumunuzu takip edebilirsiniz.
                           </span>
                         </div>
 
                         <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "flex-start", gap: 12 }}>
                           <User size={18} style={{ color: "rgba(255,255,255,0.7)", flexShrink: 0, marginTop: 2 }} />
                           <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>
-                            <strong style={{ color: "#fff" }}>Profilinizden</strong> rezervasyon durumunuzu takip edebilir, ödeme geçmişinizi görebilir ve tüm süreci yönetebilirsiniz.
+                            <strong style={{ color: "var(--text)" }}>Profilinizden</strong> rezervasyon durumunuzu takip edebilir, ödeme geçmişinizi görebilir ve tüm süreci yönetebilirsiniz.
                           </span>
                         </div>
 
                         {submitResult.type === "cash" && (
                           <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "flex-start", gap: 12 }}>
-                            <Phone size={18} style={{ color: "#fff", flexShrink: 0, marginTop: 2 }} />
+                            <Phone size={18} style={{ color: "var(--text)", flexShrink: 0, marginTop: 2 }} />
                             <span style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>
-                              Ekibimiz en kısa sürede sizinle <strong style={{ color: "#fff" }}>telefonla</strong> iletişime geçecek ve ödeme detaylarını paylaşacak.
+                              Ekibimiz en kısa sürede sizinle <strong style={{ color: "var(--text)" }}>telefonla</strong> iletişime geçecek ve ödeme detaylarını paylaşacak.
                             </span>
                           </div>
                         )}
@@ -1072,7 +1072,7 @@ export default function CartDrawer() {
                           }}
                           style={{
                             marginTop: 16, width: "100%", padding: "14px", borderRadius: 0,
-                            background: "#fff", color: "#000", border: "none",
+                            background: "var(--text)", color: "var(--bg)", border: "none",
                             fontWeight: 700, fontSize: 14, cursor: "pointer",
                           }}
                         >
@@ -1099,17 +1099,17 @@ export default function CartDrawer() {
                     TOPLAM
                   </div>
                   <div>
-                    <span style={{ fontSize: "24px", fontWeight: 700, color: "#fff" }}>{fmt(discountResult ? effectiveTotal : rawTotal)}</span>
+                    <span style={{ fontSize: "24px", fontWeight: 700, color: "var(--text)" }}>{fmt(discountResult ? effectiveTotal : rawTotal)}</span>
                     <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)", fontWeight: 400, marginLeft: "2px" }}>₺</span>
                   </div>
                 </div>
                 {discountResult && (
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, padding: "8px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Tag size={11} style={{ color: "#fff" }} />
-                      <span style={{ fontSize: 11, fontWeight: 700, color: "#fff", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
+                      <Tag size={11} style={{ color: "var(--text)" }} />
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
                     </div>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>-{fmt(discountAmount)}₺</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "var(--text)" }}>-{fmt(discountAmount)}₺</span>
                   </div>
                 )}
 
@@ -1132,7 +1132,7 @@ export default function CartDrawer() {
                       }
                     }} style={{
                       flex: 2, padding: "14px", borderRadius: 0,
-                      border: "none", background: "#fff", color: "#000",
+                      border: "none", background: "var(--text)", color: "var(--bg)",
                       fontSize: "13px", fontWeight: 700, cursor: "pointer",
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                       transition: "all 0.2s",
@@ -1147,8 +1147,8 @@ export default function CartDrawer() {
                     style={{
                       width: "100%", padding: "16px", borderRadius: 0,
                       border: "none",
-                      background: isContactValid ? "#fff" : "rgba(255,255,255,0.04)",
-                      color: isContactValid ? "#000" : "rgba(255,255,255,0.15)",
+                      background: isContactValid ? "var(--text)" : "rgba(255,255,255,0.04)",
+                      color: isContactValid ? "var(--bg)" : "rgba(255,255,255,0.15)",
                       fontSize: "14px", fontWeight: 700,
                       cursor: isContactValid ? "pointer" : "not-allowed",
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",

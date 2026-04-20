@@ -41,9 +41,9 @@ export default function ShopStorefront({ products, categories }) {
             onClick={() => setActiveCategory("all")}
             style={{
               padding: "8px 20px", borderRadius: "100px", fontSize: "13px", fontWeight: 700, whiteSpace: "nowrap", cursor: "pointer", transition: "all 0.2s",
-              background: activeCategory === "all" ? "#fff" : "rgba(255,255,255,0.05)",
-              color: activeCategory === "all" ? "#000" : "rgba(255,255,255,0.6)",
-              border: activeCategory === "all" ? "1px solid #fff" : "1px solid rgba(255,255,255,0.1)",
+              background: activeCategory === "all" ? "var(--text)" : "rgba(255,255,255,0.05)",
+              color: activeCategory === "all" ? "var(--bg)" : "rgba(255,255,255,0.6)",
+              border: activeCategory === "all" ? "1px solid var(--text)" : "1px solid rgba(255,255,255,0.1)",
             }}
           >
             Tümü
@@ -54,9 +54,9 @@ export default function ShopStorefront({ products, categories }) {
               onClick={() => setActiveCategory(cat.id)}
               style={{
                 padding: "8px 20px", borderRadius: "100px", fontSize: "13px", fontWeight: 700, whiteSpace: "nowrap", cursor: "pointer", transition: "all 0.2s",
-                background: activeCategory === cat.id ? "#fff" : "rgba(255,255,255,0.05)",
-                color: activeCategory === cat.id ? "#000" : "rgba(255,255,255,0.6)",
-                border: activeCategory === cat.id ? "1px solid #fff" : "1px solid rgba(255,255,255,0.1)",
+                background: activeCategory === cat.id ? "var(--text)" : "rgba(255,255,255,0.05)",
+                color: activeCategory === cat.id ? "var(--bg)" : "rgba(255,255,255,0.6)",
+                border: activeCategory === cat.id ? "1px solid var(--text)" : "1px solid rgba(255,255,255,0.1)",
               }}
             >
               {cat.name}
@@ -86,13 +86,13 @@ export default function ShopStorefront({ products, categories }) {
                   </div>
                 )}
                 {product.discountPercentage > 0 && (
-                  <div style={{ position: "absolute", top: 12, right: 12, background: "#fff", color: "#000", padding: "4px 8px", fontSize: 11, fontWeight: 800 }}>
+                  <div style={{ position: "absolute", top: 12, right: 12, background: "var(--text)", color: "var(--bg)", padding: "4px 8px", fontSize: 11, fontWeight: 800 }}>
                     %{product.discountPercentage} İndirim
                   </div>
                 )}
               </div>
               <div style={{ padding: "20px", display: "flex", flexDirection: "column", flex: 1 }}>
-                <div style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px", color: "#fff" }}>{product.name}</div>
+                <div style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px", color: "var(--text)" }}>{product.name}</div>
                 <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", marginBottom: "16px" }}>{product.description || "\u00A0"}</div>
                 
                 <div style={{ marginTop: "auto", display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
@@ -100,10 +100,10 @@ export default function ShopStorefront({ products, categories }) {
                     {discountPrice ? (
                       <div>
                         <div style={{ fontSize: "12px", textDecoration: "line-through", color: "rgba(255,255,255,0.4)" }}>{formatPrice(product.price)} ₺</div>
-                        <div style={{ fontSize: "20px", fontWeight: 800, color: "#fff" }}>{formatPrice(discountPrice)} ₺</div>
+                        <div style={{ fontSize: "20px", fontWeight: 800, color: "var(--text)" }}>{formatPrice(discountPrice)} ₺</div>
                       </div>
                     ) : (
-                      <div style={{ fontSize: "20px", fontWeight: 800, color: "#fff" }}>{formatPrice(product.price)} ₺</div>
+                      <div style={{ fontSize: "20px", fontWeight: 800, color: "var(--text)" }}>{formatPrice(product.price)} ₺</div>
                     )}
                   </div>
                 </div>
@@ -120,7 +120,7 @@ export default function ShopStorefront({ products, categories }) {
           zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px"
         }} onClick={() => setSelectedProduct(null)}>
           <div style={{
-            background: "#111", border: "1px solid rgba(255,255,255,0.1)",
+            background: "var(--bg)", border: "1px solid rgba(255,255,255,0.1)",
             width: "100%", maxWidth: "800px", maxHeight: "90vh", overflowY: "auto",
             display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0"
           }} onClick={e => e.stopPropagation()} className="max-md:grid-cols-1">
@@ -160,9 +160,9 @@ export default function ShopStorefront({ products, categories }) {
               {selectedProduct.discountPercentage > 0 ? (
                 <div style={{ marginBottom: "32px" }}>
                   <div style={{ fontSize: "16px", textDecoration: "line-through", color: "rgba(255,255,255,0.4)" }}>{formatPrice(selectedProduct.price)} ₺</div>
-                  <div style={{ fontSize: "32px", fontWeight: 800, color: "#fff", display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ fontSize: "32px", fontWeight: 800, color: "var(--text)", display: "flex", alignItems: "center", gap: 12 }}>
                     {formatPrice((parseInt(selectedProduct.price) * (100 - selectedProduct.discountPercentage)) / 100)} ₺
-                    <span style={{ background: "#fff", color: "#000", padding: "4px 8px", fontSize: 12, fontWeight: 800 }}>%{selectedProduct.discountPercentage} İndirim</span>
+                    <span style={{ background: "var(--text)", color: "var(--bg)", padding: "4px 8px", fontSize: 12, fontWeight: 800 }}>%{selectedProduct.discountPercentage} İndirim</span>
                   </div>
                 </div>
               ) : (
@@ -180,7 +180,7 @@ export default function ShopStorefront({ products, categories }) {
                 <button 
                   onClick={() => handleAddToCart(selectedProduct)}
                   style={{ 
-                    width: "100%", padding: "16px", background: "#fff", color: "#000", 
+                    width: "100%", padding: "16px", background: "var(--text)", color: "var(--bg)", 
                     border: "none", fontSize: "14px", fontWeight: 800, cursor: "pointer",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 8
                   }}>

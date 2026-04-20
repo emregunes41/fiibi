@@ -11,7 +11,7 @@ import Link from "next/link";
 const inp = {
   padding: "0.7rem 0.8rem", borderRadius: 0, fontSize: "0.8rem",
   border: "1px solid rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.08)",
-  color: "#fff", outline: "none", width: "100%", boxSizing: "border-box",
+  color: "var(--text)", outline: "none", width: "100%", boxSizing: "border-box",
 };
 
 export default function ReservationsPage() {
@@ -186,7 +186,7 @@ export default function ReservationsPage() {
   };
 
   return (
-    <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
+    <div style={{ color: "var(--text)", maxWidth: "100%", overflowX: "hidden" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", gap: "0.75rem", flexWrap: "wrap" }}>
         <div>
@@ -195,7 +195,7 @@ export default function ReservationsPage() {
         </div>
         <Link href="/admin/new-reservation"
           style={{ 
-            background: "#22c55e", color: "#000", padding: "0.5rem 1rem", 
+            background: "#22c55e", color: "var(--bg)", padding: "0.5rem 1rem", 
             borderRadius: 0, border: "none", fontWeight: 800, cursor: "pointer",
             display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem",
             textDecoration: "none",
@@ -212,7 +212,7 @@ export default function ReservationsPage() {
           style={{
             padding: "7px 14px", borderRadius: 0, border: "none", cursor: "pointer",
             background: viewMode === "list" ? "rgba(255,255,255,0.12)" : "transparent",
-            color: viewMode === "list" ? "#fff" : "rgba(255,255,255,0.4)",
+            color: viewMode === "list" ? "var(--text)" : "rgba(255,255,255,0.4)",
             fontWeight: 700, fontSize: "0.68rem", display: "flex", alignItems: "center", gap: "6px",
             transition: "all 0.2s",
           }}
@@ -224,7 +224,7 @@ export default function ReservationsPage() {
           style={{
             padding: "7px 14px", borderRadius: 0, border: "none", cursor: "pointer",
             background: viewMode === "calendar" ? "rgba(255,255,255,0.12)" : "transparent",
-            color: viewMode === "calendar" ? "#fff" : "rgba(255,255,255,0.4)",
+            color: viewMode === "calendar" ? "var(--text)" : "rgba(255,255,255,0.4)",
             fontWeight: 700, fontSize: "0.68rem", display: "flex", alignItems: "center", gap: "6px",
             transition: "all 0.2s",
           }}
@@ -328,7 +328,7 @@ export default function ReservationsPage() {
                     cursor: "pointer", overflow: "hidden",
                     transition: "all 0.15s", position: "relative",
                   }}>
-                    <div style={{ fontSize: "0.7rem", fontWeight: todayStyle ? 800 : 600, color: isDayBlocked ? "rgba(255,80,80,0.7)" : todayStyle ? "rgba(255,255,255,0.5)" : hasRes ? "#fff" : "rgba(255,255,255,0.3)", marginBottom: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ fontSize: "0.7rem", fontWeight: todayStyle ? 800 : 600, color: isDayBlocked ? "rgba(255,80,80,0.7)" : todayStyle ? "rgba(255,255,255,0.5)" : hasRes ? "var(--text)" : "rgba(255,255,255,0.3)", marginBottom: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                       {day}
                       {isDayBlocked && <span style={{ fontSize: "0.45rem", fontWeight: 900, color: "rgba(255,80,80,0.6)", textTransform: "uppercase" }}>KAPALI</span>}
                     </div>
@@ -383,7 +383,7 @@ export default function ReservationsPage() {
                 <div onClick={() => setDayPopup(null)} style={{ position: "fixed", inset: 0, zIndex: 999 }} />
                 <div style={{
                   position: "fixed", left: Math.min(dayPopup.x, window.innerWidth - 260), top: Math.min(dayPopup.y, window.innerHeight - 200),
-                  zIndex: 1000, background: "#111", border: "1px solid rgba(255,255,255,0.15)",
+                  zIndex: 1000, background: "var(--bg)", border: "1px solid rgba(255,255,255,0.15)",
                   borderRadius: 0, padding: "10px 12px", minWidth: 220, maxWidth: 280, maxHeight: 250, overflowY: "auto",
                   boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
                 }}>
@@ -441,13 +441,13 @@ export default function ReservationsPage() {
                         >
                           <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
                             <div style={{ width: 32, textAlign: "center", flexShrink: 0 }}>
-                              <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>{d.getDate()}</div>
+                              <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "var(--text)", lineHeight: 1 }}>{d.getDate()}</div>
                               <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.3)", fontWeight: 600 }}>
                                 {["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"][d.getDay()]}
                               </div>
                             </div>
                             <div style={{ minWidth: 0 }}>
-                              <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                              <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--text)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                                 {displayName(r)}
                               </div>
                               <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)" }}>
@@ -488,7 +488,7 @@ export default function ReservationsPage() {
           style={{
             width: "100%", boxSizing: "border-box", padding: "9px 12px 9px 34px",
             background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 0, color: "#fff", fontSize: "0.75rem", outline: "none",
+            borderRadius: 0, color: "var(--text)", fontSize: "0.75rem", outline: "none",
             transition: "all 0.2s",
           }}
         />
@@ -510,7 +510,7 @@ export default function ReservationsPage() {
             style={{
               padding: "5px 10px", borderRadius: 0, border: "none", cursor: "pointer",
               background: sortMode === s.key ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.04)",
-              color: sortMode === s.key ? "#fff" : "rgba(255,255,255,0.4)",
+              color: sortMode === s.key ? "var(--text)" : "rgba(255,255,255,0.4)",
               fontWeight: 700, fontSize: "0.6rem", transition: "all 0.15s",
             }}
           >
@@ -619,7 +619,7 @@ export default function ReservationsPage() {
                 </div>
                 <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
                   {isPhotographer && (res.contractApproved ? (
-                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(74,222,128,0.3)" }}>📝 Sözleşme ✓</span>
+                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.1)", color: "var(--text)", border: "1px solid rgba(74,222,128,0.3)" }}>📝 Sözleşme ✓</span>
                   ) : (
                     <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.12)" }}>📝 Onay Yok</span>
                   ))}
@@ -627,7 +627,7 @@ export default function ReservationsPage() {
                     <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(245,158,11,0.15)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}>💳 Kart</span>
                   )}
                   {res.paymentPreference === "CASH" && (
-                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(74,222,128,0.3)" }}>💵 Nakit</span>
+                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.1)", color: "var(--text)", border: "1px solid rgba(74,222,128,0.3)" }}>💵 Nakit</span>
                   )}
                   <span style={{
                     padding: "3px 8px", borderRadius: 0, fontSize: "0.6rem", fontWeight: 800,
@@ -652,7 +652,7 @@ export default function ReservationsPage() {
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.65rem", color: res.selectionLocked ? "#fff" : "rgba(255,255,255,0.5)", fontWeight: 700 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.65rem", color: res.selectionLocked ? "var(--text)" : "rgba(255,255,255,0.5)", fontWeight: 700 }}>
                         <Edit2 size={10} /> 
                         {res.selectionLocked 
                           ? "✅ İşleme Alındı" 
@@ -669,7 +669,7 @@ export default function ReservationsPage() {
                           }}
                           style={{
                             padding: "4px 12px", borderRadius: 0, border: "none",
-                            background: "rgba(255,255,255,0.5)", color: "#fff", fontSize: "0.62rem", fontWeight: 700,
+                            background: "rgba(255,255,255,0.5)", color: "var(--text)", fontSize: "0.62rem", fontWeight: 700,
                             cursor: "pointer", whiteSpace: "nowrap",
                           }}
                         >
@@ -693,12 +693,12 @@ export default function ReservationsPage() {
               {/* Album Model Display */}
               {res.albumModel && (
                 <div style={{ marginBottom: "8px", padding: "6px 10px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 0, display: "flex", alignItems: "center", gap: "8px" }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 0, overflow: "hidden", background: "#000", flexShrink: 0 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 0, overflow: "hidden", background: "var(--bg)", flexShrink: 0 }}>
                     <img src={res.albumModel.imageUrl} alt="Album" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
                   <div>
                     <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase" }}>Albüm Seçimi</div>
-                    <div style={{ fontSize: "0.75rem", color: "#fff", fontWeight: 600 }}>{res.albumModel.name}</div>
+                    <div style={{ fontSize: "0.75rem", color: "var(--text)", fontWeight: 600 }}>{res.albumModel.name}</div>
                   </div>
                 </div>
               )}
@@ -711,13 +711,13 @@ export default function ReservationsPage() {
                 <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {res.packages.map(p => p.name).join(" + ")}
                 </span>
-                <span style={{ fontWeight: 800, color: "#fff" }}>
+                <span style={{ fontWeight: 800, color: "var(--text)" }}>
                   {res.totalAmount || "0"} TL
                   {res.selectedAddons?.length > 0 && <span style={{ fontWeight: 400, color: "rgba(255,255,255,0.3)", marginLeft: "4px" }}>+{res.selectedAddons.length}</span>}
                 </span>
                 {(() => {
                   const ps = res.paymentStatus;
-                  if (ps === "PAID") return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", color: "#fff", padding: "2px 6px", borderRadius: 0 }}>ÖDENDİ</span>;
+                  if (ps === "PAID") return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", color: "var(--text)", padding: "2px 6px", borderRadius: 0 }}>ÖDENDİ</span>;
                   if (ps === "PARTIAL") return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", padding: "2px 6px", borderRadius: 0 }}>KISMİ</span>;
                   return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.3)", padding: "2px 6px", borderRadius: 0 }}>ÖDENMEDİ</span>;
                 })()}
@@ -761,7 +761,7 @@ export default function ReservationsPage() {
                         style={{
                           padding: "4px 6px", borderRadius: 0, fontSize: "0.68rem",
                           border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)",
-                          color: "#fff", outline: "none",
+                          color: "var(--text)", outline: "none",
                         }}
                       >
                         <option value="PENDING">Bekleyen</option>
@@ -823,7 +823,7 @@ export default function ReservationsPage() {
       {/* ── New / Edit Reservation Modal ── */}
       {(isModalOpen || editModal.isOpen) && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "420px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
+          <div style={{ background: "var(--bg)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "420px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>{editModal.isOpen ? "Rezervasyonu Düzenle" : "Yeni Rezervasyon"}</h2>
               <button onClick={() => { setIsModalOpen(false); setEditModal({isOpen: false, data: null}); }} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={18} /></button>
@@ -902,7 +902,7 @@ export default function ReservationsPage() {
                               padding: "6px 10px", borderRadius: 0, fontSize: "0.68rem", cursor: "pointer",
                               border: on ? "1px solid rgba(255,255,255,0.35)" : "1px solid rgba(255,255,255,0.08)",
                               background: on ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.03)",
-                              color: on ? "#fff" : "rgba(255,255,255,0.55)", fontWeight: on ? 700 : 500,
+                              color: on ? "var(--text)" : "rgba(255,255,255,0.55)", fontWeight: on ? 700 : 500,
                               display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "2px",
                             }}>
                               <span>{pkg.name}</span>
@@ -958,9 +958,9 @@ export default function ReservationsPage() {
                         return (
                           <button key={slot.value} type="button" onClick={() => setFormData({...formData, eventTime: slot.value})} style={{
                             padding: "10px 6px", borderRadius: 0,
-                            border: sel ? "2px solid #fff" : "1px solid rgba(255,255,255,0.08)",
-                            background: sel ? "#fff" : "rgba(255,255,255,0.03)",
-                            color: sel ? "#000" : "rgba(255,255,255,0.5)", fontSize: "0.7rem", fontWeight: 600,
+                            border: sel ? "2px solid var(--text)" : "1px solid rgba(255,255,255,0.08)",
+                            background: sel ? "var(--text)" : "rgba(255,255,255,0.03)",
+                            color: sel ? "var(--bg)" : "rgba(255,255,255,0.5)", fontSize: "0.7rem", fontWeight: 600,
                             cursor: "pointer", transition: "all 0.2s", textAlign: "center",
                           }}>
                             {slot.label}
@@ -991,11 +991,11 @@ export default function ReservationsPage() {
                               arr[idx] = {...arr[idx], value: e.target.value === "__OTHER__" ? "__OTHER__" : e.target.value};
                               setFormData({...formData, customFieldAnswers: arr});
                             }} style={inp}>
-                              <option value="" style={{ background: "#111" }}>Seçiniz...</option>
+                              <option value="" style={{ background: "var(--bg)" }}>Seçiniz...</option>
                               {opts.map((o, oi) => (
-                                <option key={oi} value={o} style={{ background: "#111" }}>{o}</option>
+                                <option key={oi} value={o} style={{ background: "var(--bg)" }}>{o}</option>
                               ))}
-                              <option value="__OTHER__" style={{ background: "#111" }}>Diğer...</option>
+                              <option value="__OTHER__" style={{ background: "var(--bg)" }}>Diğer...</option>
                             </select>
                             {isOther && (
                               <input placeholder="Lütfen belirtiniz..." value={cfa.value === "__OTHER__" ? "" : cfa.value} onChange={(e) => {
@@ -1011,7 +1011,7 @@ export default function ReservationsPage() {
                           <input type="checkbox" checked={cfa.value || false} onChange={(e) => {
                             const arr = [...formData.customFieldAnswers]; arr[idx] = {...arr[idx], value: e.target.checked};
                             setFormData({...formData, customFieldAnswers: arr});
-                          }} style={{ width: "14px", height: "14px", accentColor: "#fff" }} />
+                          }} style={{ width: "14px", height: "14px", accentColor: "var(--text)" }} />
                           {cfa.label}
                         </label>
                       ) : (
@@ -1050,7 +1050,7 @@ export default function ReservationsPage() {
                               padding: "5px 10px", borderRadius: 0, fontSize: "0.65rem", cursor: "pointer",
                               border: isSelected ? "1px solid rgba(255,255,255,0.25)" : "1px solid rgba(255,255,255,0.08)",
                               background: isSelected ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.03)",
-                              color: isSelected ? "#fff" : "rgba(255,255,255,0.55)", fontWeight: isSelected ? 700 : 500,
+                              color: isSelected ? "var(--text)" : "rgba(255,255,255,0.55)", fontWeight: isSelected ? 700 : 500,
                             }}>
                               + {addon.title} ({addon.price}₺)
                             </button>
@@ -1069,7 +1069,7 @@ export default function ReservationsPage() {
 
               <div style={{ display: "flex", gap: "0.5rem", marginTop: "4px" }}>
                 <button type="button" onClick={() => { setIsModalOpen(false); setEditModal({isOpen: false, data: null}); }} style={{ flex: 1, padding: "0.7rem", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "rgba(255,255,255,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>
-                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : (editModal.isOpen ? "GÜNCELLE" : "KAYDET")}</button>
+                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "var(--text)", color: "var(--bg)", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : (editModal.isOpen ? "GÜNCELLE" : "KAYDET")}</button>
               </div>
             </form>
           </div>
@@ -1079,7 +1079,7 @@ export default function ReservationsPage() {
       {/* ── Workflow Modal ── */}
       {workflowModal.isOpen && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "380px", padding: "1.25rem", margin: "2rem 0" }}>
+          <div style={{ background: "var(--bg)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "380px", padding: "1.25rem", margin: "2rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
               <div>
                 <h2 style={{ fontSize: "1rem", fontWeight: 900, margin: 0 }}>İş Akışı</h2>
@@ -1105,13 +1105,13 @@ export default function ReservationsPage() {
               </div>
               <div>
                 <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", marginBottom: "5px" }}>Müşteri Seçimi (Foto Numaraları)</div>
-                <div style={{ ...inp, minHeight: "60px", fontSize: "0.75rem", color: workflowModal.data.selectedPhotos ? "#fff" : "rgba(255,255,255,0.2)", border: "1px dashed rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.02)", cursor: "default", overflowY: "auto" }}>
+                <div style={{ ...inp, minHeight: "60px", fontSize: "0.75rem", color: workflowModal.data.selectedPhotos ? "var(--text)" : "rgba(255,255,255,0.2)", border: "1px dashed rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.02)", cursor: "default", overflowY: "auto" }}>
                   {workflowModal.data.selectedPhotos || "Henüz seçim yapılmadı."}
                 </div>
               </div>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <button type="button" onClick={() => setWorkflowModal({isOpen: false, data: null})} style={{ flex: 1, padding: "0.65rem", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "rgba(255,255,255,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.72rem" }}>İPTAL</button>
-                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.65rem", borderRadius: 0, border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer", fontSize: "0.72rem" }}>{isLoading ? "..." : "GÜNCELLE"}</button>
+                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.65rem", borderRadius: 0, border: "none", background: "var(--text)", color: "var(--bg)", fontWeight: 900, cursor: "pointer", fontSize: "0.72rem" }}>{isLoading ? "..." : "GÜNCELLE"}</button>
               </div>
             </form>
           </div>
@@ -1140,7 +1140,7 @@ export default function ReservationsPage() {
             <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
               <Icon size={12} style={{ color: color || "rgba(255,255,255,0.35)", flexShrink: 0 }} />
               <span style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)", minWidth: 70, flexShrink: 0 }}>{label}</span>
-              <span style={{ fontSize: "0.75rem", color: "#fff", fontWeight: 600, wordBreak: "break-word" }}>{value}</span>
+              <span style={{ fontSize: "0.75rem", color: "var(--text)", fontWeight: 600, wordBreak: "break-word" }}>{value}</span>
             </div>
           ) : null
         );
@@ -1166,7 +1166,7 @@ export default function ReservationsPage() {
                   <span style={{ padding: "4px 10px", borderRadius: 0, fontSize: "0.6rem", fontWeight: 800, textTransform: "uppercase", background: sc.bg, color: sc.c, border: sc.b }}>
                     {statusLabels[r.status] || r.status}
                   </span>
-                  <button onClick={() => { setDetailModal({ isOpen: false, data: null }); openEditModal(r); }} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
+                  <button onClick={() => { setDetailModal({ isOpen: false, data: null }); openEditModal(r); }} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text)", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
                     <Edit2 size={11} /> Düzenle
                   </button>
                   <button onClick={() => { setDetailModal({ isOpen: false, data: null }); handleDeleteReservation(r.id, r.brideName); }} style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#ef4444", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
@@ -1197,10 +1197,10 @@ export default function ReservationsPage() {
                 <DetailRow icon={CreditCard} label="Ödenen Tutar" value={r.paidAmount && r.paidAmount !== "0" ? `${r.paidAmount} TL` : null} />
                 {isPhotographer && (
                 <div style={{ display: "flex", alignItems: "center", padding: "8px 0", gap: 10, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                  <FileText size={13} style={{ color: r.contractApproved ? "#fff" : "rgba(255,255,255,0.5)", flexShrink: 0 }} />
+                  <FileText size={13} style={{ color: r.contractApproved ? "var(--text)" : "rgba(255,255,255,0.5)", flexShrink: 0 }} />
                   <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", minWidth: 110 }}>Sözleşme</span>
                   {r.contractApproved ? (
-                    <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#fff" }}>✅ Onaylandı</span>
+                    <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--text)" }}>✅ Onaylandı</span>
                   ) : (
                     <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>⚠️ Henüz Onaylanmadı</span>
                   )}
@@ -1228,7 +1228,7 @@ export default function ReservationsPage() {
                               <div style={{ fontWeight: 700, fontSize: "0.88rem", marginBottom: 2 }}>{pkgIdx + 1}. {pkg.name}</div>
                               <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.45)", lineHeight: 1.4 }}>{pkg.description}</div>
                             </div>
-                            <div style={{ fontSize: "0.9rem", fontWeight: 800, color: "#fff", flexShrink: 0, marginLeft: 12 }}>{pkg.price}₺</div>
+                            <div style={{ fontSize: "0.9rem", fontWeight: 800, color: "var(--text)", flexShrink: 0, marginLeft: 12 }}>{pkg.price}₺</div>
                           </div>
                           <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: 8 }}>
                             <span style={{ fontSize: "0.58rem", fontWeight: 700, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", padding: "3px 8px", borderRadius: 0 }}>{catLabels[pkg.category] || pkg.category}</span>
@@ -1257,7 +1257,7 @@ export default function ReservationsPage() {
                               {pkgFields.map((answer, i) => (
                                 <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
                                   <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.45)", fontWeight: 600 }}>{answer.label}</span>
-                                  <span style={{ fontSize: "0.78rem", color: "#fff", fontWeight: 700 }}>
+                                  <span style={{ fontSize: "0.78rem", color: "var(--text)", fontWeight: 700 }}>
                                     {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
                                   </span>
                                 </div>
@@ -1270,7 +1270,7 @@ export default function ReservationsPage() {
                               <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 4 }}>Ek Hizmetler</div>
                               {pkgAddons.map((addon, i) => (
                                 <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
-                                  <span style={{ fontSize: "0.72rem", color: "#fff", fontWeight: 600 }}>+ {addon.title}</span>
+                                  <span style={{ fontSize: "0.72rem", color: "var(--text)", fontWeight: 600 }}>+ {addon.title}</span>
                                   <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", fontWeight: 700 }}>{addon.price}₺</span>
                                 </div>
                               ))}
@@ -1299,7 +1299,7 @@ export default function ReservationsPage() {
                             {unmatchedFields.map((answer, i) => (
                               <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "10px 14px" }}>
                                 <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 3 }}>{answer.label}</div>
-                                <div style={{ fontSize: "0.82rem", color: "#fff", fontWeight: 600 }}>
+                                <div style={{ fontSize: "0.82rem", color: "var(--text)", fontWeight: 600 }}>
                                   {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
                                 </div>
                               </div>
@@ -1313,7 +1313,7 @@ export default function ReservationsPage() {
                           <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                             {unmatchedAddons.map((addon, i) => (
                               <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "10px 14px" }}>
-                                <span style={{ fontSize: "0.78rem", color: "#fff", fontWeight: 600 }}>{addon.title}</span>
+                                <span style={{ fontSize: "0.78rem", color: "var(--text)", fontWeight: 600 }}>{addon.title}</span>
                                 <span style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.6)", fontWeight: 700 }}>{addon.price}₺</span>
                               </div>
                             ))}
@@ -1336,7 +1336,7 @@ export default function ReservationsPage() {
                   const pct = totalAmount > 0 ? Math.min(100, (totalPaid / totalAmount) * 100) : 0;
                   const isPaid = totalPaid >= totalAmount && totalAmount > 0;
                   const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale/EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online" };
-                  const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(255,255,255,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(255,255,255,0.6)" };
+                  const methodColors = { CASH: "var(--text)", BANK_TRANSFER: "rgba(255,255,255,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(255,255,255,0.6)" };
 
                   const handleAddPayment = async (e) => {
                     e.preventDefault();
@@ -1399,22 +1399,22 @@ export default function ReservationsPage() {
                         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px", marginBottom: "12px" }}>
                           <div style={{ textAlign: "center" }}>
                             <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Toplam</div>
-                            <div style={{ fontSize: "1rem", fontWeight: 800, color: "#fff" }}>{totalAmount.toLocaleString('tr-TR')}₺</div>
+                            <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--text)" }}>{totalAmount.toLocaleString('tr-TR')}₺</div>
                           </div>
                           <div style={{ textAlign: "center" }}>
                             <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: 4 }}>Ödenen</div>
-                            <div style={{ fontSize: "1rem", fontWeight: 800, color: "#fff" }}>{totalPaid.toLocaleString('tr-TR')}₺</div>
+                            <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--text)" }}>{totalPaid.toLocaleString('tr-TR')}₺</div>
                           </div>
                           <div style={{ textAlign: "center" }}>
                             <div style={{ fontSize: "0.58rem", fontWeight: 700, color: isPaid ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: 4 }}>Kalan</div>
-                            <div style={{ fontSize: "1rem", fontWeight: 800, color: isPaid ? "#fff" : "rgba(255,255,255,0.7)" }}>{remaining.toLocaleString('tr-TR')}₺</div>
+                            <div style={{ fontSize: "1rem", fontWeight: 800, color: isPaid ? "var(--text)" : "rgba(255,255,255,0.7)" }}>{remaining.toLocaleString('tr-TR')}₺</div>
                           </div>
                         </div>
                         {/* Progress bar */}
                         <div style={{ height: 6, borderRadius: 0, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-                          <div style={{ height: "100%", borderRadius: 0, background: isPaid ? "#fff" : pct > 0 ? "linear-gradient(90deg, #fff, rgba(255,255,255,0.7))" : "transparent", width: `${pct}%`, transition: "width 0.5s ease" }} />
+                          <div style={{ height: "100%", borderRadius: 0, background: isPaid ? "var(--text)" : pct > 0 ? "linear-gradient(90deg, #fff, rgba(255,255,255,0.7))" : "transparent", width: `${pct}%`, transition: "width 0.5s ease" }} />
                         </div>
-                        <div style={{ textAlign: "center", marginTop: 6, fontSize: "0.62rem", fontWeight: 700, color: isPaid ? "#fff" : "rgba(255,255,255,0.4)" }}>
+                        <div style={{ textAlign: "center", marginTop: 6, fontSize: "0.62rem", fontWeight: 700, color: isPaid ? "var(--text)" : "rgba(255,255,255,0.4)" }}>
                           {isPaid ? "✅ Tamamen Ödendi" : `%${Math.round(pct)} ödendi`}
                         </div>
                       </div>
@@ -1424,7 +1424,7 @@ export default function ReservationsPage() {
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                           <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "rgba(255,255,255,0.45)", textTransform: "uppercase" }}>Ödeme Ekle</div>
                           {r.paymentPreference && (
-                            <div style={{ fontSize: "0.55rem", fontWeight: 700, padding: "2px 8px", borderRadius: 0, background: r.paymentPreference === "CASH" ? "rgba(255,255,255,0.06)" : "rgba(96,165,250,0.1)", color: r.paymentPreference === "CASH" ? "#fff" : "rgba(255,255,255,0.5)", border: `1px solid ${r.paymentPreference === "CASH" ? "rgba(255,255,255,0.12)" : "rgba(96,165,250,0.2)"}` }}>
+                            <div style={{ fontSize: "0.55rem", fontWeight: 700, padding: "2px 8px", borderRadius: 0, background: r.paymentPreference === "CASH" ? "rgba(255,255,255,0.06)" : "rgba(96,165,250,0.1)", color: r.paymentPreference === "CASH" ? "var(--text)" : "rgba(255,255,255,0.5)", border: `1px solid ${r.paymentPreference === "CASH" ? "rgba(255,255,255,0.12)" : "rgba(96,165,250,0.2)"}` }}>
                               {r.paymentPreference === "CASH" ? "💵 Nakit Tercih" : "💳 Kart Tercih"}
                             </div>
                           )}
@@ -1461,8 +1461,8 @@ export default function ReservationsPage() {
                             disabled={!paymentForm.amount || paymentLoading}
                             style={{ 
                               padding: "8px 16px", borderRadius: 0, border: "none",
-                              background: paymentForm.amount ? "#fff" : "rgba(255,255,255,0.06)",
-                              color: paymentForm.amount ? "#000" : "rgba(255,255,255,0.3)",
+                              background: paymentForm.amount ? "var(--text)" : "rgba(255,255,255,0.06)",
+                              color: paymentForm.amount ? "var(--bg)" : "rgba(255,255,255,0.3)",
                               fontWeight: 800, fontSize: "0.72rem", cursor: paymentForm.amount ? "pointer" : "not-allowed",
                               flexShrink: 0,
                             }}
@@ -1503,7 +1503,7 @@ export default function ReservationsPage() {
                             style={{ 
                               padding: "8px 16px", borderRadius: 0, border: "none",
                               background: (extraFeeForm.amount && extraFeeForm.note) ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.06)",
-                              color: (extraFeeForm.amount && extraFeeForm.note) ? "#000" : "rgba(255,255,255,0.3)",
+                              color: (extraFeeForm.amount && extraFeeForm.note) ? "var(--bg)" : "rgba(255,255,255,0.3)",
                               fontWeight: 800, fontSize: "0.72rem", cursor: (extraFeeForm.amount && extraFeeForm.note) ? "pointer" : "not-allowed",
                               flexShrink: 0, flex: 1
                             }}
@@ -1533,7 +1533,7 @@ export default function ReservationsPage() {
 
                         const getLogIcon = (type) => {
                            switch(type) {
-                             case "ADD_PAYMENT": return <CreditCard size={12} style={{ color: "#fff" }} />;
+                             case "ADD_PAYMENT": return <CreditCard size={12} style={{ color: "var(--text)" }} />;
                              case "DELETE_PAYMENT": return <X size={12} style={{ color: "rgba(255,255,255,0.5)" }} />;
                              case "CARD_CONVERSION": return <CreditCard size={12} style={{ color: "rgba(255,255,255,0.7)" }} />;
                              case "EXTRA_FEE": return <AlertTriangle size={12} style={{ color: "#f97316" }} />;
@@ -1554,14 +1554,14 @@ export default function ReservationsPage() {
                                 const isNegative = log.amount && log.amount.includes("-");
                                 return (
                                 <div key={log.id} style={{ display: "flex", gap: 12, position: "relative", zIndex: 1 }}>
-                                  <div style={{ width: 32, height: 32, borderRadius: 0, background: "#111", border: "2px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                  <div style={{ width: 32, height: 32, borderRadius: 0, background: "var(--bg)", border: "2px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                                     {getLogIcon(log.type)}
                                   </div>
                                   <div style={{ flex: 1, background: "rgba(255,255,255,0.03)", borderRadius: 0, padding: "10px 14px", display: "flex", flexDirection: "column", gap: 4 }}>
                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                                       <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "rgba(255,255,255,0.85)", lineHeight: 1.4 }}>{log.description}</span>
                                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                        <span style={{ fontSize: "0.7rem", fontWeight: 800, color: isPositive ? "#fff" : (isNegative ? "rgba(255,255,255,0.5)" : "#fff"), whiteSpace: "nowrap" }}>{log.amount}</span>
+                                        <span style={{ fontSize: "0.7rem", fontWeight: 800, color: isPositive ? "var(--text)" : (isNegative ? "rgba(255,255,255,0.5)" : "var(--text)"), whiteSpace: "nowrap" }}>{log.amount}</span>
                                         {log.type === "ADD_PAYMENT" && log.paymentId && (
                                           <button 
                                             onClick={() => handleDeletePayment(log.paymentId)}
@@ -1581,7 +1581,7 @@ export default function ReservationsPage() {
                                         <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>
                                           <span style={{color:"rgba(255,255,255,0.2)"}}>TOPLAM:</span> {log.totalSnapshot.toLocaleString('tr-TR')}₺
                                         </div>
-                                        <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "#fff" }}>
+                                        <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "var(--text)" }}>
                                           <span style={{color:"rgba(74,222,128,0.4)"}}>ÖDENEN:</span> {log.paidSnapshot.toLocaleString('tr-TR')}₺
                                         </div>
                                         <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>
@@ -1634,13 +1634,13 @@ export default function ReservationsPage() {
                             <div key={step.id} style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, textAlign: "center", flex: 1 }}>
                               <div style={{
                                 width: 22, height: 22, borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.55rem", fontWeight: 800, transition: "all 0.3s",
-                                ...(isCompleted ? { background: "#fff", color: "#000" } :
-                                  isCurrent ? { background: "#fff", color: "#000", boxShadow: "0 0 10px rgba(255,255,255,0.3)" } :
+                                ...(isCompleted ? { background: "var(--text)", color: "var(--bg)" } :
+                                  isCurrent ? { background: "var(--text)", color: "var(--bg)", boxShadow: "0 0 10px rgba(255,255,255,0.3)" } :
                                   { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.3)" })
                               }}>
                                 {isCompleted ? "✓" : (idx + 1)}
                               </div>
-                              <div style={{ fontSize: "0.55rem", fontWeight: isCurrent ? 800 : 600, color: isCurrent ? "#fff" : isCompleted ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.25)", lineHeight: 1.2 }}>
+                              <div style={{ fontSize: "0.55rem", fontWeight: isCurrent ? 800 : 600, color: isCurrent ? "var(--text)" : isCompleted ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.25)", lineHeight: 1.2 }}>
                                 {step.title}
                               </div>
                               <div style={{ fontSize: "0.45rem", color: "rgba(255,255,255,0.2)", lineHeight: 1.1 }}>
@@ -1664,7 +1664,7 @@ export default function ReservationsPage() {
                         {r.deliveryDate && (
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.5)" }}>Teslim Tarihi</span>
-                            <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "#fff" }}>{new Date(r.deliveryDate).toLocaleDateString('tr-TR')}</span>
+                            <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--text)" }}>{new Date(r.deliveryDate).toLocaleDateString('tr-TR')}</span>
                           </div>
                         )}
                       </div>
@@ -1687,11 +1687,11 @@ export default function ReservationsPage() {
                   <>
                     <div style={{ fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "20px 0 8px" }}>📚 Albüm Seçimi</div>
                     <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 0, padding: "14px", display: "flex", gap: "12px", alignItems: "center" }}>
-                      <div style={{ width: 48, height: 48, borderRadius: 0, overflow: "hidden", background: "#000", flexShrink: 0 }}>
+                      <div style={{ width: 48, height: 48, borderRadius: 0, overflow: "hidden", background: "var(--bg)", flexShrink: 0 }}>
                         <img src={r.albumModel.imageUrl} alt="Album" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       </div>
                       <div>
-                        <div style={{ fontSize: "0.9rem", color: "#fff", fontWeight: 700 }}>{r.albumModel.name}</div>
+                        <div style={{ fontSize: "0.9rem", color: "var(--text)", fontWeight: 700 }}>{r.albumModel.name}</div>
                         {r.albumModel.description && <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.5)", marginTop: 4 }}>{r.albumModel.description}</div>}
                       </div>
                     </div>
@@ -1716,7 +1716,7 @@ export default function ReservationsPage() {
                       style={{
                         display: "flex", alignItems: "center", gap: 8, padding: "10px 14px",
                         background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-                        borderRadius: 0, color: "#fff", fontSize: "0.75rem", fontWeight: 700,
+                        borderRadius: 0, color: "var(--text)", fontSize: "0.75rem", fontWeight: 700,
                         cursor: reminderLoading === "contract" ? "not-allowed" : "pointer",
                         opacity: reminderLoading === "contract" ? 0.5 : 1, transition: "all 0.2s",
                         textAlign: "left",
@@ -1743,7 +1743,7 @@ export default function ReservationsPage() {
                     style={{
                       display: "flex", alignItems: "center", gap: 8, padding: "10px 14px",
                       background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-                      borderRadius: 0, color: "#fff", fontSize: "0.75rem", fontWeight: 700,
+                      borderRadius: 0, color: "var(--text)", fontSize: "0.75rem", fontWeight: 700,
                       cursor: reminderLoading === "credentials" ? "not-allowed" : "pointer",
                       opacity: reminderLoading === "credentials" ? 0.5 : 1, transition: "all 0.2s",
                       textAlign: "left",
@@ -1761,7 +1761,7 @@ export default function ReservationsPage() {
                       padding: "8px 12px", fontSize: "0.72rem", fontWeight: 600,
                       background: reminderResult.type === "success" ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.04)",
                       border: `1px solid ${reminderResult.type === "success" ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.1)"}`,
-                      color: reminderResult.type === "success" ? "#fff" : "rgba(255,255,255,0.6)",
+                      color: reminderResult.type === "success" ? "var(--text)" : "rgba(255,255,255,0.6)",
                     }}>
                       {reminderResult.type === "success" ? "✓" : "✕"} {reminderResult.msg}
                     </div>
@@ -1795,7 +1795,7 @@ export default function ReservationsPage() {
               setQuickEventForm({ venueName: "", phone: "", eventDate: dayActionMenu.dateStr, startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
               setQuickEventModal(true);
               setDayActionMenu(null);
-            }} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", color: "#fff", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 8 }}>
+            }} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", color: "var(--text)", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 8 }}>
               <Plus size={14} style={{ color: "rgba(255,255,255,0.4)" }} />
               {isPhotographer ? "Olay Ekle" : `${terms.appointment} Ekle`}
             </button>
@@ -1817,7 +1817,7 @@ export default function ReservationsPage() {
       {/* ── Quick Event Modal ── */}
       {quickEventModal && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "380px", padding: "1.25rem", position: "relative", margin: "3rem 0" }}>
+          <div style={{ background: "var(--bg)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "380px", padding: "1.25rem", position: "relative", margin: "3rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>
                 <Star size={16} style={{ marginRight: 6, verticalAlign: "middle", color: "rgba(255,255,255,0.5)" }} />
@@ -1904,7 +1904,7 @@ export default function ReservationsPage() {
 
               <button type="submit" disabled={quickEventLoading} style={{
                 padding: "0.75rem", borderRadius: 0, border: "none",
-                background: "rgba(255,255,255,0.5)", color: "#fff", fontWeight: 800, fontSize: "0.8rem",
+                background: "rgba(255,255,255,0.5)", color: "var(--text)", fontWeight: 800, fontSize: "0.8rem",
                 cursor: "pointer", opacity: quickEventLoading ? 0.6 : 1, transition: "all 0.2s",
                 marginTop: 4,
               }}>

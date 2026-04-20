@@ -19,7 +19,7 @@ export default function ProfileLayoutClient({ user, children }) {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#000", color: "#fff" }}>
+    <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text)" }}>
       {/* Top Bar */}
       <div style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
@@ -42,7 +42,7 @@ export default function ProfileLayoutClient({ user, children }) {
                 <Link key={item.name} href={item.href} style={{
                   textDecoration: "none", display: "flex", alignItems: "center", gap: 6,
                   padding: "8px 14px", borderRadius: 0, fontSize: "0.72rem", fontWeight: isActive ? 700 : 500,
-                  color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
+                  color: isActive ? "var(--text)" : "rgba(255,255,255,0.5)",
                   background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
                   border: isActive ? "1px solid rgba(255,255,255,0.1)" : "1px solid transparent",
                   transition: "all 0.2s",

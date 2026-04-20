@@ -85,7 +85,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               <div
                 style={{
                   width: 40, height: 40,
-                  background: "#fff", color: "#000",
+                  background: "var(--text)", color: "var(--bg)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   borderRadius: 0, fontFamily: "serif", fontSize: 20,
                   transition: "transform 0.3s",
@@ -100,7 +100,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               </div>
               <span
                 className="hidden sm:block"
-                style={{ fontFamily: "serif", fontSize: 24, letterSpacing: "0.2em", color: "#fff", textTransform: "uppercase" }}
+                style={{ fontFamily: "serif", fontSize: 24, letterSpacing: "0.2em", color: "var(--text)", textTransform: "uppercase" }}
               >
                 {businessName}
               </span>
@@ -129,7 +129,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                 textTransform: "uppercase",
                 letterSpacing: "0.2em",
                 fontWeight: 700,
-                color: "#fff",
+                color: "var(--text)",
                 background: "rgba(255,255,255,0.1)",
                 padding: "10px 20px",
                 borderRadius: 0,
@@ -174,7 +174,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                       minWidth: 18, height: 18,
                       display: "flex", alignItems: "center", justifyContent: "center",
                       borderRadius: 0, fontSize: 10, fontWeight: 700,
-                      background: "#fff", color: "#000", padding: "0 4px",
+                      background: "var(--text)", color: "var(--bg)", padding: "0 4px",
                       animation: "cartBadgePop 0.3s ease",
                     }}
                   >
@@ -191,7 +191,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                     style={{
                       display: "flex", alignItems: "center", gap: 8,
                       fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.2em",
-                      color: "#fff",
+                      color: "var(--text)",
                       background: "rgba(255,255,255,0.05)",
                       padding: "10px 20px",
                       borderRadius: 0,
@@ -231,7 +231,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                     minWidth: 18, height: 18,
                     display: "flex", alignItems: "center", justifyContent: "center",
                     borderRadius: 0, fontSize: 10, fontWeight: 700,
-                    background: "#fff", color: "#000", padding: "0 4px",
+                    background: "var(--text)", color: "var(--bg)", padding: "0 4px",
                   }}>
                     {itemCount}
                   </span>
@@ -270,7 +270,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               <CloseIcon size={32} />
             </button>
 
-            <Link href="/booking" onClick={() => setIsMenuOpen(false)} style={{ fontFamily: "serif", fontSize: 30, color: "#fff", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 16 }}>
+            <Link href="/booking" onClick={() => setIsMenuOpen(false)} style={{ fontFamily: "serif", fontSize: 30, color: "var(--text)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 16 }}>
               Online Rezervasyon
             </Link>
 
@@ -295,7 +295,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
 
 
             {user && (
-              <Link href="/profile" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "#fff", textDecoration: "none" }}>
+              <Link href="/profile" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "var(--text)", textDecoration: "none" }}>
                 Hesabım
               </Link>
             )}
@@ -312,7 +312,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             href="/booking"
             style={{
               width: "100%", height: 56,
-              background: "#fff", color: "#000",
+              background: "var(--text)", color: "var(--bg)",
               display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
               textDecoration: "none",
               borderRadius: 0,
@@ -321,7 +321,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             }}
             className="active:scale-95"
           >
-            <div style={{ width: 6, height: 6, borderRadius: 0, background: "#000", animation: "pulse 2s infinite" }} />
+            <div style={{ width: 6, height: 6, borderRadius: 0, background: "var(--bg)", animation: "pulse 2s infinite" }} />
             <span style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.3em", fontWeight: 800 }}>
               Online Rezervasyon
             </span>

@@ -14,7 +14,7 @@ import {
 
 const inp = {
   width: "100%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)",
-  borderRadius: 0, padding: "0.7rem 0.8rem", color: "#fff", outline: "none",
+  borderRadius: 0, padding: "0.7rem 0.8rem", color: "var(--text)", outline: "none",
   fontSize: "0.8rem", boxSizing: "border-box",
 };
 
@@ -98,7 +98,7 @@ export default function PortfolioAdminPage() {
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <button 
               onClick={() => setActiveCategoryId(null)}
-              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "0.5rem 0.8rem", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem", fontWeight: 700 }}
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text)", padding: "0.5rem 0.8rem", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem", fontWeight: 700 }}
             >
               <ArrowLeft size={14} /> Geri
             </button>
@@ -118,7 +118,7 @@ export default function PortfolioAdminPage() {
             {({ open }) => (
               <button
                 onClick={() => open()}
-                style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+                style={{ background: "var(--text)", color: "var(--bg)", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
               >
                 <UploadCloud size={16} /> Görsel Yükle
               </button>
@@ -140,7 +140,7 @@ export default function PortfolioAdminPage() {
                 <img src={thumbnailUrl(photo.url)} alt="Portfolio" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 <button
                   onClick={() => handleDeletePhoto(photo.id)}
-                  style={{ position: "absolute", top: 8, right: 8, background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "5px", borderRadius: 0, cursor: "pointer", opacity: 0.7, transition: "opacity 0.2s" }}
+                  style={{ position: "absolute", top: 8, right: 8, background: "rgba(239,68,68,0.9)", color: "var(--text)", border: "none", padding: "5px", borderRadius: 0, cursor: "pointer", opacity: 0.7, transition: "opacity 0.2s" }}
                   onMouseEnter={(e) => e.target.style.opacity = 1}
                   onMouseLeave={(e) => e.target.style.opacity = 0.7}
                 >
@@ -167,7 +167,7 @@ export default function PortfolioAdminPage() {
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+          style={{ background: "var(--text)", color: "var(--bg)", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
         >
           <Plus size={16} /> Yeni Konsept
         </button>
@@ -202,7 +202,7 @@ export default function PortfolioAdminPage() {
               <div style={{ position: "absolute", top: 10, right: 10, display: "flex", gap: "0.4rem" }}>
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDeleteCategory(category.id, category.name); }}
-                  style={{ background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "6px", borderRadius: 0, cursor: "pointer" }}
+                  style={{ background: "rgba(239,68,68,0.9)", color: "var(--text)", border: "none", padding: "6px", borderRadius: 0, cursor: "pointer" }}
                 >
                   <Trash2 size={14} />
                 </button>
@@ -212,7 +212,7 @@ export default function PortfolioAdminPage() {
             {/* Info */}
             <div style={{ padding: "1.2rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.3rem" }}>
               <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Konsept</div>
-              <h3 style={{ fontSize: "1.1rem", fontWeight: 800, margin: 0, color: "#fff" }}>{category.name}</h3>
+              <h3 style={{ fontSize: "1.1rem", fontWeight: 800, margin: 0, color: "var(--text)" }}>{category.name}</h3>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.3rem" }}>
                 <ImageIcon size={12} style={{ color: "rgba(255,255,255,0.3)" }} />
                 <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>
@@ -234,7 +234,7 @@ export default function PortfolioAdminPage() {
       {/* New Category Modal */}
       {isModalOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", padding: "2rem", borderRadius: 0, width: "100%", maxWidth: "400px", position: "relative" }}>
+          <div style={{ background: "var(--bg)", border: "1px solid rgba(255,255,255,0.1)", padding: "2rem", borderRadius: 0, width: "100%", maxWidth: "400px", position: "relative" }}>
             <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>
               <X size={20} />
             </button>
@@ -256,7 +256,7 @@ export default function PortfolioAdminPage() {
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "0.5rem" }}>
                 <button type="button" onClick={() => setIsModalOpen(false)} style={{ background: "transparent", color: "rgba(255,255,255,0.6)", border: "none", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", padding: "0.5rem 1rem" }}>İptal</button>
-                <button type="submit" disabled={isCreating} style={{ background: "#fff", color: "#000", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isCreating ? 0.7 : 1 }}>
+                <button type="submit" disabled={isCreating} style={{ background: "var(--text)", color: "var(--bg)", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isCreating ? 0.7 : 1 }}>
                   {isCreating ? "Oluşturuluyor..." : "Oluştur"}
                 </button>
               </div>

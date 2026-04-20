@@ -25,7 +25,7 @@ const fmt = (n) => n.toLocaleString("tr-TR");
 const inputStyle = {
   width: "100%", background: "rgba(255,255,255,0.06)",
   border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0,
-  padding: "14px 16px", fontSize: "13px", color: "#fff",
+  padding: "14px 16px", fontSize: "13px", color: "var(--text)",
   outline: "none", boxSizing: "border-box",
 };
 const labelStyle = {
@@ -134,7 +134,7 @@ function AdminCartDrawer() {
             {/* Header */}
             <div style={{ padding: "24px", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
-                <div style={{ fontSize: "16px", fontWeight: 700, color: "#fff" }}>
+                <div style={{ fontSize: "16px", fontWeight: 700, color: "var(--text)" }}>
                   {submitResult ? (submitResult.success ? "✅ Tamamlandı" : "❌ Hata") : showContact ? "Müşteri Bilgileri" : "Admin Sepeti"}
                 </div>
                 <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
@@ -160,7 +160,7 @@ function AdminCartDrawer() {
                   <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", lineHeight: 1.7 }}>{submitResult.message}</p>
                   <button onClick={() => { setSubmitResult(null); setShowContact(false); setIsOpen(false); }} style={{
                     marginTop: 24, width: "100%", padding: 14, borderRadius: 0,
-                    background: "#fff", color: "#000", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer",
+                    background: "var(--text)", color: "var(--bg)", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer",
                   }}>Tamam</button>
                 </div>
               ) : showContact ? (
@@ -217,7 +217,7 @@ function AdminCartDrawer() {
                               <Trash2 size={12} />
                             </button>
                           </div>
-                          <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4 }}>{item.pkg.name}</div>
+                          <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text)", marginBottom: 4 }}>{item.pkg.name}</div>
                           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>{MF[item.month - 1]} {item.year}</div>
                           {item.details && (
                             <div style={{ padding: 10, borderRadius: 0, marginBottom: 8, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
@@ -254,7 +254,7 @@ function AdminCartDrawer() {
                             </div>
                           )}
                           <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline", gap: 4 }}>
-                            <span style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>{fmt(pkgPrice + addonPrice)}</span>
+                            <span style={{ fontSize: 16, fontWeight: 700, color: "var(--text)" }}>{fmt(pkgPrice + addonPrice)}</span>
                             <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>₺</span>
                           </div>
                         </div>
@@ -288,7 +288,7 @@ function AdminCartDrawer() {
                     {showContact && Number(manualDiscount) > 0 && (
                       <div style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", textDecoration: "line-through", marginBottom: 2 }}>{fmt(cartTotal())} ₺</div>
                     )}
-                    <span style={{ fontSize: 24, fontWeight: 700, color: "#fff" }}>{fmt(Math.max(0, cartTotal() - (Number(manualDiscount) || 0)))}</span>
+                    <span style={{ fontSize: 24, fontWeight: 700, color: "var(--text)" }}>{fmt(Math.max(0, cartTotal() - (Number(manualDiscount) || 0)))}</span>
                     <span style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", fontWeight: 400, marginLeft: 2 }}>₺</span>
                   </div>
                 </div>
@@ -297,7 +297,7 @@ function AdminCartDrawer() {
                     <button onClick={clearCart} style={{ flex: 1, padding: 14, borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", background: "transparent", color: "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Temizle</button>
                     <button onClick={() => setShowContact(true)} style={{
                       flex: 2, padding: 14, borderRadius: 0, border: "none",
-                      background: "#fff", color: "#000", fontSize: 13, fontWeight: 700,
+                      background: "var(--text)", color: "var(--bg)", fontSize: 13, fontWeight: 700,
                       cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                     }}>
                       <ArrowRight size={14} /> Müşteri Bilgileri
@@ -307,7 +307,7 @@ function AdminCartDrawer() {
                   <button onClick={handleSave} disabled={!isContactValid || isSubmitting} style={{
                     width: "100%", padding: 16, borderRadius: 0, border: "none",
                     background: isContactValid ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.04)",
-                    color: isContactValid ? "#000" : "rgba(255,255,255,0.15)",
+                    color: isContactValid ? "var(--bg)" : "rgba(255,255,255,0.15)",
                     fontSize: 14, fontWeight: 700, cursor: isContactValid ? "pointer" : "not-allowed",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                   }}>
@@ -328,7 +328,7 @@ export default function AdminBookingClient({ initialPackages }) {
     <CartProvider>
       <div style={{ maxWidth: 720 }}>
         <div style={{ marginBottom: 40 }}>
-          <h1 style={{ fontSize: "clamp(24px, 3.5vw, 32px)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8, color: "#fff" }}>
+          <h1 style={{ fontSize: "clamp(24px, 3.5vw, 32px)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8, color: "var(--text)" }}>
             Manuel Rezervasyon Oluştur
           </h1>
           <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", lineHeight: 1.7 }}>

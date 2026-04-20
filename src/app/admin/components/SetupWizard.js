@@ -50,7 +50,7 @@ export default function SetupWizard({ config, onComplete }) {
   const inp = {
     width: "100%", boxSizing: "border-box",
     background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
-    borderRadius: 0, padding: "14px 16px", fontSize: 14, color: "#fff",
+    borderRadius: 0, padding: "14px 16px", fontSize: 14, color: "var(--text)",
     outline: "none", marginBottom: 16,
   };
 
@@ -66,7 +66,7 @@ export default function SetupWizard({ config, onComplete }) {
         {Array.from({ length: totalSteps }, (_, i) => (
           <div key={i} style={{
             width: 40, height: 3,
-            background: i + 1 <= step ? "#fff" : "rgba(255,255,255,0.1)",
+            background: i + 1 <= step ? "var(--text)" : "rgba(255,255,255,0.1)",
             transition: "all 0.3s",
           }} />
         ))}
@@ -91,8 +91,8 @@ export default function SetupWizard({ config, onComplete }) {
           <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} style={inp} placeholder="info@studio.com" />
 
           <button type="button" onClick={() => setStep(2)} disabled={!form.businessName} style={{
-            width: "100%", padding: "14px", background: form.businessName ? "#fff" : "rgba(255,255,255,0.06)",
-            color: form.businessName ? "#000" : "rgba(255,255,255,0.3)", border: "none", fontSize: 13,
+            width: "100%", padding: "14px", background: form.businessName ? "var(--text)" : "rgba(255,255,255,0.06)",
+            color: form.businessName ? "var(--bg)" : "rgba(255,255,255,0.3)", border: "none", fontSize: 13,
             fontWeight: 800, cursor: form.businessName ? "pointer" : "not-allowed",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
           }}>
@@ -148,7 +148,7 @@ export default function SetupWizard({ config, onComplete }) {
               border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer",
             }}>Geri</button>
             <button type="button" onClick={() => setStep(3)} style={{
-              flex: 2, padding: "14px", background: "#fff", color: "#000", border: "none",
+              flex: 2, padding: "14px", background: "var(--text)", color: "var(--bg)", border: "none",
               fontSize: 13, fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
             }}>Devam <ArrowRight size={15} /></button>
           </div>
@@ -184,7 +184,7 @@ export default function SetupWizard({ config, onComplete }) {
               border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer",
             }}>Geri</button>
             <button type="button" onClick={handleFinish} disabled={saving} style={{
-              flex: 2, padding: "14px", background: "#22c55e", color: "#000", border: "none",
+              flex: 2, padding: "14px", background: "#22c55e", color: "var(--bg)", border: "none",
               fontSize: 13, fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
             }}>
               {saving ? "Kaydediliyor..." : "Tamamla & Panele Git"} <Check size={15} />

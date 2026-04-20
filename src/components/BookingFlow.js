@@ -111,7 +111,7 @@ const S = {
     borderRadius: 0,
     padding: "14px 16px",
     fontSize: "14px",
-    color: "#fff",
+    color: "var(--text)",
     outline: "none",
     transition: "border-color 0.2s",
     boxSizing: "border-box",
@@ -378,8 +378,8 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                 fontSize: "13px",
                 fontWeight: 600,
                 cursor: done ? "pointer" : "default",
-                background: active ? "#fff" : done ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.03)",
-                color: active ? "#000" : done ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.2)",
+                background: active ? "var(--text)" : done ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.03)",
+                color: active ? "var(--bg)" : done ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.2)",
                 transition: "all 0.3s",
               }}
             >
@@ -416,13 +416,13 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
           <ShoppingBag size={16} style={{ color: "rgba(255,255,255,0.5)" }} />
           <div>
             <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)" }}>{cart.itemCount} paket</div>
-            <div style={{ fontSize: "15px", fontWeight: 700, color: "#fff" }}>{fmt(cart.cartTotal())}₺</div>
+            <div style={{ fontSize: "15px", fontWeight: 700, color: "var(--text)" }}>{fmt(cart.cartTotal())}₺</div>
           </div>
           <div style={{
-            width: "32px", height: "32px", borderRadius: 0, background: "#fff",
+            width: "32px", height: "32px", borderRadius: 0, background: "var(--text)",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
-            <ArrowRight size={14} style={{ color: "#000" }} />
+            <ArrowRight size={14} style={{ color: "var(--bg)" }} />
           </div>
         </motion.div>
       )}
@@ -460,13 +460,13 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                         {on && (
                           <div style={{
                             width: "24px", height: "24px", borderRadius: 0,
-                            background: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+                            background: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center",
                           }}>
-                            <Check size={12} style={{ color: "#000" }} strokeWidth={3} />
+                            <Check size={12} style={{ color: "var(--bg)" }} strokeWidth={3} />
                           </div>
                         )}
                       </div>
-                      <div style={{ fontSize: "15px", fontWeight: 600, marginBottom: "4px", color: "#fff" }}>{c.label}</div>
+                      <div style={{ fontSize: "15px", fontWeight: 600, marginBottom: "4px", color: "var(--text)" }}>{c.label}</div>
                       <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.55)", lineHeight: 1.5 }}>{c.desc}</div>
                     </button>
                   );
@@ -487,7 +487,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                     <button onClick={() => setYear(y => y - 1)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.25)", cursor: "pointer", padding: "4px" }}>
                       <ChevronLeft size={14} />
                     </button>
-                    <span style={{ fontSize: "13px", fontWeight: 700, width: "44px", textAlign: "center", color: "#fff" }}>{year}</span>
+                    <span style={{ fontSize: "13px", fontWeight: 700, width: "44px", textAlign: "center", color: "var(--text)" }}>{year}</span>
                     <button onClick={() => setYear(y => y + 1)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.25)", cursor: "pointer", padding: "4px" }}>
                       <ChevronRight size={14} />
                     </button>
@@ -507,8 +507,8 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                         onClick={() => { setMonth(m); go(2); }}
                         style={{
                           padding: "14px 4px", borderRadius: 0,
-                          border: sel ? "2px solid #fff" : d < 0 ? "1px solid rgba(217,181,120,0.18)" : "1px solid rgba(255,255,255,0.06)",
-                          background: sel ? "#fff" : d < 0 ? "rgba(217,181,120,0.05)" : "rgba(255,255,255,0.02)",
+                          border: sel ? "2px solid var(--text)" : d < 0 ? "1px solid rgba(217,181,120,0.18)" : "1px solid rgba(255,255,255,0.06)",
+                          background: sel ? "var(--text)" : d < 0 ? "rgba(217,181,120,0.05)" : "rgba(255,255,255,0.02)",
                           cursor: past ? "not-allowed" : "pointer",
                           opacity: past ? 0.15 : 1, transition: "all 0.25s", textAlign: "center",
                           position: "relative",
@@ -523,7 +523,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                             borderRadius: 0,
                           }} />
                         )}
-                        <div style={{ fontSize: "13px", fontWeight: 700, color: sel ? "#000" : "rgba(255,255,255,0.6)" }}>{name}</div>
+                        <div style={{ fontSize: "13px", fontWeight: 700, color: sel ? "var(--bg)" : "rgba(255,255,255,0.6)" }}>{name}</div>
                         {(() => {
                           const mp = minPrice(m);
                           if (mp === null) return null;
@@ -573,7 +573,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
               )}
             </div>
 
-            <h2 style={{ fontSize: "28px", fontWeight: 700, marginBottom: "8px", color: "#fff" }}>Paket Seçin</h2>
+            <h2 style={{ fontSize: "28px", fontWeight: 700, marginBottom: "8px", color: "var(--text)" }}>Paket Seçin</h2>
             <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.35)", marginBottom: "32px" }}>
               Bir paket seçerek detaylarını doldurun ve sepetinize ekleyin.
             </p>
@@ -593,17 +593,17 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       width: "32px", height: "32px", borderRadius: 0,
                       display: "flex", alignItems: "center", justifyContent: "center",
                       background: inCart ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.04)",
-                      color: inCart ? "#000" : "rgba(255,255,255,0.15)",
+                      color: inCart ? "var(--bg)" : "rgba(255,255,255,0.15)",
                       flexShrink: 0, marginTop: "2px", transition: "all 0.3s",
                     }}>
                       {inCart ? <Check size={14} strokeWidth={3} /> : <ArrowRight size={14} />}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", marginBottom: "6px" }}>
-                        <span style={{ fontSize: "15px", fontWeight: 600, color: "#fff" }}>{pkg.name}</span>
+                        <span style={{ fontSize: "15px", fontWeight: 600, color: "var(--text)" }}>{pkg.name}</span>
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
                           {diff && <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.2)", textDecoration: "line-through", display: "block" }}>{fmt(base)}₺</span>}
-                          <span style={{ fontSize: "18px", fontWeight: 700, color: "#fff" }}>{fmt(cur)}<span style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", fontWeight: 400, marginLeft: "2px" }}>₺</span></span>
+                          <span style={{ fontSize: "18px", fontWeight: 700, color: "var(--text)" }}>{fmt(cur)}<span style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", fontWeight: 400, marginLeft: "2px" }}>₺</span></span>
                         </div>
                       </div>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
@@ -636,13 +636,13 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
               }}>
                 <div>
                   <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)" }}>{cart.itemCount} paket sepette</div>
-                  <div style={{ fontSize: "18px", fontWeight: 700, color: "#fff" }}>{fmt(cart.cartTotal())}₺</div>
+                  <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--text)" }}>{fmt(cart.cartTotal())}₺</div>
                 </div>
                 <button
                   onClick={() => cart.setIsOpen(true)}
                   style={{
                     padding: "14px 28px", borderRadius: 0,
-                    background: "#fff", border: "none", color: "#000",
+                    background: "var(--text)", border: "none", color: "var(--bg)",
                     fontSize: "13px", fontWeight: 700, cursor: "pointer",
                     display: "flex", alignItems: "center", gap: "8px",
                     transition: "all 0.2s",
@@ -676,14 +676,14 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                     {CATS.find(c => c.value === cat)?.label} · {MF[month - 1]} {year}
                   </div>
                 )}
-                <div style={{ fontSize: "18px", fontWeight: 700, color: "#fff" }}>{selectedPkg.name}</div>
+                <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--text)" }}>{selectedPkg.name}</div>
               </div>
-              <div style={{ fontSize: "22px", fontWeight: 700, color: "#fff" }}>
+              <div style={{ fontSize: "22px", fontWeight: 700, color: "var(--text)" }}>
                 {fmt(price(selectedPkg))}<span style={{ fontSize: "13px", color: "rgba(255,255,255,0.3)", fontWeight: 400, marginLeft: "2px" }}>₺</span>
               </div>
             </div>
 
-            <h2 style={{ fontSize: "24px", fontWeight: 700, marginBottom: "8px", color: "#fff" }}>Paket Detayları</h2>
+            <h2 style={{ fontSize: "24px", fontWeight: 700, marginBottom: "8px", color: "var(--text)" }}>Paket Detayları</h2>
             <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.35)", marginBottom: "32px" }}>
               Bu paket için gerekli bilgileri doldurun, ardından sepetinize ekleyin.
             </p>
@@ -733,9 +733,9 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       onClick={() => { if (!isPast && !isDisabledDay) setDetailForm(p => ({ ...p, date: dateStr, time: "" })); }}
                       style={{
                         aspectRatio: "1", borderRadius: 0,
-                        border: isSelected ? "2px solid #fff" : "1px solid rgba(255,255,255,0.06)",
-                        background: isSelected ? "#fff" : (isPast || isDisabledDay) ? "transparent" : "rgba(255,255,255,0.03)",
-                        color: isSelected ? "#000" : (isPast || isDisabledDay) ? "rgba(255,255,255,0.12)" : isSunday ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.7)",
+                        border: isSelected ? "2px solid var(--text)" : "1px solid rgba(255,255,255,0.06)",
+                        background: isSelected ? "var(--text)" : (isPast || isDisabledDay) ? "transparent" : "rgba(255,255,255,0.03)",
+                        color: isSelected ? "var(--bg)" : (isPast || isDisabledDay) ? "rgba(255,255,255,0.12)" : isSunday ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.7)",
                         fontSize: "13px", fontWeight: isSelected ? 800 : 600,
                         cursor: (isPast || isDisabledDay) ? "not-allowed" : "pointer",
                         transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center", padding: 0,
@@ -748,7 +748,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                   <>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: "12px" }}>
                       {canGoBack && <button onClick={goCalPrev} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 4 }}><ChevronLeft size={16} /></button>}
-                      <span style={{ fontSize: "14px", fontWeight: 700, color: "#fff", minWidth: 120, textAlign: "center" }}>{MF[cm - 1]} {cy}</span>
+                      <span style={{ fontSize: "14px", fontWeight: 700, color: "var(--text)", minWidth: 120, textAlign: "center" }}>{MF[cm - 1]} {cy}</span>
                       {canGoForward && <button onClick={goCalNext} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 4 }}><ChevronRight size={16} /></button>}
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "4px", marginBottom: "6px" }}>
@@ -763,7 +763,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
 
               {/* Selected date display */}
               {detailForm.date && (
-                <div style={{ marginTop: "12px", textAlign: "center", fontSize: "13px", fontWeight: 600, color: "#fff", padding: "8px", background: "rgba(255,255,255,0.04)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div style={{ marginTop: "12px", textAlign: "center", fontSize: "13px", fontWeight: 600, color: "var(--text)", padding: "8px", background: "rgba(255,255,255,0.04)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)" }}>
                   📅 {new Date(detailForm.date).toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
                 </div>
               )}
@@ -793,14 +793,14 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                           onClick={() => setDetailForm(p => ({ ...p, time: slot.value }))}
                           style={{
                             padding: "14px 8px", borderRadius: 0,
-                            border: sel ? "2px solid #fff" : `1px solid ${full ? "rgba(255,60,60,0.15)" : "rgba(255,255,255,0.06)"}`,
-                            background: sel ? "#fff" : full ? "rgba(255,60,60,0.04)" : "rgba(255,255,255,0.02)",
+                            border: sel ? "2px solid var(--text)" : `1px solid ${full ? "rgba(255,60,60,0.15)" : "rgba(255,255,255,0.06)"}`,
+                            background: sel ? "var(--text)" : full ? "rgba(255,60,60,0.04)" : "rgba(255,255,255,0.02)",
                             cursor: full ? "not-allowed" : "pointer",
                             opacity: full ? 0.5 : 1,
                             transition: "all 0.2s", textAlign: "center",
                           }}
                         >
-                          <div style={{ fontSize: "13px", fontWeight: 600, color: sel ? "#000" : full ? "rgba(255,60,60,0.6)" : "rgba(255,255,255,0.5)" }}>
+                          <div style={{ fontSize: "13px", fontWeight: 600, color: sel ? "var(--bg)" : full ? "rgba(255,60,60,0.6)" : "rgba(255,255,255,0.5)" }}>
                             {slot.label}
                           </div>
                           {full && (
@@ -821,7 +821,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                     display: "flex", alignItems: "center", justifyContent: "space-between",
                   }}>
                     <div>
-                      <div style={{ fontSize: "14px", fontWeight: 600, color: "#fff" }}>
+                      <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text)" }}>
                         {TIME_TYPE_LABELS[selectedPkg.timeType] || selectedPkg.timeType}
                       </div>
                       <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.2)", marginTop: "2px" }}>
@@ -852,9 +852,9 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                     return (
                       <button key={i} onClick={() => toggleDetailAddon(a)} style={{
                         padding: "10px 16px", borderRadius: 0, fontSize: "12px", fontWeight: 600,
-                        border: `1px solid ${on ? "#fff" : "rgba(255,255,255,0.06)"}`,
-                        background: on ? "#fff" : "rgba(255,255,255,0.02)",
-                        color: on ? "#000" : "rgba(255,255,255,0.35)",
+                        border: `1px solid ${on ? "var(--text)" : "rgba(255,255,255,0.06)"}`,
+                        background: on ? "var(--text)" : "rgba(255,255,255,0.02)",
+                        color: on ? "var(--bg)" : "rgba(255,255,255,0.35)",
                         cursor: "pointer", transition: "all 0.2s",
                       }}>
                         {a.title} <span style={{ opacity: 0.5, marginLeft: "4px" }}>+{a.price}₺</span>
@@ -956,7 +956,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                               arr[idx] = { ...arr[idx], value: e.target.checked };
                               setDetailForm(p => ({ ...p, customFieldAnswers: arr }));
                             }}
-                            style={{ width: "18px", height: "18px", accentColor: "#fff", flexShrink: 0 }}
+                            style={{ width: "18px", height: "18px", accentColor: "var(--text)", flexShrink: 0 }}
                           />
                           <span style={{ fontSize: "13px", color: answer.value ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)" }}>
                             {field.label} {field.required && <span style={{ color: "rgba(255,255,255,0.15)" }}>*</span>}
@@ -1002,7 +1002,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
               {addonTotal > 0 && (
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", paddingTop: "12px", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
                   <span style={{ fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.25)" }}>Toplam</span>
-                  <span style={{ fontSize: "20px", fontWeight: 700, color: "#fff" }}>{fmt(itemTotal)}<span style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", fontWeight: 400, marginLeft: "2px" }}>₺</span></span>
+                  <span style={{ fontSize: "20px", fontWeight: 700, color: "var(--text)" }}>{fmt(itemTotal)}<span style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", fontWeight: 400, marginLeft: "2px" }}>₺</span></span>
                 </div>
               )}
             </div>
@@ -1041,7 +1041,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       onClick={() => { setAddedFeedback(false); cart.setIsOpen(true); }}
                       style={{
                         flex: 1, padding: "14px", borderRadius: 0,
-                        border: "none", background: "#fff", color: "#000",
+                        border: "none", background: "var(--text)", color: "var(--bg)",
                         fontSize: "13px", fontWeight: 700, cursor: "pointer",
                         display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
                       }}

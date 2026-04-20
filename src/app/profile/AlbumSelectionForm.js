@@ -36,7 +36,7 @@ export default function AlbumSelectionForm({ reservationId, initialSelectedId, m
     <div style={{ marginTop: 24, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 0, padding: 24 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
         <Book size={20} style={{ color: "rgba(255,255,255,0.5)" }} />
-        <h4 style={{ fontSize: 18, fontWeight: 800, color: "#fff" }}>Albüm Modeli Seçimi</h4>
+        <h4 style={{ fontSize: 18, fontWeight: 800, color: "var(--text)" }}>Albüm Modeli Seçimi</h4>
       </div>
       <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 24, lineHeight: 1.5 }}>
         Fotoğraf seçiminiz tamamlandı! Şimdi baskı için istediğiniz albüm modelini aşağıdan seçebilirsiniz.
@@ -65,20 +65,20 @@ export default function AlbumSelectionForm({ reservationId, initialSelectedId, m
               
               <button 
                 onClick={(e) => { e.stopPropagation(); setPreviewImage(model.imageUrl); }}
-                style={{ position: "absolute", top: 12, left: 12, background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 0, padding: 6, color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                style={{ position: "absolute", top: 12, left: 12, background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 0, padding: 6, color: "var(--text)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                 title="Büyük Gör"
               >
                 <Eye size={16} />
               </button>
               
               {selectedId === model.id && (
-                <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(255,255,255,0.5)", color: "#fff", borderRadius: 0, padding: 4 }}>
+                <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(255,255,255,0.5)", color: "var(--text)", borderRadius: 0, padding: 4 }}>
                   <CheckCircle size={16} />
                 </div>
               )}
             </div>
             <div style={{ padding: 12 }}>
-              <h5 style={{ fontSize: 14, fontWeight: 700, margin: 0, color: "#fff" }}>{model.name}</h5>
+              <h5 style={{ fontSize: 14, fontWeight: 700, margin: 0, color: "var(--text)" }}>{model.name}</h5>
               {model.description && (
                 <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", margin: 0, marginTop: 4, lineHeight: 1.4 }}>
                   {model.description}
@@ -90,7 +90,7 @@ export default function AlbumSelectionForm({ reservationId, initialSelectedId, m
       </div>
 
       {message && (
-        <div style={{ marginBottom: 16, padding: "12px 16px", borderRadius: 0, fontSize: 13, fontWeight: 600, background: message.type === "success" ? "rgba(255,255,255,0.06)" : "rgba(248,113,113,0.1)", color: message.type === "success" ? "#fff" : "rgba(255,255,255,0.6)" }}>
+        <div style={{ marginBottom: 16, padding: "12px 16px", borderRadius: 0, fontSize: 13, fontWeight: 600, background: message.type === "success" ? "rgba(255,255,255,0.06)" : "rgba(248,113,113,0.1)", color: message.type === "success" ? "var(--text)" : "rgba(255,255,255,0.6)" }}>
           {message.text}
         </div>
       )}
@@ -107,7 +107,7 @@ export default function AlbumSelectionForm({ reservationId, initialSelectedId, m
         <button
           onClick={handleSubmit}
           disabled={!selectedId || isSubmitting}
-          style={{ width: "100%", padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", background: selectedId ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.05)", color: selectedId ? "#fff" : "rgba(255,255,255,0.3)", border: "none", borderRadius: 0, fontSize: 14, fontWeight: 700, cursor: selectedId && !isSubmitting ? "pointer" : "default", transition: "all 0.2s" }}
+          style={{ width: "100%", padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", background: selectedId ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.05)", color: selectedId ? "var(--text)" : "rgba(255,255,255,0.3)", border: "none", borderRadius: 0, fontSize: 14, fontWeight: 700, cursor: selectedId && !isSubmitting ? "pointer" : "default", transition: "all 0.2s" }}
         >
           <span>{isSubmitting ? "Kaydediliyor..." : selectedId === initialSelectedId && selectedId !== "" ? "Seçimi Güncelle" : "Seçimi Onayla ve Gönder"}</span>
           <ArrowRight size={18} />
@@ -122,7 +122,7 @@ export default function AlbumSelectionForm({ reservationId, initialSelectedId, m
         >
           <button 
             onClick={() => setPreviewImage(null)}
-            style={{ position: "absolute", top: 20, right: 20, background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", padding: 8, borderRadius: 0, cursor: "pointer" }}
+            style={{ position: "absolute", top: 20, right: 20, background: "rgba(255,255,255,0.1)", border: "none", color: "var(--text)", padding: 8, borderRadius: 0, cursor: "pointer" }}
           >
             <X size={24} />
           </button>

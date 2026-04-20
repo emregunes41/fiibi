@@ -23,7 +23,7 @@ export default function ContractPreviewModal({ customText }) {
           <div onClick={() => setIsOpen(false)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(8px)" }} />
           
           {/* Modal Content */}
-          <div style={{ position: "relative", zIndex: 10, background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, width: "100%", maxWidth: 800, maxHeight: "90vh", display: "flex", flexDirection: "column", boxShadow: "0 24px 50px rgba(0,0,0,0.5)", animation: "popIn 0.3s ease-out" }}>
+          <div style={{ position: "relative", zIndex: 10, background: "var(--bg)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, width: "100%", maxWidth: 800, maxHeight: "90vh", display: "flex", flexDirection: "column", boxShadow: "0 24px 50px rgba(0,0,0,0.5)", animation: "popIn 0.3s ease-out" }}>
             
             {/* Header */}
             <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
@@ -32,7 +32,7 @@ export default function ContractPreviewModal({ customText }) {
                   <FileText size={20} style={{ color: "rgba(255,255,255,0.7)" }} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>Hizmet Sözleşmesi</h3>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", margin: 0 }}>Hizmet Sözleşmesi</h3>
                   <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 12, margin: 0 }}>Profesyonel Fotoğrafçılık</p>
                 </div>
               </div>
@@ -51,39 +51,39 @@ export default function ContractPreviewModal({ customText }) {
                   <p style={{ margin: 0 }}>Bu sözleşme, <strong>Stüdyo</strong> ile siz değerli müşterimiz arasında yürürlüktedir.</p>
 
                   <div>
-                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>1.</span> Hizmetin Kapsamı</h4>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>1.</span> Hizmetin Kapsamı</h4>
                     <p style={{ margin: 0 }}>Seçilen paket kapsamında belirtilen fotoğraf ve/veya video çekim hizmeti sunulacaktır.</p>
                   </div>
 
                   <div>
-                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>2.</span> Rezervasyon ve Kapora</h4>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>2.</span> Rezervasyon ve Kapora</h4>
                     <p style={{ margin: 0 }}>Rezervasyon, kapora ödemesinin yapılması ile kesinleşir. Kapora ödemesi yapılmadan tarih rezerve edilmez.</p>
                   </div>
 
                   <div>
-                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>3.</span> Ödeme Koşulları</h4>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>3.</span> Ödeme Koşulları</h4>
                     <p style={{ margin: 0 }}>Kalan ödeme, çekim tarihinden en geç 3 gün önce tamamlanmalıdır. Kredi kartı ödemelerinde altyapı komisyonu uygulanır.</p>
                   </div>
 
                   <div>
-                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>4.</span> Tarih Değişikliği ve İptal</h4>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>4.</span> Tarih Değişikliği ve İptal</h4>
                     <p style={{ margin: 0 }}>Değişiklik en geç 15 gün öncesinden bildirilmelidir ve 1 kez ücretsizdir. Müşteri kaynaklı iptallerde kapora iade edilmez.</p>
                   </div>
 
                   <div>
-                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>5.</span> Çekim Günleri</h4>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>5.</span> Çekim Günleri</h4>
                     <p style={{ margin: 0 }}>30 dakikayı aşan gecikmeler çekim süresinden düşülür.</p>
                   </div>
 
                   <div>
-                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>6.</span> Teslim Süresi ve Telif</h4>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>6.</span> Teslim Süresi ve Telif</h4>
                     <p style={{ margin: 0 }}>Çekilen fotoğrafların telif hakkı stüdyoya aittir. Tanıtım amaçlı kullanılmasını istemediğinizi yazılı olarak bildirebilirsiniz.</p>
                   </div>
                 </>
               )}
               
               <div style={{ marginTop: 8, padding: 16, background: "rgba(74,222,128,0.05)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.1)", display: "flex", gap: 12 }}>
-                <CheckCircle2 size={20} style={{ color: "#fff", flexShrink: 0 }} />
+                <CheckCircle2 size={20} style={{ color: "var(--text)", flexShrink: 0 }} />
                 <p style={{ margin: 0, color: "rgba(255,255,255,0.7)", fontSize: 13 }}>
                   Paneli kullanarak onay verdiğinizde yukarıdaki tüm maddeleri okuduğunuzu kabul edersiniz.
                 </p>
@@ -92,7 +92,7 @@ export default function ContractPreviewModal({ customText }) {
 
             {/* Footer */}
             <div style={{ padding: "16px 24px", borderTop: "1px solid rgba(255,255,255,0.08)", flexShrink: 0, display: "flex", justifyContent: "flex-end" }}>
-              <button onClick={() => setIsOpen(false)} style={{ background: "#fff", color: "#000", fontWeight: 700, fontSize: 14, padding: "10px 24px", borderRadius: 0, border: "none", cursor: "pointer", transition: "all 0.2s" }} className="hover:opacity-90">
+              <button onClick={() => setIsOpen(false)} style={{ background: "var(--text)", color: "var(--bg)", fontWeight: 700, fontSize: 14, padding: "10px 24px", borderRadius: 0, border: "none", cursor: "pointer", transition: "all 0.2s" }} className="hover:opacity-90">
                 Pencereyi Kapat
               </button>
             </div>

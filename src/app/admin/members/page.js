@@ -28,7 +28,7 @@ export default async function AdminMembersPage() {
   });
 
   return (
-    <div style={{ color: "#fff" }}>
+    <div style={{ color: "var(--text)" }}>
       {/* Header Compact */}
       <div style={{ marginBottom: "1.25rem" }}>
         <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>
@@ -97,7 +97,7 @@ export default async function AdminMembersPage() {
                   </span>
                 )}
                 {user.role === "ADMIN" && (
-                  <span style={{ fontSize: "0.6rem", background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: 0, color: "#fff", fontWeight: 800 }}>
+                  <span style={{ fontSize: "0.6rem", background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: 0, color: "var(--text)", fontWeight: 800 }}>
                     ADMIN
                   </span>
                 )}

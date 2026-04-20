@@ -33,14 +33,14 @@ export default function RegisterPage() {
     border: "1px solid rgba(255,255,255,0.1)",
     borderRadius: 0,
     padding: "14px 16px 14px 48px",
-    color: "#fff",
+    color: "var(--text)",
     fontSize: "15px",
     outline: "none",
     transition: "all 0.2s ease",
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "100px 24px 24px", background: "#000", position: "relative", overflow: "hidden" }}>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "100px 24px 24px", background: "var(--bg)", position: "relative", overflow: "hidden" }}>
       {/* Background orbs */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
         <div style={{ position: "absolute", top: "20%", right: "15%", width: 300, height: 300, background: "rgba(255,255,255,0.03)", filter: "blur(120px)", borderRadius: 0 }} />
@@ -124,7 +124,7 @@ export default function RegisterPage() {
             <button 
               type="submit" 
               disabled={isLoading}
-              style={{ width: "100%", background: "#fff", color: "#000", fontWeight: 700, padding: "14px", borderRadius: 0, marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 15, transition: "all 0.2s ease", opacity: isLoading ? 0.5 : 1 }}
+              style={{ width: "100%", background: "var(--text)", color: "var(--bg)", fontWeight: 700, padding: "14px", borderRadius: 0, marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 15, transition: "all 0.2s ease", opacity: isLoading ? 0.5 : 1 }}
             >
               {isLoading ? <Loader2 className="animate-spin" size={18} /> : <UserPlus size={18} />}
               Hesap Oluştur
@@ -134,7 +134,7 @@ export default function RegisterPage() {
           <div style={{ textAlign: "center", marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>
               Zaten hesabınız var mı?{" "}
-              <Link href="/login" style={{ color: "#fff", fontWeight: 600, textDecoration: "none" }}>
+              <Link href="/login" style={{ color: "var(--text)", fontWeight: 600, textDecoration: "none" }}>
                 Giriş Yap
               </Link>
             </p>

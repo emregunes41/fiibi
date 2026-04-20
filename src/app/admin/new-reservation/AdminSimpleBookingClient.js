@@ -12,7 +12,7 @@ import { useAdminSession } from "../AdminSessionContext";
 const inp = {
   width: "100%", boxSizing: "border-box",
   background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)",
-  padding: "14px 16px", fontSize: "14px", color: "#fff", outline: "none",
+  padding: "14px 16px", fontSize: "14px", color: "var(--text)", outline: "none",
 };
 const lbl = {
   fontSize: "11px", fontWeight: 700, color: "rgba(255,255,255,0.45)",
@@ -20,8 +20,8 @@ const lbl = {
 };
 const btnStyle = (active) => ({
   width: "100%", padding: "16px", border: "none",
-  background: active ? "#fff" : "rgba(255,255,255,0.04)",
-  color: active ? "#000" : "rgba(255,255,255,0.15)",
+  background: active ? "var(--text)" : "rgba(255,255,255,0.04)",
+  color: active ? "var(--bg)" : "rgba(255,255,255,0.15)",
   fontSize: "14px", fontWeight: 700, cursor: active ? "pointer" : "not-allowed",
   display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
 });
@@ -114,7 +114,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "40px 20px" }}>
       <div style={{ marginBottom: 40 }}>
-        <h1 style={{ fontSize: "clamp(24px, 3.5vw, 32px)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8, color: "#fff" }}>
+        <h1 style={{ fontSize: "clamp(24px, 3.5vw, 32px)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8, color: "var(--text)" }}>
           Manuel {terms.appointment} Oluştur
         </h1>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", lineHeight: 1.7 }}>
@@ -150,7 +150,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
                   <div key={pkg.id} onClick={() => setSelectedPkg(pkg)} style={card(on)}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                       <div>
-                        <div style={{ fontSize: "15px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+                        <div style={{ fontSize: "15px", fontWeight: 700, color: "var(--text)", marginBottom: "4px" }}>
                           {on && <Check size={14} style={{ marginRight: 6, verticalAlign: "middle" }} />}
                           {pkg.name}
                         </div>
@@ -166,7 +166,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
                         )}
                       </div>
                       <div style={{ textAlign: "right", flexShrink: 0 }}>
-                        <div style={{ fontSize: "18px", fontWeight: 700, color: "#fff" }}>{fmt(price)}₺</div>
+                        <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--text)" }}>{fmt(price)}₺</div>
                       </div>
                     </div>
                   </div>
@@ -194,7 +194,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
             </button>
 
             <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "16px", marginBottom: "24px" }}>
-              <div style={{ fontSize: "14px", fontWeight: 700, color: "#fff" }}>{selectedPkg?.name}</div>
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--text)" }}>{selectedPkg?.name}</div>
               <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: "4px" }}>
                 {fmt(parseInt(selectedPkg?.price?.replace(/\D/g, "") || "0"))}₺
                 {selectedPkg?.sessionDuration && ` • ${selectedPkg.sessionDuration} dk`}
@@ -243,7 +243,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
                           padding: "12px 8px", fontSize: "13px", fontWeight: 600,
                           cursor: isBooked ? "not-allowed" : "pointer", transition: "all 0.15s",
                           background: isSelected ? "rgba(255,255,255,0.15)" : isBooked ? "rgba(255,0,0,0.05)" : "rgba(255,255,255,0.03)",
-                          color: isSelected ? "#fff" : isBooked ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.5)",
+                          color: isSelected ? "var(--text)" : isBooked ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.5)",
                           border: isSelected ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.06)",
                           textDecoration: isBooked ? "line-through" : "none",
                         }}>
@@ -273,7 +273,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
 
             {/* Summary */}
             <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "16px", marginBottom: "24px" }}>
-              <div style={{ fontSize: "14px", fontWeight: 700, color: "#fff", marginBottom: "8px" }}>{selectedPkg?.name}</div>
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--text)", marginBottom: "8px" }}>{selectedPkg?.name}</div>
               <div style={{ display: "flex", gap: "16px", fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>
                 <span><Calendar size={11} style={{ verticalAlign: "middle", marginRight: 4 }} />
                   {new Date(selectedDate).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
@@ -331,7 +331,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
                   <span style={{ fontSize: "13px", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>Toplam</span>
                   <div style={{ textAlign: "right" }}>
                     {discountVal > 0 && <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.25)", textDecoration: "line-through" }}>{fmt(price)}₺</div>}
-                    <span style={{ fontSize: "22px", fontWeight: 700, color: "#fff" }}>{fmt(finalTotal)}<span style={{ fontSize: "13px", color: "rgba(255,255,255,0.3)", fontWeight: 400, marginLeft: "2px" }}>₺</span></span>
+                    <span style={{ fontSize: "22px", fontWeight: 700, color: "var(--text)" }}>{fmt(finalTotal)}<span style={{ fontSize: "13px", color: "rgba(255,255,255,0.3)", fontWeight: 400, marginLeft: "2px" }}>₺</span></span>
                   </div>
                 </div>
               );
@@ -359,7 +359,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
                 background: "rgba(34,197,94,0.1)", border: "2px solid rgba(34,197,94,0.3)",
                 display: "flex", alignItems: "center", justifyContent: "center", fontSize: "36px",
               }}>✅</div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#fff", marginBottom: "12px" }}>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "var(--text)", marginBottom: "12px" }}>
                 {terms.appointment} Oluşturuldu!
               </h2>
               <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: "400px", margin: "0 auto 24px" }}>
@@ -373,7 +373,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
               </div>
               <a href="/admin/reservations" style={{
                 display: "inline-flex", alignItems: "center", gap: "8px",
-                padding: "14px 32px", background: "#fff", color: "#000",
+                padding: "14px 32px", background: "var(--text)", color: "var(--bg)",
                 textDecoration: "none", fontSize: "14px", fontWeight: 700,
               }}>
                 Rezervasyonlara Git

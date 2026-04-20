@@ -55,7 +55,7 @@ export default function LoginPage() {
     border: "1px solid rgba(255,255,255,0.1)",
     borderRadius: 0,
     padding: "14px 16px 14px 48px",
-    color: "#fff",
+    color: "var(--text)",
     fontSize: "15px",
     outline: "none",
     transition: "all 0.2s ease",
@@ -63,7 +63,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "100px 24px 24px", background: "#000", position: "relative", overflow: "hidden" }}>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "100px 24px 24px", background: "var(--bg)", position: "relative", overflow: "hidden" }}>
       {/* Background orbs */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
         <div style={{ position: "absolute", top: "20%", left: "15%", width: 300, height: 300, background: "rgba(255,255,255,0.03)", filter: "blur(120px)", borderRadius: 0 }} />
@@ -129,7 +129,7 @@ export default function LoginPage() {
                 <button 
                   type="submit" 
                   disabled={isLoading}
-                  style={{ width: "100%", background: "#fff", color: "#000", fontWeight: 700, padding: "14px", borderRadius: 0, marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 15, transition: "all 0.2s ease", opacity: isLoading ? 0.5 : 1 }}
+                  style={{ width: "100%", background: "var(--text)", color: "var(--bg)", fontWeight: 700, padding: "14px", borderRadius: 0, marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 15, transition: "all 0.2s ease", opacity: isLoading ? 0.5 : 1 }}
                 >
                   {isLoading ? <Loader2 className="animate-spin" size={18} /> : <LogIn size={18} />}
                   Giriş Yap
@@ -139,7 +139,7 @@ export default function LoginPage() {
               <div style={{ textAlign: "center", marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
                 <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)" }}>
                   Hesabınız yok mu?{" "}
-                  <Link href="/register" style={{ color: "#fff", fontWeight: 600, textDecoration: "none" }}>
+                  <Link href="/register" style={{ color: "var(--text)", fontWeight: 600, textDecoration: "none" }}>
                     Kayıt Ol
                   </Link>
                 </p>
@@ -157,7 +157,7 @@ export default function LoginPage() {
               </div>
 
               {resetMessage && (
-                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.15)", color: "#fff", fontSize: 13, padding: "14px", borderRadius: 0, textAlign: "center", fontWeight: 500, marginBottom: 16 }}>
+                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.15)", color: "var(--text)", fontSize: 13, padding: "14px", borderRadius: 0, textAlign: "center", fontWeight: 500, marginBottom: 16 }}>
                   ✅ {resetMessage}
                 </div>
               )}
@@ -190,7 +190,7 @@ export default function LoginPage() {
                   <button 
                     type="submit" 
                     disabled={resetLoading}
-                    style={{ width: "100%", background: "#fff", color: "#000", fontWeight: 700, padding: "14px", borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 14, transition: "all 0.2s ease", opacity: resetLoading ? 0.5 : 1 }}
+                    style={{ width: "100%", background: "var(--text)", color: "var(--bg)", fontWeight: 700, padding: "14px", borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 14, transition: "all 0.2s ease", opacity: resetLoading ? 0.5 : 1 }}
                   >
                     {resetLoading ? <Loader2 className="animate-spin" size={18} /> : <Mail size={18} />}
                     Yeni Şifre Gönder

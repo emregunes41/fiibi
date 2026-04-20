@@ -17,13 +17,13 @@ export default function ReferralClient({ tenant, referrals }) {
   };
 
   return (
-    <div style={{ color: "#fff" }}>
+    <div style={{ color: "var(--text)" }}>
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 4 }}>
           Arkadaşını Getir
         </h1>
         <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}>
-          Referans kodunuzu paylaşın. Davet ettiğiniz kişi ilk ödemesini yaptığında size <strong style={{ color: "#fff" }}>30 gün ücretsiz</strong> kullanım.
+          Referans kodunuzu paylaşın. Davet ettiğiniz kişi ilk ödemesini yaptığında size <strong style={{ color: "var(--text)" }}>30 gün ücretsiz</strong> kullanım.
         </p>
       </div>
 
@@ -33,7 +33,7 @@ export default function ReferralClient({ tenant, referrals }) {
           Referans Kodunuz
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <code style={{ fontSize: 32, fontWeight: 900, letterSpacing: "0.1em", color: "#fff" }}>{code}</code>
+          <code style={{ fontSize: 32, fontWeight: 900, letterSpacing: "0.1em", color: "var(--text)" }}>{code}</code>
           <button onClick={() => handleCopy(code)} style={{
             background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
             color: "rgba(255,255,255,0.5)", padding: "8px 14px", cursor: "pointer", fontSize: 12,

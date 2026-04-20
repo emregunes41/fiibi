@@ -10,7 +10,7 @@ import Link from "next/link";
 const inp = {
   padding: "0.7rem 0.8rem", borderRadius: 0, fontSize: "0.8rem",
   border: "1px solid rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.08)",
-  color: "#fff", outline: "none", width: "100%", boxSizing: "border-box",
+  color: "var(--text)", outline: "none", width: "100%", boxSizing: "border-box",
 };
 
 export default function OrdersPage() {
@@ -103,9 +103,9 @@ export default function OrdersPage() {
               style={{
                 padding: "8px 16px", borderRadius: "40px", fontSize: "12px", fontWeight: 700,
                 border: "1px solid", whiteSpace: "nowrap", cursor: "pointer", transition: "all 0.2s",
-                background: filterStatus === st ? "#fff" : "transparent",
-                color: filterStatus === st ? "#000" : "rgba(255,255,255,0.5)",
-                borderColor: filterStatus === st ? "#fff" : "rgba(255,255,255,0.1)",
+                background: filterStatus === st ? "var(--text)" : "transparent",
+                color: filterStatus === st ? "var(--bg)" : "rgba(255,255,255,0.5)",
+                borderColor: filterStatus === st ? "var(--text)" : "rgba(255,255,255,0.1)",
               }}
             >
               {st === "ALL" ? "Tümü" : 
@@ -183,7 +183,7 @@ export default function OrdersPage() {
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                     <div style={{ fontSize: "18px", fontWeight: 800 }}>{fmt(order.totalAmount)}₺</div>
                     <button onClick={() => setDetailModal({ isOpen: true, data: { ...order, productList, hasPhysical } })} style={{
-                      padding: "8px 16px", background: "rgba(255,255,255,0.05)", border: "none", color: "#fff",
+                      padding: "8px 16px", background: "rgba(255,255,255,0.05)", border: "none", color: "var(--text)",
                       fontSize: "13px", fontWeight: 600, borderRadius: "6px", cursor: "pointer",
                       display: "flex", alignItems: "center", gap: "6px"
                     }}>
@@ -200,22 +200,22 @@ export default function OrdersPage() {
                    
                    <div style={{ display: "flex", gap: "6px" }}>
                       {order.status === "PENDING" && (
-                        <button onClick={() => handleStatusChange(order.id, "CONFIRMED")} style={{ padding: "6px 12px", background: "#f59e0b", border: "none", color: "#000", fontSize: "12px", fontWeight: 700, borderRadius: "4px", cursor: "pointer" }}>
+                        <button onClick={() => handleStatusChange(order.id, "CONFIRMED")} style={{ padding: "6px 12px", background: "#f59e0b", border: "none", color: "var(--bg)", fontSize: "12px", fontWeight: 700, borderRadius: "4px", cursor: "pointer" }}>
                           Hazırlanıyor İşaretle
                         </button>
                       )}
                       {order.status === "CONFIRMED" && hasPhysical && (
-                        <button onClick={() => setShippingModal({ isOpen: true, orderId: order.id, trackingUrl: "" })} style={{ padding: "6px 12px", background: "#3b82f6", border: "none", color: "#fff", fontSize: "12px", fontWeight: 700, borderRadius: "4px", cursor: "pointer" }}>
+                        <button onClick={() => setShippingModal({ isOpen: true, orderId: order.id, trackingUrl: "" })} style={{ padding: "6px 12px", background: "#3b82f6", border: "none", color: "var(--text)", fontSize: "12px", fontWeight: 700, borderRadius: "4px", cursor: "pointer" }}>
                           Kargoya Ver
                         </button>
                       )}
                       {order.status === "CONFIRMED" && !hasPhysical && (
-                        <button onClick={() => handleStatusChange(order.id, "COMPLETED")} style={{ padding: "6px 12px", background: "#10b981", border: "none", color: "#fff", fontSize: "12px", fontWeight: 700, borderRadius: "4px", cursor: "pointer" }}>
+                        <button onClick={() => handleStatusChange(order.id, "COMPLETED")} style={{ padding: "6px 12px", background: "#10b981", border: "none", color: "var(--text)", fontSize: "12px", fontWeight: 700, borderRadius: "4px", cursor: "pointer" }}>
                           Tamamlandı İşaretle
                         </button>
                       )}
                       {order.status === "SHIPPED" && (
-                        <button onClick={() => handleStatusChange(order.id, "COMPLETED")} style={{ padding: "6px 12px", background: "#10b981", border: "none", color: "#fff", fontSize: "12px", fontWeight: 700, borderRadius: "4px", cursor: "pointer" }}>
+                        <button onClick={() => handleStatusChange(order.id, "COMPLETED")} style={{ padding: "6px 12px", background: "#10b981", border: "none", color: "var(--text)", fontSize: "12px", fontWeight: 700, borderRadius: "4px", cursor: "pointer" }}>
                           Teslim Edildi
                         </button>
                       )}
@@ -246,7 +246,7 @@ export default function OrdersPage() {
             }}>
               <div style={{ padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <h2 style={{ margin: 0, fontSize: "18px", display: "flex", alignItems: "center", gap: "10px" }}><Box size={20} /> Sipariş Detayları</h2>
-                <button onClick={() => setDetailModal({ isOpen: false, data: null })} style={{ background: "none", border: "none", color: "#fff", cursor: "pointer" }}><X size={20} /></button>
+                <button onClick={() => setDetailModal({ isOpen: false, data: null })} style={{ background: "none", border: "none", color: "var(--text)", cursor: "pointer" }}><X size={20} /></button>
               </div>
 
               <div style={{ padding: "24px", maxHeight: "70vh", overflowY: "auto" }}>
@@ -322,7 +322,7 @@ export default function OrdersPage() {
             }}>
               <div style={{ padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <h2 style={{ margin: 0, fontSize: "18px", display: "flex", alignItems: "center", gap: "10px" }}><Truck size={20} /> Kargo Bilgisi Gir</h2>
-                <button onClick={() => setShippingModal({ isOpen: false, orderId: null, trackingUrl: "" })} style={{ background: "none", border: "none", color: "#fff", cursor: "pointer" }}><X size={20} /></button>
+                <button onClick={() => setShippingModal({ isOpen: false, orderId: null, trackingUrl: "" })} style={{ background: "none", border: "none", color: "var(--text)", cursor: "pointer" }}><X size={20} /></button>
               </div>
 
               <div style={{ padding: "24px" }}>
@@ -339,10 +339,10 @@ export default function OrdersPage() {
                 </div>
 
                 <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px" }}>
-                  <button onClick={() => setShippingModal({ isOpen: false, orderId: null, trackingUrl: "" })} style={{ padding: "10px 16px", background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", borderRadius: "6px", cursor: "pointer", fontWeight: 600 }}>
+                  <button onClick={() => setShippingModal({ isOpen: false, orderId: null, trackingUrl: "" })} style={{ padding: "10px 16px", background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text)", borderRadius: "6px", cursor: "pointer", fontWeight: 600 }}>
                     İptal
                   </button>
-                  <button onClick={handleShippingSubmit} style={{ padding: "10px 16px", background: "#3b82f6", border: "none", color: "#fff", borderRadius: "6px", cursor: "pointer", fontWeight: 600, display: "flex", alignItems: "center", gap: "6px" }}>
+                  <button onClick={handleShippingSubmit} style={{ padding: "10px 16px", background: "#3b82f6", border: "none", color: "var(--text)", borderRadius: "6px", cursor: "pointer", fontWeight: 600, display: "flex", alignItems: "center", gap: "6px" }}>
                     <Truck size={16} /> Kargoya Verildi İşaretle
                   </button>
                 </div>

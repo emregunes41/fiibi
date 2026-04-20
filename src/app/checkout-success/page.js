@@ -5,7 +5,7 @@ export default function SuccessPage() {
   return (
     <div style={{ 
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
-      minHeight: '100vh', padding: '2rem', textAlign: 'center', background: '#000', color: '#fff',
+      minHeight: '100vh', padding: '2rem', textAlign: 'center', background: 'var(--bg)', color: 'var(--text)',
       position: 'relative', overflow: 'hidden'
     }}>
       {/* Background Glow */}
@@ -27,14 +27,14 @@ export default function SuccessPage() {
 
         <div style={{ display: 'flex', gap: '1.5rem' }}>
           <Link href="/profile" style={{ 
-            textDecoration: 'none', background: 'rgba(255,255,255,0.05)', color: '#fff', 
+            textDecoration: 'none', background: 'rgba(255,255,255,0.05)', color: 'var(--text)', 
             padding: '1.25rem 2.5rem', borderRadius: 0, fontWeight: 800, fontSize: '1rem',
             border: '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s'
           }} className="hover:bg-white/10">
             REZERVASYONLARIM
           </Link>
           <Link href="/" style={{ 
-            textDecoration: 'none', background: '#fff', color: '#000', 
+            textDecoration: 'none', background: 'var(--text)', color: 'var(--bg)', 
             padding: '1.25rem 2.5rem', borderRadius: 0, fontWeight: 800, fontSize: '1rem',
             transition: 'transform 0.2s', display: 'flex', alignItems: 'center', gap: '0.75rem'
           }} className="hover:scale-105">

@@ -120,7 +120,7 @@ export default function AIChatBot() {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
           >
-            <MessageCircle size={20} style={{ color: "#fff" }} />
+            <MessageCircle size={20} style={{ color: "var(--text)" }} />
           </motion.button>
         )}
       </AnimatePresence>
@@ -162,12 +162,12 @@ export default function AIChatBot() {
                   border: "1px solid rgba(255,255,255,0.1)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                  <MessageCircle size={15} style={{ color: "#fff" }} />
+                  <MessageCircle size={15} style={{ color: "var(--text)" }} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>Asistan</div>
+                  <div style={{ fontSize: 14, fontWeight: 800, color: "var(--text)", letterSpacing: "-0.02em" }}>Asistan</div>
                   <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", gap: 4 }}>
-                    <div style={{ width: 5, height: 5, borderRadius: 0, background: "#fff" }} />
+                    <div style={{ width: 5, height: 5, borderRadius: 0, background: "var(--text)" }} />
                     Çevrimiçi
                   </div>
                 </div>
@@ -223,9 +223,9 @@ export default function AIChatBot() {
                       padding: "10px 14px",
                       borderRadius: 0,
                       background: msg.role === "user" 
-                        ? "#fff" 
+                        ? "var(--text)" 
                         : "rgba(255,255,255,0.06)",
-                      color: msg.role === "user" ? "#000" : "#fff",
+                      color: msg.role === "user" ? "var(--bg)" : "var(--text)",
                       fontSize: 13,
                       lineHeight: 1.5,
                       fontWeight: msg.role === "user" ? 500 : 400,
@@ -253,7 +253,7 @@ export default function AIChatBot() {
                           background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%)",
                           border: "1px solid rgba(255,255,255,0.15)",
                           textDecoration: "none",
-                          color: "#fff",
+                          color: "var(--text)",
                           cursor: "pointer",
                           transition: "all 0.2s",
                         }}
@@ -266,10 +266,10 @@ export default function AIChatBot() {
                         </div>
                         <div style={{
                           width: 28, height: 28, borderRadius: 0,
-                          background: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+                          background: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center",
                           flexShrink: 0,
                         }}>
-                          <ArrowRight size={14} style={{ color: "#000" }} />
+                          <ArrowRight size={14} style={{ color: "var(--bg)" }} />
                         </div>
                       </motion.a>
                     )}
@@ -341,7 +341,7 @@ export default function AIChatBot() {
                     borderRadius: 0,
                     padding: "12px 14px",
                     fontSize: 16,
-                    color: "#fff",
+                    color: "var(--text)",
                     outline: "none",
                     resize: "none",
                     fontFamily: "inherit",
@@ -357,7 +357,7 @@ export default function AIChatBot() {
                     width: 42,
                     height: 42,
                     borderRadius: 0,
-                    background: input.trim() && !isLoading ? "#fff" : "rgba(255,255,255,0.06)",
+                    background: input.trim() && !isLoading ? "var(--text)" : "rgba(255,255,255,0.06)",
                     border: "none",
                     cursor: input.trim() && !isLoading ? "pointer" : "not-allowed",
                     display: "flex",
@@ -367,7 +367,7 @@ export default function AIChatBot() {
                     transition: "all 0.2s",
                   }}
                 >
-                  <Send size={16} style={{ color: input.trim() && !isLoading ? "#000" : "rgba(255,255,255,0.2)" }} />
+                  <Send size={16} style={{ color: input.trim() && !isLoading ? "var(--bg)" : "rgba(255,255,255,0.2)" }} />
                 </button>
               </div>
             </div>

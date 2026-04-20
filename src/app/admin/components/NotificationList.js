@@ -41,7 +41,7 @@ export default function NotificationList({ notifications }) {
         <h3 style={{ fontWeight: 900, fontSize: "1.2rem", letterSpacing: "-0.02em", color: "#60A5FA", display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <Bell size={18} /> Bildirimler
           {unread.length > 0 && (
-            <span style={{ background: "rgba(255,255,255,0.6)", color: "#fff", fontSize: "0.7rem", padding: "0.2rem 0.5rem", borderRadius: 0, fontWeight: 900 }}>
+            <span style={{ background: "rgba(255,255,255,0.6)", color: "var(--text)", fontSize: "0.7rem", padding: "0.2rem 0.5rem", borderRadius: 0, fontWeight: 900 }}>
               {unread.length} YENİ
             </span>
           )}
@@ -73,7 +73,7 @@ export default function NotificationList({ notifications }) {
                 <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "#93C5FD", marginBottom: "0.25rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   {new Date(notif.createdAt).toLocaleString("tr-TR")}
                 </div>
-                <div style={{ fontSize: "0.95rem", fontWeight: 600, color: "#fff", lineHeight: "1.4" }}>
+                <div style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text)", lineHeight: "1.4" }}>
                   {notif.message}
                 </div>
               </div>

@@ -8,7 +8,7 @@ import { getBusinessTypeList, getBusinessType } from "@/lib/business-types";
 function buildPlans(prices) {
   return [
     { id: "monthly", name: "Aylık", price: prices.monthly, period: "/ay", color: "rgba(255,255,255,0.5)", popular: false, savings: null },
-    { id: "yearly", name: "Yıllık", price: prices.yearly, period: "/yıl", monthlyEquiv: Math.round(prices.yearly / 12), color: "#fff", popular: true, savings: Math.round(100 - (prices.yearly / (prices.monthly * 12)) * 100) },
+    { id: "yearly", name: "Yıllık", price: prices.yearly, period: "/yıl", monthlyEquiv: Math.round(prices.yearly / 12), color: "var(--text)", popular: true, savings: Math.round(100 - (prices.yearly / (prices.monthly * 12)) * 100) },
     { id: "lifetime", name: "Ömürlük", price: prices.lifetime, period: "tek seferlik", color: "rgba(255,255,255,0.6)", popular: false, savings: null },
   ];
 }
@@ -95,7 +95,7 @@ export default function OnboardingPage() {
 
           <div style={{ display: "flex", gap: 6, marginBottom: 32 }}>
             {[1, 2, 3, 4, 5].map(s => (
-              <div key={s} style={{ flex: 1, height: 3, background: s <= step ? "#fff" : "rgba(255,255,255,0.06)", transition: "all 0.4s" }} />
+              <div key={s} style={{ flex: 1, height: 3, background: s <= step ? "var(--text)" : "rgba(255,255,255,0.06)", transition: "all 0.4s" }} />
             ))}
           </div>
 
@@ -111,9 +111,9 @@ export default function OnboardingPage() {
                     <div key={bt.id} onClick={() => setForm(prev => ({ ...prev, businessType: bt.id }))}
                       style={{ background: sel ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)", border: sel ? "2px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.06)", cursor: "pointer", transition: "all 0.2s", padding: "16px 14px", textAlign: "center", position: "relative" }}>
                       <div style={{ fontSize: 28, marginBottom: 8 }}>{bt.icon}</div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: sel ? "#fff" : "rgba(255,255,255,0.7)", marginBottom: 4 }}>{bt.name}</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: sel ? "var(--text)" : "rgba(255,255,255,0.7)", marginBottom: 4 }}>{bt.name}</div>
                       <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", lineHeight: 1.4 }}>{bt.desc}</div>
-                      {sel && <div style={{ position: "absolute", top: 8, right: 8 }}><div style={{ width: 18, height: 18, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}><Check size={12} style={{ color: "#000" }} /></div></div>}
+                      {sel && <div style={{ position: "absolute", top: 8, right: 8 }}><div style={{ width: 18, height: 18, background: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center" }}><Check size={12} style={{ color: "var(--bg)" }} /></div></div>}
                     </div>
                   );
                 })}
@@ -136,7 +136,7 @@ export default function OnboardingPage() {
                     <div key={p.id} onClick={() => setForm(prev => ({ ...prev, selectedPlan: p.id }))}
                       style={{ background: sel ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)", border: sel ? "2px solid rgba(255,255,255,0.4)" : p.popular ? "2px solid rgba(255,255,255,0.15)" : "1px solid rgba(255,255,255,0.06)", cursor: "pointer", transition: "all 0.2s", position: "relative" }}>
                       {p.popular && (
-                        <div style={{ background: "#fff", color: "#000", fontSize: 10, fontWeight: 800, padding: "4px 12px", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                        <div style={{ background: "var(--text)", color: "var(--bg)", fontSize: 10, fontWeight: 800, padding: "4px 12px", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                           <Star size={9} style={{ marginRight: 4, verticalAlign: "middle" }} /> En Popüler
                         </div>
                       )}
@@ -149,7 +149,7 @@ export default function OnboardingPage() {
                         </div>
                         {p.monthlyEquiv && <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 2 }}>~{p.monthlyEquiv.toLocaleString("tr-TR")} ₺/ay</div>}
                         {p.savings && <div style={{ display: "inline-block", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", padding: "2px 8px", fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.6)", marginTop: 4 }}>%{p.savings} TASARRUF</div>}
-                        {sel && <div style={{ position: "absolute", top: p.popular ? 32 : 10, right: 10 }}><div style={{ width: 22, height: 22, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}><Check size={14} style={{ color: "#000" }} /></div></div>}
+                        {sel && <div style={{ position: "absolute", top: p.popular ? 32 : 10, right: 10 }}><div style={{ width: 22, height: 22, background: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center" }}><Check size={14} style={{ color: "var(--bg)" }} /></div></div>}
                       </div>
                     </div>
                   );
@@ -157,7 +157,7 @@ export default function OnboardingPage() {
               </div>
               <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "12px 16px", marginBottom: 20, display: "flex", alignItems: "center", gap: 10, fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
                 <Shield size={14} style={{ flexShrink: 0 }} />
-                <span>7 gün ücretsiz deneme. İptal ederseniz <strong style={{ color: "#fff" }}>hiçbir ücret çekilmez</strong>.</span>
+                <span>7 gün ücretsiz deneme. İptal ederseniz <strong style={{ color: "var(--text)" }}>hiçbir ücret çekilmez</strong>.</span>
               </div>
               <button onClick={() => form.selectedPlan && setStep(3)} disabled={!form.selectedPlan} style={{ ...btnStyle, opacity: form.selectedPlan ? 1 : 0.3 }}>
                 Devam <ArrowRight size={16} />
@@ -208,7 +208,7 @@ export default function OnboardingPage() {
                 {selectedPlanObj && (
                   <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: "14px 16px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>{selectedPlanObj.name} Plan</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text)" }}>{selectedPlanObj.name} Plan</div>
                       <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>7 gün ücretsiz deneme</div>
                     </div>
                     <div style={{ fontSize: 18, fontWeight: 800 }}>{selectedPlanObj.price.toLocaleString("tr-TR")} <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>₺{selectedPlanObj.period}</span></div>
@@ -225,18 +225,18 @@ export default function OnboardingPage() {
           {step === 5 && result && (
             <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: "48px 32px", textAlign: "center" }}>
               <div style={{ width: 72, height: 72, background: "rgba(255,255,255,0.04)", border: "2px solid rgba(255,255,255,0.15)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 24 }}>
-                <Check size={36} style={{ color: "#fff" }} />
+                <Check size={36} style={{ color: "var(--text)" }} />
               </div>
               <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>Hazırsınız! 🎉</h2>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 32 }}><strong style={{ color: "#fff" }}>{result.businessName}</strong> işletmeniz oluşturuldu.</p>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 32 }}><strong style={{ color: "var(--text)" }}>{result.businessName}</strong> işletmeniz oluşturuldu.</p>
               <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: 20, marginBottom: 16 }}>
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>İşletme Adresiniz</div>
-                <code style={{ fontSize: 18, fontWeight: 700, color: "#fff", wordBreak: "break-all" }}>{result.slug}.{domain}</code>
+                <code style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", wordBreak: "break-all" }}>{result.slug}.{domain}</code>
               </div>
               <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: 14, marginBottom: 32, fontSize: 13, color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                 <Sparkles size={14} /> 7 gün ücretsiz — tüm özellikler aktif
               </div>
-              <a href={`http://${result.slug}.${domain}/admin/login`} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", color: "#000", padding: "14px 36px", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+              <a href={`http://${result.slug}.${domain}/admin/login`} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--text)", color: "var(--bg)", padding: "14px 36px", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
                 Admin Paneline Git <ArrowRight size={16} />
               </a>
             </div>
@@ -266,7 +266,7 @@ export default function OnboardingPage() {
             <a href="#nasil" style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", textDecoration: "none" }}>Nasıl Çalışır</a>
             <a href="#fiyat" style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", textDecoration: "none" }}>Fiyatlandırma</a>
             <a href="#sss" style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", textDecoration: "none" }}>SSS</a>
-            <button onClick={() => setShowRegister(true)} style={{ background: "#fff", color: "#000", border: "none", padding: "8px 18px", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>
+            <button onClick={() => setShowRegister(true)} style={{ background: "var(--text)", color: "var(--bg)", border: "none", padding: "8px 18px", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>
               Ücretsiz Başla
             </button>
           </div>
@@ -288,7 +288,7 @@ export default function OnboardingPage() {
           </p>
           <div style={{ display: "flex", gap: 12 }}>
             <button onClick={() => setShowRegister(true)} style={{
-              background: "#fff", color: "#000", border: "none", padding: "14px 28px",
+              background: "var(--text)", color: "var(--bg)", border: "none", padding: "14px 28px",
               fontWeight: 700, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
             }}>
               7 Gün Ücretsiz Dene <ArrowRight size={16} />
@@ -406,8 +406,8 @@ export default function OnboardingPage() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 1, background: "rgba(255,255,255,0.05)" }}>
             {plans.map((p) => (
-              <div key={p.id} style={{ background: "#0a0a0a", padding: "32px 24px", position: "relative", borderTop: p.popular ? "2px solid #fff" : "none" }}>
-                {p.popular && <div style={{ position: "absolute", top: -1, right: 20, background: "#fff", color: "#000", fontSize: 9, fontWeight: 800, padding: "3px 10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Popüler</div>}
+              <div key={p.id} style={{ background: "#0a0a0a", padding: "32px 24px", position: "relative", borderTop: p.popular ? "2px solid var(--text)" : "none" }}>
+                {p.popular && <div style={{ position: "absolute", top: -1, right: 20, background: "var(--text)", color: "var(--bg)", fontSize: 9, fontWeight: 800, padding: "3px 10px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Popüler</div>}
                 <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.4)", marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.06em" }}>{p.name}</div>
                 <div style={{ marginBottom: 4 }}>
                   <span style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.03em" }}>{p.price.toLocaleString("tr-TR")}</span>
@@ -416,7 +416,7 @@ export default function OnboardingPage() {
                 {p.monthlyEquiv && <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 4 }}>aylık ~{p.monthlyEquiv.toLocaleString("tr-TR")} ₺</div>}
                 {p.savings && <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)", marginBottom: 8 }}>%{p.savings} tasarruf</div>}
                 <button onClick={() => { setForm(f => ({ ...f, selectedPlan: p.id })); setShowRegister(true); }}
-                  style={{ width: "100%", marginTop: 20, padding: "12px 0", background: p.popular ? "#fff" : "transparent", color: p.popular ? "#000" : "rgba(255,255,255,0.6)", border: p.popular ? "none" : "1px solid rgba(255,255,255,0.1)", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                  style={{ width: "100%", marginTop: 20, padding: "12px 0", background: p.popular ? "var(--text)" : "transparent", color: p.popular ? "var(--bg)" : "rgba(255,255,255,0.6)", border: p.popular ? "none" : "1px solid rgba(255,255,255,0.1)", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
                   Ücretsiz Dene
                 </button>
               </div>
@@ -440,7 +440,7 @@ export default function OnboardingPage() {
             { q: "İstediğim zaman iptal edebilir miyim?", a: "Evet, herhangi bir taahhüt yoktur. Aboneliğinizi dilediğiniz zaman iptal edebilirsiniz." },
           ].map((item, i) => (
             <div key={i} style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-              <button onClick={() => setFaq(faq === i ? null : i)} style={{ width: "100%", padding: "20px 0", background: "none", border: "none", color: "#fff", fontSize: 15, fontWeight: 600, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", textAlign: "left" }}>
+              <button onClick={() => setFaq(faq === i ? null : i)} style={{ width: "100%", padding: "20px 0", background: "none", border: "none", color: "var(--text)", fontSize: 15, fontWeight: 600, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", textAlign: "left" }}>
                 {item.q}
                 <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 18, transition: "transform 0.2s", transform: faq === i ? "rotate(45deg)" : "none", flexShrink: 0, marginLeft: 16 }}>+</span>
               </button>
@@ -455,7 +455,7 @@ export default function OnboardingPage() {
         <div style={{ maxWidth: 500, margin: "0 auto", textAlign: "center" }}>
           <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 12 }}>İşinizi büyütmeye<br />hazır mısınız?</h2>
           <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 14, marginBottom: 32 }}>2 dakikada kayıt olun. 7 gün ücretsiz deneyin.</p>
-          <button onClick={() => setShowRegister(true)} style={{ background: "#fff", color: "#000", border: "none", padding: "14px 36px", fontWeight: 700, fontSize: 15, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
+          <button onClick={() => setShowRegister(true)} style={{ background: "var(--text)", color: "var(--bg)", border: "none", padding: "14px 36px", fontWeight: 700, fontSize: 15, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
             Ücretsiz Başla <ArrowRight size={16} />
           </button>
         </div>
@@ -513,11 +513,11 @@ const inputStyle = {
   width: "100%", boxSizing: "border-box",
   background: "rgba(255,255,255,0.04)",
   border: "1px solid rgba(255,255,255,0.08)", padding: "13px 14px",
-  color: "#fff", fontSize: 14, outline: "none"
+  color: "var(--text)", fontSize: 14, outline: "none"
 };
 const btnStyle = {
   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-  width: "100%", background: "#fff", color: "#000",
+  width: "100%", background: "var(--text)", color: "var(--bg)",
   border: "none", padding: "14px 24px", fontWeight: 700,
   fontSize: 14, cursor: "pointer"
 };
