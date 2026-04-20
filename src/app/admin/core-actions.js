@@ -1600,6 +1600,8 @@ export async function createQuickEvent(data) {
       paymentStatus = numericInitialPayment >= numericTotal ? "PAID" : "PARTIAL";
     }
 
+    const tenantId = await getTenantId();
+
     await prisma.reservation.create({
       data: {
         brideName: venueName,
@@ -1615,6 +1617,7 @@ export async function createQuickEvent(data) {
         paymentPreference: "CASH",
         workflowStatus: "PENDING",
         contractApproved: true,
+        ...(tenantId ? { tenant: { connect: { id: tenantId } } } : {}),
         ...(numericInitialPayment > 0 ? {
           payments: {
             create: [{ amount: numericInitialPayment, method: paymentMethod || "CASH", note: "Ön Ödeme" }]
