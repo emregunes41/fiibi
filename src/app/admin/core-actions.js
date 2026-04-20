@@ -503,7 +503,8 @@ export async function savePendingReservation(data) {
             email: data.brideEmail,
             phone: data.bridePhone,
             password: hashedPassword,
-            role: "MEMBER"
+            role: "MEMBER",
+            tenantId,
           }
         });
         userId = user.id;
@@ -624,13 +625,15 @@ export async function createManualReservation(data) {
       if (!user) {
         const password = Math.random().toString(36).slice(-8);
         const hashedPassword = await bcrypt.hash(password, 10);
+        const tenantIdForUser = await getTenantId();
         user = await prisma.user.create({
           data: {
             name: brideName,
             email: brideEmail,
             phone: bridePhone,
             password: hashedPassword,
-            role: "MEMBER"
+            role: "MEMBER",
+            tenantId: tenantIdForUser,
           }
         });
         await sendWelcomeEmail(brideEmail, brideName, password);
@@ -1351,7 +1354,7 @@ export async function convertToCreditCardPermanent(reservationId, newTotalStr) {
     if (!r) throw new Error("Reservation not found");
     
     const numericNewTotal = parseFloat(newTotalStr.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
-    const existingPaidAmount = parseFloat(r.paidAmount || '0');
+    const existingPaidAmount = parseFloat((r.paidAmount || '0').toString().replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, ''));
     await prisma.reservation.update({
       where: { id: reservationId },
       data: {
@@ -1409,8 +1412,8 @@ export async function addReservationExtraFee(reservationId, amount, note) {
         notes: newNotes,
         selectedAddons: currentAddons,
         paymentLogs: r.paymentLogs 
-          ? [...r.paymentLogs, { id: Date.now().toString(), date: new Date().toISOString(), type: "EXTRA_FEE", amount: `+ ${addAmount.toLocaleString('tr-TR')}₺`, description: `Ekstra hizmet/fiyat eklendi: ${note}`, totalSnapshot: (currentTotal + addAmount), paidSnapshot: parseFloat(r.paidAmount || '0') }] 
-          : [{ id: Date.now().toString(), date: new Date().toISOString(), type: "EXTRA_FEE", amount: `+ ${addAmount.toLocaleString('tr-TR')}₺`, description: `Ekstra hizmet/fiyat eklendi: ${note}`, totalSnapshot: (currentTotal + addAmount), paidSnapshot: parseFloat(r.paidAmount || '0') }]
+          ? [...r.paymentLogs, { id: Date.now().toString(), date: new Date().toISOString(), type: "EXTRA_FEE", amount: `+ ${addAmount.toLocaleString('tr-TR')}₺`, description: `Ekstra hizmet/fiyat eklendi: ${note}`, totalSnapshot: (currentTotal + addAmount), paidSnapshot: parseFloat((r.paidAmount || '0').toString().replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '')) }] 
+          : [{ id: Date.now().toString(), date: new Date().toISOString(), type: "EXTRA_FEE", amount: `+ ${addAmount.toLocaleString('tr-TR')}₺`, description: `Ekstra hizmet/fiyat eklendi: ${note}`, totalSnapshot: (currentTotal + addAmount), paidSnapshot: parseFloat((r.paidAmount || '0').toString().replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '')) }]
       }
     });
 

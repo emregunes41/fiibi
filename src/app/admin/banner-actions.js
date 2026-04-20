@@ -26,7 +26,7 @@ export async function getActiveBanners() {
   try {
     const tenantId = await getTenantId();
     const banners = await prisma.banner.findMany({
-      where: tenantId ? { isActive: true, tenantId } : { isActive: true },
+      where: { isActive: true, tenantId: tenantId || "NONE" },
       orderBy: { order: "asc" },
     });
     return banners;

@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/session";
+import { getCurrentTenant } from "@/lib/tenant";
 
 export async function markNotificationAsRead(id) {
   const auth = await requireAdmin();
@@ -23,8 +24,10 @@ export async function clearAllNotifications() {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
+    const tenant = await getCurrentTenant();
+    const tenantId = tenant?.id || "NONE";
     await prisma.adminNotification.updateMany({
-      where: { isRead: false },
+      where: { isRead: false, tenantId },
       data: { isRead: true }
     });
     revalidatePath("/admin/dashboard");

@@ -563,7 +563,7 @@ export default async function ProfilePage() {
           const unifiedPaymentLogs = user.reservations.flatMap(r => r.paymentLogs || []);
           // Sum paidAmount across reservations
           const unifiedPaidAmount = user.reservations.reduce((sum, r) => {
-            return sum + parseFloat(r.paidAmount || '0');
+            return sum + parseFloat((r.paidAmount || '0').toString().replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, ''));
           }, 0);
 
           const unifiedReservation = {

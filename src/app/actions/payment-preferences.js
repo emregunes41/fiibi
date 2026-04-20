@@ -20,7 +20,7 @@ export async function toggleCustomerPaymentPreference(reservationId, newPreferen
       ? parseFloat(newTotalStr.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0')
       : parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
       
-    const existingPaidAmount = parseFloat(r.paidAmount || '0');
+    const existingPaidAmount = parseFloat((r.paidAmount || '0').toString().replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, ''));
 
     let logEntry = null;
 

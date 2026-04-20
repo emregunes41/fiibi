@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 export async function getEvents() {
   const tenant = await getCurrentTenant();
   return await prisma.event.findMany({
-    where: { tenantId: tenant?.id || null },
+    where: { tenantId: tenant?.id || "NONE" },
     orderBy: { date: "desc" },
     include: {
       registrations: true
@@ -24,7 +24,7 @@ export async function createEvent(data) {
       maxParticipants: parseInt(data.maxParticipants),
       durationMinutes: parseInt(data.durationMinutes),
       price: data.price.toString(),
-      tenantId: tenant?.id || null,
+      tenantId: tenant?.id || "NONE",
     }
   });
   revalidatePath("/admin/events");
@@ -34,7 +34,7 @@ export async function createEvent(data) {
 export async function updateEvent(id, data) {
   const tenant = await getCurrentTenant();
   await prisma.event.update({
-    where: { id, tenantId: tenant?.id || null },
+    where: { id, tenantId: tenant?.id || "NONE" },
     data: {
       ...data,
       date: new Date(data.date),
@@ -50,7 +50,7 @@ export async function updateEvent(id, data) {
 export async function deleteEvent(id) {
   const tenant = await getCurrentTenant();
   await prisma.event.delete({
-    where: { id, tenantId: tenant?.id || null }
+    where: { id, tenantId: tenant?.id || "NONE" }
   });
   revalidatePath("/admin/events");
   revalidatePath("/");
@@ -59,7 +59,7 @@ export async function deleteEvent(id) {
 export async function removeRegistration(registrationId) {
   const tenant = await getCurrentTenant();
   await prisma.eventRegistration.delete({
-    where: { id: registrationId, tenantId: tenant?.id || null }
+    where: { id: registrationId, tenantId: tenant?.id || "NONE" }
   });
   revalidatePath("/admin/events");
   revalidatePath("/");

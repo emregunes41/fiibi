@@ -79,7 +79,8 @@ export async function completeSelection(galleryId, reservationId, coupleName, se
     await prisma.adminNotification.create({
       data: {
         type: "SELECTION_DONE",
-        message: message
+        message: message,
+        tenantId: reservation.tenantId,
       }
     });
 

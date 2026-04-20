@@ -85,7 +85,8 @@ export async function resendCredentials(reservationId) {
           email: reservation.brideEmail,
           phone: reservation.bridePhone,
           password: hashedPassword,
-          role: "MEMBER"
+          role: "MEMBER",
+          tenantId: reservation.tenantId,
         }
       });
       await prisma.reservation.update({

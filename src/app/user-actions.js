@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
+import { getCurrentTenant } from "@/lib/tenant";
 
 export async function registerUser(data) {
   try {
@@ -19,9 +20,12 @@ export async function registerUser(data) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Get tenant
+    const tenant = await getCurrentTenant();
+
     // Create user
     const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword, role: "MEMBER" }
+      data: { name, email, password: hashedPassword, role: "MEMBER", tenantId: tenant?.id || null }
     });
 
     // Create token
