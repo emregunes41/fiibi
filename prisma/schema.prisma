@@ -423,6 +423,9 @@ model GlobalSettings {
   // Setup wizard
   setupCompleted  Boolean  @default(false)
 
+  // Sayfa bölümü sıralaması
+  sectionOrder    Json     @default("[\"events\",\"banners\",\"content\",\"portfolio\",\"services\",\"shop\"]")
+
   // Kapalı günler (randevu alınamaz)
   blockedDays     Json     @default("[]")   // ["2026-04-15", "2026-04-20"]
 

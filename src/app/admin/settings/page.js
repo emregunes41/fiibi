@@ -12,7 +12,7 @@ import { useAdminSession } from "../AdminSessionContext";
 import { CldUploadWidget } from "next-cloudinary";
 import {
   Save, Home, Phone, Mail, Instagram, MessageCircle, MapPin,
-  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot, Image as ImageIcon, ArrowUp, ArrowDown, Eye, EyeOff, UploadCloud, Building2, Shield, CreditCard
+  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot, Image as ImageIcon, ArrowUp, ArrowDown, Eye, EyeOff, UploadCloud, Building2, Shield, CreditCard, GripVertical, Layers
 } from "lucide-react";
 import { PLATFORM, LEGAL_TYPES } from "@/lib/constants";
 
@@ -194,6 +194,7 @@ export default function SettingsPage() {
       <div style={{ display: "flex", gap: 0, marginBottom: 24, borderBottom: "1px solid rgba(255,255,255,0.08)", overflowX: "auto" }}>
         {[
           { id: "tema", label: "TEMA" },
+          { id: "duzen", label: "DÜZEN" },
           { id: "icerik", label: "İÇERİK" },
           { id: "odeme", label: "ÖDEME" },
           { id: "bildirim", label: "BİLDİRİM" },
@@ -1176,6 +1177,155 @@ export default function SettingsPage() {
         </button>
 
       </form>
+
+      {/* ── Section Order / Sayfa Düzeni ── */}
+      {activeTab === "duzen" && (() => {
+        const SECTION_META = {
+          events: { icon: "📅", label: "Etkinlikler", desc: "Yaklaşan etkinlikler ve workshop'lar" },
+          banners: { icon: "🖼️", label: "Banner Carousel", desc: "Kayan görsel ve video banner'lar" },
+          content: { icon: "📝", label: "İçerik Blokları", desc: "Görsel + metin tanıtım bölümleri" },
+          portfolio: { icon: "📸", label: "Portfolyo / Galeri", desc: "Fotoğraf kategorileri ve galeri" },
+          services: { icon: "💼", label: "Hizmetler / Paketler", desc: "Paket ve hizmet kartları" },
+          shop: { icon: "🛍️", label: "Mağaza", desc: "E-ticaret ürünleri" },
+        };
+        const DEFAULT_ORDER = ["events", "banners", "content", "portfolio", "services", "shop"];
+        const currentOrder = (() => {
+          try {
+            const saved = config?.sectionOrder;
+            if (saved && Array.isArray(saved) && saved.length > 0) return [...saved];
+          } catch (e) {}
+          return [...DEFAULT_ORDER];
+        })();
+        // Ensure all sections present
+        DEFAULT_ORDER.forEach(s => { if (!currentOrder.includes(s)) currentOrder.push(s); });
+
+        const moveSection = async (idx, dir) => {
+          const newOrder = [...currentOrder];
+          const swapIdx = idx + dir;
+          if (swapIdx < 0 || swapIdx >= newOrder.length) return;
+          [newOrder[idx], newOrder[swapIdx]] = [newOrder[swapIdx], newOrder[idx]];
+          setConfig({ ...config, sectionOrder: newOrder });
+          // Auto-save
+          setSaving(true);
+          await updateSiteConfig({ ...config, sectionOrder: newOrder });
+          setSaving(false);
+          setMessage("Bölüm sırası güncellendi.");
+          setTimeout(() => setMessage(""), 2000);
+        };
+
+        const resetOrder = async () => {
+          setConfig({ ...config, sectionOrder: DEFAULT_ORDER });
+          setSaving(true);
+          await updateSiteConfig({ ...config, sectionOrder: DEFAULT_ORDER });
+          setSaving(false);
+          setMessage("Varsayılan sıralama geri yüklendi.");
+          setTimeout(() => setMessage(""), 2000);
+        };
+
+        return (
+          <div style={sectionCard}>
+            {sectionHeader(Layers, "Sayfa Bölüm Sıralaması", "Anasayfadaki bölümlerin görünüm sırasını değiştirin. Hero her zaman en üstte, Footer her zaman en altta kalır.")}
+
+            {/* Fixed sections indicator */}
+            <div style={{
+              padding: "10px 14px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+              marginBottom: 8, display: "flex", alignItems: "center", gap: 10, opacity: 0.4,
+            }}>
+              <div style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>🏠</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 12, fontWeight: 700 }}>Hero Bölümü</div>
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>Sabit · Her zaman en üstte</div>
+              </div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", fontWeight: 700 }}>SABİT</div>
+            </div>
+
+            {/* Orderable sections */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {currentOrder.map((sId, idx) => {
+                const meta = SECTION_META[sId] || { icon: "❓", label: sId, desc: "" };
+                return (
+                  <div key={sId} style={{
+                    padding: "12px 14px", background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    display: "flex", alignItems: "center", gap: 10,
+                    transition: "all 0.2s",
+                  }}>
+                    {/* Order number */}
+                    <div style={{
+                      width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center",
+                      background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+                      fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.5)",
+                    }}>
+                      {idx + 1}
+                    </div>
+
+                    {/* Icon */}
+                    <div style={{ fontSize: 18, width: 28, textAlign: "center" }}>{meta.icon}</div>
+
+                    {/* Info */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{meta.label}</div>
+                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 1 }}>{meta.desc}</div>
+                    </div>
+
+                    {/* Move buttons */}
+                    <div style={{ display: "flex", gap: 2, flexShrink: 0 }}>
+                      <button type="button" disabled={idx === 0} onClick={() => moveSection(idx, -1)} style={{
+                        width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center",
+                        background: idx === 0 ? "none" : "rgba(255,255,255,0.06)",
+                        border: idx === 0 ? "1px solid rgba(255,255,255,0.04)" : "1px solid rgba(255,255,255,0.1)",
+                        cursor: idx === 0 ? "not-allowed" : "pointer",
+                        color: idx === 0 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.6)",
+                        transition: "all 0.15s",
+                      }}>
+                        <ArrowUp size={14} />
+                      </button>
+                      <button type="button" disabled={idx === currentOrder.length - 1} onClick={() => moveSection(idx, 1)} style={{
+                        width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center",
+                        background: idx === currentOrder.length - 1 ? "none" : "rgba(255,255,255,0.06)",
+                        border: idx === currentOrder.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "1px solid rgba(255,255,255,0.1)",
+                        cursor: idx === currentOrder.length - 1 ? "not-allowed" : "pointer",
+                        color: idx === currentOrder.length - 1 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.6)",
+                        transition: "all 0.15s",
+                      }}>
+                        <ArrowDown size={14} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Fixed footer indicator */}
+            <div style={{
+              padding: "10px 14px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+              marginTop: 8, display: "flex", alignItems: "center", gap: 10, opacity: 0.4,
+            }}>
+              <div style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>📍</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 12, fontWeight: 700 }}>Footer & İletişim</div>
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>Sabit · Her zaman en altta</div>
+              </div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", fontWeight: 700 }}>SABİT</div>
+            </div>
+
+            {/* Reset button */}
+            <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", margin: 0 }}>
+                💡 Yukarı/aşağı oklarla bölüm sırasını değiştirin. Değişiklikler otomatik kaydedilir.
+              </p>
+              <button type="button" onClick={resetOrder} style={{
+                padding: "8px 16px", background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                color: "rgba(255,255,255,0.4)", fontSize: 11, fontWeight: 700,
+                cursor: "pointer", whiteSpace: "nowrap",
+              }}>
+                Sıfırla
+              </button>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* ── Content Blocks ── */}
       {activeTab === "icerik" && <div style={sectionCard}>

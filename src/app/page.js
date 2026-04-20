@@ -134,15 +134,143 @@ export default async function HomePage() {
   // Default footer tagline based on sector
   const footerTagline = siteConfig?.footerTagline || bt.defaultSlogan;
 
+  // Section ordering
+  const DEFAULT_ORDER = ["events", "banners", "content", "portfolio", "services", "shop"];
+  let sectionOrder = DEFAULT_ORDER;
+  try {
+    const saved = siteConfig?.sectionOrder;
+    if (saved && Array.isArray(saved) && saved.length > 0) sectionOrder = saved;
+  } catch (e) {}
+  // Ensure all sections are present (in case new ones were added)
+  DEFAULT_ORDER.forEach(s => { if (!sectionOrder.includes(s)) sectionOrder.push(s); });
+
+  // Section renderers
+  const sectionRenderers = {
+    events: () => features.events && upcomingEvents.length > 0 && bt.homeSections.includes("events") ? (
+      <section key="events" className="py-12 border-t border-white/5">
+        <div className="section-container">
+          <EventsSection events={upcomingEvents} />
+        </div>
+      </section>
+    ) : null,
+
+    banners: () => banners && banners.length > 0 ? (
+      <section key="banners" className="py-12 pb-8 border-t border-white/5">
+        <div className="section-container">
+          <BannerCarousel banners={banners} />
+        </div>
+      </section>
+    ) : null,
+
+    content: () => contentBlocks && contentBlocks.filter(b => b.isActive).length > 0 ? (
+      <section key="content" className="border-t border-white/5" style={{ paddingTop: 20, paddingBottom: 40 }}>
+        <div className="section-container">
+          <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+            {contentBlocks.filter(b => b.isActive).map((block, idx) => (
+              <div key={block.id} style={{
+                display: "flex", flexDirection: idx % 2 === 0 ? "row" : "row-reverse",
+                gap: "2.5rem", alignItems: "center",
+                flexWrap: "wrap",
+              }}>
+                {block.imageUrls && block.imageUrls.length > 0 && (
+                  <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+                    <ContentBlockCarousel images={block.imageUrls} />
+                  </div>
+                )}
+                {(block.title || block.description) && (
+                  <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+                    {block.title && (
+                      <h3 style={{
+                        fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.02em",
+                        color: "var(--text)", margin: "0 0 1rem", lineHeight: 1.2,
+                        fontFamily: "'Playfair Display', serif",
+                      }}>
+                        {block.title}
+                      </h3>
+                    )}
+                    {block.description && (
+                      <p style={{
+                        fontSize: "0.9rem", lineHeight: 1.8, color: "color-mix(in srgb, var(--text) 45%, transparent)",
+                        margin: 0, whiteSpace: "pre-line",
+                      }}>
+                        {block.description}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    ) : null,
+
+    portfolio: () => features.portfolio ? (
+      <section key="portfolio" id="portfolio" className="py-20 border-t border-white/5">
+        <div className="section-container mb-16 overflow-hidden">
+          <GalleryClient categories={categories} />
+        </div>
+      </section>
+    ) : null,
+
+    services: () => !features.categories && packages.length > 0 ? (
+      <section key="services" id="services" className="border-t border-white/5" style={{ padding: "80px 24px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>{terms.services}</div>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>
+            Sunduğumuz {terms.services}
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
+            {packages.map(pkg => (
+              <div key={pkg.id} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", padding: "28px 24px" }}>
+                <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{pkg.name}</h3>
+                {pkg.description && <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, marginBottom: 16 }}>{pkg.description}</p>}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: 22, fontWeight: 900 }}>{pkg.price?.toLocaleString("tr-TR")} ₺</span>
+                  <Link href="/booking" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", padding: "8px 18px", color: "#fff", fontSize: 12, fontWeight: 700, textDecoration: "none" }}>
+                    {terms.appointment} Al
+                  </Link>
+                </div>
+                {pkg.features && pkg.features.length > 0 && (
+                  <div style={{ marginTop: 16, paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 6 }}>
+                    {pkg.features.map((f, i) => (
+                      <span key={i} style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>• {f}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: "center", marginTop: 40 }}>
+            <Link href="/booking" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", color: "#000", padding: "14px 32px", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+              <Calendar size={16} /> {terms.appointment} Oluştur
+            </Link>
+          </div>
+        </div>
+      </section>
+    ) : null,
+
+    shop: () => products.length > 0 ? (
+      <section key="shop" id="shop" className="border-t border-white/5" style={{ padding: "80px 24px", background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.01))" }}>
+        <div className="section-container">
+          <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>MAĞAZA</div>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>
+            Ürünlerimiz
+          </h2>
+          <ShopStorefront products={products} categories={productCategories} />
+        </div>
+      </section>
+    ) : null,
+  };
+
   return (
     <main className="relative min-h-screen w-full">
       {preloadUrls.map((url, i) => (
         <link key={i} rel="preload" as="image" href={url} />
       ))}
       
-      {/* 1. Cinematic Hero Section */}
+      {/* Hero Section — always first */}
       <section className="relative h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-        {/* Hero Content */}
         <div className="relative z-10 max-w-4xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <span className="text-[0.7rem] uppercase tracking-[0.5em] mb-6 block" style={{ color: heroAccent }}>
             {heroSubtitle}
@@ -164,129 +292,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 1.5 Events Section */}
-      {features.events && upcomingEvents.length > 0 && bt.homeSections.includes("events") && (
-        <section className="py-12 border-t border-white/5">
-          <div className="section-container">
-            <EventsSection events={upcomingEvents} />
-          </div>
-        </section>
-      )}
+      {/* Dynamic Sections — ordered by sectionOrder */}
+      {sectionOrder.map(sectionId => {
+        const renderer = sectionRenderers[sectionId];
+        return renderer ? renderer() : null;
+      })}
 
-      {/* 2. Banner Carousel */}
-      {banners && banners.length > 0 && (
-        <section className="py-12 pb-8 border-t border-white/5">
-          <div className="section-container">
-            <BannerCarousel banners={banners} />
-          </div>
-        </section>
-      )}
-
-      {/* 2.5 Content Blocks */}
-      {contentBlocks && contentBlocks.filter(b => b.isActive).length > 0 && (
-        <section className="border-t border-white/5" style={{ paddingTop: 20, paddingBottom: 40 }}>
-          <div className="section-container">
-            <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
-              {contentBlocks.filter(b => b.isActive).map((block, idx) => (
-                <div key={block.id} style={{
-                  display: "flex", flexDirection: idx % 2 === 0 ? "row" : "row-reverse",
-                  gap: "2.5rem", alignItems: "center",
-                  flexWrap: "wrap",
-                }}>
-                  {block.imageUrls && block.imageUrls.length > 0 && (
-                    <div style={{ flex: "1 1 300px", minWidth: 0 }}>
-                      <ContentBlockCarousel images={block.imageUrls} />
-                    </div>
-                  )}
-                  {(block.title || block.description) && (
-                    <div style={{ flex: "1 1 300px", minWidth: 0 }}>
-                      {block.title && (
-                        <h3 style={{
-                          fontSize: "clamp(1.4rem, 3vw, 2rem)", fontWeight: 800, letterSpacing: "-0.02em",
-                          color: "var(--text)", margin: "0 0 1rem", lineHeight: 1.2,
-                          fontFamily: "'Playfair Display', serif",
-                        }}>
-                          {block.title}
-                        </h3>
-                      )}
-                      {block.description && (
-                        <p style={{
-                          fontSize: "0.9rem", lineHeight: 1.8, color: "color-mix(in srgb, var(--text) 45%, transparent)",
-                          margin: 0, whiteSpace: "pre-line",
-                        }}>
-                          {block.description}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* 3. Portfolio/Gallery — only for sectors that use it */}
-      {features.portfolio && (
-        <section id="portfolio" className="py-20 border-t border-white/5">
-          <div className="section-container mb-16 overflow-hidden">
-            <GalleryClient categories={categories} />
-          </div>
-        </section>
-      )}
-
-      {/* 3b. Services Section — for non-photographer sectors */}
-      {!features.categories && packages.length > 0 && (
-        <section id="services" className="border-t border-white/5" style={{ padding: "80px 24px" }}>
-          <div style={{ maxWidth: 900, margin: "0 auto" }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>{terms.services}</div>
-            <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>
-              Sunduğumuz {terms.services}
-            </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
-              {packages.map(pkg => (
-                <div key={pkg.id} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", padding: "28px 24px" }}>
-                  <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{pkg.name}</h3>
-                  {pkg.description && <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, marginBottom: 16 }}>{pkg.description}</p>}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 22, fontWeight: 900 }}>{pkg.price?.toLocaleString("tr-TR")} ₺</span>
-                    <Link href="/booking" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", padding: "8px 18px", color: "#fff", fontSize: 12, fontWeight: 700, textDecoration: "none" }}>
-                      {terms.appointment} Al
-                    </Link>
-                  </div>
-                  {pkg.features && pkg.features.length > 0 && (
-                    <div style={{ marginTop: 16, paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 6 }}>
-                      {pkg.features.map((f, i) => (
-                        <span key={i} style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>• {f}</span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-            <div style={{ textAlign: "center", marginTop: 40 }}>
-              <Link href="/booking" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", color: "#000", padding: "14px 32px", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
-                <Calendar size={16} /> {terms.appointment} Oluştur
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* 4. E-Ticaret / Mağaza */}
-      {products.length > 0 && (
-        <section id="shop" className="border-t border-white/5" style={{ padding: "80px 24px", background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.01))" }}>
-          <div className="section-container">
-            <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>MAĞAZA</div>
-            <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>
-              Ürünlerimiz
-            </h2>
-            <ShopStorefront products={products} categories={productCategories} />
-          </div>
-        </section>
-      )}
-
-      {/* Footer */}
+      {/* Footer — always last */}
       <footer id="contact" className="border-t border-white/[0.06]">
         <div className="section-container py-20">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8">
