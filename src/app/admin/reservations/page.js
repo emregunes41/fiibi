@@ -89,6 +89,20 @@ export default function ReservationsPage() {
     getBlockedDays().then(setBlockedDays).catch(() => {});
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && reservations.length > 0 && !detailModal.isOpen) {
+      const searchParams = new URLSearchParams(window.location.search);
+      const modalId = searchParams.get("open_modal");
+      if (modalId) {
+        const res = reservations.find(r => r.id === modalId);
+        if (res) {
+          setDetailModal({ isOpen: true, data: res });
+          window.history.replaceState(null, "", window.location.pathname);
+        }
+      }
+    }
+  }, [reservations, detailModal.isOpen]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);

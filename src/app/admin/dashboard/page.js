@@ -144,7 +144,7 @@ export default async function AdminDashboard() {
             const info = getDaysLeftInfo(res.deliveryDate);
             const statusMap = { "PENDING": "Çekim Bekleniyor", "SHOT_DONE": "Düzenlemede", "EDITING": "Düzenlemede", "SELECTION_PENDING": "Seçim Bekleniyor", "DELIVERED": "Teslim Edildi", "PREPARING": "Hazırlanıyor" };
             return (
-              <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", borderRadius: 0, background: info.bg || "rgba(255,255,255,0.04)", border: info.border || "1px solid rgba(255,255,255,0.06)" }}>
+              <Link href={`/admin/reservations?open_modal=${res.id}`} key={res.id} style={{ textDecoration: "none", color: "inherit", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", borderRadius: 0, background: info.bg || "rgba(255,255,255,0.04)", border: info.border || "1px solid rgba(255,255,255,0.06)" }}>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.brideName}{isPhotographer && res.groomName ? ` & ${res.groomName}` : ''}</div>
                   <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)" }}>
@@ -155,7 +155,7 @@ export default async function AdminDashboard() {
                   <span style={{ fontSize: "0.6rem", fontWeight: 900, color: info.color }}>{info.text}</span>
                   <span style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.5)" }}>{statusMap[res.workflowStatus] || res.workflowStatus}</span>
                 </div>
-              </div>
+              </Link>
             );
           })}
           {upcomingDeliveries.length === 0 && (
@@ -181,7 +181,7 @@ export default async function AdminDashboard() {
             {upcomingShoots.map((res) => {
               const info = getDaysLeftInfo(res.eventDate);
               return (
-                <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <Link href={`/admin/reservations?open_modal=${res.id}`} key={res.id} style={{ textDecoration: "none", color: "inherit", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.brideName}{isPhotographer && res.groomName ? ` & ${res.groomName}` : ''}</div>
                     <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)" }}>
@@ -190,7 +190,7 @@ export default async function AdminDashboard() {
                     </div>
                   </div>
                   <span style={{ fontSize: "0.55rem", fontWeight: 900, color: info.color, flexShrink: 0 }}>{info.text}</span>
-                </div>
+                </Link>
               );
             })}
             {upcomingShoots.length === 0 && (
@@ -209,7 +209,7 @@ export default async function AdminDashboard() {
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             {recentReservations.map((res) => (
-              <div key={res.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 8px", borderRadius: 0, background: "rgba(255,255,255,0.04)" }}>
+              <Link href={`/admin/reservations?open_modal=${res.id}`} key={res.id} style={{ textDecoration: "none", color: "inherit", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 8px", borderRadius: 0, background: "rgba(255,255,255,0.04)" }}>
                 <div>
                   <div style={{ fontSize: "0.75rem", fontWeight: 700 }}>{res.brideName}</div>
                   <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)" }}>{new Date(res.eventDate).toLocaleDateString("tr-TR")}</div>
@@ -219,7 +219,7 @@ export default async function AdminDashboard() {
                   background: res.status === "CONFIRMED" ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.05)",
                   color: res.status === "CONFIRMED" ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.4)",
                 }}>{res.status === "CONFIRMED" ? "ONAYLI" : "BEKLEMEDE"}</span>
-              </div>
+              </Link>
             ))}
             {recentReservations.length === 0 && (
               <div style={{ padding: "1.5rem", textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: "0.7rem" }}>Kayıt yok</div>
