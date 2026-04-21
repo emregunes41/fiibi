@@ -737,7 +737,7 @@ export default function ReservationsPage() {
                         <option value="CANCELLED">İptal Et</option>
                       </select>
                       <button 
-                        onClick={() => openEditModal(res)}
+                        onClick={() => { setReminderResult(null); setDetailModal({ isOpen: true, data: res }); }}
                         style={{
                           background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)",
                           color: "rgba(255,255,255,0.5)", padding: "4px", borderRadius: 0,
