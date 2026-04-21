@@ -68,7 +68,19 @@ function S({ children, style, id }) {
   );
 }
 
-
+/* Logo — marka kılavuzundaki gerçek SVG path'leri */
+function Logo({ dark, size = 28 }) {
+  const eyeFill = dark ? "#1a1a1a" : "#fff";
+  const textFill = dark ? "#fff" : "#1a1a1a";
+  return (
+    <svg height={size} viewBox="60 62 400 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 104 90 C 116 74, 140 76, 148 92 C 156 108, 146 126, 128 130 C 110 134, 94 124, 92 108 C 90 94, 92 94, 104 90 Z" fill="#FF5F1F"/>
+      <circle cx="108" cy="106" r="10" fill={eyeFill}/>
+      <circle cx="130" cy="99" r="7" fill={eyeFill}/>
+      <text x="166" y="128" fontFamily="'DM Sans',sans-serif" fontWeight="800" fontSize="46" fill={textFill} letterSpacing="-1.5">fiibi</text>
+    </svg>
+  );
+}
 
 export default function FiibiLanding() {
   const [scrolled, setScrolled] = useState(false);
@@ -93,7 +105,7 @@ export default function FiibiLanding() {
         transition: "all 0.25s", padding: "0 24px",
       }}>
         <div style={{ ...wrap, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <img src="/fiibi-logo.svg" alt="fiibi" style={{ height: 28 }} />
+          <Logo />
           <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
             <a href="#ozellikler" style={{ color: C.secondary, fontSize: 14, fontWeight: 500, textDecoration: "none", display: "none" }} className="nav-link">Özellikler</a>
             <a href="#sektorler" style={{ color: C.secondary, fontSize: 14, fontWeight: 500, textDecoration: "none", display: "none" }} className="nav-link">Sektörler</a>
@@ -315,7 +327,7 @@ export default function FiibiLanding() {
       <footer style={{ padding: "40px 24px 20px", background: C.black }}>
         <div style={{ ...wrap, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
           <div>
-            <img src="/fiibi-logo-dark.svg" alt="fiibi" style={{ height: 24 }} />
+            <Logo dark size={24} />
             <p style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 6 }}>Hepsi bir arada CRM platformu.</p>
           </div>
           <a href="mailto:destek@fiibi.co" style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>destek@fiibi.co</a>
