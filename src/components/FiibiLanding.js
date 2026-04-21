@@ -69,7 +69,7 @@ function S({ children, style, id }) {
 }
 
 /* Logo — marka kılavuzundaki gerçek SVG path'leri */
-function Logo({ dark, size = 28 }) {
+function Logo({ dark, size = 40 }) {
   const eyeFill = dark ? "#1a1a1a" : "#fff";
   const textFill = dark ? "#fff" : "#1a1a1a";
   return (
@@ -327,7 +327,7 @@ export default function FiibiLanding() {
       <footer style={{ padding: "40px 24px 20px", background: C.black }}>
         <div style={{ ...wrap, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
           <div>
-            <Logo dark size={24} />
+            <Logo dark size={32} />
             <p style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 6 }}>Hepsi bir arada CRM platformu.</p>
           </div>
           <a href="mailto:destek@fiibi.co" style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>destek@fiibi.co</a>
