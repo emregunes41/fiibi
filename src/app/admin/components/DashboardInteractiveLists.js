@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Package, Clock, Calendar, ChevronRight } from "lucide-react";
 import ReservationHubModal from "./ReservationHubModal";
 
@@ -14,10 +15,13 @@ export default function DashboardInteractiveLists({
 }) {
   const [detailModal, setDetailModal] = useState({ isOpen: false, data: null });
 
+  const router = useRouter();
+
   // Update reservations function? Dashboard is server rendered, so we can't easily refetch
-  // all data. We will just reload the page since it's an admin dashboard to get fresh data.
+  // all data. We use router.refresh() to soft-reload server components in background
+  // without losing client states (like this modal staying open).
   const handleUpdate = () => {
-    window.location.reload();
+    router.refresh();
   };
 
   const getDaysLeftInfo = (targetDate) => {
