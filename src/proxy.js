@@ -49,10 +49,14 @@ export async function proxy(req) {
     return response;
   }
 
-  // Subdomain yoksa → platform landing (onboarding) göster
+  // Subdomain yoksa → platform landing page göster
   if (!slug) {
-    // Ana domain (localhost:3000) → onboarding'e yönlendir
-    if (pathname === "/" || (!pathname.startsWith("/admin") && !pathname.startsWith("/login") && !pathname.startsWith("/profile"))) {
+    // Ana domain root (fiibi.co/) → FiibiLanding sayfası gösterilsin, redirect yapma
+    if (pathname === "/") {
+      return response;
+    }
+    // Diğer sayfalar (admin, login hariç) → onboarding'e yönlendir
+    if (!pathname.startsWith("/admin") && !pathname.startsWith("/login") && !pathname.startsWith("/profile")) {
       return NextResponse.redirect(new URL("/onboarding", req.url));
     }
   }
