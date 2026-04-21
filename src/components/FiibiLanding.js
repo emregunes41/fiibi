@@ -98,7 +98,7 @@ export default function FiibiLanding() {
       <style>{`
         @media(max-width:768px){
           .fiibi-nav-link{display:none !important;}
-          .fiibi-hero-h1{font-size:40px !important;}
+          .fiibi-hero-h1{font-size:32px !important;}
           .fiibi-hero-sub{font-size:16px !important;}
           .fiibi-grid-3{grid-template-columns:1fr !important;}
           .fiibi-grid-2{grid-template-columns:1fr !important;}
@@ -116,28 +116,30 @@ export default function FiibiLanding() {
         <div style={{ position: "absolute", top: "10%", left: "15%", width: 500, height: 500, background: `radial-gradient(circle, ${C.orange}15, transparent 70%)`, pointerEvents: "none" }} />
         <div style={{ position: "absolute", bottom: "5%", right: "10%", width: 400, height: 400, background: `radial-gradient(circle, ${C.orangeLight}10, transparent 70%)`, pointerEvents: "none" }} />
 
-        <div style={{ ...wrap, textAlign: "center", position: "relative", zIndex: 1, padding: "80px 32px 60px" }}>
-          <Logo dark size={56} />
+        <div style={{ ...wrap, textAlign: "center", position: "relative", zIndex: 1, padding: "100px 32px 60px" }}>
+
+          <p style={{ fontSize: 14, fontWeight: 600, color: C.orange, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 20 }}>
+            Randevu ile çalışan her sektör için
+          </p>
 
           <h1 className="fiibi-hero-h1" style={{
-            fontSize: 72, fontWeight: 800, lineHeight: 1.05,
-            color: C.white, letterSpacing: "-0.04em", margin: "40px auto 24px", maxWidth: 800,
+            fontSize: 44, fontWeight: 800, lineHeight: 1.2,
+            color: C.white, letterSpacing: "-0.02em", margin: "0 auto 20px", maxWidth: 600,
           }}>
-            İşletmeni yönetmek için ihtiyacın olan <span style={{ color: C.orange }}>tek platform</span>
+            İşletmeni yönetmek için ihtiyacın olan tek platform.
           </h1>
 
           <p className="fiibi-hero-sub" style={{
-            fontSize: 20, color: "rgba(255,255,255,0.55)", lineHeight: 1.6,
-            maxWidth: 560, margin: "0 auto 40px", fontWeight: 400,
+            fontSize: 17, color: "rgba(255,255,255,0.5)", lineHeight: 1.65,
+            maxWidth: 480, margin: "0 auto 36px", fontWeight: 400,
           }}>
             Online randevu, ödeme takibi, müşteri yönetimi ve kendi web siteniz. Kredi kartı gerekmez.
           </p>
 
-          {/* CTA — Shopify style email input + button */}
-          <div style={{ display: "flex", gap: 0, justifyContent: "center", maxWidth: 480, margin: "0 auto", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 0, justifyContent: "center", maxWidth: 360, margin: "0 auto" }}>
             <Link href="/onboarding" style={{
-              background: C.orange, color: C.white, padding: "18px 40px",
-              fontSize: 17, fontWeight: 700, textDecoration: "none",
+              background: C.orange, color: C.white, padding: "16px 36px",
+              fontSize: 15, fontWeight: 700, textDecoration: "none",
               width: "100%", textAlign: "center", display: "block",
             }}>
               Ücretsiz Dene — 14 Gün
