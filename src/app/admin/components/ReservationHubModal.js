@@ -48,6 +48,12 @@ export default function ReservationHubModal({
         meetingLink: reservation.meetingLink || "",
         packageIds: (reservation.packages || []).map(p => p.id),
         totalAmount: reservation.totalAmount || "",
+        customFieldAnswers: (() => {
+          const raw = reservation.customFieldAnswers;
+          if (Array.isArray(raw)) return JSON.parse(JSON.stringify(raw));
+          if (typeof raw === "string") { try { return JSON.parse(raw); } catch { return []; } }
+          return [];
+        })(),
       });
       setIsEditMode(false);
       setReminderResult(null);
@@ -369,17 +375,52 @@ export default function ReservationHubModal({
                        </div>
                        
                        {pkgFields.length > 0 && (
-                         <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                           {pkgFields.map((answer, i) => (
-                             <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
-                               <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.45)", fontWeight: 600 }}>{answer.label}</span>
-                               <span style={{ fontSize: "0.78rem", color: "#fff", fontWeight: 700 }}>
-                                 {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
-                               </span>
-                             </div>
-                           ))}
-                         </div>
-                       )}
+                          <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                            {pkgFields.map((answer, i) => {
+                              const cfaList = formData.customFieldAnswers || [];
+                              const cfaIdx = cfaList.findIndex(a => a.label === answer.label && a.packageName === answer.packageName);
+                              const currentVal = cfaIdx >= 0 ? cfaList[cfaIdx].value : answer.value;
+
+                              if (isEditMode) {
+                                return (
+                                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }}>
+                                    <span style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.5)", fontWeight: 700, minWidth: 80, flexShrink: 0 }}>{answer.label}</span>
+                                    {answer.type === "checkbox" ? (
+                                      <label style={{ display: "flex", alignItems: "center", gap: 4, cursor: "pointer" }}>
+                                        <input type="checkbox" checked={!!currentVal}
+                                          onChange={(e) => {
+                                            const newCfa = [...cfaList];
+                                            if (cfaIdx >= 0) newCfa[cfaIdx] = { ...newCfa[cfaIdx], value: e.target.checked };
+                                            setFormData({ ...formData, customFieldAnswers: newCfa });
+                                          }}
+                                        />
+                                        <span style={{ fontSize: "0.7rem", color: "#fff" }}>{currentVal ? "Evet" : "Hayır"}</span>
+                                      </label>
+                                    ) : (
+                                      <input
+                                        style={{ ...inp, padding: "4px 8px", fontSize: "0.72rem", flex: 1 }}
+                                        value={currentVal || ""}
+                                        onChange={(e) => {
+                                          const newCfa = [...cfaList];
+                                          if (cfaIdx >= 0) newCfa[cfaIdx] = { ...newCfa[cfaIdx], value: e.target.value };
+                                          setFormData({ ...formData, customFieldAnswers: newCfa });
+                                        }}
+                                      />
+                                    )}
+                                  </div>
+                                );
+                              }
+                              return (
+                                <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                                  <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.45)", fontWeight: 600 }}>{answer.label}</span>
+                                  <span style={{ fontSize: "0.78rem", color: "#fff", fontWeight: 700 }}>
+                                    {answer.type === "checkbox" ? (currentVal ? "✅ Evet" : "❌ Hayır") : (currentVal || "—")}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                        {pkgAddons.length > 0 && (
                          <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                            <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 4 }}>Ek Hizmetler</div>
