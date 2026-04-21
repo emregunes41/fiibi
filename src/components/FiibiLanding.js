@@ -74,7 +74,7 @@ export default function FiibiLanding() {
 
       {/* ── NAV ── */}
       <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, height: 72,
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, height: scrolled ? 64 : 80,
         display: "flex", alignItems: "center", justifyContent: "center",
         background: scrolled ? "rgba(255,255,255,0.96)" : "rgba(26,26,26,0.0)",
         backdropFilter: scrolled ? "blur(16px)" : "none",
@@ -82,7 +82,7 @@ export default function FiibiLanding() {
         transition: "all 0.3s", padding: "0 32px",
       }}>
         <div style={{ ...wrap, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          {scrolled ? <Logo size={36} /> : <Logo dark size={36} />}
+          {scrolled ? <Logo size={40} /> : <Logo dark size={60} />}
           <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
             <a href="#ozellikler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Özellikler</a>
             <a href="#sektorler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Sektörler</a>
@@ -98,60 +98,62 @@ export default function FiibiLanding() {
       <style>{`
         @media(max-width:768px){
           .fiibi-nav-link{display:none !important;}
-          .fiibi-hero-h1{font-size:32px !important;}
-          .fiibi-hero-sub{font-size:16px !important;}
           .fiibi-grid-3{grid-template-columns:1fr !important;}
           .fiibi-grid-2{grid-template-columns:1fr !important;}
           .fiibi-grid-sectors{grid-template-columns:repeat(3,1fr) !important;}
           .fiibi-stats{flex-direction:column !important;gap:24px !important;}
+          .fiibi-hero-form{flex-direction:column !important;}
         }
       `}</style>
 
-      {/* ── HERO — Shopify-style dark hero ── */}
+      {/* ── HERO — functional signup ── */}
       <section style={{
         minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-        background: C.black, position: "relative", overflow: "hidden", paddingTop: 72,
+        background: C.black, position: "relative", overflow: "hidden", paddingTop: 80,
       }}>
-        {/* Gradient orbs */}
-        <div style={{ position: "absolute", top: "10%", left: "15%", width: 500, height: 500, background: `radial-gradient(circle, ${C.orange}15, transparent 70%)`, pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: "5%", right: "10%", width: 400, height: 400, background: `radial-gradient(circle, ${C.orangeLight}10, transparent 70%)`, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "10%", left: "15%", width: 500, height: 500, background: `radial-gradient(circle, ${C.orange}12, transparent 70%)`, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "5%", right: "10%", width: 400, height: 400, background: `radial-gradient(circle, ${C.orangeLight}08, transparent 70%)`, pointerEvents: "none" }} />
 
-        <div style={{ ...wrap, textAlign: "center", position: "relative", zIndex: 1, padding: "100px 32px 60px" }}>
+        <div style={{ ...wrap, textAlign: "center", position: "relative", zIndex: 1, padding: "80px 32px 48px" }}>
 
-          <p style={{ fontSize: 14, fontWeight: 600, color: C.orange, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 20 }}>
-            Randevu ile çalışan her sektör için
+          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", marginBottom: 32, lineHeight: 1.6, maxWidth: 420, margin: "0 auto 32px" }}>
+            Online randevu, ödeme takibi, müşteri yönetimi ve kendi web siteniz — tek platformda.
           </p>
 
-          <h1 className="fiibi-hero-h1" style={{
-            fontSize: 44, fontWeight: 800, lineHeight: 1.2,
-            color: C.white, letterSpacing: "-0.02em", margin: "0 auto 20px", maxWidth: 600,
-          }}>
-            İşletmeni yönetmek için ihtiyacın olan tek platform.
-          </h1>
+          {/* Functional form */}
+          <form
+            onSubmit={(e) => { e.preventDefault(); window.location.href = "/onboarding"; }}
+            className="fiibi-hero-form"
+            style={{ display: "flex", gap: 0, maxWidth: 520, margin: "0 auto", alignItems: "stretch" }}
+          >
+            <input
+              type="text"
+              placeholder="İşletme adınız"
+              style={{
+                flex: 1, padding: "16px 20px", fontSize: 15, fontWeight: 500,
+                border: "none", outline: "none", background: "rgba(255,255,255,0.08)",
+                color: C.white, fontFamily: "'DM Sans', sans-serif",
+                borderRight: "1px solid rgba(255,255,255,0.06)",
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                background: C.orange, color: C.white, padding: "16px 32px",
+                fontSize: 15, fontWeight: 700, border: "none", cursor: "pointer",
+                fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap",
+              }}
+            >
+              Ücretsiz Başla →
+            </button>
+          </form>
 
-          <p className="fiibi-hero-sub" style={{
-            fontSize: 17, color: "rgba(255,255,255,0.5)", lineHeight: 1.65,
-            maxWidth: 480, margin: "0 auto 36px", fontWeight: 400,
-          }}>
-            Online randevu, ödeme takibi, müşteri yönetimi ve kendi web siteniz. Kredi kartı gerekmez.
-          </p>
-
-          <div style={{ display: "flex", gap: 0, justifyContent: "center", maxWidth: 360, margin: "0 auto" }}>
-            <Link href="/onboarding" style={{
-              background: C.orange, color: C.white, padding: "16px 36px",
-              fontSize: 15, fontWeight: 700, textDecoration: "none",
-              width: "100%", textAlign: "center", display: "block",
-            }}>
-              Ücretsiz Dene — 14 Gün
-            </Link>
-          </div>
-
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 16 }}>
-            Kurulum 2 dakika · Kredi kartı gerekmez · İstediğin zaman iptal
+          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", marginTop: 14 }}>
+            Kredi kartı gerekmez · 2 dakikada kurulum · İstediğin zaman iptal
           </p>
         </div>
 
-        {/* Stats bar — Shopify style social proof */}
+        {/* Stats bar */}
         <div className="fiibi-stats" style={{
           display: "flex", justifyContent: "center", gap: 64,
           padding: "40px 32px", borderTop: "1px solid rgba(255,255,255,0.06)", width: "100%",
