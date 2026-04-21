@@ -30,11 +30,13 @@ export default function OnboardingPage() {
   const allBusinessTypes = getBusinessTypeList();
   const selectedBT = form.businessType ? getBusinessType(form.businessType) : null;
 
-  // URL'den referans kodu al
+  // URL'den referans kodu ve register flag al
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const ref = params.get("ref");
     if (ref) setForm(prev => ({ ...prev, referralCode: ref.toUpperCase() }));
+    // fiibi.co landing'den gelince direkt kayıt akışına git
+    if (params.get("register") === "true") setShowRegister(true);
   }, []);
 
   useEffect(() => {
@@ -517,7 +519,7 @@ const inputStyle = {
 };
 const btnStyle = {
   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-  width: "100%", background: "#fff", color: "#000",
+  width: "100%", background: "#FF5F1F", color: "#fff",
   border: "none", padding: "14px 24px", fontWeight: 700,
   fontSize: 14, cursor: "pointer"
 };

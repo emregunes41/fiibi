@@ -87,7 +87,7 @@ export default function FiibiLanding() {
             <a href="#ozellikler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Özellikler</a>
             <a href="#sektorler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Sektörler</a>
             <a href="#fiyatlar" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Fiyatlar</a>
-            <Link href="/onboarding" style={{
+            <Link href="/onboarding?register=true" style={{
               background: C.orange, color: C.white, padding: "10px 24px",
               fontSize: 14, fontWeight: 700, textDecoration: "none",
             }}>Ücretsiz Başla</Link>
@@ -122,7 +122,7 @@ export default function FiibiLanding() {
 
           {/* Functional form */}
           <form
-            onSubmit={(e) => { e.preventDefault(); window.location.href = "/onboarding"; }}
+            onSubmit={(e) => { e.preventDefault(); window.location.href = "/onboarding?register=true"; }}
             className="fiibi-hero-form"
             style={{ display: "flex", gap: 0, maxWidth: 520, margin: "0 auto", alignItems: "stretch" }}
           >
@@ -271,7 +271,7 @@ export default function FiibiLanding() {
                   <span key={f} style={{ fontSize: 14, color: C.secondary }}><span style={{ color: C.orange, marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
-              <Link href="/onboarding" style={{ display: "block", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, textDecoration: "none", border: `2px solid ${C.black}`, color: C.black }}>Ücretsiz Başla</Link>
+              <Link href="/onboarding?register=true" style={{ display: "block", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, textDecoration: "none", border: `2px solid ${C.black}`, color: C.black }}>Ücretsiz Başla</Link>
             </div>
             {/* Pro */}
             <div style={{ padding: "44px 36px", background: C.black, color: C.white, position: "relative" }}>
@@ -284,7 +284,7 @@ export default function FiibiLanding() {
                   <span key={f} style={{ fontSize: 14, color: "rgba(255,255,255,0.55)" }}><span style={{ color: C.orangeLight, marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
-              <Link href="/onboarding" style={{ display: "block", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, textDecoration: "none", background: C.orange, color: C.white }}>Hemen Başla →</Link>
+              <Link href="/onboarding?register=true" style={{ display: "block", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, textDecoration: "none", background: C.orange, color: C.white }}>Hemen Başla →</Link>
             </div>
           </div>
         </div>
@@ -299,7 +299,7 @@ export default function FiibiLanding() {
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.8)", marginBottom: 36, maxWidth: 480, margin: "0 auto 36px" }}>
             14 gün ücretsiz dene. Kredi kartı gerekmez. İstediğin zaman iptal et.
           </p>
-          <Link href="/onboarding" style={{
+          <Link href="/onboarding?register=true" style={{
             display: "inline-block", background: C.white, color: C.orangeDark,
             padding: "18px 48px", fontSize: 17, fontWeight: 800, textDecoration: "none",
           }}>
