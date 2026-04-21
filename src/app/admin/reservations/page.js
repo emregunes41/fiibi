@@ -780,19 +780,7 @@ export default function ReservationsPage() {
                       >
                         <Edit2 size={12} />
                       </button>
-                      {res.status === "CONFIRMED" && (
-                        <button 
-                          onClick={() => openWorkflowModal(res)}
-                          style={{
-                            background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)",
-                            color: "rgba(255,255,255,0.5)", padding: "4px", borderRadius: 0,
-                            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                          }}
-                          title="İş Akışı"
-                        >
-                          <Settings2 size={12} />
-                        </button>
-                      )}
+
                       <button 
                         onClick={() => handleDeleteReservation(res.id, res.brideName)}
                         style={{
@@ -1163,9 +1151,26 @@ export default function ReservationsPage() {
                   <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.65rem", margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>ID: {r.id.slice(0, 12)}...</p>
                 </div>
                 <div className="detail-header-actions">
-                  <span style={{ padding: "4px 10px", borderRadius: 0, fontSize: "0.6rem", fontWeight: 800, textTransform: "uppercase", background: sc.bg, color: sc.c, border: sc.b }}>
-                    {statusLabels[r.status] || r.status}
-                  </span>
+                  <select
+                    value={r.status}
+                    onChange={async (e) => {
+                      const newStatus = e.target.value;
+                      setIsLoading(true);
+                      await handleStatusChange(r.id, newStatus);
+                      setDetailModal(prev => ({ ...prev, data: { ...prev.data, status: newStatus } }));
+                      setIsLoading(false);
+                    }}
+                    style={{
+                      padding: "4px 10px", borderRadius: 0, fontSize: "0.65rem", fontWeight: 800, textTransform: "uppercase",
+                      background: sc.bg, color: sc.c, border: sc.b, outline: "none", cursor: "pointer",
+                      WebkitAppearance: "none", appearance: "none"
+                    }}
+                  >
+                    <option value="PENDING" style={{ color: "#000" }}>Bekleyen</option>
+                    <option value="CONFIRMED" style={{ color: "#000" }}>Onaylı</option>
+                    <option value="COMPLETED" style={{ color: "#000" }}>Tamamlandı</option>
+                    <option value="CANCELLED" style={{ color: "#000" }}>İptal</option>
+                  </select>
                   <button onClick={() => { setDetailModal({ isOpen: false, data: null }); openEditModal(r); }} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
                     <Edit2 size={11} /> Düzenle
                   </button>
@@ -1651,18 +1656,60 @@ export default function ReservationsPage() {
                         })}
                       </div>
 
-                      {/* Delivery info */}
-                      <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 10, display: "flex", flexDirection: "column", gap: 6 }}>
-                        {r.deliveryLink && (
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.5)" }}>Teslimat Linki</span>
-                            <a href={r.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.5)", textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
-                              <ExternalLink size={11} /> Aç
-                            </a>
+                      {/* İş Akışı Güncelleme & Teslimat Bilgisi */}
+                      <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 14, marginTop: 14, display: "flex", flexDirection: "column", gap: 10 }}>
+                        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "flex-end" }}>
+                          <div style={{ flex: 1, minWidth: 120 }}>
+                            <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", display: "block", marginBottom: 3 }}>Aşama Değiştir</label>
+                            <select
+                              value={r.workflowStatus || "PENDING"}
+                              onChange={async (e) => {
+                                const newWfStatus = e.target.value;
+                                await updateReservationWorkflow(r.id, { workflowStatus: newWfStatus, deliveryLink: r.deliveryLink });
+                                loadData();
+                                setDetailModal(prev => ({ ...prev, data: { ...prev.data, workflowStatus: newWfStatus } }));
+                              }}
+                              style={{ ...inp, fontSize: "0.72rem", padding: "6px" }}
+                            >
+                              <option value="PENDING" style={{color:"#000"}}>Çekim Bekleniyor</option>
+                              <option value="EDITING" style={{color:"#000"}}>Düzenleniyor (İşleniyor)</option>
+                              <option value="SELECTION_PENDING" style={{color:"#000"}}>Müşteri Seçimi Bekleniyor</option>
+                              <option value="PREPARING" style={{color:"#000"}}>Proje Hazırlanıyor</option>
+                              <option value="COMPLETED" style={{color:"#000"}}>İşlem Tamamlandı</option>
+                              {/* Legacy fallbacks */}
+                              <option value="SHOT_DONE" style={{display:"none"}}>Düzenlemede (Eski)</option>
+                              <option value="ALBUM_PREPARING" style={{display:"none"}}>Hazırlanıyor (Eski)</option>
+                              <option value="DELIVERED" style={{display:"none"}}>Teslim Edildi (Eski)</option>
+                            </select>
                           </div>
-                        )}
+                          <div style={{ flex: 2, minWidth: 200, display: "flex", gap: "6px" }}>
+                            <div style={{ flex: 1 }}>
+                              <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", display: "block", marginBottom: 3 }}>Teslimat Linki (Drive, Pixieset vb.)</label>
+                              <input 
+                                type="url" 
+                                placeholder="https://" 
+                                defaultValue={r.deliveryLink || ""} 
+                                onBlur={async (e) => {
+                                  const newLink = e.target.value;
+                                  if (newLink !== (r.deliveryLink || "")) {
+                                    await updateReservationWorkflow(r.id, { workflowStatus: r.workflowStatus, deliveryLink: newLink });
+                                    loadData();
+                                    setDetailModal(prev => ({ ...prev, data: { ...prev.data, deliveryLink: newLink } }));
+                                  }
+                                }}
+                                style={{ ...inp, fontSize: "0.72rem", padding: "6px" }} 
+                              />
+                            </div>
+                            {r.deliveryLink && (
+                              <a href={r.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, padding: "0 10px", color: "rgba(255,255,255,0.7)", textDecoration: "none", alignSelf: "flex-end", height: "30px", marginBottom: "1px" }} title="Linki Aç">
+                                <ExternalLink size={12} />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+
                         {r.deliveryDate && (
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
                             <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.5)" }}>Teslim Tarihi</span>
                             <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "#fff" }}>{new Date(r.deliveryDate).toLocaleDateString('tr-TR')}</span>
                           </div>
