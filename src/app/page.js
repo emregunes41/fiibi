@@ -7,6 +7,7 @@ import { getCurrentTenant } from "@/lib/tenant";
 import { getBusinessType } from "@/lib/business-types";
 import BookingFlow from "@/components/BookingFlow";
 import GalleryClient from "./gallery/GalleryClient";
+import FiibiLanding from "@/components/FiibiLanding";
 import Image from "next/image";
 import Link from "next/link";
 import AIChatBot from "@/components/AIChatBot";
@@ -29,6 +30,11 @@ export default async function HomePage() {
     console.error("Tenant detection error:", e);
   }
   const activeTenantId = tenant?.id || "NONE";
+
+  // fiibi.co ana sayfası — tenant yoksa SaaS landing page göster
+  if (!tenant) {
+    return <FiibiLanding />;
+  }
 
   let packages = [];
   try {

@@ -89,21 +89,32 @@ export default async function RootLayout({ children }) {
   } catch (e) {
     console.error("Layout getSiteConfig error:", e);
   }
+  // fiibi.co ana sayfa — tenant yoksa temiz layout
+  if (!siteConfig) {
+    return (
+      <html lang="tr" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+        <body style={{ margin: 0, background: "#fff", color: "#1a1a1a", fontFamily: "'DM Sans', var(--font-geist-sans), system-ui, sans-serif" }}>
+          <PageTracker />
+          {children}
+        </body>
+      </html>
+    );
+  }
 
-  const accentColor = siteConfig?.accentColor || "#ffffff";
-  const fontFamily = siteConfig?.fontFamily || "geist";
+  const accentColor = siteConfig.accentColor || "#ffffff";
+  const fontFamily = siteConfig.fontFamily || "geist";
   const fontCSS = FONT_MAP[fontFamily] || FONT_MAP.geist;
   const googleFontUrl = GOOGLE_FONTS[fontFamily] ? `https://fonts.googleapis.com/css2?family=${GOOGLE_FONTS[fontFamily]}&display=swap` : null;
 
   // Palette
   const DEFAULT_ASSETS = ["/assets/hero.mp4", "/assets/hero.jpg", ""];
   const SECTOR_TEXTURES = ["photographer","doctor","dentist","psychologist","dietitian","coach","beauty","veterinarian","physiotherapist","tutor","lawyer","consultant","fitness","veterinary"];
-  const hasCustomBg = siteConfig?.heroBgUrl && siteConfig.heroBgUrl.length > 0 && !DEFAULT_ASSETS.includes(siteConfig.heroBgUrl);
-  const businessType = siteConfig?._tenant?.businessType || "other";
+  const hasCustomBg = siteConfig.heroBgUrl && siteConfig.heroBgUrl.length > 0 && !DEFAULT_ASSETS.includes(siteConfig.heroBgUrl);
+  const businessType = siteConfig._tenant?.businessType || "other";
   const usingSectorTexture = !hasCustomBg && SECTOR_TEXTURES.includes(businessType);
 
-  let palette = getPalette(siteConfig?.siteTheme || "dark");
-  const forceDark = siteConfig?.forceDarkMode === true;
+  let palette = getPalette(siteConfig.siteTheme || "dark");
+  const forceDark = siteConfig.forceDarkMode === true;
   
   // Sektör texture'ları beyaz arka planlı → otomatik light mode (forceDarkMode kapalıysa)
   if (usingSectorTexture && !forceDark) {
