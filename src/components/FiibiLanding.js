@@ -68,24 +68,7 @@ function S({ children, style, id }) {
   );
 }
 
-/* fiibi logosu — marka kılavuzundaki baykuş ikonu + yazı */
-function Logo({ dark }) {
-  const c = dark ? C.white : C.orange;
-  return (
-    <svg width="100" height="36" viewBox="0 0 200 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Sol göz */}
-      <circle cx="28" cy="28" r="18" fill={c}/>
-      <circle cx="28" cy="28" r="7" fill={dark ? C.dark : C.white}/>
-      {/* Sağ göz */}
-      <circle cx="62" cy="28" r="18" fill={c}/>
-      <circle cx="62" cy="28" r="7" fill={dark ? C.dark : C.white}/>
-      {/* Gaga / gülümseme */}
-      <path d="M22 46 Q45 64 68 46" stroke={c} strokeWidth="6" fill="none" strokeLinecap="round"/>
-      {/* Yazı */}
-      <text x="92" y="48" fontFamily="'DM Sans',sans-serif" fontWeight="800" fontSize="48" fill={c}>fiibi</text>
-    </svg>
-  );
-}
+
 
 export default function FiibiLanding() {
   const [scrolled, setScrolled] = useState(false);
@@ -110,7 +93,7 @@ export default function FiibiLanding() {
         transition: "all 0.25s", padding: "0 24px",
       }}>
         <div style={{ ...wrap, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Logo />
+          <img src="/fiibi-logo.svg" alt="fiibi" style={{ height: 28 }} />
           <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
             <a href="#ozellikler" style={{ color: C.secondary, fontSize: 14, fontWeight: 500, textDecoration: "none", display: "none" }} className="nav-link">Özellikler</a>
             <a href="#sektorler" style={{ color: C.secondary, fontSize: 14, fontWeight: 500, textDecoration: "none", display: "none" }} className="nav-link">Sektörler</a>
@@ -332,7 +315,7 @@ export default function FiibiLanding() {
       <footer style={{ padding: "40px 24px 20px", background: C.black }}>
         <div style={{ ...wrap, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
           <div>
-            <Logo dark />
+            <img src="/fiibi-logo-dark.svg" alt="fiibi" style={{ height: 24 }} />
             <p style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 6 }}>Hepsi bir arada CRM platformu.</p>
           </div>
           <a href="mailto:destek@fiibi.co" style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>destek@fiibi.co</a>
