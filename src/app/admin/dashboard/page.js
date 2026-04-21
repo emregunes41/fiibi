@@ -135,9 +135,9 @@ export default async function AdminDashboard() {
 
       {/* Interactive Lists */}
       <DashboardInteractiveLists 
-        upcomingDeliveries={upcomingDeliveries}
-        upcomingShoots={upcomingShoots}
-        recentReservations={recentReservations}
+        upcomingDeliveries={JSON.parse(JSON.stringify(upcomingDeliveries))}
+        upcomingShoots={JSON.parse(JSON.stringify(upcomingShoots))}
+        recentReservations={JSON.parse(JSON.stringify(recentReservations))}
         terms={terms}
         isPhotographer={isPhotographer}
         paymentMode={bt?.paymentMode || "cash"}
