@@ -43,7 +43,7 @@ export async function proxy(req) {
   }
 
   // Platform sayfaları — slug olmadan erişilebilir
-  const isPlatformPath = pathname.startsWith("/onboarding") || pathname.startsWith("/super-admin") || pathname.startsWith("/suspended") || pathname.startsWith("/api") || pathname.startsWith("/_next");
+  const isPlatformPath = pathname.startsWith("/super-admin") || pathname.startsWith("/suspended") || pathname.startsWith("/api") || pathname.startsWith("/_next");
   
   if (isPlatformPath) {
     return response;
@@ -51,13 +51,13 @@ export async function proxy(req) {
 
   // Subdomain yoksa → platform landing page göster
   if (!slug) {
-    // Ana domain root (fiibi.co/) → FiibiLanding sayfası gösterilsin, redirect yapma
+    // Ana domain root (fiibi.co/) → FiibiLanding sayfası gösterilsin
     if (pathname === "/") {
       return response;
     }
-    // Diğer sayfalar (admin, login hariç) → onboarding'e yönlendir
+    // Diğer sayfalar → ana sayfaya yönlendir
     if (!pathname.startsWith("/admin") && !pathname.startsWith("/login") && !pathname.startsWith("/profile")) {
-      return NextResponse.redirect(new URL("/onboarding", req.url));
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 

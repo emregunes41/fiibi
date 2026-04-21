@@ -1,22 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import { registerBusiness } from "@/app/actions/register-photographer";
+import { getBusinessTypeList } from "@/lib/business-types";
 
 const C = {
   orange: "#FF5F1F", orangeLight: "#FFAA4C", orangeDark: "#D94800",
   cream: "#FFF6F2", bg: "#F5F5F4", black: "#1A1A1A", dark: "#2E2E2E",
   muted: "#A3A3A3", secondary: "#555555", white: "#FFFFFF",
 };
-
-const SECTORS = [
-  { icon: "📸", name: "Fotoğrafçı" }, { icon: "🩺", name: "Doktor" },
-  { icon: "🦷", name: "Diş Hekimi" }, { icon: "🧠", name: "Psikolog" },
-  { icon: "🥗", name: "Diyetisyen" }, { icon: "🏋️", name: "Spor Hocası" },
-  { icon: "💇", name: "Güzellik" }, { icon: "🐾", name: "Veteriner" },
-  { icon: "📚", name: "Eğitmen" }, { icon: "⚖️", name: "Avukat" },
-  { icon: "💼", name: "Danışman" }, { icon: "🏢", name: "Diğer" },
-];
 
 const FEATURES = [
   { title: "Online Randevu", desc: "Müşterileriniz 7/24 online randevu alsın. Takvim otomatik yönetilsin.", icon: "📅" },
@@ -26,6 +18,14 @@ const FEATURES = [
   { title: "SMS & E-posta", desc: "Otomatik hatırlatmalar ve onay bildirimleri. Müşteri kaybı sıfır.", icon: "📱" },
   { title: "Sözleşme & Form", desc: "Dijital sözleşme onayı ve özel müşteri formları.", icon: "📋" },
 ];
+
+function buildPlans(prices) {
+  return [
+    { id: "monthly", name: "Aylık", price: prices.monthly, period: "/ay", popular: false, savings: null },
+    { id: "yearly", name: "Yıllık", price: prices.yearly, period: "/yıl", monthlyEquiv: Math.round(prices.yearly / 12), popular: true, savings: Math.round(100 - (prices.yearly / (prices.monthly * 12)) * 100) },
+    { id: "lifetime", name: "Ömürlük", price: prices.lifetime, period: "tek seferlik", popular: false, savings: null },
+  ];
+}
 
 function useReveal() {
   const ref = useRef(null);
@@ -59,16 +59,244 @@ function Logo({ dark, size = 36 }) {
   );
 }
 
+const labelStyle = {
+  display: "block", fontSize: 11, fontWeight: 600,
+  color: "rgba(255,255,255,0.45)", marginBottom: 6,
+  textTransform: "uppercase", letterSpacing: "0.06em"
+};
+const inputStyle = {
+  width: "100%", boxSizing: "border-box",
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(255,255,255,0.08)", padding: "13px 14px",
+  color: "#fff", fontSize: 14, outline: "none",
+  fontFamily: "'DM Sans', sans-serif"
+};
+const btnStyle = {
+  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+  width: "100%", background: C.orange, color: C.white,
+  border: "none", padding: "14px 24px", fontWeight: 700,
+  fontSize: 14, cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
+};
+
 export default function FiibiLanding() {
   const [scrolled, setScrolled] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [result, setResult] = useState(null);
+  const [plans, setPlans] = useState(buildPlans({ monthly: 2499, yearly: 24999, lifetime: 69500 }));
+  
+  const [form, setForm] = useState({
+    businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "", referralCode: "", businessType: "",
+  });
+
+  const allBusinessTypes = getBusinessTypeList();
+
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", h, { passive: true });
     return () => window.removeEventListener("scroll", h);
   }, []);
 
+  useEffect(() => {
+    fetch("/api/pricing").then(r => r.json()).then(p => setPlans(buildPlans(p))).catch(() => {});
+  }, []);
+
+  // Listen to ?register=true
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("register") === "true") {
+      setShowRegister(true);
+    }
+    const ref = params.get("ref");
+    if (ref) setForm(prev => ({ ...prev, referralCode: ref.toUpperCase() }));
+  }, []);
+
   const wrap = { maxWidth: 1200, margin: "0 auto", padding: "0 32px", width: "100%" };
 
+  function handleBusinessName(value) {
+    const slug = value.toLowerCase()
+      .replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ı/g, 'i')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 30);
+    setForm(prev => ({ ...prev, businessName: value, slug }));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    const res = await registerBusiness({
+      businessName: form.businessName, ownerName: form.ownerName, ownerEmail: form.ownerEmail,
+      ownerPhone: form.ownerPhone, password: form.password, slug: form.slug,
+      selectedPlan: form.selectedPlan, referralCode: form.referralCode,
+      businessType: form.businessType,
+    });
+    if (res.error) { setError(res.error); setLoading(false); return; }
+    setResult(res.tenant);
+    setStep(5);
+    setLoading(false);
+  }
+
+  const domain = typeof window !== "undefined" ? (process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "fiibi.co") : "fiibi.co";
+  const selectedPlanObj = plans.find(p => p.id === form.selectedPlan);
+
+  // --- REGISTER FLOW ---
+  if (showRegister) {
+    return (
+      <div style={{ fontFamily: "'DM Sans', sans-serif", minHeight: "100vh", background: C.black, color: C.white, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 16px" }}>
+        <div style={{ width: "100%", maxWidth: step === 1 ? 720 : 480 }}>
+          <button onClick={() => { if (step > 1) setStep(step - 1); else { setShowRegister(false); setStep(1); } }}
+            style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", fontSize: 13, cursor: "pointer", marginBottom: 24, padding: 0, display: "flex", alignItems: "center", gap: 6, fontFamily: "'DM Sans', sans-serif" }}>
+            ← {step === 1 ? "Ana Sayfa" : "Geri"}
+          </button>
+
+          <div style={{ display: "flex", gap: 6, marginBottom: 32 }}>
+            {[1, 2, 3, 4, 5].map(s => (
+              <div key={s} style={{ flex: 1, height: 3, background: s <= step ? C.white : "rgba(255,255,255,0.06)", transition: "all 0.4s" }} />
+            ))}
+          </div>
+
+          {/* Step 1: Sektör */}
+          {step === 1 && (
+            <>
+              <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8 }}>Sektörünüzü Seçin</h2>
+              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>Size özel bir deneyim oluşturalım.</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 8, marginBottom: 24 }}>
+                {allBusinessTypes.filter(b => b.id !== "other").map((bt) => {
+                  const sel = form.businessType === bt.id;
+                  return (
+                    <div key={bt.id} onClick={() => setForm(prev => ({ ...prev, businessType: bt.id }))}
+                      style={{ background: sel ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)", border: sel ? `2px solid ${C.orange}` : "1px solid rgba(255,255,255,0.06)", cursor: "pointer", transition: "all 0.2s", padding: "20px 14px", textAlign: "center", position: "relative" }}>
+                      <div style={{ fontSize: 32, marginBottom: 12 }}>{bt.icon}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: sel ? C.white : "rgba(255,255,255,0.7)", marginBottom: 4 }}>{bt.name}</div>
+                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: 1.4 }}>{bt.desc}</div>
+                      {sel && <div style={{ position: "absolute", top: 8, right: 8 }}><div style={{ width: 18, height: 18, background: C.orange, display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{color: C.white, fontSize: 10}}>✓</span></div></div>}
+                    </div>
+                  );
+                })}
+              </div>
+              <button onClick={() => form.businessType && setStep(2)} disabled={!form.businessType} style={{ ...btnStyle, opacity: form.businessType ? 1 : 0.3 }}>
+                Devam →
+              </button>
+            </>
+          )}
+
+          {/* Step 2: Paket */}
+          {step === 2 && (
+            <>
+              <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8 }}>Planınızı Seçin</h2>
+              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>14 gün ücretsiz deneyin, beğenmezseniz ödeme çekilmez.</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 24 }}>
+                {plans.map((p) => {
+                  const sel = form.selectedPlan === p.id;
+                  return (
+                    <div key={p.id} onClick={() => setForm(prev => ({ ...prev, selectedPlan: p.id }))}
+                      style={{ background: sel ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)", border: sel ? `2px solid ${C.orange}` : p.popular ? "2px solid rgba(255,255,255,0.15)" : "1px solid rgba(255,255,255,0.06)", cursor: "pointer", transition: "all 0.2s", position: "relative" }}>
+                      {p.popular && (
+                        <div style={{ background: C.white, color: C.black, fontSize: 10, fontWeight: 800, padding: "4px 12px", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                          En Popüler
+                        </div>
+                      )}
+                      <div style={{ padding: "24px 20px" }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.5)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>{p.name}</div>
+                        <div style={{ marginBottom: 4 }}>
+                          <span style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.03em" }}>{p.price.toLocaleString("tr-TR")}</span>
+                          <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginLeft: 4 }}>₺</span>
+                          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginLeft: 6 }}>{p.period}</span>
+                        </div>
+                        {p.monthlyEquiv && <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginBottom: 2 }}>~{p.monthlyEquiv.toLocaleString("tr-TR")} ₺/ay</div>}
+                        {p.savings && <div style={{ display: "inline-block", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", padding: "2px 8px", fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.6)", marginTop: 4 }}>%{p.savings} TASARRUF</div>}
+                        {sel && <div style={{ position: "absolute", top: p.popular ? 32 : 12, right: 12 }}><div style={{ width: 22, height: 22, background: C.orange, display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{color: C.white, fontSize: 12}}>✓</span></div></div>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <button onClick={() => form.selectedPlan && setStep(3)} disabled={!form.selectedPlan} style={{ ...btnStyle, opacity: form.selectedPlan ? 1 : 0.3 }}>
+                Devam →
+              </button>
+            </>
+          )}
+
+          {/* Step 3: İşletme */}
+          {step === 3 && (
+            <form onSubmit={(e) => { e.preventDefault(); setStep(4); }}>
+              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>İşletme Bilgileri</h2>
+                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>İşletme adınız ve web adresiniz.</p>
+                <div style={{ marginBottom: 24 }}>
+                  <label style={labelStyle}>İşletme Adı *</label>
+                  <input type="text" required value={form.businessName} onChange={e => handleBusinessName(e.target.value)} placeholder="İşletme adınız" style={inputStyle} />
+                  {form.slug && <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.35)" }}>→ <span style={{ color: "rgba(255,255,255,0.6)" }}>{form.slug}.{domain}</span></div>}
+                </div>
+                <div style={{ marginBottom: 32 }}>
+                  <label style={labelStyle}>URL Adresi *</label>
+                  <div style={{ display: "flex" }}>
+                    <input type="text" required value={form.slug} onChange={e => setForm(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') }))} placeholder="ahmet" style={{ ...inputStyle, borderRight: "none", flex: 1 }} />
+                    <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "0 14px", display: "flex", alignItems: "center", fontSize: 13, color: "rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>.{domain}</div>
+                  </div>
+                </div>
+                <button type="submit" disabled={!form.businessName || !form.slug} style={{ ...btnStyle, opacity: (!form.businessName || !form.slug) ? 0.4 : 1 }}>Devam →</button>
+              </div>
+            </form>
+          )}
+
+          {/* Step 4: Hesap */}
+          {step === 4 && (
+            <form onSubmit={handleSubmit}>
+              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>Hesap Bilgileri</h2>
+                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>Admin paneline giriş bilgileriniz.</p>
+                <div style={{ marginBottom: 20 }}><label style={labelStyle}>Ad Soyad *</label><input type="text" required value={form.ownerName} onChange={e => setForm(prev => ({ ...prev, ownerName: e.target.value }))} placeholder="Ahmet Yılmaz" style={inputStyle} /></div>
+                <div style={{ marginBottom: 20 }}><label style={labelStyle}>E-posta *</label><input type="email" required value={form.ownerEmail} onChange={e => setForm(prev => ({ ...prev, ownerEmail: e.target.value }))} placeholder="ahmet@gmail.com" style={inputStyle} /></div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
+                  <div><label style={labelStyle}>Telefon</label><input type="tel" value={form.ownerPhone} onChange={e => setForm(prev => ({ ...prev, ownerPhone: e.target.value }))} placeholder="0555 123 45 67" style={inputStyle} /></div>
+                  <div><label style={labelStyle}>Şifre *</label><input type="password" required minLength={6} value={form.password} onChange={e => setForm(prev => ({ ...prev, password: e.target.value }))} placeholder="En az 6 karakter" style={inputStyle} /></div>
+                </div>
+                <div style={{ marginBottom: 24 }}>
+                  <label style={labelStyle}>Referans Kodu <span style={{ fontWeight: 400, textTransform: "none", fontSize: 10 }}>(varsa)</span></label>
+                  <input type="text" value={form.referralCode} onChange={e => setForm(prev => ({ ...prev, referralCode: e.target.value.toUpperCase() }))} placeholder="ABC123" maxLength={6} style={{ ...inputStyle, letterSpacing: "0.1em", textTransform: "uppercase" }} />
+                </div>
+                {selectedPlanObj && (
+                  <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: "16px 20px", marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: C.white }}>{selectedPlanObj.name} Plan</div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)" }}>14 gün ücretsiz deneme</div>
+                    </div>
+                    <div style={{ fontSize: 20, fontWeight: 800 }}>{selectedPlanObj.price.toLocaleString("tr-TR")} <span style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>₺{selectedPlanObj.period}</span></div>
+                  </div>
+                )}
+                {error && <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: 14, fontSize: 14, color: "rgba(255,255,255,0.6)", textAlign: "center", marginBottom: 20 }}>{error}</div>}
+                <button type="submit" disabled={loading} style={{ ...btnStyle, opacity: loading ? 0.5 : 1 }}>{loading ? "Oluşturuluyor..." : "Ücretsiz Başla"}</button>
+                <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.2)" }}>Ödeme bilgileri deneme süresi sonunda istenecektir.</div>
+              </div>
+            </form>
+          )}
+
+          {/* Step 5: Başarılı */}
+          {step === 5 && result && (
+            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: "56px 40px", textAlign: "center" }}>
+              <div style={{ width: 80, height: 80, background: "rgba(255,255,255,0.04)", border: "2px solid rgba(255,255,255,0.15)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 24, borderRadius: 0 }}>
+                <span style={{ fontSize: 32, color: C.white }}>✓</span>
+              </div>
+              <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 12 }}>Hazırsınız! 🎉</h2>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 16, marginBottom: 40 }}><strong style={{ color: C.white }}>{result.businessName}</strong> işletmeniz oluşturuldu.</p>
+              <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: 24, marginBottom: 20 }}>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>İşletme Adresiniz</div>
+                <code style={{ fontSize: 20, fontWeight: 700, color: C.white, wordBreak: "break-all" }}>{result.slug}.{domain}</code>
+              </div>
+              <a href={`http://${result.slug}.${domain}/admin/login`} style={{ display: "inline-flex", alignItems: "center", gap: 10, background: C.white, color: C.black, padding: "16px 40px", fontWeight: 800, fontSize: 15, textDecoration: "none", marginTop: 24 }}>
+                Admin Paneline Git →
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // --- LANDING PAGE ---
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", color: C.black, background: C.white, minHeight: "100vh" }}>
 
@@ -87,10 +315,10 @@ export default function FiibiLanding() {
             <a href="#ozellikler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Özellikler</a>
             <a href="#sektorler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Sektörler</a>
             <a href="#fiyatlar" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Fiyatlar</a>
-            <Link href="/onboarding?register=true" style={{
+            <button onClick={() => setShowRegister(true)} style={{
               background: C.orange, color: C.white, padding: "10px 24px",
-              fontSize: 14, fontWeight: 700, textDecoration: "none",
-            }}>Ücretsiz Başla</Link>
+              fontSize: 14, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
+            }}>Ücretsiz Başla</button>
           </div>
         </div>
       </nav>
@@ -122,13 +350,15 @@ export default function FiibiLanding() {
 
           {/* Functional form */}
           <form
-            onSubmit={(e) => { e.preventDefault(); window.location.href = "/onboarding?register=true"; }}
+            onSubmit={(e) => { e.preventDefault(); setShowRegister(true); setStep(1); }}
             className="fiibi-hero-form"
             style={{ display: "flex", gap: 0, maxWidth: 520, margin: "0 auto", alignItems: "stretch" }}
           >
             <input
               type="text"
               placeholder="İşletme adınız"
+              value={form.businessName}
+              onChange={e => handleBusinessName(e.target.value)}
               style={{
                 flex: 1, padding: "16px 20px", fontSize: 15, fontWeight: 500,
                 border: "none", outline: "none", background: "rgba(255,255,255,0.08)",
@@ -199,7 +429,7 @@ export default function FiibiLanding() {
         </div>
       </Reveal>
 
-      {/* ── HOW IT WORKS — Shopify step style ── */}
+      {/* ── HOW IT WORKS ── */}
       <Reveal style={{ padding: "100px 32px", background: C.black, color: C.white }}>
         <div style={wrap}>
           <div style={{ textAlign: "center", marginBottom: 72 }}>
@@ -239,7 +469,7 @@ export default function FiibiLanding() {
             </p>
           </div>
           <div className="fiibi-grid-sectors" style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 2 }}>
-            {SECTORS.map((s, i) => (
+            {allBusinessTypes.filter(b => b.id !== "other").map((s, i) => (
               <div key={i} style={{
                 padding: "28px 16px", textAlign: "center", background: C.cream,
               }}>
@@ -271,7 +501,7 @@ export default function FiibiLanding() {
                   <span key={f} style={{ fontSize: 14, color: C.secondary }}><span style={{ color: C.orange, marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
-              <Link href="/onboarding?register=true" style={{ display: "block", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, textDecoration: "none", border: `2px solid ${C.black}`, color: C.black }}>Ücretsiz Başla</Link>
+              <button onClick={() => setShowRegister(true)} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, textDecoration: "none", border: `2px solid ${C.black}`, background: "transparent", color: C.black, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Ücretsiz Başla</button>
             </div>
             {/* Pro */}
             <div style={{ padding: "44px 36px", background: C.black, color: C.white, position: "relative" }}>
@@ -284,7 +514,7 @@ export default function FiibiLanding() {
                   <span key={f} style={{ fontSize: 14, color: "rgba(255,255,255,0.55)" }}><span style={{ color: C.orangeLight, marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
-              <Link href="/onboarding?register=true" style={{ display: "block", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, textDecoration: "none", background: C.orange, color: C.white }}>Hemen Başla →</Link>
+              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "yearly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, textDecoration: "none", background: C.orange, border: "none", color: C.white, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Hemen Başla →</button>
             </div>
           </div>
         </div>
@@ -299,12 +529,12 @@ export default function FiibiLanding() {
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.8)", marginBottom: 36, maxWidth: 480, margin: "0 auto 36px" }}>
             14 gün ücretsiz dene. Kredi kartı gerekmez. İstediğin zaman iptal et.
           </p>
-          <Link href="/onboarding?register=true" style={{
+          <button onClick={() => setShowRegister(true)} style={{
             display: "inline-block", background: C.white, color: C.orangeDark,
-            padding: "18px 48px", fontSize: 17, fontWeight: 800, textDecoration: "none",
+            padding: "18px 48px", fontSize: 17, fontWeight: 800, textDecoration: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
           }}>
             Ücretsiz Başla →
-          </Link>
+          </button>
         </div>
       </Reveal>
 
