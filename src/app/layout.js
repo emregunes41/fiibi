@@ -83,22 +83,33 @@ export default async function RootLayout({ children }) {
     );
   }
 
-  let siteConfig = null;
+  // Tenant kontrolü — fiibi.co ana sayfa mı?
+  let currentTenant = null;
   try {
-    siteConfig = await getSiteConfig();
-  } catch (e) {
-    console.error("Layout getSiteConfig error:", e);
-  }
-  // fiibi.co ana sayfa — tenant yoksa temiz layout
-  if (!siteConfig) {
+    const { getCurrentTenant } = await import("@/lib/tenant");
+    currentTenant = await getCurrentTenant();
+  } catch (e) {}
+
+  // fiibi.co ana sayfa — tenant yoksa temiz layout (Navbar/Video/Cart yok)
+  if (!currentTenant) {
     return (
       <html lang="tr" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-        <body style={{ margin: 0, background: "#fff", color: "#1a1a1a", fontFamily: "'DM Sans', var(--font-geist-sans), system-ui, sans-serif" }}>
+        <head>
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap" />
+        </head>
+        <body style={{ margin: 0, background: "#fff", color: "#1a1a1a", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
           <PageTracker />
           {children}
         </body>
       </html>
     );
+  }
+
+  let siteConfig = null;
+  try {
+    siteConfig = await getSiteConfig();
+  } catch (e) {
+    console.error("Layout getSiteConfig error:", e);
   }
 
   const accentColor = siteConfig.accentColor || "#ffffff";
