@@ -286,8 +286,12 @@ export default function ReservationHubModal({
              {r.packages && r.packages.length > 0 ? (
                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                  {r.packages.map((pkg, pkgIdx) => {
-                     const pkgFields = (r.customFieldAnswers || []).filter(a => a.packageName === pkg.name && a.type !== "_hidden");
-                     const pkgAddons = (r.selectedAddons || []).filter(a => a.packageName === pkg.name);
+                     const rawCfa = r.customFieldAnswers;
+                     const cfaArray = Array.isArray(rawCfa) ? rawCfa : (typeof rawCfa === "string" ? (() => { try { return JSON.parse(rawCfa); } catch { return []; } })() : []);
+                     const rawAddons = r.selectedAddons;
+                     const addonsArray = Array.isArray(rawAddons) ? rawAddons : (typeof rawAddons === "string" ? (() => { try { return JSON.parse(rawAddons); } catch { return []; } })() : []);
+                     const pkgFields = cfaArray.filter(a => a.packageName === pkg.name && a.type !== "_hidden");
+                     const pkgAddons = addonsArray.filter(a => a.packageName === pkg.name);
                      return (
                      <div key={pkg.id} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "14px 16px" }}>
                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
@@ -331,8 +335,9 @@ export default function ReservationHubModal({
 
              {/* ── Ödeme Takibi ── */}
              {(() => {
-                const totalAmount = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
-                const payments = r.payments || [];
+                const amountStr = String(r.totalAmount || "0").replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '');
+                const totalAmount = parseFloat(amountStr) || 0;
+                const payments = Array.isArray(r.payments) ? r.payments : [];
                 const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
                 const remaining = Math.max(0, totalAmount - totalPaid);
                 const isPaid = totalPaid >= totalAmount && totalAmount > 0;
