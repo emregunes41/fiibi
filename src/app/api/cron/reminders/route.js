@@ -34,9 +34,8 @@ export async function GET(req) {
     const upcomingDeliveries = await prisma.reservation.findMany({
       where: {
         deliveryDate: { lte: twoDaysLater, gte: now },
-        deliveryLink: null,
         status: { not: "DELETED" },
-        workflowStatus: { not: "COMPLETED" }
+        workflowStatus: { notIn: ["COMPLETED", "DELIVERED"] }
       },
       include: { packages: true }
     });
@@ -53,7 +52,7 @@ export async function GET(req) {
           <div style="padding: 28px 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
             <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 16px 20px; border-radius: 6px; margin-bottom: 20px;">
               <div style="font-size: 16px; font-weight: 700; color: #991b1b;">⚠️ Teslim Tarihi Yaklaşıyor!</div>
-              <div style="font-size: 13px; color: #b91c1c; margin-top: 4px;">Henüz fotoğraf/video linki yüklenmemiş.</div>
+              <div style="font-size: 13px; color: #b91c1c; margin-top: 4px;">Durum henüz 'Teslim Edildi' değil. Lütfen işlemleri tamamlayıp iş akışını güncelleyin.</div>
             </div>
             <table style="width:100%;border-collapse:collapse;">
               <tr><td style="padding:6px 0;color:#999;font-size:13px;width:130px;">👤 Müşteri</td><td style="padding:6px 0;color:#333;font-size:13px;font-weight:600;">${r.brideName}</td></tr>
@@ -62,7 +61,7 @@ export async function GET(req) {
               <tr><td style="padding:6px 0;color:#999;font-size:13px;">⏳ Kalan</td><td style="padding:6px 0;color:#ef4444;font-size:13px;font-weight:700;">${daysLeft} gün</td></tr>
             </table>
             <div style="margin-top:24px;text-align:center;">
-              <a href="${siteUrl}/admin/reservations" style="background:#000;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;display:inline-block;font-size:13px;">Link Yükle</a>
+              <a href="${siteUrl}/admin/reservations" style="background:#000;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;display:inline-block;font-size:13px;">Rezervasyonlara Git</a>
             </div>
           </div>
         </div>
@@ -74,9 +73,8 @@ export async function GET(req) {
     const overdueDeliveries = await prisma.reservation.findMany({
       where: {
         deliveryDate: { lt: now },
-        deliveryLink: null,
         status: { not: "DELETED" },
-        workflowStatus: { not: "COMPLETED" }
+        workflowStatus: { notIn: ["COMPLETED", "DELIVERED"] }
       },
       include: { packages: true }
     });
@@ -94,7 +92,7 @@ export async function GET(req) {
           <div style="padding: 28px 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
             <div style="background: #fef2f2; border-left: 4px solid #dc2626; padding: 16px 20px; border-radius: 6px; margin-bottom: 20px;">
               <div style="font-size: 16px; font-weight: 700; color: #991b1b;">🚨 Teslim Tarihi Geçti!</div>
-              <div style="font-size: 13px; color: #b91c1c; margin-top: 4px;">Teslim tarihinden <strong>${daysOverdue} gün</strong> geçti, henüz fotoğraf/video linki yüklenmemiş.</div>
+              <div style="font-size: 13px; color: #b91c1c; margin-top: 4px;">Teslim tarihinden <strong>${daysOverdue} gün</strong> geçti ve rezervasyon durumu hâlâ "Teslim Edildi" olarak işaretlenmemiş.</div>
             </div>
             <table style="width:100%;border-collapse:collapse;">
               <tr><td style="padding:6px 0;color:#999;font-size:13px;width:130px;">👤 Müşteri</td><td style="padding:6px 0;color:#333;font-size:13px;font-weight:600;">${r.brideName}</td></tr>
@@ -104,10 +102,10 @@ export async function GET(req) {
               <tr><td style="padding:6px 0;color:#999;font-size:13px;">🔴 Gecikme</td><td style="padding:6px 0;color:#dc2626;font-size:14px;font-weight:800;">${daysOverdue} gün</td></tr>
             </table>
             <div style="margin-top:24px;text-align:center;">
-              <a href="${siteUrl}/admin/reservations" style="background:#dc2626;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;display:inline-block;font-size:13px;">Hemen Link Yükle</a>
+              <a href="${siteUrl}/admin/reservations" style="background:#dc2626;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;display:inline-block;font-size:13px;">Hemen İncele / Güncelle</a>
             </div>
             <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; text-align: center;">
-              <p style="color: #bbb; font-size: 11px; margin: 0;">Bu hatırlatma, teslim linki yüklenene kadar her gün gönderilir.</p>
+              <p style="color: #bbb; font-size: 11px; margin: 0;">Bu hatırlatma, rezervasyon "Teslim Edildi" veya "Tamamlandı" olarak işaretlenene kadar her gün gönderilir.</p>
             </div>
           </div>
         </div>
