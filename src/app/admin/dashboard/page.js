@@ -48,7 +48,7 @@ export default async function AdminDashboard() {
     where: { ...tenantFilter, status: { not: "DELETED" } },
     take: 5,
     orderBy: { createdAt: "desc" },
-    include: { packages: true, customFieldAnswers: true, payments: true, selectedAddons: true }
+    include: { packages: true, payments: true }
   });
 
   const notifications = await prisma.adminNotification.findMany({
@@ -66,7 +66,7 @@ export default async function AdminDashboard() {
     },
     orderBy: { deliveryDate: "asc" },
     take: 5,
-    include: { packages: true, customFieldAnswers: true, payments: true, selectedAddons: true }
+    include: { packages: true, payments: true }
   });
 
   const now = new Date();
@@ -80,7 +80,7 @@ export default async function AdminDashboard() {
     },
     orderBy: { eventDate: "asc" },
     take: 5,
-    include: { packages: true, customFieldAnswers: true, payments: true, selectedAddons: true }
+    include: { packages: true, payments: true }
   });
 
   const getDaysLeftInfo = (date) => {
