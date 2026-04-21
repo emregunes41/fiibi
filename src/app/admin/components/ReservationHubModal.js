@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Edit2, User, Phone, Mail, Calendar, Clock, CreditCard, FileText, ExternalLink, Trash2 } from "lucide-react";
-import { updateReservationStatus, updateReservationWorkflow, addPayment, updateReservation } from "../core-actions";
+import { X, Edit2, User, Phone, Mail, Calendar, Clock, CreditCard, FileText, ExternalLink, Trash2, Package } from "lucide-react";
+import { updateReservationStatus, updateReservationWorkflow, addPayment, updateReservation, getPackages } from "../core-actions";
 import { sendContractReminder, resendCredentials } from "../reminder-actions";
 
 const inp = {
@@ -29,6 +29,7 @@ export default function ReservationHubModal({
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [reminderLoading, setReminderLoading] = useState("");
   const [reminderResult, setReminderResult] = useState(null);
+  const [allPackages, setAllPackages] = useState([]);
 
   useEffect(() => {
     if (reservation) {
@@ -45,6 +46,8 @@ export default function ReservationHubModal({
         notes: reservation.notes || "",
         venueName: reservation.venueName || "",
         meetingLink: reservation.meetingLink || "",
+        packageIds: (reservation.packages || []).map(p => p.id),
+        totalAmount: reservation.totalAmount || "",
       });
       setIsEditMode(false);
       setReminderResult(null);
@@ -78,13 +81,35 @@ export default function ReservationHubModal({
     setIsLoading(true);
     const res = await updateReservation(r.id, formData);
     if (res.success) {
-      setData(res.reservation);
       setIsEditMode(false);
       if (onUpdate) onUpdate();
     } else {
       alert("Hata: " + res.error);
     }
     setIsLoading(false);
+  };
+
+  const handleTogglePackage = (pkg) => {
+    const currentIds = formData.packageIds || [];
+    const isSelected = currentIds.includes(pkg.id);
+    let newIds;
+    if (isSelected) {
+      newIds = currentIds.filter(id => id !== pkg.id);
+    } else {
+      newIds = [...currentIds, pkg.id];
+    }
+    // Recalculate total
+    const selectedPkgs = allPackages.filter(p => newIds.includes(p.id));
+    const total = selectedPkgs.reduce((sum, p) => sum + (parseFloat(String(p.price).replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '')) || 0), 0);
+    setFormData({ ...formData, packageIds: newIds, totalAmount: String(total) });
+  };
+
+  const enterEditMode = async () => {
+    setIsEditMode(true);
+    if (allPackages.length === 0) {
+      const pkgs = await getPackages();
+      setAllPackages(pkgs || []);
+    }
   };
 
   const handleAddPayment = async (e) => {
@@ -151,7 +176,7 @@ export default function ReservationHubModal({
                 <option value="COMPLETED" style={{ color: "#000" }}>Tamamlandı</option>
                 <option value="CANCELLED" style={{ color: "#000" }}>İptal</option>
               </select>
-              <button onClick={() => setIsEditMode(true)} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
+              <button onClick={enterEditMode} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
                 <Edit2 size={11} /> Düzenle
               </button>
               {onDelete && (
@@ -231,6 +256,47 @@ export default function ReservationHubModal({
                 <div>
                   <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Notlar</div>
                   <textarea style={{...inp, minHeight: 60, resize: "vertical"}} value={formData.notes || ""} onChange={(e) => setFormData({...formData, notes: e.target.value})} />
+                </div>
+
+                {/* Paket Düzenleme */}
+                <div style={{ marginTop: 6 }}>
+                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
+                    <Package size={10} /> Paketler
+                  </div>
+                  {allPackages.length === 0 ? (
+                    <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.3)", padding: "8px 0" }}>Yükleniyor...</div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                      {allPackages.filter(p => p.isActive).map(pkg => {
+                        const isSelected = (formData.packageIds || []).includes(pkg.id);
+                        return (
+                          <div
+                            key={pkg.id}
+                            onClick={() => handleTogglePackage(pkg)}
+                            style={{
+                              display: "flex", justifyContent: "space-between", alignItems: "center",
+                              padding: "8px 10px", cursor: "pointer", transition: "all 0.15s",
+                              background: isSelected ? "rgba(74,222,128,0.08)" : "rgba(255,255,255,0.03)",
+                              border: isSelected ? "1px solid rgba(74,222,128,0.3)" : "1px solid rgba(255,255,255,0.08)",
+                            }}
+                          >
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+                              <span style={{ fontSize: "0.85rem", flexShrink: 0 }}>{isSelected ? "☑" : "☐"}</span>
+                              <div style={{ minWidth: 0 }}>
+                                <div style={{ fontSize: "0.72rem", fontWeight: 700, color: isSelected ? "#fff" : "rgba(255,255,255,0.6)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pkg.name}</div>
+                                <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.35)" }}>{pkg.description?.slice(0, 50)}{pkg.description?.length > 50 ? "..." : ""}</div>
+                              </div>
+                            </div>
+                            <span style={{ fontSize: "0.75rem", fontWeight: 800, color: isSelected ? "#4ade80" : "rgba(255,255,255,0.5)", flexShrink: 0, marginLeft: 8 }}>{pkg.price}₺</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <div style={{ marginTop: 8 }}>
+                    <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Toplam Tutar (₺)</div>
+                    <input style={inp} type="text" value={formData.totalAmount || ""} onChange={(e) => setFormData({...formData, totalAmount: e.target.value})} placeholder="0" />
+                  </div>
                 </div>
 
                 <div style={{ display: "flex", gap: "8px", marginTop: "10px" }}>
