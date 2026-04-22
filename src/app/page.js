@@ -18,6 +18,7 @@ import ShopStorefront from "@/components/ShopStorefront";
 import { prisma } from "@/lib/prisma";
 import { optimizeCloudinaryUrl, thumbnailUrl } from "@/lib/image-utils";
 import { ArrowDown, Instagram, Mail, Phone, MapPin, MessageCircle, Calendar, Clock, Shield } from "lucide-react";
+import { redirect } from "next/navigation";
 
 
 export const revalidate = 60; // cache for 60 seconds
@@ -29,6 +30,16 @@ export default async function HomePage() {
   } catch (e) {
     console.error("Tenant detection error:", e);
   }
+
+  // Dondurulmuş veya süresi dolmuş hesap → /suspended sayfasına yönlendir
+  if (tenant) {
+    const isFrozen = tenant.isFrozen === true;
+    const isExpiredTrial = tenant.plan === "trial" && tenant.planExpiresAt && new Date(tenant.planExpiresAt) < new Date();
+    if (isFrozen || isExpiredTrial) {
+      redirect("/suspended");
+    }
+  }
+
   const activeTenantId = tenant?.id || "NONE";
 
   // fiibi.co ana sayfası — tenant yoksa SaaS landing page göster

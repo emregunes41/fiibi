@@ -22,13 +22,14 @@ export default function SuspendedPage() {
           Hesap Askıya Alındı
         </h1>
         <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 15, lineHeight: 1.7, marginBottom: 32 }}>
-          Bu stüdyonun hesabı geçici olarak askıya alınmıştır. 
+          Bu işletmenin hesabı geçici olarak askıya alınmıştır. 
           Abonelik ödemesi tamamlandığında hesap otomatik olarak aktifleşecektir.
         </p>
         <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13 }}>
-          Destek için: <a href="mailto:support@photoapp.co" style={{ color: "rgba(255,255,255,0.5)" }}>support@photoapp.co</a>
+          Destek için: <a href="mailto:destek@fiibi.co" style={{ color: "rgba(255,255,255,0.5)" }}>destek@fiibi.co</a>
         </p>
       </div>
     </div>
   );
 }
+
