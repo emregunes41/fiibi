@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { getBusinessType } from "@/lib/business-types";
+import { sendOnboardingEmail } from "./send-onboarding-email";
 
 /**
  * Yeni işletme kaydı — tenant + admin + globalSettings oluşturur
@@ -120,6 +121,14 @@ export async function registerBusiness(data) {
 
       return tenant;
     });
+
+    // Rehber e-postası gönder (fire-and-forget, hata olursa kayıt etkilenmesin)
+    sendOnboardingEmail({
+      ownerName,
+      ownerEmail: ownerEmail.toLowerCase(),
+      businessName,
+      slug: cleanSlug,
+    }).catch(err => console.error("[onboarding] Email error:", err));
 
     return {
       success: true,
