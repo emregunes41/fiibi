@@ -6,17 +6,17 @@
 
 const PLAN_LIMITS = {
   trial: {
-    maxUploadMB: 100,        // 100 MB toplam yükleme limiti
-    onlinePayment: false,     // PayTR online ödeme kapalı
-    smsEnabled: false,        // SMS bildirimleri kapalı
-    emailEnabled: true,       // E-posta bildirimleri açık
+    maxUploadMB: 10000,       // 10 GB (pro ile aynı)
+    onlinePayment: true,      // Aktif
+    smsEnabled: true,         // Aktif
+    emailEnabled: true,       // Aktif
     customDomain: false,      // Özel alan adı yok
   },
   pro: {
     maxUploadMB: 10000,       // 10 GB
-    onlinePayment: true,      // PayTR online ödeme açık
-    smsEnabled: true,         // SMS bildirimleri açık
-    emailEnabled: true,       // E-posta bildirimleri açık
+    onlinePayment: true,      // Aktif
+    smsEnabled: true,         // Aktif
+    emailEnabled: true,       // Aktif
     customDomain: true,       // Özel alan adı var
   },
 };
