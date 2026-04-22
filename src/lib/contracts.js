@@ -60,7 +60,7 @@ MADDE 5 — UYUŞMAZLIKLARIN ÇÖZÜMÜ
  */
 export function getDistanceSalesContract(seller = {}) {
   const sellerName = seller.legalName || seller.businessName || "[Firma Ünvanı]";
-  const sellerEmail = seller.email || "[Firma E-posta]";
+  const sellerEmail = seller.ownerEmail || seller.email || "[Firma E-posta]";
   const sellerAddress = seller.legalAddress || "[Firma Adresi]";
 
   return `
@@ -100,8 +100,8 @@ MADDE 5 — YETKİ
  */
 export function getPreliminaryInfoForm(seller = {}) {
   const sellerName = seller.legalName || seller.businessName || "[Firma Ünvanı]";
-  const sellerEmail = seller.email || "[Firma E-posta]";
-  const sellerPhone = seller.phone || "[Firma Telefon]";
+  const sellerEmail = seller.ownerEmail || seller.email || "[Firma E-posta]";
+  const sellerPhone = seller.ownerPhone || seller.phone || "[Firma Telefon]";
   const sellerAddress = seller.legalAddress || "[Firma Adresi]";
 
   return `
@@ -133,7 +133,7 @@ Alıcı, hizmetin ifa edilmeye başlanmadığı durumlarda, 14 (on dört) gün i
  */
 export function getKVKKText(seller = {}) {
   const sellerName = seller.legalName || seller.businessName || "[Firma Ünvanı]";
-  const sellerEmail = seller.email || "[Firma E-posta]";
+  const sellerEmail = seller.ownerEmail || seller.email || "[Firma E-posta]";
   const sellerAddress = seller.legalAddress || "[Firma Adresi]";
 
   return `
