@@ -186,8 +186,21 @@ function AdminLayoutInner({ children }) {
         {/* Mobile top padding for the top bar */}
         <div className="md:hidden" style={{ height: "72px" }} />
         {trialDays !== null && (
-          <div className="admin-trial-banner" style={{ marginBottom: "1rem" }}>
-            <Link href="/admin/subscription" style={{ textDecoration: "none" }}>
+          <>
+            <style>{`
+              .admin-sticky-banner {
+                position: sticky;
+                top: 54px;
+                z-index: 40;
+              }
+              @media (min-width: 768px) {
+                .admin-sticky-banner {
+                  top: 0px;
+                }
+              }
+            `}</style>
+            <div className="admin-sticky-banner" style={{ marginBottom: "1rem" }}>
+              <Link href="/admin/subscription" style={{ textDecoration: "none" }}>
               <div style={{
                 background: trialDays <= 2 ? "rgba(248,113,113,0.15)" : "rgba(250,204,21,0.15)",
                 backdropFilter: "blur(8px)",
@@ -205,6 +218,7 @@ function AdminLayoutInner({ children }) {
               </div>
             </Link>
           </div>
+          </>
         )}
         <div style={{ padding: "clamp(16px, 4vw, 56px)", maxWidth: "1200px", margin: "0 auto" }}>
           {children}
