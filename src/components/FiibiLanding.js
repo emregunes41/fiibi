@@ -185,7 +185,7 @@ export default function FiibiLanding() {
           {step === 2 && (
             <>
               <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8 }}>Planınızı Seçin</h2>
-              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>14 gün ücretsiz deneyin, beğenmezseniz ödeme çekilmez.</p>
+              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>7 gün ücretsiz deneyin, beğenmezseniz iptal edin.</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 24 }}>
                 {plans.map((p) => {
                   const sel = form.selectedPlan === p.id;
@@ -261,14 +261,14 @@ export default function FiibiLanding() {
                   <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: "16px 20px", marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
                       <div style={{ fontSize: 13, fontWeight: 700, color: C.white }}>{selectedPlanObj.name} Plan</div>
-                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)" }}>14 gün ücretsiz deneme</div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)" }}>7 gün ücretsiz deneme</div>
                     </div>
                     <div style={{ fontSize: 20, fontWeight: 800 }}>{selectedPlanObj.price.toLocaleString("tr-TR")} <span style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>₺{selectedPlanObj.period}</span></div>
                   </div>
                 )}
                 {error && <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: 14, fontSize: 14, color: "rgba(255,255,255,0.6)", textAlign: "center", marginBottom: 20 }}>{error}</div>}
                 <button type="submit" disabled={loading} style={{ ...btnStyle, opacity: loading ? 0.5 : 1 }}>{loading ? "Oluşturuluyor..." : "Ücretsiz Başla"}</button>
-                <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.2)" }}>Ödeme bilgileri deneme süresi sonunda istenecektir.</div>
+                <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.2)" }}>7 gün ücretsiz · İstediğiniz zaman iptal · Kart bilginiz kayıt sonrası alınacak</div>
               </div>
             </form>
           )}
