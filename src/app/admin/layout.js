@@ -186,7 +186,7 @@ function AdminLayoutInner({ children }) {
         {/* Mobile top padding for the top bar */}
         <div className="md:hidden" style={{ height: "72px" }} />
         {trialDays !== null && (
-          <div className="sticky z-40 top-[72px] md:top-0" style={{ marginBottom: "1rem" }}>
+          <div className="admin-trial-banner" style={{ marginBottom: "1rem" }}>
             <Link href="/admin/subscription" style={{ textDecoration: "none" }}>
               <div style={{
                 background: trialDays <= 2 ? "rgba(248,113,113,0.15)" : "rgba(250,204,21,0.15)",

@@ -66,6 +66,17 @@ html[data-light] .admin-modal-content {
   background-color: #ffffff !important;
 }
 
+.admin-trial-banner {
+  position: sticky;
+  top: 56px;
+  z-index: 40;
+}
+@media (min-width: 768px) {
+  .admin-trial-banner {
+    top: 0;
+  }
+}
+
 /* Modals and dropdowns hardcoded to #111 */
 html[data-light] [style*="background: #111"],
 html[data-light] [style*="background:#111"] {
