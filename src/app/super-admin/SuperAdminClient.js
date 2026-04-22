@@ -463,6 +463,18 @@ export default function SuperAdminClient() {
                           )}
                         </div>
                       </div>
+
+                      {/* Abonelik & Ödeme Bilgileri */}
+                      <div style={{
+                        display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center",
+                        paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.04)",
+                        fontSize: 11, color: "rgba(255,255,255,0.35)",
+                      }}>
+                        <span title="Son Ödeme">💳 {t.lastPaymentAt ? new Date(t.lastPaymentAt).toLocaleDateString("tr-TR") : "—"}</span>
+                        <span title="Sonraki Ödeme">📅 {t.nextPaymentAt ? new Date(t.nextPaymentAt).toLocaleDateString("tr-TR") : "—"}</span>
+                        <span title="Kart Durumu" style={{ color: t.paytrCtoken ? "#4ade80" : "rgba(255,255,255,0.2)" }}>{t.paytrCtoken ? "🔒 Kart Kayıtlı" : "Kart Yok"}</span>
+                        <span title="IBAN" style={{ marginLeft: "auto", fontFamily: "monospace", fontSize: 10, color: "rgba(255,255,255,0.2)" }}>{t.iban ? `TR••${t.iban.slice(-4)}` : "IBAN Yok"}</span>
+                      </div>
                     </div>
                   );
                 })}

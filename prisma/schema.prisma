@@ -20,10 +20,17 @@ model Tenant {
   password        String                      // bcrypt hash
 
   // Abonelik
-  plan            String    @default("trial") // trial, standard, pro
-  selectedPlan    String?                     // "monthly", "yearly", "lifetime" — deneme sonrası
+  plan            String    @default("trial") // trial, pro
+  selectedPlan    String?                     // "monthly", "yearly" — deneme sonrası
   planExpiresAt   DateTime?
-  iyzicoSubId     String?                     // iyzico abonelik referansı
+  subscriptionStartedAt DateTime?             // Abonelik başlangıç tarihi
+  lastPaymentAt   DateTime?                   // Son başarılı ödeme tarihi
+  nextPaymentAt   DateTime?                   // Sonraki ödeme tarihi
+  gracePeriodEndsAt DateTime?                 // 3 günlük tolerans bitiş tarihi
+
+  // PayTR Kart Saklama
+  paytrUtoken     String?                     // PayTR kullanıcı tokeni
+  paytrCtoken     String?                     // PayTR kart tokeni
 
   // Durum
   isActive        Boolean   @default(true)

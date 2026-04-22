@@ -67,12 +67,21 @@ export async function getAllTenants() {
     ownerName: t.ownerName,
     ownerEmail: t.ownerEmail,
     plan: t.plan,
+    selectedPlan: t.selectedPlan,
     planExpiresAt: t.planExpiresAt,
     isActive: t.isActive,
     isFrozen: t.isFrozen,
     createdAt: t.createdAt,
     commissionRate: t.commissionRate,
     subMerchantStatus: t.subMerchantStatus,
+    // Abonelik & Ödeme
+    lastPaymentAt: t.lastPaymentAt,
+    nextPaymentAt: t.nextPaymentAt,
+    gracePeriodEndsAt: t.gracePeriodEndsAt,
+    failedPayments: t.failedPayments,
+    paytrCtoken: t.paytrCtoken ? true : false, // Kart kayıtlı mı (sadece boolean gönder, token'ı expose etme)
+    iban: t.iban,
+    // İstatistikler
     reservationCount: t._count.reservations,
     userCount: t._count.users,
     packageCount: t._count.packages,
@@ -150,7 +159,7 @@ export async function changeTenantPlan(tenantId, newPlan) {
   // Plan süresini belirle
   let planExpiresAt = null;
   if (newPlan === "trial") {
-    planExpiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+    planExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   } else {
     planExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
   }
@@ -200,7 +209,7 @@ export async function getPlatformPricing() {
   const config = await prisma.platformConfig.findUnique({ where: { id: "main" } });
   
   // Varsayılan fiyatlar
-  const defaults = { monthly: 2499, yearly: 24999, lifetime: 69500 };
+  const defaults = { monthly: 2499, yearly: 24999 };
   
   if (!config) return defaults;
   
@@ -214,13 +223,13 @@ export async function getPlatformPricing() {
 export async function updatePlatformPricing(pricing) {
   if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
 
-  const { monthly, yearly, lifetime } = pricing;
-  if (!monthly || !yearly || !lifetime) return { error: "Tüm fiyatlar gerekli" };
+  const { monthly, yearly } = pricing;
+  if (!monthly || !yearly) return { error: "Tüm fiyatlar gerekli" };
 
   await prisma.platformConfig.upsert({
     where: { id: "main" },
-    update: { pricing: { monthly: Number(monthly), yearly: Number(yearly), lifetime: Number(lifetime) } },
-    create: { id: "main", pricing: { monthly: Number(monthly), yearly: Number(yearly), lifetime: Number(lifetime) } },
+    update: { pricing: { monthly: Number(monthly), yearly: Number(yearly) } },
+    create: { id: "main", pricing: { monthly: Number(monthly), yearly: Number(yearly) } },
   });
 
   return { success: true };
