@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { PLATFORM, LEGAL_TYPES } from "@/lib/constants";
 import AdminPageTabs from "../components/AdminPageTabs";
+import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, getKVKKText } from "@/lib/contracts";
 
 const inp = {
   width: "100%", boxSizing: "border-box",
@@ -890,74 +891,65 @@ export default function SettingsPage() {
 
         {/* 6. Rezervasyon Sözleşmesi */}
         {activeTab === "sozlesme" && <div style={sectionCard}>
-          {sectionHeader(FileText, "Rezervasyon Sözleşmesi", "Müşterinin ödeme öncesi onaylaması gereken sözleşme metni.")}
+          {sectionHeader(FileText, "Yasal Sözleşmeler", "Müşterinin ödeme öncesi onaylaması gereken sözleşme ve metinler.")}
 
           <div style={{ marginBottom: 24 }}>
             <label style={label}>Hizmet Sözleşmesi</label>
             <textarea
-              value={config.contractText || ""}
+              value={config.contractText || getServiceAgreement(adminSession?.tenant)}
               onChange={(e) => setConfig({ ...config, contractText: e.target.value })}
               style={{
                 ...inp,
-                minHeight: 150,
+                minHeight: 250,
                 resize: "vertical",
                 lineHeight: 1.7,
                 fontFamily: "inherit",
               }}
-              placeholder={isPhotographer
-                ? "Örnek:\n\nRezervasyonunuzu onaylayarak aşağıdaki koşulları kabul etmiş olursunuz:\n\n1. Çekim tarihi değişikliği en geç 7 gün öncesinden bildirilmelidir.\n2. İptal durumunda kapora iade edilmez.\n3. Fotoğraf teslim süresi paket detaylarında belirtilmiştir."
-                : "Örnek:\n\nRandevunuzu onaylayarak aşağıdaki koşulları kabul etmiş olursunuz:\n\n1. Randevu iptali en geç 24 saat öncesinden bildirilmelidir.\n2. İptal edilmeyen randevular ücretlendirilir.\n3. Muayene ücreti hizmet sonrası tahsil edilir."}
             />
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 8, lineHeight: 1.6 }}>
-              💡 Boş bırakırsanız varsayılan şablon kullanılır. Müşteri ödeme öncesi bu metni onaylamak zorundadır.
-            </p>
           </div>
 
           <div style={{ marginBottom: 24 }}>
             <label style={label}>Mesafeli Satış Sözleşmesi</label>
             <textarea
-              value={config.distanceSalesContractText || ""}
+              value={config.distanceSalesContractText || getDistanceSalesContract(adminSession?.tenant)}
               onChange={(e) => setConfig({ ...config, distanceSalesContractText: e.target.value })}
               style={{
                 ...inp,
-                minHeight: 150,
+                minHeight: 250,
                 resize: "vertical",
                 lineHeight: 1.7,
                 fontFamily: "inherit",
               }}
-              placeholder="Mesafeli satış sözleşmesi metnini buraya girin... (Boş bırakırsanız yasal standart metin kullanılır)"
             />
           </div>
 
           <div style={{ marginBottom: 24 }}>
             <label style={label}>Ön Bilgilendirme Formu</label>
             <textarea
-              value={config.preliminaryInfoText || ""}
+              value={config.preliminaryInfoText || getPreliminaryInfoForm(adminSession?.tenant)}
               onChange={(e) => setConfig({ ...config, preliminaryInfoText: e.target.value })}
               style={{
                 ...inp,
-                minHeight: 150,
+                minHeight: 250,
                 resize: "vertical",
                 lineHeight: 1.7,
                 fontFamily: "inherit",
               }}
-              placeholder="Ön bilgilendirme formu metnini buraya girin... (Boş bırakırsanız yasal standart metin kullanılır)"
             />
           </div>
 
           <div>
             <label style={label}>KVKK Aydınlatma Metni</label>
             <textarea
-              value={config.kvkkText || ""}
+              value={config.kvkkText || getKVKKText(adminSession?.tenant)}
               onChange={(e) => setConfig({ ...config, kvkkText: e.target.value })}
               style={{
                 ...inp,
-                minHeight: 150,
+                minHeight: 250,
                 resize: "vertical",
                 lineHeight: 1.7,
                 fontFamily: "inherit",
               }}
-              placeholder="KVKK aydınlatma metnini buraya girin... (Boş bırakırsanız yasal standart metin kullanılır)"
             />
           </div>
         </div>}

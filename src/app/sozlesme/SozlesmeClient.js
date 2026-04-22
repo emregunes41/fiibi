@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, FileText, Shield, ScrollText, Eye, BookOpen } from "lucide-react";
 import { PLATFORM } from "@/lib/constants";
-import { getSellerAgreement, getDistanceSalesContract, getPreliminaryInfoForm, getKVKKText } from "@/lib/contracts";
+import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, getKVKKText } from "@/lib/contracts";
 
 const tabs = [
   { id: "hizmet", label: "Hizmet Sözleşmesi", icon: FileText, desc: "Satıcı hizmet sözleşmesi" },
@@ -16,10 +16,10 @@ const tabs = [
 export default function SozlesmeClient({ tenant, config }) {
   const [activeTab, setActiveTab] = useState("hizmet");
 
-  const sellerAgreement = config?.contractText || getSellerAgreement(tenant);
+  const sellerAgreement = config?.contractText || getServiceAgreement(tenant);
   const distanceSales = config?.distanceSalesContractText || getDistanceSalesContract(tenant);
   const preliminaryInfo = config?.preliminaryInfoText || getPreliminaryInfoForm(tenant);
-  const kvkkText = config?.kvkkText || getKVKKText();
+  const kvkkText = config?.kvkkText || getKVKKText(tenant);
 
   const contentMap = {
     hizmet: sellerAgreement,
