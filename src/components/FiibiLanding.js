@@ -494,7 +494,7 @@ export default function FiibiLanding() {
             <div style={{ padding: "44px 36px", background: C.white }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Deneme</div>
               <div style={{ fontSize: 48, fontWeight: 800, color: C.black, letterSpacing: "-0.03em" }}>₺0</div>
-              <div style={{ fontSize: 14, color: C.muted, marginBottom: 28 }}>14 gün · Tüm özellikler</div>
+              <div style={{ fontSize: 14, color: C.muted, marginBottom: 28 }}>7 gün · Tüm özellikler</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
                 {["Sınırsız randevu", "Kendi web siten", "Ödeme takibi", "SMS & e-posta"].map(f => (
                   <span key={f} style={{ fontSize: 14, color: C.secondary }}><span style={{ color: C.orange, marginRight: 8 }}>✓</span>{f}</span>
@@ -526,7 +526,7 @@ export default function FiibiLanding() {
             İşletmeni büyütmeye<br/>hazır mısın?
           </h2>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.8)", marginBottom: 36, maxWidth: 480, margin: "0 auto 36px" }}>
-            14 gün ücretsiz dene. Kredi kartı gerekmez. İstediğin zaman iptal et.
+            7 gün ücretsiz dene. Kredi kartı gerekmez. İstediğin zaman iptal et.
           </p>
           <button onClick={() => setShowRegister(true)} style={{
             display: "inline-block", background: C.white, color: C.orangeDark,
