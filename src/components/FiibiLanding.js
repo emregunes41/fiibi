@@ -23,7 +23,6 @@ function buildPlans(prices) {
   return [
     { id: "monthly", name: "Aylık", price: prices.monthly, period: "/ay", popular: false, savings: null },
     { id: "yearly", name: "Yıllık", price: prices.yearly, period: "/yıl", monthlyEquiv: Math.round(prices.yearly / 12), popular: true, savings: Math.round(100 - (prices.yearly / (prices.monthly * 12)) * 100) },
-    { id: "lifetime", name: "Ömürlük", price: prices.lifetime, period: "tek seferlik", popular: false, savings: null },
   ];
 }
 

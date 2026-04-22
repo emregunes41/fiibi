@@ -46,11 +46,6 @@ function buildPlans(prices) {
       savings: Math.round(100 - (prices.yearly / (prices.monthly * 12)) * 100),
       features: PLAN_FEATURES.yearly,
     },
-    {
-      id: "lifetime", name: "Ömürlük", price: prices.lifetime,
-      period: "tek seferlik", color: "#4ade80", popular: false, savings: null,
-      features: PLAN_FEATURES.lifetime,
-    },
   ];
 }
 

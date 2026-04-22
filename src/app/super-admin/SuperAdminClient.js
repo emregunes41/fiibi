@@ -290,7 +290,6 @@ export default function SuperAdminClient() {
                 {[
                   { key: "monthly", label: "Aylık", suffix: "₺/ay", color: "#8b5cf6" },
                   { key: "yearly", label: "Yıllık", suffix: "₺/yıl", color: "#f59e0b" },
-                  { key: "lifetime", label: "Ömürlük", suffix: "₺", color: "#4ade80" },
                 ].map((p) => (
                   <div key={p.key} style={cardStyle}>
                     <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
