@@ -154,7 +154,7 @@ export default async function HomePage() {
 
   // Section renderers
   const sectionRenderers = {
-    events: () => (features.events && modules.moduleEvents !== false && upcomingEvents.length > 0 && bt.homeSections.includes("events")) ? (
+    events: () => (modules.moduleEvents !== false && upcomingEvents.length > 0) ? (
       <section key="events" className="py-12 border-t border-white/5">
         <div className="section-container">
           <EventsSection events={upcomingEvents} />

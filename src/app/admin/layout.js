@@ -58,7 +58,7 @@ function AdminLayoutInner({ children }) {
     modules.moduleReservations !== false && { name: "Hizmet & Katalog", href: "/admin/catalog", icon: Package },
     modules.moduleStore !== false && { name: "Mağaza", href: "/admin/store", icon: ShoppingBag },
     modules.moduleReservations !== false && { name: terms.appointments, href: "/admin/reservations", icon: CalendarDays },
-    (features.events && modules.moduleEvents !== false) && { name: "Etkinlikler", href: "/admin/events", icon: Ticket },
+    modules.moduleEvents !== false && { name: "Etkinlikler", href: "/admin/events", icon: Ticket },
     { name: "Muhasebe", href: "/admin/muhasebe", icon: Wallet },
     { name: "Sistem", href: "/admin/settings", icon: Settings },
   ].filter(Boolean) : [
