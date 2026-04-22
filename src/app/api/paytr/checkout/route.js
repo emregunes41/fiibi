@@ -15,9 +15,15 @@ export async function POST(req) {
     } = await req.json();
 
     const { getCurrentTenant, getCurrentSiteConfig, getTenantUrl } = await import("@/lib/tenant");
+    const { hasFeature } = await import("@/lib/plan-limits");
     const tenant = await getCurrentTenant();
     if (!tenant) {
       return NextResponse.json({ error: "Tenant bulunamadı" }, { status: 400 });
+    }
+
+    // Trial planında online ödeme kapalı
+    if (!hasFeature(tenant.plan, "onlinePayment")) {
+      return NextResponse.json({ error: "Online ödeme özelliği Pro plana özeldir. Lütfen planınızı yükseltin." }, { status: 403 });
     }
     
     const config = await getCurrentSiteConfig();

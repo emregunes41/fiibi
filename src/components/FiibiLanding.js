@@ -489,31 +489,46 @@ export default function FiibiLanding() {
               Basit ve şeffaf.
             </h2>
           </div>
-          <div className="fiibi-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, maxWidth: 760, margin: "0 auto" }}>
-            {/* Free */}
-            <div style={{ padding: "44px 36px", background: C.white }}>
+          <div className="fiibi-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 2, maxWidth: 900, margin: "0 auto" }}>
+            {/* Deneme */}
+            <div style={{ padding: "40px 28px", background: C.white }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Deneme</div>
-              <div style={{ fontSize: 48, fontWeight: 800, color: C.black, letterSpacing: "-0.03em" }}>₺0</div>
-              <div style={{ fontSize: 14, color: C.muted, marginBottom: 28 }}>7 gün · Tüm özellikler</div>
+              <div style={{ fontSize: 44, fontWeight: 800, color: C.black, letterSpacing: "-0.03em" }}>₺0</div>
+              <div style={{ fontSize: 13, color: C.muted, marginBottom: 28 }}>7 gün ücretsiz</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
-                {["Sınırsız randevu", "Kendi web siten", "Ödeme takibi", "SMS & e-posta"].map(f => (
-                  <span key={f} style={{ fontSize: 14, color: C.secondary }}><span style={{ color: C.orange, marginRight: 8 }}>✓</span>{f}</span>
+                {["Sınırsız randevu", "Kendi web siten", "Ödeme takibi", "E-posta bildirimleri", "100 MB depolama"].map(f => (
+                  <span key={f} style={{ fontSize: 13, color: C.secondary }}><span style={{ color: C.orange, marginRight: 8 }}>✓</span>{f}</span>
+                ))}
+                {["SMS bildirimleri", "Online ödeme"].map(f => (
+                  <span key={f} style={{ fontSize: 13, color: C.muted, textDecoration: "line-through", opacity: 0.5 }}><span style={{ marginRight: 8 }}>✗</span>{f}</span>
                 ))}
               </div>
-              <button onClick={() => setShowRegister(true)} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, textDecoration: "none", border: `2px solid ${C.black}`, background: "transparent", color: C.black, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Ücretsiz Başla</button>
+              <button onClick={() => setShowRegister(true)} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, border: `2px solid ${C.black}`, background: "transparent", color: C.black, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Ücretsiz Başla</button>
             </div>
-            {/* Pro */}
-            <div style={{ padding: "44px 36px", background: C.black, color: C.white, position: "relative" }}>
-              <div style={{ position: "absolute", top: 16, right: 16, background: C.orange, color: C.white, padding: "4px 12px", fontSize: 10, fontWeight: 700 }}>POPÜLER</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Pro</div>
-              <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-0.03em" }}>₺499</div>
-              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>aylık · Her şey dahil</div>
+            {/* Aylık */}
+            <div style={{ padding: "40px 28px", background: C.black, color: C.white, position: "relative" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Aylık</div>
+              <div style={{ fontSize: 44, fontWeight: 800, letterSpacing: "-0.03em" }}>₺{plans[0]?.price?.toLocaleString("tr-TR") || "—"}</div>
+              <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>aylık · Her şey dahil</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
-                {["Deneme planındaki her şey", "Özel alan adı", "Öncelikli destek", "Gelişmiş raporlama", "Online ödeme"].map(f => (
-                  <span key={f} style={{ fontSize: 14, color: "rgba(255,255,255,0.55)" }}><span style={{ color: C.orangeLight, marginRight: 8 }}>✓</span>{f}</span>
+                {["Sınırsız randevu", "Kendi web siten", "Online ödeme (PayTR)", "SMS & e-posta", "10 GB depolama", "Öncelikli destek"].map(f => (
+                  <span key={f} style={{ fontSize: 13, color: "rgba(255,255,255,0.55)" }}><span style={{ color: C.orangeLight, marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
-              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "yearly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, textDecoration: "none", background: C.orange, border: "none", color: C.white, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Hemen Başla →</button>
+              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "monthly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, background: C.orange, border: "none", color: C.white, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Hemen Başla →</button>
+            </div>
+            {/* Yıllık */}
+            <div style={{ padding: "40px 28px", background: C.white, position: "relative" }}>
+              {plans[1]?.savings > 0 && <div style={{ position: "absolute", top: 16, right: 16, background: C.orange, color: C.white, padding: "4px 12px", fontSize: 10, fontWeight: 700 }}>%{plans[1].savings} TASARRUF</div>}
+              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Yıllık</div>
+              <div style={{ fontSize: 44, fontWeight: 800, color: C.black, letterSpacing: "-0.03em" }}>₺{plans[1]?.price?.toLocaleString("tr-TR") || "—"}</div>
+              <div style={{ fontSize: 13, color: C.muted, marginBottom: 28 }}>yıllık · {plans[1]?.monthlyEquiv ? `~₺${plans[1].monthlyEquiv.toLocaleString("tr-TR")}/ay` : "Her şey dahil"}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
+                {["Aylık plandaki her şey", "Online ödeme (PayTR)", "SMS & e-posta", "10 GB depolama", "Öncelikli destek"].map(f => (
+                  <span key={f} style={{ fontSize: 13, color: C.secondary }}><span style={{ color: C.orange, marginRight: 8 }}>✓</span>{f}</span>
+                ))}
+              </div>
+              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "yearly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, border: `2px solid ${C.black}`, background: "transparent", color: C.black, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Hemen Başla →</button>
             </div>
           </div>
         </div>

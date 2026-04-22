@@ -10,6 +10,7 @@ import { sendDriveLinkEmail } from "../actions/send-drive-link";
 import { getCurrentTenant } from "@/lib/tenant";
 import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth";
+import { checkUploadLimit } from "@/lib/plan-limits";
 
 // Tenant ID helper — tüm sorguları scope'lamak için
 // 1. Header'dan slug → tenant lookup
@@ -33,10 +34,48 @@ async function getTenantId() {
   return null;
 }
 
+/**
+ * Client bileşenler için yükleme kotası kontrolü
+ * CldUploadWidget kullanmadan önce çağrılır
+ */
+export async function checkUploadQuota() {
+  const tenant = await getCurrentTenant();
+  if (!tenant) return { allowed: true, limitMB: 10000, usedMB: 0, remainingMB: 10000 };
+  
+  const settings = await prisma.globalSettings.findFirst({ where: { tenantId: tenant.id }, select: { storageUsedMB: true } });
+  const usedMB = Math.round((settings?.storageUsedMB || 0) * 100) / 100;
+  return checkUploadLimit(tenant.plan, usedMB);
+}
+
+/**
+ * Başarılı upload sonrası depolama kullanımını güncelle (MB)
+ */
+export async function trackUploadSize(fileSizeBytes) {
+  const tenant = await getCurrentTenant();
+  if (!tenant) return;
+  const fileSizeMB = (fileSizeBytes || 0) / (1024 * 1024);
+  await prisma.globalSettings.updateMany({
+    where: { tenantId: tenant.id },
+    data: { storageUsedMB: { increment: fileSizeMB } },
+  });
+}
+
 export async function uploadAlbumImage(formData) {
   
   const auth = await requireAdmin();
   if (auth?.error) return auth;
+
+  // Plan bazlı yükleme limiti kontrolü
+  const tenant = await getCurrentTenant();
+  if (tenant) {
+    const settings = await prisma.globalSettings.findFirst({ where: { tenantId: tenant.id }, select: { storageUsedMB: true } });
+    const usedMB = settings?.storageUsedMB || 0;
+    const check = checkUploadLimit(tenant.plan, usedMB);
+    if (!check.allowed) {
+      return { error: `Yükleme limitinize ulaştınız (${check.limitMB} MB). Pro plana geçerek limiti artırabilirsiniz.` };
+    }
+  }
+
   try {
     const file = formData.get('file');
     if (!file) return { error: "Dosya bulunamadı." };
@@ -71,6 +110,15 @@ export async function uploadAlbumImage(formData) {
     const result = await res.json();
     if (result.error) {
       return { error: result.error.message };
+    }
+
+    // Depolama kullanımını güncelle
+    if (tenant) {
+      const fileSizeMB = (result.bytes || 0) / (1024 * 1024);
+      await prisma.globalSettings.updateMany({
+        where: { tenantId: tenant.id },
+        data: { storageUsedMB: { increment: fileSizeMB } },
+      });
     }
 
     return { success: true, url: result.secure_url };

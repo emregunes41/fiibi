@@ -437,6 +437,9 @@ model GlobalSettings {
   // Kapalı günler (randevu alınamaz)
   blockedDays     Json     @default("[]")   // ["2026-04-15", "2026-04-20"]
 
+  // Depolama kullanımı (MB)
+  storageUsedMB   Float    @default(0)
+
   updatedAt    DateTime @updatedAt
 }
 
