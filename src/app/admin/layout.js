@@ -184,41 +184,25 @@ function AdminLayoutInner({ children }) {
         minWidth: 0, // prevents overflow on mobile
       }}>
         {/* Mobile top padding for the top bar */}
-        <div className="md:hidden" style={{ height: "72px" }} />
+        <div className="md:hidden" style={{ height: "90px" }} />
         {trialDays !== null && (
-          <>
-            <style>{`
-              .admin-sticky-banner {
-                position: sticky;
-                top: 54px;
-                z-index: 40;
+          <Link href="/admin/subscription" style={{ textDecoration: "none" }}>
+            <div style={{
+              background: trialDays <= 2 ? "rgba(248,113,113,0.15)" : "rgba(250,204,21,0.15)",
+              backdropFilter: "blur(8px)",
+              borderBottom: `1px solid ${trialDays <= 2 ? "rgba(248,113,113,0.3)" : "rgba(250,204,21,0.3)"}`,
+              padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              fontSize: 13, fontWeight: 700, cursor: "pointer",
+              color: trialDays <= 2 ? "#f87171" : "#eab308",
+              marginBottom: "1rem"
+            }}>
+              <AlertTriangle size={16} />
+              {trialDays === 0
+                ? "Deneme süreniz doldu! Plan seçmek için tıklayın."
+                : `Deneme süreniz ${trialDays} gün sonra bitiyor. Plan seçin →`
               }
-              @media (min-width: 768px) {
-                .admin-sticky-banner {
-                  top: 0px;
-                }
-              }
-            `}</style>
-            <div className="admin-sticky-banner" style={{ marginBottom: "1rem" }}>
-              <Link href="/admin/subscription" style={{ textDecoration: "none" }}>
-              <div style={{
-                background: trialDays <= 2 ? "rgba(248,113,113,0.15)" : "rgba(250,204,21,0.15)",
-                backdropFilter: "blur(8px)",
-                borderBottom: `1px solid ${trialDays <= 2 ? "rgba(248,113,113,0.3)" : "rgba(250,204,21,0.3)"}`,
-                padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                fontSize: 13, fontWeight: 700, cursor: "pointer",
-                color: trialDays <= 2 ? "#f87171" : "#eab308",
-                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
-              }}>
-                <AlertTriangle size={16} />
-                {trialDays === 0
-                  ? "Deneme süreniz doldu! Plan seçmek için tıklayın."
-                  : `Deneme süreniz ${trialDays} gün sonra bitiyor. Plan seçin →`
-                }
-              </div>
-            </Link>
-          </div>
-          </>
+            </div>
+          </Link>
         )}
         <div style={{ padding: "clamp(16px, 4vw, 56px)", maxWidth: "1200px", margin: "0 auto" }}>
           {children}
