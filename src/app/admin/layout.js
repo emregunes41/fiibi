@@ -115,6 +115,25 @@ function AdminLayoutInner({ children }) {
     </>
   );
 
+  const trialWarningBanner = trialDays !== null ? (
+    <Link href="/admin/subscription" style={{ textDecoration: "none", display: "block" }}>
+      <div style={{
+        background: trialDays <= 2 ? "rgba(248,113,113,0.15)" : "rgba(250,204,21,0.15)",
+        backdropFilter: "blur(8px)",
+        borderBottom: `1px solid ${trialDays <= 2 ? "rgba(248,113,113,0.3)" : "rgba(250,204,21,0.3)"}`,
+        padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+        fontSize: 13, fontWeight: 700, cursor: "pointer",
+        color: trialDays <= 2 ? "#f87171" : "#eab308",
+      }}>
+        <AlertTriangle size={16} />
+        {trialDays === 0
+          ? "Deneme süreniz doldu! Plan seçmek için tıklayın."
+          : `Deneme süreniz ${trialDays} gün sonra bitiyor. Plan seçin →`
+        }
+      </div>
+    </Link>
+  ) : null;
+
   return (
     <div className="admin-theme" style={{ display: "flex", minHeight: "100vh", background: "var(--bg, #0a0a0a)", color: "var(--text, #fff)" }}>
       
@@ -122,19 +141,21 @@ function AdminLayoutInner({ children }) {
       <div className="md:hidden" style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
         background: "var(--bg, #0a0a0a)", borderBottom: "1px solid rgba(255,255,255,0.08)",
-        padding: "14px 16px",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
+        display: "flex", flexDirection: "column"
       }}>
-        <button
-          onClick={() => setSidebarOpen(true)}
-          style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", padding: "4px" }}
-        >
-          <Menu size={22} />
-        </button>
-        <span style={{ fontWeight: 800, fontSize: "0.9rem", letterSpacing: "-0.02em" }}>
-          {brandName}<span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>.{bt?.terms?.brandSuffix || "panel"}</span>
-        </span>
-        <div style={{ width: "30px" }} /> {/* spacer */}
+        <div style={{ padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <button
+            onClick={() => setSidebarOpen(true)}
+            style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", padding: "4px" }}
+          >
+            <Menu size={22} />
+          </button>
+          <span style={{ fontWeight: 800, fontSize: "0.9rem", letterSpacing: "-0.02em" }}>
+            {brandName}<span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>.{bt?.terms?.brandSuffix || "panel"}</span>
+          </span>
+          <div style={{ width: "30px" }} /> {/* spacer */}
+        </div>
+        {trialWarningBanner}
       </div>
 
       {/* Mobile Sidebar Backdrop */}
@@ -184,26 +205,12 @@ function AdminLayoutInner({ children }) {
         minWidth: 0, // prevents overflow on mobile
       }}>
         {/* Mobile top padding for the top bar */}
-        <div className="md:hidden" style={{ height: "90px" }} />
-        {trialDays !== null && (
-          <Link href="/admin/subscription" style={{ textDecoration: "none" }}>
-            <div style={{
-              background: trialDays <= 2 ? "rgba(248,113,113,0.15)" : "rgba(250,204,21,0.15)",
-              backdropFilter: "blur(8px)",
-              borderBottom: `1px solid ${trialDays <= 2 ? "rgba(248,113,113,0.3)" : "rgba(250,204,21,0.3)"}`,
-              padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              fontSize: 13, fontWeight: 700, cursor: "pointer",
-              color: trialDays <= 2 ? "#f87171" : "#eab308",
-              marginBottom: "1rem"
-            }}>
-              <AlertTriangle size={16} />
-              {trialDays === 0
-                ? "Deneme süreniz doldu! Plan seçmek için tıklayın."
-                : `Deneme süreniz ${trialDays} gün sonra bitiyor. Plan seçin →`
-              }
-            </div>
-          </Link>
-        )}
+        <div className="md:hidden" style={{ height: trialDays !== null ? "105px" : "60px" }} />
+        
+        {/* Desktop Trial Banner */}
+        <div className="hidden md:block" style={{ marginBottom: "1rem" }}>
+          {trialWarningBanner}
+        </div>
         <div style={{ padding: "clamp(16px, 4vw, 56px)", maxWidth: "1200px", margin: "0 auto" }}>
           {children}
         </div>
