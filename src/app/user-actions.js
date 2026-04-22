@@ -3,11 +3,12 @@
 import { prisma } from "@/lib/prisma";
 import { signToken, verifyAuth } from "@/lib/auth";
 import { requireUser } from "@/lib/session";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import { getCurrentTenant } from "@/lib/tenant";
+import { checkRateLimit, resetRateLimit } from "@/lib/rate-limit";
 
 export async function registerUser(data) {
   try {
@@ -36,6 +37,7 @@ export async function registerUser(data) {
     cookieStore.set("auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
     });
@@ -48,11 +50,30 @@ export async function registerUser(data) {
 
 export async function loginUser(email, password) {
   try {
+    // Rate limiting
+    const headersList = await headers();
+    const ip = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimitKey = `user_login:${ip}:${email}`;
+
+    const rateCheck = checkRateLimit(rateLimitKey, {
+      maxAttempts: 5,
+      windowMs: 15 * 60 * 1000,
+      blockDurationMs: 15 * 60 * 1000,
+    });
+
+    if (!rateCheck.allowed) {
+      const minutes = Math.ceil(rateCheck.retryAfterSec / 60);
+      return { error: `Çok fazla başarısız deneme. ${minutes} dakika sonra tekrar deneyin.` };
+    }
+
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) return { error: "E-posta veya şifre hatalı." };
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) return { error: "E-posta veya şifre hatalı." };
+
+    // Başarılı — rate limit sıfırla
+    resetRateLimit(rateLimitKey);
 
     const token = await signToken({ userId: user.id, email: user.email, role: user.role });
 
@@ -60,6 +81,7 @@ export async function loginUser(email, password) {
     cookieStore.set("auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
     });

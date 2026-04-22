@@ -1,8 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import bcrypt from "bcryptjs";
+import { checkRateLimit, resetRateLimit } from "@/lib/rate-limit";
 
 const SUPER_ADMIN_SECRET = process.env.SUPER_ADMIN_SECRET;
 
@@ -10,12 +11,32 @@ const SUPER_ADMIN_SECRET = process.env.SUPER_ADMIN_SECRET;
  * Super Admin giriş
  */
 export async function superAdminLogin(password) {
+  // Rate limiting — Super Admin daha sıkı (3 deneme, 30 dk engelleme)
+  const headersList = await headers();
+  const ip = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const rateLimitKey = `super_admin_login:${ip}`;
+
+  const rateCheck = checkRateLimit(rateLimitKey, {
+    maxAttempts: 3,
+    windowMs: 30 * 60 * 1000,
+    blockDurationMs: 30 * 60 * 1000,
+  });
+
+  if (!rateCheck.allowed) {
+    const minutes = Math.ceil(rateCheck.retryAfterSec / 60);
+    return { error: `Çok fazla başarısız deneme. ${minutes} dakika sonra tekrar deneyin.` };
+  }
+
   if (!SUPER_ADMIN_SECRET) {
     return { error: "Super Admin erişimi yapılandırılmamış." };
   }
   if (password !== SUPER_ADMIN_SECRET) {
     return { error: "Geçersiz şifre." };
   }
+
+  // Başarılı — rate limit sıfırla
+  resetRateLimit(rateLimitKey);
+
   const cookieStore = await cookies();
   cookieStore.set("super_admin", "true", {
     httpOnly: true,

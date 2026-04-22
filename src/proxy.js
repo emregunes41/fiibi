@@ -42,9 +42,18 @@ export async function proxy(req) {
     response.headers.set("x-tenant-slug", slug);
   }
 
-  // Platform sayfaları — slug olmadan erişilebilir
-  const isPlatformPath = pathname.startsWith("/super-admin") || pathname.startsWith("/suspended") || pathname.startsWith("/api") || pathname.startsWith("/_next");
+  // Platform sayfaları — slug olmadan erişilebilir (ama auth kontrollü)
+  const isPlatformPath = pathname.startsWith("/suspended") || pathname.startsWith("/api") || pathname.startsWith("/_next");
   
+  // ─── SUPER ADMIN AUTH ──────────────────────────────────────
+  if (pathname.startsWith("/super-admin") && !pathname.startsWith("/super-admin/login")) {
+    const superAdmin = req.cookies.get("super_admin")?.value;
+    if (superAdmin !== "true") {
+      return NextResponse.redirect(new URL("/super-admin/login", req.url));
+    }
+    return response;
+  }
+
   if (isPlatformPath) {
     return response;
   }

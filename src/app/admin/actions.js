@@ -2,13 +2,30 @@
 
 import { prisma } from "@/lib/prisma";
 import { signToken } from "@/lib/auth";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { getTenantSlug, getTenantBySlug } from "@/lib/tenant";
+import { checkRateLimit, resetRateLimit } from "@/lib/rate-limit";
 
 export async function loginAdmin(username, password) {
   try {
+    // Rate limiting — IP + username bazlı
+    const headersList = await headers();
+    const ip = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimitKey = `admin_login:${ip}:${username}`;
+    
+    const rateCheck = checkRateLimit(rateLimitKey, {
+      maxAttempts: 5,
+      windowMs: 15 * 60 * 1000,      // 15 dakika
+      blockDurationMs: 15 * 60 * 1000, // 15 dakika engelleme
+    });
+
+    if (!rateCheck.allowed) {
+      const minutes = Math.ceil(rateCheck.retryAfterSec / 60);
+      return { error: `Çok fazla başarısız deneme. ${minutes} dakika sonra tekrar deneyin.` };
+    }
+
     const slug = await getTenantSlug();
     let tenantId = null;
 
@@ -59,6 +76,9 @@ export async function loginAdmin(username, password) {
     if (!isValid) {
       return { error: "Kullanıcı adı veya şifre hatalı." };
     }
+
+    // Başarılı giriş — rate limit sıfırla
+    resetRateLimit(rateLimitKey);
 
     // Session JWT
     const token = await signToken({
