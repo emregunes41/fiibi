@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 
-const SUPER_ADMIN_SECRET = process.env.SUPER_ADMIN_SECRET || "superadmin2026";
+const SUPER_ADMIN_SECRET = process.env.SUPER_ADMIN_SECRET || "123456";
 
 /**
  * Super Admin giriş
