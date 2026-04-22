@@ -29,7 +29,14 @@ export async function GET() {
       if (payload.tenantId) {
         tenant = await prisma.tenant.findUnique({
           where: { id: payload.tenantId },
-          select: { id: true, slug: true, businessName: true, businessType: true, plan: true, planExpiresAt: true, isFrozen: true, createdAt: true, referralCode: true, referralCount: true }
+          select: { 
+            id: true, slug: true, businessName: true, businessType: true, 
+            plan: true, planExpiresAt: true, isFrozen: true, createdAt: true, 
+            referralCode: true, referralCount: true,
+            settings: {
+              select: { moduleReservations: true, moduleStore: true, moduleEvents: true }
+            }
+          }
         });
       }
       return NextResponse.json({ user: null, admin: { id: payload.adminId, username: payload.username }, tenant });

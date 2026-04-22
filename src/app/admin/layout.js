@@ -49,13 +49,16 @@ function AdminLayoutInner({ children }) {
 
   const bt = getBusinessType(businessType);
   const { features, terms } = bt;
+  
+  // Modül ayarları
+  const modules = session?.tenant?.settings || { moduleReservations: true, moduleStore: true, moduleEvents: true };
 
   const navItems = businessType ? [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-    { name: "Hizmet & Katalog", href: "/admin/catalog", icon: Package },
-    { name: "Mağaza", href: "/admin/store", icon: ShoppingBag },
-    { name: terms.appointments, href: "/admin/reservations", icon: CalendarDays },
-    features.events && { name: "Etkinlikler", href: "/admin/events", icon: Ticket },
+    modules.moduleReservations && { name: "Hizmet & Katalog", href: "/admin/catalog", icon: Package },
+    modules.moduleStore && { name: "Mağaza", href: "/admin/store", icon: ShoppingBag },
+    modules.moduleReservations && { name: terms.appointments, href: "/admin/reservations", icon: CalendarDays },
+    (features.events && modules.moduleEvents) && { name: "Etkinlikler", href: "/admin/events", icon: Ticket },
     { name: "Muhasebe", href: "/admin/muhasebe", icon: Wallet },
     { name: "Sistem", href: "/admin/settings", icon: Settings },
   ].filter(Boolean) : [

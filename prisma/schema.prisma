@@ -429,6 +429,11 @@ model GlobalSettings {
   // Sayfa bölümü sıralaması
   sectionOrder    Json     @default("[\"events\",\"banners\",\"content\",\"portfolio\",\"services\",\"shop\"]")
 
+  // Modüller (All-in-One Business OS)
+  moduleReservations Boolean @default(true)
+  moduleStore        Boolean @default(true)
+  moduleEvents       Boolean @default(true)
+
   // Kapalı günler (randevu alınamaz)
   blockedDays     Json     @default("[]")   // ["2026-04-15", "2026-04-20"]
 

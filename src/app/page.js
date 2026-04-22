@@ -150,9 +150,11 @@ export default async function HomePage() {
   // Ensure all sections are present (in case new ones were added)
   DEFAULT_ORDER.forEach(s => { if (!sectionOrder.includes(s)) sectionOrder.push(s); });
 
+  const modules = siteConfig || { moduleReservations: true, moduleStore: true, moduleEvents: true };
+
   // Section renderers
   const sectionRenderers = {
-    events: () => features.events && upcomingEvents.length > 0 && bt.homeSections.includes("events") ? (
+    events: () => (features.events && modules.moduleEvents && upcomingEvents.length > 0 && bt.homeSections.includes("events")) ? (
       <section key="events" className="py-12 border-t border-white/5">
         <div className="section-container">
           <EventsSection events={upcomingEvents} />
@@ -219,7 +221,7 @@ export default async function HomePage() {
       </section>
     ) : null,
 
-    services: () => !features.categories && packages.length > 0 ? (
+    services: () => (!features.categories && modules.moduleReservations && packages.length > 0) ? (
       <section key="services" id="services" className="border-t border-white/5" style={{ padding: "80px 24px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>{terms.services}</div>
@@ -256,7 +258,7 @@ export default async function HomePage() {
       </section>
     ) : null,
 
-    shop: () => products.length > 0 ? (
+    shop: () => (modules.moduleStore && products.length > 0) ? (
       <section key="shop" id="shop" className="border-t border-white/5" style={{ padding: "80px 24px", background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.01))" }}>
         <div className="section-container">
           <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>MAĞAZA</div>

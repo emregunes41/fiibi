@@ -198,6 +198,7 @@ export default function SettingsPage() {
       {/* Tab Bar */}
       <div style={{ display: "flex", gap: 0, marginBottom: 24, borderBottom: "1px solid rgba(255,255,255,0.08)", overflowX: "auto" }}>
         {[
+          { id: "moduller", label: "MODÜLLER" },
           { id: "tema", label: "TEMA" },
           { id: "duzen", label: "DÜZEN" },
           { id: "icerik", label: "İÇERİK" },
@@ -206,7 +207,7 @@ export default function SettingsPage() {
           { id: "sozlesme", label: "SÖZLEŞME" },
           { id: "ai", label: "AI" },
         ].map(tab => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
+          <button key={tab.id} onClick={() => setActiveTab(tab.id)} type="button" style={{
             padding: "10px 18px", fontSize: 12, fontWeight: activeTab === tab.id ? 800 : 500,
             color: activeTab === tab.id ? "#fff" : "rgba(255,255,255,0.4)",
             background: "none", border: "none", borderBottom: activeTab === tab.id ? "2px solid #fff" : "2px solid transparent",
@@ -216,6 +217,52 @@ export default function SettingsPage() {
       </div>
 
       <form onSubmit={handleSubmit}>
+
+        {/* 0. Modüller */}
+        {activeTab === "moduller" && <div style={sectionCard}>
+          {sectionHeader(Layers, "Aktif Modüller", "Platformunuzda kullanmak istediğiniz araçları seçin. Kapatılan modüller sol menüden ve websitenizden gizlenir.")}
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 8 }}>
+              <input 
+                type="checkbox" 
+                checked={config.moduleReservations ?? true} 
+                onChange={(e) => setConfig({ ...config, moduleReservations: e.target.checked })}
+                style={{ marginTop: 2, width: 18, height: 18, accentColor: "#fff", cursor: "pointer" }}
+              />
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 4 }}>Hizmetler & Randevu Sistemi</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Hizmet/paket tanımlayarak müşterilerinizden rezervasyon almanızı sağlar.</div>
+              </div>
+            </label>
+
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 8 }}>
+              <input 
+                type="checkbox" 
+                checked={config.moduleStore ?? true} 
+                onChange={(e) => setConfig({ ...config, moduleStore: e.target.checked })}
+                style={{ marginTop: 2, width: 18, height: 18, accentColor: "#fff", cursor: "pointer" }}
+              />
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 4 }}>E-Ticaret & Mağaza Sistemi</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Fiziksel veya dijital ürün satışı yapmanızı ve kargo takibini sağlar.</div>
+              </div>
+            </label>
+
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 8 }}>
+              <input 
+                type="checkbox" 
+                checked={config.moduleEvents ?? true} 
+                onChange={(e) => setConfig({ ...config, moduleEvents: e.target.checked })}
+                style={{ marginTop: 2, width: 18, height: 18, accentColor: "#fff", cursor: "pointer" }}
+              />
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 4 }}>Etkinlikler & Bilet Satışı</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Atölye, seminer veya grup dersleri tanımlayıp bilet satmanızı sağlar.</div>
+              </div>
+            </label>
+          </div>
+        </div>}
 
         {/* 1. Hero Başlıkları */}
         {activeTab === "tema" && <div style={sectionCard}>
