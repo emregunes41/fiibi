@@ -41,7 +41,7 @@ export default function ReservationHubModal({
         groomPhone: reservation.groomPhone || "",
         brideEmail: reservation.brideEmail || "",
         groomEmail: reservation.groomEmail || "",
-        eventDate: reservation.eventDate ? reservation.eventDate.split('T')[0] : "",
+        eventDate: reservation.eventDate ? (typeof reservation.eventDate === 'string' ? reservation.eventDate.split('T')[0] : new Date(reservation.eventDate.getTime() - reservation.eventDate.getTimezoneOffset() * 60000).toISOString().split('T')[0]) : "",
         eventTime: reservation.eventTime || "",
         notes: reservation.notes || "",
         venueName: reservation.venueName || "",
