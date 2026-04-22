@@ -61,7 +61,7 @@ export default async function AdminDashboard() {
     where: { 
       ...tenantFilter,
       status: "CONFIRMED", 
-      workflowStatus: { notIn: ["COMPLETED", "DELIVERED"] },
+      workflowStatus: { notIn: ["COMPLETED", "DELIVERED", "SELECTION_PENDING"] },
       deliveryDate: { not: null }
     },
     orderBy: { deliveryDate: "asc" },
