@@ -4,12 +4,15 @@ import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 
-const SUPER_ADMIN_SECRET = process.env.SUPER_ADMIN_SECRET || "123456";
+const SUPER_ADMIN_SECRET = process.env.SUPER_ADMIN_SECRET;
 
 /**
  * Super Admin giriş
  */
 export async function superAdminLogin(password) {
+  if (!SUPER_ADMIN_SECRET) {
+    return { error: "Super Admin erişimi yapılandırılmamış." };
+  }
   if (password !== SUPER_ADMIN_SECRET) {
     return { error: "Geçersiz şifre." };
   }

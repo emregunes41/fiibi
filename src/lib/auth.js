@@ -3,8 +3,7 @@ import { jwtVerify, SignJWT } from "jose";
 export const getJwtSecretKey = () => {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
-    // In production, we should throw an error, but for setup we fallback
-    return new TextEncoder().encode("pinowed-super-secret-key-2026-fallback"); 
+    throw new Error("JWT_SECRET environment variable is not set. Authentication cannot function without it.");
   }
   return new TextEncoder().encode(secret);
 };

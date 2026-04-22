@@ -78,7 +78,7 @@ export async function loginAdmin(username, password) {
 
   } catch (error) {
     console.error("Login Error:", error);
-    return { error: `Sistem hatası: ${error.message}` };
+    return { error: "Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin." };
   }
   
   redirect("/admin/dashboard");

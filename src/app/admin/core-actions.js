@@ -239,9 +239,10 @@ export async function deleteAlbumModel(id) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    await prisma.albumModel.delete({
-      where: { id }
-    });
+    const tenantId = await getTenantId();
+    const item = await prisma.albumModel.findFirst({ where: { id, tenantId } });
+    if (!item) return { error: "Albüm modeli bulunamadı." };
+    await prisma.albumModel.delete({ where: { id } });
     revalidatePath('/admin/album-models');
     revalidatePath('/profile');
     return { success: true };
@@ -252,6 +253,9 @@ export async function deleteAlbumModel(id) {
 
 export async function selectAlbumModel(reservationId, albumModelId) {
   try {
+    const tenantId = await getTenantId();
+    const reservation = await prisma.reservation.findFirst({ where: { id: reservationId, tenantId } });
+    if (!reservation) return { error: "Rezervasyon bulunamadı." };
     await prisma.reservation.update({
       where: { id: reservationId },
       data: { albumModelId }
@@ -325,6 +329,9 @@ export async function updatePackage(id, data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
+    const tenantId = await getTenantId();
+    const existing = await prisma.photographyPackage.findFirst({ where: { id, tenantId } });
+    if (!existing) return { error: "Paket bulunamadı." };
     const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, meetingLink, customFields, availableSlots, workingDays } = data;
     await prisma.photographyPackage.update({
       where: { id },
@@ -357,6 +364,9 @@ export async function deletePackage(id) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
+    const tenantId = await getTenantId();
+    const existing = await prisma.photographyPackage.findFirst({ where: { id, tenantId } });
+    if (!existing) return { error: "Paket bulunamadı." };
     await prisma.photographyPackage.delete({ where: { id } });
     revalidatePath('/admin/packages');
     revalidatePath('/');
@@ -374,6 +384,9 @@ export async function softDeleteReservation(id) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
+    const tenantId = await getTenantId();
+    const existing = await prisma.reservation.findFirst({ where: { id, tenantId } });
+    if (!existing) return { error: "Rezervasyon bulunamadı." };
     await prisma.reservation.update({
       where: { id },
       data: { status: "DELETED" }
@@ -391,7 +404,9 @@ export async function hardDeleteReservation(id) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    // Payments are cascade deleted via schema, but let's be explicit
+    const tenantId = await getTenantId();
+    const existing = await prisma.reservation.findFirst({ where: { id, tenantId } });
+    if (!existing) return { error: "Rezervasyon bulunamadı." };
     await prisma.payment.deleteMany({ where: { reservationId: id } });
     await prisma.reservation.delete({ where: { id } });
     revalidatePath('/admin/reservations');

@@ -58,7 +58,7 @@ export async function POST(req) {
       no_installment: "0",
       max_installment: "0",
       currency: "TL",
-      test_mode: "1"
+      test_mode: process.env.NODE_ENV === "production" ? "0" : "1"
     };
 
     // PayTR Hash: merchant_id + user_ip + merchant_oid + email + payment_amount + user_basket + no_installment + max_installment + currency + test_mode + merchant_salt
