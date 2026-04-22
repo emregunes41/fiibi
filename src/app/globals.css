@@ -58,6 +58,26 @@ html[data-light] [style*="background: rgba(255"] {
 html[data-light] [style*="background:rgba(255"] {
   background: rgba(0,0,0,0.03) !important;
 }
+
+/* Modals and dropdowns hardcoded to #111 */
+html[data-light] [style*="background: #111"],
+html[data-light] [style*="background:#111"] {
+  background: #ffffff !important;
+}
+
+/* Primary buttons and elements hardcoded to #fff */
+html[data-light] [style*="background: #fff"],
+html[data-light] [style*="background:#fff"] {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+/* Elements with hardcoded black text */
+html[data-light] [style*="color: #000"],
+html[data-light] [style*="color:#000"] {
+  color: #ffffff !important;
+}
+
 html[data-light] [style*="backgroundColor"] {
   /* handled by var(--bg) already */
 }
