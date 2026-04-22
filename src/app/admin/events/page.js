@@ -190,7 +190,7 @@ export default function EventsAdminPage() {
       {/* CREATE/EDIT MODAL */}
       {formOpen && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: 20 }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, width: "100%", maxWidth: 600, maxHeight: "90vh", overflowY: "auto" }}>
+          <div className="admin-modal-content" style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, width: "100%", maxWidth: 600, maxHeight: "90vh", overflowY: "auto" }}>
             <div style={{ padding: "24px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800 }}>{editingId ? "Etkinliği Düzenle" : "Yeni Etkinlik Aç"}</h2>
               <button onClick={() => setFormOpen(false)} style={{ background: "none", border: "none", color: "#fff", cursor: "pointer" }}><X size={24} /></button>
@@ -274,7 +274,7 @@ export default function EventsAdminPage() {
       {/* PARTICIPANTS MODAL */}
       {participantsOpen && selectedEvent && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", zIndex: 100, display: "flex", justifyContent: "center", alignItems: "center", padding: 20 }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, width: "100%", maxWidth: 800, maxHeight: "90vh", display: "flex", flexDirection: "column" }}>
+          <div className="admin-modal-content" style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, width: "100%", maxWidth: 800, maxHeight: "90vh", display: "flex", flexDirection: "column" }}>
             <div style={{ padding: "24px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
                 <h2 style={{ margin: "0 0 4px 0", fontSize: 20, fontWeight: 800 }}>{selectedEvent.title}</h2>

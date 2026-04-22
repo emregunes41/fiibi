@@ -59,6 +59,13 @@ html[data-light] [style*="background:rgba(255"] {
   background: rgba(0,0,0,0.03) !important;
 }
 
+.admin-modal-content {
+  background-color: #111;
+}
+html[data-light] .admin-modal-content {
+  background-color: #ffffff !important;
+}
+
 /* Modals and dropdowns hardcoded to #111 */
 html[data-light] [style*="background: #111"],
 html[data-light] [style*="background:#111"] {
