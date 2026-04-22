@@ -13,13 +13,13 @@ const tabs = [
   { id: "kvkk", label: "KVKK", icon: Shield, desc: "Kişisel verilerin korunması" },
 ];
 
-export default function SozlesmeClient({ tenant }) {
+export default function SozlesmeClient({ tenant, config }) {
   const [activeTab, setActiveTab] = useState("hizmet");
 
-  const sellerAgreement = getSellerAgreement(tenant);
-  const distanceSales = getDistanceSalesContract(tenant);
-  const preliminaryInfo = getPreliminaryInfoForm(tenant);
-  const kvkkText = getKVKKText();
+  const sellerAgreement = config?.contractText || getSellerAgreement(tenant);
+  const distanceSales = config?.distanceSalesContractText || getDistanceSalesContract(tenant);
+  const preliminaryInfo = config?.preliminaryInfoText || getPreliminaryInfoForm(tenant);
+  const kvkkText = config?.kvkkText || getKVKKText();
 
   const contentMap = {
     hizmet: sellerAgreement,

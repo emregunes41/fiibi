@@ -1,6 +1,7 @@
 import { getProducts, getProductCategories } from "../ecommerce-actions";
 import ProductsClient from "./ProductsClient";
 import { getSiteConfig } from "../core-actions";
+import AdminPageTabs from "../components/AdminPageTabs";
 
 export const metadata = {
   title: "Ürünler - E-Ticaret"
@@ -13,8 +14,16 @@ export default async function ProductsPage() {
   
   return (
     <div style={{ padding: "0" }}>
+      <div style={{ marginBottom: "16px" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>Mağaza</h1>
+      </div>
+
+      <AdminPageTabs tabs={[
+        { label: "Ürünler", href: "/admin/products" },
+        { label: "Siparişler", href: "/admin/orders" }
+      ]} />
+      
       <div style={{ marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "1.5rem", fontWeight: 900, marginBottom: "4px" }}>Mağaza & Ürünler</h1>
         <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem" }}>Fiziksel veya dijital ürünlerinizi yönetin, kategoriler oluşturun.</p>
       </div>
       

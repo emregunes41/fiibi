@@ -52,89 +52,20 @@ function AdminLayoutInner({ children }) {
 
   const navItems = businessType ? [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-    { name: "Hizmet & Katalog", icon: Package, children: [
-        { name: terms.services, href: "/admin/packages" },
-        features.albumModels && { name: "Albüm Modelleri", href: "/admin/album-models" },
-    ].filter(Boolean) },
-    { name: "Mağaza", icon: ShoppingBag, children: [
-        { name: "Ürünler", href: "/admin/products" },
-        { name: "Siparişler", href: "/admin/orders" },
-    ]},
+    { name: "Hizmet & Katalog", href: "/admin/catalog", icon: Package },
+    { name: "Mağaza", href: "/admin/store", icon: ShoppingBag },
     { name: terms.appointments, href: "/admin/reservations", icon: CalendarDays },
     features.events && { name: "Etkinlikler", href: "/admin/events", icon: Ticket },
     { name: "Muhasebe", href: "/admin/muhasebe", icon: Wallet },
-    { name: "Sistem", icon: Settings, children: [
-        { name: "Genel Ayarlar", href: "/admin/settings" },
-        { name: terms.clients, href: "/admin/members" },
-        { name: "Abonelik", href: "/admin/subscription" },
-    ]},
+    { name: "Sistem", href: "/admin/settings", icon: Settings },
   ].filter(Boolean) : [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Ayarlar", href: "/admin/settings", icon: Settings },
   ];
 
-  function NavItem({ item, depth = 0 }) {
-    const [isOpen, setIsOpen] = useState(true); // Default open if active inside? Let's just default true for now
-    
-    // Check if active
-    const isActive = item.href ? pathname.startsWith(item.href) : (item.children && item.children.some(c => pathname.startsWith(c.href)));
-
-    useEffect(() => {
-      if (isActive && item.children) setIsOpen(true);
-    }, [isActive, item.children]);
-
-    if (item.children) {
-      return (
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div 
-            onClick={() => setIsOpen(!isOpen)}
-            style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between", 
-              padding: `0.85rem 1.25rem`, paddingLeft: `calc(1.25rem + ${depth * 15}px)`,
-              color: "rgba(255,255,255,0.45)", fontWeight: 700, fontSize: "0.75rem",
-              textTransform: "uppercase", letterSpacing: "0.1em", cursor: "pointer",
-              marginTop: depth === 0 ? "0.5rem" : "0"
-            }} 
-            className="hover:text-white transition-colors"
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-              {item.icon && <item.icon size={16} />}
-              {item.name}
-            </div>
-            <span style={{ transform: isOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }}><ChevronRight size={14} /></span>
-          </div>
-          {isOpen && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", marginTop: "0.25rem" }}>
-              {item.children.map(child => <NavItem key={child.name} item={child} depth={depth + 1} />)}
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    return (
-      <Link href={item.href} style={{ textDecoration: "none" }}>
-        <div style={{
-          display: "flex", alignItems: "center", gap: "1rem", 
-          padding: `0.85rem 1.25rem`, paddingLeft: `calc(1.25rem + ${depth * 15}px)`,
-          borderRadius: 0,
-          background: isActive ? "rgba(255,255,255,0.1)" : "transparent",
-          color: isActive ? "#fff" : "rgba(255,255,255,0.65)",
-          fontWeight: isActive ? 700 : 500,
-          transition: "all 0.2s",
-          border: isActive ? "1px solid rgba(255,255,255,0.1)" : "1px solid transparent"
-        }} className="hover:bg-white/5">
-          {item.icon && <item.icon size={20} color={isActive ? "#fff" : "rgba(255,255,255,0.5)"} />}
-          {!item.icon && depth > 0 && <span style={{ width: 6, height: 6, borderRadius: "50%", background: isActive ? "#fff" : "rgba(255,255,255,0.2)", marginLeft: 6, marginRight: 8 }} />}
-          <span style={{ fontSize: depth > 0 ? "0.85rem" : "1rem" }}>{item.name}</span>
-        </div>
-      </Link>
-    );
-  }
-
   const sidebarContent = (
     <>
-      <div style={{ fontWeight: 900, fontSize: "1.75rem", letterSpacing: "-0.04em", marginBottom: "2.5rem", paddingLeft: "0.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ fontWeight: 900, fontSize: "1.75rem", letterSpacing: "-0.04em", marginBottom: "3.5rem", paddingLeft: "0.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span>{brandName}<span style={{ color: "rgba(255,255,255,0.4)", fontSize: "1.1rem" }}>.{terms.brandSuffix}</span></span>
         {/* Close button only on mobile */}
         <button
@@ -146,8 +77,25 @@ function AdminLayoutInner({ children }) {
         </button>
       </div>
 
-      <nav style={{ display: "flex", flexDirection: "column", gap: "0.25rem", flex: 1 }}>
-        {navItems.map((item) => <NavItem key={item.name} item={item} />)}
+      <nav style={{ display: "flex", flexDirection: "column", gap: "0.75rem", flex: 1 }}>
+        {navItems.map((item) => {
+          const isActive = pathname.startsWith(item.href);
+          return (
+            <Link key={item.name} href={item.href} style={{ textDecoration: "none" }}>
+              <div style={{
+                display: "flex", alignItems: "center", gap: "1rem", padding: "1rem 1.25rem", borderRadius: 0,
+                background: isActive ? "rgba(255,255,255,0.1)" : "transparent",
+                color: isActive ? "#fff" : "rgba(255,255,255,0.65)",
+                fontWeight: isActive ? 700 : 500,
+                transition: "all 0.2s",
+                border: isActive ? "1px solid rgba(255,255,255,0.1)" : "1px solid transparent"
+              }} className="hover:bg-white/5">
+                <item.icon size={20} color={isActive ? "#fff" : "rgba(255,255,255,0.5)"} />
+                {item.name}
+              </div>
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Logout via Server Action */}

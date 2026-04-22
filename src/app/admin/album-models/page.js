@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import { Plus, Trash2, Book, X, Image as ImageIcon, Upload } from "lucide-react";
 import { getAlbumModels, createAlbumModel, deleteAlbumModel, uploadAlbumImage } from "../core-actions";
 
+import { getBusinessType } from "@/lib/business-types";
+import { useAdminSession } from "../AdminSessionContext";
+import AdminPageTabs from "../components/AdminPageTabs";
+
 const inp = {
   width: "100%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)",
   borderRadius: 0, padding: "0.7rem 0.8rem", color: "#fff", outline: "none",
@@ -15,6 +19,10 @@ const lbl = { display: "block", fontSize: "0.65rem", fontWeight: 800, color: "rg
 const emptyForm = { name: "", imageUrl: "", description: "" };
 
 export default function AlbumModelsPage() {
+  const { session: adminSession } = useAdminSession();
+  const businessType = adminSession?.tenant?.businessType || null;
+  const { features, terms } = getBusinessType(businessType);
+
   const [models, setModels] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ ...emptyForm });
@@ -81,13 +89,19 @@ export default function AlbumModelsPage() {
 
   return (
     <div style={{ padding: "0.5rem" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
-        <div>
-          <h1 style={{ fontSize: "1.8rem", fontWeight: 900, m: 0 }}>Albüm Modelleri</h1>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", marginTop: 4 }}>
-            Müşterilerin seçebileceği albüm tasarımlarını yönetin
-          </p>
-        </div>
+      <div style={{ marginBottom: "16px" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>Hizmet & Katalog</h1>
+      </div>
+
+      <AdminPageTabs tabs={[
+        { label: terms.services || "Hizmetler", href: "/admin/packages" },
+        features.albumModels ? { label: "Albüm Modelleri", href: "/admin/album-models" } : null
+      ].filter(Boolean)} />
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.85rem", margin: 0 }}>
+          Müşterilerin seçebileceği albüm tasarımlarını yönetin
+        </p>
         <button 
           onClick={openNew}
           style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}

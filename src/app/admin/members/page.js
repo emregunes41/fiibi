@@ -8,6 +8,9 @@ import { verifyAuth } from "@/lib/auth";
 import ResetPasswordButton from "./ResetPasswordButton";
 import DeleteUserButton from "./DeleteUserButton";
 
+import { getBusinessType } from "@/lib/business-types";
+import AdminPageTabs from "../components/AdminPageTabs";
+
 async function getMembersTenantId() {
   const tenant = await getCurrentTenant();
   if (tenant?.id) return tenant.id;
@@ -21,6 +24,9 @@ async function getMembersTenantId() {
 
 export default async function AdminMembersPage() {
   const tenantId = await getMembersTenantId();
+  const tenant = await getCurrentTenant();
+  const bt = getBusinessType(tenant?.businessType || "photographer");
+  
   const users = await prisma.user.findMany({
     where: { tenantId },
     include: { reservations: true },
@@ -28,16 +34,23 @@ export default async function AdminMembersPage() {
   });
 
   return (
-    <div style={{ color: "#fff" }}>
+    <div style={{ color: "#fff", maxWidth: 640, margin: "0 auto" }}>
       {/* Header Compact */}
-      <div style={{ marginBottom: "1.25rem" }}>
-        <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>
-          Üye Yönetimi
+      <div style={{ marginBottom: "16px" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>
+          Sistem & Ayarlar
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem", marginTop: "4px" }}>
-          Toplam {users.length} üye
-        </p>
       </div>
+
+      <AdminPageTabs tabs={[
+        { label: "Genel Ayarlar", href: "/admin/settings" },
+        { label: bt.terms.clients || "Müşteriler", href: "/admin/members" },
+        { label: "Abonelik", href: "/admin/subscription" }
+      ]} />
+      
+      <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem", marginBottom: "16px" }}>
+        Toplam {users.length} üye
+      </p>
 
       {/* Member Cards List */}
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>

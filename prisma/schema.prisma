@@ -399,6 +399,9 @@ model GlobalSettings {
   heroBgUrl    String   @default("/assets/hero.mp4")
   heroBgColor  String   @default("#f5f0e8")
   contractText String   @default("")
+  distanceSalesContractText String @default("")
+  preliminaryInfoText String @default("")
+  kvkkText String @default("")
 
   // Bildirim kanalları
   emailEnabled Boolean  @default(true)

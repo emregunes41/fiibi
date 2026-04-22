@@ -15,6 +15,7 @@ import {
   Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot, Image as ImageIcon, ArrowUp, ArrowDown, Eye, EyeOff, UploadCloud, Building2, Shield, CreditCard, GripVertical, Layers
 } from "lucide-react";
 import { PLATFORM, LEGAL_TYPES } from "@/lib/constants";
+import AdminPageTabs from "../components/AdminPageTabs";
 
 const inp = {
   width: "100%", boxSizing: "border-box",
@@ -182,13 +183,16 @@ export default function SettingsPage() {
   return (
     <div style={{ maxWidth: 640, margin: "0 auto" }}>
       {/* Header */}
-      <div style={{ marginBottom: 28 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-          <Globe size={14} style={{ color: "rgba(255,255,255,0.35)" }} />
-          <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Anasayfa Ayarları</span>
-        </div>
-        <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>Site Yapılandırması</h1>
+      <div style={{ marginBottom: 16 }}>
+        <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>Sistem & Ayarlar</h1>
       </div>
+
+      {/* Global Tabs */}
+      <AdminPageTabs tabs={[
+        { label: "Genel Ayarlar", href: "/admin/settings" },
+        { label: terms.clients || "Müşteriler", href: "/admin/members" },
+        { label: "Abonelik", href: "/admin/subscription" }
+      ]} />
 
       {/* Tab Bar */}
       <div style={{ display: "flex", gap: 0, marginBottom: 24, borderBottom: "1px solid rgba(255,255,255,0.08)", overflowX: "auto" }}>
@@ -888,14 +892,14 @@ export default function SettingsPage() {
         {activeTab === "sozlesme" && <div style={sectionCard}>
           {sectionHeader(FileText, "Rezervasyon Sözleşmesi", "Müşterinin ödeme öncesi onaylaması gereken sözleşme metni.")}
 
-          <div>
-            <label style={label}>Sözleşme İçeriği</label>
+          <div style={{ marginBottom: 24 }}>
+            <label style={label}>Hizmet Sözleşmesi</label>
             <textarea
               value={config.contractText || ""}
               onChange={(e) => setConfig({ ...config, contractText: e.target.value })}
               style={{
                 ...inp,
-                minHeight: 200,
+                minHeight: 150,
                 resize: "vertical",
                 lineHeight: 1.7,
                 fontFamily: "inherit",
@@ -905,8 +909,56 @@ export default function SettingsPage() {
                 : "Örnek:\n\nRandevunuzu onaylayarak aşağıdaki koşulları kabul etmiş olursunuz:\n\n1. Randevu iptali en geç 24 saat öncesinden bildirilmelidir.\n2. İptal edilmeyen randevular ücretlendirilir.\n3. Muayene ücreti hizmet sonrası tahsil edilir."}
             />
             <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 8, lineHeight: 1.6 }}>
-              💡 Boş bırakırsanız sözleşme adımı gösterilmez. Doldurursanız müşteri ödeme öncesi bu metni onaylamak zorundadır.
+              💡 Boş bırakırsanız varsayılan şablon kullanılır. Müşteri ödeme öncesi bu metni onaylamak zorundadır.
             </p>
+          </div>
+
+          <div style={{ marginBottom: 24 }}>
+            <label style={label}>Mesafeli Satış Sözleşmesi</label>
+            <textarea
+              value={config.distanceSalesContractText || ""}
+              onChange={(e) => setConfig({ ...config, distanceSalesContractText: e.target.value })}
+              style={{
+                ...inp,
+                minHeight: 150,
+                resize: "vertical",
+                lineHeight: 1.7,
+                fontFamily: "inherit",
+              }}
+              placeholder="Mesafeli satış sözleşmesi metnini buraya girin... (Boş bırakırsanız yasal standart metin kullanılır)"
+            />
+          </div>
+
+          <div style={{ marginBottom: 24 }}>
+            <label style={label}>Ön Bilgilendirme Formu</label>
+            <textarea
+              value={config.preliminaryInfoText || ""}
+              onChange={(e) => setConfig({ ...config, preliminaryInfoText: e.target.value })}
+              style={{
+                ...inp,
+                minHeight: 150,
+                resize: "vertical",
+                lineHeight: 1.7,
+                fontFamily: "inherit",
+              }}
+              placeholder="Ön bilgilendirme formu metnini buraya girin... (Boş bırakırsanız yasal standart metin kullanılır)"
+            />
+          </div>
+
+          <div>
+            <label style={label}>KVKK Aydınlatma Metni</label>
+            <textarea
+              value={config.kvkkText || ""}
+              onChange={(e) => setConfig({ ...config, kvkkText: e.target.value })}
+              style={{
+                ...inp,
+                minHeight: 150,
+                resize: "vertical",
+                lineHeight: 1.7,
+                fontFamily: "inherit",
+              }}
+              placeholder="KVKK aydınlatma metnini buraya girin... (Boş bırakırsanız yasal standart metin kullanılır)"
+            />
           </div>
         </div>}
 

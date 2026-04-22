@@ -6,6 +6,7 @@ import { getOrders, updateReservationStatus, updateOrderShipping, getPackages, g
 import { useAdminSession } from "../AdminSessionContext";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import AdminPageTabs from "../components/AdminPageTabs";
 
 const inp = {
   padding: "0.7rem 0.8rem", borderRadius: 0, fontSize: "0.8rem",
@@ -79,9 +80,17 @@ export default function OrdersPage() {
 
   return (
     <div style={{ padding: "0 1rem", maxWidth: "1200px", margin: "0 auto", animation: "fadeIn 0.4s" }}>
+      <div style={{ marginBottom: "16px" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>Mağaza</h1>
+      </div>
+
+      <AdminPageTabs tabs={[
+        { label: "Ürünler", href: "/admin/products" },
+        { label: "Siparişler", href: "/admin/orders" }
+      ]} />
+
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px", flexWrap: "wrap", gap: "16px" }}>
         <div>
-          <h1 style={{ fontSize: "2rem", fontWeight: 800, margin: "0 0 8px 0", letterSpacing: "-0.02em" }}>Siparişlerim</h1>
           <p style={{ color: "rgba(255,255,255,0.5)", margin: 0, fontSize: "0.95rem" }}>Mağazanızdan verilen fiziki ve dijital ürün siparişleri.</p>
         </div>
       </div>

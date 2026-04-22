@@ -6,6 +6,7 @@ import { getPackages, createPackage, updatePackage, deletePackage } from "../cor
 import MonthlyPriceManager from "./MonthlyPriceManager";
 import { getBusinessType } from "@/lib/business-types";
 import { useAdminSession } from "../AdminSessionContext";
+import AdminPageTabs from "../components/AdminPageTabs";
 
 const CATEGORIES = [
   { value: "DIS_CEKIM", label: "Dış Çekim", icon: "🌿" },
@@ -190,16 +191,25 @@ export default function PackagesPage() {
         }}>{deleteMessage.text}</div>
       )}
 
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", gap: "0.75rem", flexWrap: "wrap" }}>
-        <div>
-          <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>{terms.service} Yönetimi</h1>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.75rem", margin: "4px 0 0" }}>{packages.length} {terms.service.toLowerCase()}</p>
-        </div>
-        <button onClick={openNew} style={{
-          background: "#fff", color: "#000", padding: "0.5rem 1rem", borderRadius: 0,
-          border: "none", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem",
-        }}><Plus size={14} /> YENİ</button>
+      <div style={{ marginBottom: "16px" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>Hizmet & Katalog</h1>
+      </div>
+
+      <AdminPageTabs tabs={[
+        { label: terms.services || "Hizmetler", href: "/admin/packages" },
+        features.albumModels ? { label: "Albüm Modelleri", href: "/admin/album-models" } : null
+      ].filter(Boolean)} />
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.85rem", margin: 0 }}>
+          Sunacağınız hizmetlerin süresini, ücretini ve ekstralarını belirleyin.
+        </p>
+        <button
+          onClick={openNew}
+          style={{ background: "#fff", color: "#000", border: "none", borderRadius: 0, padding: "8px 16px", fontSize: "0.8rem", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem" }}
+        >
+          <Plus size={14} /> Yeni {terms.service}
+        </button>
       </div>
 
       {businessType && features.discountMonths && <MonthlyPriceManager />}
