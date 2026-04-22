@@ -186,21 +186,25 @@ function AdminLayoutInner({ children }) {
         {/* Mobile top padding for the top bar */}
         <div className="md:hidden" style={{ height: "72px" }} />
         {trialDays !== null && (
-          <Link href="/admin/subscription" style={{ textDecoration: "none" }}>
-            <div style={{
-              background: trialDays <= 2 ? "rgba(248,113,113,0.1)" : "rgba(250,204,21,0.08)",
-              borderBottom: `1px solid ${trialDays <= 2 ? "rgba(248,113,113,0.2)" : "rgba(250,204,21,0.15)"}`,
-              padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              fontSize: 13, fontWeight: 600, cursor: "pointer",
-              color: trialDays <= 2 ? "#f87171" : "#facc15"
-            }}>
-              <AlertTriangle size={14} />
-              {trialDays === 0
-                ? "Deneme süreniz doldu! Plan seçmek için tıklayın."
-                : `Deneme süreniz ${trialDays} gün sonra bitiyor. Plan seçin →`
-              }
-            </div>
-          </Link>
+          <div className="sticky z-40 top-[72px] md:top-0" style={{ marginBottom: "1rem" }}>
+            <Link href="/admin/subscription" style={{ textDecoration: "none" }}>
+              <div style={{
+                background: trialDays <= 2 ? "rgba(248,113,113,0.15)" : "rgba(250,204,21,0.15)",
+                backdropFilter: "blur(8px)",
+                borderBottom: `1px solid ${trialDays <= 2 ? "rgba(248,113,113,0.3)" : "rgba(250,204,21,0.3)"}`,
+                padding: "10px 20px", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                fontSize: 13, fontWeight: 700, cursor: "pointer",
+                color: trialDays <= 2 ? "#f87171" : "#eab308",
+                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+              }}>
+                <AlertTriangle size={16} />
+                {trialDays === 0
+                  ? "Deneme süreniz doldu! Plan seçmek için tıklayın."
+                  : `Deneme süreniz ${trialDays} gün sonra bitiyor. Plan seçin →`
+                }
+              </div>
+            </Link>
+          </div>
         )}
         <div style={{ padding: "clamp(16px, 4vw, 56px)", maxWidth: "1200px", margin: "0 auto" }}>
           {children}
