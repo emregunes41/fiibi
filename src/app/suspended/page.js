@@ -1,6 +1,4 @@
-import { Snowflake } from "lucide-react";
-
-export const metadata = { title: "Hesap Askıda" };
+export const metadata = { title: "Sayfa Bulunamadı" };
 
 export default function SuspendedPage() {
   return (
@@ -8,25 +6,15 @@ export default function SuspendedPage() {
       minHeight: "100vh", background: "#0a0a0a", display: "flex",
       alignItems: "center", justifyContent: "center", padding: 24
     }}>
-      <div style={{ textAlign: "center", maxWidth: 440 }}>
-        <div style={{
-          width: 72, height: 72, borderRadius: "50%",
-          background: "rgba(56,189,248,0.08)", border: "2px solid rgba(56,189,248,0.15)",
-          display: "inline-flex", alignItems: "center", justifyContent: "center",
-          marginBottom: 24
-        }}>
-          <Snowflake size={32} style={{ color: "#38bdf8" }} />
+      <div style={{ textAlign: "center", maxWidth: 400 }}>
+        <div style={{ fontSize: 72, fontWeight: 900, color: "rgba(255,255,255,0.06)", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: 16 }}>
+          404
         </div>
-
-        <h1 style={{ color: "#fff", fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 12 }}>
-          Hesap Askıya Alındı
+        <h1 style={{ color: "#fff", fontSize: 20, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 12 }}>
+          Sayfa Bulunamadı
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 15, lineHeight: 1.7, marginBottom: 32 }}>
-          Bu işletmenin hesabı geçici olarak askıya alınmıştır. 
-          Abonelik ödemesi tamamlandığında hesap otomatik olarak aktifleşecektir.
-        </p>
-        <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13 }}>
-          Destek için: <a href="mailto:destek@fiibi.co" style={{ color: "rgba(255,255,255,0.5)" }}>destek@fiibi.co</a>
+        <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14, lineHeight: 1.7, margin: 0 }}>
+          Aradığınız sayfa mevcut değil veya kaldırılmış olabilir.
         </p>
       </div>
     </div>
