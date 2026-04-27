@@ -6,13 +6,14 @@ import {
   Shield, Users, Building2, CreditCard, Snowflake, Trash2,
   RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check,
   BarChart, Database, Cloud, Mail, HardDrive, Image, Zap,
-  DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock
+  DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock, Package
 } from "lucide-react";
 import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
   changeTenantPlan, deleteTenant, superAdminLogout,
   getPlatformPricing, updatePlatformPricing,
-  updateTenantCommission, updateSubMerchantStatus
+  updateTenantCommission, updateSubMerchantStatus,
+  getPendingPackages, updatePackageApprovalStatus
 } from "@/app/actions/super-admin";
 import { getCloudinaryUsage, getDbUsage, getResendUsage, getVercelUsage } from "@/app/actions/platform-usage";
 
@@ -21,11 +22,13 @@ const TABS = [
   { id: "usage", label: "Kaynak Kullanımı", icon: BarChart },
   { id: "pricing", label: "Fiyatlandırma", icon: DollarSign },
   { id: "tenants", label: "Stüdyolar", icon: Building2 },
+  { id: "packages", label: "Paket Onayları", icon: Package },
 ];
 
 export default function SuperAdminClient() {
   const [tab, setTab] = useState("overview");
   const [tenants, setTenants] = useState([]);
+  const [pendingPackages, setPendingPackages] = useState([]);
   const [stats, setStats] = useState(null);
   const [usage, setUsage] = useState(null);
   const [pricing, setPricing] = useState({ monthly: 2499, yearly: 24999, lifetime: 69500 });
@@ -42,7 +45,7 @@ export default function SuperAdminClient() {
       const results = await Promise.allSettled([
         getAllTenants(), getPlatformStats(),
         getCloudinaryUsage(), getDbUsage(), getResendUsage(), getVercelUsage(),
-        getPlatformPricing(),
+        getPlatformPricing(), getPendingPackages()
       ]);
       const val = (i) => results[i].status === "fulfilled" ? results[i].value : null;
       const t = val(0), s = val(1);
@@ -56,6 +59,8 @@ export default function SuperAdminClient() {
       });
       const pr = val(6);
       if (pr && !pr.error) setPricing(pr);
+      const pkg = val(7);
+      if (pkg && !pkg.error) setPendingPackages(pkg);
     } catch (err) { console.error("loadData error:", err); }
     setLoading(false);
   }
@@ -72,6 +77,7 @@ export default function SuperAdminClient() {
   async function handleLogout() { await superAdminLogout(); router.push("/super-admin/login"); }
   async function handleCommission(id, rate) { setActionLoading(id); await updateTenantCommission(id, rate); await loadData(); setActionLoading(null); }
   async function handleSubMerchantStatus(id, status) { setActionLoading(id); await updateSubMerchantStatus(id, status); await loadData(); setActionLoading(null); }
+  async function handlePackageApproval(id, status) { setActionLoading(id); await updatePackageApprovalStatus(id, status); await loadData(); setActionLoading(null); }
 
   const smStatusConfig = {
     NOT_STARTED: { label: "Başvuru Yok", color: "rgba(255,255,255,0.3)", bg: "rgba(255,255,255,0.03)", border: "rgba(255,255,255,0.06)" },
@@ -469,6 +475,61 @@ export default function SuperAdminClient() {
                 })}
                 {tenants.length === 0 && (
                   <div style={{ textAlign: "center", padding: 48, color: "rgba(255,255,255,0.3)", fontSize: 14 }}>Henüz stüdyo yok.</div>
+                )}
+              </div>
+            </>
+          )}
+
+          {/* ─── TAB: Paket Onayları ─── */}
+          {tab === "packages" && (
+            <>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                <h2 style={{ ...sectionTitle, marginBottom: 0 }}>Onay Bekleyen Paketler</h2>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>{pendingPackages.length} kayıt</span>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {pendingPackages.map(pkg => (
+                  <div key={pkg.id} style={{
+                    background: "rgba(255,255,255,0.02)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    padding: "16px 20px",
+                    display: "flex", flexWrap: "wrap", gap: "12px 20px", alignItems: "center"
+                  }}>
+                    <div style={{ flex: "1 1 200px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                        <span style={{ fontWeight: 700, fontSize: 15 }}>{pkg.name}</span>
+                        <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: 0 }}>{pkg.category}</span>
+                      </div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
+                        Stüdyo: <span style={{ color: "var(--text)" }}>{pkg.tenantBusinessName}</span> ({pkg.tenantSlug})
+                      </div>
+                    </div>
+                    
+                    <div style={{ fontSize: 14, fontWeight: 800, color: "var(--text)", minWidth: 100 }}>
+                      {pkg.price ? `${pkg.price}₺` : "Ücretsiz / Fiyat Yok"}
+                    </div>
+
+                    <div style={{ display: "flex", gap: 8, marginLeft: "auto" }}>
+                      <button
+                        onClick={() => handlePackageApproval(pkg.id, "APPROVED")}
+                        disabled={actionLoading === pkg.id}
+                        style={{ ...smallBtn, color: "#4ade80", padding: "8px 16px", fontWeight: 700 }}
+                      >
+                        <CheckCircle2 size={16} style={{ marginRight: 6 }} /> Onayla
+                      </button>
+                      <button
+                        onClick={() => handlePackageApproval(pkg.id, "REJECTED")}
+                        disabled={actionLoading === pkg.id}
+                        style={{ ...smallBtn, color: "#f87171", padding: "8px 16px", fontWeight: 700 }}
+                      >
+                        <XCircle size={16} style={{ marginRight: 6 }} /> Reddet
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {pendingPackages.length === 0 && (
+                  <div style={{ textAlign: "center", padding: 48, color: "rgba(255,255,255,0.3)", fontSize: 14 }}>Onay bekleyen paket bulunmuyor.</div>
                 )}
               </div>
             </>

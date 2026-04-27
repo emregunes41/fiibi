@@ -14,7 +14,7 @@ export default async function BookingPage() {
   const activeTenantId = tenant?.id || "NONE";
   
   const packages = await prisma.photographyPackage.findMany({
-    where: { tenantId: activeTenantId },
+    where: { tenantId: activeTenantId, approvalStatus: "APPROVED" },
     orderBy: { createdAt: 'desc' }
   });
   

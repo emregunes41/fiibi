@@ -103,6 +103,7 @@ model PhotographyPackage {
   postSelectionDays Int          @default(0)
   meetingLink  String?
   isActive     Boolean       @default(true)
+  approvalStatus String      @default("PENDING") // PENDING, APPROVED, REJECTED
   tenantId     String?
   tenant       Tenant?       @relation(fields: [tenantId], references: [id])
   createdAt    DateTime      @default(now())
@@ -175,6 +176,7 @@ model Event {
   location        String?  // for offline
   imageUrl        String?  // cover photo
   isActive        Boolean  @default(true)
+  approvalStatus  String   @default("PENDING") // PENDING, APPROVED, REJECTED
   tenantId        String?
   tenant          Tenant?  @relation(fields: [tenantId], references: [id])
   createdAt       DateTime @default(now())

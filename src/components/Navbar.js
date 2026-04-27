@@ -185,7 +185,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               )}
 
               {/* Login / Panel */}
-              {!loading && user && (
+              {isPhotographer && !loading && user ? (
                   <Link
                     href="/profile"
                     style={{
@@ -203,6 +203,25 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                     className="hover:!bg-white/10"
                   >
                     <UserCircle size={14} /> Panel
+                  </Link>
+              ) : isPhotographer && !loading && !user && (
+                  <Link
+                    href="/login"
+                    style={{
+                      display: "flex", alignItems: "center", gap: 8,
+                      fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.2em",
+                      color: "var(--text)",
+                      background: "rgba(255,255,255,0.05)",
+                      padding: "10px 20px",
+                      borderRadius: 0,
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      textDecoration: "none",
+                      whiteSpace: "nowrap",
+                      transition: "all 0.3s",
+                    }}
+                    className="hover:!bg-white/10"
+                  >
+                    <User size={14} /> Üye Girişi
                   </Link>
               )}
             </div>
@@ -294,11 +313,15 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             )}
 
 
-            {user && (
+            {isPhotographer && (user ? (
               <Link href="/profile" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "var(--text)", textDecoration: "none" }}>
                 Hesabım
               </Link>
-            )}
+            ) : (
+              <Link href="/login" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "var(--text)", textDecoration: "none" }}>
+                Müşteri Girişi
+              </Link>
+            ))}
           </div>
         )}
       </header>

@@ -261,3 +261,51 @@ export async function updateSubMerchantStatus(tenantId, status) {
 
   return { success: true };
 }
+  
+/**
+ * Onay bekleyen paketleri getir
+ */
+export async function getPendingPackages() {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  const packages = await prisma.photographyPackage.findMany({
+    where: { approvalStatus: "PENDING" },
+    include: {
+      tenant: {
+        select: {
+          businessName: true,
+          slug: true,
+          ownerEmail: true,
+        }
+      }
+    },
+    orderBy: { createdAt: "desc" }
+  });
+
+  return packages.map(p => ({
+    id: p.id,
+    name: p.name,
+    category: p.category,
+    price: p.price,
+    tenantBusinessName: p.tenant?.businessName || "Bilinmiyor",
+    tenantSlug: p.tenant?.slug || "",
+    createdAt: p.createdAt
+  }));
+}
+
+/**
+ * Paket onay durumunu güncelle
+ */
+export async function updatePackageApprovalStatus(packageId, status) {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  const validStatuses = ["PENDING", "APPROVED", "REJECTED"];
+  if (!validStatuses.includes(status)) return { error: "Geçersiz durum" };
+
+  await prisma.photographyPackage.update({
+    where: { id: packageId },
+    data: { approvalStatus: status }
+  });
+
+  return { success: true };
+}

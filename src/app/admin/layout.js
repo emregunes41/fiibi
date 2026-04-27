@@ -53,8 +53,8 @@ function AdminLayoutInner({ children }) {
   const navItems = businessType ? [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: terms.services, href: "/admin/packages", icon: Package },
-    { name: "Mağaza & Ürünler", href: "/admin/products", icon: ShoppingBag },
-    { name: "Siparişler", href: "/admin/orders", icon: Box },
+    // { name: "Mağaza & Ürünler", href: "/admin/products", icon: ShoppingBag },
+    // { name: "Siparişler", href: "/admin/orders", icon: Box },
     features.events && { name: "Etkinlikler", href: "/admin/events", icon: Ticket },
     features.albumModels && { name: "Albüm Modelleri", href: "/admin/album-models", icon: Book },
     { name: terms.appointments, href: "/admin/reservations", icon: CalendarDays },
