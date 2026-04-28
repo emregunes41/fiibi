@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode, getSubMerchantInfo, updateSubMerchantInfo } from "../core-actions";
+import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode, getSubMerchantInfo, updateSubMerchantInfo, getTenantDomainInfo, updateTenantDomain } from "../core-actions";
 import { getBanners, createBanner, updateBanner, deleteBanner, reorderBanners } from "../banner-actions";
 import { getContentBlocks, createContentBlock, updateContentBlock, deleteContentBlock } from "../content-actions";
 import { getPortfolioCategories, createPortfolioCategory, deletePortfolioCategory, addPhotoToPortfolio, deletePortfolioPhoto } from "../portfolio-actions";
@@ -105,6 +105,11 @@ export default function SettingsPage() {
   const [smCommission, setSmCommission] = useState(5);
   const [smLoaded, setSmLoaded] = useState(false);
 
+  // Domain
+  const [domainForm, setDomainForm] = useState({ customDomain: "" });
+  const [domainSaving, setDomainSaving] = useState(false);
+  const [domainMessage, setDomainMessage] = useState("");
+
   useEffect(() => {
     async function loadConfig() {
       const data = await getSiteConfig();
@@ -142,6 +147,13 @@ export default function SettingsPage() {
         setSmCommission(info.commissionRate ?? 5);
       }
       setSmLoaded(true);
+    });
+
+    // Load custom domain info
+    getTenantDomainInfo().then((info) => {
+      if (info && !info.error) {
+        setDomainForm({ customDomain: info.customDomain || "" });
+      }
     });
   }, []);
 
@@ -206,6 +218,7 @@ export default function SettingsPage() {
           { id: "bildirim", label: "BİLDİRİM" },
           { id: "sozlesme", label: "SÖZLEŞME" },
           { id: "ai", label: "AI" },
+          { id: "domain", label: "DOMAIN" },
         ].map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)} type="button" style={{
             padding: "10px 18px", fontSize: 12, fontWeight: activeTab === tab.id ? 800 : 500,
@@ -2069,6 +2082,49 @@ export default function SettingsPage() {
             {smSaving ? <Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} /> : <Shield size={16} />}
             {smSaving ? "Gönderiliyor..." : smStatus === "PENDING" ? "Bilgileri Güncelle" : "Başvuruyu Gönder"}
           </button>
+        </div>}
+
+        {/* 6. Domain Yönetimi */}
+        {activeTab === "domain" && <div style={sectionCard}>
+          {sectionHeader(Globe, "Özel Alan Adı (Custom Domain)", "Sitenize kendi alan adınızdan (www.siteniz.com) ulaşılmasını sağlayın.")}
+          <div style={{ marginBottom: 16 }}>
+            <label style={label}>Özel Domaininiz</label>
+            <input
+              type="text"
+              value={domainForm.customDomain}
+              onChange={(e) => setDomainForm({ ...domainForm, customDomain: e.target.value })}
+              style={inp}
+              placeholder="www.studyonuz.com (İptal etmek için boş bırakın)"
+            />
+            <div style={{ padding: "16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", marginTop: 16 }}>
+              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", margin: "0 0 8px 0", lineHeight: 1.5 }}>
+                Lütfen alan adınızı kaydetmeden önce <strong>Domain (DNS) Panelinizden</strong> sistemimize yönlendirme yaptığınızdan emin olun:
+              </p>
+              <ul style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", margin: 0, paddingLeft: 16, lineHeight: 1.6 }}>
+                <li>A Kaydı (A Record): <strong>76.76.21.21</strong></li>
+                <li>veya CNAME (www için): <strong>cname.vercel-dns.com</strong></li>
+              </ul>
+            </div>
+          </div>
+          <button
+            type="button"
+            disabled={domainSaving}
+            onClick={async () => {
+              setDomainSaving(true);
+              setDomainMessage("");
+              const res = await updateTenantDomain(domainForm.customDomain);
+              if (res.success) {
+                setDomainMessage("✅ Domain başarıyla kaydedildi. SSL sertifikası birkaç dakika içinde otomatik aktifleşecektir.");
+              } else {
+                setDomainMessage("❌ Hata: " + res.error);
+              }
+              setDomainSaving(false);
+            }}
+            style={{ background: "var(--text)", color: "var(--bg)", border: "none", padding: "12px 24px", fontWeight: 700, cursor: "pointer", fontSize: 12, borderRadius: 0 }}
+          >
+            {domainSaving ? "Kaydediliyor..." : "Domain'i Kaydet"}
+          </button>
+          {domainMessage && <p style={{ fontSize: 12, marginTop: 12, color: domainMessage.includes("Hata") ? "#ef4444" : "#22c55e", fontWeight: 600 }}>{domainMessage}</p>}
         </div>}
 
     </div>

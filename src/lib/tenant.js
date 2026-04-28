@@ -12,6 +12,11 @@ export async function getTenantSlug() {
   return headersList.get("x-tenant-slug") || null;
 }
 
+export async function getTenantCustomDomain() {
+  const headersList = await headers();
+  return headersList.get("x-custom-domain") || null;
+}
+
 /**
  * Slug ile tenant'ı DB'den çek
  */
@@ -38,6 +43,11 @@ export async function getTenantByDomain(domain) {
  * Bulamazsa null döner
  */
 export async function getCurrentTenant() {
+  const customDomain = await getTenantCustomDomain();
+  if (customDomain) {
+    const tenant = await getTenantByDomain(customDomain);
+    if (tenant) return tenant;
+  }
   const slug = await getTenantSlug();
   if (!slug) return null;
   return getTenantBySlug(slug);
