@@ -11,6 +11,7 @@ export async function middleware(req) {
   // ─── TENANT DETECTION ─────────────────────────────────────────
   const isLocalhost = hostname.includes("localhost") || hostname.includes("127.0.0.1");
   let slug = null;
+  let customDomain = null;
 
   if (isLocalhost) {
     // pinowed.localhost:3000 → slug = "pinowed"
@@ -28,10 +29,7 @@ export async function middleware(req) {
         slug = potentialSlug;
       }
     } else if (hostname !== platformDomain && hostname !== `www.${platformDomain}`) {
-      // Custom domain
-      const response = NextResponse.next();
-      response.headers.set("x-custom-domain", hostname);
-      return response;
+      customDomain = hostname;
     }
   }
 
@@ -41,6 +39,9 @@ export async function middleware(req) {
   if (slug) {
     response.headers.set("x-tenant-slug", slug);
   }
+  if (customDomain) {
+    response.headers.set("x-custom-domain", customDomain);
+  }
 
   // Platform sayfaları — slug olmadan erişilebilir
   const isPlatformPath = pathname.startsWith("/onboarding") || pathname.startsWith("/super-admin") || pathname.startsWith("/suspended") || pathname.startsWith("/api") || pathname.startsWith("/_next");
@@ -49,8 +50,8 @@ export async function middleware(req) {
     return response;
   }
 
-  // Subdomain yoksa → platform landing (onboarding) göster
-  if (!slug) {
+  // Subdomain veya Custom Domain yoksa → platform landing (onboarding) göster
+  if (!slug && !customDomain) {
     // Ana domain (localhost:3000) → onboarding'e yönlendir
     if (pathname === "/" || (!pathname.startsWith("/admin") && !pathname.startsWith("/login") && !pathname.startsWith("/profile"))) {
       return NextResponse.redirect(new URL("/onboarding", req.url));
@@ -69,6 +70,7 @@ export async function middleware(req) {
         const authedResponse = NextResponse.next();
         authedResponse.headers.set("x-next-pathname", pathname);
         if (slug) authedResponse.headers.set("x-tenant-slug", slug);
+        if (customDomain) authedResponse.headers.set("x-custom-domain", customDomain);
         return authedResponse;
       }
       return NextResponse.redirect(new URL("/admin/login", req.url));
@@ -87,6 +89,7 @@ export async function middleware(req) {
       const authedResponse = NextResponse.next();
       authedResponse.headers.set("x-next-pathname", pathname);
       if (slug) authedResponse.headers.set("x-tenant-slug", slug);
+      if (customDomain) authedResponse.headers.set("x-custom-domain", customDomain);
       return authedResponse;
     } catch (err) {
       return NextResponse.redirect(new URL("/login", req.url));

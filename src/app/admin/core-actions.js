@@ -1669,3 +1669,79 @@ export async function toggleBlockedDay(dateStr) {
     return { error: error.message };
   }
 }
+
+export async function getTenantDomainInfo() {
+  const tenantId = await getTenantId();
+  if (!tenantId) return { error: "Yetkisiz" };
+  const tenant = await prisma.tenant.findUnique({
+    where: { id: tenantId },
+    select: { customDomain: true }
+  });
+  return { customDomain: tenant?.customDomain || "" };
+}
+
+export async function updateTenantDomain(domain) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    const tenantId = await getTenantId();
+    if (!tenantId) return { error: "Yetkisiz" };
+
+    const formattedDomain = domain ? domain.trim().toLowerCase() : null;
+    
+    if (formattedDomain) {
+      const existing = await prisma.tenant.findUnique({ where: { customDomain: formattedDomain } });
+      if (existing && existing.id !== tenantId) {
+        return { error: "Bu alan adı (domain) başka bir mağaza tarafından kullanılıyor." };
+      }
+    }
+
+    const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
+    const oldDomain = tenant.customDomain;
+
+    const VERCEL_TOKEN = process.env.VERCEL_TOKEN;
+    const VERCEL_PROJECT_ID = process.env.VERCEL_PROJECT_ID;
+
+    // Remove old domain from Vercel
+    if (oldDomain && oldDomain !== formattedDomain && VERCEL_TOKEN && VERCEL_PROJECT_ID) {
+      try {
+        await fetch(`https://api.vercel.com/v9/projects/${VERCEL_PROJECT_ID}/domains/${oldDomain}`, {
+          method: "DELETE",
+          headers: { "Authorization": `Bearer ${VERCEL_TOKEN}` }
+        });
+      } catch (e) {
+        console.error("Vercel domain silme hatası:", e);
+      }
+    }
+
+    // Add new domain to Vercel
+    if (formattedDomain && formattedDomain !== oldDomain && VERCEL_TOKEN && VERCEL_PROJECT_ID) {
+      try {
+        const addRes = await fetch(`https://api.vercel.com/v10/projects/${VERCEL_PROJECT_ID}/domains`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${VERCEL_TOKEN}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ name: formattedDomain })
+        });
+        const addData = await addRes.json();
+        if (addData.error) {
+          console.error("Vercel domain ekleme hatası:", addData.error);
+        }
+      } catch (e) {
+        console.error("Vercel domain ekleme hatası:", e);
+      }
+    }
+
+    await prisma.tenant.update({
+      where: { id: tenantId },
+      data: { customDomain: formattedDomain }
+    });
+
+    return { success: true };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
+

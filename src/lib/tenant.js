@@ -13,6 +13,14 @@ export async function getTenantSlug() {
 }
 
 /**
+ * Request header'larından custom domain'i al
+ */
+export async function getTenantCustomDomain() {
+  const headersList = await headers();
+  return headersList.get("x-custom-domain") || null;
+}
+
+/**
  * Slug ile tenant'ı DB'den çek
  */
 export async function getTenantBySlug(slug) {
@@ -34,10 +42,15 @@ export async function getTenantByDomain(domain) {
 
 /**
  * Mevcut request'ten tenant'ı otomatik algıla
- * Önce header'dan slug → sonra DB lookup
+ * Önce custom domain, sonra slug, sonra DB lookup
  * Bulamazsa null döner
  */
 export async function getCurrentTenant() {
+  const customDomain = await getTenantCustomDomain();
+  if (customDomain) {
+    return getTenantByDomain(customDomain);
+  }
+
   const slug = await getTenantSlug();
   if (!slug) return null;
   return getTenantBySlug(slug);
