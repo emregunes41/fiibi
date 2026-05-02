@@ -21,10 +21,12 @@ export async function POST(req) {
       return NextResponse.json({ error: "Tenant bulunamadı" }, { status: 400 });
     }
 
-    // Trial planında online ödeme kapalı
+    // Trial planında online ödeme kapalı (GEÇİCİ OLARAK TEST İÇİN AÇILDI)
+    /*
     if (!hasFeature(tenant.plan, "onlinePayment")) {
       return NextResponse.json({ error: "Online ödeme özelliği Pro plana özeldir. Lütfen planınızı yükseltin." }, { status: 403 });
     }
+    */
     
     const config = await getCurrentSiteConfig();
     
