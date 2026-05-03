@@ -46,6 +46,7 @@ export default function ReservationsPage() {
   const [quickEventLoading, setQuickEventLoading] = useState(false);
   const [reminderLoading, setReminderLoading] = useState("");
   const [reminderResult, setReminderResult] = useState(null);
+  const [isIcalModalOpen, setIsIcalModalOpen] = useState(false);
   const [dayPopup, setDayPopup] = useState(null);
   const [blockedDays, setBlockedDays] = useState([]);
   const [dayActionMenu, setDayActionMenu] = useState(null); // { dateStr, x, y }
@@ -166,7 +167,7 @@ export default function ReservationsPage() {
               if (!adminSession?.tenant?.id) return alert("Hata: Tenant bulunamadı.");
               const url = `${window.location.origin}/api/calendar?t=${adminSession.tenant.id}`;
               navigator.clipboard.writeText(url);
-              alert("✅ Google Takvim Senkronizasyon (iCal) linki kopyalandı!\n\nBu linki Google Takvim'de 'URL ile ekle' (From URL) kısmına yapıştırarak tüm rezervasyonlarınızı telefonunuza aktarabilirsiniz.");
+              setIsIcalModalOpen(true);
             }}
             style={{ 
               background: "rgba(255,255,255,0.06)", color: "#fff", padding: "0.5rem 1rem", 
@@ -1198,6 +1199,49 @@ export default function ReservationsPage() {
           </div>
         </div>
       )}
+      {/* ── iCal Instructions Modal ── */}
+      {isIcalModalOpen && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
+          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", width: "100%", maxWidth: "500px", padding: "1.5rem", position: "relative" }}>
+            <button onClick={() => setIsIcalModalOpen(false)} style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={20} /></button>
+            <h2 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "0 0 1rem 0", color: "#fff", display: "flex", alignItems: "center", gap: "8px" }}>
+              <Calendar size={20} style={{ color: "#22c55e" }} /> Takvim Bağlantısı Kopyalandı!
+            </h2>
+            <div style={{ background: "rgba(34,197,94,0.1)", borderLeft: "4px solid #22c55e", padding: "12px", borderRadius: "4px", marginBottom: "1.5rem", fontSize: "0.85rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>
+              Size özel gizli iCal bağlantısı panoya <strong>kopyalandı</strong>.<br/>
+              Aşağıdaki adımları takip ederek telefonunuza ekleyebilirsiniz:
+            </div>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div style={{ background: "rgba(255,255,255,0.03)", padding: "12px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                <h3 style={{ fontSize: "0.9rem", color: "#fff", margin: "0 0 8px 0", display: "flex", alignItems: "center", gap: "6px" }}>🍏 iPhone (Apple Takvim) İçin</h3>
+                <ol style={{ margin: 0, paddingLeft: "20px", fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.6 }}>
+                  <li>Ayarlar (Settings) &gt; Takvim &gt; Hesaplar'a gidin.</li>
+                  <li><strong>Hesap Ekle</strong> &gt; <strong>Diğer</strong> &gt; <strong>Abone Olunan Takvim Ekle</strong> seçeneğine dokunun.</li>
+                  <li>Kopyaladığınız linki yapıştırın ve Sonraki'ye basarak kaydedin.</li>
+                </ol>
+              </div>
+
+              <div style={{ background: "rgba(255,255,255,0.03)", padding: "12px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                <h3 style={{ fontSize: "0.9rem", color: "#fff", margin: "0 0 8px 0", display: "flex", alignItems: "center", gap: "6px" }}>🤖 Google Takvim (Android/PC) İçin</h3>
+                <ol style={{ margin: 0, paddingLeft: "20px", fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.6 }}>
+                  <li>Bilgisayardan <strong>calendar.google.com</strong> adresine girin.</li>
+                  <li>Sol menüde "Diğer takvimler" yanındaki <strong>+ (Artı)</strong> ikonuna tıklayın.</li>
+                  <li><strong>URL ile ekle</strong> seçeneğine tıklayın.</li>
+                  <li>Kopyaladığınız linki yapıştırın ve "Takvim Ekle" butonuna basın. (Kısa süre içinde telefonunuza da senkronize olacaktır).</li>
+                </ol>
+              </div>
+            </div>
+
+            <div style={{ marginTop: "1.5rem", textAlign: "right" }}>
+              <button onClick={() => setIsIcalModalOpen(false)} style={{ background: "#22c55e", color: "#000", border: "none", padding: "8px 16px", borderRadius: "4px", fontWeight: 700, cursor: "pointer", fontSize: "0.85rem" }}>
+                Tamam, Anladım
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
