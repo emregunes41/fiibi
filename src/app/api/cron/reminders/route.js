@@ -35,7 +35,17 @@ export async function GET(req) {
       where: {
         deliveryDate: { lte: twoDaysLater, gte: now },
         status: { not: "DELETED" },
-        workflowStatus: { notIn: ["COMPLETED", "DELIVERED"] }
+        workflowStatus: { notIn: ["COMPLETED", "DELIVERED", "SELECTION_PENDING"] },
+        OR: [
+          { deliveryLink: null },
+          { deliveryLink: "" },
+          {
+            AND: [
+              { selectedPhotos: { not: null } },
+              { selectedPhotos: { not: "" } }
+            ]
+          }
+        ]
       },
       include: { packages: true }
     });
@@ -74,7 +84,17 @@ export async function GET(req) {
       where: {
         deliveryDate: { lt: now },
         status: { not: "DELETED" },
-        workflowStatus: { notIn: ["COMPLETED", "DELIVERED"] }
+        workflowStatus: { notIn: ["COMPLETED", "DELIVERED", "SELECTION_PENDING"] },
+        OR: [
+          { deliveryLink: null },
+          { deliveryLink: "" },
+          {
+            AND: [
+              { selectedPhotos: { not: null } },
+              { selectedPhotos: { not: "" } }
+            ]
+          }
+        ]
       },
       include: { packages: true }
     });

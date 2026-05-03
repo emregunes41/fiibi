@@ -62,7 +62,17 @@ export default async function AdminDashboard() {
       ...tenantFilter,
       status: "CONFIRMED", 
       workflowStatus: { notIn: ["COMPLETED", "DELIVERED", "SELECTION_PENDING"] },
-      deliveryDate: { not: null }
+      deliveryDate: { not: null },
+      OR: [
+        { deliveryLink: null },
+        { deliveryLink: "" },
+        {
+          AND: [
+            { selectedPhotos: { not: null } },
+            { selectedPhotos: { not: "" } }
+          ]
+        }
+      ]
     },
     orderBy: { deliveryDate: "asc" },
     take: 5,
