@@ -5,9 +5,12 @@ import { usePathname } from "next/navigation";
 import { User, UserCircle, Menu, X as CloseIcon, ShoppingBag } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useCart } from "./CartContext";
+import { useLanguage } from "@/components/LanguageContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Navbar({ businessName = "Studio", logoUrl = null }) {
   const pathname = usePathname();
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -120,8 +123,8 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               gap: 6,
             }}
           >
-            {isPhotographer && <Link href="/#portfolio" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:!text-white">Portfolyo</Link>}
-            <Link href="/#contact" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:!text-white">İletişim</Link>
+            {isPhotographer && <Link href="/#portfolio" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:!text-white">{t.nav.gallery}</Link>}
+            <Link href="/#contact" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:!text-white">{t.nav.contact}</Link>
             <Link
               href="/booking"
               style={{
@@ -140,7 +143,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               }}
               className="hover:!bg-white hover:!text-black"
             >
-              Rezervasyon
+              {t.nav.bookNow}
             </Link>
           </div>
 
@@ -149,6 +152,8 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
 
             {/* Desktop Right Items */}
             <div className="hidden md:flex" style={{ alignItems: "center", gap: 16 }}>
+              <LanguageSwitcher />
+              
               {/* Cart - only for photographers */}
               {isPhotographer && (
               <button
@@ -222,7 +227,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                     }}
                     className="hover:!bg-white/10"
                   >
-                    <User size={14} /> Müşteri Girişi
+                    <User size={14} /> {t.nav.clientLogin}
                   </Link>
                 ) : null
               )}
@@ -230,6 +235,8 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
 
             {/* Mobile Right Items */}
             <div className="flex md:hidden" style={{ alignItems: "center", gap: 10 }}>
+              <LanguageSwitcher />
+              
               {/* Cart - only for photographers */}
               {isPhotographer && (
               <button
@@ -292,17 +299,17 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             </button>
 
             <Link href="/booking" onClick={() => setIsMenuOpen(false)} style={{ fontFamily: "serif", fontSize: 30, color: "#fff", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 16 }}>
-              Online Rezervasyon
+              {t.nav.bookNow}
             </Link>
 
             {isPhotographer && (
             <Link href="/#portfolio" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", textDecoration: "none" }}>
-              Portfolyo
+              {t.nav.gallery}
             </Link>
             )}
 
             <Link href="/#contact" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", textDecoration: "none" }}>
-              İletişim
+              {t.nav.contact}
             </Link>
 
             {isPhotographer && (
@@ -321,7 +328,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               </Link>
             ) : isPhotographer ? (
               <Link href="/login" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "#fff", textDecoration: "none" }}>
-                Müşteri Girişi
+                {t.nav.clientLogin}
               </Link>
             ) : null}
           </div>

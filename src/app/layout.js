@@ -67,6 +67,8 @@ export async function generateMetadata() {
   return { title: seoTitle, description: seoDescription };
 }
 
+import { LanguageProvider } from "@/components/LanguageContext";
+
 export default async function RootLayout({ children }) {
   const headersList = await headers();
   const pathname = headersList.get("x-next-pathname") || headersList.get("x-invoke-path") || "";
@@ -151,20 +153,22 @@ export default async function RootLayout({ children }) {
         className="min-h-full flex flex-col font-sans"
         style={{ fontFamily: fontCSS, color: palette.text }}
       >
-        <HeroBackground 
-          bgType={siteConfig?.heroBgType || (siteConfig?.heroBgUrl ? "video" : "color")} 
-          bgUrl={siteConfig?.heroBgUrl || ""} 
-          bgColor={siteConfig?.heroBgColor || palette.bg}
-          businessType={siteConfig?._tenant?.businessType || "other"}
-          forceDarkMode={forceDark}
-        />
+        <LanguageProvider>
+          <HeroBackground 
+            bgType={siteConfig?.heroBgType || (siteConfig?.heroBgUrl ? "video" : "color")} 
+            bgUrl={siteConfig?.heroBgUrl || ""} 
+            bgColor={siteConfig?.heroBgColor || palette.bg}
+            businessType={siteConfig?._tenant?.businessType || "other"}
+            forceDarkMode={forceDark}
+          />
 
-        <CartWrapper>
-          <PageTracker />
-          <Navbar businessName={siteConfig?.businessName || "Studio"} logoUrl={siteConfig?.logoUrl} accentColor={accentColor} />
-          {children}
-          <div className="md:hidden h-32 shrink-0 w-full" />
-        </CartWrapper>
+          <CartWrapper>
+            <PageTracker />
+            <Navbar businessName={siteConfig?.businessName || "Studio"} logoUrl={siteConfig?.logoUrl} accentColor={accentColor} />
+            {children}
+            <div className="md:hidden h-32 shrink-0 w-full" />
+          </CartWrapper>
+        </LanguageProvider>
       </body>
     </html>
   );
