@@ -1850,6 +1850,18 @@ export async function checkDomainAvailability(query) {
   }
 
   try {
+    // Kur bilgisini dinamik olarak çek
+    let exchangeRate = 35; // Fallback
+    try {
+      const kurRes = await fetch("https://open.er-api.com/v6/latest/USD");
+      const kurData = await kurRes.json();
+      if (kurData && kurData.rates && kurData.rates.TRY) {
+        exchangeRate = kurData.rates.TRY;
+      }
+    } catch (e) {
+      console.error("Kur çekme hatası:", e);
+    }
+
     const results = await Promise.all(
       domainsToCheck.map(async (domain) => {
         try {
@@ -1873,8 +1885,7 @@ export async function checkDomainAvailability(query) {
           const priceData = await priceRes.json();
           const usdPrice = parseFloat(priceData.purchasePrice || 20);
           
-          const exchangeRate = 35;
-          const markupPercent = 1.20; 
+          const markupPercent = 1.50; // %50 Kar Marjı
           const finalPriceTRY = Math.ceil(usdPrice * exchangeRate * markupPercent);
           
           return {
