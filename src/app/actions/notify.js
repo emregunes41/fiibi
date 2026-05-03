@@ -69,9 +69,14 @@ export async function sendEmailWithResend(settings, to, subject, html) {
     const { Resend } = await import("resend");
     const resend = new Resend(apiKey);
     const from = getEmailFrom(settings);
+    
+    // Müşteri maile "Yanıtla" derse, tenant'ın gerçek iletişim e-postasına düşsün
+    const replyTo = settings.email || settings._tenant?.ownerEmail || undefined;
+
     const { data, error } = await resend.emails.send({
       from,
       to: [to],
+      reply_to: replyTo,
       subject,
       html,
     });
