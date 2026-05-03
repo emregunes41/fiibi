@@ -42,7 +42,38 @@ function generateICS(reservations, businessName) {
     // Construct event details
     const summary = `${res.brideName} & ${res.groomName || "Rezervasyon"}`;
     const packageNames = res.packages && res.packages.length > 0 ? res.packages.map(p => p.name).join(", ") : "Bilinmiyor";
-    const description = `Paket: ${packageNames}\\nTelefon: ${res.bridePhone || "-"}\\nDurum: ${res.status}`;
+    
+    // Finansal hesaplamalar
+    const totalAmountStr = res.totalAmount || "0";
+    const paidAmountStr = res.paidAmount || "0";
+    const tNum = parseFloat(totalAmountStr.replace(/\\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "")) || 0;
+    const pNum = parseFloat(paidAmountStr.replace(/\\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "")) || 0;
+    const remaining = Math.max(0, tNum - pNum);
+
+    // Açıklama satırları
+    let descLines = [
+      `Paket: ${packageNames}`,
+      `Mekan: ${res.venueName || "Belirtilmemiş"}`,
+      `-- İLETİŞİM --`,
+      `Tel 1: ${res.bridePhone || "-"}`,
+    ];
+    if (res.groomPhone) descLines.push(`Tel 2: ${res.groomPhone}`);
+    if (res.brideEmail) descLines.push(`E-posta: ${res.brideEmail}`);
+
+    descLines.push(
+      `-- FİNANS --`,
+      `Toplam: ${totalAmountStr} TL`,
+      `Ödenen: ${paidAmountStr} TL`,
+      `Kalan: ${remaining} TL`,
+      `Durum: ${res.status}`
+    );
+
+    if (res.notes) {
+      descLines.push(`-- NOTLAR --`);
+      descLines.push(res.notes.replace(/\\r?\\n/g, ' '));
+    }
+
+    const description = descLines.join('\\n');
     
     ics.push(
       "BEGIN:VEVENT",
