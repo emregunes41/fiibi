@@ -1824,64 +1824,72 @@ export async function updateTenantDomain(domain) {
 
 
 // ─── DOMAIN PURCHASING & AVAILABILITY ──────────────────────────────────
-export async function checkDomainAvailability(domain) {
+export async function checkDomainAvailability(query) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
 
-  if (!domain || domain.length < 4 || !domain.includes(".")) {
-    return { error: "Geçersiz domain formatı." };
+  if (!query || query.length < 3) {
+    return { error: "Geçersiz arama terimi." };
   }
 
   // Remove protocol and www if any
-  const cleanDomain = domain.replace(/^https?:\/\//, "").replace(/^www\./, "").split('/')[0].toLowerCase();
+  const cleanQuery = query.replace(/^https?:\/\//, "").replace(/^www\./, "").split('/')[0].toLowerCase();
+  
+  const VERCEL_TOKEN = process.env.VERCEL_TOKEN;
+  if (!VERCEL_TOKEN) {
+    return { error: "Vercel API Token bulunamadı. Lütfen çevre değişkenlerini kontrol edin." };
+  }
+
+  let domainsToCheck = [];
+  if (cleanQuery.includes(".")) {
+    domainsToCheck.push(cleanQuery);
+  } else {
+    // Arama terimine popüler uzantıları ekle
+    const tlds = [".com", ".net", ".org", ".co", ".ai", ".io"];
+    domainsToCheck = tlds.map(tld => `${cleanQuery}${tld}`);
+  }
 
   try {
-    const VERCEL_TOKEN = process.env.VERCEL_TOKEN;
-    if (!VERCEL_TOKEN) {
-      return { error: "Vercel API Token bulunamadı. Lütfen çevre değişkenlerini kontrol edin." };
-    }
+    const results = await Promise.all(
+      domainsToCheck.map(async (domain) => {
+        try {
+          // 1. Check availability
+          const availRes = await fetch(`https://api.vercel.com/v1/registrar/domains/${domain}/availability`, {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${VERCEL_TOKEN}` }
+          });
+          
+          if (!availRes.ok) return { domain, available: false, error: "API Hatası" };
+          const availData = await availRes.json();
+          if (!availData.available) return { domain, available: false };
 
-    // 1. Check availability
-    const availRes = await fetch(`https://api.vercel.com/v1/registrar/domains/${cleanDomain}/availability`, {
-      method: "GET",
-      headers: { "Authorization": `Bearer ${VERCEL_TOKEN}` }
-    });
-    
-    if (!availRes.ok) {
-      if (availRes.status === 401) return { error: "Vercel API yetkilendirme hatası." };
-      return { error: "Domain müsaitlik sorgusu başarısız." };
-    }
-    const availData = await availRes.json();
-    
-    if (!availData.available) {
-      return { available: false, domain: cleanDomain };
-    }
+          // 2. Fetch real price from Vercel
+          const priceRes = await fetch(`https://api.vercel.com/v1/registrar/domains/${domain}/price`, {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${VERCEL_TOKEN}` }
+          });
 
-    // 2. Fetch real price from Vercel
-    const priceRes = await fetch(`https://api.vercel.com/v1/registrar/domains/${cleanDomain}/price`, {
-      method: "GET",
-      headers: { "Authorization": `Bearer ${VERCEL_TOKEN}` }
-    });
+          if (!priceRes.ok) return { domain, available: false, error: "Fiyat alınamadı" };
+          const priceData = await priceRes.json();
+          const usdPrice = parseFloat(priceData.purchasePrice || 20);
+          
+          const exchangeRate = 35;
+          const markupPercent = 1.20; 
+          const finalPriceTRY = Math.ceil(usdPrice * exchangeRate * markupPercent);
+          
+          return {
+            domain,
+            available: true,
+            price: finalPriceTRY,
+            usdPrice
+          };
+        } catch (e) {
+          return { domain, available: false, error: e.message };
+        }
+      })
+    );
 
-    if (!priceRes.ok) {
-      return { error: "Domain fiyat bilgisi alınamadı." };
-    }
-    const priceData = await priceRes.json();
-    const usdPrice = parseFloat(priceData.purchasePrice || 20); // Fallback $20
-    
-    // Basit bir kur hesaplaması (Güncel Kur + Vercel Komisyonu + Hizmet Bedeli)
-    // Örnek: Kur 35 TL, + %20 Hizmet/Komisyon payı eklenebilir.
-    const exchangeRate = 35;
-    const markupPercent = 1.20; // %20 Kar Marjı
-    
-    const finalPriceTRY = Math.ceil(usdPrice * exchangeRate * markupPercent);
-    
-    return { 
-      available: true, 
-      price: finalPriceTRY, 
-      usdPrice: usdPrice,
-      domain: cleanDomain
-    };
+    return { results };
   } catch (err) {
     return { error: "Domain sorgulama hatası: " + err.message };
   }

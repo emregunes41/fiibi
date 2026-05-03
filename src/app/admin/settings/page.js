@@ -2121,53 +2121,59 @@ export default function SettingsPage() {
             </div>
             
             {searchResult && (
-              <div style={{ marginTop: 16, padding: "16px", background: searchResult.error || !searchResult.available ? "rgba(239,68,68,0.1)" : "rgba(34,197,94,0.1)", border: searchResult.error || !searchResult.available ? "1px solid rgba(239,68,68,0.2)" : "1px solid rgba(34,197,94,0.2)" }}>
+              <div style={{ marginTop: 16 }}>
                 {searchResult.error ? (
-                  <p style={{ margin: 0, color: "#ef4444", fontSize: 13 }}>{searchResult.error}</p>
-                ) : searchResult.available ? (
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div>
-                      <p style={{ margin: "0 0 4px 0", color: "#22c55e", fontWeight: "bold", fontSize: 14 }}>✅ {searchResult.domain} Müsait!</p>
-                      <p style={{ margin: 0, color: "rgba(255,255,255,0.7)", fontSize: 12 }}>Yıllık Yenileme Ücreti Dahil Fiyat</p>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                      <span style={{ fontSize: 18, fontWeight: "bold", color: "var(--text)" }}>{searchResult.price} ₺</span>
-                      <button 
-                        type="button"
-                        disabled={domainSaving}
-                        onClick={async () => {
-                          setDomainSaving(true);
-                          setDomainMessage("");
-                          try {
-                            const res = await fetch("/api/paytr/domain-checkout", {
-                              method: "POST",
-                              headers: { "Content-Type": "application/json" },
-                              body: JSON.stringify({ domain: searchResult.domain, amount: searchResult.price })
-                            });
-                            const data = await res.json();
-                            if (data.iframeToken) {
-                              // iFrame göstermek yerine, geçici olarak PayTR test sayfasına yönlendirebilir 
-                              // veya burada bir modal açabiliriz. En temizi yeni bir sekmede açmak veya modal eklemek.
-                              // Şimdilik modal olarak basıyoruz:
-                              const iframeUrl = `https://www.paytr.com/odeme/guvenli/${data.iframeToken}`;
-                              window.location.href = iframeUrl;
-                            } else {
-                              setDomainMessage("❌ Ödeme başlatılamadı: " + (data.error || "Bilinmeyen hata"));
-                            }
-                          } catch (err) {
-                            setDomainMessage("❌ Hata: " + err.message);
-                          }
-                          setDomainSaving(false);
-                        }}
-                        style={{ background: "#22c55e", color: "#fff", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer" }}
-                      >
-                        {domainSaving ? "Yükleniyor..." : "Satın Al"}
-                      </button>
-                    </div>
+                  <div style={{ padding: "16px", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)" }}>
+                    <p style={{ margin: 0, color: "#ef4444", fontSize: 13 }}>{searchResult.error}</p>
                   </div>
-                ) : (
-                  <p style={{ margin: 0, color: "#ef4444", fontSize: 13 }}>❌ Maalesef bu domain daha önce alınmış.</p>
-                )}
+                ) : searchResult.results ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    {searchResult.results.map((item, index) => (
+                      <div key={index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", background: item.error || !item.available ? "rgba(239,68,68,0.05)" : "rgba(34,197,94,0.05)", border: item.error || !item.available ? "1px solid rgba(239,68,68,0.1)" : "1px solid rgba(34,197,94,0.2)" }}>
+                        <div>
+                          <p style={{ margin: "0 0 4px 0", color: item.available ? "#22c55e" : "#ef4444", fontWeight: "bold", fontSize: 14 }}>
+                            {item.available ? `✅ ${item.domain} Müsait!` : `❌ ${item.domain} Alınmış`}
+                          </p>
+                          {item.available && <p style={{ margin: 0, color: "rgba(255,255,255,0.7)", fontSize: 12 }}>Yıllık Yenileme Ücreti Dahil Fiyat</p>}
+                          {item.error && <p style={{ margin: 0, color: "#ef4444", fontSize: 12 }}>{item.error}</p>}
+                        </div>
+                        {item.available && (
+                          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                            <span style={{ fontSize: 18, fontWeight: "bold", color: "var(--text)" }}>{item.price} ₺</span>
+                            <button 
+                              type="button"
+                              disabled={domainSaving}
+                              onClick={async () => {
+                                setDomainSaving(true);
+                                setDomainMessage("");
+                                try {
+                                  const res = await fetch("/api/paytr/domain-checkout", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ domain: item.domain, amount: item.price })
+                                  });
+                                  const data = await res.json();
+                                  if (data.iframeToken) {
+                                    const iframeUrl = `https://www.paytr.com/odeme/guvenli/${data.iframeToken}`;
+                                    window.location.href = iframeUrl;
+                                  } else {
+                                    setDomainMessage(`❌ ${item.domain} ödemesi başlatılamadı: ` + (data.error || "Bilinmeyen hata"));
+                                  }
+                                } catch (err) {
+                                  setDomainMessage("❌ Hata: " + err.message);
+                                }
+                                setDomainSaving(false);
+                              }}
+                              style={{ background: "#22c55e", color: "#fff", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer" }}
+                            >
+                              {domainSaving ? "Yükleniyor..." : "Satın Al"}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             )}
           </div>
