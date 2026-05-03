@@ -37,12 +37,18 @@ html[data-light] {
 
 /* ─── LIGHT MODE: Force dark text/borders over white backgrounds ─── */
 html[data-light] body,
-html[data-light] body * {
+html[data-light] body *:not([style*="color: var(--bg)"]):not([style*='color: "var(--bg)"']) {
   color: var(--text, #1a1a1a) !important;
 }
 
+/* Explicitly allow inverse text colors to be light in light mode */
+html[data-light] [style*="color: var(--bg)"],
+html[data-light] [style*='color: "var(--bg)"'] {
+  color: var(--bg) !important;
+}
+
 /* Override inline rgba(255,255,255,...) styles — navbar, cards, sections */
-html[data-light] [style*="rgba(255"] {
+html[data-light] [style*="rgba(255"]:not([style*="color: var(--bg)"]) {
   color: var(--text, #1a1a1a) !important;
 }
 

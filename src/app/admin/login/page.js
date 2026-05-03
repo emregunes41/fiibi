@@ -69,7 +69,7 @@ export default function AdminLogin() {
                 width: '100%', padding: '0.875rem 1rem 0.875rem 2.75rem', 
                 borderRadius: 0, border: '1px solid var(--border)',
                 outline: 'none', fontSize: '0.95rem',
-                color: '#fff', background: 'rgba(255,255,255,0.05)'
+                color: 'var(--text)', background: 'rgba(255,255,255,0.05)'
               }}
             />
           </div>
@@ -86,7 +86,7 @@ export default function AdminLogin() {
                 width: '100%', padding: '0.875rem 1rem 0.875rem 2.75rem', 
                 borderRadius: 0, border: '1px solid var(--border)',
                 outline: 'none', fontSize: '0.95rem',
-                color: '#fff', background: 'rgba(255,255,255,0.05)'
+                color: 'var(--text)', background: 'rgba(255,255,255,0.05)'
               }}
             />
           </div>
@@ -95,7 +95,7 @@ export default function AdminLogin() {
             type="submit" 
             disabled={isLoading}
             style={{ 
-              background: 'var(--primary)', color: '#000', padding: '1rem', 
+              background: 'var(--text)', color: 'var(--bg)', padding: '1rem', 
               borderRadius: 0, border: 'none', fontWeight: 600, fontSize: '1rem',
               cursor: isLoading ? 'not-allowed' : 'pointer', opacity: isLoading ? 0.7 : 1,
               marginTop: '0.5rem'
