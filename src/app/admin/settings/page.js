@@ -112,6 +112,9 @@ export default function SettingsPage() {
   const [searchDomainName, setSearchDomainName] = useState("");
   const [searchResult, setSearchResult] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [selectedYears, setSelectedYears] = useState(1);
+  const [renewYears, setRenewYears] = useState(1);
+  const [renewLoading, setRenewLoading] = useState(false);
 
   useEffect(() => {
     async function loadConfig() {
@@ -2139,7 +2142,16 @@ export default function SettingsPage() {
                         </div>
                         {item.available && (
                           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                            <span style={{ fontSize: 18, fontWeight: "bold", color: "var(--text)" }}>{item.price} ₺</span>
+                            <select 
+                              value={selectedYears} 
+                              onChange={(e) => setSelectedYears(Number(e.target.value))}
+                              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: "8px", borderRadius: "4px" }}
+                            >
+                              <option value={1} style={{color: "#000"}}>1 Yıl</option>
+                              <option value={2} style={{color: "#000"}}>2 Yıl</option>
+                              <option value={3} style={{color: "#000"}}>3 Yıl</option>
+                            </select>
+                            <span style={{ fontSize: 18, fontWeight: "bold", color: "var(--text)" }}>{item.price * selectedYears} ₺</span>
                             <button 
                               type="button"
                               disabled={domainSaving}
@@ -2150,7 +2162,7 @@ export default function SettingsPage() {
                                   const res = await fetch("/api/paytr/domain-checkout", {
                                     method: "POST",
                                     headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ domain: item.domain, amount: item.price })
+                                    body: JSON.stringify({ domain: item.domain, amount: item.price * selectedYears, years: selectedYears })
                                   });
                                   const data = await res.json();
                                   if (data.iframeToken) {
@@ -2164,7 +2176,7 @@ export default function SettingsPage() {
                                 }
                                 setDomainSaving(false);
                               }}
-                              style={{ background: "#22c55e", color: "#fff", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer" }}
+                              style={{ background: "#22c55e", color: "#fff", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer", borderRadius: "4px" }}
                             >
                               {domainSaving ? "Yükleniyor..." : "Satın Al"}
                             </button>
@@ -2192,9 +2204,59 @@ export default function SettingsPage() {
               disabled={domainForm.purchasedDomain}
             />
             {domainForm.purchasedDomain && (
-              <p style={{ fontSize: 12, color: "#22c55e", marginTop: 8 }}>
-                Bu domain platformumuz üzerinden satın alınmıştır. DNS ayarları otomatik yönetilir. Bitiş: {domainForm.domainExpiresAt ? new Date(domainForm.domainExpiresAt).toLocaleDateString("tr-TR") : "-"}
-              </p>
+              <div style={{ marginTop: 16, padding: "16px", background: "rgba(34,197,94,0.05)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: "8px" }}>
+                <p style={{ fontSize: 13, color: "#22c55e", margin: "0 0 16px 0", fontWeight: "bold" }}>
+                  ✅ Bu domain platformumuz üzerinden satın alınmıştır. DNS ayarları otomatik yönetilir. Bitiş: {domainForm.domainExpiresAt ? new Date(domainForm.domainExpiresAt).toLocaleDateString("tr-TR") : "-"}
+                </p>
+                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <select 
+                    value={renewYears} 
+                    onChange={(e) => setRenewYears(Number(e.target.value))}
+                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: "8px", borderRadius: "4px" }}
+                  >
+                    <option value={1} style={{color: "#000"}}>1 Yıl Uzat</option>
+                    <option value={2} style={{color: "#000"}}>2 Yıl Uzat</option>
+                    <option value={3} style={{color: "#000"}}>3 Yıl Uzat</option>
+                  </select>
+                  <button
+                    type="button"
+                    disabled={renewLoading}
+                    onClick={async () => {
+                      setRenewLoading(true);
+                      try {
+                        const { checkDomainAvailability } = await import("@/app/admin/core-actions");
+                        const avail = await checkDomainAvailability(domainForm.customDomain);
+                        if(avail && avail.results && avail.results.length > 0) {
+                           const item = avail.results[0];
+                           if(item.price) {
+                             const res = await fetch("/api/paytr/domain-checkout", {
+                               method: "POST",
+                               headers: { "Content-Type": "application/json" },
+                               body: JSON.stringify({ domain: domainForm.customDomain, amount: item.price * renewYears, years: renewYears, isRenewal: true })
+                             });
+                             const data = await res.json();
+                             if(data.iframeToken) {
+                               window.location.href = `https://www.paytr.com/odeme/guvenli/${data.iframeToken}`;
+                             } else {
+                               alert("Ödeme başlatılamadı: " + data.error);
+                             }
+                           } else {
+                             alert("Fiyat alınamadı.");
+                           }
+                        } else {
+                          alert("Domain fiyatı hesaplanamadı.");
+                        }
+                      } catch (err) {
+                        alert("Hata: " + err.message);
+                      }
+                      setRenewLoading(false);
+                    }}
+                    style={{ background: "#3b82f6", color: "#fff", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer", borderRadius: "4px" }}
+                  >
+                    {renewLoading ? "Bekleyiniz..." : "Süreyi Uzat"}
+                  </button>
+                </div>
+              </div>
             )}
             {!domainForm.purchasedDomain && (
               <div style={{ padding: "16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", marginTop: 16 }}>

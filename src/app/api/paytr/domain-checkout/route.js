@@ -5,7 +5,7 @@ import { requireAdmin } from "@/lib/session";
 
 export async function POST(req) {
   try {
-    const { domain, amount } = await req.json();
+    const { domain, amount, years = 1, isRenewal = false } = await req.json();
 
     const auth = await requireAdmin();
     if (auth?.error) {
@@ -32,10 +32,13 @@ export async function POST(req) {
 
     const paymentAmountStr = String(Math.round(Number(amount) * 100)); // Kuruş cinsinden
     const safeDomain = domain.replace(/[^a-zA-Z0-9.-]/g, ""); // PayTR için güvenli karakterler
-    const merchantOidStr = `DMN_${tenantId}_${Date.now()}_${safeDomain}`.substring(0, 64);
+    // OID formatı: DMN_{tenantId}_{Date}_{domain}_{years}_{isRenewal?1:0}
+    const isRenewFlag = isRenewal ? "1" : "0";
+    const merchantOidStr = `DMN_${tenantId}_${Date.now()}_${safeDomain}_${years}_${isRenewFlag}`.substring(0, 64);
 
+    const actionText = isRenewal ? "Domain Yenileme" : "Domain Satın Alma";
     const user_basket = Buffer.from(JSON.stringify([
-      ["Domain Satın Alma: " + domain, amount, 1]
+      [`${actionText}: ${domain} (${years} Yıl)`, amount, 1]
     ])).toString('base64');
 
     const params = {
