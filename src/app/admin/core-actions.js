@@ -1042,16 +1042,14 @@ export async function getSiteConfig() {
         });
       }
     } else {
-      // Fallback: eski global settings (geçiş dönemi)
-      config = await prisma.globalSettings.findUnique({
-        where: { id: "global-settings" }
-      });
-    }
-
-    if (!config) {
-      config = await prisma.globalSettings.create({
-        data: { id: "global-settings" }
-      });
+      // Eğer tenant yoksa (platform ana sayfasıysa), 
+      // veritabanındaki bir tenant'ın ayarlarını çekme! Sabit Fiibi ayarlarını dön.
+      return {
+        businessName: "Fiibi",
+        seoTitle: "Fiibi | Dijital Randevu ve Portfolyo Sistemi",
+        seoDescription: "2 dakikada kendi CRM'inizi kurun. Rezervasyon, ödeme, müşteri yönetimi tek platformda.",
+        logoUrl: null,
+      };
     }
     
     // Tenant bilgisini config'e ekle
