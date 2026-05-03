@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { verifyPaytrCallback } from "@/lib/paytr";
-import prisma from "@/lib/prisma";
-import { updateTenantDomain } from "@/app/admin/core-actions";
+import { prisma } from "@/lib/prisma";
+
 
 export async function POST(req) {
   try {

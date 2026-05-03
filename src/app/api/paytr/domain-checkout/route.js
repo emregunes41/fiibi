@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { generatePaytrToken } from "@/lib/paytr";
 import { headers } from "next/headers";
-import { requireAdmin } from "@/app/admin/core-actions";
+import { requireAdmin } from "@/lib/session";
 
 export async function POST(req) {
   try {
