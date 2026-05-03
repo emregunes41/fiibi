@@ -185,7 +185,8 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               )}
 
               {/* Login / Panel */}
-              {!loading && user && (
+              {!loading && (
+                user ? (
                   <Link
                     href="/profile"
                     style={{
@@ -204,6 +205,26 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                   >
                     <UserCircle size={14} /> Panel
                   </Link>
+                ) : isPhotographer ? (
+                  <Link
+                    href="/login"
+                    style={{
+                      display: "flex", alignItems: "center", gap: 8,
+                      fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.2em",
+                      color: "#fff",
+                      background: "transparent",
+                      padding: "10px 20px",
+                      borderRadius: 0,
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      textDecoration: "none",
+                      whiteSpace: "nowrap",
+                      transition: "all 0.3s",
+                    }}
+                    className="hover:!bg-white/10"
+                  >
+                    <User size={14} /> Müşteri Girişi
+                  </Link>
+                ) : null
               )}
             </div>
 
@@ -294,11 +315,15 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             )}
 
 
-            {user && (
+            {user ? (
               <Link href="/profile" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "#fff", textDecoration: "none" }}>
                 Hesabım
               </Link>
-            )}
+            ) : isPhotographer ? (
+              <Link href="/login" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "#fff", textDecoration: "none" }}>
+                Müşteri Girişi
+              </Link>
+            ) : null}
           </div>
         )}
       </header>
