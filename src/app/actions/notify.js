@@ -93,9 +93,23 @@ export async function sendEmailWithResend(settings, to, subject, html) {
  */
 function emailFooter(settings, siteUrl) {
   const businessName = settings.businessName || settings._tenant?.businessName || "Studio";
+  const phone = settings.phone || "";
+  const email = settings.email || settings._tenant?.ownerEmail || "";
+  const address = settings.address || "";
+  
   return `
     <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
-      <p style="color: #999; font-size: 12px; margin: 0;">${businessName}</p>
+      <p style="color: #666; font-size: 13px; font-weight: bold; margin-bottom: 8px;">${businessName}</p>
+      ${phone ? `<p style="color: #888; font-size: 12px; margin: 4px 0;">📞 ${phone}</p>` : ""}
+      ${email ? `<p style="color: #888; font-size: 12px; margin: 4px 0;">✉️ ${email}</p>` : ""}
+      ${address ? `<p style="color: #888; font-size: 12px; margin: 4px 0;">📍 ${address}</p>` : ""}
+      
+      <div style="margin-top: 24px; padding: 12px; background: #f9f9f9; border-radius: 6px;">
+        <p style="color: #aaa; font-size: 11px; margin: 0;">
+          Lütfen bu e-postayı doğrudan yanıtlamayınız (No-Reply).<br>
+          Soru ve talepleriniz için yukarıdaki iletişim bilgilerinden bize ulaşabilirsiniz.
+        </p>
+      </div>
     </div>
   `;
 }
@@ -221,17 +235,24 @@ export async function notifyPaymentReceived(email, phone, name, amount, remainin
   const businessName = settings.businessName || "Studio";
 
   if (settings.emailEnabled && email) {
-    results.email = await sendEmailWithResend(settings, email, `Ödemeniz Alındı ✓ - ${businessName}`, `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #eee; border-radius: 10px;">
-        <h2 style="color: #333;">Merhaba ${name},</h2>
-        <p style="color: #555; font-size: 16px;">Ödemeniz başarıyla alındı.</p>
-        <div style="background: #f9f9fb; border-left: 4px solid #4ade80; padding: 20px; margin: 20px 0;">
-          <p style="margin: 0 0 8px;"><strong>Ödenen:</strong> ${amount} ₺</p>
-          <p style="margin: 0;"><strong>Kalan:</strong> ${remaining} ₺</p>
+    const html = `
+      <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        ${emailHeader(settings)}
+        <div style="padding: 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
+          <h2 style="color: #333; margin-top: 0;">Merhaba ${name},</h2>
+          <p style="color: #555; font-size: 16px;">Ödemeniz başarıyla alındı.</p>
+          <div style="background: #f9f9fb; border-left: 4px solid #4ade80; padding: 20px; margin: 20px 0;">
+            <p style="margin: 0 0 8px;"><strong>Ödenen:</strong> ${amount} ₺</p>
+            <p style="margin: 0;"><strong>Kalan:</strong> ${remaining} ₺</p>
+          </div>
+          <div style="text-align: center; margin-top: 20px;">
+            <a href="${siteUrl}/profile" style="background: #000; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 6px; display: inline-block; font-weight: bold;">Profilime Git</a>
+          </div>
+          ${emailFooter(settings, siteUrl)}
         </div>
-        <a href="${siteUrl}/profile" style="background: #000; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 6px; display: inline-block; margin-top: 10px;">Profilime Git</a>
       </div>
-    `);
+    `;
+    results.email = await sendEmailWithResend(settings, email, `Ödemeniz Alındı ✓ - ${businessName}`, html);
   }
 
   if (settings.smsEnabled && phone) {
@@ -252,19 +273,25 @@ export async function notifyEventReminder(email, phone, name, date, packageName)
   const results = { email: null, sms: null };
   const formattedDate = new Date(date).toLocaleDateString("tr-TR");
   const businessName = settings.businessName || "Studio";
+  const siteUrl = await getSiteUrl(settings);
 
   if (settings.emailEnabled && email) {
-    results.email = await sendEmailWithResend(settings, email, "Randevunuza 1 Hafta Kaldı! 📅", `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #eee; border-radius: 10px;">
-        <h2 style="color: #333;">Merhaba ${name}! 🎉</h2>
-        <p style="color: #555; font-size: 16px;">Randevunuza sadece <strong>1 hafta</strong> kaldı!</p>
-        <div style="background: #f9f9fb; border-left: 4px solid #facc15; padding: 20px; margin: 20px 0;">
-          <p style="margin: 0 0 8px;"><strong>Tarih:</strong> ${formattedDate}</p>
-          <p style="margin: 0;"><strong>Hizmet:</strong> ${packageName || "Randevu"}</p>
+    const html = `
+      <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        ${emailHeader(settings)}
+        <div style="padding: 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
+          <h2 style="color: #333; margin-top: 0;">Merhaba ${name}! 🎉</h2>
+          <p style="color: #555; font-size: 16px;">Randevunuza sadece <strong>1 hafta</strong> kaldı!</p>
+          <div style="background: #f9f9fb; border-left: 4px solid #facc15; padding: 20px; margin: 20px 0;">
+            <p style="margin: 0 0 8px;"><strong>Tarih:</strong> ${formattedDate}</p>
+            <p style="margin: 0;"><strong>Hizmet:</strong> ${packageName || "Randevu"}</p>
+          </div>
+          <p style="color: #555;">Hazırlıklarınızı tamamladığınızdan emin olun. Sorularınız için bize ulaşabilirsiniz.</p>
+          ${emailFooter(settings, siteUrl)}
         </div>
-        <p style="color: #555;">Hazırlıklarınızı tamamladığınızdan emin olun. Sorularınız için bize ulaşabilirsiniz.</p>
       </div>
-    `);
+    `;
+    results.email = await sendEmailWithResend(settings, email, "Randevunuza 1 Hafta Kaldı! 📅", html);
   }
 
   if (settings.smsEnabled && phone) {
@@ -284,20 +311,27 @@ export async function notifyPhotosReady(email, phone, name) {
 
   const results = { email: null, sms: null };
   const siteUrl = await getSiteUrl(settings);
+  const businessName = settings.businessName || "Studio";
 
   if (settings.emailEnabled && email) {
-    results.email = await sendEmailWithResend(settings, email, "Dosyalarınız Hazır! ✨", `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #eee; border-radius: 10px;">
-        <h2 style="color: #333;">Merhaba ${name}! 🎉</h2>
-        <p style="color: #555; font-size: 16px;">Dosyalarınız hazır ve panelinize yüklendi!</p>
-        <p style="color: #555;">Hemen giriş yaparak dosyalarınızı görüntüleyebilirsiniz.</p>
-        <a href="${siteUrl}/profile" style="background: #000; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 6px; display: inline-block; margin-top: 16px; font-weight: bold;">Dosyalarımı Gör</a>
+    const html = `
+      <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        ${emailHeader(settings)}
+        <div style="padding: 30px; border: 1px solid #eee; border-top: none; border-radius: 0 0 10px 10px;">
+          <h2 style="color: #333; margin-top: 0;">Merhaba ${name}! 🎉</h2>
+          <p style="color: #555; font-size: 16px;">Dosyalarınız hazır ve panelinize yüklendi!</p>
+          <p style="color: #555;">Hemen giriş yaparak dosyalarınızı görüntüleyebilirsiniz.</p>
+          <div style="text-align: center; margin-top: 24px;">
+            <a href="${siteUrl}/profile" style="background: #000; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 6px; display: inline-block; font-weight: bold;">Dosyalarımı Gör</a>
+          </div>
+          ${emailFooter(settings, siteUrl)}
+        </div>
       </div>
-    `);
+    `;
+    results.email = await sendEmailWithResend(settings, email, "Dosyalarınız Hazır! ✨", html);
   }
 
   if (settings.smsEnabled && phone) {
-    const businessName = settings.businessName || "Studio";
     const message = `Merhaba ${name}, dosyalariniz hazir! Giris yaparak goruntuleyin. ${businessName}`;
     results.sms = await sendSMS(phone, message, settings);
   }
