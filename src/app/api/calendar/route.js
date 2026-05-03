@@ -46,17 +46,29 @@ function generateICS(reservations, businessName) {
     // Finansal hesaplamalar
     const totalAmountStr = res.totalAmount || "0";
     const paidAmountStr = res.paidAmount || "0";
-    const tNum = parseFloat(totalAmountStr.replace(/\\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "")) || 0;
-    const pNum = parseFloat(paidAmountStr.replace(/\\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "")) || 0;
+    const tNum = parseFloat(totalAmountStr.replace(/\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "")) || 0;
+    const pNum = parseFloat(paidAmountStr.replace(/\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "")) || 0;
     const remaining = Math.max(0, tNum - pNum);
 
     // Açıklama satırları
     let descLines = [
       `Paket: ${packageNames}`,
-      `Mekan: ${res.venueName || "Belirtilmemiş"}`,
+    ];
+
+    if (res.customFieldAnswers && Array.isArray(res.customFieldAnswers)) {
+      res.customFieldAnswers.forEach(ans => {
+        if (ans.type !== "_hidden" && ans.label && ans.value) {
+          descLines.push(`${ans.label}: ${ans.value}`);
+        }
+      });
+    } else if (res.venueName) {
+      descLines.push(`Mekan: ${res.venueName}`);
+    }
+
+    descLines.push(
       `-- İLETİŞİM --`,
       `Tel 1: ${res.bridePhone || "-"}`,
-    ];
+    );
     if (res.groomPhone) descLines.push(`Tel 2: ${res.groomPhone}`);
     if (res.brideEmail) descLines.push(`E-posta: ${res.brideEmail}`);
 
