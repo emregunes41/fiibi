@@ -160,16 +160,37 @@ export default function ReservationsPage() {
           <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>Rezervasyonlar</h1>
           <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.75rem", margin: "4px 0 0" }}>{reservations.filter(r => r.status !== "DELETED").length} kayıt</p>
         </div>
-        <Link href="/admin/new-reservation"
-          style={{ 
-            background: "#22c55e", color: "#000", padding: "0.5rem 1rem", 
-            borderRadius: 0, border: "none", fontWeight: 800, cursor: "pointer",
-            display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem",
-            textDecoration: "none",
-          }}
-        >
-          <Plus size={14} /> YENİ
-        </Link>
+        <div style={{ display: "flex", gap: "8px" }}>
+          <button
+            onClick={() => {
+              if (!adminSession?.tenant?.id) return alert("Hata: Tenant bulunamadı.");
+              const url = `${window.location.origin}/api/calendar?t=${adminSession.tenant.id}`;
+              navigator.clipboard.writeText(url);
+              alert("✅ Google Takvim Senkronizasyon (iCal) linki kopyalandı!\n\nBu linki Google Takvim'de 'URL ile ekle' (From URL) kısmına yapıştırarak tüm rezervasyonlarınızı telefonunuza aktarabilirsiniz.");
+            }}
+            style={{ 
+              background: "rgba(255,255,255,0.06)", color: "#fff", padding: "0.5rem 1rem", 
+              borderRadius: 0, border: "1px solid rgba(255,255,255,0.1)", fontWeight: 800, cursor: "pointer",
+              display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem",
+              transition: "all 0.2s"
+            }}
+            className="hover:!bg-white/10"
+            title="Google Takvim ile Eşitle"
+          >
+            <Calendar size={14} /> iCal Senkronize Et
+          </button>
+          
+          <Link href="/admin/new-reservation"
+            style={{ 
+              background: "#22c55e", color: "#000", padding: "0.5rem 1rem", 
+              borderRadius: 0, border: "none", fontWeight: 800, cursor: "pointer",
+              display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem",
+              textDecoration: "none",
+            }}
+          >
+            <Plus size={14} /> YENİ
+          </Link>
+        </div>
       </div>
 
       {/* View Mode Toggle */}
