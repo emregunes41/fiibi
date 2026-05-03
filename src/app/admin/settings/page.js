@@ -1812,22 +1812,6 @@ export default function SettingsPage() {
             <input type="text" value={config.footerTagline || ""} onChange={e => setConfig({ ...config, footerTagline: e.target.value })} style={inp} placeholder={(() => { try { const { getBusinessType: gbt } = require("@/lib/business-types"); return gbt(businessType).defaultSlogan; } catch { return "İşletmenizin sloganı"; } })()} />
           </div>
 
-          {/* Accent Color */}
-          <div style={{ marginBottom: 24 }}>
-            <label style={label}>Tema Rengi</label>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-              <input type="color" value={config.accentColor || "#ffffff"} onChange={e => setConfig({ ...config, accentColor: e.target.value })} style={{ width: 44, height: 44, border: "1px solid rgba(255,255,255,0.15)", background: "none", cursor: "pointer", padding: 2 }} />
-              <input type="text" value={config.accentColor || "#ffffff"} onChange={e => setConfig({ ...config, accentColor: e.target.value })} style={{ ...inp, maxWidth: 140 }} placeholder="#ffffff" />
-            </div>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {["#ffffff", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6", "#10b981", "#ec4899", "#f97316"].map(c => (
-                <button key={c} onClick={() => setConfig({ ...config, accentColor: c })} style={{
-                  width: 28, height: 28, background: c, border: config.accentColor === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.15)",
-                  cursor: "pointer", padding: 0
-                }} />
-              ))}
-            </div>
-          </div>
 
           {/* Font Seçimi */}
           <div style={{ marginBottom: 24 }}>
@@ -1898,37 +1882,7 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {/* E-Ticaret / Kargo Ayarları */}
-          <div style={{ marginTop: 32, paddingTop: 32, borderTop: "1px dashed rgba(255,255,255,0.1)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-              <Package size={20} style={{ color: "#fff" }} />
-              <div style={{ fontSize: 16, fontWeight: 800 }}>E-Ticaret & Kargo Ayarları</div>
-            </div>
 
-            <div style={{ display: "flex", gap: "24px", flexDirection: "column" }}>
-              <div>
-                <label style={label}>Kargo Ücreti Kim Tarafından Ödenir?</label>
-                <div style={{ display: "flex", gap: 8 }}>
-                  {[{ id: "seller", label: "Satıcı Öder (Ücretsiz Kargo)" }, { id: "buyer", label: "Alıcı Öder (+Kargo Ücreti)" }].map(m => (
-                    <button key={m.id} type="button" onClick={() => setConfig({ ...config, shippingPayer: m.id })} style={{
-                      padding: "10px 18px", fontSize: 12, fontWeight: 700, cursor: "pointer", borderRadius: 0,
-                      border: config.shippingPayer === m.id ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.1)",
-                      background: config.shippingPayer === m.id ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.03)",
-                      color: config.shippingPayer === m.id ? "#fff" : "rgba(255,255,255,0.4)",
-                    }}>{m.label}</button>
-                  ))}
-                </div>
-              </div>
-
-              {config.shippingPayer === "buyer" && (
-                <div>
-                  <label style={label}>Sabit Kargo Ücreti (₺)</label>
-                  <input type="text" value={config.flatShippingRate || "0"} onChange={e => setConfig({ ...config, flatShippingRate: e.target.value.replace(/[^0-9]/g, "") })} style={inp} placeholder="Örn: 79" />
-                  <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", margin: "6px 0 0" }}>Fiziksel ürün alındığında ödeme tutarına bu rakam eklenir.</p>
-                </div>
-              )}
-            </div>
-          </div>
         </div>}
 
         {/* Alt Üye İşyeri Kayıt Formu */}
