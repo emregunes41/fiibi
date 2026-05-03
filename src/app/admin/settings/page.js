@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { PLATFORM, LEGAL_TYPES } from "@/lib/constants";
 import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, getKVKKText } from "@/lib/contracts";
+import MembersList from "../components/MembersList";
 
 const inp = {
   width: "100%", boxSizing: "border-box",
@@ -215,6 +216,7 @@ export default function SettingsPage() {
             { id: "tasarim", label: "Tasarım & Düzen", icon: Palette },
             { id: "icerik", label: "İçerik Yönetimi", icon: FileText },
             { id: "sistem", label: "Ödeme & Bildirim", icon: CreditCard },
+            { id: "musteriler", label: terms.clients || "Müşteriler", icon: Users },
           ].map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -235,10 +237,17 @@ export default function SettingsPage() {
 
         {/* Right Content Area */}
         <div className="flex-1 min-w-0">
-          <form onSubmit={handleSubmit}>
+          
+          {activeTab === "musteriler" ? (
+            <div style={sectionCard}>
+              {sectionHeader(Users, terms.clients || "Müşteriler", "Platformunuza kayıtlı üyeleri ve rezervasyon geçmişlerini yönetin.")}
+              <MembersList terms={terms} />
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit}>
 
-        {/* 0. Modüller */}
-        {activeTab === "genel" && <div style={sectionCard}>
+              {/* 0. Modüller */}
+              {activeTab === "genel" && <div style={sectionCard}>
           {sectionHeader(Layers, "Aktif Modüller", "Platformunuzda kullanmak istediğiniz araçları seçin. Kapatılan modüller sol menüden ve websitenizden gizlenir.")}
 
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -1276,6 +1285,7 @@ export default function SettingsPage() {
         </button>
 
       </form>
+      )}
 
       {/* ── Section Order / Sayfa Düzeni ── */}
       {activeTab === "tasarim" && (() => {

@@ -226,7 +226,7 @@ export async function deleteUser(userId) {
       where: { id: userId }
     });
 
-    revalidatePath('/admin/members');
+    revalidatePath('/admin/settings');
     return { success: true };
   } catch (err) {
     console.error("Delete user error:", err);
@@ -1262,7 +1262,7 @@ export async function resetUserPassword(userId, newPassword) {
       where: { id: userId },
       data: { password: hashedPassword }
     });
-    revalidatePath('/admin/members');
+    revalidatePath('/admin/settings');
     return { success: true };
   } catch (error) {
     console.error("Reset Password Error:", error);
@@ -1921,5 +1921,24 @@ export async function checkDomainAvailability(query) {
     return { results };
   } catch (err) {
     return { error: "Domain sorgulama hatası: " + err.message };
+  }
+}
+
+export async function getTenantUsers() {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+
+  const tenantId = await getTenantId();
+  if (!tenantId) return { error: "Tenant bulunamadı." };
+
+  try {
+    const users = await prisma.user.findMany({
+      where: { tenantId },
+      include: { reservations: true },
+      orderBy: { createdAt: "desc" },
+    });
+    return { success: true, users };
+  } catch (error) {
+    return { error: error.message };
   }
 }
