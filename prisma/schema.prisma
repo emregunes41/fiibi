@@ -13,6 +13,8 @@ model Tenant {
   businessType    String    @default("photographer") // photographer, doctor, psychologist, dietitian, coach, beauty, veterinarian, dentist, physiotherapist, tutor, lawyer, consultant, other
   slug            String    @unique           // "ahmet" → ahmet.photoapp.co
   customDomain    String?   @unique           // "www.ahmetfoto.com"
+  purchasedDomain Boolean   @default(false)   // Vercel üzerinden mi satın alındı?
+  domainExpiresAt DateTime?                   // Satın alınan domain bitiş tarihi
   businessName    String                      // "Ahmet Photography"
   ownerName       String
   ownerEmail      String    @unique

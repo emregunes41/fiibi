@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode, getSubMerchantInfo, updateSubMerchantInfo, getTenantDomainInfo, updateTenantDomain } from "../core-actions";
+import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode, getSubMerchantInfo, updateSubMerchantInfo, getTenantDomainInfo, updateTenantDomain, checkDomainAvailability } from "../core-actions";
 import { getBanners, createBanner, updateBanner, deleteBanner, reorderBanners } from "../banner-actions";
 import { getContentBlocks, createContentBlock, updateContentBlock, deleteContentBlock } from "../content-actions";
 import { getPortfolioCategories, createPortfolioCategory, deletePortfolioCategory, addPhotoToPortfolio, deletePortfolioPhoto } from "../portfolio-actions";
@@ -106,9 +106,12 @@ export default function SettingsPage() {
   const [smLoaded, setSmLoaded] = useState(false);
 
   // Domain
-  const [domainForm, setDomainForm] = useState({ customDomain: "" });
+  const [domainForm, setDomainForm] = useState({ customDomain: "", purchasedDomain: false, domainExpiresAt: null });
   const [domainSaving, setDomainSaving] = useState(false);
   const [domainMessage, setDomainMessage] = useState("");
+  const [searchDomainName, setSearchDomainName] = useState("");
+  const [searchResult, setSearchResult] = useState(null);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   useEffect(() => {
     async function loadConfig() {
@@ -2086,25 +2089,118 @@ export default function SettingsPage() {
 
         {/* 6. Domain Yönetimi */}
         {activeTab === "domain" && <div style={sectionCard}>
-          {sectionHeader(Globe, "Özel Alan Adı (Custom Domain)", "Sitenize kendi alan adınızdan (www.siteniz.com) ulaşılmasını sağlayın.")}
-          <div style={{ marginBottom: 16 }}>
-            <label style={label}>Özel Domaininiz</label>
+          {sectionHeader(Globe, "Alan Adı (Domain) Ayarları", "Sitenize kendi alan adınızdan (www.siteniz.com) ulaşılmasını sağlayın.")}
+          
+          <div style={{ marginBottom: 32, padding: "24px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)" }}>
+            <h3 style={{ fontSize: 16, margin: "0 0 8px 0", color: "var(--text)" }}>Yeni Domain Satın Al (Sıfır Ayar)</h3>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: "0 0 16px 0", lineHeight: 1.5 }}>
+              Sistemimiz üzerinden doğrudan domain satın alabilirsiniz. DNS, SSL veya yönlendirme ayarlarına gerek kalmadan saniyeler içinde domaininiz yayına girer.
+            </p>
+            <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+              <input
+                type="text"
+                value={searchDomainName}
+                onChange={(e) => setSearchDomainName(e.target.value)}
+                style={{ ...inp, marginBottom: 0, flex: 1 }}
+                placeholder="Örn: ahmetfotograf.com"
+              />
+              <button
+                type="button"
+                disabled={searchLoading || !searchDomainName}
+                onClick={async () => {
+                  setSearchLoading(true);
+                  setSearchResult(null);
+                  const res = await checkDomainAvailability(searchDomainName);
+                  setSearchResult(res);
+                  setSearchLoading(false);
+                }}
+                style={{ background: "var(--text)", color: "var(--bg)", border: "none", padding: "12px 24px", fontWeight: 700, cursor: "pointer", fontSize: 13, borderRadius: 0 }}
+              >
+                {searchLoading ? "Sorgulanıyor..." : "Sorgula"}
+              </button>
+            </div>
+            
+            {searchResult && (
+              <div style={{ marginTop: 16, padding: "16px", background: searchResult.error || !searchResult.available ? "rgba(239,68,68,0.1)" : "rgba(34,197,94,0.1)", border: searchResult.error || !searchResult.available ? "1px solid rgba(239,68,68,0.2)" : "1px solid rgba(34,197,94,0.2)" }}>
+                {searchResult.error ? (
+                  <p style={{ margin: 0, color: "#ef4444", fontSize: 13 }}>{searchResult.error}</p>
+                ) : searchResult.available ? (
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <p style={{ margin: "0 0 4px 0", color: "#22c55e", fontWeight: "bold", fontSize: 14 }}>✅ {searchResult.domain} Müsait!</p>
+                      <p style={{ margin: 0, color: "rgba(255,255,255,0.7)", fontSize: 12 }}>Yıllık Yenileme Ücreti Dahil Fiyat</p>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                      <span style={{ fontSize: 18, fontWeight: "bold", color: "var(--text)" }}>{searchResult.price} ₺</span>
+                      <button 
+                        type="button"
+                        disabled={domainSaving}
+                        onClick={async () => {
+                          setDomainSaving(true);
+                          setDomainMessage("");
+                          try {
+                            const res = await fetch("/api/paytr/domain-checkout", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ domain: searchResult.domain, amount: searchResult.price })
+                            });
+                            const data = await res.json();
+                            if (data.iframeToken) {
+                              // iFrame göstermek yerine, geçici olarak PayTR test sayfasına yönlendirebilir 
+                              // veya burada bir modal açabiliriz. En temizi yeni bir sekmede açmak veya modal eklemek.
+                              // Şimdilik modal olarak basıyoruz:
+                              const iframeUrl = `https://www.paytr.com/odeme/guvenli/${data.iframeToken}`;
+                              window.location.href = iframeUrl;
+                            } else {
+                              setDomainMessage("❌ Ödeme başlatılamadı: " + (data.error || "Bilinmeyen hata"));
+                            }
+                          } catch (err) {
+                            setDomainMessage("❌ Hata: " + err.message);
+                          }
+                          setDomainSaving(false);
+                        }}
+                        style={{ background: "#22c55e", color: "#fff", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer" }}
+                      >
+                        {domainSaving ? "Yükleniyor..." : "Satın Al"}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p style={{ margin: 0, color: "#ef4444", fontSize: 13 }}>❌ Maalesef bu domain daha önce alınmış.</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div style={{ marginBottom: 32 }}>
+            <h3 style={{ fontSize: 16, margin: "0 0 8px 0", color: "var(--text)" }}>Zaten bir domainim var (Gelişmiş)</h3>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: "0 0 16px 0", lineHeight: 1.5 }}>
+              Daha önceden sahip olduğunuz bir domaininiz varsa buraya girebilirsiniz. DNS ayarlarını yapmanız gerekecektir.
+            </p>
             <input
               type="text"
               value={domainForm.customDomain}
               onChange={(e) => setDomainForm({ ...domainForm, customDomain: e.target.value })}
               style={inp}
               placeholder="www.studyonuz.com (İptal etmek için boş bırakın)"
+              disabled={domainForm.purchasedDomain}
             />
-            <div style={{ padding: "16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", marginTop: 16 }}>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", margin: "0 0 8px 0", lineHeight: 1.5 }}>
-                Lütfen alan adınızı kaydetmeden önce <strong>Domain (DNS) Panelinizden</strong> sistemimize yönlendirme yaptığınızdan emin olun:
+            {domainForm.purchasedDomain && (
+              <p style={{ fontSize: 12, color: "#22c55e", marginTop: 8 }}>
+                Bu domain platformumuz üzerinden satın alınmıştır. DNS ayarları otomatik yönetilir. Bitiş: {domainForm.domainExpiresAt ? new Date(domainForm.domainExpiresAt).toLocaleDateString("tr-TR") : "-"}
               </p>
-              <ul style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", margin: 0, paddingLeft: 16, lineHeight: 1.6 }}>
-                <li>A Kaydı (A Record): <strong>76.76.21.21</strong></li>
-                <li>veya CNAME (www için): <strong>cname.vercel-dns.com</strong></li>
-              </ul>
-            </div>
+            )}
+            {!domainForm.purchasedDomain && (
+              <div style={{ padding: "16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", marginTop: 16 }}>
+                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", margin: "0 0 8px 0", lineHeight: 1.5 }}>
+                  Lütfen alan adınızı kaydetmeden önce <strong>Domain (DNS) Panelinizden</strong> sistemimize yönlendirme yaptığınızdan emin olun:
+                </p>
+                <ul style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", margin: 0, paddingLeft: 16, lineHeight: 1.6 }}>
+                  <li>A Kaydı (A Record): <strong>76.76.21.21</strong></li>
+                  <li>veya CNAME (www için): <strong>cname.vercel-dns.com</strong></li>
+                </ul>
+              </div>
+            )}
           </div>
           <button
             type="button"
