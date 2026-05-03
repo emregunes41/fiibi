@@ -12,7 +12,7 @@ import { useAdminSession } from "../AdminSessionContext";
 import { CldUploadWidget } from "next-cloudinary";
 import {
   Save, Home, Phone, Mail, Instagram, MessageCircle, MapPin,
-  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot, Image as ImageIcon, ArrowUp, ArrowDown, Eye, EyeOff, UploadCloud, Building2, Shield, CreditCard, GripVertical, Layers, Package
+  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot, Image as ImageIcon, ArrowUp, ArrowDown, Eye, EyeOff, UploadCloud, Building2, Shield, CreditCard, GripVertical, Layers, Package, Users
 } from "lucide-react";
 import { PLATFORM, LEGAL_TYPES } from "@/lib/constants";
 import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, getKVKKText } from "@/lib/contracts";
