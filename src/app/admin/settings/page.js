@@ -20,8 +20,8 @@ import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, 
 
 const inp = {
   width: "100%", boxSizing: "border-box",
-  background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
-  borderRadius: 0, padding: "14px 16px", fontSize: 14, color: "#fff",
+  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
+  borderRadius: 6, padding: "12px 16px", fontSize: 14, color: "#fff",
   outline: "none", transition: "all 0.2s",
 };
 
@@ -33,22 +33,22 @@ const label = {
 };
 
 const sectionCard = {
-  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-  borderRadius: 0, padding: "24px", marginBottom: 16,
+  background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+  borderRadius: 12, padding: "24px", marginBottom: 24,
 };
 
 const sectionHeader = (Icon, title, desc) => (
   <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 24 }}>
     <div style={{
-      width: 36, height: 36, borderRadius: 0, background: "rgba(255,255,255,0.06)",
-      border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center",
+      width: 40, height: 40, borderRadius: 8, background: "rgba(255,255,255,0.04)",
+      border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center",
       justifyContent: "center", flexShrink: 0,
     }}>
       <Icon size={16} style={{ color: "rgba(255,255,255,0.6)" }} />
     </div>
     <div>
-      <h2 style={{ fontSize: 14, fontWeight: 800, color: "#fff", margin: "0 0 3px", letterSpacing: "0.02em" }}>{title}</h2>
-      <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", margin: 0 }}>{desc}</p>
+      <h2 style={{ fontSize: 15, fontWeight: 700, color: "#fff", margin: "0 0 4px", letterSpacing: "0.01em" }}>{title}</h2>
+      <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.4 }}>{desc}</p>
     </div>
   </div>
 );
@@ -200,7 +200,7 @@ export default function SettingsPage() {
   );
 
   return (
-    <div style={{ maxWidth: 640, margin: "0 auto" }}>
+    <div style={{ maxWidth: 900, margin: "0 auto" }}>
       {/* Header */}
       <div style={{ marginBottom: 16 }}>
         <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>Sistem & Ayarlar</h1>
@@ -213,29 +213,42 @@ export default function SettingsPage() {
         { label: "Abonelik", href: "/admin/subscription" }
       ]} />
 
-      {/* Tab Bar */}
-      <div style={{ display: "flex", gap: 0, marginBottom: 24, borderBottom: "1px solid rgba(255,255,255,0.08)", overflowX: "auto" }}>
-        {[
-          { id: "moduller", label: "MODÜLLER" },
-          { id: "tema", label: "TEMA" },
-          { id: "duzen", label: "DÜZEN" },
-          { id: "icerik", label: "İÇERİK" },
-          { id: "odeme", label: "ÖDEME" },
-          { id: "bildirim", label: "BİLDİRİM" },
-          { id: "sozlesme", label: "SÖZLEŞME" },
-          { id: "ai", label: "AI" },
-          { id: "domain", label: "DOMAIN" },
-        ].map(tab => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)} type="button" style={{
-            padding: "10px 18px", fontSize: 12, fontWeight: activeTab === tab.id ? 800 : 500,
-            color: activeTab === tab.id ? "#fff" : "rgba(255,255,255,0.4)",
-            background: "none", border: "none", borderBottom: activeTab === tab.id ? "2px solid #fff" : "2px solid transparent",
-            cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap",
-          }}>{tab.label}</button>
-        ))}
-      </div>
+      {/* Layout Split */}
+      <div className="flex flex-col md:flex-row gap-8">
+        
+        {/* Left Sidebar Navigation */}
+        <div className="w-full md:w-56 shrink-0 flex flex-row md:flex-col gap-1 overflow-x-auto border-b md:border-b-0 border-white/10 pb-4 md:pb-0 mb-4 md:mb-0" style={{ scrollbarWidth: "none" }}>
+          {[
+            { id: "moduller", label: "Modüller", icon: Layers },
+            { id: "tema", label: "Tema & Görünüm", icon: Palette },
+            { id: "duzen", label: "Sayfa Düzeni", icon: Layout },
+            { id: "icerik", label: "İçerikler", icon: FileText },
+            { id: "odeme", label: "Ödeme Yöntemi", icon: CreditCard },
+            { id: "bildirim", label: "Bildirimler", icon: Mail },
+            { id: "sozlesme", label: "Sözleşmeler", icon: FileText },
+            { id: "ai", label: "Yapay Zeka (AI)", icon: Bot },
+            { id: "domain", label: "Alan Adı", icon: Globe },
+          ].map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)} type="button" style={{
+                display: "flex", alignItems: "center", gap: 10,
+                padding: "12px 16px", fontSize: 13, fontWeight: isActive ? 700 : 500,
+                color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
+                background: isActive ? "rgba(255,255,255,0.06)" : "transparent", 
+                border: "none", borderRadius: 8,
+                cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap", textAlign: "left"
+              }} className="hover:bg-white/5">
+                <Icon size={16} /> {tab.label}
+              </button>
+            )
+          })}
+        </div>
 
-      <form onSubmit={handleSubmit}>
+        {/* Right Content Area */}
+        <div className="flex-1 min-w-0">
+          <form onSubmit={handleSubmit}>
 
         {/* 0. Modüller */}
         {activeTab === "moduller" && <div style={sectionCard}>
@@ -255,18 +268,7 @@ export default function SettingsPage() {
               </div>
             </label>
 
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 8 }}>
-              <input 
-                type="checkbox" 
-                checked={config.moduleStore ?? true} 
-                onChange={(e) => setConfig({ ...config, moduleStore: e.target.checked })}
-                style={{ marginTop: 2, width: 18, height: 18, accentColor: "#fff", cursor: "pointer" }}
-              />
-              <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 4 }}>E-Ticaret & Mağaza Sistemi</div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Fiziksel veya dijital ürün satışı yapmanızı ve kargo takibini sağlar.</div>
-              </div>
-            </label>
+
 
             <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 8 }}>
               <input 
@@ -1270,7 +1272,7 @@ export default function SettingsPage() {
           type="submit"
           disabled={saving}
           style={{
-            width: "100%", padding: 16, borderRadius: 0, border: "none",
+            width: "100%", padding: 16, borderRadius: 8, border: "none",
             background: "#fff", color: "#000", fontWeight: 800, fontSize: 13,
             textTransform: "uppercase", letterSpacing: "0.08em",
             cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.5 : 1,
@@ -2291,6 +2293,8 @@ export default function SettingsPage() {
           {domainMessage && <p style={{ fontSize: 12, marginTop: 12, color: domainMessage.includes("Hata") ? "#ef4444" : "#22c55e", fontWeight: 600 }}>{domainMessage}</p>}
         </div>}
 
+        </div>
+      </div>
     </div>
   );
 }
