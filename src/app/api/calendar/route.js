@@ -45,9 +45,16 @@ function generateICS(reservations, businessName) {
     
     // Finansal hesaplamalar
     const totalAmountStr = res.totalAmount || "0";
-    const paidAmountStr = res.paidAmount || "0";
     const tNum = parseFloat(totalAmountStr.replace(/\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "")) || 0;
-    const pNum = parseFloat(paidAmountStr.replace(/\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "")) || 0;
+    
+    let pNum = 0;
+    if (res.payments && res.payments.length > 0) {
+      pNum = res.payments.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+    } else {
+      const paidAmountStr = res.paidAmount || "0";
+      pNum = parseFloat(paidAmountStr.replace(/\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "")) || 0;
+    }
+    
     const remaining = Math.max(0, tNum - pNum);
 
     // Açıklama satırları
@@ -75,8 +82,8 @@ function generateICS(reservations, businessName) {
     descLines.push(
       `-- FİNANS --`,
       `Toplam: ${totalAmountStr} TL`,
-      `Ödenen: ${paidAmountStr} TL`,
-      `Kalan: ${remaining} TL`,
+      `Ödenen: ${pNum.toLocaleString('tr-TR')} TL`,
+      `Kalan: ${remaining.toLocaleString('tr-TR')} TL`,
       `Durum: ${res.status}`
     );
 
@@ -129,7 +136,8 @@ export async function GET(req) {
         status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] }
       },
       include: {
-        packages: true
+        packages: true,
+        payments: true
       }
     });
 
