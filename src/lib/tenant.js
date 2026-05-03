@@ -32,8 +32,18 @@ export async function getTenantBySlug(slug) {
  */
 export async function getTenantByDomain(domain) {
   if (!domain) return null;
-  return prisma.tenant.findUnique({
-    where: { customDomain: domain },
+  
+  // www. ile ve www. olmadan her iki versiyonu da ara
+  const cleanDomain = domain.replace(/^www\./, "");
+  const wwwDomain = `www.${cleanDomain}`;
+
+  return prisma.tenant.findFirst({
+    where: {
+      OR: [
+        { customDomain: cleanDomain },
+        { customDomain: wwwDomain }
+      ]
+    }
   });
 }
 

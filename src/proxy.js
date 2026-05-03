@@ -28,18 +28,19 @@ export async function proxy(req) {
         slug = potentialSlug;
       }
     } else if (hostname !== platformDomain && hostname !== `www.${platformDomain}`) {
-      // Custom domain
-      const response = NextResponse.next();
-      response.headers.set("x-custom-domain", hostname);
-      return response;
+      // Custom domain - don't return early, just flag it
+      // Let the headers be set below
     }
   }
 
-  // Set tenant slug + pathname headers
+  // Set tenant slug, custom domain + pathname headers
   const response = NextResponse.next();
   response.headers.set("x-next-pathname", pathname);
+  
   if (slug) {
     response.headers.set("x-tenant-slug", slug);
+  } else if (hostname !== platformDomain && hostname !== `www.${platformDomain}`) {
+    response.headers.set("x-custom-domain", hostname);
   }
 
   // Platform sayfaları — slug olmadan erişilebilir (ama auth kontrollü)
