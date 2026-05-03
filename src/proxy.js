@@ -34,14 +34,20 @@ export async function proxy(req) {
   }
 
   // Set tenant slug, custom domain + pathname headers
-  const response = NextResponse.next();
-  response.headers.set("x-next-pathname", pathname);
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-next-pathname", pathname);
   
   if (slug) {
-    response.headers.set("x-tenant-slug", slug);
+    requestHeaders.set("x-tenant-slug", slug);
   } else if (hostname !== platformDomain && hostname !== `www.${platformDomain}`) {
-    response.headers.set("x-custom-domain", hostname);
+    requestHeaders.set("x-custom-domain", hostname);
   }
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 
   // Platform sayfaları — slug olmadan erişilebilir (ama auth kontrollü)
   const isPlatformPath = pathname.startsWith("/suspended") || pathname.startsWith("/api") || pathname.startsWith("/_next");
@@ -80,10 +86,10 @@ export async function proxy(req) {
       const payload = await verifyAuth(adminToken);
       if (payload.adminId) {
         // Admin auth başarılı — tenant header ile devam
-        const authedResponse = NextResponse.next();
-        authedResponse.headers.set("x-next-pathname", pathname);
-        if (slug) authedResponse.headers.set("x-tenant-slug", slug);
-        return authedResponse;
+        const reqHeaders = new Headers(req.headers);
+        reqHeaders.set("x-next-pathname", pathname);
+        if (slug) reqHeaders.set("x-tenant-slug", slug);
+        return NextResponse.next({ request: { headers: reqHeaders } });
       }
       return NextResponse.redirect(new URL("/admin/login", req.url));
     } catch (err) {
@@ -98,10 +104,10 @@ export async function proxy(req) {
     }
     try {
       await verifyAuth(userToken);
-      const authedResponse = NextResponse.next();
-      authedResponse.headers.set("x-next-pathname", pathname);
-      if (slug) authedResponse.headers.set("x-tenant-slug", slug);
-      return authedResponse;
+      const reqHeaders = new Headers(req.headers);
+      reqHeaders.set("x-next-pathname", pathname);
+      if (slug) reqHeaders.set("x-tenant-slug", slug);
+      return NextResponse.next({ request: { headers: reqHeaders } });
     } catch (err) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
