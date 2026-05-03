@@ -169,7 +169,7 @@ export default function ReservationsPage() {
             onClick={() => {
               const tid = adminSession?.tenant?.id || siteConfig?._tenant?.id;
               if (!tid) return alert("Hata: Tenant bulunamadı.");
-              const url = `${window.location.origin}/api/calendar?t=${tid}`;
+              const url = `${window.location.origin}/api/calendar?t=${tid}&cb=${Date.now()}`;
               navigator.clipboard.writeText(url);
               setIsIcalModalOpen(true);
             }}
