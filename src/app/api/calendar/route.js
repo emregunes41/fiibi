@@ -79,8 +79,8 @@ function generateICS(reservations, businessName) {
       "BEGIN:VEVENT",
       `UID:res-${res.id}@fiibi.co`,
       `DTSTAMP:${stamp}`,
-      `DTSTART;TZID=Europe/Istanbul:${startDateString}`,
-      `DTEND;TZID=Europe/Istanbul:${endDateString}`,
+      `DTSTART:${startDateString}`,
+      `DTEND:${endDateString}`,
       `SUMMARY:${summary}`,
       `DESCRIPTION:${description}`,
       "END:VEVENT"
