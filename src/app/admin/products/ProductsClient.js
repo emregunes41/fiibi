@@ -317,7 +317,7 @@ export default function ProductsClient({ initialProducts, initialCategories, con
                 <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "rgba(255,255,255,0.5)", marginBottom: "6px" }}>Ürün Görselleri</label>
                 
                 <CldUploadWidget 
-                  uploadPreset="pinowed_files"
+                  uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
                   options={{ maxFiles: 10, multiple: true, folder: "products" }}
                   onUpload={(result) => {
                     if (result.event === "success") {

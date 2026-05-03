@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function run() {
   const user = await prisma.user.findFirst({
-    where: { email: "hello@pinowed.com" },
+    where: { email: "admin@fiibi.co" },
     include: { 
         reservations: { include: { packages: true, payments: true } }
     }

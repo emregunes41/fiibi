@@ -2,17 +2,17 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("🏗️  Pinowed tenant oluşturuluyor...");
+  console.log("🏗️  Demo tenant oluşturuluyor...");
 
   // 1. Tenant oluştur
   const tenant = await prisma.tenant.upsert({
-    where: { slug: "pinowed" },
+    where: { slug: "demo" },
     update: {},
     create: {
-      slug: "pinowed",
-      businessName: "Pinowed Photography",
-      ownerName: "Emre",
-      ownerEmail: "hello@pinowed.com",
+      slug: "demo",
+      businessName: "Demo Studio",
+      ownerName: "Admin",
+      ownerEmail: "admin@fiibi.co",
       password: "managed-externally", // Admin tablosundan yönetiliyor
       plan: "pro",
     },
@@ -106,13 +106,13 @@ async function main() {
       where: { id: "global-settings" },
       data: {
         tenantId: tenant.id,
-        businessName: "Pinowed Photography",
+        businessName: "Demo Studio",
       },
     });
     console.log(`   Ayarlar: güncellendi`);
   }
 
-  console.log("\n🎉 Tüm veriler 'pinowed' tenant'ına bağlandı!");
+  console.log("\n🎉 Tüm veriler 'demo' tenant'ına bağlandı!");
 }
 
 main()

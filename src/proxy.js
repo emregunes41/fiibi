@@ -13,7 +13,7 @@ export async function proxy(req) {
   let slug = null;
 
   if (isLocalhost) {
-    // pinowed.localhost:3000 → slug = "pinowed"
+    // tenant.localhost:3000 → slug = "tenant"
     const parts = hostname.split(".");
     if (parts.length > 1 && parts[0] !== "www") {
       slug = parts[0].split(":")[0];
