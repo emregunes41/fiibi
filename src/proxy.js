@@ -65,8 +65,10 @@ export async function proxy(req) {
     return response;
   }
 
-  // Subdomain yoksa → platform landing page göster
-  if (!slug) {
+  const isCustomDomain = hostname !== platformDomain && hostname !== `www.${platformDomain}` && !isLocalhost;
+
+  // Subdomain veya Custom Domain yoksa → platform landing page kuralları
+  if (!slug && !isCustomDomain) {
     // Ana domain root (fiibi.co/) → FiibiLanding sayfası gösterilsin
     if (pathname === "/") {
       return response;
