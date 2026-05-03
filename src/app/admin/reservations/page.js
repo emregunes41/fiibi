@@ -58,6 +58,8 @@ export default function ReservationsPage() {
   const isPhotographer = businessType === "photographer";
   const [paymentMode, setPaymentMode] = useState("cash");
 
+  const [siteConfig, setSiteConfig] = useState(null);
+
   async function loadData() {
     try {
       const [resData, pkgData, blocked, sc] = await Promise.all([
@@ -70,6 +72,7 @@ export default function ReservationsPage() {
       setPackages(pkgData || []);
       setBlockedDays(blocked || []);
       setPaymentMode(sc?.paymentMode || "cash");
+      setSiteConfig(sc);
     } catch (e) {}
   }
 
@@ -164,8 +167,9 @@ export default function ReservationsPage() {
         <div style={{ display: "flex", gap: "8px" }}>
           <button
             onClick={() => {
-              if (!adminSession?.tenant?.id) return alert("Hata: Tenant bulunamadı.");
-              const url = `${window.location.origin}/api/calendar?t=${adminSession.tenant.id}`;
+              const tid = adminSession?.tenant?.id || siteConfig?._tenant?.id;
+              if (!tid) return alert("Hata: Tenant bulunamadı.");
+              const url = `${window.location.origin}/api/calendar?t=${tid}`;
               navigator.clipboard.writeText(url);
               setIsIcalModalOpen(true);
             }}
@@ -178,7 +182,7 @@ export default function ReservationsPage() {
             className="hover:!bg-white/10"
             title="Google Takvim ile Eşitle"
           >
-            <Calendar size={14} /> iCal Senkronize Et
+            <Calendar size={14} /> Google/Apple Takvim Senkronizasyon
           </button>
           
           <Link href="/admin/new-reservation"
