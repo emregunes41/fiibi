@@ -9,8 +9,6 @@ import ResetPasswordButton from "./ResetPasswordButton";
 import DeleteUserButton from "./DeleteUserButton";
 
 import { getBusinessType } from "@/lib/business-types";
-import AdminPageTabs from "../components/AdminPageTabs";
-
 async function getMembersTenantId() {
   const tenant = await getCurrentTenant();
   if (tenant?.id) return tenant.id;
@@ -38,15 +36,9 @@ export default async function AdminMembersPage() {
       {/* Header Compact */}
       <div style={{ marginBottom: "16px" }}>
         <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>
-          Sistem & Ayarlar
+          {bt.terms.clients || "Müşteriler"}
         </h1>
       </div>
-
-      <AdminPageTabs tabs={[
-        { label: "Genel Ayarlar", href: "/admin/settings" },
-        { label: bt.terms.clients || "Müşteriler", href: "/admin/members" },
-        { label: "Abonelik", href: "/admin/subscription" }
-      ]} />
       
       <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem", marginBottom: "16px" }}>
         Toplam {users.length} üye

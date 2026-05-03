@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { Crown, Clock, Zap, Check, Shield, Star, Infinity } from "lucide-react";
 import { useAdminSession } from "../AdminSessionContext";
-import AdminPageTabs from "../components/AdminPageTabs";
-
 const PLAN_FEATURES = {
   monthly: [
     "Tüm özellikler aktif",
@@ -91,15 +89,9 @@ export default function SubscriptionPage() {
       {/* Header Compact */}
       <div style={{ marginBottom: "16px" }}>
         <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>
-          Sistem & Ayarlar
+          Abonelik
         </h1>
       </div>
-
-      <AdminPageTabs tabs={[
-        { label: "Genel Ayarlar", href: "/admin/settings" },
-        { label: "Müşteriler", href: "/admin/members" },
-        { label: "Abonelik", href: "/admin/subscription" }
-      ]} />
 
       {/* Current Plan Status */}
       {plan === "trial" && daysLeft !== null && (

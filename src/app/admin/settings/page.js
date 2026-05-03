@@ -15,7 +15,6 @@ import {
   Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot, Image as ImageIcon, ArrowUp, ArrowDown, Eye, EyeOff, UploadCloud, Building2, Shield, CreditCard, GripVertical, Layers, Package
 } from "lucide-react";
 import { PLATFORM, LEGAL_TYPES } from "@/lib/constants";
-import AdminPageTabs from "../components/AdminPageTabs";
 import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, getKVKKText } from "@/lib/contracts";
 
 const inp = {
@@ -202,16 +201,9 @@ export default function SettingsPage() {
   return (
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
       {/* Header */}
-      <div style={{ marginBottom: 16 }}>
+      <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>Sistem & Ayarlar</h1>
       </div>
-
-      {/* Global Tabs */}
-      <AdminPageTabs tabs={[
-        { label: "Genel Ayarlar", href: "/admin/settings" },
-        { label: terms.clients || "Müşteriler", href: "/admin/members" },
-        { label: "Abonelik", href: "/admin/subscription" }
-      ]} />
 
       {/* Layout Split */}
       <div className="flex flex-col md:flex-row gap-8">
