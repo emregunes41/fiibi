@@ -70,10 +70,12 @@ function generateICS(reservations, businessName) {
 
     if (res.notes) {
       descLines.push(`-- NOTLAR --`);
-      descLines.push(res.notes.replace(/\\r?\\n/g, ' '));
+      // Gerçek satır sonlarını ve \n stringlerini iCal satır sonuna çevir, boşlukları temizle
+      const safeNotes = res.notes.replace(/(?:\\\\n)+/g, '\\n').replace(/(?:\\r\\n|\\n|\\r)+/gm, '\\n').trim();
+      descLines.push(safeNotes);
     }
 
-    const description = descLines.join('\\n');
+    const description = descLines.join('\\n').replace(/(?:\\r\\n|\\n|\\r)+/gm, '\\n');
     
     ics.push(
       "BEGIN:VEVENT",
