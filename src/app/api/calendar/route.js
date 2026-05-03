@@ -41,7 +41,8 @@ function generateICS(reservations, businessName) {
 
     // Construct event details
     const summary = `${res.brideName} & ${res.groomName || "Rezervasyon"}`;
-    const description = `Paket: ${res.package?.name || "Bilinmiyor"}\\nTelefon: ${res.bridePhone}\\nDurum: ${res.status}`;
+    const packageNames = res.packages && res.packages.length > 0 ? res.packages.map(p => p.name).join(", ") : "Bilinmiyor";
+    const description = `Paket: ${packageNames}\\nTelefon: ${res.bridePhone || "-"}\\nDurum: ${res.status}`;
     
     ics.push(
       "BEGIN:VEVENT",
@@ -83,7 +84,7 @@ export async function GET(req) {
         status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] }
       },
       include: {
-        package: true
+        packages: true
       }
     });
 
