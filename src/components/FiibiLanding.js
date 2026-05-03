@@ -4,20 +4,14 @@ import { useState, useEffect, useRef } from "react";
 import { registerBusiness } from "@/app/actions/register-photographer";
 import { getBusinessTypeList } from "@/lib/business-types";
 
+import { useLanguage } from "@/components/LanguageContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+
 const C = {
   orange: "#FF5F1F", orangeLight: "#FFAA4C", orangeDark: "#D94800",
   cream: "#FFF6F2", bg: "#F5F5F4", black: "#1A1A1A", dark: "#2E2E2E",
   muted: "#A3A3A3", secondary: "#555555", white: "#FFFFFF",
 };
-
-const FEATURES = [
-  { title: "Online Randevu", desc: "Müşterileriniz 7/24 online randevu alsın. Takvim otomatik yönetilsin.", icon: "📅" },
-  { title: "Ödeme Takibi", desc: "Nakit, havale, kart — tüm tahsilatlarınızı tek ekranda takip edin.", icon: "💳" },
-  { title: "Yönetim Paneli", desc: "Rezervasyonlar, müşteriler, hatırlatmalar. Her şey tek panelde.", icon: "📊" },
-  { title: "Kendi Web Siteniz", desc: "2 dakikada profesyonel web siteniz hazır. Özel alan adı desteği.", icon: "🌐" },
-  { title: "SMS & E-posta", desc: "Otomatik hatırlatmalar ve onay bildirimleri. Müşteri kaybı sıfır.", icon: "📱" },
-  { title: "Sözleşme & Form", desc: "Dijital sözleşme onayı ve özel müşteri formları.", icon: "📋" },
-];
 
 function buildPlans(prices) {
   return [
@@ -78,11 +72,21 @@ const btnStyle = {
 };
 
 export default function FiibiLanding() {
+  const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  
+  const FEATURES = [
+    { title: t.landing.stats.appointment, desc: "Müşterileriniz 7/24 online randevu alsın. Takvim otomatik yönetilsin.", icon: "📅" },
+    { title: t.landing.pricing.m5, desc: "Nakit, havale, kart — tüm tahsilatlarınızı tek ekranda takip edin.", icon: "💳" },
+    { title: "Yönetim Paneli", desc: "Rezervasyonlar, müşteriler, hatırlatmalar. Her şey tek panelde.", icon: "📊" },
+    { title: t.landing.pricing.m2, desc: "2 dakikada profesyonel web siteniz hazır. Özel alan adı desteği.", icon: "🌐" },
+    { title: t.landing.pricing.m4, desc: "Otomatik hatırlatmalar ve onay bildirimleri. Müşteri kaybı sıfır.", icon: "📱" },
+    { title: "Sözleşme & Form", desc: "Dijital sözleşme onayı ve özel müşteri formları.", icon: "📋" },
+  ];
   const [result, setResult] = useState(null);
   const [plans, setPlans] = useState(buildPlans({ monthly: 2499, yearly: 24999, lifetime: 69500 }));
   
@@ -311,13 +315,16 @@ export default function FiibiLanding() {
         <div style={{ ...wrap, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           {scrolled ? <Logo size={40} /> : <Logo dark size={60} />}
           <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
-            <a href="#ozellikler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Özellikler</a>
-            <a href="#sektorler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Sektörler</a>
-            <a href="#fiyatlar" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Fiyatlar</a>
+            <a href="#ozellikler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.features}</a>
+            <a href="#sektorler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.sectors}</a>
+            <a href="#fiyatlar" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.pricing}</a>
             <button onClick={() => setShowRegister(true)} style={{
               background: C.orange, color: C.white, padding: "10px 24px",
               fontSize: 14, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
-            }}>Ücretsiz Başla</button>
+            }}>{t.landing.nav.startFree}</button>
+            <div style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)" }}>
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </nav>
@@ -344,7 +351,7 @@ export default function FiibiLanding() {
         <div style={{ ...wrap, textAlign: "center", position: "relative", zIndex: 1, padding: "80px 32px 48px" }}>
 
           <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", marginBottom: 32, lineHeight: 1.6, maxWidth: 420, margin: "0 auto 32px" }}>
-            Online randevu, ödeme takibi, müşteri yönetimi ve kendi web siteniz — tek platformda.
+            {t.landing.hero.subtitle}
           </p>
 
           {/* Functional form */}
@@ -373,12 +380,12 @@ export default function FiibiLanding() {
                 fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap",
               }}
             >
-              Ücretsiz Başla →
+              {t.landing.hero.cta}
             </button>
           </form>
 
           <p style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", marginTop: 14 }}>
-            Kredi kartı gerekmez · 2 dakikada kurulum · İstediğin zaman iptal
+            {t.landing.hero.note}
           </p>
         </div>
 
@@ -405,12 +412,12 @@ export default function FiibiLanding() {
       <Reveal id="ozellikler" style={{ padding: "100px 32px", background: C.white }}>
         <div style={wrap}>
           <div style={{ maxWidth: 560, marginBottom: 64 }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: C.orange, textTransform: "uppercase", letterSpacing: "0.12em" }}>ÖZELLİKLER</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.orange, textTransform: "uppercase", letterSpacing: "0.12em" }}>{t.landing.features.tag}</span>
             <h2 style={{ fontSize: 44, fontWeight: 800, color: C.black, letterSpacing: "-0.03em", marginTop: 12, lineHeight: 1.1 }}>
-              İhtiyacın olan her şey, tek yerde.
+              {t.landing.features.title}
             </h2>
             <p style={{ fontSize: 16, color: C.secondary, marginTop: 16, lineHeight: 1.7 }}>
-              Randevu yönetiminden ödeme takibine, müşteri iletişiminden web sitenize — hepsi dahil.
+              {t.landing.features.subtitle}
             </p>
           </div>
           <div className="fiibi-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2 }}>
@@ -432,16 +439,16 @@ export default function FiibiLanding() {
       <Reveal style={{ padding: "100px 32px", background: C.black, color: C.white }}>
         <div style={wrap}>
           <div style={{ textAlign: "center", marginBottom: 72 }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: C.orange, textTransform: "uppercase", letterSpacing: "0.12em" }}>NASIL ÇALIŞIR?</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.orange, textTransform: "uppercase", letterSpacing: "0.12em" }}>{t.landing.how.tag}</span>
             <h2 style={{ fontSize: 44, fontWeight: 800, letterSpacing: "-0.03em", marginTop: 12, lineHeight: 1.1 }}>
-              3 adımda başla.
+              {t.landing.how.title}
             </h2>
           </div>
           <div className="fiibi-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0 }}>
             {[
-              { n: "01", t: "Kayıt Ol", d: "Sektörünüzü seçin, işletme bilgilerinizi girin. 2 dakika sürer." },
-              { n: "02", t: "Hizmetlerini Ekle", d: "Paketlerinizi, fiyatlarınızı ve çalışma saatlerinizi belirleyin." },
-              { n: "03", t: "Yayına Al", d: "Web siteniz hazır! Müşterileriniz online randevu almaya başlasın." },
+              { n: "01", t: "1", d: t.landing.how.s1 },
+              { n: "02", t: "2", d: t.landing.how.s2 },
+              { n: "03", t: "3", d: t.landing.how.s3 },
             ].map((s, i) => (
               <div key={i} style={{ padding: "40px 32px", borderLeft: i > 0 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
                 <div style={{ fontSize: 48, fontWeight: 800, color: C.orange, marginBottom: 20, letterSpacing: "-0.04em" }}>{s.n}</div>
@@ -458,13 +465,13 @@ export default function FiibiLanding() {
         <div style={wrap}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48, flexWrap: "wrap", gap: 20 }}>
             <div>
-              <span style={{ fontSize: 12, fontWeight: 700, color: C.orange, textTransform: "uppercase", letterSpacing: "0.12em" }}>SEKTÖRLER</span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: C.orange, textTransform: "uppercase", letterSpacing: "0.12em" }}>{t.landing.sectors.tag}</span>
               <h2 style={{ fontSize: 44, fontWeight: 800, color: C.black, letterSpacing: "-0.03em", marginTop: 12, lineHeight: 1.1 }}>
-                Hangi sektörde olursan ol.
+                {t.landing.sectors.title}
               </h2>
             </div>
             <p style={{ fontSize: 15, color: C.secondary, maxWidth: 360, lineHeight: 1.6 }}>
-              fiibi, randevu ile çalışan her meslek dalına uygun altyapı sunar. Sektörüne özel terminoloji otomatik uygulanır.
+              {t.landing.sectors.subtitle}
             </p>
           </div>
           <div className="fiibi-grid-sectors" style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 2 }}>
@@ -484,40 +491,40 @@ export default function FiibiLanding() {
       <Reveal id="fiyatlar" style={{ padding: "100px 32px", background: C.bg }}>
         <div style={wrap}>
           <div style={{ textAlign: "center", marginBottom: 64 }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: C.orange, textTransform: "uppercase", letterSpacing: "0.12em" }}>FİYATLAR</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.orange, textTransform: "uppercase", letterSpacing: "0.12em" }}>{t.landing.pricing.tag}</span>
             <h2 style={{ fontSize: 44, fontWeight: 800, color: C.black, letterSpacing: "-0.03em", marginTop: 12, lineHeight: 1.1 }}>
-              Basit ve şeffaf.
+              {t.landing.pricing.title}
             </h2>
           </div>
           <div className="fiibi-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, maxWidth: 760, margin: "0 auto" }}>
             {/* Aylık */}
             <div style={{ padding: "44px 36px", background: C.white }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Aylık</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>{t.landing.pricing.monthly}</div>
               <div style={{ fontSize: 48, fontWeight: 800, color: C.black, letterSpacing: "-0.03em" }}>₺{plans[0]?.price?.toLocaleString("tr-TR") || "—"}</div>
-              <div style={{ fontSize: 14, color: C.muted, marginBottom: 28 }}>aylık · Tüm özellikler</div>
+              <div style={{ fontSize: 14, color: C.muted, marginBottom: 28 }}>{t.landing.pricing.allFeatures}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
-                {["Sınırsız randevu", "Kendi web siten", "Online ödeme", "SMS & e-posta", "Ödeme takibi", "Öncelikli destek"].map(f => (
+                {[t.landing.pricing.m1, t.landing.pricing.m2, t.landing.pricing.m3, t.landing.pricing.m4, t.landing.pricing.m5, t.landing.pricing.m6].map(f => (
                   <span key={f} style={{ fontSize: 14, color: C.secondary }}><span style={{ color: C.orange, marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
-              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "monthly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, border: `2px solid ${C.black}`, background: "transparent", color: C.black, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Hemen Başla →</button>
+              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "monthly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, border: `2px solid ${C.black}`, background: "transparent", color: C.black, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
             </div>
             {/* Yıllık */}
             <div style={{ padding: "44px 36px", background: C.black, color: C.white, position: "relative" }}>
-              {plans[1]?.savings > 0 && <div style={{ position: "absolute", top: 16, right: 16, background: C.orange, color: C.white, padding: "4px 12px", fontSize: 10, fontWeight: 700 }}>%{plans[1].savings} TASARRUF</div>}
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Yıllık</div>
+              {plans[1]?.savings > 0 && <div style={{ position: "absolute", top: 16, right: 16, background: C.orange, color: C.white, padding: "4px 12px", fontSize: 10, fontWeight: 700 }}>%{plans[1].savings} {t.landing.pricing.savings}</div>}
+              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>{t.landing.pricing.yearly}</div>
               <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-0.03em" }}>₺{plans[1]?.price?.toLocaleString("tr-TR") || "—"}</div>
               <div style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>{plans[1]?.monthlyEquiv ? `~₺${plans[1].monthlyEquiv.toLocaleString("tr-TR")}/ay` : "yıllık"} · Her şey dahil</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
-                {["Aylık plandaki her şey", "Online ödeme", "SMS & e-posta", "Ödeme takibi", "Öncelikli destek"].map(f => (
+                {[t.landing.pricing.y1, t.landing.pricing.m3, t.landing.pricing.m4, t.landing.pricing.m5, t.landing.pricing.m6].map(f => (
                   <span key={f} style={{ fontSize: 14, color: "rgba(255,255,255,0.55)" }}><span style={{ color: C.orangeLight, marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
-              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "yearly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, background: C.orange, border: "none", color: C.white, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Hemen Başla →</button>
+              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "yearly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, background: C.orange, border: "none", color: C.white, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
             </div>
           </div>
           <p style={{ textAlign: "center", marginTop: 24, fontSize: 15, color: C.secondary }}>
-            🎁 <strong>Tüm planlar 7 gün ücretsiz deneme</strong> ile başlar. Kredi kartı gerekmez.
+            🎁 {t.landing.pricing.freeTrialNote}
           </p>
         </div>
       </Reveal>
@@ -526,16 +533,16 @@ export default function FiibiLanding() {
       <Reveal style={{ padding: "120px 32px", background: C.orange, textAlign: "center" }}>
         <div style={wrap}>
           <h2 style={{ fontSize: 52, fontWeight: 800, color: C.white, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: 20 }}>
-            İşletmeni büyütmeye<br/>hazır mısın?
+            {t.landing.cta.title1}<br/>{t.landing.cta.title2}
           </h2>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.8)", marginBottom: 36, maxWidth: 480, margin: "0 auto 36px" }}>
-            7 gün ücretsiz dene. Kredi kartı gerekmez. İstediğin zaman iptal et.
+            {t.landing.cta.subtitle}
           </p>
           <button onClick={() => setShowRegister(true)} style={{
             display: "inline-block", background: C.white, color: C.orangeDark,
             padding: "18px 48px", fontSize: 17, fontWeight: 800, textDecoration: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
           }}>
-            Ücretsiz Başla →
+            {t.landing.nav.startFree}
           </button>
         </div>
       </Reveal>
@@ -546,20 +553,20 @@ export default function FiibiLanding() {
           <div>
             <Logo dark size={40} />
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 10, maxWidth: 280, lineHeight: 1.6 }}>
-              Randevu ile çalışan her sektör için hepsi bir arada CRM platformu.
+              {t.landing.footer.desc}
             </p>
           </div>
           <div style={{ display: "flex", gap: 48, flexWrap: "wrap" }}>
             <div>
               <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 14 }}>Platform</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <a href="#ozellikler" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>Özellikler</a>
-                <a href="#fiyatlar" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>Fiyatlar</a>
-                <a href="#sektorler" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>Sektörler</a>
+                <a href="#ozellikler" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>{t.landing.nav.features}</a>
+                <a href="#fiyatlar" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>{t.landing.nav.pricing}</a>
+                <a href="#sektorler" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>{t.landing.nav.sectors}</a>
               </div>
             </div>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 14 }}>İletişim</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 14 }}>{t.nav.contact}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 <a href="mailto:destek@fiibi.co" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>destek@fiibi.co</a>
               </div>
@@ -567,7 +574,7 @@ export default function FiibiLanding() {
           </div>
         </div>
         <div style={{ ...wrap, borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 40, paddingTop: 20, textAlign: "center" }}>
-          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.15)" }}>© {new Date().getFullYear()} fiibi. Tüm hakları saklıdır.</span>
+          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.15)" }}>© {new Date().getFullYear()} fiibi. {t.footer.rights}</span>
         </div>
       </footer>
     </div>

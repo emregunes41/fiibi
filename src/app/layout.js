@@ -100,8 +100,10 @@ export default async function RootLayout({ children }) {
           <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap" />
         </head>
         <body style={{ margin: 0, background: "#fff", color: "#1a1a1a", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
-          <PageTracker />
-          {children}
+          <LanguageProvider>
+            <PageTracker />
+            {children}
+          </LanguageProvider>
         </body>
       </html>
     );
