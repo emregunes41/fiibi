@@ -1792,7 +1792,11 @@ export async function updateTenantDomain(domain) {
     }
 
     // Add new domain to Vercel
-    if (formattedDomain && formattedDomain !== oldDomain && VERCEL_TOKEN && VERCEL_PROJECT_ID) {
+    if (formattedDomain && formattedDomain !== oldDomain) {
+      if (!VERCEL_TOKEN || !VERCEL_PROJECT_ID) {
+        return { error: "Sistemde VERCEL_TOKEN veya VERCEL_PROJECT_ID eksik! Lütfen ayarları kontrol edin." };
+      }
+      
       try {
         const addRes = await fetch(`https://api.vercel.com/v10/projects/${VERCEL_PROJECT_ID}/domains`, {
           method: "POST",
@@ -1803,11 +1807,14 @@ export async function updateTenantDomain(domain) {
           body: JSON.stringify({ name: formattedDomain })
         });
         const addData = await addRes.json();
+        
         if (addData.error) {
-          console.error("Vercel domain ekleme hatası:", addData.error);
+          console.error("Vercel domain ekleme hatası detay:", addData.error);
+          return { error: `Vercel API Hatası: ${addData.error.message}` };
         }
       } catch (e) {
-        console.error("Vercel domain ekleme hatası:", e);
+        console.error("Vercel domain ekleme ağ hatası:", e);
+        return { error: `Bağlantı Hatası: ${e.message}` };
       }
     }
 
