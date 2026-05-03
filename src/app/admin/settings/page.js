@@ -53,6 +53,32 @@ const sectionHeader = (Icon, title, desc) => (
   </div>
 );
 
+
+const SUB_TABS = {
+  genel: [
+    { id: "moduller", label: "Modüller" },
+    { id: "domain", label: "Alan Adı" }
+  ],
+  tasarim: [
+    { id: "tema", label: "Tema & Marka" },
+    { id: "hero", label: "Hero & Karşılama" },
+    { id: "duzen", label: "Sayfa Düzeni" },
+    { id: "iletisim", label: "İletişim & Sosyal" }
+  ],
+  icerik: [
+    { id: "icerik_blok", label: "İçerik Blokları" },
+    { id: "banner", label: "Banner&apos;lar" },
+    { id: "portfolio", label: "Portfolyo" },
+    { id: "sozlesme", label: "Sözleşmeler" },
+    { id: "indirim", label: "İndirimler" }
+  ],
+  sistem: [
+    { id: "odeme", label: "Ödeme" },
+    { id: "bildirim", label: "Bildirimler" },
+    { id: "ai", label: "Yapay Zeka" }
+  ]
+};
+
 export default function SettingsPage() {
   const router = useRouter();
   const [config, setConfig] = useState(null);
@@ -62,6 +88,7 @@ export default function SettingsPage() {
   const [isError, setIsError] = useState(false);
   const [uploadingBg, setUploadingBg] = useState(false);
   const [activeTab, setActiveTab] = useState("genel");
+  const [subTab, setSubTab] = useState("moduller");
   const { session: adminSession } = useAdminSession();
   const businessType = adminSession?.tenant?.businessType || null;
   const bt = getBusinessType(businessType);
@@ -221,7 +248,7 @@ export default function SettingsPage() {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             return (
-              <button key={tab.id} onClick={() => setActiveTab(tab.id)} type="button" style={{
+              <button key={tab.id} onClick={() => { setActiveTab(tab.id); if (SUB_TABS[tab.id]) setSubTab(SUB_TABS[tab.id][0].id); }} type="button" style={{
                 display: "flex", alignItems: "center", gap: 10,
                 padding: "12px 16px", fontSize: 13, fontWeight: isActive ? 700 : 500,
                 color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
@@ -235,8 +262,27 @@ export default function SettingsPage() {
           })}
         </div>
 
+
         {/* Right Content Area */}
         <div className="flex-1 min-w-0">
+          
+          {SUB_TABS[activeTab] && (
+            <div style={{ display: "flex", gap: 12, marginBottom: 24, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
+              {SUB_TABS[activeTab].map(st => (
+                <button
+                  key={st.id}
+                  type="button"
+                  onClick={() => setSubTab(st.id)}
+                  style={{
+                    background: subTab === st.id ? "#fff" : "rgba(255,255,255,0.06)",
+                    color: subTab === st.id ? "#000" : "rgba(255,255,255,0.6)",
+                    border: "none", borderRadius: 0, padding: "6px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap"
+                  }}
+                >{st.label}</button>
+              ))}
+            </div>
+          )}
+
           
           {activeTab === "musteriler" ? (
             <div style={sectionCard}>
@@ -247,7 +293,7 @@ export default function SettingsPage() {
             <form onSubmit={handleSubmit}>
 
               {/* 0. Modüller */}
-              {activeTab === "genel" && <div style={sectionCard}>
+              {activeTab === "genel" && subTab === "moduller" && <div style={sectionCard}>
           {sectionHeader(Layers, "Aktif Modüller", "Platformunuzda kullanmak istediğiniz araçları seçin. Kapatılan modüller sol menüden ve websitenizden gizlenir.")}
 
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -282,7 +328,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 1. Hero Başlıkları */}
-        {activeTab === "tasarim" && <div style={sectionCard}>
+        {activeTab === "tasarim" && subTab === "hero" && <div style={sectionCard}>
           {sectionHeader(Type, "Sinematik Başlıklar", "Anasayfada görünen büyük başlık ve slogan.")}
 
           <div style={{ marginBottom: 16 }}>
@@ -313,7 +359,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 2. Preview Card */}
-        {activeTab === "tasarim" && <div style={{ ...sectionCard, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
+        {activeTab === "tasarim" && subTab === "hero" && <div style={{ ...sectionCard, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
             <Layout size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
             <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Canlı Önizleme</span>
@@ -340,7 +386,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* Banner Carousel Management */}
-        {activeTab === "icerik" && <div style={sectionCard}>
+        {activeTab === "icerik" && subTab === "banner" && <div style={sectionCard}>
           {sectionHeader(ImageIcon, "Banner Carousel", "Anasayfada portfolyo bölümünün üstünde görünen kayan banner görselleri.")}
 
           {/* Upload new banner */}
@@ -510,7 +556,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 2.5 Hero Arka Plan */}
-        {activeTab === "tasarim" && <div style={sectionCard}>
+        {activeTab === "tasarim" && subTab === "hero" && <div style={sectionCard}>
           {sectionHeader(Monitor, "Arka Plan Ayarı", "Anasayfadaki hero bölümünün arka planını değiştirin.")}
 
           {/* Type Selector */}
@@ -622,7 +668,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 3. Stüdyo & İletişim */}
-        {activeTab === "tasarim" && <div style={sectionCard}>
+        {activeTab === "tasarim" && subTab === "iletisim" && <div style={sectionCard}>
           {sectionHeader(Home, `${terms.placeName || "İşletme"} & İletişim`, "Alt panelde yer alan adres ve iletişim detayları.")}
 
           <div style={{ marginBottom: 16 }}>
@@ -670,7 +716,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 4. Sosyal Kanallar */}
-        {activeTab === "tasarim" && <div style={sectionCard}>
+        {activeTab === "tasarim" && subTab === "iletisim" && <div style={sectionCard}>
           {sectionHeader(Instagram, "Sosyal Kanallar", "Müşterilerinizin size ulaşabileceği linkler.")}
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -718,7 +764,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 5. Bildirim Kanalları */}
-        {activeTab === "sistem" && <div style={sectionCard}>
+        {activeTab === "sistem" && subTab === "bildirim" && <div style={sectionCard}>
           {sectionHeader(Mail, "Bildirim Kanalları", "Müşterilere gönderilecek bildirimlerin kanallarını yönetin.")}
 
           {/* Toggle Switches */}
@@ -954,7 +1000,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 6. Rezervasyon Sözleşmesi */}
-        {activeTab === "icerik" && <div style={sectionCard}>
+        {activeTab === "icerik" && subTab === "sozlesme" && <div style={sectionCard}>
           {sectionHeader(FileText, "Yasal Sözleşmeler", "Müşterinin ödeme öncesi onaylaması gereken sözleşme ve metinler.")}
 
           <div style={{ marginBottom: 24 }}>
@@ -1019,7 +1065,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* İndirim Kodları Section */}
-        {activeTab === "icerik" && <div style={sectionCard}>
+        {activeTab === "icerik" && subTab === "indirim" && <div style={sectionCard}>
           {sectionHeader(Tag, "İndirim Kodları", "Müşterilere verebileceğiniz indirim kuponları")}
 
           {/* Create new code */}
@@ -1158,7 +1204,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 8. AI Chatbot Ayarları */}
-        {activeTab === "sistem" && <div style={sectionCard}>
+        {activeTab === "sistem" && subTab === "ai" && <div style={sectionCard}>
           {sectionHeader(Bot, "AI Chatbot Ayarları", "Yapay zeka asistanının davranışını ve talimatlarını düzenleyin.")}
 
           {/* Toggle */}
@@ -1288,7 +1334,7 @@ export default function SettingsPage() {
       )}
 
       {/* ── Section Order / Sayfa Düzeni ── */}
-      {activeTab === "tasarim" && (() => {
+      {activeTab === "tasarim" && subTab === "duzen" && (() => {
         const SECTION_META = {
           events: { icon: "📅", label: "Etkinlikler", desc: "Yaklaşan etkinlikler ve workshop'lar" },
           banners: { icon: "🖼️", label: "Banner Carousel", desc: "Kayan görsel ve video banner'lar" },
@@ -1437,7 +1483,7 @@ export default function SettingsPage() {
       })()}
 
       {/* ── Content Blocks ── */}
-      {activeTab === "icerik" && <div style={sectionCard}>
+      {activeTab === "icerik" && subTab === "icerik_blok" && <div style={sectionCard}>
         {sectionHeader(Layout, "Anasayfa İçerik Blokları", "Anasayfada görsel ve metin ile bölümler ekleyin")}
         
         {/* Existing blocks */}
@@ -1525,7 +1571,7 @@ export default function SettingsPage() {
       </div>}
 
       {/* ── Portfolyo Yönetimi ── */}
-      {activeTab === "icerik" && <div style={sectionCard}>
+      {activeTab === "icerik" && subTab === "portfolio" && <div style={sectionCard}>
         {sectionHeader(ImageIcon, "Portfolyo", "Anasayfada gösterilecek portfolyo fotoğraflarını yönetin.")}
 
         {/* Yeni Kategori Ekle */}
@@ -1639,7 +1685,7 @@ export default function SettingsPage() {
       </div>}
 
         {/* ═══ MARKA SEKME ═══ */}
-        {activeTab === "tasarim" && <div style={sectionCard}>
+        {activeTab === "tasarim" && subTab === "tema" && <div style={sectionCard}>
           {sectionHeader(Palette, "Marka & Kimlik", "Tema, logo, renkler ve yazı tipi ayarları.")}
 
           {/* Gece / Gündüz Toggle */}
@@ -1828,7 +1874,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* ═══ ÖDEME SEKME ═══ */}
-        {activeTab === "sistem" && <div style={sectionCard}>
+        {activeTab === "sistem" && subTab === "odeme" && <div style={sectionCard}>
           {sectionHeader(Banknote, "Ödeme Ayarları", "Müşterilerinizden online ödeme almak için pazaryeri kaydınızı tamamlayın.")}
 
           {/* Payment Mode */}
@@ -1886,7 +1932,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* Alt Üye İşyeri Kayıt Formu */}
-        {activeTab === "sistem" && (config.paymentMode === "card" || config.paymentMode === "both") && <div style={sectionCard}>
+        {activeTab === "sistem" && subTab === "odeme" && (config.paymentMode === "card" || config.paymentMode === "both") && <div style={sectionCard}>
           {sectionHeader(Building2, "Alt Üye İşyeri Kaydı", `${PLATFORM.name} pazaryeri üzerinden kredi kartı ile ödeme alabilmeniz için yasal bilgilerinizi girin.`)}
 
           {/* Durum Göstergesi */}
@@ -2090,7 +2136,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 6. Domain Yönetimi */}
-        {activeTab === "genel" && <div style={sectionCard}>
+        {activeTab === "genel" && subTab === "domain" && <div style={sectionCard}>
           {sectionHeader(Globe, "Alan Adı (Domain) Ayarları", "Sitenize kendi alan adınızdan (www.siteniz.com) ulaşılmasını sağlayın.")}
           
           <div style={{ marginBottom: 32, padding: "24px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)" }}>
