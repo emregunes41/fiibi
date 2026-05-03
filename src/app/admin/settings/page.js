@@ -21,7 +21,7 @@ import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, 
 const inp = {
   width: "100%", boxSizing: "border-box",
   background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-  borderRadius: 6, padding: "12px 16px", fontSize: 14, color: "#fff",
+  borderRadius: 0, padding: "12px 16px", fontSize: 14, color: "#fff",
   outline: "none", transition: "all 0.2s",
 };
 
@@ -34,13 +34,13 @@ const label = {
 
 const sectionCard = {
   background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
-  borderRadius: 12, padding: "24px", marginBottom: 24,
+  borderRadius: 0, padding: "24px", marginBottom: 24,
 };
 
 const sectionHeader = (Icon, title, desc) => (
   <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 24 }}>
     <div style={{
-      width: 40, height: 40, borderRadius: 8, background: "rgba(255,255,255,0.04)",
+      width: 40, height: 40, borderRadius: 0, background: "rgba(255,255,255,0.04)",
       border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center",
       justifyContent: "center", flexShrink: 0,
     }}>
@@ -61,7 +61,7 @@ export default function SettingsPage() {
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [uploadingBg, setUploadingBg] = useState(false);
-  const [activeTab, setActiveTab] = useState("tema");
+  const [activeTab, setActiveTab] = useState("genel");
   const { session: adminSession } = useAdminSession();
   const businessType = adminSession?.tenant?.businessType || null;
   const bt = getBusinessType(businessType);
@@ -219,15 +219,10 @@ export default function SettingsPage() {
         {/* Left Sidebar Navigation */}
         <div className="w-full md:w-56 shrink-0 flex flex-row md:flex-col gap-1 overflow-x-auto border-b md:border-b-0 border-white/10 pb-4 md:pb-0 mb-4 md:mb-0" style={{ scrollbarWidth: "none" }}>
           {[
-            { id: "moduller", label: "Modüller", icon: Layers },
-            { id: "tema", label: "Tema & Görünüm", icon: Palette },
-            { id: "duzen", label: "Sayfa Düzeni", icon: Layout },
-            { id: "icerik", label: "İçerikler", icon: FileText },
-            { id: "odeme", label: "Ödeme Yöntemi", icon: CreditCard },
-            { id: "bildirim", label: "Bildirimler", icon: Mail },
-            { id: "sozlesme", label: "Sözleşmeler", icon: FileText },
-            { id: "ai", label: "Yapay Zeka (AI)", icon: Bot },
-            { id: "domain", label: "Alan Adı", icon: Globe },
+            { id: "genel", label: "Genel Ayarlar", icon: Globe },
+            { id: "tasarim", label: "Tasarım & Düzen", icon: Palette },
+            { id: "icerik", label: "İçerik Yönetimi", icon: FileText },
+            { id: "sistem", label: "Ödeme & Bildirim", icon: CreditCard },
           ].map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -237,7 +232,7 @@ export default function SettingsPage() {
                 padding: "12px 16px", fontSize: 13, fontWeight: isActive ? 700 : 500,
                 color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
                 background: isActive ? "rgba(255,255,255,0.06)" : "transparent", 
-                border: "none", borderRadius: 8,
+                border: "none", borderRadius: 0,
                 cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap", textAlign: "left"
               }} className="hover:bg-white/5">
                 <Icon size={16} /> {tab.label}
@@ -251,11 +246,11 @@ export default function SettingsPage() {
           <form onSubmit={handleSubmit}>
 
         {/* 0. Modüller */}
-        {activeTab === "moduller" && <div style={sectionCard}>
+        {activeTab === "genel" && <div style={sectionCard}>
           {sectionHeader(Layers, "Aktif Modüller", "Platformunuzda kullanmak istediğiniz araçları seçin. Kapatılan modüller sol menüden ve websitenizden gizlenir.")}
 
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 8 }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 0 }}>
               <input 
                 type="checkbox" 
                 checked={config.moduleReservations ?? true} 
@@ -270,7 +265,7 @@ export default function SettingsPage() {
 
 
 
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 8 }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 0 }}>
               <input 
                 type="checkbox" 
                 checked={config.moduleEvents ?? true} 
@@ -286,7 +281,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 1. Hero Başlıkları */}
-        {activeTab === "tema" && <div style={sectionCard}>
+        {activeTab === "tasarim" && <div style={sectionCard}>
           {sectionHeader(Type, "Sinematik Başlıklar", "Anasayfada görünen büyük başlık ve slogan.")}
 
           <div style={{ marginBottom: 16 }}>
@@ -317,7 +312,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 2. Preview Card */}
-        {activeTab === "tema" && <div style={{ ...sectionCard, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
+        {activeTab === "tasarim" && <div style={{ ...sectionCard, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
             <Layout size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
             <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Canlı Önizleme</span>
@@ -514,7 +509,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 2.5 Hero Arka Plan */}
-        {activeTab === "tema" && <div style={sectionCard}>
+        {activeTab === "tasarim" && <div style={sectionCard}>
           {sectionHeader(Monitor, "Arka Plan Ayarı", "Anasayfadaki hero bölümünün arka planını değiştirin.")}
 
           {/* Type Selector */}
@@ -626,7 +621,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 3. Stüdyo & İletişim */}
-        {activeTab === "tema" && <div style={sectionCard}>
+        {activeTab === "tasarim" && <div style={sectionCard}>
           {sectionHeader(Home, `${terms.placeName || "İşletme"} & İletişim`, "Alt panelde yer alan adres ve iletişim detayları.")}
 
           <div style={{ marginBottom: 16 }}>
@@ -674,7 +669,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 4. Sosyal Kanallar */}
-        {activeTab === "tema" && <div style={sectionCard}>
+        {activeTab === "tasarim" && <div style={sectionCard}>
           {sectionHeader(Instagram, "Sosyal Kanallar", "Müşterilerinizin size ulaşabileceği linkler.")}
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -722,7 +717,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 5. Bildirim Kanalları */}
-        {activeTab === "bildirim" && <div style={sectionCard}>
+        {activeTab === "sistem" && <div style={sectionCard}>
           {sectionHeader(Mail, "Bildirim Kanalları", "Müşterilere gönderilecek bildirimlerin kanallarını yönetin.")}
 
           {/* Toggle Switches */}
@@ -958,7 +953,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 6. Rezervasyon Sözleşmesi */}
-        {activeTab === "sozlesme" && <div style={sectionCard}>
+        {activeTab === "icerik" && <div style={sectionCard}>
           {sectionHeader(FileText, "Yasal Sözleşmeler", "Müşterinin ödeme öncesi onaylaması gereken sözleşme ve metinler.")}
 
           <div style={{ marginBottom: 24 }}>
@@ -1023,7 +1018,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* İndirim Kodları Section */}
-        {activeTab === "sozlesme" && <div style={sectionCard}>
+        {activeTab === "icerik" && <div style={sectionCard}>
           {sectionHeader(Tag, "İndirim Kodları", "Müşterilere verebileceğiniz indirim kuponları")}
 
           {/* Create new code */}
@@ -1162,7 +1157,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 8. AI Chatbot Ayarları */}
-        {activeTab === "ai" && <div style={sectionCard}>
+        {activeTab === "sistem" && <div style={sectionCard}>
           {sectionHeader(Bot, "AI Chatbot Ayarları", "Yapay zeka asistanının davranışını ve talimatlarını düzenleyin.")}
 
           {/* Toggle */}
@@ -1272,7 +1267,7 @@ export default function SettingsPage() {
           type="submit"
           disabled={saving}
           style={{
-            width: "100%", padding: 16, borderRadius: 8, border: "none",
+            width: "100%", padding: 16, borderRadius: 0, border: "none",
             background: "#fff", color: "#000", fontWeight: 800, fontSize: 13,
             textTransform: "uppercase", letterSpacing: "0.08em",
             cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.5 : 1,
@@ -1291,7 +1286,7 @@ export default function SettingsPage() {
       </form>
 
       {/* ── Section Order / Sayfa Düzeni ── */}
-      {activeTab === "duzen" && (() => {
+      {activeTab === "tasarim" && (() => {
         const SECTION_META = {
           events: { icon: "📅", label: "Etkinlikler", desc: "Yaklaşan etkinlikler ve workshop'lar" },
           banners: { icon: "🖼️", label: "Banner Carousel", desc: "Kayan görsel ve video banner'lar" },
@@ -1642,7 +1637,7 @@ export default function SettingsPage() {
       </div>}
 
         {/* ═══ MARKA SEKME ═══ */}
-        {activeTab === "tema" && <div style={sectionCard}>
+        {activeTab === "tasarim" && <div style={sectionCard}>
           {sectionHeader(Palette, "Marka & Kimlik", "Tema, logo, renkler ve yazı tipi ayarları.")}
 
           {/* Gece / Gündüz Toggle */}
@@ -1650,7 +1645,7 @@ export default function SettingsPage() {
             <label style={label}>Site Teması</label>
             <div style={{ 
               display: "flex", alignItems: "center", gap: 16, 
-              padding: "16px 20px", borderRadius: 12,
+              padding: "16px 20px", borderRadius: 0,
               background: config.forceDarkMode ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.08)",
               border: "1px solid rgba(255,255,255,0.1)"
             }}>
@@ -1831,7 +1826,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* ═══ ÖDEME SEKME ═══ */}
-        {activeTab === "odeme" && <div style={sectionCard}>
+        {activeTab === "sistem" && <div style={sectionCard}>
           {sectionHeader(Banknote, "Ödeme Ayarları", "Müşterilerinizden online ödeme almak için pazaryeri kaydınızı tamamlayın.")}
 
           {/* Payment Mode */}
@@ -1889,7 +1884,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* Alt Üye İşyeri Kayıt Formu */}
-        {activeTab === "odeme" && (config.paymentMode === "card" || config.paymentMode === "both") && <div style={sectionCard}>
+        {activeTab === "sistem" && (config.paymentMode === "card" || config.paymentMode === "both") && <div style={sectionCard}>
           {sectionHeader(Building2, "Alt Üye İşyeri Kaydı", `${PLATFORM.name} pazaryeri üzerinden kredi kartı ile ödeme alabilmeniz için yasal bilgilerinizi girin.`)}
 
           {/* Durum Göstergesi */}
@@ -2093,7 +2088,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 6. Domain Yönetimi */}
-        {activeTab === "domain" && <div style={sectionCard}>
+        {activeTab === "genel" && <div style={sectionCard}>
           {sectionHeader(Globe, "Alan Adı (Domain) Ayarları", "Sitenize kendi alan adınızdan (www.siteniz.com) ulaşılmasını sağlayın.")}
           
           <div style={{ marginBottom: 32, padding: "24px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)" }}>
