@@ -55,7 +55,7 @@ export default function LoginPage() {
     border: "1px solid rgba(255,255,255,0.1)",
     borderRadius: 0,
     padding: "14px 16px 14px 48px",
-    color: "#fff",
+    color: "var(--text)",
     fontSize: "15px",
     outline: "none",
     transition: "all 0.2s ease",
@@ -63,7 +63,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "100px 24px 24px", background: "#000", position: "relative", overflow: "hidden" }}>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "100px 24px 24px", background: "var(--bg)", position: "relative", overflow: "hidden" }}>
       {/* Background orbs */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
         <div style={{ position: "absolute", top: "20%", left: "15%", width: 300, height: 300, background: "rgba(255,255,255,0.03)", filter: "blur(120px)", borderRadius: 0 }} />

@@ -57,6 +57,7 @@ model Tenant {
   subMerchantKey  String?                     // PayTR sub-merchant key (onay sonrası)
   sellerAgreementAccepted Boolean @default(false) // Satıcı sözleşmesi onayı
   sellerAgreementDate     DateTime?           // Sözleşme onay tarihi
+  pendingDomainPurchase   Json?               // {domain, years, isRenewal, merchantOid} — checkout sırasında geçici kayıt
 
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt

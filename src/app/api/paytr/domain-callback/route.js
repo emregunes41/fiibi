@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { verifyPaytrCallback } from "@/lib/paytr";
 import { prisma } from "@/lib/prisma";
 
-
 export async function POST(req) {
   try {
     const formData = await req.formData();
@@ -12,7 +11,7 @@ export async function POST(req) {
     const merchant_salt = process.env.PAYTR_MERCHANT_SALT;
 
     if (!merchant_key || !merchant_salt) {
-      return NextResponse.json({ error: "Sistem PayTR ayarları eksik." }, { status: 500 });
+      return new NextResponse("OK", { status: 200 });
     }
 
     const { merchant_oid, status, total_amount, hash } = params;
@@ -26,34 +25,47 @@ export async function POST(req) {
     }, hash);
 
     if (!isValid) {
-      return NextResponse.json({ error: "PAYTR notification failed: bad hash" }, { status: 400 });
+      console.error("Domain callback: Hash doğrulanamadı");
+      return new NextResponse("OK", { status: 200 });
     }
 
     if (status === "success") {
-      // merchant_oid formatı: DMN_tenantId_timestamp_domain.com_years_isRenewFlag
+      // OID formatı: DMN_tenantId_timestamp
       if (merchant_oid.startsWith("DMN_")) {
         const parts = merchant_oid.split("_");
-        if (parts.length >= 6) {
-          const isRenewFlag = parts.pop();
-          const isRenewal = isRenewFlag === "1";
-          const yearsStr = parts.pop();
-          const years = parseInt(yearsStr, 10) || 1;
-          const purchasedDomain = parts.slice(3).join("_");
+        if (parts.length >= 3) {
           const tenantId = parts[1];
+
+          // ── TENANT KONTROLÜ ──
+          const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
+          if (!tenant) {
+            console.error("Domain callback: Tenant bulunamadı:", tenantId);
+            return new NextResponse("OK", { status: 200 });
+          }
+
+          // ── İDEMPOTENCY: Aynı OID ile daha önce işlem yapılmış mı? ──
+          const pending = tenant.pendingDomainPurchase;
+          if (!pending || pending.merchantOid !== merchant_oid) {
+            console.log("Domain callback: Pending purchase bulunamadı veya OID eşleşmedi. Muhtemel tekrar çağrı.");
+            return new NextResponse("OK", { status: 200 });
+          }
+
+          // Detayları veritabanından oku (OID kırpılma sorunu artık yok)
+          const { domain: purchasedDomain, years, isRenewal } = pending;
 
           const VERCEL_TOKEN = process.env.VERCEL_TOKEN;
           
           if (VERCEL_TOKEN) {
             try {
               if (!isRenewal) {
-                // 1. Yeni Domain Satın Alımı
+                // Yeni Domain Satın Alımı
                 const buyRes = await fetch(`https://api.vercel.com/v1/registrar/domains/${purchasedDomain}/buy`, {
                   method: "POST",
                   headers: {
                     "Authorization": `Bearer ${VERCEL_TOKEN}`,
                     "Content-Type": "application/json"
                   },
-                  body: JSON.stringify({ renew: false }) // Varsayılan autoRenew'u Vercel açsa da aşağıda kapatacağız
+                  body: JSON.stringify({ renew: false })
                 });
                 
                 if (!buyRes.ok) {
@@ -74,39 +86,28 @@ export async function POST(req) {
                 } catch(e) {}
                 
               } else {
-                // 1. Mevcut Domaini Yenile
+                // Mevcut Domaini Yenile
                 const renewRes = await fetch(`https://api.vercel.com/v1/registrar/domains/${purchasedDomain}/renew`, {
                   method: "POST",
                   headers: {
                     "Authorization": `Bearer ${VERCEL_TOKEN}`,
                     "Content-Type": "application/json"
                   },
-                  body: JSON.stringify({}) // Vercel renew parametreleri (gerekirse expectedPrice eklenebilir)
+                  body: JSON.stringify({})
                 });
                 if (!renewRes.ok) {
                    console.error("Vercel Domain Yenileme Hatası", await renewRes.json());
                 }
               }
 
-              // Birden fazla yıl alındıysa ek yenilemeler yap (eğer satın alma da 1 yıl veriyorsa, kalan yılları yenile)
-              // Vercel API genelde tek seferde 1 yıl yeniler, bu sebeple döngüye sokuyoruz.
-              if (years > 1 && !isRenewal) {
-                for(let i = 1; i < years; i++) {
-                   await fetch(`https://api.vercel.com/v1/registrar/domains/${purchasedDomain}/renew`, {
-                     method: "POST",
-                     headers: { "Authorization": `Bearer ${VERCEL_TOKEN}`, "Content-Type": "application/json" },
-                     body: JSON.stringify({})
-                   });
-                }
-              } else if (years > 1 && isRenewal) {
-                // isRenewal = true iken zaten yukarıda 1 kez renew yaptık.
-                for(let i = 1; i < years; i++) {
-                   await fetch(`https://api.vercel.com/v1/registrar/domains/${purchasedDomain}/renew`, {
-                     method: "POST",
-                     headers: { "Authorization": `Bearer ${VERCEL_TOKEN}`, "Content-Type": "application/json" },
-                     body: JSON.stringify({})
-                   });
-                }
+              // Birden fazla yıl alındıysa ek yenilemeler yap
+              const extraRenewals = isRenewal ? years - 1 : years - 1;
+              for (let i = 0; i < extraRenewals; i++) {
+                await fetch(`https://api.vercel.com/v1/registrar/domains/${purchasedDomain}/renew`, {
+                  method: "POST",
+                  headers: { "Authorization": `Bearer ${VERCEL_TOKEN}`, "Content-Type": "application/json" },
+                  body: JSON.stringify({})
+                });
               }
 
             } catch (e) {
@@ -114,15 +115,11 @@ export async function POST(req) {
             }
           }
 
-          // 2. Veritabanını güncelle
-          const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
-          
+          // Veritabanını güncelle
           let newExpiresAt = new Date();
-          // Eğer yenilemeyse ve mevcut bir bitiş tarihi varsa, mevcut bitişin üzerine ekle
-          if (isRenewal && tenant?.domainExpiresAt && new Date(tenant.domainExpiresAt) > new Date()) {
+          if (isRenewal && tenant.domainExpiresAt && new Date(tenant.domainExpiresAt) > new Date()) {
             newExpiresAt = new Date(tenant.domainExpiresAt);
           }
-          
           newExpiresAt.setFullYear(newExpiresAt.getFullYear() + years);
 
           await prisma.tenant.update({
@@ -130,11 +127,12 @@ export async function POST(req) {
             data: {
               customDomain: purchasedDomain,
               purchasedDomain: true,
-              domainExpiresAt: newExpiresAt
+              domainExpiresAt: newExpiresAt,
+              pendingDomainPurchase: null // İşlem tamamlandı, temizle (idempotency)
             }
           });
 
-          // 3. Vercel projeye domaini ekle (sadece yeni alım ise)
+          // Vercel projeye domaini ekle (sadece yeni alım ise)
           const VERCEL_PROJECT_ID = process.env.VERCEL_PROJECT_ID;
           if (!isRenewal && VERCEL_TOKEN && VERCEL_PROJECT_ID) {
             try {
@@ -157,6 +155,6 @@ export async function POST(req) {
     return new NextResponse("OK", { status: 200 });
   } catch (err) {
     console.error("Domain PayTR Callback Hatası:", err);
-    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
+    return new NextResponse("OK", { status: 200 });
   }
 }

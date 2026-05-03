@@ -36,19 +36,17 @@ html[data-light] {
 }
 
 /* ─── LIGHT MODE: Force dark text/borders over white backgrounds ─── */
-html[data-light] body,
-html[data-light] body *:not([style*="color: var(--bg)"]):not([style*='color: "var(--bg)"']) {
+html[data-light] body {
   color: var(--text, #1a1a1a) !important;
 }
 
-/* Explicitly allow inverse text colors to be light in light mode */
-html[data-light] [style*="color: var(--bg)"],
-html[data-light] [style*='color: "var(--bg)"'] {
-  color: var(--bg) !important;
+/* General text override — but NOT for elements inside inverted buttons */
+html[data-light] body *:not(button):not(a) {
+  color: var(--text, #1a1a1a) !important;
 }
 
 /* Override inline rgba(255,255,255,...) styles — navbar, cards, sections */
-html[data-light] [style*="rgba(255"]:not([style*="color: var(--bg)"]) {
+html[data-light] [style*="rgba(255"] {
   color: var(--text, #1a1a1a) !important;
 }
 
@@ -63,6 +61,79 @@ html[data-light] [style*="background: rgba(255"] {
 }
 html[data-light] [style*="background:rgba(255"] {
   background: rgba(0,0,0,0.03) !important;
+}
+
+/* ─── INVERTED BUTTONS: #fff bg → dark bg with white text ─── */
+html[data-light] button[style*="background: #fff"],
+html[data-light] button[style*="background:#fff"],
+html[data-light] button[style*='background: "#fff"'] {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+}
+html[data-light] button[style*="background: #fff"] *,
+html[data-light] button[style*="background:#fff"] *,
+html[data-light] button[style*='background: "#fff"'] * {
+  color: #ffffff !important;
+}
+
+/* Non-button elements with white bg (badges, labels etc.) */
+html[data-light] span[style*="background: #fff"],
+html[data-light] div[style*="background: #fff"],
+html[data-light] span[style*="background:#fff"],
+html[data-light] div[style*="background:#fff"] {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+}
+html[data-light] span[style*="background: #fff"] *,
+html[data-light] div[style*="background: #fff"] *,
+html[data-light] span[style*="background:#fff"] *,
+html[data-light] div[style*="background:#fff"] * {
+  color: #ffffff !important;
+}
+
+/* Elements using CSS variables for inverse colors */
+html[data-light] [style*="color: var(--bg)"] {
+  color: var(--bg) !important;
+}
+html[data-light] [style*="background: var(--text)"] {
+  background: var(--text) !important;
+}
+html[data-light] [style*="background: var(--text)"] *,
+html[data-light] button[style*="background: var(--text)"] * {
+  color: var(--bg) !important;
+}
+
+/* Inputs and selects in light mode */
+html[data-light] input,
+html[data-light] textarea,
+html[data-light] select {
+  color: var(--text, #1a1a1a) !important;
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.15) !important;
+}
+
+html[data-light] input::placeholder,
+html[data-light] textarea::placeholder {
+  color: rgba(0,0,0,0.4) !important;
+}
+
+/* Green/Blue accent buttons should keep their colors */
+html[data-light] button[style*="background: #22c55e"],
+html[data-light] button[style*="background:#22c55e"],
+html[data-light] button[style*="background: #3b82f6"],
+html[data-light] button[style*="background:#3b82f6"] {
+  color: #ffffff !important;
+}
+html[data-light] button[style*="background: #22c55e"] *,
+html[data-light] button[style*="background:#22c55e"] *,
+html[data-light] button[style*="background: #3b82f6"] *,
+html[data-light] button[style*="background:#3b82f6"] * {
+  color: #ffffff !important;
+}
+
+/* Links */
+html[data-light] a[style*="color: #fff"] {
+  color: var(--text, #1a1a1a) !important;
 }
 
 .admin-modal-content {
@@ -87,19 +158,6 @@ html[data-light] .admin-modal-content {
 html[data-light] [style*="background: #111"],
 html[data-light] [style*="background:#111"] {
   background: #ffffff !important;
-}
-
-/* Primary buttons and elements hardcoded to #fff */
-html[data-light] [style*="background: #fff"],
-html[data-light] [style*="background:#fff"] {
-  background: #1a1a1a !important;
-  color: #ffffff !important;
-}
-
-/* Elements with hardcoded black text */
-html[data-light] [style*="color: #000"],
-html[data-light] [style*="color:#000"] {
-  color: #ffffff !important;
 }
 
 html[data-light] [style*="backgroundColor"] {

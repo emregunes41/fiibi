@@ -1823,6 +1823,29 @@ export async function updateTenantDomain(domain) {
 }
 
 
+// ─── EXCHANGE RATE CACHE (1 saat geçerli) ─────────────────────────────
+let _cachedRate = null;
+let _cachedRateAt = 0;
+const RATE_CACHE_MS = 60 * 60 * 1000; // 1 saat
+
+async function getExchangeRate() {
+  if (_cachedRate && (Date.now() - _cachedRateAt < RATE_CACHE_MS)) {
+    return _cachedRate;
+  }
+  try {
+    const kurRes = await fetch("https://open.er-api.com/v6/latest/USD");
+    const kurData = await kurRes.json();
+    if (kurData?.rates?.TRY) {
+      _cachedRate = kurData.rates.TRY;
+      _cachedRateAt = Date.now();
+      return _cachedRate;
+    }
+  } catch (e) {
+    console.error("Kur çekme hatası:", e);
+  }
+  return _cachedRate || 35; // Fallback
+}
+
 // ─── DOMAIN PURCHASING & AVAILABILITY ──────────────────────────────────
 export async function checkDomainAvailability(query) {
   const auth = await requireAdmin();
@@ -1850,17 +1873,7 @@ export async function checkDomainAvailability(query) {
   }
 
   try {
-    // Kur bilgisini dinamik olarak çek
-    let exchangeRate = 35; // Fallback
-    try {
-      const kurRes = await fetch("https://open.er-api.com/v6/latest/USD");
-      const kurData = await kurRes.json();
-      if (kurData && kurData.rates && kurData.rates.TRY) {
-        exchangeRate = kurData.rates.TRY;
-      }
-    } catch (e) {
-      console.error("Kur çekme hatası:", e);
-    }
+    const exchangeRate = await getExchangeRate();
 
     const results = await Promise.all(
       domainsToCheck.map(async (domain) => {
