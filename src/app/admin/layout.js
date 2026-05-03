@@ -51,12 +51,11 @@ function AdminLayoutInner({ children }) {
   const { features, terms } = bt;
   
   // Modül ayarları
-  const modules = session?.tenant?.settings || { moduleReservations: true, moduleStore: true, moduleEvents: true };
+  const modules = session?.tenant?.settings || { moduleReservations: true, moduleEvents: true };
 
   const navItems = businessType ? [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     modules.moduleReservations !== false && { name: "Hizmet & Katalog", href: "/admin/catalog", icon: Package },
-    modules.moduleStore !== false && { name: "Mağaza", href: "/admin/store", icon: ShoppingBag },
     modules.moduleReservations !== false && { name: terms.appointments, href: "/admin/reservations", icon: CalendarDays },
     modules.moduleEvents !== false && { name: "Etkinlikler", href: "/admin/events", icon: Ticket },
     { name: "Muhasebe", href: "/admin/muhasebe", icon: Wallet },

@@ -14,7 +14,6 @@ import AIChatBot from "@/components/AIChatBot";
 import BannerCarousel from "@/components/BannerCarousel";
 import ContentBlockCarousel from "@/components/ContentBlockCarousel";
 import EventsSection from "@/components/EventsSection";
-import ShopStorefront from "@/components/ShopStorefront";
 import { prisma } from "@/lib/prisma";
 import { optimizeCloudinaryUrl, thumbnailUrl } from "@/lib/image-utils";
 import { ArrowDown, Instagram, Mail, Phone, MapPin, MessageCircle, Calendar, Clock, Shield } from "lucide-react";
@@ -99,27 +98,6 @@ export default async function HomePage() {
   const bt = getBusinessType(tenant?.businessType || "photographer");
   const { features, terms } = bt;
 
-  let products = [];
-  try {
-    if (tenant) {
-      products = await prisma.product.findMany({
-        where: { tenantId: tenant.id, isActive: true },
-        include: { category: true },
-        orderBy: { createdAt: 'desc' }
-      });
-    }
-  } catch (e) { console.error("Products query error:", e); }
-
-  let productCategories = [];
-  try {
-    if (tenant) {
-      productCategories = await prisma.productCategory.findMany({
-        where: { tenantId: tenant.id },
-        orderBy: { createdAt: 'desc' }
-      });
-    }
-  } catch (e) { console.error("ProductCategories query error:", e); }
-
   // Hero text: use DB values directly, fallback to sector defaults only if empty
   const heroSubtitle = siteConfig?.heroSubtitle || bt.heroSub;
   const heroTitle = siteConfig?.heroTitle || bt.heroTitle;
@@ -152,7 +130,7 @@ export default async function HomePage() {
   const footerTagline = siteConfig?.footerTagline || bt.defaultSlogan;
 
   // Section ordering
-  const DEFAULT_ORDER = ["events", "banners", "content", "portfolio", "services", "shop"];
+  const DEFAULT_ORDER = ["events", "banners", "content", "portfolio", "services"];
   let sectionOrder = DEFAULT_ORDER;
   try {
     const saved = siteConfig?.sectionOrder;
@@ -161,7 +139,7 @@ export default async function HomePage() {
   // Ensure all sections are present (in case new ones were added)
   DEFAULT_ORDER.forEach(s => { if (!sectionOrder.includes(s)) sectionOrder.push(s); });
 
-  const modules = siteConfig || { moduleReservations: true, moduleStore: true, moduleEvents: true };
+  const modules = siteConfig || { moduleReservations: true, moduleEvents: true };
 
   // Section renderers
   const sectionRenderers = {
@@ -265,18 +243,6 @@ export default async function HomePage() {
               <Calendar size={16} /> {terms.appointment} Oluştur
             </Link>
           </div>
-        </div>
-      </section>
-    ) : null,
-
-    shop: () => (modules.moduleStore !== false && products.length > 0) ? (
-      <section key="shop" id="shop" className="border-t border-white/5" style={{ padding: "80px 24px", background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.01))" }}>
-        <div className="section-container">
-          <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>MAĞAZA</div>
-          <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>
-            Ürünlerimiz
-          </h2>
-          <ShopStorefront products={products} categories={productCategories} />
         </div>
       </section>
     ) : null,
