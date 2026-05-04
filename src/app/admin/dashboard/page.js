@@ -113,39 +113,37 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Sub-Merchant Warning */}
-      {siteConfig && (siteConfig.paymentMode === "card" || siteConfig.paymentMode === "both") && (
-        tenant?.subMerchantStatus === "NOT_STARTED" ? (
-          <div style={{ padding: 16, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.3)", marginBottom: 24, display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "space-between", alignItems: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <AlertCircle size={20} color="#ef4444" style={{ flexShrink: 0 }} />
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginBottom: 2 }}>ALT ÜYE İŞYERİ KAYDINIZI TAMAMLAYIN</div>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Online ödeme (kredi kartı) alabilmeniz için vergi levhanızı yükleyip başvurunuzu tamamlamanız gerekmektedir.</div>
-              </div>
-            </div>
-            <Link href="/admin/settings?tab=sistem&subTab=odeme" style={{ padding: "8px 16px", background: "#ef4444", color: "#fff", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Başvuru Yap</Link>
-          </div>
-        ) : tenant?.subMerchantStatus === "REJECTED" ? (
-          <div style={{ padding: 16, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.3)", marginBottom: 24, display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "space-between", alignItems: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <AlertCircle size={20} color="#ef4444" style={{ flexShrink: 0 }} />
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginBottom: 2 }}>SANAL POS BAŞVURUNUZ REDDEDİLDİ</div>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Bilgilerinizi güncelleyerek tekrar başvuru yapabilirsiniz.</div>
-              </div>
-            </div>
-            <Link href="/admin/settings?tab=sistem&subTab=odeme" style={{ padding: "8px 16px", background: "#ef4444", color: "#fff", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Tekrar Başvur</Link>
-          </div>
-        ) : tenant?.subMerchantStatus === "PENDING" ? (
-          <div style={{ padding: 16, background: "rgba(56,189,248,0.06)", border: "1px solid rgba(56,189,248,0.3)", marginBottom: 24, display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center" }}>
-            <Clock size={20} color="#38bdf8" style={{ flexShrink: 0 }} />
+      {tenant && tenant.subMerchantStatus === "NOT_STARTED" ? (
+        <div style={{ padding: 16, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.3)", marginBottom: 24, display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <AlertCircle size={20} color="#ef4444" style={{ flexShrink: 0 }} />
             <div>
-              <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginBottom: 2 }}>SANAL POS BAŞVURUNUZ İNCELENİYOR</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Sanal POS (Alt Üye İşyeri) başvurunuz onaylandıktan sonra kredi kartı ile online ödeme almaya başlayabileceksiniz.</div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginBottom: 2 }}>ALT ÜYE İŞYERİ KAYDINIZI TAMAMLAYIN</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Online ödeme (kredi kartı) alabilmeniz için vergi levhanızı yükleyip başvurunuzu tamamlamanız gerekmektedir.</div>
             </div>
           </div>
-        ) : null
-      )}
+          <Link href="/admin/settings?tab=sistem&subTab=odeme" style={{ padding: "8px 16px", background: "#ef4444", color: "#fff", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Başvuru Yap</Link>
+        </div>
+      ) : tenant?.subMerchantStatus === "REJECTED" ? (
+        <div style={{ padding: 16, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.3)", marginBottom: 24, display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <AlertCircle size={20} color="#ef4444" style={{ flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginBottom: 2 }}>SANAL POS BAŞVURUNUZ REDDEDİLDİ</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Bilgilerinizi güncelleyerek tekrar başvuru yapabilirsiniz.</div>
+            </div>
+          </div>
+          <Link href="/admin/settings?tab=sistem&subTab=odeme" style={{ padding: "8px 16px", background: "#ef4444", color: "#fff", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Tekrar Başvur</Link>
+        </div>
+      ) : tenant?.subMerchantStatus === "PENDING" ? (
+        <div style={{ padding: 16, background: "rgba(56,189,248,0.06)", border: "1px solid rgba(56,189,248,0.3)", marginBottom: 24, display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center" }}>
+          <Clock size={20} color="#38bdf8" style={{ flexShrink: 0 }} />
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginBottom: 2 }}>SANAL POS BAŞVURUNUZ İNCELENİYOR</div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Sanal POS (Alt Üye İşyeri) başvurunuz onaylandıktan sonra kredi kartı ile online ödeme almaya başlayabileceksiniz.</div>
+          </div>
+        </div>
+      ) : null}
 
       {/* Stats Grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "8px", marginBottom: "1.5rem" }}>

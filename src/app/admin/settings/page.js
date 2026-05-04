@@ -1852,7 +1852,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* Alt Üye İşyeri Kayıt Formu */}
-        {activeTab === "sistem" && subTab === "odeme" && (config.paymentMode === "card" || config.paymentMode === "both") && <div style={sectionCard}>
+        {activeTab === "sistem" && subTab === "odeme" && <div style={sectionCard}>
           {sectionHeader(Building2, "Alt Üye İşyeri Kaydı", `${PLATFORM.name} pazaryeri üzerinden kredi kartı ile ödeme alabilmeniz için yasal bilgilerinizi girin.`)}
 
           {/* Durum Göstergesi */}
