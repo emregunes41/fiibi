@@ -6,7 +6,7 @@ import {
   Shield, Users, Building2, CreditCard, Snowflake, Trash2,
   RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check,
   BarChart, Database, Cloud, Mail, HardDrive, Image, Zap,
-  DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock, Key, Eye, X, FileText
+  DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock, Key, Eye, X, FileText, Phone, Globe, Calendar
 } from "lucide-react";
 import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
@@ -519,32 +519,77 @@ export default function SuperAdminClient() {
         }} onClick={() => setInfoModal(null)}>
           <div style={{
             background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0,
-            width: "100%", maxWidth: 500, padding: 24
+            width: "100%", maxWidth: 600, padding: 24, maxHeight: "90vh", overflowY: "auto"
           }} onClick={e => e.stopPropagation()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <FileText size={20} style={{ color: "#38bdf8" }} />
-                <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>Müşteri & Vergi Bilgileri</h3>
+                <Users size={20} style={{ color: "#38bdf8" }} />
+                <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>Kullanıcı Detayları</h3>
               </div>
               <button onClick={() => setInfoModal(null)} style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={20} /></button>
             </div>
             
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {[
-                { label: "İşletme Adı", value: infoModal.businessName },
-                { label: "Resmi Ünvan", value: infoModal.legalName || "-" },
-                { label: "Şirket Tipi", value: infoModal.legalType === "personal" ? "Bireysel" : infoModal.legalType === "sole_proprietorship" ? "Şahıs Şirketi" : infoModal.legalType === "limited" ? "Limited" : infoModal.legalType === "joint_stock" ? "Anonim" : infoModal.legalType },
-                { label: "TCKN / VKN", value: infoModal.taxId || "-" },
-                { label: "Vergi Dairesi", value: infoModal.taxOffice || "-" },
-                { label: "IBAN", value: infoModal.iban || "-" },
-                { label: "Resmi Adres", value: infoModal.legalAddress || "-" },
-                { label: "Sözleşme Onayı", value: infoModal.sellerAgreementAccepted ? `Onaylandı (${new Date(infoModal.sellerAgreementDate).toLocaleDateString()})` : "Onaylanmadı" },
-              ].map((item, i) => (
-                <div key={i} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>{item.label}</span>
-                  <span style={{ fontSize: 14, color: "#fff", fontWeight: 500 }}>{item.value}</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+              {/* İletişim Bilgileri */}
+              <div>
+                <h4 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 8 }}>GENEL & İLETİŞİM</h4>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                  {[
+                    { label: "İşletme Adı", value: infoModal.businessName },
+                    { label: "Sahibi", value: infoModal.ownerName },
+                    { label: "E-Posta", value: infoModal.ownerEmail },
+                    { label: "Telefon", value: infoModal.ownerPhone || "-" },
+                    { label: "Özel Domain", value: infoModal.customDomain || "-" },
+                    { label: "İşletme Türü", value: infoModal.businessType || "-" },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>{item.label}</span>
+                      <span style={{ fontSize: 14, color: "#fff", fontWeight: 500, wordBreak: "break-all" }}>{item.value}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* Abonelik */}
+              <div>
+                <h4 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 8 }}>ABONELİK & DURUM</h4>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                  {[
+                    { label: "Mevcut Plan", value: infoModal.plan.toUpperCase() },
+                    { label: "Ödeme Periyodu", value: infoModal.selectedPlan === "yearly" ? "Yıllık" : infoModal.selectedPlan === "monthly" ? "Aylık" : "-" },
+                    { label: "Başlangıç", value: infoModal.subscriptionStartedAt ? new Date(infoModal.subscriptionStartedAt).toLocaleDateString() : "-" },
+                    { label: "Bitiş Tarihi", value: infoModal.planExpiresAt ? new Date(infoModal.planExpiresAt).toLocaleDateString() : "-" },
+                    { label: "Kayıt Tarihi", value: new Date(infoModal.createdAt).toLocaleDateString() },
+                    { label: "Durum", value: infoModal.isActive ? (infoModal.isFrozen ? "Dondurulmuş" : "Aktif") : "Pasif" },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>{item.label}</span>
+                      <span style={{ fontSize: 14, color: "#fff", fontWeight: 500 }}>{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Ticari Bilgiler */}
+              <div>
+                <h4 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 8 }}>TİCARİ & VERGİ BİLGİLERİ</h4>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                  {[
+                    { label: "Resmi Ünvan", value: infoModal.legalName || "-" },
+                    { label: "Şirket Tipi", value: infoModal.legalType === "personal" ? "Bireysel" : infoModal.legalType === "sole_proprietorship" ? "Şahıs Şirketi" : infoModal.legalType === "limited" ? "Limited" : infoModal.legalType === "joint_stock" ? "Anonim" : infoModal.legalType },
+                    { label: "TCKN / VKN", value: infoModal.taxId || "-" },
+                    { label: "Vergi Dairesi", value: infoModal.taxOffice || "-" },
+                    { label: "IBAN", value: infoModal.iban || "-" },
+                    { label: "Sözleşme Onayı", value: infoModal.sellerAgreementAccepted ? `Onaylandı (${new Date(infoModal.sellerAgreementDate).toLocaleDateString()})` : "Onaylanmadı" },
+                    { label: "Resmi Adres", value: infoModal.legalAddress || "-", fullWidth: true },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display: "flex", flexDirection: "column", gap: 4, gridColumn: item.fullWidth ? "1 / -1" : "auto" }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>{item.label}</span>
+                      <span style={{ fontSize: 14, color: "#fff", fontWeight: 500 }}>{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
             
             {infoModal.subMerchantStatus === "PENDING" && (
