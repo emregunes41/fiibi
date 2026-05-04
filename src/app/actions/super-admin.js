@@ -105,6 +105,13 @@ export async function getAllTenants() {
     failedPayments: t.failedPayments,
     paytrCtoken: t.paytrCtoken ? true : false, // Kart kayıtlı mı (sadece boolean gönder, token'ı expose etme)
     iban: t.iban,
+    legalName: t.legalName,
+    legalType: t.legalType,
+    taxId: t.taxId,
+    taxOffice: t.taxOffice,
+    legalAddress: t.legalAddress,
+    sellerAgreementAccepted: t.sellerAgreementAccepted,
+    sellerAgreementDate: t.sellerAgreementDate,
     // İstatistikler
     reservationCount: t._count.reservations,
     userCount: t._count.users,

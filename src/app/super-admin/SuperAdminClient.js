@@ -6,7 +6,7 @@ import {
   Shield, Users, Building2, CreditCard, Snowflake, Trash2,
   RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check,
   BarChart, Database, Cloud, Mail, HardDrive, Image, Zap,
-  DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock, Key
+  DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock, Key, Eye, X, FileText
 } from "lucide-react";
 import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
@@ -32,6 +32,7 @@ export default function SuperAdminClient() {
   const [pricingSaved, setPricingSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
+  const [infoModal, setInfoModal] = useState(null);
   const router = useRouter();
 
   const domain = process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "localhost:3000";
@@ -456,6 +457,13 @@ export default function SuperAdminClient() {
                              t.subMerchantStatus === "PENDING" ? <Clock size={10} /> : null}
                             {sm.label}
                           </span>
+                          <button
+                            onClick={() => setInfoModal(t)}
+                            style={{ ...smallBtn, color: "#fff", background: "rgba(255,255,255,0.1)", padding: "4px 8px" }}
+                            title="Bilgileri İncele"
+                          >
+                            <Eye size={13} />
+                          </button>
                           {t.subMerchantStatus === "PENDING" && (
                             <>
                               <button
@@ -501,6 +509,63 @@ export default function SuperAdminClient() {
           )}
         </div>
       </div>
+
+      {/* Info Modal */}
+      {infoModal && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+          background: "rgba(0,0,0,0.8)", backdropFilter: "blur(4px)",
+          display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 24
+        }} onClick={() => setInfoModal(null)}>
+          <div style={{
+            background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0,
+            width: "100%", maxWidth: 500, padding: 24
+          }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <FileText size={20} style={{ color: "#38bdf8" }} />
+                <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>Müşteri & Vergi Bilgileri</h3>
+              </div>
+              <button onClick={() => setInfoModal(null)} style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={20} /></button>
+            </div>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {[
+                { label: "İşletme Adı", value: infoModal.businessName },
+                { label: "Resmi Ünvan", value: infoModal.legalName || "-" },
+                { label: "Şirket Tipi", value: infoModal.legalType === "personal" ? "Bireysel" : infoModal.legalType === "sole_proprietorship" ? "Şahıs Şirketi" : infoModal.legalType === "limited" ? "Limited" : infoModal.legalType === "joint_stock" ? "Anonim" : infoModal.legalType },
+                { label: "TCKN / VKN", value: infoModal.taxId || "-" },
+                { label: "Vergi Dairesi", value: infoModal.taxOffice || "-" },
+                { label: "IBAN", value: infoModal.iban || "-" },
+                { label: "Resmi Adres", value: infoModal.legalAddress || "-" },
+                { label: "Sözleşme Onayı", value: infoModal.sellerAgreementAccepted ? `Onaylandı (${new Date(infoModal.sellerAgreementDate).toLocaleDateString()})` : "Onaylanmadı" },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>{item.label}</span>
+                  <span style={{ fontSize: 14, color: "#fff", fontWeight: 500 }}>{item.value}</span>
+                </div>
+              ))}
+            </div>
+            
+            {infoModal.subMerchantStatus === "PENDING" && (
+              <div style={{ display: "flex", gap: 12, marginTop: 32 }}>
+                <button
+                  onClick={async () => { await handleSubMerchantStatus(infoModal.id, "APPROVED"); setInfoModal(null); }}
+                  style={{ flex: 1, padding: 12, background: "#4ade80", color: "#000", border: "none", fontWeight: 800, cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}
+                >
+                  <CheckCircle2 size={16} /> Onayla
+                </button>
+                <button
+                  onClick={async () => { await handleSubMerchantStatus(infoModal.id, "REJECTED"); setInfoModal(null); }}
+                  style={{ flex: 1, padding: 12, background: "rgba(248,113,113,0.1)", color: "#f87171", border: "1px solid rgba(248,113,113,0.3)", fontWeight: 800, cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}
+                >
+                  <XCircle size={16} /> Reddet
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
