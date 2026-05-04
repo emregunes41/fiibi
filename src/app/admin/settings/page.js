@@ -160,6 +160,15 @@ export default function SettingsPage() {
       setLoading(false);
     });
 
+    // URL parametrelerinden sekme kontrolü
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get("tab");
+      const subTabParam = params.get("subTab");
+      if (tabParam) setActiveTab(tabParam);
+      if (subTabParam) setSubTab(subTabParam);
+    }
+
     loadDiscountCodes();
     getBanners().then(setBanners);
     getContentBlocks().then(setContentBlocks);
