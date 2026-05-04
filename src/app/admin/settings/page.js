@@ -1827,27 +1827,10 @@ export default function SettingsPage() {
         {activeTab === "sistem" && subTab === "odeme" && <div style={sectionCard}>
           {sectionHeader(Banknote, "Ödeme Ayarları", "Müşterilerinizden online ödeme almak için pazaryeri kaydınızı tamamlayın.")}
 
-          {/* Payment Mode */}
-          <div style={{ marginBottom: 24 }}>
-            <label style={label}>Ödeme Modu</label>
-            <div style={{ display: "flex", gap: 8 }}>
-              {[{ id: "cash", label: "Nakit / Havale" }, { id: "card", label: "Kredi Kartı" }, { id: "both", label: "Her İkisi" }].map(m => (
-                <button key={m.id} type="button" onClick={() => setConfig({ ...config, paymentMode: m.id })} style={{
-                  padding: "10px 18px", fontSize: 12, fontWeight: 700, cursor: "pointer", borderRadius: 0,
-                  border: config.paymentMode === m.id ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.1)",
-                  background: config.paymentMode === m.id ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.03)",
-                  color: config.paymentMode === m.id ? "#fff" : "rgba(255,255,255,0.4)",
-                }}>{m.label}</button>
-              ))}
-            </div>
+          <div style={{ padding: "20px", textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: 13 }}>
+            Platformumuz, online ödemeler (Kredi Kartı) ve Nakit / Havale ödemelerini otomatik olarak yönetir.
+            Kredi kartı ile ödeme alabilmek için lütfen aşağıdaki "Alt Üye İşyeri Kaydı" işlemini tamamlayın. Onaylandığında kredi kartı ödemeleri otomatik olarak aktifleşecektir.
           </div>
-
-          {config.paymentMode === "cash" && (
-            <div style={{ padding: "20px", textAlign: "center", color: "rgba(255,255,255,0.3)", fontSize: 13 }}>
-              Müşterileriniz nakit veya havale ile ödeme yapacak. Online ödeme almak için modunu değiştirin.
-            </div>
-          )}
-
 
         </div>}
 

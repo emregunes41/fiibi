@@ -304,6 +304,17 @@ export async function updateSubMerchantStatus(tenantId, status) {
     data: { subMerchantStatus: status }
   });
 
+  // Otomatik ödeme modunu güncelle
+  let newMode = "cash";
+  if (status === "APPROVED") {
+    newMode = "both";
+  }
+  
+  await prisma.globalSettings.updateMany({
+    where: { tenantId },
+    data: { paymentMode: newMode }
+  });
+
   return { success: true };
 }
 
