@@ -6,13 +6,13 @@ import {
   Shield, Users, Building2, CreditCard, Snowflake, Trash2,
   RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check,
   BarChart, Database, Cloud, Mail, HardDrive, Image, Zap,
-  DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock
+  DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock, Key
 } from "lucide-react";
 import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
   changeTenantPlan, deleteTenant, superAdminLogout,
   getPlatformPricing, updatePlatformPricing,
-  updateTenantCommission, updateSubMerchantStatus
+  updateTenantCommission, updateSubMerchantStatus, resetTenantAdminPassword
 } from "@/app/actions/super-admin";
 import { getCloudinaryUsage, getDbUsage, getResendUsage, getVercelUsage } from "@/app/actions/platform-usage";
 
@@ -20,7 +20,7 @@ const TABS = [
   { id: "overview", label: "Genel Bakış", icon: LayoutDashboard },
   { id: "usage", label: "Kaynak Kullanımı", icon: BarChart },
   { id: "pricing", label: "Fiyatlandırma", icon: DollarSign },
-  { id: "tenants", label: "Stüdyolar", icon: Building2 },
+  { id: "tenants", label: "Kullanıcılar", icon: Users },
 ];
 
 export default function SuperAdminClient() {
@@ -72,6 +72,18 @@ export default function SuperAdminClient() {
   async function handleLogout() { await superAdminLogout(); router.push("/super-admin/login"); }
   async function handleCommission(id, rate) { setActionLoading(id); await updateTenantCommission(id, rate); await loadData(); setActionLoading(null); }
   async function handleSubMerchantStatus(id, status) { setActionLoading(id); await updateSubMerchantStatus(id, status); await loadData(); setActionLoading(null); }
+  async function handleResetPassword(id, name) {
+    const newPass = prompt(`"${name}" adlı kullanıcının (admin paneli) yeni şifresini girin (en az 6 karakter):`);
+    if (!newPass || newPass.length < 6) {
+      if (newPass !== null) alert("Şifre en az 6 karakter olmalıdır.");
+      return;
+    }
+    setActionLoading(id);
+    const res = await resetTenantAdminPassword(id, newPass);
+    if (res.error) alert(res.error);
+    else alert("Şifre başarıyla güncellendi.");
+    setActionLoading(null);
+  }
 
   const smStatusConfig = {
     NOT_STARTED: { label: "Başvuru Yok", color: "rgba(255,255,255,0.3)", bg: "rgba(255,255,255,0.03)", border: "rgba(255,255,255,0.06)" },
@@ -170,7 +182,7 @@ export default function SuperAdminClient() {
               {stats && (
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12, marginBottom: 32 }}>
                   {[
-                    { label: "Toplam Stüdyo", value: stats.tenantCount, icon: Building2, color: "#8b5cf6" },
+                    { label: "Toplam Kullanıcı", value: stats.tenantCount, icon: Users, color: "#8b5cf6" },
                     { label: "Aktif", value: stats.activeCount, icon: Check, color: "#4ade80" },
                     { label: "Dondurulmuş", value: stats.frozenCount, icon: Snowflake, color: "#38bdf8" },
                     { label: "Trial", value: stats.trialCount, icon: CreditCard, color: "#facc15" },
@@ -212,7 +224,7 @@ export default function SuperAdminClient() {
                       usage.vercel.bandwidth.usedGB, usage.vercel.bandwidth.limitGB, "GB",
                       usage.vercel.hasRealData
                         ? `${usage.vercel.totalPageViews.toLocaleString("tr-TR")} sayfa (gerçek)`
-                        : `~tahmini · ${usage.vercel.activeTenants} stüdyo`,
+                        : `~tahmini · ${usage.vercel.activeTenants} kullanıcı`,
                       usage.vercel.bandwidth.pct
                     )}
                     <div style={cardStyle}>
@@ -335,11 +347,11 @@ export default function SuperAdminClient() {
             </>
           )}
 
-          {/* ─── TAB: Stüdyolar ─── */}
+          {/* ─── TAB: Kullanıcılar ─── */}
           {tab === "tenants" && (
             <>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                <h2 style={{ ...sectionTitle, marginBottom: 0 }}>Stüdyolar</h2>
+                <h2 style={{ ...sectionTitle, marginBottom: 0 }}>Kullanıcılar</h2>
                 <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>{tenants.length} kayıt</span>
               </div>
 
@@ -393,6 +405,9 @@ export default function SuperAdminClient() {
                           </select>
                           <button onClick={() => handleFreeze(t.id)} disabled={actionLoading === t.id} title={t.isFrozen ? "Aktifleştir" : "Dondur"} style={{ ...smallBtn, color: t.isFrozen ? "#4ade80" : "#38bdf8" }}>
                             <Snowflake size={13} />
+                          </button>
+                          <button onClick={() => handleResetPassword(t.id, t.businessName)} disabled={actionLoading === t.id} title="Şifre Sıfırla" style={{ ...smallBtn, color: "#a78bfa" }}>
+                            <Key size={13} />
                           </button>
                           <button onClick={() => handleDelete(t.id, t.businessName)} disabled={actionLoading === t.id} title="Sil" style={{ ...smallBtn, color: "#f87171" }}>
                             <Trash2 size={13} />
@@ -479,7 +494,7 @@ export default function SuperAdminClient() {
                   );
                 })}
                 {tenants.length === 0 && (
-                  <div style={{ textAlign: "center", padding: 48, color: "rgba(255,255,255,0.3)", fontSize: 14 }}>Henüz stüdyo yok.</div>
+                  <div style={{ textAlign: "center", padding: 48, color: "rgba(255,255,255,0.3)", fontSize: 14 }}>Henüz kullanıcı yok.</div>
                 )}
               </div>
             </>

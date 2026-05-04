@@ -294,3 +294,24 @@ export async function updateSubMerchantStatus(tenantId, status) {
 
   return { success: true };
 }
+
+/**
+ * Reset Tenant Admin Password
+ */
+export async function resetTenantAdminPassword(tenantId, newPassword) {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+  
+  if (!newPassword || newPassword.length < 6) {
+    return { error: "Şifre en az 6 karakter olmalıdır." };
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  
+  // Update all admins belonging to this tenant
+  await prisma.admin.updateMany({
+    where: { tenantId },
+    data: { password: hashedPassword }
+  });
+
+  return { success: true };
+}

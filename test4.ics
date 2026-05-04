@@ -1,0 +1,192 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Fiibi//SaaS Platform//TR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Pinowed Rezervasyonları
+X-WR-TIMEZONE:Europe/Istanbul
+BEGIN:VEVENT
+UID:res-cmnohzn510000y9emi3g2djic@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260509T100000
+DTEND:20260509T120000
+SUMMARY:özgür & afilli
+DESCRIPTION:Paket: Söz/Nişan -  Klip ve Fotoğraf\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 05555555555\nTel 2: 05555555555\nE-posta: gelecek\n-- FİNANS --\nToplam: 8.000 TL\nÖdenen: 1000 TL\nKalan: 0 TL\nDurum: CONFIRMED\n-- NOTLAR --\n\n[ADMIN NOTU] Sisteme 12.000 TL özel manuel indirim uygulanmıştır.
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmob4ufjh0002133yfmnlon94@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260529T100000
+DTEND:20260529T120000
+SUMMARY:büşra şahin & halil şahin
+DESCRIPTION:Paket: Standart Paket\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 05304158731\nTel 2: 05555555555\nE-posta: 09halllsahin09@gmail.com\n-- FİNANS --\nToplam: 11.000 TL\nÖdenen: 0 TL\nKalan: 11 TL\nDurum: CONFIRMED\n-- NOTLAR --\n[Standart Paket] saat net değil\n[ADMIN NOTU] Sisteme 1.000 TL özel manuel indirim uygulanmıştır.
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmo28l9e80007t1sex7eh5bc3@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260417T100000
+DTEND:20260417T120000
+SUMMARY:qweqwe & Rezervasyon
+DESCRIPTION:Paket: Bilinmiyor\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 2(342) 342 34 33\nE-posta: gunestudio3@gmail.com\n-- FİNANS --\nToplam: 500 TL\nÖdenen: 0 TL\nKalan: 500 TL\nDurum: COMPLETED
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmolp8fa900028bphfain9zq2@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260626T100000
+DTEND:20260626T120000
+SUMMARY:emine tevkur & osman özsoy
+DESCRIPTION:Paket: Düğün Klip, Standart Kamera Fotoğraf Çekimi\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 05326616122\nTel 2: 05555555555\nE-posta: yok@gmail.com\n-- FİNANS --\nToplam: 34.000 TL\nÖdenen: 0 TL\nKalan: 34 TL\nDurum: CONFIRMED\n-- NOTLAR --\n[Standart Kamera Fotoğraf Çekimi] standart kamera fotoğraf - saat 4 de nikah çekiminden başlıyor
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnnae25j0001jzle592d1urb@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260425T160000
+DTEND:20260425T180000
+SUMMARY:Şirin Koçyiğit & Adnan Payas
+DESCRIPTION:Paket: Standart Paket\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 05323364494\nTel 2: 05318141010\nE-posta: sirinkocyigit22@gmail.com\n-- FİNANS --\nToplam: 17.000 TL\nÖdenen: 0 TL\nKalan: 17 TL\nDurum: CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnoi1ils0001y9emzvaete47@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260514T120000
+DTEND:20260514T140000
+SUMMARY:elif & mert dolgun
+DESCRIPTION:Paket: Standart Paket\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 0545 303 4100\nTel 2: gelecek\nE-posta: gelecek\n-- FİNANS --\nToplam: 11.000 TL\nÖdenen: 0 TL\nKalan: 11 TL\nDurum: CONFIRMED\n-- NOTLAR --\n\n[ADMIN NOTU] Sisteme 1.000 TL özel manuel indirim uygulanmıştır.
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnohpzjr0001ni3q1ho9ir71@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260509T100000
+DTEND:20260509T120000
+SUMMARY:Kübra  & doğuş
+DESCRIPTION:Paket: Söz/Nişan -  Klip ve Fotoğraf\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 05050772602\nTel 2: 05342996885\nE-posta: kubradogus@gmail.com\n-- FİNANS --\nToplam: 18.000 TL\nÖdenen: 0 TL\nKalan: 18 TL\nDurum: CONFIRMED\n-- NOTLAR --\n\n[ADMIN NOTU] Sisteme 2.000 TL özel manuel indirim uygulanmıştır.
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnpwcoei00003q5wxl8szojt@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260606T100000
+DTEND:20260606T120000
+SUMMARY:saklıgöl & Rezervasyon
+DESCRIPTION:Paket: Bilinmiyor\nMekan: saklıgöl\n-- İLETİŞİM --\nTel 1: -\n-- FİNANS --\nToplam: 0 TL\nÖdenen: 0 TL\nKalan: 0 TL\nDurum: CONFIRMED\n-- NOTLAR --\nklip
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnnhsy8d0001s0yiiioqtbvx@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260404T100000
+DTEND:20260404T120000
+SUMMARY:Afilli & özgür
+DESCRIPTION:Paket: Söz/Nişan -  Klip ve Fotoğraf\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 05555555555\nTel 2: 044444444444\nE-posta: gunestudio@gmail.com\n-- FİNANS --\nToplam: 8.000 TL\nÖdenen: 8000 TL\nKalan: 0 TL\nDurum: COMPLETED\n-- NOTLAR --\n[Söz/Nişan -  Klip ve Fotoğraf] özgür\n[ADMIN NOTU] Sisteme 12.000 TL özel manuel indirim uygulanmıştır.
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnudtzuz0002edroqj5szmxa@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260419T140000
+DTEND:20260419T160000
+SUMMARY:berrin gedik & ---
+DESCRIPTION:Paket: Eco Paket\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 05346886867\nTel 2: ---\nE-posta: test@gmail.com\n-- FİNANS --\nToplam: 8.000 TL\nÖdenen: 0 TL\nKalan: 8 TL\nDurum: CONFIRMED\n-- NOTLAR --\n[Eco Paket] kindyroo 3 yaş doğum günü sadece fotoğraf çekimi saat belli olacak\n[ADMIN NOTU] Sisteme 3.000 TL özel manuel indirim uygulanmıştır.
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnohxc9w0001yhqymoo3htoj@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260509T120000
+DTEND:20260509T140000
+SUMMARY:selma şahin & yucehan temel
+DESCRIPTION:Paket: Standart Paket\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 05063794768\nTel 2: 05550008841\nE-posta: gelecek\n-- FİNANS --\nToplam: 10.000 TL\nÖdenen: 0 TL\nKalan: 10 TL\nDurum: CONFIRMED\n-- NOTLAR --\n\n[ADMIN NOTU] Sisteme 2.000 TL özel manuel indirim uygulanmıştır.
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnoi3vsp0003y9eme3xy8uxy@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260516T140000
+DTEND:20260516T160000
+SUMMARY:beyza salman & muratcan yolcu
+DESCRIPTION:Paket: Standart Paket\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 0552 189 7461\nTel 2: 0545 945 4277\nE-posta: gelecek\n-- FİNANS --\nToplam: 16.000 TL\nÖdenen: 0 TL\nKalan: 16 TL\nDurum: CONFIRMED\n-- NOTLAR --\n\n[ADMIN NOTU] Sisteme 1.000 TL özel manuel indirim uygulanmıştır.
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnoiauz00001btnspftfxtod@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260517T100000
+DTEND:20260517T120000
+SUMMARY:izem akkoyun & oğuz kağan
+DESCRIPTION:Paket: Düğün Klip, Standart Kamera Fotoğraf Çekimi\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 0545 373 5969\nTel 2: 0543 220 0041\nE-posta: oguzkagan1989@hotmail.com\n-- FİNANS --\nToplam: 30.000 TL\nÖdenen: 0 TL\nKalan: 30 TL\nDurum: CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnoijk2d0000y06i70whi88m@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260523T100000
+DTEND:20260523T120000
+SUMMARY:nihan & hasan
+DESCRIPTION:Paket: Söz/Nişan -  Klip ve Fotoğraf\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 05315107640\nTel 2: 05555555555\nE-posta: gelecek\n-- FİNANS --\nToplam: 20.000 TL\nÖdenen: 0 TL\nKalan: 20 TL\nDurum: CONFIRMED\n-- NOTLAR --\n[Söz/Nişan -  Klip ve Fotoğraf] saat 16.30 da başlayacak
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnpw81n80000ro33ltrjj8fv@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260517T100000
+DTEND:20260517T120000
+SUMMARY:saklıgöl & Rezervasyon
+DESCRIPTION:Paket: Bilinmiyor\nMekan: saklıgöl\n-- İLETİŞİM --\nTel 1: -\n-- FİNANS --\nToplam: 15000 TL\nÖdenen: 0 TL\nKalan: 15000 TL\nDurum: CONFIRMED\n-- NOTLAR --\nstandart fotoğraf kamera
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnpwcwh000013q5w9ffwgi7q@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260613T100000
+DTEND:20260613T120000
+SUMMARY:saklıgöl & Rezervasyon
+DESCRIPTION:Paket: Bilinmiyor\nMekan: saklıgöl\n-- İLETİŞİM --\nTel 1: -\n-- FİNANS --\nToplam: 0 TL\nÖdenen: 0 TL\nKalan: 0 TL\nDurum: CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnpwd2te000012qiwijj6k2t@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260614T100000
+DTEND:20260614T120000
+SUMMARY:saklıgöl & Rezervasyon
+DESCRIPTION:Paket: Bilinmiyor\nMekan: saklıgöl\n-- İLETİŞİM --\nTel 1: -\n-- FİNANS --\nToplam: 0 TL\nÖdenen: 0 TL\nKalan: 0 TL\nDurum: CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnpwdcjh000112qirsh1y5lv@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260620T100000
+DTEND:20260620T120000
+SUMMARY:saklıgöl & Rezervasyon
+DESCRIPTION:Paket: Bilinmiyor\nMekan: saklıgöl\n-- İLETİŞİM --\nTel 1: -\n-- FİNANS --\nToplam: 0 TL\nÖdenen: 0 TL\nKalan: 0 TL\nDurum: CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnpwdhrt00023q5wm8rn4o3u@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260621T100000
+DTEND:20260621T120000
+SUMMARY:saklıgöl & Rezervasyon
+DESCRIPTION:Paket: Bilinmiyor\nMekan: saklıgöl\n-- İLETİŞİM --\nTel 1: -\n-- FİNANS --\nToplam: 0 TL\nÖdenen: 0 TL\nKalan: 0 TL\nDurum: CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnpwdn3m000212qiyq7jbsqf@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260626T100000
+DTEND:20260626T120000
+SUMMARY:saklıgöl & Rezervasyon
+DESCRIPTION:Paket: Bilinmiyor\nMekan: saklıgöl\n-- İLETİŞİM --\nTel 1: -\n-- FİNANS --\nToplam: 0 TL\nÖdenen: 0 TL\nKalan: 0 TL\nDurum: CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnpwdq88000312qim4wftlf2@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260627T100000
+DTEND:20260627T120000
+SUMMARY:saklıgöl & Rezervasyon
+DESCRIPTION:Paket: Bilinmiyor\nMekan: saklıgöl\n-- İLETİŞİM --\nTel 1: -\n-- FİNANS --\nToplam: 0 TL\nÖdenen: 0 TL\nKalan: 0 TL\nDurum: CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnpwdu4p000412qid4vaohsd@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260628T100000
+DTEND:20260628T120000
+SUMMARY:saklıgöl & Rezervasyon
+DESCRIPTION:Paket: Bilinmiyor\nMekan: saklıgöl\n-- İLETİŞİM --\nTel 1: -\n-- FİNANS --\nToplam: 0 TL\nÖdenen: 0 TL\nKalan: 0 TL\nDurum: CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:res-cmnnhy9wy000110xvqumepmnx@fiibi.co
+DTSTAMP:20260503T195000Z
+DTSTART:20260405T100000
+DTEND:20260405T120000
+SUMMARY:esra cancan & yavuz durmaz
+DESCRIPTION:Paket: Standart Paket, Standart Kamera Fotoğraf Çekimi\nMekan: Belirtilmemiş\n-- İLETİŞİM --\nTel 1: 05530228797\nTel 2: 05467190341\nE-posta: yavuzdrr41@gmail.com\n-- FİNANS --\nToplam: 0 TL\nÖdenen: 0 TL\nKalan: 0 TL\nDurum: CONFIRMED\n-- NOTLAR --\n\n[ADMIN NOTU] Sisteme 2.000 TL özel manuel indirim uygulanmıştır.
+END:VEVENT
+END:VCALENDAR

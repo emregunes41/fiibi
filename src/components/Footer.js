@@ -1,7 +1,11 @@
+"use client";
+
 import { Instagram, Twitter, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from "@/components/LanguageContext";
 
 export default function Footer({ businessName = "Studio", phone = "", email = "", address = "", instagram = "", footerTagline = "" }) {
+  const { t } = useLanguage();
   return (
     <footer className="relative z-10 bg-black/80 backdrop-blur-xl border-t border-white/10 py-16 px-6 mt-20">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -28,18 +32,18 @@ export default function Footer({ businessName = "Studio", phone = "", email = ""
 
         {/* Links */}
         <div>
-          <h4 className="text-white font-bold mb-6">Hızlı Bağlantılar</h4>
+          <h4 className="text-white font-bold mb-6">{t.footer.quickLinks}</h4>
           <ul className="list-none flex flex-col gap-4">
-            <li><Link href="/" className="text-white/50 hover:text-white text-sm no-underline transition-colors">Ana Sayfa</Link></li>
-            <li><Link href="/#packages" className="text-white/50 hover:text-white text-sm no-underline transition-colors">Paketler</Link></li>
-            <li><Link href="/#about" className="text-white/50 hover:text-white text-sm no-underline transition-colors">Hakkımızda</Link></li>
-            <li><Link href="/#contact" className="text-white/50 hover:text-white text-sm no-underline transition-colors">İletişim</Link></li>
+            <li><Link href="/" className="text-white/50 hover:text-white text-sm no-underline transition-colors">{t.nav.home}</Link></li>
+            <li><Link href="/#packages" className="text-white/50 hover:text-white text-sm no-underline transition-colors">{t.nav.packages}</Link></li>
+            <li><Link href="/#about" className="text-white/50 hover:text-white text-sm no-underline transition-colors">{t.footer.about}</Link></li>
+            <li><Link href="/#contact" className="text-white/50 hover:text-white text-sm no-underline transition-colors">{t.nav.contact}</Link></li>
           </ul>
         </div>
 
         {/* Contact info */}
         <div>
-          <h4 className="text-white font-bold mb-6">İletişim Bilgileri</h4>
+          <h4 className="text-white font-bold mb-6">{t.footer.contactInfo}</h4>
           <ul className="list-none flex flex-col gap-4">
             {address && (
               <li className="flex items-start gap-3 text-white/50 text-sm">
@@ -64,16 +68,16 @@ export default function Footer({ businessName = "Studio", phone = "", email = ""
 
         {/* Newsletter */}
         <div>
-          <h4 className="text-white font-bold mb-6">Bültene Katılın</h4>
-          <p className="text-white/50 text-sm mb-4">Kampanyalardan ve yeni paketlerden haberdar olun.</p>
+          <h4 className="text-white font-bold mb-6">{t.footer.newsletter}</h4>
+          <p className="text-white/50 text-sm mb-4">{t.footer.newsletterDesc}</p>
           <div className="flex gap-2">
             <input 
               type="email" 
-              placeholder="E-posta adresiniz"
+              placeholder={t.footer.emailPlaceholder}
               className="bg-white/5 border border-white/10 rounded-none px-4 py-2 text-sm text-white w-full focus:outline-none focus:border-white/30"
             />
             <button className="bg-white text-black font-bold px-4 py-2 rounded-none text-sm hover:bg-white/90 transition-all">
-              Katıl
+              {t.footer.join}
             </button>
           </div>
         </div>
@@ -81,7 +85,7 @@ export default function Footer({ businessName = "Studio", phone = "", email = ""
       </div>
 
       <div className="max-w-7xl mx-auto border-t border-white/5 mt-16 pt-8 text-center text-white/30 text-xs">
-                © {new Date().getFullYear()} {businessName}. Tüm hakları saklıdır.
+                © {new Date().getFullYear()} {businessName}. {t.footer.rights}
       </div>
     </footer>
   );

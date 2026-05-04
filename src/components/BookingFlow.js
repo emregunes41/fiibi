@@ -14,6 +14,7 @@ import {
 } from "@/app/admin/core-actions";
 import { useCart } from "./CartContext";
 import { getBusinessType } from "@/lib/business-types";
+import { useLanguage } from "@/components/LanguageContext";
 
 /* ─── constants ─── */
 const CATS = [
@@ -137,6 +138,7 @@ const S = {
 
 /* ─── component ─── */
 export default function BookingFlow({ initialPackages, isAdmin = false }) {
+  const { t } = useLanguage();
   const cart = useCart();
   const [step, setStep] = useState(null); // null until businessType loads
   const [cat, setCat] = useState(null);

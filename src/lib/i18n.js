@@ -39,7 +39,14 @@ export const dictionaries = {
       phone: "Telefon",
       email: "E-Posta",
       followUs: "Bizi Takip Edin",
-      rights: "Tüm Hakları Saklıdır"
+      rights: "Tüm Hakları Saklıdır",
+      quickLinks: "Hızlı Bağlantılar",
+      about: "Hakkımızda",
+      contactInfo: "İletişim Bilgileri",
+      newsletter: "Bültene Katılın",
+      newsletterDesc: "Kampanyalardan ve yeni paketlerden haberdar olun.",
+      emailPlaceholder: "E-posta adresiniz",
+      join: "Katıl"
     },
     landing: {
       nav: {
@@ -137,14 +144,37 @@ export const dictionaries = {
       step4: "Review & Confirm",
       next: "Next",
       back: "Back",
-      confirm: "Confirm Booking"
+      confirm: "Confirm Booking",
+      summary: "Order Summary",
+      total: "Total",
+      pricePrefix: "₺",
+      priceSuffix: "",
+      selectPackage: "Select Package",
+      selected: "Selected",
+      dateLabel: "Select Date",
+      timeLabel: "Select Time",
+      noSlots: "No slots available on this date.",
+      month: "Month",
+      year: "Year",
+      notes: "Additional Notes (Optional)",
+      addons: "Extra Services",
+      loading: "Loading...",
+      success: "Booking Successful!",
+      error: "An error occurred."
     },
     footer: {
       address: "Address",
       phone: "Phone",
       email: "Email",
       followUs: "Follow Us",
-      rights: "All Rights Reserved"
+      rights: "All Rights Reserved",
+      quickLinks: "Quick Links",
+      about: "About Us",
+      contactInfo: "Contact Info",
+      newsletter: "Newsletter",
+      newsletterDesc: "Stay updated on campaigns and new packages.",
+      emailPlaceholder: "Your email address",
+      join: "Join"
     },
     landing: {
       nav: {
