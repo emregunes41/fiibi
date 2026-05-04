@@ -74,7 +74,7 @@ export async function proxy(req) {
       return response;
     }
     // Diğer sayfalar → ana sayfaya yönlendir
-    if (!pathname.startsWith("/admin") && !pathname.startsWith("/login") && !pathname.startsWith("/profile")) {
+    if (!pathname.startsWith("/admin") && !pathname.startsWith("/login") && !pathname.startsWith("/profile") && !pathname.startsWith("/super-admin")) {
       return NextResponse.redirect(new URL("/", req.url));
     }
   }
