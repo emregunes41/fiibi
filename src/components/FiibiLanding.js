@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { registerBusiness } from "@/app/actions/register-photographer";
+import { registerBusiness, preCheckRegistration } from "@/app/actions/register-photographer";
+import { sendVerificationCode } from "@/app/actions/verification";
 import { getBusinessTypeList } from "@/lib/business-types";
 
 import { useLanguage } from "@/components/LanguageContext";
@@ -91,7 +92,7 @@ export default function FiibiLanding() {
   const [plans, setPlans] = useState(buildPlans({ monthly: 2499, yearly: 24999, lifetime: 69500 }));
   
   const [form, setForm] = useState({
-    businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "", referralCode: "", businessType: "",
+    businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "", referralCode: "", businessType: "", verificationCode: "",
   });
 
   const allBusinessTypes = getBusinessTypeList();
@@ -125,7 +126,34 @@ export default function FiibiLanding() {
     setForm(prev => ({ ...prev, businessName: value, slug }));
   }
 
-  async function handleSubmit(e) {
+  async function handleAccountSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    
+    // 1. Check if email/phone/slug/name is already used
+    const preCheck = await preCheckRegistration({
+      slug: form.slug, ownerEmail: form.ownerEmail, ownerPhone: form.ownerPhone, businessName: form.businessName
+    });
+    if (preCheck.error) {
+      setError(preCheck.error);
+      setLoading(false);
+      return;
+    }
+
+    // 2. Send verification code
+    const sendRes = await sendVerificationCode(form.ownerEmail, form.ownerName);
+    if (sendRes.error) {
+      setError(sendRes.error);
+      setLoading(false);
+      return;
+    }
+
+    setStep(5);
+    setLoading(false);
+  }
+
+  async function handleVerifyAndRegister(e) {
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -133,11 +161,11 @@ export default function FiibiLanding() {
       businessName: form.businessName, ownerName: form.ownerName, ownerEmail: form.ownerEmail,
       ownerPhone: form.ownerPhone, password: form.password, slug: form.slug,
       selectedPlan: form.selectedPlan, referralCode: form.referralCode,
-      businessType: form.businessType,
+      businessType: form.businessType, verificationCode: form.verificationCode
     });
     if (res.error) { setError(res.error); setLoading(false); return; }
     setResult(res.tenant);
-    setStep(5);
+    setStep(6);
     setLoading(false);
   }
 
@@ -155,7 +183,7 @@ export default function FiibiLanding() {
           </button>
 
           <div style={{ display: "flex", gap: 6, marginBottom: 32 }}>
-            {[1, 2, 3, 4, 5].map(s => (
+            {[1, 2, 3, 4, 5, 6].map(s => (
               <div key={s} style={{ flex: 1, height: 3, background: s <= step ? C.white : "rgba(255,255,255,0.06)", transition: "all 0.4s" }} />
             ))}
           </div>
@@ -247,7 +275,7 @@ export default function FiibiLanding() {
 
           {/* Step 4: Hesap */}
           {step === 4 && (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleAccountSubmit}>
               <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>Hesap Bilgileri</h2>
                 <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>Admin paneline giriş bilgileriniz.</p>
@@ -271,14 +299,31 @@ export default function FiibiLanding() {
                   </div>
                 )}
                 {error && <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: 14, fontSize: 14, color: "rgba(255,255,255,0.6)", textAlign: "center", marginBottom: 20 }}>{error}</div>}
-                <button type="submit" disabled={loading} style={{ ...btnStyle, opacity: loading ? 0.5 : 1 }}>{loading ? "Oluşturuluyor..." : "Ücretsiz Başla"}</button>
+                <button type="submit" disabled={loading} style={{ ...btnStyle, opacity: loading ? 0.5 : 1 }}>{loading ? "Kontrol Ediliyor..." : "Devam →"}</button>
+                <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.2)" }}>Sonraki adımda e-posta doğrulaması yapılacaktır.</div>
+              </div>
+            </form>
+          )}
+
+          {/* Step 5: Doğrulama (OTP) */}
+          {step === 5 && (
+            <form onSubmit={handleVerifyAndRegister}>
+              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>E-Posta Doğrulama</h2>
+                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}><strong>{form.ownerEmail}</strong> adresine gönderilen 6 haneli doğrulama kodunu girin.</p>
+                <div style={{ marginBottom: 20 }}>
+                  <label style={labelStyle}>Doğrulama Kodu *</label>
+                  <input type="text" required value={form.verificationCode} onChange={e => setForm(prev => ({ ...prev, verificationCode: e.target.value }))} placeholder="123456" maxLength={6} style={{ ...inputStyle, textAlign: "center", fontSize: 24, letterSpacing: "0.2em", fontWeight: 800 }} />
+                </div>
+                {error && <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: 14, fontSize: 14, color: "rgba(255,255,255,0.6)", textAlign: "center", marginBottom: 20 }}>{error}</div>}
+                <button type="submit" disabled={loading || form.verificationCode.length !== 6} style={{ ...btnStyle, opacity: (loading || form.verificationCode.length !== 6) ? 0.5 : 1 }}>{loading ? "Oluşturuluyor..." : "Doğrula ve Ücretsiz Başla"}</button>
                 <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.2)" }}>7 gün ücretsiz · İstediğiniz zaman iptal · Kart bilginiz kayıt sonrası alınacak</div>
               </div>
             </form>
           )}
 
-          {/* Step 5: Başarılı */}
-          {step === 5 && result && (
+          {/* Step 6: Başarılı */}
+          {step === 6 && result && (
             <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: "56px 40px", textAlign: "center" }}>
               <div style={{ width: 80, height: 80, background: "rgba(255,255,255,0.04)", border: "2px solid rgba(255,255,255,0.15)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 24, borderRadius: 0 }}>
                 <span style={{ fontSize: 32, color: C.white }}>✓</span>

@@ -565,3 +565,12 @@ model PlatformConfig {
   config    Json     @default("{}")   // Ek platform ayarları
   updatedAt DateTime @updatedAt
 }
+
+// ─── DOĞRULAMA (OTP) ──────────────────────────────────────────────────
+model VerificationCode {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

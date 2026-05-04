@@ -6,12 +6,64 @@ import { getBusinessType } from "@/lib/business-types";
 import { sendOnboardingEmail } from "./send-onboarding-email";
 
 /**
+ * Yeni kayıt öncesi slug, email, telefon ve işletme adını kontrol eder.
+ */
+export async function preCheckRegistration({ slug, ownerEmail, ownerPhone, businessName }) {
+  try {
+    const cleanSlug = slug?.toLowerCase().replace(/[^a-z0-9-]/g, '').replace(/--+/g, '-').replace(/^-|-$/g, '');
+    
+    // Yasaklı slug
+    const reserved = ["admin", "api", "www", "app", "dashboard", "login", "register", "settings", "billing", "pricing", "support", "help"];
+    if (reserved.includes(cleanSlug)) return { error: "Bu adres kullanılamaz, lütfen başka bir adres seçiniz." };
+
+    // Slug kontrolü
+    if (cleanSlug) {
+      const existingSlug = await prisma.tenant.findUnique({ where: { slug: cleanSlug } });
+      if (existingSlug) return { error: "Bu adres zaten kullanılıyor." };
+    }
+
+    // İşletme adı kontrolü
+    if (businessName) {
+      const existingName = await prisma.tenant.findFirst({ 
+        where: { businessName: { equals: businessName, mode: 'insensitive' } } 
+      });
+      if (existingName) return { error: "Bu mağaza adı zaten kullanılıyor." };
+    }
+
+    // Telefon kontrolü
+    if (ownerPhone) {
+      const existingPhone = await prisma.tenant.findFirst({ where: { ownerPhone } });
+      if (existingPhone) return { error: "Bu telefon numarası zaten kayıtlı." };
+    }
+
+    // E-posta kontrolü
+    if (ownerEmail) {
+      const existingEmail = await prisma.tenant.findUnique({ where: { ownerEmail: ownerEmail.toLowerCase() } });
+      if (existingEmail) return { error: "Bu e-posta adresi zaten kayıtlı." };
+    }
+
+    return { success: true };
+  } catch (err) {
+    return { error: "Doğrulama sırasında bir hata oluştu." };
+  }
+}
+
+/**
  * Yeni işletme kaydı — tenant + admin + globalSettings oluşturur
  * Tüm sektörler için ortak kayıt fonksiyonu
  */
 export async function registerBusiness(data) {
   try {
-    const { businessName, ownerName, ownerEmail, ownerPhone, password, slug, selectedPlan, referralCode: inputReferral, businessType } = data;
+    const { businessName, ownerName, ownerEmail, ownerPhone, password, slug, selectedPlan, referralCode: inputReferral, businessType, verificationCode } = data;
+
+    // Validasyon
+    if (!businessName || !ownerName || !ownerEmail || !password || !slug) {
+      return { error: "Tüm alanları doldurunuz." };
+    }
+
+    if (!verificationCode) {
+      return { error: "Doğrulama kodu gereklidir." };
+    }
 
     // Validasyon
     if (!businessName || !ownerName || !ownerEmail || !password || !slug) {
@@ -28,22 +80,23 @@ export async function registerBusiness(data) {
       return { error: "Adres en az 3 karakter olmalıdır." };
     }
 
-    // Yasaklı slug'lar
-    const reserved = ["admin", "api", "www", "app", "dashboard", "login", "register", "settings", "billing", "pricing", "support", "help"];
-    if (reserved.includes(cleanSlug)) {
-      return { error: "Bu adres kullanılamaz, lütfen başka bir adres seçiniz." };
+    // Ön kontrolleri tekrar yap (Race condition koruması)
+    const preCheck = await preCheckRegistration({ slug, ownerEmail, ownerPhone, businessName });
+    if (preCheck.error) {
+      return { error: preCheck.error };
     }
 
-    // Slug kontrolü
-    const existingSlug = await prisma.tenant.findUnique({ where: { slug: cleanSlug } });
-    if (existingSlug) {
-      return { error: "Bu adres zaten kullanılıyor." };
+    // Doğrulama kodunu kontrol et
+    const codeRecord = await prisma.verificationCode.findUnique({
+      where: { email: ownerEmail.toLowerCase() }
+    });
+
+    if (!codeRecord || codeRecord.code !== verificationCode) {
+      return { error: "Hatalı veya geçersiz doğrulama kodu." };
     }
 
-    // E-posta kontrolü
-    const existingEmail = await prisma.tenant.findUnique({ where: { ownerEmail: ownerEmail.toLowerCase() } });
-    if (existingEmail) {
-      return { error: "Bu e-posta adresi zaten kayıtlı." };
+    if (new Date() > codeRecord.expiresAt) {
+      return { error: "Doğrulama kodunun süresi dolmuş." };
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -121,6 +174,11 @@ export async function registerBusiness(data) {
 
       return tenant;
     });
+
+    // Doğrulama kodunu sil
+    await prisma.verificationCode.delete({
+      where: { email: ownerEmail.toLowerCase() }
+    }).catch(() => {});
 
     // Rehber e-postası gönder (fire-and-forget, hata olursa kayıt etkilenmesin)
     sendOnboardingEmail({
