@@ -124,7 +124,7 @@ export default function SettingsPage() {
   const [portfolioUploading, setPortfolioUploading] = useState(false);
 
   // Sub-Merchant
-  const [smForm, setSmForm] = useState({ legalName: "", legalType: "personal", taxId: "", taxOffice: "", iban: "", legalAddress: "", sellerAgreementAccepted: false });
+  const [smForm, setSmForm] = useState({ legalName: "", legalType: "personal", taxId: "", taxOffice: "", iban: "", legalAddress: "", taxPlateUrl: "", sellerAgreementAccepted: false });
   const [smSaving, setSmSaving] = useState(false);
   const [smMessage, setSmMessage] = useState("");
   const [smError, setSmError] = useState(false);
@@ -174,6 +174,7 @@ export default function SettingsPage() {
           taxOffice: info.taxOffice || "",
           iban: info.iban || "",
           legalAddress: info.legalAddress || "",
+          taxPlateUrl: info.taxPlateUrl || "",
           sellerAgreementAccepted: info.sellerAgreementAccepted || false,
         });
         setSmStatus(info.subMerchantStatus || "NOT_STARTED");
@@ -1966,6 +1967,42 @@ export default function SettingsPage() {
             />
           </div>
 
+          {/* Vergi Levhası Yükleme */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={label}>Vergi Levhası / Kimlik Fotoğrafı *</label>
+            <CldUploadWidget
+              uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""}
+              onSuccess={(res) => {
+                if (res.event === "success") {
+                  setSmForm(p => ({ ...p, taxPlateUrl: res.info.secure_url }));
+                }
+              }}
+              options={{ multiple: false, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, resourceType: "image" }}
+            >
+              {({ open }) => (
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <button
+                    type="button"
+                    onClick={() => open()}
+                    style={{
+                      padding: "10px 16px", borderRadius: 0, cursor: "pointer",
+                      border: "1px dashed rgba(255,255,255,0.2)", background: "rgba(255,255,255,0.03)",
+                      color: "#fff", fontSize: 12, fontWeight: 700,
+                      display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s"
+                    }}
+                  >
+                    <UploadCloud size={14} /> Fotoğraf Yükle
+                  </button>
+                  {smForm.taxPlateUrl && (
+                    <a href={smForm.taxPlateUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "#4ade80", textDecoration: "underline", display: "flex", alignItems: "center", gap: 6 }}>
+                      <CheckCircle2 size={14} /> Yüklendi
+                    </a>
+                  )}
+                </div>
+              )}
+            </CldUploadWidget>
+          </div>
+
           {/* Adres */}
           <div style={{ marginBottom: 20 }}>
             <label style={label}>Resmi Adres</label>
@@ -2023,7 +2060,7 @@ export default function SettingsPage() {
           {/* Kaydet Butonu */}
           <button
             type="button"
-            disabled={smSaving || !smForm.legalName || !smForm.taxId || !smForm.iban || !smForm.sellerAgreementAccepted}
+            disabled={smSaving || !smForm.legalName || !smForm.taxId || !smForm.iban || !smForm.taxPlateUrl || !smForm.sellerAgreementAccepted}
             onClick={async () => {
               setSmSaving(true);
               setSmMessage("");
@@ -2041,10 +2078,10 @@ export default function SettingsPage() {
             }}
             style={{
               width: "100%", padding: 16, borderRadius: 0, border: "none",
-              background: (smForm.legalName && smForm.taxId && smForm.iban && smForm.sellerAgreementAccepted) ? "#fff" : "rgba(255,255,255,0.06)",
-              color: (smForm.legalName && smForm.taxId && smForm.iban && smForm.sellerAgreementAccepted) ? "#000" : "rgba(255,255,255,0.3)",
+              background: (smForm.legalName && smForm.taxId && smForm.iban && smForm.taxPlateUrl && smForm.sellerAgreementAccepted) ? "#fff" : "rgba(255,255,255,0.06)",
+              color: (smForm.legalName && smForm.taxId && smForm.iban && smForm.taxPlateUrl && smForm.sellerAgreementAccepted) ? "#000" : "rgba(255,255,255,0.3)",
               fontWeight: 800, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.08em",
-              cursor: (smForm.legalName && smForm.taxId && smForm.iban && smForm.sellerAgreementAccepted) ? "pointer" : "not-allowed",
+              cursor: (smForm.legalName && smForm.taxId && smForm.iban && smForm.taxPlateUrl && smForm.sellerAgreementAccepted) ? "pointer" : "not-allowed",
               opacity: smSaving ? 0.5 : 1,
               display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
               transition: "all 0.2s",

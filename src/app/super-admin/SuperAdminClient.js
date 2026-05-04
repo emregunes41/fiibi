@@ -580,6 +580,7 @@ export default function SuperAdminClient() {
                     { label: "TCKN / VKN", value: infoModal.taxId || "-" },
                     { label: "Vergi Dairesi", value: infoModal.taxOffice || "-" },
                     { label: "IBAN", value: infoModal.iban || "-" },
+                    { label: "Vergi Levhası", value: infoModal.taxPlateUrl ? <a href={infoModal.taxPlateUrl} target="_blank" rel="noopener noreferrer" style={{ color: "#38bdf8", textDecoration: "underline" }}>Görüntüle</a> : "Yüklenmedi" },
                     { label: "Sözleşme Onayı", value: infoModal.sellerAgreementAccepted ? `Onaylandı (${new Date(infoModal.sellerAgreementDate).toLocaleDateString()})` : "Onaylanmadı" },
                     { label: "Resmi Adres", value: infoModal.legalAddress || "-", fullWidth: true },
                   ].map((item, i) => (

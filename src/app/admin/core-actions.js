@@ -1210,12 +1210,13 @@ export async function updateSubMerchantInfo(data) {
     const tenantId = await getTenantId();
     if (!tenantId) return { error: "Tenant bulunamadı." };
 
-    const { legalName, legalType, taxId, taxOffice, iban, legalAddress, sellerAgreementAccepted } = data;
+    const { legalName, legalType, taxId, taxOffice, iban, legalAddress, sellerAgreementAccepted, taxPlateUrl } = data;
 
     // Validasyon
     if (!legalName || !legalName.trim()) return { error: "Resmi unvan gereklidir." };
     if (!taxId || !taxId.trim()) return { error: "TCKN/VKN gereklidir." };
     if (!iban || !iban.trim()) return { error: "IBAN gereklidir." };
+    if (!taxPlateUrl || !taxPlateUrl.trim()) return { error: "Vergi levhası / Kimlik fotoğrafı yüklenmesi zorunludur." };
     if (!sellerAgreementAccepted) return { error: "Satıcı sözleşmesini onaylamanız gerekiyor." };
 
     // IBAN format kontrolü (TR + 24 rakam)
@@ -1239,6 +1240,7 @@ export async function updateSubMerchantInfo(data) {
         taxOffice: taxOffice?.trim() || null,
         iban: cleanIBAN,
         legalAddress: legalAddress?.trim() || null,
+        taxPlateUrl: taxPlateUrl?.trim() || null,
         sellerAgreementAccepted: true,
         sellerAgreementDate: new Date(),
         subMerchantStatus: "PENDING",

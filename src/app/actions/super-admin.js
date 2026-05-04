@@ -114,6 +114,7 @@ export async function getAllTenants() {
     taxId: t.taxId,
     taxOffice: t.taxOffice,
     legalAddress: t.legalAddress,
+    taxPlateUrl: t.taxPlateUrl,
     sellerAgreementAccepted: t.sellerAgreementAccepted,
     sellerAgreementDate: t.sellerAgreementDate,
     // İstatistikler
