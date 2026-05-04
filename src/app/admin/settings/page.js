@@ -284,12 +284,14 @@ export default function SettingsPage() {
           )}
 
           
-          {activeTab === "musteriler" ? (
+          {activeTab === "musteriler" && (
             <div style={sectionCard}>
               {sectionHeader(Users, terms.clients || "Müşteriler", "Platformunuza kayıtlı üyeleri ve rezervasyon geçmişlerini yönetin.")}
               <MembersList terms={terms} />
             </div>
-          ) : (
+          )}
+          
+          {activeTab !== "musteriler" && (
             <form onSubmit={handleSubmit}>
 
               {/* 0. Modüller */}
@@ -1296,43 +1298,6 @@ export default function SettingsPage() {
           )}
         </div>}
 
-        {/* Status Message */}
-        {message && (
-          <div style={{
-            padding: "12px 16px", borderRadius: 0, display: "flex", alignItems: "center", gap: 10, marginBottom: 16,
-            background: isError ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.04)",
-            border: `1px solid ${isError ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.1)"}`,
-            color: isError ? "rgba(255,255,255,0.6)" : "#fff",
-          }}>
-            {isError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
-            <span style={{ fontSize: 12, fontWeight: 700 }}>{message}</span>
-          </div>
-        )}
-
-        {/* Save Button */}
-        <button
-          type="submit"
-          disabled={saving}
-          style={{
-            width: "100%", padding: 16, borderRadius: 0, border: "none",
-            background: "#fff", color: "#000", fontWeight: 800, fontSize: 13,
-            textTransform: "uppercase", letterSpacing: "0.08em",
-            cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.5 : 1,
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-            transition: "all 0.2s", marginBottom: 40,
-          }}
-        >
-          {saving ? (
-            <Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} />
-          ) : (
-            <Save size={16} />
-          )}
-          {saving ? "Kaydediliyor..." : "Değişiklikleri Uygula"}
-        </button>
-
-      </form>
-      )}
-
       {/* ── Section Order / Sayfa Düzeni ── */}
       {activeTab === "tasarim" && subTab === "duzen" && (() => {
         const SECTION_META = {
@@ -2289,6 +2254,43 @@ export default function SettingsPage() {
           </button>
           {domainMessage && <p style={{ fontSize: 12, marginTop: 12, color: domainMessage.includes("Hata") ? "#ef4444" : "#22c55e", fontWeight: 600 }}>{domainMessage}</p>}
         </div>}
+
+        {/* Status Message */}
+        {message && (
+          <div style={{
+            padding: "12px 16px", borderRadius: 0, display: "flex", alignItems: "center", gap: 10, marginBottom: 16,
+            background: isError ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.04)",
+            border: `1px solid ${isError ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.1)"}`,
+            color: isError ? "rgba(255,255,255,0.6)" : "#fff",
+          }}>
+            {isError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
+            <span style={{ fontSize: 12, fontWeight: 700 }}>{message}</span>
+          </div>
+        )}
+
+        {/* Save Button */}
+        <button
+          type="submit"
+          disabled={saving}
+          style={{
+            width: "100%", padding: 16, borderRadius: 0, border: "none",
+            background: "#fff", color: "#000", fontWeight: 800, fontSize: 13,
+            textTransform: "uppercase", letterSpacing: "0.08em",
+            cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.5 : 1,
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+            transition: "all 0.2s", marginBottom: 40,
+          }}
+        >
+          {saving ? (
+            <Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} />
+          ) : (
+            <Save size={16} />
+          )}
+          {saving ? "Kaydediliyor..." : "Değişiklikleri Uygula"}
+        </button>
+
+      </form>
+      )}
 
         </div>
       </div>
