@@ -6,7 +6,7 @@ import { Lock, User } from "lucide-react";
 import { loginAdmin } from "@/app/admin/actions";
 
 export default function AdminLogin() {
-  const [username, setUsername] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +24,7 @@ export default function AdminLogin() {
     setIsLoading(true);
     setError("");
 
-    const res = await loginAdmin(username, password);
+    const res = await loginAdmin(identifier, password);
     if (res?.error) {
       setError(res.error);
       setIsLoading(false);
@@ -61,9 +61,9 @@ export default function AdminLogin() {
             <User size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-subtle)' }} />
             <input 
               type="text" 
-              placeholder="Kullanıcı Adı" 
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              placeholder="E-Posta, Telefon veya Kullanıcı Adı" 
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
               required
               style={{ 
                 width: '100%', padding: '0.875rem 1rem 0.875rem 2.75rem', 

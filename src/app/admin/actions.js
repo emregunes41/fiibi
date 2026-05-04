@@ -8,12 +8,12 @@ import bcrypt from "bcryptjs";
 import { getTenantSlug, getTenantBySlug } from "@/lib/tenant";
 import { checkRateLimit, resetRateLimit } from "@/lib/rate-limit";
 
-export async function loginAdmin(username, password) {
+export async function loginAdmin(identifier, password) {
   try {
-    // Rate limiting — IP + username bazlı
+    // Rate limiting — IP + identifier bazlı
     const headersList = await headers();
     const ip = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    const rateLimitKey = `admin_login:${ip}:${username}`;
+    const rateLimitKey = `admin_login:${ip}:${identifier}`;
     
     const rateCheck = checkRateLimit(rateLimitKey, {
       maxAttempts: 5,
@@ -41,40 +41,69 @@ export async function loginAdmin(username, password) {
     // Admin'i bul
     let admin;
     if (tenantId) {
-      // Tenant-scoped admin arama
+      // 1. Önce username ile tenant-scoped ara
       admin = await prisma.admin.findFirst({
-        where: { username, tenantId }
+        where: { username: identifier, tenantId }
       });
+
+      // 2. Bulunamazsa email veya telefon ile tenant'ı bul, oradan admin'i çek
+      if (!admin) {
+        const t = await prisma.tenant.findFirst({
+          where: {
+            id: tenantId,
+            OR: [
+              { ownerEmail: identifier },
+              { ownerPhone: identifier }
+            ]
+          }
+        });
+        if (t) {
+          admin = await prisma.admin.findFirst({ where: { tenantId: t.id } });
+        }
+      }
     } else {
       // Legacy: slug yoksa global arama
       admin = await prisma.admin.findUnique({
-        where: { username }
+        where: { username: identifier }
       });
+      if (!admin) {
+        const t = await prisma.tenant.findFirst({
+          where: {
+            OR: [
+              { ownerEmail: identifier },
+              { ownerPhone: identifier }
+            ]
+          }
+        });
+        if (t) {
+          admin = await prisma.admin.findFirst({ where: { tenantId: t.id } });
+        }
+      }
     }
 
     // İlk kurulum: tenant varsa ama admin yoksa, tenant sahibinin şifresini kontrol et
     if (!admin && tenantId) {
       const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
-      if (tenant && username === `${slug}_admin`) {
+      if (tenant && (identifier === `${slug}_admin` || identifier === tenant.ownerEmail || identifier === tenant.ownerPhone)) {
         const isOwnerPassword = await bcrypt.compare(password, tenant.password);
         if (isOwnerPassword) {
           // Admin henüz oluşturulmamışsa oluştur
           const hashedPassword = await bcrypt.hash(password, 10);
           admin = await prisma.admin.create({
-            data: { username, password: hashedPassword, tenantId }
+            data: { username: `${slug}_admin`, password: hashedPassword, tenantId }
           });
         }
       }
     }
 
     if (!admin) {
-      return { error: "Kullanıcı adı veya şifre hatalı." };
+      return { error: "Bilgiler hatalı." };
     }
 
     // Şifre kontrolü
     const isValid = await bcrypt.compare(password, admin.password);
     if (!isValid) {
-      return { error: "Kullanıcı adı veya şifre hatalı." };
+      return { error: "Bilgiler hatalı." };
     }
 
     // Başarılı giriş — rate limit sıfırla
