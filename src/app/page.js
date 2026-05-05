@@ -21,7 +21,7 @@ import { redirect } from "next/navigation";
 import { getTemplate } from "@/lib/templates";
 
 
-export const revalidate = 60; // cache for 60 seconds
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   let tenant = null;
