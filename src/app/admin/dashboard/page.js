@@ -155,7 +155,7 @@ export default async function AdminDashboard() {
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Müşterilerinize daha profesyonel görünmek için kendi alan adınızı sisteme entegre edin.</div>
             </div>
           </div>
-          <Link href="/admin/settings?tab=domain" style={{ padding: "8px 16px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Domain Bağla</Link>
+          <Link href="/admin/settings?tab=genel&subTab=domain" style={{ padding: "8px 16px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Domain Bağla</Link>
         </div>
       )}
 
@@ -169,7 +169,7 @@ export default async function AdminDashboard() {
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Sitenizdeki ziyaretçilerin size anında ulaşabilmesi için WhatsApp iletişim numaranızı eklemelisiniz.</div>
             </div>
           </div>
-          <Link href="/admin/settings?tab=genel" style={{ padding: "8px 16px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Numara Ekle</Link>
+          <Link href="/admin/settings?tab=tasarim&subTab=iletisim" style={{ padding: "8px 16px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Numara Ekle</Link>
         </div>
       )}
 
