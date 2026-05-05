@@ -91,6 +91,7 @@ export async function proxy(req) {
         const reqHeaders = new Headers(req.headers);
         reqHeaders.set("x-next-pathname", pathname);
         if (slug) reqHeaders.set("x-tenant-slug", slug);
+        if (isCustomDomain) reqHeaders.set("x-custom-domain", hostname);
         return NextResponse.next({ request: { headers: reqHeaders } });
       }
       return NextResponse.redirect(new URL("/admin/login", req.url));
@@ -109,6 +110,7 @@ export async function proxy(req) {
       const reqHeaders = new Headers(req.headers);
       reqHeaders.set("x-next-pathname", pathname);
       if (slug) reqHeaders.set("x-tenant-slug", slug);
+      if (isCustomDomain) reqHeaders.set("x-custom-domain", hostname);
       return NextResponse.next({ request: { headers: reqHeaders } });
     } catch (err) {
       return NextResponse.redirect(new URL("/login", req.url));

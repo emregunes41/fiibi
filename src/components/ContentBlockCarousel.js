@@ -95,7 +95,7 @@ export default function ContentBlockCarousel({ images }) {
             onClick={() => { setCurrent(i); setProgress(0); }}
             style={{
               width: i === current ? 20 : 6, height: 6,
-              borderRadius: 0, border: "none", padding: 0,
+              borderRadius: "var(--radius)", border: "none", padding: 0,
               background: i === current ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.15)",
               cursor: "pointer", transition: "all 0.3s",
               overflow: "hidden", position: "relative",
@@ -117,7 +117,7 @@ export default function ContentBlockCarousel({ images }) {
         <>
           <button onClick={goPrev} style={{
             position: "absolute", left: 8, top: "45%", transform: "translateY(-50%)",
-            background: "rgba(0,0,0,0.5)", border: "none", borderRadius: 0,
+            background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "var(--radius)",
             width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center",
             cursor: "pointer", color: "rgba(255,255,255,0.7)",
           }}>
@@ -125,7 +125,7 @@ export default function ContentBlockCarousel({ images }) {
           </button>
           <button onClick={goNext} style={{
             position: "absolute", right: 8, top: "45%", transform: "translateY(-50%)",
-            background: "rgba(0,0,0,0.5)", border: "none", borderRadius: 0,
+            background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "var(--radius)",
             width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center",
             cursor: "pointer", color: "rgba(255,255,255,0.7)",
           }}>

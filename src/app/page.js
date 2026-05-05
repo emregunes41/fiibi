@@ -313,33 +313,33 @@ export default async function HomePage() {
       })}
 
       {/* Footer — always last */}
-      <footer id="contact" className="border-t border-white/[0.06]">
+      <footer id="contact" className={tpl.sectionBorder ? "border-t border-white/[0.06]" : ""} style={{ background: tpl.footerStyle === "fun" ? "var(--bg-card)" : "transparent" }}>
         <div className="section-container py-20">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8">
-            <div className="md:col-span-5">
+            <div className={`md:col-span-5 ${tpl.footerStyle === "centered" ? "md:col-span-12 text-center flex flex-col items-center" : ""}`}>
               <h3 className="font-serif text-4xl md:text-5xl tracking-tight text-white mb-4" style={{ lineHeight: 1.1 }}>
                 {siteConfig?.businessName || "Studio"}<span className="text-white/20">.</span>
               </h3>
-              <p className="text-white/25 text-[13px] leading-relaxed max-w-[280px]">
+              <p className={`text-white/25 text-[13px] leading-relaxed max-w-[280px] ${tpl.footerStyle === "centered" ? "text-center" : ""}`}>
                 {footerTagline}
               </p>
             </div>
-            <div className="md:col-span-7">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div className={`md:col-span-7 ${tpl.footerStyle === "centered" ? "md:col-span-12 flex justify-center w-full mt-8" : ""}`}>
+              <div className={`grid grid-cols-1 sm:grid-cols-2 gap-10 ${tpl.footerStyle === "centered" ? "w-full max-w-lg" : ""}`}>
                 <div>
                   <div className="text-[10px] uppercase tracking-[0.25em] text-white/25 mb-5 font-semibold">İletişim</div>
                   <div className="flex flex-col gap-3">
                     <a href={`tel:${(siteConfig?.phone || "").replace(/\s/g, '')}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0"><Phone size={13} strokeWidth={1.5} /></span>
+                      <span className="w-8 h-8 flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><Phone size={13} strokeWidth={1.5} /></span>
                       {siteConfig?.phone || ""}
                     </a>
                     <a href={`mailto:${siteConfig?.email || ""}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0"><Mail size={13} strokeWidth={1.5} /></span>
+                      <span className="w-8 h-8 flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><Mail size={13} strokeWidth={1.5} /></span>
                       {siteConfig?.email || ""}
                     </a>
                     {siteConfig?.address && (
                       <div className="text-[13px] text-white/50 flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center flex-shrink-0"><MapPin size={13} strokeWidth={1.5} /></span>
+                        <span className="w-8 h-8 flex items-center justify-center flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><MapPin size={13} strokeWidth={1.5} /></span>
                         {siteConfig.address}
                       </div>
                     )}
@@ -350,19 +350,19 @@ export default async function HomePage() {
                   <div className="flex flex-col gap-3">
                     {siteConfig?.whatsapp && (
                       <a href={`https://wa.me/${siteConfig.whatsapp}?text=Merhaba%2C%20bilgi%20almak%20istiyorum.`} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#25D366]/20 group-hover:border-[#25D366]/30 transition-all flex-shrink-0"><MessageCircle size={13} strokeWidth={1.5} /></span>
+                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-[#25D366]/20 group-hover:border-[#25D366]/30 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><MessageCircle size={13} strokeWidth={1.5} /></span>
                         WhatsApp
                       </a>
                     )}
                     {siteConfig?.instagram && (
                       <a href={siteConfig.instagram} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#E1306C]/20 group-hover:border-[#E1306C]/30 transition-all flex-shrink-0"><Instagram size={13} strokeWidth={1.5} /></span>
+                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-[#E1306C]/20 group-hover:border-[#E1306C]/30 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><Instagram size={13} strokeWidth={1.5} /></span>
                         Instagram
                       </a>
                     )}
                     {siteConfig?.googleMapsUrl && (
                       <a href={siteConfig.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 rounded-none bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-[#4285F4]/20 group-hover:border-[#4285F4]/30 transition-all flex-shrink-0"><MapPin size={13} strokeWidth={1.5} /></span>
+                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-[#4285F4]/20 group-hover:border-[#4285F4]/30 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><MapPin size={13} strokeWidth={1.5} /></span>
                         Yol Tarifi
                       </a>
                     )}

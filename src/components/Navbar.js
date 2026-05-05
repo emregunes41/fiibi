@@ -74,7 +74,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             justifyContent: "space-between",
             position: "relative",
             padding: scrolled ? "12px 28px" : "0 28px",
-            borderRadius: 0,
+            borderRadius: `var(--radius)`,
             background: scrolled ? "rgba(0,0,0,0.5)" : "transparent",
             backdropFilter: scrolled ? "blur(20px)" : "none",
             WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
@@ -88,9 +88,9 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               <div
                 style={{
                   width: 40, height: 40,
-                  background: "#fff", color: "#000",
+                  background: "var(--text)", color: "var(--bg)",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  borderRadius: 0, fontFamily: "serif", fontSize: 20,
+                  borderRadius: `var(--radius)`, fontFamily: "serif", fontSize: 20,
                   transition: "transform 0.3s",
                 }}
                 className="group-hover:rotate-12"
@@ -131,17 +131,17 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                 fontSize: "0.65rem",
                 textTransform: "uppercase",
                 letterSpacing: "0.2em",
-                fontWeight: 700,
-                color: "#fff",
-                background: "rgba(255,255,255,0.1)",
+                fontWeight: "var(--heading-weight)",
+                color: "var(--btn-text)",
+                background: "var(--btn-bg)",
                 padding: "10px 20px",
-                borderRadius: 0,
-                border: "1px solid rgba(255,255,255,0.2)",
+                borderRadius: `var(--radius)`,
+                border: "none",
                 textDecoration: "none",
                 whiteSpace: "nowrap",
                 transition: "all 0.3s",
               }}
-              className="hover:!bg-white hover:!text-black"
+              className="hover:opacity-80"
             >
               {t.nav.bookNow}
             </Link>
@@ -161,7 +161,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                 style={{
                   position: "relative",
                   width: 40, height: 40,
-                  borderRadius: 0,
+                  borderRadius: `var(--radius)`,
                   background: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.1)",
                   display: "flex", alignItems: "center", justifyContent: "center",
@@ -178,8 +178,8 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                       position: "absolute", top: -4, right: -4,
                       minWidth: 18, height: 18,
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      borderRadius: 0, fontSize: 10, fontWeight: 700,
-                      background: "#fff", color: "#000", padding: "0 4px",
+                      borderRadius: `var(--radius)`, fontSize: 10, fontWeight: 700,
+                      background: "var(--btn-bg)", color: "var(--btn-text)", padding: "0 4px",
                       animation: "cartBadgePop 0.3s ease",
                     }}
                   >
@@ -198,10 +198,10 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                       display: "flex", alignItems: "center", gap: 8,
                       fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.2em",
                       color: "#fff",
-                      background: "rgba(255,255,255,0.05)",
+                      background: "transparent",
                       padding: "10px 20px",
-                      borderRadius: 0,
-                      border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: `var(--radius)`,
+                      border: "1px solid var(--border)",
                       textDecoration: "none",
                       whiteSpace: "nowrap",
                       transition: "all 0.3s",
@@ -219,8 +219,8 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                       color: "#fff",
                       background: "transparent",
                       padding: "10px 20px",
-                      borderRadius: 0,
-                      border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: `var(--radius)`,
+                      border: "1px solid var(--border)",
                       textDecoration: "none",
                       whiteSpace: "nowrap",
                       transition: "all 0.3s",
@@ -244,9 +244,9 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                 style={{
                   position: "relative",
                   width: 40, height: 40,
-                  borderRadius: 0,
+                  borderRadius: `var(--radius)`,
                   background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  border: "1px solid var(--border)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   cursor: "pointer",
                 }}
@@ -258,8 +258,8 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                     position: "absolute", top: -4, right: -4,
                     minWidth: 18, height: 18,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    borderRadius: 0, fontSize: 10, fontWeight: 700,
-                    background: "#fff", color: "#000", padding: "0 4px",
+                    borderRadius: `var(--radius)`, fontSize: 10, fontWeight: 700,
+                    background: "var(--btn-bg)", color: "var(--btn-text)", padding: "0 4px",
                   }}>
                     {itemCount}
                   </span>
@@ -344,16 +344,16 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             href="/booking"
             style={{
               width: "100%", height: 56,
-              background: "#fff", color: "#000",
+              background: "var(--btn-bg)", color: "var(--btn-text)",
               display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
               textDecoration: "none",
-              borderRadius: 0,
+              borderRadius: `var(--radius)`,
               boxShadow: "0 20px 50px rgba(0,0,0,0.4)",
               transition: "transform 0.2s",
             }}
             className="active:scale-95"
           >
-            <div style={{ width: 6, height: 6, borderRadius: 0, background: "#000", animation: "pulse 2s infinite" }} />
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--btn-text)", animation: "pulse 2s infinite" }} />
             <span style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.3em", fontWeight: 800 }}>
               Online Rezervasyon
             </span>
