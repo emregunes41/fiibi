@@ -27,7 +27,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
   useEffect(() => {
     async function checkSession() {
       try {
-        const res = await fetch('/api/auth/session');
+        const res = await fetch(`/api/auth/session?t=${Date.now()}`);
         const session = await res.json();
         if (session && session.user) {
           setUser(session.user);
