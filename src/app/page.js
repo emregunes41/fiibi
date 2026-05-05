@@ -18,6 +18,7 @@ import { prisma } from "@/lib/prisma";
 import { optimizeCloudinaryUrl, thumbnailUrl } from "@/lib/image-utils";
 import { ArrowDown, Instagram, Mail, Phone, MapPin, MessageCircle, Calendar, Clock, Shield } from "lucide-react";
 import { redirect } from "next/navigation";
+import { getTemplate } from "@/lib/templates";
 
 
 export const revalidate = 60; // cache for 60 seconds
@@ -104,6 +105,7 @@ export default async function HomePage() {
 
   const heroText = "var(--text)";
   const heroAccent = "color-mix(in srgb, var(--text) 40%, transparent)";
+  const tpl = getTemplate(siteConfig?.siteTemplate || "classic");
 
   // Helper to render newlines as <br/>
   const renderTitle = (text) => {
@@ -211,20 +213,39 @@ export default async function HomePage() {
     ) : null,
 
     services: () => (!features.categories && modules.moduleReservations !== false && packages.length > 0) ? (
-      <section key="services" id="services" className="border-t border-white/5" style={{ padding: "80px 24px" }}>
+      <section key="services" id="services" className={tpl.sectionBorder ? "border-t border-white/5" : ""} style={{ padding: `var(--section-spacing) 24px` }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>{terms.services}</div>
-          <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: "var(--heading-weight)", letterSpacing: "-0.03em", marginBottom: 48 }}>
             Sunduğumuz {terms.services}
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: tpl.cardStyle === "editorial" ? "1fr" : "repeat(auto-fit, minmax(260px, 1fr))", gap: tpl.radius > 10 ? 16 : 12 }}>
             {packages.map(pkg => (
-              <div key={pkg.id} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", padding: "28px 24px" }}>
-                <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{pkg.name}</h3>
-                {pkg.description && <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, marginBottom: 16 }}>{pkg.description}</p>}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div key={pkg.id} style={{
+                background: tpl.cardStyle === "glass" ? "rgba(255,255,255,0.03)" : tpl.cardStyle === "elevated" ? "var(--bg-card)" : "rgba(255,255,255,0.02)",
+                border: tpl.cardStyle === "glass" ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(255,255,255,0.06)",
+                padding: `var(--card-padding)`,
+                borderRadius: `var(--radius)`,
+                backdropFilter: tpl.cardStyle === "glass" ? "blur(20px)" : "none",
+                boxShadow: tpl.cardStyle === "elevated" ? "0 4px 20px rgba(0,0,0,0.15)" : "none",
+                display: tpl.cardStyle === "editorial" ? "flex" : "block",
+                gap: tpl.cardStyle === "editorial" ? 24 : 0,
+                alignItems: tpl.cardStyle === "editorial" ? "center" : "stretch",
+              }}>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontSize: 17, fontWeight: "var(--heading-weight)", marginBottom: 8 }}>{pkg.name}</h3>
+                  {pkg.description && <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, marginBottom: 16 }}>{pkg.description}</p>}
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
                   <span style={{ fontSize: 22, fontWeight: 900 }}>{pkg.price?.toLocaleString("tr-TR")} ₺</span>
-                  <Link href="/booking" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", padding: "8px 18px", color: "#fff", fontSize: 12, fontWeight: 700, textDecoration: "none" }}>
+                  <Link href="/booking" style={{
+                    background: tpl.buttonStyle === "outline" ? "transparent" : tpl.buttonStyle === "pill" ? "var(--accent)" : "rgba(255,255,255,0.08)",
+                    border: tpl.buttonStyle === "outline" ? "1px solid rgba(255,255,255,0.3)" : tpl.buttonStyle === "text" ? "none" : "1px solid rgba(255,255,255,0.12)",
+                    padding: tpl.buttonStyle === "pill" ? "8px 22px" : "8px 18px",
+                    color: tpl.buttonStyle === "pill" ? "var(--btn-text)" : "#fff",
+                    fontSize: 12, fontWeight: 700, textDecoration: tpl.buttonStyle === "text" ? "underline" : "none",
+                    borderRadius: tpl.buttonStyle === "pill" ? 999 : tpl.buttonStyle === "rounded" ? 8 : `var(--radius)`,
+                  }}>
                     {terms.appointment} Al
                   </Link>
                 </div>
@@ -239,7 +260,15 @@ export default async function HomePage() {
             ))}
           </div>
           <div style={{ textAlign: "center", marginTop: 40 }}>
-            <Link href="/booking" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", color: "#000", padding: "14px 32px", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+            <Link href="/booking" style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              background: tpl.buttonStyle === "outline" ? "transparent" : "var(--btn-bg)",
+              color: tpl.buttonStyle === "outline" ? "var(--text)" : "var(--btn-text)",
+              border: tpl.buttonStyle === "outline" ? "2px solid var(--text)" : "none",
+              padding: tpl.buttonStyle === "pill" ? "14px 36px" : "14px 32px",
+              fontWeight: 700, fontSize: 14, textDecoration: "none",
+              borderRadius: tpl.buttonStyle === "pill" ? 999 : tpl.buttonStyle === "rounded" ? 12 : `var(--radius)`,
+            }}>
               <Calendar size={16} /> {terms.appointment} Oluştur
             </Link>
           </div>
@@ -254,23 +283,23 @@ export default async function HomePage() {
         <link key={i} rel="preload" as="image" href={url} />
       ))}
       
-      {/* Hero Section — always first */}
-      <section className="relative h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-        <div className="relative z-10 max-w-4xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <span className="text-[0.7rem] uppercase tracking-[0.5em] mb-6 block" style={{ color: heroAccent }}>
+      {/* Hero Section */}
+      <section className={`relative flex flex-col items-center justify-center text-center px-6 overflow-hidden ${tpl.heroStyle === "cinematic" ? "min-h-screen" : tpl.heroStyle === "centered" ? "min-h-[80vh]" : tpl.heroStyle === "playful" ? "min-h-[70vh]" : "h-screen"}`}>
+        <div className={`relative z-10 max-w-4xl animate-in fade-in slide-in-from-bottom-8 duration-1000 ${tpl.heroStyle === "editorial" ? "text-left ml-0 mr-auto pl-4" : ""}`}>
+          <span className="uppercase mb-6 block" style={{ color: heroAccent, fontSize: "var(--hero-sub-size)", letterSpacing: tpl.heroStyle === "magazine" ? "0.25em" : "0.5em", fontWeight: "var(--body-weight)" }}>
             {heroSubtitle}
           </span>
-          <h1 className="text-5xl md:text-8xl font-serif mb-8 leading-[1.1] text-justify-balanced" style={{ color: heroText }}>
+          <h1 className="font-serif mb-8 leading-[1.1] text-justify-balanced" style={{ color: heroText, fontSize: "var(--hero-title-size)", fontWeight: "var(--heading-weight)", letterSpacing: tpl.heroStyle === "cinematic" ? "-0.04em" : "-0.02em" }}>
             {renderTitle(heroTitle)}
           </h1>
-          <div className="h-20 w-[1px] mx-auto mb-8 hidden md:block" style={{ background: `linear-gradient(to bottom, ${heroAccent}, transparent)` }} />
+          {tpl.showDividerLine && <div className="h-20 w-[1px] mx-auto mb-8 hidden md:block" style={{ background: `linear-gradient(to bottom, ${heroAccent}, transparent)` }} />}
           <Link 
             href={heroCTA.href} 
             className="group flex items-center justify-center gap-4 transition-colors no-underline"
             style={{ color: heroText }}
           >
-            <span className="text-[0.8rem] uppercase tracking-[0.3em] font-jakarta">{heroCTA.text}</span>
-            <div className="w-10 h-10 rounded-none flex items-center justify-center transition-all" style={{ border: `1px solid ${heroAccent}` }}>
+            <span className="uppercase font-jakarta" style={{ fontSize: "0.8rem", letterSpacing: "0.3em" }}>{heroCTA.text}</span>
+            <div className="w-10 h-10 flex items-center justify-center transition-all" style={{ border: `1px solid ${heroAccent}`, borderRadius: `var(--radius)` }}>
               <ArrowDown size={14} className="group-hover:-rotate-45 transition-transform" />
             </div>
           </Link>

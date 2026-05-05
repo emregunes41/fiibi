@@ -1703,6 +1703,41 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* Şablon Seçimi */}
+          <div style={{ marginBottom: 28 }}>
+            <label style={label}>Sayfa Şablonu</label>
+            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 16, marginTop: -4 }}>Sayfanızın genel görünümünü, kart stillerini ve düzenini belirler.</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10 }}>
+              {require("@/lib/templates").getTemplateList().map(t => {
+                const selected = (config.siteTemplate || "classic") === t.id;
+                return (
+                  <button key={t.id} onClick={() => setConfig({ ...config, siteTemplate: t.id })} style={{
+                    padding: 0, background: selected ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.01)",
+                    border: selected ? "2px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.08)",
+                    cursor: "pointer", textAlign: "left", overflow: "hidden", transition: "all 0.2s"
+                  }}>
+                    {/* Mini preview mockup */}
+                    <div style={{ padding: "12px 14px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                      <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
+                        <div style={{ width: 8, height: 8, borderRadius: t.radius, background: "rgba(255,255,255,0.15)" }} />
+                        <div style={{ flex: 1, height: 8, borderRadius: t.radius, background: "rgba(255,255,255,0.08)" }} />
+                      </div>
+                      <div style={{ height: 28, borderRadius: t.radius, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", marginBottom: 6 }} />
+                      <div style={{ display: "flex", gap: 4 }}>
+                        <div style={{ flex: 1, height: 16, borderRadius: t.radius, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }} />
+                        <div style={{ flex: 1, height: 16, borderRadius: t.radius, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }} />
+                      </div>
+                    </div>
+                    <div style={{ padding: "10px 14px" }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 3 }}>{t.emoji} {t.name} {selected && "✓"}</div>
+                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", lineHeight: 1.4 }}>{t.desc}</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Renk Paleti */}
           <div style={{ marginBottom: 28 }}>
             <label style={label}>Site Teması</label>

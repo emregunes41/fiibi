@@ -7,6 +7,7 @@ import PageTracker from "@/components/PageTracker";
 import { getSiteConfig } from "@/app/admin/core-actions";
 import { headers } from "next/headers";
 import { getPalette } from "@/lib/palettes";
+import { getTemplate } from "@/lib/templates";
 import { PLATFORM } from "@/lib/constants";
 
 const geistSans = Geist({
@@ -136,11 +137,14 @@ export default async function RootLayout({ children }) {
     palette = getPalette("light");
   }
 
+  const tpl = getTemplate(siteConfig.siteTemplate || "classic");
+
   return (
     <html suppressHydrationWarning
       lang="tr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       {...(!palette.isDark ? { "data-light": "" } : {})}
+      data-template={tpl.id}
       style={{
         "--bg": palette.bg,
         "--bg-card": palette.card || palette.bg,
@@ -151,6 +155,13 @@ export default async function RootLayout({ children }) {
         "--btn-bg": palette.buttonBg || palette.text,
         "--btn-text": palette.buttonText || palette.bg,
         "--font-site": fontCSS,
+        "--radius": `${tpl.radius}px`,
+        "--section-spacing": `${tpl.sectionSpacing}px`,
+        "--card-padding": `${tpl.cardPadding}px`,
+        "--heading-weight": tpl.fontWeight.heading,
+        "--body-weight": tpl.fontWeight.body,
+        "--hero-title-size": tpl.heroTitleSize,
+        "--hero-sub-size": tpl.heroSubSize,
       }}
     >
       <head>

@@ -436,6 +436,7 @@ model GlobalSettings {
 
   // Setup wizard
   setupCompleted  Boolean  @default(false)
+  siteTemplate    String   @default("classic") // classic, cinematic, modern, boutique, energetic, magazine
 
   // Sayfa bölümü sıralaması
   sectionOrder    Json     @default("[\"events\",\"banners\",\"content\",\"portfolio\",\"services\",\"shop\"]")
