@@ -145,6 +145,48 @@ export default async function AdminDashboard() {
         </div>
       ) : null}
 
+      {/* Domain Warning */}
+      {!tenant?.customDomain && (
+        <div style={{ padding: 16, background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.3)", marginBottom: 24, display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <AlertCircle size={20} color="#f59e0b" style={{ flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginBottom: 2 }}>ALAN ADINIZI (DOMAIN) BAĞLAYIN</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Müşterilerinize daha profesyonel görünmek için kendi alan adınızı sisteme entegre edin.</div>
+            </div>
+          </div>
+          <Link href="/admin/settings?tab=domain" style={{ padding: "8px 16px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Domain Bağla</Link>
+        </div>
+      )}
+
+      {/* Missing WhatsApp Warning */}
+      {!siteConfig?.whatsapp && (
+        <div style={{ padding: 16, background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.3)", marginBottom: 24, display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <AlertCircle size={20} color="#22c55e" style={{ flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginBottom: 2 }}>WHATSAPP NUMARANIZI EKLEYİN</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Sitenizdeki ziyaretçilerin size anında ulaşabilmesi için WhatsApp iletişim numaranızı eklemelisiniz.</div>
+            </div>
+          </div>
+          <Link href="/admin/settings?tab=genel" style={{ padding: "8px 16px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Numara Ekle</Link>
+        </div>
+      )}
+
+      {/* Missing Packages/Services Warning */}
+      {totalPackages === 0 && (
+        <div style={{ padding: 16, background: "rgba(168,85,247,0.06)", border: "1px solid rgba(168,85,247,0.3)", marginBottom: 24, display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <Package size={20} color="#a855f7" style={{ flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginBottom: 2 }}>İLK İÇERİĞİNİZİ OLUŞTURUN</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Sitenizde henüz hiç {terms.service} bulunmuyor. Satışa başlamak için hemen ekleyin.</div>
+            </div>
+          </div>
+          <Link href="/admin/packages" style={{ padding: "8px 16px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>{terms.service} Ekle</Link>
+        </div>
+      )}
+
       {/* Stats Grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "8px", marginBottom: "1.5rem" }}>
         <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px", borderRadius: 0 }}>
