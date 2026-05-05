@@ -1,8 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { verifyAuth } from "@/lib/auth";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { getCurrentTenant } from "@/lib/tenant";
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
@@ -46,6 +48,7 @@ export async function GET() {
     const tenant = await getCurrentTenant();
     return NextResponse.json({ user: null, tenant: tenant ? { businessType: tenant.businessType } : null });
   } catch (error) {
+    console.error("Session Route Error:", error);
     return NextResponse.json({ user: null });
   }
 }
