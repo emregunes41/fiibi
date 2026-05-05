@@ -169,6 +169,28 @@ export default async function RootLayout({ children }) {
             <Navbar businessName={siteConfig?.businessName || "Studio"} logoUrl={siteConfig?.logoUrl} accentColor={accentColor} />
             {children}
             <div className="md:hidden h-32 shrink-0 w-full" />
+            <a 
+              href="https://fiibi.co" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              style={{
+                display: "block",
+                textAlign: "center",
+                padding: "20px 16px",
+                fontSize: "12px",
+                color: "var(--text)",
+                opacity: 0.6,
+                textDecoration: "none",
+                fontWeight: 500,
+                borderTop: "1px solid rgba(128,128,128,0.15)",
+                width: "100%",
+                marginTop: "auto",
+                position: "relative",
+                zIndex: 40
+              }}
+            >
+              Powered by <span style={{ fontWeight: 800 }}>Fiibi</span>
+            </a>
           </CartWrapper>
         </LanguageProvider>
       </body>
