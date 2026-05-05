@@ -1705,30 +1705,51 @@ export default function SettingsPage() {
 
           {/* Renk Paleti */}
           <div style={{ marginBottom: 28 }}>
-            <label style={label}>Renk Paleti</label>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 8 }}>
-              {[
-                { id: "dark",   name: "Gece",     desc: "Klasik siyah",     colors: ["#0a0a0a", "#161616", "#ffffff"] },
-                { id: "slate",  name: "Antrasit",  desc: "Koyu gri tonlar",  colors: ["#1a1d21", "#24282e", "#e8eaed"] },
-                { id: "coffee", name: "Kahve",     desc: "Sıcak kahverengi", colors: ["#16110d", "#201a14", "#f0e6d8"] },
-                { id: "ocean",  name: "Okyanus",   desc: "Derin lacivert",   colors: ["#0c1525", "#131f35", "#dce4f0"] },
-                { id: "forest", name: "Orman",     desc: "Koyu yeşil",       colors: ["#0d1710", "#142018", "#ddeee2"] },
-                { id: "wine",   name: "Şarap",     desc: "Bordo tonlar",     colors: ["#1a0d12", "#25141a", "#f0e0e5"] },
-              ].map(p => {
-                const selected = (config.siteTheme || "dark") === p.id;
+            <label style={label}>Site Teması</label>
+            
+            {/* Koyu Temalar */}
+            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10, marginTop: 4 }}>Koyu Temalar</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 8, marginBottom: 20 }}>
+              {Object.entries(require("@/lib/palettes").PALETTES).filter(([, p]) => p.isDark).map(([id, p]) => {
+                const selected = (config.siteTheme || "dark") === id;
                 return (
-                  <button key={p.id} onClick={() => setConfig({ ...config, siteTheme: p.id })} style={{
+                  <button key={id} onClick={() => setConfig({ ...config, siteTheme: id })} style={{
                     padding: 0, background: selected ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.01)",
                     border: selected ? "2px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.08)",
-                    cursor: "pointer", textAlign: "left", overflow: "hidden"
+                    cursor: "pointer", textAlign: "left", overflow: "hidden", transition: "all 0.2s"
                   }}>
-                    <div style={{ display: "flex", height: 40 }}>
-                      <div style={{ flex: 2, background: p.colors[0] }} />
-                      <div style={{ flex: 1, background: p.colors[1] }} />
-                      <div style={{ flex: 0.5, background: p.colors[2] }} />
+                    <div style={{ display: "flex", height: 36 }}>
+                      <div style={{ flex: 2, background: p.preview[0] }} />
+                      <div style={{ flex: 1, background: p.preview[1] }} />
+                      <div style={{ flex: 0.5, background: p.preview[2] }} />
                     </div>
                     <div style={{ padding: "8px 10px" }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{p.name}</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{p.name} {selected && "✓"}</div>
+                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>{p.desc}</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Açık Temalar */}
+            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>Açık Temalar</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 8 }}>
+              {Object.entries(require("@/lib/palettes").PALETTES).filter(([, p]) => !p.isDark).map(([id, p]) => {
+                const selected = (config.siteTheme || "dark") === id;
+                return (
+                  <button key={id} onClick={() => setConfig({ ...config, siteTheme: id })} style={{
+                    padding: 0, background: selected ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.01)",
+                    border: selected ? "2px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.08)",
+                    cursor: "pointer", textAlign: "left", overflow: "hidden", transition: "all 0.2s"
+                  }}>
+                    <div style={{ display: "flex", height: 36 }}>
+                      <div style={{ flex: 2, background: p.preview[0] }} />
+                      <div style={{ flex: 1, background: p.preview[1] }} />
+                      <div style={{ flex: 0.5, background: p.preview[2] }} />
+                    </div>
+                    <div style={{ padding: "8px 10px" }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{p.name} {selected && "✓"}</div>
                       <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>{p.desc}</div>
                     </div>
                   </button>

@@ -133,7 +133,7 @@ export default async function RootLayout({ children }) {
   
   // Sektör texture'ları beyaz arka planlı → otomatik light mode (forceDarkMode kapalıysa)
   if (usingSectorTexture && !forceDark) {
-    palette = { bg: "#ffffff", text: "#1a1a1a", isDark: false };
+    palette = getPalette("light");
   }
 
   return (
@@ -143,8 +143,13 @@ export default async function RootLayout({ children }) {
       {...(!palette.isDark ? { "data-light": "" } : {})}
       style={{
         "--bg": palette.bg,
+        "--bg-card": palette.card || palette.bg,
         "--text": palette.text,
-        "--accent": usingSectorTexture ? "#1a1a1a" : accentColor,
+        "--text-muted": palette.muted || "rgba(255,255,255,0.45)",
+        "--border": palette.border || "rgba(255,255,255,0.08)",
+        "--accent": usingSectorTexture ? palette.accent : (accentColor || palette.accent || "#ffffff"),
+        "--btn-bg": palette.buttonBg || palette.text,
+        "--btn-text": palette.buttonText || palette.bg,
         "--font-site": fontCSS,
       }}
     >
