@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Crown, Clock, Zap, Check, Shield, Star, Infinity } from "lucide-react";
+import { Crown, Clock, Zap, Check, Shield, Star } from "lucide-react";
 import { useAdminSession } from "../AdminSessionContext";
 const PLAN_FEATURES = {
   monthly: [
@@ -204,7 +204,7 @@ export default function SubscriptionPage() {
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 6
                 }}
               >
-                {p.id === "lifetime" ? <Infinity size={15} /> : <Zap size={14} />}
+                <Zap size={14} />
                 {plan === "pro" ? "Planı Değiştir" : "Planı Seç"}
               </button>
             </div>

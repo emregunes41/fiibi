@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { UserPlus, Mail, Lock, User, Loader2, Camera } from "lucide-react";
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", password: "", kvkkAccepted: false });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -121,10 +121,23 @@ export default function RegisterPage() {
               </div>
             </div>
 
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer", marginTop: 8 }}>
+              <input 
+                type="checkbox" 
+                required 
+                checked={formData.kvkkAccepted}
+                onChange={(e) => setFormData({...formData, kvkkAccepted: e.target.checked})}
+                style={{ marginTop: 4 }} 
+              />
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>
+                <a href="#" style={{ color: "rgba(255,255,255,0.9)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.3)" }}>Kişisel Verilerin Korunması Kanunu</a> kapsamında aydınlatma metnini okudum ve kabul ediyorum.
+              </span>
+            </label>
+
             <button 
               type="submit" 
-              disabled={isLoading}
-              style={{ width: "100%", background: "#fff", color: "#000", fontWeight: 700, padding: "14px", borderRadius: 0, marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 15, transition: "all 0.2s ease", opacity: isLoading ? 0.5 : 1 }}
+              disabled={isLoading || !formData.kvkkAccepted}
+              style={{ width: "100%", background: "#fff", color: "#000", fontWeight: 700, padding: "14px", borderRadius: 0, marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 15, transition: "all 0.2s ease", opacity: (isLoading || !formData.kvkkAccepted) ? 0.5 : 1 }}
             >
               {isLoading ? <Loader2 className="animate-spin" size={18} /> : <UserPlus size={18} />}
               Hesap Oluştur

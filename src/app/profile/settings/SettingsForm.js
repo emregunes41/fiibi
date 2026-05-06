@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { User, Save, Lock, AlertCircle, CheckCircle2 } from "lucide-react";
-import { updateUser, updatePassword } from "../../user-actions";
+import { updateUser, updatePassword, deleteUser } from "../../user-actions";
+import { useRouter } from "next/navigation";
 
 export default function SettingsForm({ user }) {
   const [isSaving, setIsSaving] = useState(false);
@@ -15,6 +16,11 @@ export default function SettingsForm({ user }) {
   const [pwdStatus, setPwdStatus] = useState(""); // "success", "error"
   const [pwdMessage, setPwdMessage] = useState("");
   const [isPwdSaving, setIsPwdSaving] = useState(false);
+
+  const [deletePassword, setDeletePassword] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+  const router = useRouter();
 
   async function handleProfileSubmit(e) {
     e.preventDefault();
@@ -81,6 +87,27 @@ export default function SettingsForm({ user }) {
       setPwdMessage("Beklenmeyen bir hata oluştu.");
     } finally {
       setIsPwdSaving(false);
+    }
+  }
+
+  async function handleDeleteAccount(e) {
+    e.preventDefault();
+    if (!confirm("Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.")) return;
+
+    setDeleteError("");
+    setIsDeleting(true);
+
+    try {
+      const res = await deleteUser(user.id, deletePassword);
+      if (res.error) {
+        setDeleteError(res.error);
+        setIsDeleting(false);
+      } else {
+        router.push("/login");
+      }
+    } catch (err) {
+      setDeleteError("Beklenmeyen bir hata oluştu.");
+      setIsDeleting(false);
     }
   }
 
@@ -269,6 +296,55 @@ export default function SettingsForm({ user }) {
         </div>
       </div>
       )}
+
+      {/* Hesap Silme Form */}
+      <div style={{ background: "rgba(220, 38, 38, 0.05)", border: "1px solid rgba(220, 38, 38, 0.2)", borderRadius: 0, overflow: "hidden", display: "flex", flexDirection: "column", maxWidth: 680 }}>
+        {/* Header */}
+        <div style={{ padding: "24px 24px 20px 24px", display: "flex", alignItems: "center", gap: 16, borderBottom: "1px solid rgba(220, 38, 38, 0.1)" }}>
+          <div style={{ width: 40, height: 40, borderRadius: 0, background: "rgba(220, 38, 38, 0.1)", border: "1px solid rgba(220, 38, 38, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <AlertCircle size={20} style={{ color: "#ef4444" }} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.01em", color: "#ef4444", marginBottom: 2 }}>Hesabı Sil</h2>
+            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, margin: 0 }}>Bu işlem geri alınamaz ve tüm verileriniz kalıcı olarak silinir.</p>
+          </div>
+        </div>
+
+        {/* Form Body */}
+        <div style={{ padding: "24px" }}>
+          <form onSubmit={handleDeleteAccount} className="flex flex-col gap-5">
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <label style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Onay İçin Şifrenizi Girin</label>
+              <input 
+                type="password"
+                placeholder="Hesap şifreniz"
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                required
+                style={{ background: "rgba(0,0,0,0.2)", border: "1px solid rgba(220, 38, 38, 0.3)", borderRadius: 0, padding: "14px 16px", color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s" }}
+              />
+            </div>
+
+            <div className="mt-2 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div style={{ flex: 1 }}>
+                {deleteError && (
+                  <span style={{ color: "#ef4444", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+                    <AlertCircle size={14} /> {deleteError}
+                  </span>
+                )}
+              </div>
+              <button 
+                type="submit" 
+                disabled={isDeleting || !deletePassword}
+                style={{ background: "#ef4444", color: "#fff", border: "none", borderRadius: 0, padding: "14px 24px", fontSize: 13, fontWeight: 700, transition: "all 0.2s", cursor: (isDeleting || !deletePassword) ? "not-allowed" : "pointer", opacity: (isDeleting || !deletePassword) ? 0.7 : 1 }}
+                className="flex items-center justify-center gap-2 w-full md:w-auto hover:bg-red-600"
+              >
+                {isDeleting ? "Siliniyor..." : "Hesabımı Kalıcı Olarak Sil"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
 
     </div>
   );

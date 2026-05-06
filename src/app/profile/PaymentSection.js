@@ -7,7 +7,7 @@ import { CreditCard, Banknote, X, AlertTriangle, CheckCircle2, Circle } from "lu
 const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale/EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online" };
 const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(255,255,255,0.5)", CREDIT_CARD: "rgba(255,255,255,0.7)", ONLINE: "rgba(255,255,255,0.6)" };
 
-export default function PaymentSection({ reservation, compactMode = false }) {
+export default function PaymentSection({ reservation, compactMode = false, allowPaymentMethodChange = false }) {
   const [showPayModal, setShowPayModal] = useState(false);
   const [showConversionConfirm, setShowConversionConfirm] = useState(false);
   const [showRevertConfirm, setShowRevertConfirm] = useState(false);
@@ -292,7 +292,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
   ) : null;
 
   const handlePrimaryPayClick = () => {
-    if (isCashOnly && !isConvertedToCard) {
+    if (isCashOnly && !isConvertedToCard && allowPaymentMethodChange) {
       setShowConversionConfirm(true);
     } else {
       setPaymentMode("full");
@@ -315,7 +315,7 @@ export default function PaymentSection({ reservation, compactMode = false }) {
             }}
           >
             <CreditCard size={16} />
-            {isCashOnly && !isConvertedToCard ? `Kredi Kartı ile Öde (+%15)` : "Ödeme Yap"}
+            {isCashOnly && !isConvertedToCard && allowPaymentMethodChange ? `Kredi Kartı ile Öde (+%15)` : "Ödeme Yap"}
           </button>
         )}
 
@@ -526,13 +526,13 @@ export default function PaymentSection({ reservation, compactMode = false }) {
               }}
             >
               <CreditCard size={16} />
-              {isCashOnly && !isConvertedToCard 
+              {isCashOnly && !isConvertedToCard && allowPaymentMethodChange 
                 ? `Kredi Kartı ile Öde (+%15)`
                 : `Ödeme Yap`
               }
             </button>
 
-            {(!isCashOnly || isConvertedToCard) && (
+            {(!isCashOnly || isConvertedToCard) && allowPaymentMethodChange && (
               <button
                 onClick={() => setShowRevertConfirm(true)}
                 style={{

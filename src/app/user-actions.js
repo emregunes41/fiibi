@@ -12,7 +12,11 @@ import { checkRateLimit, resetRateLimit } from "@/lib/rate-limit";
 
 export async function registerUser(data) {
   try {
-    const { name, email, password } = data;
+    const { name, email, password, kvkkAccepted } = data;
+
+    if (!kvkkAccepted) {
+      return { error: "KVKK metnini onaylamanız gerekmektedir." };
+    }
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -26,7 +30,15 @@ export async function registerUser(data) {
 
     // Create user
     const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword, role: "MEMBER", tenantId: tenant?.id || null }
+      data: { 
+        name, 
+        email, 
+        password: hashedPassword, 
+        role: "MEMBER", 
+        tenantId: tenant?.id || null,
+        kvkkAccepted: true,
+        kvkkAcceptedAt: new Date()
+      }
     });
 
     // Create token
@@ -55,7 +67,7 @@ export async function loginUser(email, password) {
     const ip = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
     const rateLimitKey = `user_login:${ip}:${email}`;
 
-    const rateCheck = checkRateLimit(rateLimitKey, {
+    const rateCheck = await checkRateLimit(rateLimitKey, {
       maxAttempts: 5,
       windowMs: 15 * 60 * 1000,
       blockDurationMs: 15 * 60 * 1000,
@@ -73,7 +85,7 @@ export async function loginUser(email, password) {
     if (!isValid) return { error: "E-posta veya şifre hatalı." };
 
     // Başarılı — rate limit sıfırla
-    resetRateLimit(rateLimitKey);
+    await resetRateLimit(rateLimitKey);
 
     const token = await signToken({ userId: user.id, email: user.email, role: user.role });
 
@@ -233,5 +245,45 @@ export async function approveContract(reservationId) {
   } catch (err) {
     console.error("Approve Contract Error:", err);
     return { error: err.message };
+  }
+}
+
+export async function deleteUser(id, password) {
+  const auth = await requireUser();
+  if (auth?.error) return auth;
+  if (auth.session.userId !== id) return { error: "Yetkisiz islem!" };
+
+  try {
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) return { error: "Kullanıcı bulunamadı." };
+
+    // Şifre doğrulama (güvenlik için)
+    if (user.password) {
+      const isValid = await bcrypt.compare(password, user.password);
+      if (!isValid) return { error: "Mevcut şifreniz hatalı." };
+    }
+
+    // Soft Delete (GDPR uyumlu anonimleştirme)
+    const anonymizedEmail = `deleted_${id}@fiibi.co`;
+    
+    await prisma.user.update({
+      where: { id },
+      data: {
+        email: anonymizedEmail,
+        name: "Silinmiş Kullanıcı",
+        phone: null,
+        password: null,
+        image: null,
+        role: "DELETED"
+      }
+    });
+
+    const cookieStore = await cookies();
+    cookieStore.delete("auth_token");
+    
+    return { success: true };
+  } catch (err) {
+    console.error("Delete User Error:", err);
+    return { error: "Hesap silinirken bir hata oluştu." };
   }
 }

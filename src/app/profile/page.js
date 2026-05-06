@@ -586,7 +586,7 @@ export default async function ProfilePage() {
                 <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13 }}>Tüm rezervasyonlarınızın toplam ödeme özeti</p>
               </div>
 
-              <PaymentSection reservation={unifiedReservation} compactMode={false} />
+              <PaymentSection reservation={unifiedReservation} compactMode={false} allowPaymentMethodChange={siteConfig?.allowPaymentMethodChange || false} />
             </section>
           );
         })()}

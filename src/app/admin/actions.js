@@ -15,7 +15,7 @@ export async function loginAdmin(identifier, password) {
     const ip = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
     const rateLimitKey = `admin_login:${ip}:${identifier}`;
     
-    const rateCheck = checkRateLimit(rateLimitKey, {
+    const rateCheck = await checkRateLimit(rateLimitKey, {
       maxAttempts: 5,
       windowMs: 15 * 60 * 1000,      // 15 dakika
       blockDurationMs: 15 * 60 * 1000, // 15 dakika engelleme
@@ -107,7 +107,7 @@ export async function loginAdmin(identifier, password) {
     }
 
     // Başarılı giriş — rate limit sıfırla
-    resetRateLimit(rateLimitKey);
+    await resetRateLimit(rateLimitKey);
 
     // Session JWT
     const token = await signToken({

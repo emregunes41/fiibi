@@ -60,6 +60,12 @@ model Tenant {
   sellerAgreementDate     DateTime?           // Sözleşme onay tarihi
   pendingDomainPurchase   Json?               // {domain, years, isRenewal, merchantOid} — checkout sırasında geçici kayıt
 
+  // Yasal Uyumluluk
+  kvkkAccepted          Boolean   @default(false)
+  kvkkAcceptedAt        DateTime?
+  serviceAgreementAccepted Boolean @default(false)
+  serviceAgreementDate  DateTime?
+
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
@@ -240,6 +246,8 @@ model User {
   role          String        @default("MEMBER")
   tenantId      String?
   tenant        Tenant?       @relation(fields: [tenantId], references: [id])
+  kvkkAccepted  Boolean       @default(false)
+  kvkkAcceptedAt DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   accounts      Account[]
@@ -433,6 +441,7 @@ model GlobalSettings {
   paymentMode     String   @default("cash")   // cash, card, both
   shippingPayer   String   @default("seller") // seller, buyer
   flatShippingRate String  @default("0")      // alıcı ödüyorsa eklenecek tutar
+  allowPaymentMethodChange Boolean @default(false)
 
   // Setup wizard
   setupCompleted  Boolean  @default(false)

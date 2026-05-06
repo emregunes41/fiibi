@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-const DEFAULTS = { monthly: 2499, yearly: 24999, lifetime: 69500 };
+const DEFAULTS = { monthly: 2499, yearly: 24999 };
 
 export async function GET() {
   try {

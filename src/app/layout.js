@@ -65,7 +65,41 @@ export async function generateMetadata() {
   const seoTitle = siteConfig?.seoTitle || businessName;
   const seoDescription = siteConfig?.seoDescription || `${businessName} — Online randevu ve hizmet yönetimi.`;
   
-  return { title: seoTitle, description: seoDescription };
+  // Calculate canonical URL
+  const host = headersList.get("host") || "fiibi.co";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const baseUrl = `${protocol}://${host}`;
+  const canonicalUrl = `${baseUrl}${pathname}`;
+
+  return { 
+    title: seoTitle, 
+    description: seoDescription,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: seoTitle,
+      description: seoDescription,
+      url: canonicalUrl,
+      siteName: businessName,
+      images: [
+        {
+          url: siteConfig?.logoUrl || `${baseUrl}/og-image.jpg`, // Fallback resim düşünülebilir
+          width: 1200,
+          height: 630,
+          alt: businessName,
+        },
+      ],
+      locale: "tr_TR",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: seoTitle,
+      description: seoDescription,
+      images: [siteConfig?.logoUrl || `${baseUrl}/og-image.jpg`],
+    },
+  };
 }
 
 import { LanguageProvider } from "@/components/LanguageContext";

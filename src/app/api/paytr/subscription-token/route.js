@@ -29,19 +29,19 @@ export async function POST(request) {
       return NextResponse.json({ error: "PayTR yapılandırması eksik" }, { status: 500 });
     }
 
-    // Fiyatlandırma bilgisini al
+    // Fiyatlandırma — DB'deki değerler kuruş cinsinden (2499 = 24.99₺)
     const config = await prisma.platformConfig.findUnique({ where: { id: "main" } });
     const pricing = config?.pricing || { monthly: 2499, yearly: 24999 };
-    const planPrice = tenant.selectedPlan === "yearly" ? pricing.yearly : pricing.monthly;
+    const planPriceKurus = tenant.selectedPlan === "yearly" ? pricing.yearly : pricing.monthly;
 
-    // PayTR token parametreleri
+    // PayTR iFrame token parametreleri
     const merchant_oid = `SUB_${tenant.id}_${Date.now()}`;
     const email = tenant.ownerEmail;
-    const payment_amount = (planPrice / 100).toFixed(2); // kuruş → TL formatı (PayTR kuruş istiyor ama iFrame TL istiyor)
+    const payment_amount = planPriceKurus.toString(); // PayTR kuruş bekliyor
     const user_ip = request.headers.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
     const merchant_ok_url = `${process.env.NEXT_PUBLIC_APP_URL || "https://fiibi.co"}/api/paytr/subscription-callback`;
     const merchant_fail_url = `${process.env.NEXT_PUBLIC_APP_URL || "https://fiibi.co"}/api/paytr/subscription-callback`;
-    const user_basket = JSON.stringify([["Fiibi Pro Abonelik", planPrice.toString(), 1]]);
+    const user_basket = JSON.stringify([["Fiibi Pro Abonelik", (planPriceKurus / 100).toFixed(2), 1]]); // Sepet TL cinsinden
     const currency = "TL";
     const test_mode = process.env.NODE_ENV === "production" ? "0" : "1";
     const no_installment = "1"; // Taksit yok
@@ -70,7 +70,7 @@ export async function POST(request) {
       user_ip,
       merchant_oid,
       email,
-      payment_amount: planPrice.toString(), // PayTR kuruş cinsinden istiyor
+      payment_amount, // Kuruş cinsinden
       paytr_token,
       user_basket,
       debug_on,

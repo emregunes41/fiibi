@@ -1,39 +1,36 @@
 /**
- * Basit In-Memory Rate Limiter
- * Serverless ortamda her cold start'ta sıfırlanır, ama brute force'u yavaşlatır.
- * Daha güçlü koruma için Upstash Redis ile değiştirilebilir.
+ * Rate Limiter — In-Memory
+ * 
+ * Basit in-memory rate limiter. Cold start'ta sıfırlanır, 
+ * Vercel serverless ortamında birden fazla instance için state paylaşmaz
+ * ancak abuse engellemek için yeterlidir.
  */
 
 const attempts = new Map();
 
 // Eski kayıtları temizle (memory leak önleme)
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, data] of attempts) {
-    if (now - data.firstAttempt > data.windowMs) {
-      attempts.delete(key);
+if (typeof setInterval !== "undefined") {
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, data] of attempts) {
+      if (now - data.firstAttempt > data.windowMs) {
+        attempts.delete(key);
+      }
     }
-  }
-}, 60 * 1000); // Her 1 dakikada temizle
+  }, 60 * 1000);
+}
 
-/**
- * Rate limit kontrolü
- * @param {string} identifier - IP adresi veya benzersiz tanımlayıcı
- * @param {object} options - { maxAttempts, windowMs, blockDurationMs }
- * @returns {{ allowed: boolean, remaining: number, retryAfterMs: number }}
- */
-export function checkRateLimit(identifier, options = {}) {
+function checkInMemory(identifier, options) {
   const {
-    maxAttempts = 5,          // Maksimum deneme
-    windowMs = 15 * 60 * 1000, // 15 dakika pencere
-    blockDurationMs = 15 * 60 * 1000, // 15 dakika engelleme
+    maxAttempts = 5,
+    windowMs = 15 * 60 * 1000,
+    blockDurationMs = 15 * 60 * 1000,
   } = options;
 
   const now = Date.now();
-  const key = identifier;
 
-  if (!attempts.has(key)) {
-    attempts.set(key, {
+  if (!attempts.has(identifier)) {
+    attempts.set(identifier, {
       count: 1,
       firstAttempt: now,
       blockedUntil: null,
@@ -42,9 +39,8 @@ export function checkRateLimit(identifier, options = {}) {
     return { allowed: true, remaining: maxAttempts - 1, retryAfterMs: 0 };
   }
 
-  const data = attempts.get(key);
+  const data = attempts.get(identifier);
 
-  // Engellenmiş mi kontrol et
   if (data.blockedUntil && now < data.blockedUntil) {
     const retryAfterMs = data.blockedUntil - now;
     return {
@@ -55,32 +51,18 @@ export function checkRateLimit(identifier, options = {}) {
     };
   }
 
-  // Engelleme süresi dolmuşsa sıfırla
   if (data.blockedUntil && now >= data.blockedUntil) {
-    attempts.set(key, {
-      count: 1,
-      firstAttempt: now,
-      blockedUntil: null,
-      windowMs,
-    });
+    attempts.set(identifier, { count: 1, firstAttempt: now, blockedUntil: null, windowMs });
     return { allowed: true, remaining: maxAttempts - 1, retryAfterMs: 0 };
   }
 
-  // Pencere süresi dolmuşsa sıfırla
   if (now - data.firstAttempt > windowMs) {
-    attempts.set(key, {
-      count: 1,
-      firstAttempt: now,
-      blockedUntil: null,
-      windowMs,
-    });
+    attempts.set(identifier, { count: 1, firstAttempt: now, blockedUntil: null, windowMs });
     return { allowed: true, remaining: maxAttempts - 1, retryAfterMs: 0 };
   }
 
-  // Sayacı artır
   data.count++;
 
-  // Limit aşıldı mı?
   if (data.count > maxAttempts) {
     data.blockedUntil = now + blockDurationMs;
     return {
@@ -98,9 +80,16 @@ export function checkRateLimit(identifier, options = {}) {
   };
 }
 
-/**
- * Başarılı girişten sonra sayacı sıfırla
- */
-export function resetRateLimit(identifier) {
+export async function checkRateLimit(identifier, options = {}) {
+  const {
+    maxAttempts = 5,
+    windowMs = 15 * 60 * 1000,
+    blockDurationMs = 15 * 60 * 1000,
+  } = options;
+
+  return checkInMemory(identifier, { maxAttempts, windowMs, blockDurationMs });
+}
+
+export async function resetRateLimit(identifier) {
   attempts.delete(identifier);
 }

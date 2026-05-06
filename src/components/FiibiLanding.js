@@ -89,10 +89,10 @@ export default function FiibiLanding() {
     { title: "Sözleşme & Form", desc: "Dijital sözleşme onayı ve özel müşteri formları.", icon: "📋" },
   ];
   const [result, setResult] = useState(null);
-  const [plans, setPlans] = useState(buildPlans({ monthly: 2499, yearly: 24999, lifetime: 69500 }));
+  const [plans, setPlans] = useState(buildPlans({ monthly: 2499, yearly: 24999 }));
   
   const [form, setForm] = useState({
-    businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "", referralCode: "", businessType: "", verificationCode: "",
+    businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "", referralCode: "", businessType: "", verificationCode: "", kvkkAccepted: false, serviceAgreementAccepted: false
   });
 
   const allBusinessTypes = getBusinessTypeList();
@@ -161,7 +161,8 @@ export default function FiibiLanding() {
       businessName: form.businessName, ownerName: form.ownerName, ownerEmail: form.ownerEmail,
       ownerPhone: form.ownerPhone, password: form.password, slug: form.slug,
       selectedPlan: form.selectedPlan, referralCode: form.referralCode,
-      businessType: form.businessType, verificationCode: form.verificationCode
+      businessType: form.businessType, verificationCode: form.verificationCode,
+      kvkkAccepted: form.kvkkAccepted, serviceAgreementAccepted: form.serviceAgreementAccepted
     });
     if (res.error) { setError(res.error); setLoading(false); return; }
     setResult(res.tenant);
@@ -298,8 +299,24 @@ export default function FiibiLanding() {
                     <div style={{ fontSize: 20, fontWeight: 800 }}>{selectedPlanObj.price.toLocaleString("tr-TR")} <span style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>₺{selectedPlanObj.period}</span></div>
                   </div>
                 )}
+                
+                <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24, padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
+                    <input type="checkbox" required checked={form.kvkkAccepted} onChange={e => setForm(prev => ({ ...prev, kvkkAccepted: e.target.checked }))} style={{ marginTop: 4 }} />
+                    <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>
+                      <a href="#" style={{ color: C.orange, textDecoration: "none" }}>Kişisel Verilerin Korunması Kanunu</a> kapsamında aydınlatma metnini okudum ve kabul ediyorum. *
+                    </span>
+                  </label>
+                  <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
+                    <input type="checkbox" required checked={form.serviceAgreementAccepted} onChange={e => setForm(prev => ({ ...prev, serviceAgreementAccepted: e.target.checked }))} style={{ marginTop: 4 }} />
+                    <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>
+                      <a href="#" style={{ color: C.orange, textDecoration: "none" }}>Hizmet Sözleşmesini</a> okudum ve kabul ediyorum. *
+                    </span>
+                  </label>
+                </div>
+
                 {error && <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: 14, fontSize: 14, color: "rgba(255,255,255,0.6)", textAlign: "center", marginBottom: 20 }}>{error}</div>}
-                <button type="submit" disabled={loading} style={{ ...btnStyle, opacity: loading ? 0.5 : 1 }}>{loading ? "Kontrol Ediliyor..." : "Devam →"}</button>
+                <button type="submit" disabled={loading || !form.kvkkAccepted || !form.serviceAgreementAccepted} style={{ ...btnStyle, opacity: (loading || !form.kvkkAccepted || !form.serviceAgreementAccepted) ? 0.5 : 1 }}>{loading ? "Kontrol Ediliyor..." : "Devam →"}</button>
                 <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.2)" }}>Sonraki adımda e-posta doğrulaması yapılacaktır.</div>
               </div>
             </form>
@@ -571,6 +588,53 @@ export default function FiibiLanding() {
           <p style={{ textAlign: "center", marginTop: 24, fontSize: 15, color: C.secondary }}>
             🎁 {t.landing.pricing.freeTrialNote}
           </p>
+        </div>
+      </Reveal>
+
+      
+      {/* ── FAQ ── */}
+      <Reveal id="sss" style={{ padding: "100px 32px", background: C.white }}>
+        <div style={wrap}>
+          <div style={{ textAlign: "center", marginBottom: 64 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: C.orange, textTransform: "uppercase", letterSpacing: "0.12em" }}>Sıkça Sorulan Sorular</span>
+            <h2 style={{ fontSize: 44, fontWeight: 800, color: C.black, letterSpacing: "-0.03em", marginTop: 12, lineHeight: 1.1 }}>
+              Aklınıza Takılanlar
+            </h2>
+          </div>
+          <div style={{ maxWidth: 760, margin: "0 auto", display: "flex", flexDirection: "column", gap: 2 }}>
+            {[
+              { q: "Kurulum gerçekten 2 dakika mı sürüyor?", a: "Evet, Fiibi ile kayıt olduğunuz anda mağazanız sizin için özel bir alt alan adında saniyeler içinde oluşturulur. Kendi alan adınızı sonradan ayarlar menüsünden bağlayabilirsiniz." },
+              { q: "Ödeme altyapısı nasıl çalışıyor?", a: "Ödemeler için hiçbir ekstra entegrasyonla uğraşmazsınız. Fiibi, kendi güvenli ödeme sistemi üzerinden tüm kartlardan çekim yapar ve hak edişinizi komisyonlar kesildikten sonra otomatik olarak banka hesabınıza yatırır." },
+              { q: "Müşterilerim benden nasıl randevu alacak?", a: "Size tahsis edilen web sitenizde müşterilerinizin paketlerinizi görüp istedikleri tarih/saat aralığında randevu oluşturabileceği akıllı bir takvim bulunur." },
+              { q: "Yıllık planda iade hakkım var mı?", a: "Evet, yıllık planlarımızda ilk 14 gün içerisinde koşulsuz şartsız tam iade garantimiz bulunmaktadır." }
+            ].map((faq, i) => (
+              <div key={i} style={{ padding: "24px", background: C.cream }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: C.black, marginBottom: 8 }}>{faq.q}</h3>
+                <p style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6 }}>{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Reveal>
+
+      {/* ── TESTIMONIAL ── */}
+      <Reveal style={{ padding: "100px 32px", background: C.bg }}>
+        <div style={wrap}>
+          <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
+            <div style={{ fontSize: 64, color: C.orangeLight, lineHeight: 0.5, marginBottom: 24 }}>“</div>
+            <p style={{ fontSize: 24, fontWeight: 700, color: C.black, lineHeight: 1.5, marginBottom: 32, letterSpacing: "-0.01em" }}>
+              "Fiibi sayesinde tüm fotoğrafçılık süreçlerimi, rezervasyonlarımı ve ödemelerimi tek ekrandan yönetebiliyorum. Müşterilerim web sitemden randevu alıyor, ödemesini güvenle yapıyor. Gerçek bir zaman tasarrufu!"
+            </p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16 }}>
+              <div style={{ width: 56, height: 56, borderRadius: "50%", background: C.orange, color: C.white, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 800 }}>
+                P
+              </div>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: C.black }}>Pinowed</div>
+                <div style={{ fontSize: 13, color: C.secondary }}>Kurucu & Kullanıcı</div>
+              </div>
+            </div>
+          </div>
         </div>
       </Reveal>
 

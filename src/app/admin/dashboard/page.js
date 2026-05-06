@@ -1,4 +1,4 @@
-import { Users, Package, Calendar, Clock, ChevronRight, AlertCircle } from "lucide-react";
+import { Users, Package, Calendar, Clock, ChevronRight, AlertCircle, CheckCircle2 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import NotificationList from "../components/NotificationList";
@@ -215,6 +215,39 @@ export default async function AdminDashboard() {
             <Clock size={11} /> Bekleyen
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{pendingReservations}</div>
+        </div>
+      </div>
+
+      {/* Onboarding Checklist */}
+      <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", padding: "20px", marginBottom: "1.5rem" }}>
+        <h2 style={{ fontSize: "1rem", fontWeight: 800, marginBottom: "16px", display: "flex", alignItems: "center", gap: 8 }}>
+          <CheckCircle2 size={18} color="#f97316" /> Başlangıç Rehberi
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+          <Link href="/admin/settings?tab=tasarim" style={{ display: "flex", alignItems: "center", gap: 12, padding: 12, background: siteConfig?.logoUrl ? "rgba(34,197,94,0.1)" : "rgba(255,255,255,0.04)", border: siteConfig?.logoUrl ? "1px solid rgba(34,197,94,0.2)" : "1px solid rgba(255,255,255,0.08)", textDecoration: "none", color: "#fff" }}>
+            <div style={{ width: 24, height: 24, borderRadius: "50%", background: siteConfig?.logoUrl ? "#22c55e" : "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {siteConfig?.logoUrl ? <CheckCircle2 size={14} color="#000" /> : <span style={{ fontSize: 12, fontWeight: 800 }}>1</span>}
+            </div>
+            <div style={{ fontSize: 13, fontWeight: 700 }}>Logonuzu Ekleyin</div>
+          </Link>
+          <Link href="/admin/packages" style={{ display: "flex", alignItems: "center", gap: 12, padding: 12, background: totalPackages > 0 ? "rgba(34,197,94,0.1)" : "rgba(255,255,255,0.04)", border: totalPackages > 0 ? "1px solid rgba(34,197,94,0.2)" : "1px solid rgba(255,255,255,0.08)", textDecoration: "none", color: "#fff" }}>
+            <div style={{ width: 24, height: 24, borderRadius: "50%", background: totalPackages > 0 ? "#22c55e" : "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {totalPackages > 0 ? <CheckCircle2 size={14} color="#000" /> : <span style={{ fontSize: 12, fontWeight: 800 }}>2</span>}
+            </div>
+            <div style={{ fontSize: 13, fontWeight: 700 }}>İlk Paketinizi Oluşturun</div>
+          </Link>
+          <Link href="/admin/settings?tab=sistem&subTab=odeme" style={{ display: "flex", alignItems: "center", gap: 12, padding: 12, background: tenant?.subMerchantStatus === "APPROVED" ? "rgba(34,197,94,0.1)" : "rgba(255,255,255,0.04)", border: tenant?.subMerchantStatus === "APPROVED" ? "1px solid rgba(34,197,94,0.2)" : "1px solid rgba(255,255,255,0.08)", textDecoration: "none", color: "#fff" }}>
+            <div style={{ width: 24, height: 24, borderRadius: "50%", background: tenant?.subMerchantStatus === "APPROVED" ? "#22c55e" : "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {tenant?.subMerchantStatus === "APPROVED" ? <CheckCircle2 size={14} color="#000" /> : <span style={{ fontSize: 12, fontWeight: 800 }}>3</span>}
+            </div>
+            <div style={{ fontSize: 13, fontWeight: 700 }}>Online Ödeme Başvurusu</div>
+          </Link>
+          <Link href="/admin/settings?tab=genel&subTab=domain" style={{ display: "flex", alignItems: "center", gap: 12, padding: 12, background: tenant?.customDomain ? "rgba(34,197,94,0.1)" : "rgba(255,255,255,0.04)", border: tenant?.customDomain ? "1px solid rgba(34,197,94,0.2)" : "1px solid rgba(255,255,255,0.08)", textDecoration: "none", color: "#fff" }}>
+            <div style={{ width: 24, height: 24, borderRadius: "50%", background: tenant?.customDomain ? "#22c55e" : "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {tenant?.customDomain ? <CheckCircle2 size={14} color="#000" /> : <span style={{ fontSize: 12, fontWeight: 800 }}>4</span>}
+            </div>
+            <div style={{ fontSize: 13, fontWeight: 700 }}>Alan Adınızı Bağlayın</div>
+          </Link>
         </div>
       </div>
 

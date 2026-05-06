@@ -54,7 +54,11 @@ export async function preCheckRegistration({ slug, ownerEmail, ownerPhone, busin
  */
 export async function registerBusiness(data) {
   try {
-    const { businessName, ownerName, ownerEmail, ownerPhone, password, slug, selectedPlan, referralCode: inputReferral, businessType, verificationCode } = data;
+    const { 
+      businessName, ownerName, ownerEmail, ownerPhone, password, slug, 
+      selectedPlan, referralCode: inputReferral, businessType, verificationCode,
+      kvkkAccepted, serviceAgreementAccepted 
+    } = data;
 
     // Validasyon
     if (!businessName || !ownerName || !ownerEmail || !password || !slug) {
@@ -68,6 +72,10 @@ export async function registerBusiness(data) {
     // Validasyon
     if (!businessName || !ownerName || !ownerEmail || !password || !slug) {
       return { error: "Tüm alanları doldurunuz." };
+    }
+
+    if (!kvkkAccepted || !serviceAgreementAccepted) {
+      return { error: "KVKK ve Hizmet Sözleşmesini kabul etmeniz gerekmektedir." };
     }
 
     if (!businessType) {
@@ -138,6 +146,10 @@ export async function registerBusiness(data) {
           planExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 gün trial
           referralCode: newReferralCode,
           referredBy: referringTenant?.id || null,
+          kvkkAccepted: true,
+          kvkkAcceptedAt: new Date(),
+          serviceAgreementAccepted: true,
+          serviceAgreementDate: new Date()
         }
       });
 

@@ -163,14 +163,14 @@ async function attemptRecurringCharge(tenant) {
       return { success: false, error: "PayTR config missing" };
     }
 
-    // Fiyatlandırma
+    // Fiyatlandırma — DB'deki değerler kuruş cinsinden (2499 = 24.99₺)
     const config = await prisma.platformConfig.findUnique({ where: { id: "main" } });
     const pricing = config?.pricing || { monthly: 2499, yearly: 24999 };
-    const planPrice = tenant.selectedPlan === "yearly" ? pricing.yearly : pricing.monthly;
+    const planPriceKurus = tenant.selectedPlan === "yearly" ? pricing.yearly : pricing.monthly;
 
     const merchant_oid = `REC_${tenant.id}_${Date.now()}`;
     const email = tenant.ownerEmail;
-    const payment_amount = planPrice.toString(); // Kuruş cinsinden
+    const payment_amount = planPriceKurus.toString(); // PayTR kuruş bekliyor
     const user_ip = "1.1.1.1"; // Recurring için sabit IP kullanılabilir
     const currency = "TL";
     const test_mode = process.env.NODE_ENV === "production" ? "0" : "1";
@@ -178,7 +178,7 @@ async function attemptRecurringCharge(tenant) {
     const payment_type = "card";
     const installment_count = "0";
     const recurring_payment = "1";
-    const user_basket = JSON.stringify([["Fiibi Pro Abonelik Yenileme", (planPrice / 100).toFixed(2), 1]]);
+    const user_basket = JSON.stringify([["Fiibi Pro Abonelik Yenileme", (planPriceKurus / 100).toFixed(2), 1]]); // Sepet TL cinsinden
 
     const merchant_ok_url = `${process.env.NEXT_PUBLIC_APP_URL || "https://fiibi.co"}/api/paytr/subscription-callback`;
     const merchant_fail_url = merchant_ok_url;

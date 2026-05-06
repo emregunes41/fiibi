@@ -1897,6 +1897,30 @@ export default function SettingsPage() {
             Kredi kartı ile ödeme alabilmek için lütfen aşağıdaki "Alt Üye İşyeri Kaydı" işlemini tamamlayın. Onaylandığında kredi kartı ödemeleri otomatik olarak aktifleşecektir.
           </div>
 
+          <div style={{ marginTop: 24, padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
+              <div style={{
+                width: 40, height: 24, borderRadius: 12, background: config?.allowPaymentMethodChange ? "#4ade80" : "rgba(255,255,255,0.1)",
+                position: "relative", transition: "all 0.2s"
+              }}>
+                <div style={{
+                  position: "absolute", top: 2, left: config?.allowPaymentMethodChange ? 18 : 2, width: 20, height: 20,
+                  borderRadius: "50%", background: "#fff", transition: "all 0.2s"
+                }} />
+              </div>
+              <input 
+                type="checkbox" 
+                checked={config?.allowPaymentMethodChange || false}
+                onChange={(e) => setConfig({ ...config, allowPaymentMethodChange: e.target.checked })}
+                style={{ display: "none" }}
+              />
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Müşterilerin Ödeme Yöntemi Değiştirmesine İzin Ver</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>Aktif edilirse, "Nakit" olarak seçilmiş bir ödemeyi müşteri kendisi +%15 farkla "Kredi Kartı" seçeneğine çevirebilir.</div>
+              </div>
+            </label>
+          </div>
+
         </div>}
 
         {/* Alt Üye İşyeri Kayıt Formu */}

@@ -16,7 +16,7 @@ export async function superAdminLogin(password) {
   const ip = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   const rateLimitKey = `super_admin_login:${ip}`;
 
-  const rateCheck = checkRateLimit(rateLimitKey, {
+  const rateCheck = await checkRateLimit(rateLimitKey, {
     maxAttempts: 3,
     windowMs: 30 * 60 * 1000,
     blockDurationMs: 30 * 60 * 1000,
@@ -35,7 +35,7 @@ export async function superAdminLogin(password) {
   }
 
   // Başarılı — rate limit sıfırla
-  resetRateLimit(rateLimitKey);
+  await resetRateLimit(rateLimitKey);
 
   const cookieStore = await cookies();
   cookieStore.set("super_admin", "true", {
