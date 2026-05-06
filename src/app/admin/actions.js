@@ -138,3 +138,30 @@ export async function logoutAdmin() {
   cookieStore.delete("admin_token");
   redirect("/admin/login");
 }
+
+
+export async function autoLoginWithToken(token) {
+  try {
+    const { verifyAuth } = await import("@/lib/auth");
+    const payload = await verifyAuth(token);
+    
+    if (!payload || !payload.id || !payload.role || payload.role !== "admin") {
+      return { error: "Geçersiz veya süresi dolmuş token." };
+    }
+
+    const cookieStore = await cookies();
+    cookieStore.set({
+      name: "admin_token",
+      value: token,
+      httpOnly: true,
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24, // 1 day
+      sameSite: "lax",
+    });
+
+    return { success: true };
+  } catch (err) {
+    return { error: "Geçersiz veya süresi dolmuş token." };
+  }
+}

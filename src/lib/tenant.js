@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
+import { cache } from "react";
 
 /**
  * Request header'larından tenant slug'ını al
@@ -52,7 +53,7 @@ export async function getTenantByDomain(domain) {
  * Önce header'dan slug → sonra DB lookup
  * Bulamazsa null döner
  */
-export async function getCurrentTenant() {
+export const getCurrentTenant = cache(async function getCurrentTenant() {
   const customDomain = await getTenantCustomDomain();
   if (customDomain) {
     const tenant = await getTenantByDomain(customDomain);
@@ -61,7 +62,7 @@ export async function getCurrentTenant() {
   const slug = await getTenantSlug();
   if (!slug) return null;
   return getTenantBySlug(slug);
-}
+});
 
 /**
  * Tenant zorunlu — yoksa hata fırlat

@@ -39,59 +39,67 @@ export default async function AdminDashboard() {
 
   const tenantFilter = { tenantId };
 
-  const totalPackages = await prisma.photographyPackage.count({ where: tenantFilter });
-  const totalReservations = await prisma.reservation.count({ where: { ...tenantFilter, status: { not: "DELETED" } } });
-  const pendingReservations = await prisma.reservation.count({ where: { ...tenantFilter, status: "PENDING" } });
-  const totalMembers = await prisma.user.count({ where: tenantFilter });
-
-  const recentReservations = await prisma.reservation.findMany({
-    where: { ...tenantFilter, status: { not: "DELETED" } },
-    take: 5,
-    orderBy: { createdAt: "desc" },
-    include: { packages: true, payments: true }
-  });
-
-  const notifications = await prisma.adminNotification.findMany({
-    where: tenantFilter,
-    orderBy: { createdAt: "desc" },
-    take: 10
-  });
-
-  const upcomingDeliveries = await prisma.reservation.findMany({
-    where: { 
-      ...tenantFilter,
-      status: "CONFIRMED", 
-      workflowStatus: { notIn: ["COMPLETED", "DELIVERED", "SELECTION_PENDING"] },
-      deliveryDate: { not: null },
-      OR: [
-        { deliveryLink: null },
-        { deliveryLink: "" },
-        {
-          AND: [
-            { selectedPhotos: { not: null } },
-            { selectedPhotos: { not: "" } }
-          ]
-        }
-      ]
-    },
-    orderBy: { deliveryDate: "asc" },
-    take: 5,
-    include: { packages: true, payments: true }
-  });
-
   const now = new Date();
   const thirtyDaysLater = new Date(now);
   thirtyDaysLater.setDate(thirtyDaysLater.getDate() + 30);
-  const upcomingShoots = await prisma.reservation.findMany({
-    where: {
-      ...tenantFilter,
-      status: "CONFIRMED",
-      eventDate: { gte: now, lte: thirtyDaysLater }
-    },
-    orderBy: { eventDate: "asc" },
-    take: 5,
-    include: { packages: true, payments: true }
-  });
+
+  const [
+    totalPackages,
+    totalReservations,
+    pendingReservations,
+    totalMembers,
+    recentReservations,
+    notifications,
+    upcomingDeliveries,
+    upcomingShoots
+  ] = await Promise.all([
+    prisma.photographyPackage.count({ where: tenantFilter }),
+    prisma.reservation.count({ where: { ...tenantFilter, status: { not: "DELETED" } } }),
+    prisma.reservation.count({ where: { ...tenantFilter, status: "PENDING" } }),
+    prisma.user.count({ where: tenantFilter }),
+    prisma.reservation.findMany({
+      where: { ...tenantFilter, status: { not: "DELETED" } },
+      take: 5,
+      orderBy: { createdAt: "desc" },
+      include: { packages: true, payments: true }
+    }),
+    prisma.adminNotification.findMany({
+      where: tenantFilter,
+      orderBy: { createdAt: "desc" },
+      take: 10
+    }),
+    prisma.reservation.findMany({
+      where: { 
+        ...tenantFilter,
+        status: "CONFIRMED", 
+        workflowStatus: { notIn: ["COMPLETED", "DELIVERED", "SELECTION_PENDING"] },
+        deliveryDate: { not: null },
+        OR: [
+          { deliveryLink: null },
+          { deliveryLink: "" },
+          {
+            AND: [
+              { selectedPhotos: { not: null } },
+              { selectedPhotos: { not: "" } }
+            ]
+          }
+        ]
+      },
+      orderBy: { deliveryDate: "asc" },
+      take: 5,
+      include: { packages: true, payments: true }
+    }),
+    prisma.reservation.findMany({
+      where: {
+        ...tenantFilter,
+        status: "CONFIRMED",
+        eventDate: { gte: now, lte: thirtyDaysLater }
+      },
+      orderBy: { eventDate: "asc" },
+      take: 5,
+      include: { packages: true, payments: true }
+    })
+  ]);
 
   const getDaysLeftInfo = (date) => {
     if (!date) return { text: "-", color: "gray" };

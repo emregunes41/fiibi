@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { getBusinessType } from "@/lib/business-types";
 import { sendOnboardingEmail } from "./send-onboarding-email";
+import { signToken } from "@/lib/auth";
 
 /**
  * Yeni kayıt öncesi slug, email, telefon ve işletme adını kontrol eder.
@@ -200,8 +201,15 @@ export async function registerBusiness(data) {
       slug: cleanSlug,
     }).catch(err => console.error("[onboarding] Email error:", err));
 
+    const adminToken = await signToken({
+      id: adminUser.id,
+      tenantId: result.id,
+      role: "admin",
+    });
+
     return {
       success: true,
+      token: adminToken,
       tenant: {
         id: result.id,
         slug: result.slug,

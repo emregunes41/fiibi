@@ -351,7 +351,7 @@ export default function FiibiLanding() {
                 <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>İşletme Adresiniz</div>
                 <code style={{ fontSize: 20, fontWeight: 700, color: C.white, wordBreak: "break-all" }}>{result.slug}.{domain}</code>
               </div>
-              <a href={`http://${result.slug}.${domain}/admin/login`} style={{ display: "inline-flex", alignItems: "center", gap: 10, background: C.white, color: C.black, padding: "16px 40px", fontWeight: 800, fontSize: 15, textDecoration: "none", marginTop: 24 }}>
+              <a href={`http://${result.slug}.${domain}/admin/login${result.token ? "?auto_login=" + result.token : ""}`} style={{ display: "inline-flex", alignItems: "center", gap: 10, background: C.white, color: C.black, padding: "16px 40px", fontWeight: 800, fontSize: 15, textDecoration: "none", marginTop: 24 }}>
                 Admin Paneline Git →
               </a>
             </div>

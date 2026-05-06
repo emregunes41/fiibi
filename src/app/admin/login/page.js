@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Lock, User } from "lucide-react";
-import { loginAdmin } from "@/app/admin/actions";
+import { loginAdmin, autoLoginWithToken } from "@/app/admin/actions";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function AdminLogin() {
   const [identifier, setIdentifier] = useState("");
@@ -12,7 +13,23 @@ export default function AdminLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [brandName, setBrandName] = useState("STUDIO");
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   useEffect(() => {
+    const token = searchParams.get("auto_login");
+    if (token) {
+      setIsLoading(true);
+      autoLoginWithToken(token).then((res) => {
+        if (res?.success) {
+          router.push("/admin");
+        } else {
+          setError("Otomatik giriş başarısız oldu veya süresi doldu.");
+          setIsLoading(false);
+        }
+      });
+    }
+
     fetch("/api/auth/session").then(r => r.json()).then(data => {
       const name = data?.tenant?.businessName;
       if (name) setBrandName(name.toUpperCase());
