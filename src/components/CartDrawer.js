@@ -906,7 +906,7 @@ export default function CartDrawer() {
                           )}
                         </div>
                         <span style={{ fontSize: 13, color: contractAccepted ? "#fff" : "rgba(255,255,255,0.5)", lineHeight: 1.5, transition: "all 0.2s" }}>
-                          Siparişimi tamamlayarak, <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Hizmet Sözleşmesi</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okuduğumu ve kabul ettiğimi onaylıyorum. *
+                          Siparişimi tamamlayarak, <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Hizmet Sözleşmesi</a>'ni, <a href="/sozlesme?tab=kvkk" target="_blank" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>KVKK Aydınlatma Metni</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okuduğumu ve kabul ettiğimi onaylıyorum. *
                         </span>
                       </div>
                     </div>

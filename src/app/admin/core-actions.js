@@ -1095,7 +1095,7 @@ export async function updateSiteConfig(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions, businessName, logoUrl, faviconUrl, footerTagline, seoTitle, seoDescription, accentColor, fontFamily, siteTheme, siteTemplate, forceDarkMode, paymentMode, allowPaymentMethodChange, setupCompleted, sectionOrder, moduleReservations, moduleStore, moduleEvents } = data;
+    const { heroTitle, heroSubtitle, address, phone, email, instagram, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions, businessName, logoUrl, faviconUrl, footerTagline, seoTitle, seoDescription, accentColor, fontFamily, siteTheme, siteTemplate, forceDarkMode, paymentMode, allowPaymentMethodChange, distanceSalesContractText, preliminaryInfoText, kvkkText, setupCompleted, sectionOrder, moduleReservations, moduleStore, moduleEvents } = data;
 
     // Tenant-aware: mevcut tenant'ın settings ID'sini bul
     let tenant = await getCurrentTenant();
@@ -1130,6 +1130,9 @@ export async function updateSiteConfig(data) {
         heroBgUrl: heroBgUrl || "/assets/hero.mp4",
         heroBgColor: heroBgColor || "#000000",
         contractText: contractText || "",
+        distanceSalesContractText: distanceSalesContractText || "",
+        preliminaryInfoText: preliminaryInfoText || "",
+        kvkkText: kvkkText || "",
         emailEnabled: emailEnabled ?? true,
         smsEnabled: smsEnabled ?? false,
         resendApiKey: resendApiKey || "",

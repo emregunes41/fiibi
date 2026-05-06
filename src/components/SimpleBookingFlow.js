@@ -423,7 +423,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
               <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", marginBottom: 0 }}>
                 <input type="checkbox" checked={agreedToTerms} onChange={e => setAgreedToTerms(e.target.checked)} style={{ width: 18, height: 18, accentColor: "#000", marginTop: 2, cursor: "pointer" }} />
                 <span style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>
-                  <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "#fff", textDecoration: "underline" }}>Hizmet Sözleşmesi</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "#fff", textDecoration: "underline" }}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okudum, onaylıyorum.
+                  <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "#fff", textDecoration: "underline" }}>Hizmet Sözleşmesi</a>'ni, <a href="/sozlesme?tab=kvkk" target="_blank" style={{ color: "#fff", textDecoration: "underline" }}>KVKK Aydınlatma Metni</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "#fff", textDecoration: "underline" }}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okudum, onaylıyorum.
                 </span>
               </label>
             </div>

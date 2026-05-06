@@ -130,7 +130,7 @@ export default function RegisterPage() {
                 style={{ marginTop: 4 }} 
               />
               <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>
-                <a href="#" style={{ color: "rgba(255,255,255,0.9)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.3)" }}>Kişisel Verilerin Korunması Kanunu</a> kapsamında aydınlatma metnini okudum ve kabul ediyorum.
+                <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "rgba(255,255,255,0.9)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.3)" }}>Hizmet Sözleşmesi</a>'ni ve <a href="/sozlesme?tab=kvkk" target="_blank" style={{ color: "rgba(255,255,255,0.9)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.3)" }}>KVKK Aydınlatma Metni</a>'ni okudum ve kabul ediyorum.
               </span>
             </label>
 
