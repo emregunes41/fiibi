@@ -28,7 +28,7 @@ const btn = (active) => ({
   background: active ? "#fff" : "rgba(255,255,255,0.04)",
   color: active ? "#000" : "rgba(255,255,255,0.15)",
   fontSize: "14px", fontWeight: 700, cursor: active ? "pointer" : "not-allowed",
-  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
 });
 const anim = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -12 }, transition: { duration: 0.25 } };
 
@@ -402,11 +402,18 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                       border: paymentMethod === m.value ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.08)",
                       background: paymentMethod === m.value ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)",
                       color: paymentMethod === m.value ? "#fff" : "rgba(255,255,255,0.4)",
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
                       fontSize: "13px", fontWeight: 600, transition: "all 0.2s",
                     }}
                   >
-                    {m.icon} {m.label}
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      {m.icon} {m.label}
+                    </div>
+                    {m.value === "card" && (
+                      <div style={{ marginTop: 8 }}>
+                        <img src="/iyzico-logo-pack/checkout_iyzico_ile_ode/TR/Tr_White_Horizontal/iyzico_ile_ode_horizontal_white.svg" alt="iyzico ile Öde" style={{ height: 16, opacity: 0.8 }} />
+                      </div>
+                    )}
                   </button>
                 ))}
               </div>
