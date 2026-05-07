@@ -127,9 +127,9 @@ function AdminLayoutInner({ children }) {
               </div>
             </Link>
             
-            <Link href="/admin/packages" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
+            <Link href="/admin/settings?tab=icerik&subTab=icerik_blok" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-white">
-                <span style={{ fontSize: "14px" }}>✨</span> Yeni Hizmet/Paket
+                <span style={{ fontSize: "14px" }}>📰</span> İçerik Bloğu
               </div>
             </Link>
           </div>
