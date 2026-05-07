@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Edit2, X, ImagePlus, FileText, Calendar } from "lucide-react";
-import { getPosts, createPost, updatePost, deletePost } from "./actions";
+import { getPosts, createPost, updatePost, deletePost } from "./post-actions";
 import Link from "next/link";
 
 export default function PostsAdminPage() {
@@ -86,15 +86,14 @@ export default function PostsAdminPage() {
   }
 
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 20px" }}>
-      
+    <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, flexWrap: "wrap", gap: 16 }}>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, margin: "0 0 8px 0" }}>Blog & Yazılar</h1>
-          <p style={{ color: "rgba(255,255,255,0.5)", margin: 0, fontSize: 14 }}>Müşterilerinizle faydalı içerikler ve güncellemeler paylaşın.</p>
+          <h1 style={{ fontSize: 20, fontWeight: 800, margin: "0 0 4px 0" }}>Blog & Yazılar</h1>
+          <p style={{ color: "rgba(255,255,255,0.5)", margin: 0, fontSize: 13 }}>Sitenizde görünecek blog yazılarını ve haberleri yönetin.</p>
         </div>
-        <button onClick={() => openForm()} style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", color: "#000", border: "none", padding: "12px 20px", borderRadius: 0, fontWeight: 700, cursor: "pointer" }}>
-          <Plus size={18} /> Yeni Yazı
+        <button onClick={() => openForm()} style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", color: "#000", border: "none", padding: "10px 16px", borderRadius: 0, fontWeight: 700, cursor: "pointer", fontSize: 13 }}>
+          <Plus size={16} /> Yeni Yazı
         </button>
       </div>
 

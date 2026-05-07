@@ -17,6 +17,7 @@ import {
 import { PLATFORM, LEGAL_TYPES } from "@/lib/constants";
 import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, getKVKKText } from "@/lib/contracts";
 import MembersList from "../components/MembersList";
+import PostsManager from "./PostsManager";
 
 const inp = {
   width: "100%", boxSizing: "border-box",
@@ -67,8 +68,9 @@ const SUB_TABS = {
   ],
   icerik: [
     { id: "icerik_blok", label: "İçerik Blokları" },
-    { id: "banner", label: "Banner&apos;lar" },
+    { id: "banner", label: "Banner'lar" },
     { id: "portfolio", label: "Portfolyo" },
+    { id: "blog", label: "Blog & Yazılar" },
     { id: "sozlesme", label: "Sözleşmeler" },
     { id: "indirim", label: "İndirimler" }
   ],
@@ -566,6 +568,13 @@ export default function SettingsPage() {
             </div>
           )}
         </div>}
+
+        {/* Blog Manager */}
+        {activeTab === "icerik" && subTab === "blog" && (
+          <div style={sectionCard}>
+            <PostsManager />
+          </div>
+        )}
 
         {/* 2.5 Hero Arka Plan */}
         {activeTab === "tasarim" && subTab === "hero" && <div style={sectionCard}>
