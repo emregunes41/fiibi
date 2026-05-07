@@ -95,12 +95,20 @@ html[data-light] div[style*="background:#fff"] * {
 html[data-light] [style*="color: var(--bg)"] {
   color: var(--bg) !important;
 }
-html[data-light] [style*="background: var(--text)"] {
+html[data-light] [style*="background: var(--text)"],
+html[data-light] [style*="background: var(--accent)"],
+html[data-light] [style*="background: var(--btn-bg)"] {
   background: var(--text) !important;
+  color: var(--bg) !important;
 }
 html[data-light] [style*="background: var(--text)"] *,
-html[data-light] button[style*="background: var(--text)"] * {
+html[data-light] [style*="background: var(--accent)"] *,
+html[data-light] [style*="background: var(--btn-bg)"] * {
   color: var(--bg) !important;
+}
+html[data-light] [style*="color: var(--accent)"],
+html[data-light] [style*="color: var(--btn-bg)"] {
+  color: var(--text) !important;
 }
 
 /* Inputs and selects in light mode */
