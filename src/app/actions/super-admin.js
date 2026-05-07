@@ -378,3 +378,25 @@ export async function updateTenantSlug(tenantId, newSlug) {
 
   return { success: true, slug };
 }
+
+/**
+ * Tenant işletme adını güncelle
+ */
+export async function updateTenantBusinessName(tenantId, newName) {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  const businessName = newName?.trim();
+  if (!businessName || businessName.length < 2) {
+    return { error: "İşletme adı en az 2 karakter olmalıdır." };
+  }
+  if (businessName.length > 100) {
+    return { error: "İşletme adı en fazla 100 karakter olabilir." };
+  }
+
+  await prisma.tenant.update({
+    where: { id: tenantId },
+    data: { businessName }
+  });
+
+  return { success: true, businessName };
+}

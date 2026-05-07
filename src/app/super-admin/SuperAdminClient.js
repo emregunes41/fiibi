@@ -13,7 +13,7 @@ import {
   changeTenantPlan, deleteTenant, superAdminLogout,
   getPlatformPricing, updatePlatformPricing,
   updateTenantCommission, updateSubMerchantStatus, resetTenantAdminPassword,
-  updateTenantSlug
+  updateTenantSlug, updateTenantBusinessName
 } from "@/app/actions/super-admin";
 import { getCloudinaryUsage, getDbUsage, getResendUsage, getVercelUsage } from "@/app/actions/platform-usage";
 
@@ -93,6 +93,15 @@ export default function SuperAdminClient() {
     const res = await updateTenantSlug(id, newSlug);
     if (res.error) alert(res.error);
     else { alert(`Adres başarıyla güncellendi: ${res.slug}.${domain}`); await loadData(); }
+    setActionLoading(null);
+  }
+  async function handleBusinessNameChange(id, currentName) {
+    const newName = prompt(`Mevcut i\u015fletme ad\u0131: ${currentName}\n\nYeni i\u015fletme ad\u0131n\u0131 girin:`, currentName);
+    if (!newName || newName.trim() === currentName) return;
+    setActionLoading(id);
+    const res = await updateTenantBusinessName(id, newName.trim());
+    if (res.error) alert(res.error);
+    else { alert(`\u0130\u015fletme ad\u0131 g\u00fcncellendi: ${res.businessName}`); setInfoModal(prev => prev ? { ...prev, businessName: res.businessName } : null); await loadData(); }
     setActionLoading(null);
   }
 
@@ -544,7 +553,6 @@ export default function SuperAdminClient() {
                 <h4 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 8 }}>GENEL & İLETİŞİM</h4>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                   {[
-                    { label: "İşletme Adı", value: infoModal.businessName },
                     { label: "Sahibi", value: infoModal.ownerName },
                     { label: "E-Posta", value: infoModal.ownerEmail },
                     { label: "Telefon", value: infoModal.ownerPhone || "-" },
@@ -556,6 +564,22 @@ export default function SuperAdminClient() {
                       <span style={{ fontSize: 14, color: "#fff", fontWeight: 500, wordBreak: "break-all" }}>{item.value}</span>
                     </div>
                   ))}
+
+                {/* İşletme Adı Düzenleme */}
+                <div style={{ marginTop: 16, padding: "14px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 4 }}>İşletme Adı</div>
+                      <div style={{ fontSize: 14, color: "#fff", fontWeight: 600 }}>{infoModal.businessName}</div>
+                    </div>
+                    <button
+                      onClick={() => handleBusinessNameChange(infoModal.id, infoModal.businessName)}
+                      style={{ ...smallBtn, color: "#f59e0b", background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)", padding: "6px 14px", fontSize: 11, fontWeight: 700 }}
+                    >
+                      Düzenle
+                    </button>
+                  </div>
+                </div>
                 </div>
 
                 {/* Slug Düzenleme */}
