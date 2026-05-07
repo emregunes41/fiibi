@@ -12,12 +12,18 @@ function getOpenAI() {
 // Tenant-aware site config çek
 async function getTenantConfig() {
   const tenant = await getCurrentTenant();
+  let config = null;
   if (tenant) {
-    const config = await getTenantSiteConfig(tenant.id);
-    if (config) return config;
+    config = await getTenantSiteConfig(tenant.id);
   }
-  // Fallback: eski global-settings
-  return prisma.globalSettings.findUnique({ where: { id: "global-settings" } });
+  if (!config) {
+    // Fallback: eski global-settings
+    config = await prisma.globalSettings.findUnique({ where: { id: "global-settings" } });
+  }
+  if (config && tenant) {
+    config._tenant = tenant;
+  }
+  return config;
 }
 
 // Build dynamic system prompt
@@ -26,7 +32,7 @@ async function buildSystemPrompt(siteConfig) {
     ? `\n## ÖZEL TALİMATLAR (Sahibinden)\n${siteConfig.chatbotInstructions}\n`
     : "";
 
-  const businessName = siteConfig?.businessName || "Studio";
+  const businessName = siteConfig?.businessName || siteConfig?._tenant?.businessName || "Studio";
 
   return `Sen ${businessName} stüdyonun sanal asistanısın. ${businessName}, premium bir düğün ve etkinlik fotoğrafçılığı stüdyosüdur.
 

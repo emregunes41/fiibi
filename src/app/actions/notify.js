@@ -143,7 +143,7 @@ export async function notifyReservationReceived(email, phone, name, reservationD
 
   if (settings.smsEnabled && phone) {
     const formattedDate = new Date(reservationDetails.date).toLocaleDateString("tr-TR");
-    const businessName = settings.businessName || "Studio";
+    const businessName = settings.businessName || settings._tenant?.businessName || "Studio";
     const message = `Merhaba ${name}, rezervasyon talebiniz alındı! Tarih: ${formattedDate} | Tutar: ${reservationDetails.totalAmount} TL | ${businessName}`;
     results.sms = await sendSMS(phone, message, settings);
   }
@@ -167,7 +167,7 @@ export async function notifyReservationConfirmed(email, phone, name, date, total
   }
 
   if (settings.smsEnabled && phone) {
-    const businessName = settings.businessName || "Studio";
+    const businessName = settings.businessName || settings._tenant?.businessName || "Studio";
     const message = `Merhaba ${name}, rezervasyonunuz onaylandı! Tarih: ${formattedDate} | ${businessName}`;
     results.sms = await sendSMS(phone, message, settings);
   }
@@ -232,7 +232,7 @@ export async function notifyPaymentReceived(email, phone, name, amount, remainin
 
   const results = { email: null, sms: null };
   const siteUrl = await getSiteUrl(settings);
-  const businessName = settings.businessName || "Studio";
+  const businessName = settings.businessName || settings._tenant?.businessName || "Studio";
 
   if (settings.emailEnabled && email) {
     const html = `
@@ -272,7 +272,7 @@ export async function notifyEventReminder(email, phone, name, date, packageName)
 
   const results = { email: null, sms: null };
   const formattedDate = new Date(date).toLocaleDateString("tr-TR");
-  const businessName = settings.businessName || "Studio";
+  const businessName = settings.businessName || settings._tenant?.businessName || "Studio";
   const siteUrl = await getSiteUrl(settings);
 
   if (settings.emailEnabled && email) {
@@ -311,7 +311,7 @@ export async function notifyPhotosReady(email, phone, name) {
 
   const results = { email: null, sms: null };
   const siteUrl = await getSiteUrl(settings);
-  const businessName = settings.businessName || "Studio";
+  const businessName = settings.businessName || settings._tenant?.businessName || "Studio";
 
   if (settings.emailEnabled && email) {
     const html = `

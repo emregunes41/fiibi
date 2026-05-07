@@ -20,7 +20,7 @@ export async function GET(req) {
   try {
     const settings = await getNotificationSettings();
     const adminEmail = settings.email || settings._tenant?.ownerEmail || "admin@studio.com";
-    const businessName = settings.businessName || "Studio";
+    const businessName = settings.businessName || r.tenant.businessName || "Studio";
     const domain = process.env.PLATFORM_DOMAIN || "localhost:3000";
     const protocol = domain.includes("localhost") ? "http" : "https";
     const tenant = settings._tenant;
