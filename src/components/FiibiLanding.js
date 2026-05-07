@@ -682,7 +682,22 @@ export default function FiibiLanding() {
             </div>
           </div>
         </div>
-        <div style={{ ...wrap, borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 40, paddingTop: 20, textAlign: "center" }}>
+        
+          <div style={{ width: "100%", marginTop: 40, borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 32, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.15em" }}>Güvenli Ödeme Altyapısı</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", justifyContent: "center", opacity: 0.5 }}>
+              {/* Visa */}
+              <svg width="40" height="13" viewBox="0 0 40 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.22 0.280029L9.93 12.63H6.5L3.92 2.87003C3.76 2.27003 3.65 2.06003 3.2 1.80003C2.42 1.34003 1.15 0.950029 0 0.700029L0.08 0.280029H5.63C6.33 0.280029 6.96 0.760029 7.12 1.57003L8.52 8.76003L11.75 0.280029H15.22ZM28.53 8.52003C28.53 5.34003 24.18 5.16003 24.2 3.73003C24.21 3.30003 24.62 2.83003 25.5 2.69003C25.94 2.62003 27.23 2.56003 28.56 3.18003L29.09 0.690029C28.37 0.430029 27.42 0.210029 26.29 0.210029C23.12 0.210029 20.93 1.89003 20.91 4.33003C20.89 6.13003 22.54 7.14003 23.77 7.74003C25.04 8.35003 25.46 8.74003 25.46 9.28003C25.44 10.1 24.46 10.46 23.57 10.48C22.07 10.5 20.93 10.08 20.08 9.68003L19.53 12.23C20.25 12.57 21.56 12.86 22.95 12.88C26.33 12.88 28.53 11.22 28.53 8.52003ZM36.96 12.63H39.88L37.96 0.280029H35.15C34.54 0.280029 34.02 0.650029 33.78 1.20003L28.84 12.63H32.22L32.89 10.74H37.04L36.96 12.63ZM33.82 8.21003L35.48 3.59003L36.46 8.21003H33.82ZM19.82 0.280029H17.06L13.56 12.63H16.81L19.82 0.280029Z" fill="#fff"/></svg>
+              {/* Mastercard */}
+              <svg width="22" height="13" viewBox="0 0 22 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.05001 0.490005C4.24001 0.490005 1.76001 2.05001 0.5 4.38001C1.65 6.43001 1.65 8.95001 0.5 11.01C1.75 13.34 4.24001 14.9 7.05001 14.9C10.74 14.9 13.84 12.16 14.28 8.62001C13.88 4.70001 10.74 1.62001 7.05001 0.490005Z" fill="#fff"/><path d="M14.95 0.490005C11.26 1.62001 8.11999 4.70001 7.71999 8.62001C8.15999 12.16 11.26 14.9 14.95 14.9C17.76 14.9 20.24 13.34 21.5 11.01C20.35 8.96001 20.35 6.44001 21.5 4.38001C20.24 2.05001 17.76 0.490005 14.95 0.490005Z" fill="#fff"/></svg>
+              {/* PayTR Text Logo */}
+              <span style={{ fontSize: 16, fontWeight: 900, color: "#fff", letterSpacing: "-0.5px" }}>PayTR</span>
+              {/* Iyzico Text Logo */}
+              <span style={{ fontSize: 16, fontWeight: 800, color: "#fff", letterSpacing: "-0.5px" }}>iyzico</span>
+            </div>
+          </div>
+
+        <div style={{ ...wrap, borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 24, paddingTop: 20, textAlign: "center" }}>
           <span style={{ fontSize: 11, color: "rgba(255,255,255,0.15)" }}>© {new Date().getFullYear()} fiibi. {t.footer.rights}</span>
         </div>
       </footer>
