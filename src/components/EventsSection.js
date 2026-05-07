@@ -34,14 +34,14 @@ export default function EventsSection({ events }) {
   return (
     <div className="w-full">
       <div style={{ marginBottom: "3rem", textAlign: "center" }}>
-        <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>BİZE KATILIN</div>
+        <div style={{ fontSize: 10, fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>BİZE KATILIN</div>
         <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 8px 0" }}>
           Yaklaşan Etkinlikler
         </h2>
-        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", margin: 0 }}>Grup dersleri, seminerler ve kamplar</p>
+        <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", margin: 0 }}>Grup dersleri, seminerler ve kamplar</p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24 }}>
         {events.map((ev) => {
           const registered = ev.registrations?.length || 0;
           const remaining = ev.maxParticipants - registered;
@@ -50,7 +50,8 @@ export default function EventsSection({ events }) {
             <div key={ev.id} style={{ 
               background: "var(--bg-card)", border: "1px solid var(--border)", 
               borderRadius: "var(--radius)", overflow: "hidden", transition: "transform 0.3s, border-color 0.3s",
-              display: "flex", flexDirection: "column" 
+              display: "flex", flexDirection: "column",
+              width: "100%", maxWidth: "350px", flex: "1 1 300px"
             }}>
               {/* Cover Image */}
               {ev.imageUrl && (
@@ -61,9 +62,9 @@ export default function EventsSection({ events }) {
 
               <div style={{ padding: 24, flex: 1, display: "flex", flexDirection: "column" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
-                  <div suppressHydrationWarning style={{ background: "rgba(255,255,255,0.05)", padding: "8px 12px", borderRadius: "var(--radius)" }}>
-                    <div suppressHydrationWarning style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>{new Date(ev.date).toLocaleString('tr-TR', { month: 'short' })}</div>
-                    <div suppressHydrationWarning style={{ fontSize: 20, fontWeight: 800, color: "#fff", lineHeight: 1 }}>{new Date(ev.date).getDate()}</div>
+                  <div suppressHydrationWarning style={{ background: "rgba(128,128,128,0.1)", padding: "8px 12px", borderRadius: "var(--radius)" }}>
+                    <div suppressHydrationWarning style={{ fontSize: 10, fontWeight: 800, color: "var(--text-muted)", textTransform: "uppercase" }}>{new Date(ev.date).toLocaleString('tr-TR', { month: 'short' })}</div>
+                    <div suppressHydrationWarning style={{ fontSize: 20, fontWeight: 800, color: "var(--text)", lineHeight: 1 }}>{new Date(ev.date).getDate()}</div>
                   </div>
                   <div style={{ fontSize: 15, fontWeight: 900, color: "var(--btn-text)", background: "var(--accent)", padding: "4px 10px", borderRadius: "var(--radius)" }}>
                     {ev.price === "0" ? "Ücretsiz" : `${ev.price}₺`}
@@ -71,28 +72,28 @@ export default function EventsSection({ events }) {
                 </div>
 
                 <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 8, lineHeight: 1.3 }}>{ev.title}</h3>
-                {ev.description && <p style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginBottom: 16, lineHeight: 1.5, flex: 1 }}>{ev.description}</p>}
+                {ev.description && <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 16, lineHeight: 1.5, flex: 1 }}>{ev.description}</p>}
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: "auto" }}>
-                  <div suppressHydrationWarning style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(255,255,255,0.6)" }}>
-                    <Clock size={14} style={{ color: "rgba(255,255,255,0.4)" }} /> <span suppressHydrationWarning>{new Date(ev.date).toLocaleTimeString("tr-TR", { hour: '2-digit', minute: '2-digit' })}</span> ({ev.durationMinutes}Dk)
+                  <div suppressHydrationWarning style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "var(--text-muted)" }}>
+                    <Clock size={14} style={{ color: "var(--text-muted)", opacity: 0.7 }} /> <span suppressHydrationWarning>{new Date(ev.date).toLocaleTimeString("tr-TR", { hour: '2-digit', minute: '2-digit' })}</span> ({ev.durationMinutes}Dk)
                   </div>
                   {ev.location && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(255,255,255,0.6)" }}>
-                      <MapPin size={14} style={{ color: "rgba(255,255,255,0.4)" }} /> {ev.location}
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "var(--text-muted)" }}>
+                      <MapPin size={14} style={{ color: "var(--text-muted)", opacity: 0.7 }} /> {ev.location}
                     </div>
                   )}
                   {ev.meetingLink && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(255,255,255,0.6)" }}>
-                      <Video size={14} style={{ color: "rgba(255,255,255,0.4)" }} /> Online Etkinlik
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "var(--text-muted)" }}>
+                      <Video size={14} style={{ color: "var(--text-muted)", opacity: 0.7 }} /> Online Etkinlik
                     </div>
                   )}
                 </div>
               </div>
               
-              <div style={{ padding: "16px 24px", background: "rgba(0,0,0,0.2)", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+              <div style={{ padding: "16px 24px", background: "rgba(128,128,128,0.05)", borderTop: "1px solid var(--border)" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                  <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)" }}>Kontenjan Durumu</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)" }}>Kontenjan Durumu</span>
                   {remaining > 0 ? (
                      <span style={{ fontSize: 11, fontWeight: 800, color: remaining <= 3 ? "#ef4444" : "#4ade80" }}>Son {remaining} Kişi</span>
                   ) : (
@@ -116,17 +117,17 @@ export default function EventsSection({ events }) {
 
       {/* Registration Modal */}
       {selectedEvent && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)" }}>
+        <div style={{ position: "fixed", inset: 0, zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(5px)" }}>
           <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", width: "100%", maxWidth: 450, overflow: "hidden", position: "relative", boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)" }}>
             
             {status === "success" ? (
               <div style={{ padding: 40, textAlign: "center" }}>
                 <CheckCircle size={48} style={{ color: "#4ade80", margin: "0 auto 16px" }} />
-                <h3 style={{ fontSize: 24, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Kaydınız Alındı!</h3>
-                <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, marginBottom: 24 }}>
+                <h3 style={{ fontSize: 24, fontWeight: 800, color: "var(--text)", marginBottom: 8 }}>Kaydınız Alındı!</h3>
+                <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 24 }}>
                   {selectedEvent.price === "0" ? "Etkinlik detayları e-posta adresinize gönderildi." : "Kayıt bilgileriniz alındı. Ödeme detayları için sizinle iletişime geçilecektir."}
                 </p>
-                <button onClick={closeDialog} style={{ width: "100%", padding: 14, background: "rgba(255,255,255,0.1)", color: "#fff", border: "none", borderRadius: "var(--radius)", fontWeight: 700, cursor: "pointer" }}>Kapat</button>
+                <button onClick={closeDialog} style={{ width: "100%", padding: 14, background: "var(--bg-muted)", color: "var(--text)", border: "none", borderRadius: "var(--radius)", fontWeight: 700, cursor: "pointer" }}>Kapat</button>
               </div>
             ) : (
               <>
@@ -136,10 +137,10 @@ export default function EventsSection({ events }) {
                     <img src={selectedEvent.imageUrl} alt={selectedEvent.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
                 )}
-                <div style={{ padding: "24px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div style={{ padding: "24px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <div>
                     <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>{selectedEvent.title}</h3>
-                    <p suppressHydrationWarning style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", margin: 0 }}>
+                    <p suppressHydrationWarning style={{ fontSize: 12, color: "var(--text-muted)", margin: 0 }}>
                       {new Date(selectedEvent.date).toLocaleDateString("tr-TR", { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>

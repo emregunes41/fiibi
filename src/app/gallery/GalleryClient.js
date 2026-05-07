@@ -263,11 +263,10 @@ export default function GalleryClient({ categories }) {
           <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 8px 0" }}>
             Portfolyo
           </h2>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", margin: 0 }}>Çalışmalarımızdan öne çıkanlar</p>
         </div>        {/* Category Grid — Responsive Gallery */}
         <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(clamp(110px, 18vw, 240px), 1fr))",
+          display: "flex",
+          flexWrap: "wrap",
           gap: "1rem",
           justifyContent: "center",
           width: "100%",
@@ -297,6 +296,7 @@ export default function GalleryClient({ categories }) {
                   transition={{ delay: i * 0.05 }}
                   onClick={() => openCategory(cat)}
                   style={{
+                    width: "clamp(110px, 18vw, 240px)",
                     cursor: photoCount > 0 ? "pointer" : "default",
                     position: "relative",
                     borderRadius: "var(--radius)",

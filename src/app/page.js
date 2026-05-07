@@ -228,9 +228,9 @@ export default async function HomePage() {
             </h2>
             <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", margin: 0 }}>Sektörel haberler ve faydalı ipuçları</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24 }}>
             {posts.map(post => (
-              <Link key={post.id} href={`/blog/${post.slug}`} style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", overflow: "hidden", textDecoration: "none", color: "var(--text)", display: "flex", flexDirection: "column", transition: "transform 0.3s, border-color 0.3s" }} className="hover:border-white/20 hover:-translate-y-1">
+              <Link key={post.id} href={`/blog/${post.slug}`} style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", overflow: "hidden", textDecoration: "none", color: "var(--text)", display: "flex", flexDirection: "column", transition: "transform 0.3s, border-color 0.3s", width: "100%", maxWidth: "350px", flex: "1 1 300px" }} className="hover:border-white/20 hover:-translate-y-1">
                 {post.imageUrl ? (
                   <div style={{ width: "100%", height: 200, overflow: "hidden" }}>
                     <img src={post.imageUrl} alt={post.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
