@@ -1879,7 +1879,7 @@ export default function SettingsPage() {
           {/* İşletme Adı */}
           <div style={{ marginBottom: 16 }}>
             <label style={label}>İşletme Adı</label>
-            <input type="text" value={config.businessName || ""} onChange={e => setConfig({ ...config, businessName: e.target.value })} style={inp} placeholder="Studio" />
+            <input type="text" value={config.businessName || ""} onChange={e => setConfig({ ...config, businessName: e.target.value })} style={inp} placeholder={terms?.placeName || "İşletme Adınız"} />
           </div>
 
           {/* Footer Slogan */}

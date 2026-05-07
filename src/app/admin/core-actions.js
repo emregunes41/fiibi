@@ -1151,7 +1151,7 @@ export async function updateSiteConfig(data) {
         showEmailOnHome: showEmailOnHome ?? true,
         showAddressOnHome: showAddressOnHome ?? true,
         // Yeni SaaS alanları
-        businessName: businessName || "Studio",
+        businessName: businessName || tenant?.businessName || "Studio",
         logoUrl: logoUrl || null,
         faviconUrl: faviconUrl || null,
         footerTagline: footerTagline || "",

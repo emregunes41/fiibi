@@ -364,7 +364,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8">
             <div className={`md:col-span-5 ${tpl.footerStyle === "centered" ? "md:col-span-12 text-center flex flex-col items-center" : ""}`}>
               <h3 className="font-serif text-4xl md:text-5xl tracking-tight text-white mb-4" style={{ lineHeight: 1.1 }}>
-                {siteConfig?.businessName || "Studio"}<span className="text-white/20">.</span>
+                {siteConfig?.businessName || tenant?.businessName || "Studio"}<span className="text-white/20">.</span>
               </h3>
               <p className={`text-white/25 text-[13px] leading-relaxed max-w-[280px] ${tpl.footerStyle === "centered" ? "text-center" : ""}`}>
                 {footerTagline}
@@ -426,7 +426,7 @@ export default async function HomePage() {
         </div>
         <div className="border-t border-white/[0.04]">
           <div className="section-container py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <span className="text-[10px] text-white/20 uppercase tracking-[0.2em]">© {new Date().getFullYear()} {siteConfig?.businessName || "Studio"}</span>
+            <span className="text-[10px] text-white/20 uppercase tracking-[0.2em]">© {new Date().getFullYear()} {siteConfig?.businessName || tenant?.businessName || "Studio"}</span>
           </div>
         </div>
       </footer>

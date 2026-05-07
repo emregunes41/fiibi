@@ -61,7 +61,7 @@ export async function generateMetadata() {
   } catch (e) {
     console.error("Metadata getSiteConfig error:", e);
   }
-  const businessName = siteConfig?.businessName || "Studio";
+  const businessName = siteConfig?.businessName || tenant?.businessName || "Studio";
   const seoTitle = siteConfig?.seoTitle || businessName;
   const seoDescription = siteConfig?.seoDescription || `${businessName} — Online randevu ve hizmet yönetimi.`;
   
@@ -216,7 +216,7 @@ export default async function RootLayout({ children }) {
 
           <CartWrapper>
             <PageTracker />
-            <Navbar businessName={siteConfig?.businessName || "Studio"} logoUrl={siteConfig?.logoUrl} accentColor={accentColor} />
+            <Navbar businessName={siteConfig?.businessName || tenant?.businessName || "Studio"} logoUrl={siteConfig?.logoUrl} accentColor={accentColor} />
             {children}
             <div className="md:hidden h-32 shrink-0 w-full" />
             <a 
