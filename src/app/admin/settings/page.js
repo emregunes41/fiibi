@@ -174,7 +174,7 @@ export default function SettingsPage() {
     loadDiscountCodes();
     getBanners().then(setBanners);
     getContentBlocks().then(setContentBlocks);
-    getPortfolioCategories().then(setPortfolioCategories);
+    getPortfolioCategories().then(res => setPortfolioCategories(res?.categories || []));
     // Load sub-merchant info
     getSubMerchantInfo().then((info) => {
       if (info && !info.error) {
@@ -1573,7 +1573,7 @@ export default function SettingsPage() {
             onClick={async () => {
               const res = await createPortfolioCategory(newCategoryName.trim());
               if (res.success) {
-                setPortfolioCategories(await getPortfolioCategories());
+                setPortfolioCategories((await getPortfolioCategories())?.categories || []);
                 setNewCategoryName("");
               }
             }}
@@ -1605,7 +1605,7 @@ export default function SettingsPage() {
                       onSuccess={async (result) => {
                         if (result.event === "success") {
                           await addPhotoToPortfolio(cat.id, result.info.secure_url, result.info.public_id);
-                          setPortfolioCategories(await getPortfolioCategories());
+                          setPortfolioCategories((await getPortfolioCategories())?.categories || []);
                         }
                       }}
                     >
@@ -1625,7 +1625,7 @@ export default function SettingsPage() {
                       onClick={async () => {
                         if (confirm(`"${cat.name}" kategorisini ve tüm fotoğraflarını silmek istediğinize emin misiniz?`)) {
                           await deletePortfolioCategory(cat.id);
-                          setPortfolioCategories(await getPortfolioCategories());
+                          setPortfolioCategories((await getPortfolioCategories())?.categories || []);
                         }
                       }}
                       style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(255,255,255,0.3)" }}
@@ -1643,7 +1643,7 @@ export default function SettingsPage() {
                           type="button"
                           onClick={async () => {
                             await deletePortfolioPhoto(photo.id);
-                            setPortfolioCategories(await getPortfolioCategories());
+                            setPortfolioCategories((await getPortfolioCategories())?.categories || []);
                           }}
                           style={{
                             position: "absolute", top: 2, right: 2, background: "rgba(0,0,0,0.7)",
