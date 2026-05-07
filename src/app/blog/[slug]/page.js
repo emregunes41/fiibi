@@ -44,8 +44,8 @@ export default async function SinglePostPage({ params }) {
       <article style={{ maxWidth: 800, margin: "0 auto" }}>
         
         <div style={{ marginBottom: 40 }}>
-          <Link href="/blog" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>
-            <ArrowLeft size={16} /> Blog'a Dön
+          <Link href="/#blog" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>
+            <ArrowLeft size={16} /> Ana Sayfaya Dön
           </Link>
         </div>
 
