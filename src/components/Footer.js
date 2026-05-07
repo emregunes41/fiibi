@@ -88,7 +88,7 @@ export default function Footer({ businessName = "Studio", phone = "", email = ""
       <div className="max-w-7xl mx-auto mt-16 flex flex-col items-center gap-4 opacity-50">
         <div className="text-[10px] font-bold text-white/50 tracking-[0.15em] uppercase">Güvenli Ödeme Altyapısı</div>
         <div className="flex items-center justify-center gap-6 flex-wrap opacity-80">
-          <img src="/iyzico-logo-pack/footer_iyzico_ile_ode/White/logo_band_white.svg" alt="iyzico Korumalı Alışveriş" className="h-6" />
+          <img src="/iyzico_footer.svg" alt="iyzico Korumalı Alışveriş" className="h-6" />
           <span className="text-sm font-black text-white tracking-tighter opacity-60">PayTR</span>
         </div>
       </div>
