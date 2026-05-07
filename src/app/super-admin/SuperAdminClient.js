@@ -13,7 +13,7 @@ import {
   changeTenantPlan, deleteTenant, superAdminLogout,
   getPlatformPricing, updatePlatformPricing,
   updateTenantCommission, updateSubMerchantStatus, resetTenantAdminPassword,
-  updateTenantSlug, updateTenantBusinessName
+  updateTenantField, impersonateTenant
 } from "@/app/actions/super-admin";
 import { getCloudinaryUsage, getDbUsage, getResendUsage, getVercelUsage } from "@/app/actions/platform-usage";
 
@@ -86,22 +86,22 @@ export default function SuperAdminClient() {
     else alert("Şifre başarıyla güncellendi.");
     setActionLoading(null);
   }
-  async function handleSlugChange(id, currentSlug) {
-    const newSlug = prompt(`Mevcut adres: ${currentSlug}.${domain}\n\nYeni slug girin (sadece küçük harf, rakam, tire):`, currentSlug);
-    if (!newSlug || newSlug === currentSlug) return;
+  // God Mode — generic field editor
+  async function editField(id, field, label, currentValue) {
+    const newVal = prompt(`${label} düzenle:`, currentValue || "");
+    if (newVal === null || newVal === currentValue) return;
     setActionLoading(id);
-    const res = await updateTenantSlug(id, newSlug);
+    const res = await updateTenantField(id, field, newVal);
     if (res.error) alert(res.error);
-    else { alert(`Adres başarıyla güncellendi: ${res.slug}.${domain}`); await loadData(); }
+    else { setInfoModal(prev => prev ? { ...prev, [field]: res.value } : null); await loadData(); }
     setActionLoading(null);
   }
-  async function handleBusinessNameChange(id, currentName) {
-    const newName = prompt(`Mevcut i\u015fletme ad\u0131: ${currentName}\n\nYeni i\u015fletme ad\u0131n\u0131 girin:`, currentName);
-    if (!newName || newName.trim() === currentName) return;
+  // God Mode — impersonate
+  async function handleImpersonate(id) {
     setActionLoading(id);
-    const res = await updateTenantBusinessName(id, newName.trim());
+    const res = await impersonateTenant(id);
     if (res.error) alert(res.error);
-    else { alert(`\u0130\u015fletme ad\u0131 g\u00fcncellendi: ${res.businessName}`); setInfoModal(prev => prev ? { ...prev, businessName: res.businessName } : null); await loadData(); }
+    else window.open(res.url, "_blank");
     setActionLoading(null);
   }
 
@@ -541,81 +541,66 @@ export default function SuperAdminClient() {
           }} onClick={e => e.stopPropagation()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <Users size={20} style={{ color: "#38bdf8" }} />
-                <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>Kullanıcı Detayları</h3>
+                <Shield size={20} style={{ color: "#f59e0b" }} />
+                <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>God Mode — {infoModal.businessName}</h3>
               </div>
-              <button onClick={() => setInfoModal(null)} style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={20} /></button>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button onClick={() => handleImpersonate(infoModal.id)} style={{ ...smallBtn, color: "#4ade80", background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.2)", padding: "6px 14px", fontSize: 11, fontWeight: 700, gap: 6, display: "flex", alignItems: "center" }}>
+                  <ExternalLink size={12} /> Admin Panele Gir
+                </button>
+                <button onClick={() => setInfoModal(null)} style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={20} /></button>
+              </div>
             </div>
             
-            <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-              {/* İletişim Bilgileri */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+              {/* GENEL & İLETİŞİM — Tümü Düzenlenebilir */}
               <div>
-                <h4 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 8 }}>GENEL & İLETİŞİM</h4>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <h4 style={{ margin: "0 0 12px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 8 }}>GENEL & İLETİŞİM</h4>
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                   {[
-                    { label: "Sahibi", value: infoModal.ownerName },
-                    { label: "E-Posta", value: infoModal.ownerEmail },
-                    { label: "Telefon", value: infoModal.ownerPhone || "-" },
-                    { label: "Özel Domain", value: infoModal.customDomain || "-" },
-                    { label: "İşletme Türü", value: infoModal.businessType || "-" },
-                  ].map((item, i) => (
-                    <div key={i} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>{item.label}</span>
-                      <span style={{ fontSize: 14, color: "#fff", fontWeight: 500, wordBreak: "break-all" }}>{item.value}</span>
+                    { field: "businessName", label: "İşletme Adı", value: infoModal.businessName },
+                    { field: "ownerName", label: "Sahibi", value: infoModal.ownerName },
+                    { field: "ownerEmail", label: "E-Posta", value: infoModal.ownerEmail },
+                    { field: "ownerPhone", label: "Telefon", value: infoModal.ownerPhone },
+                    { field: "businessType", label: "İşletme Türü", value: infoModal.businessType },
+                    { field: "customDomain", label: "Özel Domain", value: infoModal.customDomain },
+                  ].map((item) => (
+                    <div key={item.field} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 14px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 1 }}>{item.label}</div>
+                        <div style={{ fontSize: 13, color: "#fff", fontWeight: 500, wordBreak: "break-all" }}>{item.value || "—"}</div>
+                      </div>
+                      <button onClick={() => editField(infoModal.id, item.field, item.label, item.value)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.2)", cursor: "pointer", padding: 4, fontSize: 14 }} title="Düzenle">✏️</button>
                     </div>
                   ))}
-
-                {/* İşletme Adı Düzenleme */}
-                <div style={{ marginTop: 16, padding: "14px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div>
-                      <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 4 }}>İşletme Adı</div>
-                      <div style={{ fontSize: 14, color: "#fff", fontWeight: 600 }}>{infoModal.businessName}</div>
-                    </div>
-                    <button
-                      onClick={() => handleBusinessNameChange(infoModal.id, infoModal.businessName)}
-                      style={{ ...smallBtn, color: "#f59e0b", background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)", padding: "6px 14px", fontSize: 11, fontWeight: 700 }}
-                    >
-                      Düzenle
-                    </button>
-                  </div>
-                </div>
-                </div>
-
-                {/* Slug Düzenleme */}
-                <div style={{ marginTop: 16, padding: "14px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div>
-                      <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Site Adresi (Slug)</div>
-                      <div style={{ fontSize: 14, color: "#fff", fontWeight: 500, fontFamily: "monospace" }}>
-                        <span style={{ color: "#8b5cf6" }}>{infoModal.slug}</span><span style={{ color: "rgba(255,255,255,0.3)" }}>.{domain}</span>
+                  {/* Slug — özel gösterim */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 14px", background: "rgba(139,92,246,0.04)", border: "1px solid rgba(139,92,246,0.1)" }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 1 }}>Site Adresi (Slug)</div>
+                      <div style={{ fontSize: 13, color: "#fff", fontWeight: 500, fontFamily: "monospace" }}>
+                        <span style={{ color: "#8b5cf6" }}>{infoModal.slug}</span><span style={{ color: "rgba(255,255,255,0.25)" }}>.{domain}</span>
                       </div>
                     </div>
-                    <button
-                      onClick={() => handleSlugChange(infoModal.id, infoModal.slug)}
-                      style={{ ...smallBtn, color: "#8b5cf6", background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.2)", padding: "6px 14px", fontSize: 11, fontWeight: 700 }}
-                    >
-                      Düzenle
-                    </button>
+                    <button onClick={() => editField(infoModal.id, "slug", "Slug", infoModal.slug)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.2)", cursor: "pointer", padding: 4, fontSize: 14 }} title="Düzenle">✏️</button>
                   </div>
                 </div>
               </div>
 
-              {/* Abonelik */}
+              {/* ABONELİK & DURUM */}
               <div>
-                <h4 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 8 }}>ABONELİK & DURUM</h4>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <h4 style={{ margin: "0 0 12px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 8 }}>ABONELİK & DURUM</h4>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
                   {[
-                    { label: "Mevcut Plan", value: infoModal.plan.toUpperCase() },
-                    { label: "Ödeme Periyodu", value: infoModal.selectedPlan === "yearly" ? "Yıllık" : infoModal.selectedPlan === "monthly" ? "Aylık" : "-" },
-                    { label: "Başlangıç", value: infoModal.subscriptionStartedAt ? new Date(infoModal.subscriptionStartedAt).toLocaleDateString() : "-" },
-                    { label: "Bitiş Tarihi", value: infoModal.planExpiresAt ? new Date(infoModal.planExpiresAt).toLocaleDateString() : "-" },
+                    { label: "Mevcut Plan", value: infoModal.plan?.toUpperCase() },
+                    { label: "Ödeme Periyodu", value: infoModal.selectedPlan === "yearly" ? "Yıllık" : infoModal.selectedPlan === "monthly" ? "Aylık" : "—" },
+                    { label: "Başlangıç", value: infoModal.subscriptionStartedAt ? new Date(infoModal.subscriptionStartedAt).toLocaleDateString() : "—" },
+                    { label: "Bitiş Tarihi", value: infoModal.planExpiresAt ? new Date(infoModal.planExpiresAt).toLocaleDateString() : "—" },
                     { label: "Kayıt Tarihi", value: new Date(infoModal.createdAt).toLocaleDateString() },
                     { label: "Durum", value: infoModal.isActive ? (infoModal.isFrozen ? "Dondurulmuş" : "Aktif") : "Pasif" },
                   ].map((item, i) => (
-                    <div key={i} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>{item.label}</span>
-                      <span style={{ fontSize: 14, color: "#fff", fontWeight: 500 }}>{item.value}</span>
+                    <div key={i} style={{ padding: "8px 14px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 1 }}>{item.label}</div>
+                      <div style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{item.value}</div>
                     </div>
                   ))}
                 </div>

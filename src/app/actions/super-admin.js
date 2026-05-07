@@ -348,55 +348,95 @@ export async function resetTenantAdminPassword(tenantId, newPassword) {
 }
 
 /**
- * Tenant slug (URL adresini) güncelle
+ * Generic tenant field update — God Mode
  */
-export async function updateTenantSlug(tenantId, newSlug) {
+const EDITABLE_FIELDS = [
+  "businessName", "ownerName", "ownerEmail", "ownerPhone",
+  "slug", "customDomain", "businessType", "plan",
+  "isActive", "legalName", "legalType", "taxId", "taxOffice", "iban", "legalAddress",
+];
+
+export async function updateTenantField(tenantId, field, value) {
   if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
 
-  // Slug format kontrolü
-  const slug = newSlug?.toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 30);
-  if (!slug || slug.length < 2) {
-    return { error: "Slug en az 2 karakter olmalı ve sadece küçük harf, rakam, tire içerebilir." };
+  if (!EDITABLE_FIELDS.includes(field)) {
+    return { error: `"${field}" düzenlenebilir bir alan değil.` };
   }
 
-  // Rezerve kelimeler
-  const reserved = ["admin", "api", "www", "app", "super-admin", "login", "register", "support", "help", "billing", "fiibi", "fiybi"];
-  if (reserved.includes(slug)) {
-    return { error: `"${slug}" rezerve edilmiş bir adrestir.` };
+  // Slug özel validasyonu
+  if (field === "slug") {
+    const slug = value?.toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 30);
+    if (!slug || slug.length < 2) return { error: "Slug en az 2 karakter olmalı." };
+    const reserved = ["admin", "api", "www", "app", "super-admin", "login", "register", "support", "help", "billing", "fiibi", "fiybi"];
+    if (reserved.includes(slug)) return { error: `"${slug}" rezerve edilmiş bir adrestir.` };
+    const existing = await prisma.tenant.findUnique({ where: { slug } });
+    if (existing && existing.id !== tenantId) return { error: `"${slug}" zaten kullanılıyor.` };
+    value = slug;
   }
 
-  // Benzersizlik kontrolü
-  const existing = await prisma.tenant.findUnique({ where: { slug } });
-  if (existing && existing.id !== tenantId) {
-    return { error: `"${slug}" adresi zaten başka bir kullanıcı tarafından kullanılıyor.` };
+  // Plan validasyonu
+  if (field === "plan") {
+    const validPlans = ["trial", "basic", "pro"];
+    if (!validPlans.includes(value)) return { error: "Geçersiz plan." };
+  }
+
+  // Email validasyonu
+  if (field === "ownerEmail" && value) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return { error: "Geçersiz e-posta formatı." };
+  }
+
+  // Boolean alanlar
+  if (field === "isActive") {
+    value = value === true || value === "true";
+  }
+
+  // Genel min uzunluk
+  if (typeof value === "string" && value.trim().length < 1) {
+    return { error: "Bu alan boş bırakılamaz." };
   }
 
   await prisma.tenant.update({
     where: { id: tenantId },
-    data: { slug }
+    data: { [field]: typeof value === "string" ? value.trim() : value }
   });
 
-  return { success: true, slug };
+  return { success: true, field, value };
+}
+
+// Backward compat wrappers
+export async function updateTenantSlug(tenantId, newSlug) {
+  return updateTenantField(tenantId, "slug", newSlug);
+}
+export async function updateTenantBusinessName(tenantId, newName) {
+  return updateTenantField(tenantId, "businessName", newName);
 }
 
 /**
- * Tenant işletme adını güncelle
+ * Super Admin → Tenant admin paneline giriş (Impersonate / God Mode)
  */
-export async function updateTenantBusinessName(tenantId, newName) {
+export async function impersonateTenant(tenantId) {
   if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
 
-  const businessName = newName?.trim();
-  if (!businessName || businessName.length < 2) {
-    return { error: "İşletme adı en az 2 karakter olmalıdır." };
-  }
-  if (businessName.length > 100) {
-    return { error: "İşletme adı en fazla 100 karakter olabilir." };
-  }
+  const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
+  if (!tenant) return { error: "Tenant bulunamadı." };
 
-  await prisma.tenant.update({
-    where: { id: tenantId },
-    data: { businessName }
+  // Tenant'ın admin'ini bul
+  const admin = await prisma.admin.findFirst({ where: { tenantId } });
+  if (!admin) return { error: "Bu tenant'ın admin hesabı bulunamadı." };
+
+  // JWT oluştur
+  const { signToken } = await import("@/lib/auth");
+  const token = await signToken({
+    adminId: admin.id,
+    username: admin.username,
+    tenantId: admin.tenantId,
   });
 
-  return { success: true, businessName };
+  // Subdomain URL oluştur
+  const domain = process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "fiibi.co";
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  const url = `${protocol}://${tenant.slug}.${domain}/admin/login?auto_login=${token}`;
+
+  return { success: true, url, slug: tenant.slug };
 }
+
