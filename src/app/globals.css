@@ -63,6 +63,18 @@ html[data-light] [style*="background:rgba(255"] {
   background: rgba(0,0,0,0.03) !important;
 }
 
+/* Backgrounds that were semi-transparent black → semi-transparent white (Navbar, Modals) */
+html[data-light] [style*="background: rgba(0,0,0,0.5)"],
+html[data-light] [style*="background: rgba(0, 0, 0, 0.5)"],
+html[data-light] [style*="background: rgba(0,0,0,0.8)"],
+html[data-light] [style*="background: rgba(0, 0, 0, 0.8)"] {
+  background: rgba(255,255,255,0.8) !important;
+}
+html[data-light] [style*="background: rgba(0,0,0,0.95)"],
+html[data-light] [style*="background: rgba(0, 0, 0, 0.95)"] {
+  background: rgba(255,255,255,0.95) !important;
+}
+
 /* ─── INVERTED BUTTONS: #fff bg → dark bg with white text ─── */
 html[data-light] button[style*="background: #fff"],
 html[data-light] button[style*="background:#fff"],
