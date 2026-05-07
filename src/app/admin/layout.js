@@ -81,6 +81,61 @@ function AdminLayoutInner({ children }) {
         </button>
       </div>
 
+      <div style={{ position: "relative", marginBottom: "1rem" }}>
+        <button
+          onClick={() => setQuickAddOpen(!quickAddOpen)}
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            width: "100%", padding: "12px 16px", borderRadius: 0,
+            background: "rgba(255,255,255,0.1)", border: "1px dashed rgba(255,255,255,0.2)", color: "#fff",
+            fontWeight: 800, fontSize: "0.95rem", cursor: "pointer",
+            transition: "all 0.2s"
+          }}
+          className="hover:bg-white/20"
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <Plus size={18} strokeWidth={2.5} />
+            İçerik Ekle
+          </div>
+          <ChevronRight size={16} style={{ transform: quickAddOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s", color: "rgba(255,255,255,0.5)" }} />
+        </button>
+
+        {quickAddOpen && (
+          <div style={{
+            marginTop: "0.5rem",
+            display: "flex", flexDirection: "column",
+            animation: "popDown 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+            transformOrigin: "top center",
+            borderLeft: "2px solid rgba(255,255,255,0.1)",
+            marginLeft: "8px", paddingLeft: "8px"
+          }}>
+            <Link href="/admin/settings?tab=icerik&subTab=banner" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-white">
+                <span style={{ fontSize: "14px" }}>🖼️</span> Banner Yükle
+              </div>
+            </Link>
+            
+            <Link href="/admin/settings?tab=icerik&subTab=portfolio" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-white">
+                <span style={{ fontSize: "14px" }}>📸</span> Portfolyo Ekle
+              </div>
+            </Link>
+            
+            <Link href="/admin/settings?tab=icerik&subTab=blog" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-white">
+                <span style={{ fontSize: "14px" }}>📝</span> Blog Yazısı
+              </div>
+            </Link>
+            
+            <Link href="/admin/packages" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-white">
+                <span style={{ fontSize: "14px" }}>✨</span> Yeni Hizmet/Paket
+              </div>
+            </Link>
+          </div>
+        )}
+      </div>
+
       <nav style={{ display: "flex", flexDirection: "column", gap: "0.75rem", flex: 1 }}>
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
@@ -216,77 +271,6 @@ function AdminLayoutInner({ children }) {
           {children}
         </div>
       </main>
-
-      {/* Floating Action Button (Quick Add) */}
-      <div style={{ position: "fixed", bottom: "32px", right: "32px", zIndex: 100 }}>
-        {quickAddOpen && (
-          <>
-            <div 
-              style={{ position: "fixed", inset: 0, zIndex: 90 }} 
-              onClick={() => setQuickAddOpen(false)} 
-            />
-            <div style={{ 
-              position: "absolute", bottom: "70px", right: 0, 
-              background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", 
-              borderRadius: "16px", padding: "8px", width: "220px",
-              display: "flex", flexDirection: "column", gap: "4px",
-              boxShadow: "0 10px 40px rgba(0,0,0,0.5)", zIndex: 100,
-              transformOrigin: "bottom right", animation: "popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)"
-            }}>
-              <div style={{ padding: "8px 12px", fontSize: "11px", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                Hızlı İçerik Ekle
-              </div>
-              
-              <Link href="/admin/settings?tab=icerik&subTab=banner" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "8px", color: "#fff", fontSize: "14px", fontWeight: 600, transition: "all 0.2s" }} className="hover:bg-white/10">
-                  <span style={{ fontSize: "18px" }}>🖼️</span> Banner Yükle
-                </div>
-              </Link>
-              
-              <Link href="/admin/settings?tab=icerik&subTab=portfolio" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "8px", color: "#fff", fontSize: "14px", fontWeight: 600, transition: "all 0.2s" }} className="hover:bg-white/10">
-                  <span style={{ fontSize: "18px" }}>📸</span> Portfolyo Ekle
-                </div>
-              </Link>
-              
-              <Link href="/admin/settings?tab=icerik&subTab=blog" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "8px", color: "#fff", fontSize: "14px", fontWeight: 600, transition: "all 0.2s" }} className="hover:bg-white/10">
-                  <span style={{ fontSize: "18px" }}>📝</span> Blog Yazısı
-                </div>
-              </Link>
-              
-              <div style={{ height: "1px", background: "rgba(255,255,255,0.1)", margin: "4px 0" }} />
-              
-              <Link href="/admin/packages" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "8px", color: "#fff", fontSize: "14px", fontWeight: 600, transition: "all 0.2s" }} className="hover:bg-white/10">
-                  <span style={{ fontSize: "18px" }}>✨</span> Yeni Hizmet/Paket
-                </div>
-              </Link>
-            </div>
-            <style>{`
-              @keyframes popIn {
-                from { opacity: 0; transform: scale(0.9); }
-                to { opacity: 1; transform: scale(1); }
-              }
-            `}</style>
-          </>
-        )}
-        
-        <button
-          onClick={() => setQuickAddOpen(!quickAddOpen)}
-          style={{
-            width: "56px", height: "56px", borderRadius: "28px",
-            background: "#fff", color: "#000", border: "none",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 8px 32px rgba(255,255,255,0.2)", cursor: "pointer",
-            transition: "transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
-            transform: quickAddOpen ? "rotate(45deg)" : "rotate(0deg)"
-          }}
-          className="hover:scale-110"
-        >
-          <Plus size={28} strokeWidth={2.5} />
-        </button>
-      </div>
 
     </div>
   );
