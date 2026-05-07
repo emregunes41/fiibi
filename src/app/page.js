@@ -132,9 +132,7 @@ export default async function HomePage() {
   }).filter(Boolean);
 
   // Dynamic hero CTA text & link
-  const heroCTA = features.portfolio
-    ? { text: "Galeriyi Keşfet", href: "#portfolio" }
-    : { text: `${terms.appointment} Al`, href: "/booking" };
+  const heroCTA = { text: `Şimdi ${terms.appointment} Oluştur`, href: "/booking" };
 
   // Default footer tagline based on sector
   const footerTagline = siteConfig?.footerTagline || bt.defaultSlogan;
