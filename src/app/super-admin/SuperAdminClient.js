@@ -12,7 +12,8 @@ import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
   changeTenantPlan, deleteTenant, superAdminLogout,
   getPlatformPricing, updatePlatformPricing,
-  updateTenantCommission, updateSubMerchantStatus, resetTenantAdminPassword
+  updateTenantCommission, updateSubMerchantStatus, resetTenantAdminPassword,
+  updateTenantSlug
 } from "@/app/actions/super-admin";
 import { getCloudinaryUsage, getDbUsage, getResendUsage, getVercelUsage } from "@/app/actions/platform-usage";
 
@@ -83,6 +84,15 @@ export default function SuperAdminClient() {
     const res = await resetTenantAdminPassword(id, newPass);
     if (res.error) alert(res.error);
     else alert("Şifre başarıyla güncellendi.");
+    setActionLoading(null);
+  }
+  async function handleSlugChange(id, currentSlug) {
+    const newSlug = prompt(`Mevcut adres: ${currentSlug}.${domain}\n\nYeni slug girin (sadece küçük harf, rakam, tire):`, currentSlug);
+    if (!newSlug || newSlug === currentSlug) return;
+    setActionLoading(id);
+    const res = await updateTenantSlug(id, newSlug);
+    if (res.error) alert(res.error);
+    else { alert(`Adres başarıyla güncellendi: ${res.slug}.${domain}`); await loadData(); }
     setActionLoading(null);
   }
 
@@ -546,6 +556,24 @@ export default function SuperAdminClient() {
                       <span style={{ fontSize: 14, color: "#fff", fontWeight: 500, wordBreak: "break-all" }}>{item.value}</span>
                     </div>
                   ))}
+                </div>
+
+                {/* Slug Düzenleme */}
+                <div style={{ marginTop: 16, padding: "14px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Site Adresi (Slug)</div>
+                      <div style={{ fontSize: 14, color: "#fff", fontWeight: 500, fontFamily: "monospace" }}>
+                        <span style={{ color: "#8b5cf6" }}>{infoModal.slug}</span><span style={{ color: "rgba(255,255,255,0.3)" }}>.{domain}</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleSlugChange(infoModal.id, infoModal.slug)}
+                      style={{ ...smallBtn, color: "#8b5cf6", background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.2)", padding: "6px 14px", fontSize: 11, fontWeight: 700 }}
+                    >
+                      Düzenle
+                    </button>
+                  </div>
                 </div>
               </div>
 

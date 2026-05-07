@@ -346,3 +346,35 @@ export async function resetTenantAdminPassword(tenantId, newPassword) {
 
   return { success: true };
 }
+
+/**
+ * Tenant slug (URL adresini) güncelle
+ */
+export async function updateTenantSlug(tenantId, newSlug) {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  // Slug format kontrolü
+  const slug = newSlug?.toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 30);
+  if (!slug || slug.length < 2) {
+    return { error: "Slug en az 2 karakter olmalı ve sadece küçük harf, rakam, tire içerebilir." };
+  }
+
+  // Rezerve kelimeler
+  const reserved = ["admin", "api", "www", "app", "super-admin", "login", "register", "support", "help", "billing", "fiibi", "fiybi"];
+  if (reserved.includes(slug)) {
+    return { error: `"${slug}" rezerve edilmiş bir adrestir.` };
+  }
+
+  // Benzersizlik kontrolü
+  const existing = await prisma.tenant.findUnique({ where: { slug } });
+  if (existing && existing.id !== tenantId) {
+    return { error: `"${slug}" adresi zaten başka bir kullanıcı tarafından kullanılıyor.` };
+  }
+
+  await prisma.tenant.update({
+    where: { id: tenantId },
+    data: { slug }
+  });
+
+  return { success: true, slug };
+}
