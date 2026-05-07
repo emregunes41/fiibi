@@ -8,6 +8,9 @@ import { Cookie, X } from "lucide-react";
  * Çerez Onay Banneri (Cookie Consent Banner)
  * KVKK ve ePrivacy uyumlu çerez bilgilendirme ve onay bileşeni.
  * Kullanıcı onay verene kadar analitik/takip çerezleri çalışmaz.
+ * 
+ * Renk değişkenleri layout.js tarafından html elemanına set edilir:
+ * --bg, --bg-card, --text, --text-muted, --border, --btn-bg, --btn-text
  */
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
@@ -52,29 +55,29 @@ export default function CookieConsent() {
       <div style={{
         maxWidth: 520,
         margin: "0 auto",
-        background: "rgba(15,15,15,0.97)",
+        background: "var(--bg-card, rgba(15,15,15,0.97))",
         backdropFilter: "blur(20px)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        border: "1px solid var(--border, rgba(255,255,255,0.1))",
         borderRadius: 12,
         padding: "20px 24px",
         pointerEvents: "auto",
-        boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
       }}>
         <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
           <div style={{
             width: 36, height: 36, borderRadius: 8,
-            background: "rgba(255,255,255,0.06)",
+            background: "var(--border, rgba(255,255,255,0.06))",
             display: "flex", alignItems: "center", justifyContent: "center",
             flexShrink: 0, marginTop: 2,
           }}>
-            <Cookie size={18} style={{ color: "rgba(255,255,255,0.6)" }} />
+            <Cookie size={18} style={{ color: "var(--text-muted, rgba(255,255,255,0.6))" }} />
           </div>
           <div style={{ flex: 1 }}>
             <p style={{
               margin: "0 0 6px",
               fontSize: 14,
               fontWeight: 700,
-              color: "#fff",
+              color: "var(--text, #fff)",
             }}>
               Çerez Kullanımı
             </p>
@@ -82,13 +85,13 @@ export default function CookieConsent() {
               margin: "0 0 16px",
               fontSize: 12,
               lineHeight: 1.6,
-              color: "rgba(255,255,255,0.5)",
+              color: "var(--text-muted, rgba(255,255,255,0.5))",
             }}>
               Bu site, oturum yönetimi için zorunlu çerezler ve site kullanım
               istatistikleri için analitik çerezler kullanmaktadır.{" "}
               <Link
                 href="/cerez-politikasi"
-                style={{ color: "rgba(255,255,255,0.7)", textDecoration: "underline" }}
+                style={{ color: "var(--accent, rgba(255,255,255,0.7))", textDecoration: "underline" }}
               >
                 Çerez Politikası
               </Link>
@@ -97,8 +100,8 @@ export default function CookieConsent() {
               <button
                 onClick={handleAccept}
                 style={{
-                  background: "#fff",
-                  color: "#000",
+                  background: "var(--btn-bg, #fff)",
+                  color: "var(--btn-text, #000)",
                   border: "none",
                   padding: "8px 20px",
                   borderRadius: 6,
@@ -113,9 +116,9 @@ export default function CookieConsent() {
               <button
                 onClick={handleReject}
                 style={{
-                  background: "rgba(255,255,255,0.08)",
-                  color: "rgba(255,255,255,0.6)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "transparent",
+                  color: "var(--text-muted, rgba(255,255,255,0.6))",
+                  border: "1px solid var(--border, rgba(255,255,255,0.1))",
                   padding: "8px 20px",
                   borderRadius: 6,
                   fontSize: 12,
@@ -131,7 +134,7 @@ export default function CookieConsent() {
           <button
             onClick={handleReject}
             style={{
-              background: "none", border: "none", color: "rgba(255,255,255,0.3)",
+              background: "none", border: "none", color: "var(--text-muted, rgba(255,255,255,0.3))",
               cursor: "pointer", padding: 4, flexShrink: 0,
             }}
           >
