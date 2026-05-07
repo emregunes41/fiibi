@@ -95,6 +95,14 @@ export default async function HomePage() {
     });
   } catch (e) { console.error("Events query error:", e); }
 
+  let posts = [];
+  try {
+    posts = await prisma.post.findMany({
+      where: { tenantId: activeTenantId, isPublished: true },
+      orderBy: { publishedAt: "desc" }
+    });
+  } catch (e) { console.error("Posts query error:", e); }
+
   const upcomingEvents = (events || []).filter(e => e.isActive && new Date(e.date) >= new Date());
   const bt = getBusinessType(tenant?.businessType || "photographer");
   const { features, terms } = bt;
@@ -132,7 +140,7 @@ export default async function HomePage() {
   const footerTagline = siteConfig?.footerTagline || bt.defaultSlogan;
 
   // Section ordering
-  const DEFAULT_ORDER = ["events", "banners", "content", "portfolio", "services"];
+  const DEFAULT_ORDER = ["events", "banners", "content", "portfolio", "blog", "services"];
   let sectionOrder = DEFAULT_ORDER;
   try {
     const saved = siteConfig?.sectionOrder;
@@ -208,6 +216,46 @@ export default async function HomePage() {
       <section key="portfolio" id="portfolio" className="py-20 border-t border-white/5">
         <div className="section-container mb-16 overflow-hidden">
           <GalleryClient categories={categories} />
+        </div>
+      </section>
+    ) : null,
+
+    blog: () => posts.length > 0 ? (
+      <section key="blog" id="blog" className="py-20 border-t border-white/5">
+        <div className="section-container">
+          <div style={{ marginBottom: "3rem", textAlign: "center" }}>
+            <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>BLOG & HABERLER</div>
+            <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 8px 0" }}>
+              Güncel Yazılar
+            </h2>
+            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", margin: 0 }}>Sektörel haberler ve faydalı ipuçları</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24 }}>
+            {posts.map(post => (
+              <Link key={post.id} href={`/blog/${post.slug}`} style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", overflow: "hidden", textDecoration: "none", color: "var(--text)", display: "flex", flexDirection: "column", transition: "transform 0.3s, border-color 0.3s" }} className="hover:border-white/20 hover:-translate-y-1">
+                {post.imageUrl ? (
+                  <div style={{ width: "100%", height: 200, overflow: "hidden" }}>
+                    <img src={post.imageUrl} alt={post.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  </div>
+                ) : (
+                  <div style={{ width: "100%", height: 200, background: "rgba(255,255,255,0.02)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <span style={{ fontSize: 40, opacity: 0.1 }}>📝</span>
+                  </div>
+                )}
+                <div style={{ padding: 24, flex: 1, display: "flex", flexDirection: "column" }}>
+                  <div suppressHydrationWarning style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+                    <Calendar size={12} />
+                    {new Date(post.publishedAt || post.createdAt).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </div>
+                  <h3 style={{ fontSize: 18, fontWeight: 800, margin: "0 0 12px 0", lineHeight: 1.3 }}>{post.title}</h3>
+                  {post.excerpt && <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", margin: "0 0 20px 0", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden", flex: 1 }}>{post.excerpt}</p>}
+                  <div style={{ marginTop: "auto", fontSize: 13, fontWeight: 700, color: "var(--accent)", display: "flex", alignItems: "center", gap: 4 }}>
+                    Devamını Oku <span style={{ fontSize: 16 }}>&rarr;</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     ) : null,
