@@ -411,7 +411,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                     </div>
                     {m.value === "card" && (
                       <div style={{ marginTop: 8 }}>
-                        <img src="/iyzico_checkout.svg" alt="iyzico ile Öde" style={{ height: 16, opacity: 0.8 }} />
+                        <img src="/assets/iyzico_checkout.svg" alt="iyzico ile Öde" style={{ height: 16, opacity: 0.8 }} />
                       </div>
                     )}
                   </button>

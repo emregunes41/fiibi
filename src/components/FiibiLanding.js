@@ -686,7 +686,7 @@ export default function FiibiLanding() {
           <div style={{ width: "100%", marginTop: 40, borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 32, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.15em" }}>Güvenli Ödeme Altyapısı</div>
             <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", justifyContent: "center", opacity: 0.8 }}>
-              <img src="/iyzico_footer.svg" alt="iyzico Korumalı Alışveriş" style={{ height: 28 }} />
+              <img src="/assets/iyzico_footer.svg" alt="iyzico Korumalı Alışveriş" style={{ height: 28 }} />
               <span style={{ fontSize: 16, fontWeight: 900, color: "#fff", letterSpacing: "-0.5px", opacity: 0.6 }}>PayTR</span>
             </div>
           </div>

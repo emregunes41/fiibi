@@ -958,7 +958,7 @@ export default function CartDrawer() {
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Kredi Kartı</div>
                           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.4 }}>Online güvenli ödeme</div>
-                          <img src="/iyzico_checkout.svg" alt="iyzico ile Öde" style={{ height: 16, marginTop: 8, opacity: 0.8 }} />
+                          <img src="/assets/iyzico_checkout.svg" alt="iyzico ile Öde" style={{ height: 16, marginTop: 8, opacity: 0.8 }} />
                         </div>
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
                           <div style={{ fontSize: 20, fontWeight: 800, color: "rgba(255,255,255,0.5)" }}>{fmt(cardTotal)}₺</div>
@@ -994,7 +994,7 @@ export default function CartDrawer() {
                       <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", margin: 0 }}>
                         Aşağıdaki formu doldurarak güvenli ödemenizi tamamlayın.
                       </p>
-                      <img src="/iyzico_checkout.svg" alt="iyzico ile Öde" style={{ height: 20, marginTop: 12, opacity: 0.8 }} />
+                      <img src="/assets/iyzico_checkout.svg" alt="iyzico ile Öde" style={{ height: 20, marginTop: 12, opacity: 0.8 }} />
                     </div>
                     <div style={{ borderRadius: 0, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)" }}>
                       <iframe
