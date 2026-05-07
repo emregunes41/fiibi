@@ -33,13 +33,12 @@ export default function EventsSection({ events }) {
 
   return (
     <div className="w-full">
-      <div style={{ marginBottom: "2rem", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-        <div>
-          <h2 style={{ fontSize: "clamp(1.5rem, 4vw, 2.2rem)", fontWeight: 800, letterSpacing: "-0.04em", margin: "0 0 8px 0" }}>
-            Yaklaşan Etkinlikler
-          </h2>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", margin: 0 }}>Grup dersleri, seminerler ve kamplar</p>
-        </div>
+      <div style={{ marginBottom: "3rem", textAlign: "center" }}>
+        <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>BİZE KATILIN</div>
+        <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 8px 0" }}>
+          Yaklaşan Etkinlikler
+        </h2>
+        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", margin: 0 }}>Grup dersleri, seminerler ve kamplar</p>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24 }}>

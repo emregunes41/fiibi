@@ -27,11 +27,18 @@ export default function PostsAdminPage() {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    let res;
     if (editingId) {
-      await updatePost(editingId, formData);
+      res = await updatePost(editingId, formData);
     } else {
-      await createPost(formData);
+      res = await createPost(formData);
     }
+    
+    if (res?.error) {
+      alert("Hata: " + res.error);
+      return;
+    }
+    
     setFormOpen(false);
     setEditingId(null);
     loadPosts();
@@ -39,8 +46,12 @@ export default function PostsAdminPage() {
 
   const handleDelete = async (id) => {
     if (confirm("Bu yazıyı silmek istediğinize emin misiniz?")) {
-      await deletePost(id);
-      loadPosts();
+      const res = await deletePost(id);
+      if (res?.error) {
+        alert("Hata: " + res.error);
+      } else {
+        loadPosts();
+      }
     }
   };
 
