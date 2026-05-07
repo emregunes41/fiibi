@@ -376,15 +376,19 @@ export default async function HomePage() {
                 <div>
                   <div className="text-[10px] uppercase tracking-[0.25em] text-white/25 mb-5 font-semibold">İletişim</div>
                   <div className="flex flex-col gap-3">
-                    <a href={`tel:${(siteConfig?.phone || "").replace(/\s/g, '')}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                      <span className="w-8 h-8 flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><Phone size={13} strokeWidth={1.5} /></span>
-                      {siteConfig?.phone || ""}
-                    </a>
-                    <a href={`mailto:${siteConfig?.email || ""}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                      <span className="w-8 h-8 flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><Mail size={13} strokeWidth={1.5} /></span>
-                      {siteConfig?.email || ""}
-                    </a>
-                    {siteConfig?.address && (
+                    {siteConfig?.showPhoneOnHome !== false && (
+                      <a href={`tel:${(siteConfig?.phone || "").replace(/\s/g, '')}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
+                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><Phone size={13} strokeWidth={1.5} /></span>
+                        {siteConfig?.phone || ""}
+                      </a>
+                    )}
+                    {siteConfig?.showEmailOnHome !== false && (
+                      <a href={`mailto:${siteConfig?.email || ""}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
+                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><Mail size={13} strokeWidth={1.5} /></span>
+                        {siteConfig?.email || ""}
+                      </a>
+                    )}
+                    {siteConfig?.showAddressOnHome !== false && siteConfig?.address && (
                       <div className="text-[13px] text-white/50 flex items-center gap-3">
                         <span className="w-8 h-8 flex items-center justify-center flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><MapPin size={13} strokeWidth={1.5} /></span>
                         {siteConfig.address}

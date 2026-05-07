@@ -735,28 +735,39 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div style={{ marginTop: 24, padding: "16px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 4 }}>İletişim Bilgilerini Göster</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Anasayfada iletişim numarası, e-posta ve adres gibi bilgileri gösterir. Gizlemek için kapatın.</div>
+          <div style={{ marginTop: 24, padding: "16px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: 16 }}>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 4 }}>Tüm İletişim Bölümünü Göster</div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Anasayfanın en altındaki tüm iletişim ve bağlantılar kutusunu açar/kapatır.</div>
+              </div>
+              <div onClick={() => setConfig({ ...config, showContactOnHome: !config.showContactOnHome })} style={{ width: 44, height: 24, borderRadius: 12, background: config.showContactOnHome !== false ? "var(--accent)" : "rgba(255,255,255,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s", flexShrink: 0 }}>
+                <div style={{ width: 18, height: 18, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showContactOnHome !== false ? 23 : 3, boxShadow: "0 1px 3px rgba(0,0,0,0.3)" }} />
+              </div>
             </div>
-            <div
-              onClick={() => setConfig({ ...config, showContactOnHome: !config.showContactOnHome })}
-              style={{
-                width: 44, height: 24, borderRadius: 12,
-                background: config.showContactOnHome !== false ? "var(--accent)" : "rgba(255,255,255,0.1)",
-                position: "relative", cursor: "pointer", transition: "all 0.3s",
-                boxShadow: config.showContactOnHome !== false ? "0 0 10px var(--accent)" : "none",
-                flexShrink: 0
-              }}
-            >
-              <div style={{
-                width: 18, height: 18, borderRadius: "50%", background: "#fff",
-                position: "absolute", top: 3, transition: "all 0.3s",
-                left: config.showContactOnHome !== false ? 23 : 3,
-                boxShadow: "0 1px 3px rgba(0,0,0,0.3)"
-              }} />
-            </div>
+
+            {config.showContactOnHome !== false && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, paddingLeft: 16 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>Telefon Numarasını Göster</div>
+                  <div onClick={() => setConfig({ ...config, showPhoneOnHome: !config.showPhoneOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showPhoneOnHome !== false ? "var(--accent)" : "rgba(255,255,255,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
+                    <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showPhoneOnHome !== false ? 19 : 3 }} />
+                  </div>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>E-Posta Adresini Göster</div>
+                  <div onClick={() => setConfig({ ...config, showEmailOnHome: !config.showEmailOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showEmailOnHome !== false ? "var(--accent)" : "rgba(255,255,255,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
+                    <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showEmailOnHome !== false ? 19 : 3 }} />
+                  </div>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>Fiziksel Adresi Göster</div>
+                  <div onClick={() => setConfig({ ...config, showAddressOnHome: !config.showAddressOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showAddressOnHome !== false ? "var(--accent)" : "rgba(255,255,255,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
+                    <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showAddressOnHome !== false ? 19 : 3 }} />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>}
 
