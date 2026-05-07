@@ -131,7 +131,7 @@ export default function SozlesmeClient({ tenant, config }) {
         }}>
           <Shield size={16} style={{ color: "rgba(255,255,255,0.3)", flexShrink: 0 }} />
           <p style={{ margin: 0, color: "rgba(255,255,255,0.4)", fontSize: 12, lineHeight: 1.6 }}>
-            Bu sayfadaki tüm yasal metinler {PLATFORM.name} ({PLATFORM.legalName}) tarafından hazırlanmıştır.
+            Bu sayfadaki yasal metinler, hizmet veren işletme tarafından düzenlenmiştir. Altyapı: {PLATFORM.name} ({PLATFORM.legalName}).
             Sorularınız için <strong style={{ color: "rgba(255,255,255,0.6)" }}>{PLATFORM.supportEmail}</strong> adresine yazabilirsiniz.
           </p>
         </div>

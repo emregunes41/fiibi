@@ -427,6 +427,12 @@ export default async function HomePage() {
         <div className="border-t border-white/[0.04]">
           <div className="section-container py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="text-[10px] text-white/20 uppercase tracking-[0.2em]">© {new Date().getFullYear()} {siteConfig?.businessName || tenant?.businessName || "Studio"}</span>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "center" }}>
+              <Link href="/gizlilik-politikasi" style={{ color: "rgba(255,255,255,0.2)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Gizlilik Politikası</Link>
+              <Link href="/cerez-politikasi" style={{ color: "rgba(255,255,255,0.2)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Çerez Politikası</Link>
+              <Link href="/kullanim-sartlari" style={{ color: "rgba(255,255,255,0.2)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Kullanım Şartları</Link>
+              <Link href="/sozlesme" style={{ color: "rgba(255,255,255,0.2)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Yasal Sözleşmeler</Link>
+            </div>
           </div>
         </div>
       </footer>

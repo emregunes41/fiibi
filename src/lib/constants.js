@@ -10,17 +10,17 @@ export const PLATFORM = {
   legalName: "fiibi Teknoloji",
   domain: "fiibi.co",
   supportEmail: "destek@fiibi.co",
-  supportPhone: "+90 (212) 000 00 00",
-  address: "İstanbul, Türkiye",
+  address: "İstanbul, Türkiye",     // (Açık adresle güncellenecek)
 
   // Ödeme / Komisyon
   defaultCommissionRate: 5, // %5 varsayılan komisyon
   paymentProvider: "PayTR",
   currency: "TRY",
 
-  // Yasal
-  taxId: "0000000000",         // Platform VKN (güncellenecek)
-  mersisNo: "0000000000000000", // MERSİS numarası (güncellenecek)
+  // Yasal (⚠️ Gerçek bilgilerle güncellenmelidir)
+  taxId: "",                     // Platform VKN (güncellenecek)
+  mersisNo: "",                  // MERSİS numarası (güncellenecek)
+  supportPhone: "",              // Destek telefon numarası (güncellenecek)
   
   // Teknik
   sessionCookieName: "admin_token",

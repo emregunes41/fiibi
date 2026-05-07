@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { X, FileText, CheckCircle2 } from "lucide-react";
 
-export default function ContractPreviewModal({ customText }) {
+export default function ContractPreviewModal({ customText, businessName = "İşletme" }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -48,7 +48,7 @@ export default function ContractPreviewModal({ customText }) {
                 <div style={{ whiteSpace: "pre-wrap" }}>{customText}</div>
               ) : (
                 <>
-                  <p style={{ margin: 0 }}>Bu sözleşme, <strong>Stüdyo</strong> ile siz değerli müşterimiz arasında yürürlüktedir.</p>
+                  <p style={{ margin: 0 }}>Bu sözleşme, <strong>{businessName}</strong> ile siz değerli müşterimiz arasında yürürlüktedir.</p>
 
                   <div>
                     <h4 style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><span style={{ color: "rgba(255,255,255,0.7)" }}>1.</span> Hizmetin Kapsamı</h4>

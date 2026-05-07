@@ -106,8 +106,7 @@ function emailFooter(settings, siteUrl) {
       
       <div style="margin-top: 24px; padding: 12px; background: #f9f9f9; border-radius: 6px;">
         <p style="color: #aaa; font-size: 11px; margin: 0;">
-          Lütfen bu e-postayı doğrudan yanıtlamayınız (No-Reply).<br>
-          Soru ve talepleriniz için yukarıdaki iletişim bilgilerinden bize ulaşabilirsiniz.
+          Soru ve talepleriniz için yukarıdaki iletişim bilgilerinden bize ulaşabilir veya bu e-postayı doğrudan yanıtlayabilirsiniz.
         </p>
       </div>
     </div>

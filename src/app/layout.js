@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import CartWrapper from "@/components/CartWrapper";
 import HeroBackground from "@/components/HeroBackground";
 import PageTracker from "@/components/PageTracker";
+import CookieConsent from "@/components/CookieConsent";
 import { getSiteConfig } from "@/app/admin/core-actions";
 import { headers } from "next/headers";
 import { getPalette } from "@/lib/palettes";
@@ -241,6 +242,7 @@ export default async function RootLayout({ children }) {
             >
               Powered by <span style={{ fontWeight: 800 }}>Fiibi</span>
             </a>
+            <CookieConsent />
           </CartWrapper>
         </LanguageProvider>
       </body>
