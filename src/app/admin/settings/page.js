@@ -734,6 +734,30 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
+
+          <div style={{ marginTop: 24, padding: "16px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 4 }}>İletişim Bilgilerini Göster</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Anasayfada iletişim numarası, e-posta ve adres gibi bilgileri gösterir. Gizlemek için kapatın.</div>
+            </div>
+            <div
+              onClick={() => setConfig({ ...config, showContactOnHome: !config.showContactOnHome })}
+              style={{
+                width: 44, height: 24, borderRadius: 12,
+                background: config.showContactOnHome !== false ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                position: "relative", cursor: "pointer", transition: "all 0.3s",
+                boxShadow: config.showContactOnHome !== false ? "0 0 10px var(--accent)" : "none",
+                flexShrink: 0
+              }}
+            >
+              <div style={{
+                width: 18, height: 18, borderRadius: "50%", background: "#fff",
+                position: "absolute", top: 3, transition: "all 0.3s",
+                left: config.showContactOnHome !== false ? 23 : 3,
+                boxShadow: "0 1px 3px rgba(0,0,0,0.3)"
+              }} />
+            </div>
+          </div>
         </div>}
 
         {/* 4. Sosyal Kanallar */}

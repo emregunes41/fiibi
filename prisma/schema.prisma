@@ -437,6 +437,7 @@ model GlobalSettings {
   googleMapsUrl  String   @default("")
   chatbotEnabled      Boolean @default(false)
   chatbotInstructions String  @default("")
+  showContactOnHome   Boolean @default(true)
 
   // Ödeme ve E-Ticaret Ayarları
   paymentMode     String   @default("cash")   // cash, card, both

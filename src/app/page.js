@@ -371,6 +371,7 @@ export default async function HomePage() {
               </p>
             </div>
             <div className={`md:col-span-7 ${tpl.footerStyle === "centered" ? "md:col-span-12 flex justify-center w-full mt-8" : ""}`}>
+              {siteConfig?.showContactOnHome !== false && (
               <div className={`grid grid-cols-1 sm:grid-cols-2 gap-10 ${tpl.footerStyle === "centered" ? "w-full max-w-lg" : ""}`}>
                 <div>
                   <div className="text-[10px] uppercase tracking-[0.25em] text-white/25 mb-5 font-semibold">İletişim</div>
@@ -415,6 +416,7 @@ export default async function HomePage() {
                   </div>
                 </div>
               </div>
+              )}
             </div>
           </div>
         </div>
