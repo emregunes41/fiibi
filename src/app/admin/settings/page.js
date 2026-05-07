@@ -1324,10 +1324,11 @@ export default function SettingsPage() {
           banners: { icon: "🖼️", label: "Banner Carousel", desc: "Kayan görsel ve video banner'lar" },
           content: { icon: "📝", label: "İçerik Blokları", desc: "Görsel + metin tanıtım bölümleri" },
           portfolio: { icon: "📸", label: "Portfolyo / Galeri", desc: "Fotoğraf kategorileri ve galeri" },
+          blog: { icon: "📰", label: "Blog & Haberler", desc: "Güncel yazılar ve makaleler" },
           services: { icon: "💼", label: "Hizmetler / Paketler", desc: "Paket ve hizmet kartları" },
           shop: { icon: "🛍️", label: "Mağaza", desc: "E-ticaret ürünleri" },
         };
-        const DEFAULT_ORDER = ["events", "banners", "content", "portfolio", "services", "shop"];
+        const DEFAULT_ORDER = ["events", "banners", "content", "portfolio", "blog", "services", "shop"];
         const currentOrder = (() => {
           try {
             const saved = config?.sectionOrder;
