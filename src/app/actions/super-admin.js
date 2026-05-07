@@ -433,8 +433,8 @@ export async function impersonateTenant(tenantId) {
   });
 
   // Subdomain URL oluştur
-  const domain = process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "fiibi.co";
-  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  const domain = process.env.PLATFORM_DOMAIN || process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "fiibi.co";
+  const protocol = domain.includes("localhost") ? "http" : "https";
   const url = `${protocol}://${tenant.slug}.${domain}/admin/login?auto_login=${token}`;
 
   return { success: true, url, slug: tenant.slug };
