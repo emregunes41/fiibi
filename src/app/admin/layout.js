@@ -58,6 +58,7 @@ function AdminLayoutInner({ children }) {
     modules.moduleReservations !== false && { name: "Hizmet & Katalog", href: "/admin/catalog", icon: Package },
     modules.moduleReservations !== false && { name: terms.appointments, href: "/admin/reservations", icon: CalendarDays },
     modules.moduleEvents !== false && { name: "Etkinlikler", href: "/admin/events", icon: Ticket },
+    { name: "Blog / Yazılar", href: "/admin/posts", icon: Book },
     { name: "Muhasebe", href: "/admin/muhasebe", icon: Wallet },
     { name: "Sistem", href: "/admin/settings", icon: Settings },
     { name: "Abonelik", href: "/admin/subscription", icon: Crown },

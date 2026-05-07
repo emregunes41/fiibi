@@ -87,6 +87,7 @@ model Tenant {
   pageViews            PageView[]
   products             Product[]
   productCategories    ProductCategory[]
+  posts                Post[]
 }
 
 // ─── ADMIN ────────────────────────────────────────────────────────
@@ -583,4 +584,23 @@ model VerificationCode {
   code      String
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+// ─── BLOG YAZILARI ─────────────────────────────────────────────
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String
+  content     String   @db.Text
+  excerpt     String?
+  imageUrl    String?
+  isPublished Boolean  @default(true)
+  publishedAt DateTime @default(now())
+  tenantId    String?
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([slug, tenantId])
+  @@index([tenantId])
 }
