@@ -1,63 +1,80 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Crown, Clock, Zap, Check, Shield, Star } from "lucide-react";
+import { Crown, Clock, Zap, Check, X, Star, Shield } from "lucide-react";
 import { useAdminSession } from "../AdminSessionContext";
+import { PLAN_COMPARISON } from "@/lib/plan-limits";
+
 const PLAN_FEATURES = {
-  monthly: [
-    "Tüm özellikler aktif",
+  basic: [
     "Sınırsız rezervasyon",
-    "Portfolyo yönetimi",
-    "E-posta & SMS bildirimleri",
+    "Sınırsız paket/hizmet",
+    "Portfolyo yönetimi (20 fotoğraf)",
+    "E-posta bildirimleri",
     "Online ödeme entegrasyonu",
-    "Destek",
+    "100 MB içerik yükleme",
+    "Standart destek",
   ],
-  yearly: [
-    "Tüm aylık özellikler",
-    "Custom domain desteği",
-    "Öncelikli destek",
-    "AI Chatbot",
+  pro: [
+    "Basic'teki her şey +",
+    "Sınırsız portfolyo fotoğrafı",
+    "10 GB içerik yükleme",
+    "SMS bildirimleri",
+    "AI Chatbot asistanı",
+    "Arka plan özelleştirme",
+    "Özel alan adı (domain)",
     "Gelişmiş analitik",
-    "Yıllık fatura ile tasarruf",
-  ],
-  lifetime: [
-    "Tüm yıllık özellikler",
-    "Ömür boyu erişim",
-    "Tüm gelecek güncellemeler",
-    "VIP destek",
-    "Sınırsız kullanım süresi",
-    "Abonelik derdi yok",
+    "Öncelikli destek",
   ],
 };
 
 function buildPlans(prices) {
   return [
     {
-      id: "monthly", name: "Aylık", price: prices.monthly,
-      period: "/ay", color: "#8b5cf6", popular: false, savings: null,
-      features: PLAN_FEATURES.monthly,
+      id: "basic_monthly", tier: "basic", name: "Basic", period: "Aylık",
+      price: prices.basic_monthly || 1499, periodLabel: "/ay",
+      color: "#8b5cf6", popular: false, savings: null,
+      features: PLAN_FEATURES.basic,
     },
     {
-      id: "yearly", name: "Yıllık", price: prices.yearly,
-      period: "/yıl", monthlyEquiv: Math.round(prices.yearly / 12),
+      id: "basic_yearly", tier: "basic", name: "Basic", period: "Yıllık",
+      price: prices.basic_yearly || 14999, periodLabel: "/yıl",
+      monthlyEquiv: Math.round((prices.basic_yearly || 14999) / 12),
+      color: "#8b5cf6", popular: false,
+      savings: Math.round(100 - ((prices.basic_yearly || 14999) / ((prices.basic_monthly || 1499) * 12)) * 100),
+      features: PLAN_FEATURES.basic,
+    },
+    {
+      id: "pro_monthly", tier: "pro", name: "Pro", period: "Aylık",
+      price: prices.pro_monthly || 2999, periodLabel: "/ay",
+      color: "#f59e0b", popular: false, savings: null,
+      features: PLAN_FEATURES.pro,
+    },
+    {
+      id: "pro_yearly", tier: "pro", name: "Pro", period: "Yıllık",
+      price: prices.pro_yearly || 29999, periodLabel: "/yıl",
+      monthlyEquiv: Math.round((prices.pro_yearly || 29999) / 12),
       color: "#f59e0b", popular: true,
-      savings: Math.round(100 - (prices.yearly / (prices.monthly * 12)) * 100),
-      features: PLAN_FEATURES.yearly,
+      savings: Math.round(100 - ((prices.pro_yearly || 29999) / ((prices.pro_monthly || 2999) * 12)) * 100),
+      features: PLAN_FEATURES.pro,
     },
   ];
 }
 
 const PLAN_DETAILS = {
   trial: { name: "Deneme", color: "#38bdf8" },
+  basic: { name: "Basic", color: "#8b5cf6" },
   pro: { name: "Pro", color: "#f59e0b" },
 };
 
 export default function SubscriptionPage() {
   const { session: adminSession } = useAdminSession();
   const tenantInfo = adminSession?.tenant || null;
-  const [plans, setPlans] = useState(buildPlans({ monthly: 2499, yearly: 24999, lifetime: 69500 }));
+  const [plans, setPlans] = useState(buildPlans({}));
   const [loading, setLoading] = useState(true);
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [billingCycle, setBillingCycle] = useState("yearly"); // "monthly" veya "yearly"
+  const [showComparison, setShowComparison] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -80,33 +97,39 @@ export default function SubscriptionPage() {
   );
 
   const plan = tenantInfo?.plan || "trial";
+  const pd = PLAN_DETAILS[plan] || PLAN_DETAILS.trial;
   const expiresAt = tenantInfo?.planExpiresAt ? new Date(tenantInfo.planExpiresAt) : null;
   const now = new Date();
   const daysLeft = expiresAt ? Math.max(0, Math.ceil((expiresAt - now) / (1000 * 60 * 60 * 24))) : null;
 
+  // Filter plans by billing cycle and group by tier
+  const filteredPlans = plans.filter(p => p.period === (billingCycle === "yearly" ? "Yıllık" : "Aylık"));
+
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", color: "#fff" }}>
-      {/* Header Compact */}
-      <div style={{ marginBottom: "16px" }}>
+      {/* Header */}
+      <div style={{ marginBottom: 16 }}>
         <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>
           Abonelik
         </h1>
       </div>
 
       {/* Current Plan Status */}
-      {plan === "trial" && daysLeft !== null && (
+      {(plan === "trial" || plan === "basic") && daysLeft !== null && (
         <div style={{
-          background: daysLeft <= 3 ? "rgba(255,100,100,0.06)" : "rgba(56,189,248,0.06)",
-          border: daysLeft <= 3 ? "1px solid rgba(255,100,100,0.15)" : "1px solid rgba(56,189,248,0.15)",
+          background: daysLeft <= 3 ? "rgba(255,100,100,0.06)" : `${pd.color}08`,
+          border: daysLeft <= 3 ? "1px solid rgba(255,100,100,0.15)" : `1px solid ${pd.color}20`,
           padding: "16px 20px", marginBottom: 24, display: "flex", alignItems: "center", justifyContent: "space-between"
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Clock size={16} style={{ color: daysLeft <= 3 ? "#ff6464" : "#38bdf8" }} />
+            <Clock size={16} style={{ color: daysLeft <= 3 ? "#ff6464" : pd.color }} />
             <div>
               <div style={{ fontSize: 13, fontWeight: 700 }}>
-                Deneme Süresi: <span style={{ color: daysLeft <= 3 ? "#ff6464" : "#38bdf8" }}>{daysLeft} gün kaldı</span>
+                {plan === "trial" ? "Deneme Süresi" : "Basic Plan"}: <span style={{ color: daysLeft <= 3 ? "#ff6464" : pd.color }}>{daysLeft} gün kaldı</span>
               </div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>Süre dolmadan bir plan seçin.</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>
+                {plan === "trial" ? "Süre dolmadan bir plan seçin." : "Süreniz dolmadan yenileyebilirsiniz."}
+              </div>
             </div>
           </div>
         </div>
@@ -127,13 +150,38 @@ export default function SubscriptionPage() {
         </div>
       )}
 
+      {/* Billing Cycle Toggle */}
+      <div style={{
+        display: "flex", justifyContent: "center", gap: 0, marginBottom: 28,
+        background: "rgba(255,255,255,0.04)", padding: 4, width: "fit-content", margin: "0 auto 28px",
+        borderRadius: 8,
+      }}>
+        {["monthly", "yearly"].map(cycle => (
+          <button
+            key={cycle}
+            onClick={() => setBillingCycle(cycle)}
+            style={{
+              padding: "8px 24px", fontSize: 12, fontWeight: 700,
+              background: billingCycle === cycle ? "rgba(255,255,255,0.12)" : "transparent",
+              color: billingCycle === cycle ? "#fff" : "rgba(255,255,255,0.4)",
+              border: "none", cursor: "pointer", borderRadius: 6,
+              transition: "all 0.2s",
+            }}
+          >
+            {cycle === "monthly" ? "Aylık" : "Yıllık"}
+            {cycle === "yearly" && <span style={{ marginLeft: 6, fontSize: 10, color: "#4ade80", fontWeight: 800 }}>Tasarruf</span>}
+          </button>
+        ))}
+      </div>
+
       {/* Plans Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
-        {plans.map((p) => (
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
+        {filteredPlans.map((p) => (
           <div key={p.id} style={{
             background: selectedPlan === p.id ? `${p.color}08` : "rgba(255,255,255,0.02)",
             border: selectedPlan === p.id ? `2px solid ${p.color}40` : p.popular ? `2px solid ${p.color}25` : "1px solid rgba(255,255,255,0.06)",
             padding: 0, position: "relative", cursor: "pointer", transition: "all 0.2s",
+            borderRadius: 0,
           }}
             onClick={() => setSelectedPlan(p.id)}
           >
@@ -144,13 +192,17 @@ export default function SubscriptionPage() {
                 padding: "5px 14px", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.08em"
               }}>
                 <Star size={10} style={{ marginRight: 4, verticalAlign: "middle" }} />
-                En Popüler
+                Tavsiye Edilen
               </div>
             )}
 
             <div style={{ padding: "24px 20px" }}>
-              {/* Plan name */}
-              <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              {/* Tier badge */}
+              <div style={{
+                display: "inline-block", background: `${p.color}15`, border: `1px solid ${p.color}25`,
+                padding: "3px 10px", fontSize: 10, fontWeight: 800, color: p.color, marginBottom: 12,
+                textTransform: "uppercase", letterSpacing: "0.08em",
+              }}>
                 {p.name}
               </div>
 
@@ -160,7 +212,7 @@ export default function SubscriptionPage() {
                   {p.price.toLocaleString("tr-TR")}
                 </span>
                 <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginLeft: 4 }}>₺</span>
-                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginLeft: 6 }}>{p.period}</span>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginLeft: 6 }}>{p.periodLabel}</span>
               </div>
 
               {/* Monthly equivalent */}
@@ -173,8 +225,8 @@ export default function SubscriptionPage() {
               {/* Savings */}
               {p.savings && (
                 <div style={{
-                  display: "inline-block", background: `${p.color}15`, border: `1px solid ${p.color}25`,
-                  padding: "3px 8px", fontSize: 10, fontWeight: 700, color: p.color, marginBottom: 16
+                  display: "inline-block", background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.2)",
+                  padding: "3px 8px", fontSize: 10, fontWeight: 700, color: "#4ade80", marginBottom: 16
                 }}>
                   %{p.savings} TASARRUF
                 </div>
@@ -194,7 +246,7 @@ export default function SubscriptionPage() {
 
               {/* CTA */}
               <button
-                onClick={(e) => { e.stopPropagation(); setSelectedPlan(p.id); alert(`${p.name} plan ödeme entegrasyonu yakında aktif olacak.`); }}
+                onClick={(e) => { e.stopPropagation(); setSelectedPlan(p.id); alert(`${p.name} ${p.period} plan ödeme entegrasyonu yakında aktif olacak.`); }}
                 style={{
                   width: "100%", marginTop: 24, padding: "12px 0",
                   background: selectedPlan === p.id ? p.color : "rgba(255,255,255,0.06)",
@@ -205,17 +257,62 @@ export default function SubscriptionPage() {
                 }}
               >
                 <Zap size={14} />
-                {plan === "pro" ? "Planı Değiştir" : "Planı Seç"}
+                {plan === p.tier ? "Planı Yenile" : plan === "pro" && p.tier === "basic" ? "Basic'e Geç" : "Planı Seç"}
               </button>
             </div>
           </div>
         ))}
       </div>
 
+      {/* Comparison Toggle */}
+      <div style={{ textAlign: "center", marginTop: 24 }}>
+        <button
+          onClick={() => setShowComparison(!showComparison)}
+          style={{
+            background: "none", border: "1px solid rgba(255,255,255,0.1)",
+            color: "rgba(255,255,255,0.5)", padding: "10px 24px", fontSize: 12,
+            fontWeight: 700, cursor: "pointer", transition: "all 0.2s",
+          }}
+        >
+          {showComparison ? "Karşılaştırmayı Gizle" : "Planları Karşılaştır"}
+        </button>
+      </div>
+
+      {/* Comparison Table */}
+      {showComparison && (
+        <div style={{ marginTop: 20, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+          {/* Header */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 100px 100px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+            <div style={{ padding: "12px 16px", fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Özellik</div>
+            <div style={{ padding: "12px 8px", fontSize: 11, fontWeight: 800, color: "#8b5cf6", textTransform: "uppercase", textAlign: "center" }}>Basic</div>
+            <div style={{ padding: "12px 8px", fontSize: 11, fontWeight: 800, color: "#f59e0b", textTransform: "uppercase", textAlign: "center" }}>Pro</div>
+          </div>
+          {/* Rows */}
+          {PLAN_COMPARISON.map((row, i) => (
+            <div key={i} style={{
+              display: "grid", gridTemplateColumns: "1fr 100px 100px",
+              borderBottom: i < PLAN_COMPARISON.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none",
+            }}>
+              <div style={{ padding: "10px 16px", fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{row.feature}</div>
+              <div style={{ padding: "10px 8px", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {row.basic === true ? <Check size={14} style={{ color: "#8b5cf6" }} /> :
+                 row.basic === false ? <X size={14} style={{ color: "rgba(255,255,255,0.15)" }} /> :
+                 <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>{row.basic}</span>}
+              </div>
+              <div style={{ padding: "10px 8px", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {row.pro === true ? <Check size={14} style={{ color: "#f59e0b" }} /> :
+                 row.pro === false ? <X size={14} style={{ color: "rgba(255,255,255,0.15)" }} /> :
+                 <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>{row.pro}</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Info */}
       <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(255,255,255,0.2)", fontSize: 11, lineHeight: 1.6 }}>
-        Tüm planlar KDV dahildir. Ödeme işlemleri güvenli altyapı üzerinden gerçekleşir.<br />
-        İptal ve iade koşulları için destek ile iletişime geçin.
+        Tüm planlar KDV dahildir. Tüm planlar 7 gün ücretsiz deneme ile başlar.<br />
+        Ödeme işlemleri güvenli altyapı üzerinden gerçekleşir. İptal ve iade koşulları için destek ile iletişime geçin.
       </div>
 
       {/* Referral Section */}
@@ -233,7 +330,7 @@ export default function SubscriptionPage() {
               <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 4 }}>Referans Kodunuz</div>
               <div style={{ fontSize: 18, fontWeight: 900, letterSpacing: "0.1em" }}>{tenantInfo.referralCode}</div>
             </div>
-            <button 
+            <button
               onClick={() => navigator.clipboard.writeText(tenantInfo.referralCode).then(() => alert("Kod kopyalandı!"))}
               style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff", padding: "8px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}
             >

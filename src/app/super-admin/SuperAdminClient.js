@@ -28,7 +28,7 @@ export default function SuperAdminClient() {
   const [tenants, setTenants] = useState([]);
   const [stats, setStats] = useState(null);
   const [usage, setUsage] = useState(null);
-  const [pricing, setPricing] = useState({ monthly: 2499, yearly: 24999, lifetime: 69500 });
+  const [pricing, setPricing] = useState({ basic_monthly: 1499, basic_yearly: 14999, pro_monthly: 2999, pro_yearly: 29999 });
   const [pricingSaved, setPricingSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
@@ -95,7 +95,8 @@ export default function SuperAdminClient() {
 
   const planColors = {
     trial: { bg: "rgba(250,204,21,0.1)", border: "rgba(250,204,21,0.2)", text: "#facc15" },
-    pro: { bg: "rgba(139,92,246,0.1)", border: "rgba(139,92,246,0.2)", text: "#8b5cf6" },
+    basic: { bg: "rgba(139,92,246,0.1)", border: "rgba(139,92,246,0.2)", text: "#8b5cf6" },
+    pro: { bg: "rgba(245,158,11,0.1)", border: "rgba(245,158,11,0.2)", text: "#f59e0b" },
   };
 
   function renderUsageBar(label, Icon, color, current, limit, unit, sub, pct) {
@@ -301,8 +302,10 @@ export default function SuperAdminClient() {
               <h2 style={sectionTitle}>Abonelik Fiyatları</h2>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 16 }}>
                 {[
-                  { key: "monthly", label: "Aylık", suffix: "₺/ay", color: "#8b5cf6" },
-                  { key: "yearly", label: "Yıllık", suffix: "₺/yıl", color: "#f59e0b" },
+                  { key: "basic_monthly", label: "Basic Aylık", suffix: "₺/ay", color: "#8b5cf6" },
+                  { key: "basic_yearly", label: "Basic Yıllık", suffix: "₺/yıl", color: "#8b5cf6" },
+                  { key: "pro_monthly", label: "Pro Aylık", suffix: "₺/ay", color: "#f59e0b" },
+                  { key: "pro_yearly", label: "Pro Yıllık", suffix: "₺/yıl", color: "#f59e0b" },
                 ].map((p) => (
                   <div key={p.key} style={cardStyle}>
                     <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
@@ -321,11 +324,6 @@ export default function SuperAdminClient() {
                       />
                       <span style={{ fontSize: 13, color: p.color, whiteSpace: "nowrap", fontWeight: 700 }}>{p.suffix}</span>
                     </div>
-                    {p.key === "yearly" && pricing.monthly > 0 && (
-                      <div style={{ fontSize: 11, color: "#f59e0b", marginTop: 6 }}>
-                        ~{Math.round(pricing.yearly / 12).toLocaleString("tr-TR")} ₺/ay · %{Math.round(100 - (pricing.yearly / (pricing.monthly * 12)) * 100)} tasarruf
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
@@ -402,6 +400,7 @@ export default function SuperAdminClient() {
                           <a href={`http://${t.slug}.${domain}/admin`} target="_blank" rel="noopener" style={smallBtn}><ExternalLink size={13} /></a>
                           <select value={t.plan} onChange={e => handlePlanChange(t.id, e.target.value)} disabled={actionLoading === t.id} style={{ ...smallBtn, width: 80, cursor: "pointer", appearance: "none", textAlign: "center" }}>
                             <option value="trial">Trial</option>
+                            <option value="basic">Basic</option>
                             <option value="pro">Pro</option>
                           </select>
                           <button onClick={() => handleFreeze(t.id)} disabled={actionLoading === t.id} title={t.isFrozen ? "Aktifleştir" : "Dondur"} style={{ ...smallBtn, color: t.isFrozen ? "#4ade80" : "#38bdf8" }}>

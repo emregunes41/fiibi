@@ -16,8 +16,22 @@ const C = {
 
 function buildPlans(prices) {
   return [
-    { id: "monthly", name: "Aylık", price: prices.monthly, period: "/ay", popular: false, savings: null },
-    { id: "yearly", name: "Yıllık", price: prices.yearly, period: "/yıl", monthlyEquiv: Math.round(prices.yearly / 12), popular: true, savings: Math.round(100 - (prices.yearly / (prices.monthly * 12)) * 100) },
+    { id: "basic_monthly", tier: "basic", name: "Basic", period: "Aylık", price: prices.basic_monthly || 1499, periodLabel: "/ay", popular: false, savings: null, features: [
+      "Sınırsız rezervasyon", "Sınırsız paket/hizmet", "Portfolyo (20 fotoğraf)", "E-posta bildirimleri", "Online ödeme", "100 MB içerik yükleme"
+    ]},
+    { id: "basic_yearly", tier: "basic", name: "Basic", period: "Yıllık", price: prices.basic_yearly || 14999, periodLabel: "/yıl",
+      monthlyEquiv: Math.round((prices.basic_yearly || 14999) / 12), popular: false,
+      savings: Math.round(100 - ((prices.basic_yearly || 14999) / ((prices.basic_monthly || 1499) * 12)) * 100),
+      features: ["Sınırsız rezervasyon", "Sınırsız paket/hizmet", "Portfolyo (20 fotoğraf)", "E-posta bildirimleri", "Online ödeme", "100 MB içerik yükleme"]
+    },
+    { id: "pro_monthly", tier: "pro", name: "Pro", period: "Aylık", price: prices.pro_monthly || 2999, periodLabel: "/ay", popular: false, savings: null, features: [
+      "Basic'ın tüm özellikleri +", "SMS bildirimleri", "AI Chatbot", "10 GB içerik yükleme", "Sınırsız portfolyo", "Arka plan özelleştirme", "Özel alan adı (domain)", "Öncelikli destek"
+    ]},
+    { id: "pro_yearly", tier: "pro", name: "Pro", period: "Yıllık", price: prices.pro_yearly || 29999, periodLabel: "/yıl",
+      monthlyEquiv: Math.round((prices.pro_yearly || 29999) / 12), popular: true,
+      savings: Math.round(100 - ((prices.pro_yearly || 29999) / ((prices.pro_monthly || 2999) * 12)) * 100),
+      features: ["Basic'ın tüm özellikleri +", "SMS bildirimleri", "AI Chatbot", "10 GB içerik yükleme", "Sınırsız portfolyo", "Arka plan özelleştirme", "Özel alan adı (domain)", "Öncelikli destek"]
+    },
   ];
 }
 
@@ -89,7 +103,7 @@ export default function FiibiLanding() {
     { title: "Sözleşme & Form", desc: "Dijital sözleşme onayı ve özel müşteri formları.", icon: "📋" },
   ];
   const [result, setResult] = useState(null);
-  const [plans, setPlans] = useState(buildPlans({ monthly: 2499, yearly: 24999 }));
+  const [plans, setPlans] = useState(buildPlans({}));
   
   const [form, setForm] = useState({
     businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "", referralCode: "", businessType: "", verificationCode: "", kvkkAccepted: false, serviceAgreementAccepted: false
@@ -559,30 +573,30 @@ export default function FiibiLanding() {
             </h2>
           </div>
           <div className="fiibi-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, maxWidth: 760, margin: "0 auto" }}>
-            {/* Aylık */}
+            {/* Basic */}
             <div style={{ padding: "44px 36px", background: C.white }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>{t.landing.pricing.monthly}</div>
-              <div style={{ fontSize: 48, fontWeight: 800, color: C.black, letterSpacing: "-0.03em" }}>₺{plans[0]?.price?.toLocaleString("tr-TR") || "—"}</div>
-              <div style={{ fontSize: 14, color: C.muted, marginBottom: 28 }}>{t.landing.pricing.allFeatures}</div>
+              <div style={{ display: "inline-block", background: "rgba(139,92,246,0.1)", color: "#8b5cf6", padding: "4px 12px", fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>BASIC</div>
+              <div style={{ fontSize: 48, fontWeight: 800, color: C.black, letterSpacing: "-0.03em" }}>₺{(plans.find(p => p.id === "basic_monthly")?.price || 1499).toLocaleString("tr-TR")}</div>
+              <div style={{ fontSize: 14, color: C.muted, marginBottom: 28 }}>/ ay · Temel özellikler</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
-                {[t.landing.pricing.m1, t.landing.pricing.m2, t.landing.pricing.m3, t.landing.pricing.m4, t.landing.pricing.m5, t.landing.pricing.m6].map(f => (
-                  <span key={f} style={{ fontSize: 14, color: C.secondary }}><span style={{ color: C.orange, marginRight: 8 }}>✓</span>{f}</span>
+                {(plans.find(p => p.id === "basic_monthly")?.features || []).map(f => (
+                  <span key={f} style={{ fontSize: 14, color: C.secondary }}><span style={{ color: "#8b5cf6", marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
-              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "monthly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, border: `2px solid ${C.black}`, background: "transparent", color: C.black, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
+              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "basic_monthly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, border: `2px solid ${C.black}`, background: "transparent", color: C.black, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
             </div>
-            {/* Yıllık */}
+            {/* Pro */}
             <div style={{ padding: "44px 36px", background: C.black, color: C.white, position: "relative" }}>
-              {plans[1]?.savings > 0 && <div style={{ position: "absolute", top: 16, right: 16, background: C.orange, color: C.white, padding: "4px 12px", fontSize: 10, fontWeight: 700 }}>%{plans[1].savings} {t.landing.pricing.savings}</div>}
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>{t.landing.pricing.yearly}</div>
-              <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-0.03em" }}>₺{plans[1]?.price?.toLocaleString("tr-TR") || "—"}</div>
-              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>{plans[1]?.monthlyEquiv ? `~₺${plans[1].monthlyEquiv.toLocaleString("tr-TR")}/ay` : "yıllık"} · Her şey dahil</div>
+              <div style={{ position: "absolute", top: 16, right: 16, background: C.orange, color: C.white, padding: "4px 12px", fontSize: 10, fontWeight: 700 }}>TAVSİYE EDİLEN</div>
+              <div style={{ display: "inline-block", background: "rgba(245,158,11,0.15)", color: "#f59e0b", padding: "4px 12px", fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>PRO</div>
+              <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-0.03em" }}>₺{(plans.find(p => p.id === "pro_monthly")?.price || 2999).toLocaleString("tr-TR")}</div>
+              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 28 }}>/ ay · Tüm özellikler</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
-                {[t.landing.pricing.y1, t.landing.pricing.m3, t.landing.pricing.m4, t.landing.pricing.m5, t.landing.pricing.m6].map(f => (
+                {(plans.find(p => p.id === "pro_monthly")?.features || []).map(f => (
                   <span key={f} style={{ fontSize: 14, color: "rgba(255,255,255,0.55)" }}><span style={{ color: C.orangeLight, marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
-              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "yearly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, background: C.orange, border: "none", color: C.white, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
+              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "pro_monthly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, background: C.orange, border: "none", color: C.white, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
             </div>
           </div>
           <p style={{ textAlign: "center", marginTop: 24, fontSize: 15, color: C.secondary }}>

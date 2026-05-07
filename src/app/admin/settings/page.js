@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { PLATFORM, LEGAL_TYPES } from "@/lib/constants";
 import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, getKVKKText } from "@/lib/contracts";
+import { getPlanLimits, hasFeature } from "@/lib/plan-limits";
 import MembersList from "../components/MembersList";
 import PostsManager from "./PostsManager";
 
@@ -96,6 +97,11 @@ export default function SettingsPage() {
   const bt = getBusinessType(businessType);
   const { features, terms } = bt;
   const isPhotographer = businessType === "photographer";
+
+  // Plan limitleri
+  const tenantPlan = adminSession?.tenant?.plan || "trial";
+  const planLimits = getPlanLimits(tenantPlan);
+  const isPro = tenantPlan === "pro";
 
   // Discount codes
   const [discountCodes, setDiscountCodes] = useState([]);
@@ -580,6 +586,16 @@ export default function SettingsPage() {
         {activeTab === "tasarim" && subTab === "hero" && <div style={sectionCard}>
           {sectionHeader(Monitor, "Arka Plan Ayarı", "Anasayfadaki hero bölümünün arka planını değiştirin.")}
 
+          {!isPro && (
+            <div style={{ padding: "16px 20px", background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.15)", marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
+              <Sparkles size={16} style={{ color: "#8b5cf6" }} />
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#8b5cf6" }}>Pro Özelliği</div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Arka plan özelleştirme Pro plana dahildir. <a href="/admin/subscription" style={{ color: "#8b5cf6", textDecoration: "underline" }}>Planı Yükselt</a></div>
+              </div>
+            </div>
+          )}
+
           {/* Type Selector */}
           <div style={{ marginBottom: 20 }}>
             <label style={label}>Arka Plan Türü</label>
@@ -592,7 +608,8 @@ export default function SettingsPage() {
                 <button
                   key={opt.value}
                   type="button"
-                  onClick={() => setConfig({ ...config, heroBgType: opt.value })}
+                  onClick={() => isPro && setConfig({ ...config, heroBgType: opt.value })}
+                  disabled={!isPro}
                   style={{
                     flex: 1, padding: "12px 8px", borderRadius: 0, border: "1px solid",
                     borderColor: config.heroBgType === opt.value ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.08)",
@@ -859,14 +876,16 @@ export default function SettingsPage() {
             <div style={{
               background: config.smsEnabled ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.03)",
               border: `1px solid ${config.smsEnabled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
-              borderRadius: 0, padding: "18px 16px", cursor: "pointer", transition: "all 0.2s",
+              borderRadius: 0, padding: "18px 16px", cursor: isPro ? "pointer" : "default", transition: "all 0.2s",
+              opacity: isPro ? 1 : 0.5,
             }}
-              onClick={() => setConfig({ ...config, smsEnabled: !config.smsEnabled })}
+              onClick={() => isPro && setConfig({ ...config, smsEnabled: !config.smsEnabled })}
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <Phone size={16} style={{ color: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.3)" }} />
                   <span style={{ fontSize: 13, fontWeight: 800, color: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>SMS</span>
+                  {!isPro && <span style={{ fontSize: 9, fontWeight: 800, color: "#8b5cf6", background: "rgba(139,92,246,0.15)", padding: "2px 6px" }}>PRO</span>}
                 </div>
                 <div style={{
                   width: 40, height: 22, borderRadius: 0, position: "relative",
@@ -881,7 +900,7 @@ export default function SettingsPage() {
                 </div>
               </div>
               <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", margin: 0 }}>
-                Netgsm API ile SMS bildirimleri
+                {isPro ? "Netgsm API ile SMS bildirimleri" : "SMS bildirimleri Pro plana dahildir."}
               </p>
             </div>
           </div>
@@ -1263,15 +1282,25 @@ export default function SettingsPage() {
         {activeTab === "sistem" && subTab === "ai" && <div style={sectionCard}>
           {sectionHeader(Bot, "AI Chatbot Ayarları", "Yapay zeka asistanının davranışını ve talimatlarını düzenleyin.")}
 
+          {!isPro && (
+            <div style={{ padding: "16px 20px", background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.15)", marginBottom: 16, display: "flex", alignItems: "center", gap: 10 }}>
+              <Sparkles size={16} style={{ color: "#8b5cf6" }} />
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#8b5cf6" }}>Pro Özelliği</div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>AI Chatbot Pro plana dahildir. <a href="/admin/subscription" style={{ color: "#8b5cf6", textDecoration: "underline" }}>Planı Yükselt</a></div>
+              </div>
+            </div>
+          )}
+
           {/* Toggle */}
           <div
             style={{
               background: config.chatbotEnabled ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.03)",
               border: `1px solid ${config.chatbotEnabled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
-              borderRadius: 0, padding: "18px 16px", cursor: "pointer", transition: "all 0.2s",
-              marginBottom: 16,
+              borderRadius: 0, padding: "18px 16px", cursor: isPro ? "pointer" : "default", transition: "all 0.2s",
+              marginBottom: 16, opacity: isPro ? 1 : 0.5,
             }}
-            onClick={() => setConfig({ ...config, chatbotEnabled: !config.chatbotEnabled })}
+            onClick={() => isPro && setConfig({ ...config, chatbotEnabled: !config.chatbotEnabled })}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
