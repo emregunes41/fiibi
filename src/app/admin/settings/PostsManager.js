@@ -27,6 +27,11 @@ export default function PostsAdminPage() {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    if (!formData.title || !formData.content) {
+      alert("Lütfen başlık ve içerik alanlarını doldurun.");
+      return;
+    }
+    
     let res;
     if (editingId) {
       res = await updatePost(editingId, formData);
@@ -165,7 +170,7 @@ export default function PostsAdminPage() {
               <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800 }}>{editingId ? "Yazıyı Düzenle" : "Yeni Yazı Oluştur"}</h2>
               <button onClick={() => setFormOpen(false)} style={{ background: "none", border: "none", color: "#fff", cursor: "pointer" }}><X size={24} /></button>
             </div>
-            <form onSubmit={handleSave} style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20 }}>
+            <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20 }}>
               
               {/* Image Upload */}
               <div>
@@ -209,9 +214,9 @@ export default function PostsAdminPage() {
 
               <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
                 <button type="button" onClick={() => setFormOpen(false)} style={{ flex: 1, padding: "14px", background: "rgba(255,255,255,0.05)", border: "none", color: "#fff", fontWeight: 700, borderRadius: 0, cursor: "pointer" }}>İptal</button>
-                <button type="submit" style={{ flex: 1, padding: "14px", background: "#fff", border: "none", color: "#000", fontWeight: 700, borderRadius: 0, cursor: "pointer" }}>Kaydet</button>
+                <button type="button" onClick={handleSave} style={{ flex: 1, padding: "14px", background: "#fff", border: "none", color: "#000", fontWeight: 700, borderRadius: 0, cursor: "pointer" }}>Kaydet</button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       )}
