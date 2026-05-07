@@ -112,14 +112,20 @@ html[data-light] [style*="color: var(--bg)"] {
   color: #ffffff !important;
 }
 html[data-light] [style*="background: var(--text)"],
+html[data-light] [style*="background:var(--text)"],
 html[data-light] [style*="background: var(--accent)"],
-html[data-light] [style*="background: var(--btn-bg)"] {
+html[data-light] [style*="background:var(--accent)"],
+html[data-light] [style*="background: var(--btn-bg)"],
+html[data-light] [style*="background:var(--btn-bg)"] {
   background: #1a1a1a !important;
   color: #ffffff !important;
 }
 html[data-light] [style*="background: var(--text)"] *,
+html[data-light] [style*="background:var(--text)"] *,
 html[data-light] [style*="background: var(--accent)"] *,
-html[data-light] [style*="background: var(--btn-bg)"] * {
+html[data-light] [style*="background:var(--accent)"] *,
+html[data-light] [style*="background: var(--btn-bg)"] *,
+html[data-light] [style*="background:var(--btn-bg)"] * {
   color: #ffffff !important;
 }
 html[data-light] [style*="color: var(--accent)"],
@@ -191,9 +197,9 @@ html[data-light] [style*="backgroundColor"] {
 /* Specific component overrides */
 html[data-light] nav,
 html[data-light] nav * {
-  color: var(--text, #1a1a1a) !important;
+  /* removed greedy color override */
 }
-html[data-light] nav [style*="background"] {
+html[data-light] .scrolled-nav-bg {
   background: rgba(255,255,255,0.85) !important;
   backdrop-filter: blur(20px) !important;
   border-color: rgba(0,0,0,0.08) !important;
@@ -201,7 +207,7 @@ html[data-light] nav [style*="background"] {
 
 html[data-light] footer,
 html[data-light] footer * {
-  color: var(--text, #1a1a1a) !important;
+  /* removed greedy color override */
 }
 
 /* Glass panels in light mode */

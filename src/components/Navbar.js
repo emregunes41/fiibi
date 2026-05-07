@@ -75,12 +75,13 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             position: "relative",
             padding: scrolled ? "12px 28px" : "0 28px",
             borderRadius: `var(--radius)`,
-            background: scrolled ? "rgba(0,0,0,0.5)" : "transparent",
+            background: scrolled ? "var(--nav-bg, rgba(0,0,0,0.5))" : "transparent",
             backdropFilter: scrolled ? "blur(20px)" : "none",
             WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-            border: scrolled ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
+            border: scrolled ? "1px solid var(--border)" : "1px solid transparent",
             transition: "all 0.4s ease",
           }}
+          className={scrolled ? "scrolled-nav-bg" : ""}
         >
           {/* ── Left: Logo ── */}
           <div style={{ display: "flex", alignItems: "center", flexShrink: 0, zIndex: 10 }}>
@@ -103,7 +104,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               </div>
               <span
                 className="hidden sm:block"
-                style={{ fontFamily: "serif", fontSize: 24, letterSpacing: "0.2em", color: "#fff", textTransform: "uppercase" }}
+                style={{ fontFamily: "serif", fontSize: 24, letterSpacing: "0.2em", color: "var(--text)", textTransform: "uppercase" }}
               >
                 {businessName}
               </span>
@@ -123,8 +124,8 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               gap: 6,
             }}
           >
-            {isPhotographer && <Link href="/#portfolio" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:!text-white">{t.nav.gallery}</Link>}
-            <Link href="/#contact" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:!text-white">{t.nav.contact}</Link>
+            {isPhotographer && <Link href="/#portfolio" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "var(--text-muted)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:opacity-100">{t.nav.gallery}</Link>}
+            <Link href="/#contact" style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 600, color: "var(--text-muted)", textDecoration: "none", padding: "10px 14px", transition: "color 0.3s" }} className="hover:opacity-100">{t.nav.contact}</Link>
             <Link
               href="/booking"
               style={{
@@ -168,10 +169,10 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                   cursor: "pointer",
                   transition: "all 0.3s",
                 }}
-                className="hover:!bg-white/10 hover:!border-white/20 group"
+                className="hover:opacity-80 group"
                 aria-label="Sepetim"
               >
-                <ShoppingBag size={16} style={{ color: "rgba(255,255,255,0.5)" }} className="group-hover:!text-white" />
+                <ShoppingBag size={16} style={{ color: "var(--text-muted)" }} className="group-hover:opacity-100" />
                 {itemCount > 0 && (
                   <span
                     style={{
@@ -252,7 +253,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                 }}
                 aria-label="Sepetim"
               >
-                <ShoppingBag size={16} style={{ color: "rgba(255,255,255,0.5)" }} />
+                <ShoppingBag size={16} style={{ color: "var(--text-muted)" }} />
                 {itemCount > 0 && (
                   <span style={{
                     position: "absolute", top: -4, right: -4,
@@ -270,7 +271,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               {/* Hamburger */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                style={{ padding: 8, background: "none", border: "none", color: "rgba(255,255,255,0.7)", cursor: "pointer" }}
+                style={{ padding: 8, background: "none", border: "none", color: "var(--text)", cursor: "pointer" }}
               >
                 {isMenuOpen ? <CloseIcon size={24} /> : <Menu size={24} />}
               </button>
@@ -284,8 +285,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
           <div
             style={{
               position: "fixed", inset: 0, zIndex: 99,
-              background: "rgba(0,0,0,0.95)",
-              backdropFilter: "blur(40px)",
+              background: "var(--bg)",
               display: "flex", flexDirection: "column",
               alignItems: "center", justifyContent: "center", gap: 48,
             }}
@@ -293,29 +293,29 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
           >
             <button
               onClick={() => setIsMenuOpen(false)}
-              style={{ position: "absolute", top: 32, right: 24, background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}
+              style={{ position: "absolute", top: 32, right: 24, background: "none", border: "none", color: "var(--text)", cursor: "pointer" }}
             >
               <CloseIcon size={32} />
             </button>
 
-            <Link href="/booking" onClick={() => setIsMenuOpen(false)} style={{ fontFamily: "serif", fontSize: 30, color: "#fff", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 16 }}>
+            <Link href="/booking" onClick={() => setIsMenuOpen(false)} style={{ fontFamily: "serif", fontSize: 30, color: "var(--text)", textDecoration: "none", borderBottom: "1px solid var(--border)", paddingBottom: 16 }}>
               {t.nav.bookNow}
             </Link>
 
             {isPhotographer && (
-            <Link href="/#portfolio" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", textDecoration: "none" }}>
+            <Link href="/#portfolio" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "var(--text-muted)", textDecoration: "none" }}>
               {t.nav.gallery}
             </Link>
             )}
 
-            <Link href="/#contact" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", textDecoration: "none" }}>
+            <Link href="/#contact" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "var(--text-muted)", textDecoration: "none" }}>
               {t.nav.contact}
             </Link>
 
             {isPhotographer && (
             <button
               onClick={() => { setIsMenuOpen(false); openCart(true); }}
-              style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}
+              style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}
             >
               <ShoppingBag size={18} /> Sepetim {itemCount > 0 && `(${itemCount})`}
             </button>
@@ -323,11 +323,11 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
 
 
             {user ? (
-              <Link href="/profile" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "#fff", textDecoration: "none" }}>
+              <Link href="/profile" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "var(--text)", textDecoration: "none" }}>
                 Hesabım
               </Link>
             ) : isPhotographer ? (
-              <Link href="/login" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "#fff", textDecoration: "none" }}>
+              <Link href="/login" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "var(--text)", textDecoration: "none" }}>
                 {t.nav.clientLogin}
               </Link>
             ) : null}
