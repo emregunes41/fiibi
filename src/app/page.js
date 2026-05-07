@@ -359,7 +359,7 @@ export default async function HomePage() {
       })}
 
       {/* Footer — always last */}
-      <footer id="contact" className={tpl.sectionBorder ? "border-t border-white/[0.06]" : ""} style={{ background: tpl.footerStyle === "fun" ? "var(--bg-card)" : "transparent" }}>
+      <footer id="contact" className={`mt-16 ${tpl.sectionBorder ? "border-t border-white/[0.06]" : ""}`} style={{ background: tpl.footerStyle === "fun" ? "var(--bg-card)" : "transparent" }}>
         <div className="section-container py-20">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8">
             <div className={`md:col-span-5 ${tpl.footerStyle === "centered" ? "md:col-span-12 text-center flex flex-col items-center" : ""}`}>
