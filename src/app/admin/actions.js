@@ -145,7 +145,10 @@ export async function autoLoginWithToken(token) {
     const { verifyAuth } = await import("@/lib/auth");
     const payload = await verifyAuth(token);
     
-    if (!payload || !payload.id || !payload.role || payload.role !== "admin") {
+    // loginAdmin creates tokens with { adminId, username, tenantId }
+    // Also support legacy tokens with { id, role: "admin" }
+    const isValid = (payload?.adminId) || (payload?.id && payload?.role === "admin");
+    if (!payload || !isValid) {
       return { error: "Geçersiz veya süresi dolmuş token." };
     }
 
