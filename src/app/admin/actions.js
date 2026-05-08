@@ -142,7 +142,7 @@ export async function logoutAdmin() {
 
 export async function autoLoginWithToken(token) {
   try {
-    const { verifyAuth } = await import("@/lib/auth");
+    const { verifyAuth, signToken } = await import("@/lib/auth");
     const payload = await verifyAuth(token);
     
     // loginAdmin creates tokens with { adminId, username, tenantId }
@@ -152,10 +152,18 @@ export async function autoLoginWithToken(token) {
       return { error: "Geçersiz veya süresi dolmuş token." };
     }
 
+    // Auto-login token'ı doğrudan session olarak kullanma
+    // Yeni bir uzun ömürlü session token oluştur
+    const sessionToken = await signToken({
+      adminId: payload.adminId || payload.id,
+      username: payload.username,
+      tenantId: payload.tenantId || null,
+    });
+
     const cookieStore = await cookies();
     cookieStore.set({
       name: "admin_token",
-      value: token,
+      value: sessionToken, // Kısa ömürlü auto-login token değil, yeni session token
       httpOnly: true,
       path: "/",
       secure: process.env.NODE_ENV === "production",

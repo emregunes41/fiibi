@@ -1,7 +1,7 @@
 // Central Login API — fiibi.co merkezi giriş
 
 import { prisma } from "@/lib/prisma";
-import { signToken } from "@/lib/auth";
+import { signAutoLoginToken } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
@@ -74,8 +74,8 @@ export async function POST(req) {
       return NextResponse.json({ error: "Bilgiler hatalı." }, { status: 401 });
     }
 
-    // Auto-login token oluştur (kısa ömürlü)
-    const token = await signToken({
+    // Auto-login token oluştur (60 saniye geçerli — URL'de taşınacağı için kısa ömürlü)
+    const token = await signAutoLoginToken({
       adminId: admin.id,
       username: admin.username,
       tenantId: admin.tenantId,

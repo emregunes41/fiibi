@@ -25,3 +25,11 @@ export async function signToken(payload) {
     .sign(getJwtSecretKey());
 }
 
+// Kısa ömürlü auto-login token — URL'de taşınacağı için 60 saniye geçerli
+export async function signAutoLoginToken(payload) {
+  return await new SignJWT({ ...payload, purpose: "auto_login" })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("60s")
+    .sign(getJwtSecretKey());
+}
