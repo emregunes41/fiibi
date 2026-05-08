@@ -219,6 +219,7 @@ export default async function MuhasebePage() {
             <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.35)", marginTop: 4 }}>%{commissionRate} kesinti</div>
           </div>
 
+        </div>
 
         {/* Sonraki Ödeme */}
         <div style={{ marginTop: 20, padding: "14px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
