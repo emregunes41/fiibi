@@ -116,12 +116,63 @@ export default async function MuhasebePage() {
 
   // ─── HELPERS ───
   const fmt = (n) => Math.round(n).toLocaleString("tr-TR");
+  const fmtDecimal = (n) => n.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const monthNames = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
   const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale / EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online Ödeme" };
   const methodIcons = { CASH: "💵", BANK_TRANSFER: "🏦", CREDIT_CARD: "💳", ONLINE: "🌐" };
   const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(255,255,255,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(255,255,255,0.6)" };
   const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan" };
   const catColors = { DIS_CEKIM: "#f59e0b", DUGUN: "#fb7185", NISAN: "#67e8f9" };
+
+  // ─── CÜZDAN / KOMİSYON HESAPLARI ───
+  const commissionRate = tenant?.commissionRate ?? 5;
+  const onlinePayments = validPayments.filter(p => p.method === "ONLINE" || p.method === "CREDIT_CARD");
+  const onlineTotal = onlinePayments.reduce((s, p) => s + p.amount, 0);
+  const offlineTotal = totalCashIn - onlineTotal;
+  const platformCommission = (onlineTotal * commissionRate) / 100;
+  const netOnlineEarnings = onlineTotal - platformCommission;
+  const walletBalance = netOnlineEarnings; // online kazançtan komisyon düşülmüş
+
+  // Bu ayki online ödemeler
+  const thisMonthOnline = onlinePayments
+    .filter(p => new Date(p.createdAt) >= startOfMonth)
+    .reduce((s, p) => s + p.amount, 0);
+  const thisMonthCommission = (thisMonthOnline * commissionRate) / 100;
+  const thisMonthNet = thisMonthOnline - thisMonthCommission;
+
+  // Sonraki ödeme tahmini — her ayın 15'i ve son günü ödeme yapılır
+  const nextPayoutDate = (() => {
+    const d = new Date();
+    const day = d.getDate();
+    const month = d.getMonth();
+    const year = d.getFullYear();
+    if (day < 15) return new Date(year, month, 15);
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    if (day < lastDay) return new Date(year, month, lastDay);
+    return new Date(year, month + 1, 15);
+  })();
+  const daysUntilPayout = Math.ceil((nextPayoutDate - now) / (1000 * 60 * 60 * 24));
+
+  // Son 6 ayın ödeme takvimi
+  const payoutSchedule = [];
+  for (let i = 0; i < 6; i++) {
+    const m = new Date(currentYear, currentMonth - i, 1);
+    const mEnd = new Date(currentYear, currentMonth - i + 1, 0);
+    const mPayments = onlinePayments.filter(p => {
+      const d = new Date(p.createdAt);
+      return d >= m && d <= mEnd;
+    });
+    const mTotal = mPayments.reduce((s, p) => s + p.amount, 0);
+    const mComm = (mTotal * commissionRate) / 100;
+    payoutSchedule.push({
+      label: `${monthNames[m.getMonth()]} ${m.getFullYear()}`,
+      gross: mTotal,
+      commission: mComm,
+      net: mTotal - mComm,
+      count: mPayments.length,
+      isPast: i > 0,
+    });
+  }
 
   return (
     <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
@@ -133,7 +184,98 @@ export default async function MuhasebePage() {
           </div>
           <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", margin: 0 }}>Muhasebe</h1>
         </div>
-        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem", margin: 0 }}>Finansal genel bakış ve ödeme takibi</p>
+        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem", margin: 0 }}>Cüzdan, kazançlar ve ödeme takibi</p>
+      </div>
+
+      {/* ═══ CÜZDAN BÖLÜMÜ ═══ */}
+      <div style={{ background: "linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(0,0,0,0.3) 50%, rgba(59,130,246,0.06) 100%)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 0, padding: "24px", marginBottom: "1.5rem", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -20, right: -20, width: 120, height: 120, borderRadius: "50%", background: "rgba(34,197,94,0.05)", filter: "blur(40px)" }} />
+        
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+          <Wallet size={16} style={{ color: "#22c55e" }} />
+          <span style={{ fontSize: "0.7rem", fontWeight: 800, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.1em" }}>Cüzdanım</span>
+          <span style={{ fontSize: "0.55rem", fontWeight: 600, color: "rgba(255,255,255,0.3)", marginLeft: "auto", padding: "2px 8px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>%{commissionRate} komisyon</span>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16 }}>
+          {/* Net Kazanç */}
+          <div>
+            <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>NET KAZANÇ (Online)</div>
+            <div style={{ fontSize: "2rem", fontWeight: 900, color: "#22c55e", lineHeight: 1 }}>{fmtDecimal(walletBalance)}<span style={{ fontSize: "0.9rem", opacity: 0.7 }}>₺</span></div>
+            <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.35)", marginTop: 4 }}>Komisyon düşüldükten sonra</div>
+          </div>
+
+          {/* Brüt Online */}
+          <div>
+            <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>BRÜT ONLİNE GELİR</div>
+            <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "#fff" }}>{fmtDecimal(onlineTotal)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
+            <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.35)", marginTop: 4 }}>{onlinePayments.length} online işlem</div>
+          </div>
+
+          {/* Platform Komisyonu */}
+          <div>
+            <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>PLATFORM KOMİSYONU</div>
+            <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "#f87171" }}>-{fmtDecimal(platformCommission)}<span style={{ fontSize: "0.8rem", opacity: 0.7 }}>₺</span></div>
+            <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.35)", marginTop: 4 }}>%{commissionRate} kesinti</div>
+          </div>
+
+          {/* Nakit / Elden */}
+          <div>
+            <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>NAKİT / EFT GELİR</div>
+            <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "rgba(255,255,255,0.7)" }}>{fmtDecimal(offlineTotal)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
+            <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.35)", marginTop: 4 }}>Komisyonsuz (elden tahsilat)</div>
+          </div>
+        </div>
+
+        {/* Sonraki Ödeme */}
+        <div style={{ marginTop: 20, padding: "14px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <Calendar size={14} style={{ color: "rgba(255,255,255,0.5)" }} />
+            <div>
+              <div style={{ fontSize: "0.7rem", fontWeight: 800 }}>Sonraki Ödeme</div>
+              <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.4)" }}>{nextPayoutDate.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}</div>
+            </div>
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <div style={{ fontSize: "1rem", fontWeight: 900, color: "#22c55e" }}>{fmtDecimal(thisMonthNet)}<span style={{ fontSize: "0.7rem", opacity: 0.7 }}>₺</span></div>
+            <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)" }}>{daysUntilPayout} gün kaldı · bu ayki net</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══ ÖDEME TAKVİMİ ═══ */}
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px", marginBottom: "1.5rem" }}>
+        <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
+          <Calendar size={13} style={{ color: "rgba(255,255,255,0.5)" }} />
+          Ödeme Takvimi (Son 6 Ay)
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {payoutSchedule.map((p, i) => (
+            <div key={i} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "6px 12px", padding: "10px 12px", background: i === 0 ? "rgba(34,197,94,0.06)" : "rgba(255,255,255,0.02)", border: `1px solid ${i === 0 ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.05)"}` }}>
+              <div style={{ minWidth: 100 }}>
+                <div style={{ fontSize: "0.75rem", fontWeight: 700 }}>{p.label}</div>
+                <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)" }}>{p.count} işlem</div>
+              </div>
+              <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)" }}>Brüt</div>
+                  <div style={{ fontSize: "0.7rem", fontWeight: 700 }}>{fmt(p.gross)}₺</div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)" }}>Komisyon</div>
+                  <div style={{ fontSize: "0.7rem", fontWeight: 700, color: "#f87171" }}>-{fmt(p.commission)}₺</div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)" }}>Net</div>
+                  <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "#22c55e" }}>{fmt(p.net)}₺</div>
+                </div>
+                <div style={{ fontSize: "0.55rem", fontWeight: 700, padding: "2px 8px", background: p.isPast ? "rgba(255,255,255,0.05)" : "rgba(34,197,94,0.1)", color: p.isPast ? "rgba(255,255,255,0.4)" : "#22c55e", border: `1px solid ${p.isPast ? "rgba(255,255,255,0.08)" : "rgba(34,197,94,0.2)"}` }}>
+                  {i === 0 ? "Aktif" : "Tamamlandı"}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ═══ TOP SUMMARY CARDS ═══ */}
