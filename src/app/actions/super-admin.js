@@ -400,6 +400,14 @@ export async function updateTenantField(tenantId, field, value) {
     data: { [field]: typeof value === "string" ? value.trim() : value }
   });
 
+  // businessName değiştiğinde GlobalSettings'i de senkronize et (navbar + SEO)
+  if (field === "businessName") {
+    await prisma.globalSettings.updateMany({
+      where: { tenantId },
+      data: { businessName: typeof value === "string" ? value.trim() : value }
+    });
+  }
+
   return { success: true, field, value };
 }
 
