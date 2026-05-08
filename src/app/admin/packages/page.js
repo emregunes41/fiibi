@@ -61,18 +61,18 @@ const getCategoryIcon = (val) => CATEGORIES.find(c => c.value === val)?.icon || 
 const getTimeTypeLabel = (val) => [...TIME_TYPES_PHOTO, ...TIME_TYPES_GENERAL].find(t => t.value === val)?.label || val;
 
 const inp = {
-  width: "100%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)",
-  borderRadius: 0, padding: "0.7rem 0.8rem", color: "#fff", outline: "none",
+  width: "100%", background: "#fff", border: "1px solid rgba(0,0,0,0.12)",
+  borderRadius: 0, padding: "0.7rem 0.8rem", color: "#1a1a1a", outline: "none",
   fontSize: "0.8rem", boxSizing: "border-box",
 };
 
 const sel = {
   ...inp, appearance: "none", WebkitAppearance: "none", cursor: "pointer",
-  backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E\")",
+  backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%231a1a1a' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E\")",
   backgroundRepeat: "no-repeat", backgroundPosition: "right 0.8rem center",
 };
 
-const lbl = { display: "block", fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", marginBottom: "5px", letterSpacing: "0.04em" };
+const lbl = { display: "block", fontSize: "0.65rem", fontWeight: 800, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", marginBottom: "5px", letterSpacing: "0.04em" };
 
 const emptyFormBase = { 
   name: "", description: "", price: "", features: "", 
@@ -181,13 +181,13 @@ export default function PackagesPage() {
     : packages;
 
   return (
-    <div style={{ color: "#fff" }}>
+    <div style={{ color: "#1a1a1a" }}>
       {/* Toast */}
       {deleteMessage && (
         <div style={{ position: "fixed", top: 70, right: 16, zIndex: 2000, padding: "10px 16px", borderRadius: 0,
-          background: deleteMessage.type === "error" ? "rgba(255,255,255,0.08)" : "rgba(34,197,94,0.15)",
-          border: `1px solid ${deleteMessage.type === "error" ? "rgba(255,255,255,0.12)" : "rgba(34,197,94,0.3)"}`,
-          color: deleteMessage.type === "error" ? "rgba(255,255,255,0.6)" : "#fff", fontWeight: 600, fontSize: 12,
+          background: deleteMessage.type === "error" ? "rgba(0,0,0,0.04)" : "rgba(34,197,94,0.15)",
+          border: `1px solid ${deleteMessage.type === "error" ? "rgba(0,0,0,0.08)" : "rgba(34,197,94,0.2)"}`,
+          color: deleteMessage.type === "error" ? "rgba(0,0,0,0.5)" : "#1a1a1a", fontWeight: 600, fontSize: 12,
         }}>{deleteMessage.text}</div>
       )}
 
@@ -201,7 +201,7 @@ export default function PackagesPage() {
       ].filter(Boolean)} />
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.85rem", margin: 0 }}>
+        <p style={{ color: "rgba(0,0,0,0.35)", fontSize: "0.85rem", margin: 0 }}>
           Sunacağınız hizmetlerin süresini, ücretini ve ekstralarını belirleyin.
         </p>
         <button
@@ -219,13 +219,13 @@ export default function PackagesPage() {
         <div key={group.value} style={{ marginBottom: "1.5rem" }}>
           <h2 style={{ fontSize: "0.9rem", fontWeight: 900, marginBottom: "10px", display: "flex", alignItems: "center", gap: "6px" }}>
             {group.icon} {group.label}
-            <span style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.25)", fontWeight: 500 }}>({group.items.length})</span>
+            <span style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.2)", fontWeight: 500 }}>({group.items.length})</span>
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {group.items.map((pkg) => (
               <div key={pkg.id} style={{
                 padding: "12px 14px", borderRadius: 0,
-                border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(0,0,0,0.08)", background: "rgba(0,0,0,0.02)",
               }}>
                 {/* Row 1: Name + Price + Actions */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
@@ -233,15 +233,15 @@ export default function PackagesPage() {
                     <span style={{ fontSize: "1.1rem" }}>{getCategoryIcon(pkg.category)}</span>
                     <div style={{ minWidth: 0 }}>
                       <div style={{ fontWeight: 700, fontSize: "0.9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pkg.name}</div>
-                      <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.55)" }}>{pkg.description?.substring(0, 60)}{pkg.description?.length > 60 ? "..." : ""}</div>
+                      <div style={{ fontSize: "0.72rem", color: "rgba(0,0,0,0.45)" }}>{pkg.description?.substring(0, 60)}{pkg.description?.length > 60 ? "..." : ""}</div>
                     </div>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
                     <span style={{ fontWeight: 900, fontSize: "0.9rem" }}>{pkg.price}₺</span>
-                    <button onClick={() => startEdit(pkg)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
+                    <button onClick={() => startEdit(pkg)} style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", color: "#1a1a1a", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
                       <Edit2 size={12} />
                     </button>
-                    <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(255,68,68,0.05)", border: "1px solid rgba(255,68,68,0.15)", color: "#ff6b6b", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
+                    <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(220,38,38,0.05)", border: "1px solid rgba(220,38,38,0.12)", color: "#dc2626", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
                       <Trash2 size={12} />
                     </button>
                   </div>
@@ -249,40 +249,40 @@ export default function PackagesPage() {
 
                 {/* Row 2: Tags */}
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
-                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(0,0,0,0.03)", padding: "3px 8px", borderRadius: 0, color: "rgba(0,0,0,0.5)", textTransform: "uppercase" }}>
                     {getCategoryLabel(pkg.category)}
                   </span>
-                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(0,0,0,0.03)", padding: "3px 8px", borderRadius: 0, color: "rgba(0,0,0,0.5)", textTransform: "uppercase" }}>
                     {getTimeTypeLabel(pkg.timeType)}
                   </span>
-                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(0,0,0,0.03)", padding: "3px 8px", borderRadius: 0, color: "rgba(0,0,0,0.5)", textTransform: "uppercase" }}>
                     {pkg.maxCapacity}/periyot
                   </span>
-                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(0,0,0,0.03)", padding: "3px 8px", borderRadius: 0, color: "rgba(0,0,0,0.5)", textTransform: "uppercase" }}>
                     ⏳{pkg.deliveryTimeDays}gün teslim
                   </span>
                   {pkg.postSelectionDays > 0 && (
-                    <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(96,165,250,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.5)", textTransform: "uppercase" }}>
+                    <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(59,130,246,0.06)", padding: "3px 8px", borderRadius: 0, color: "rgba(0,0,0,0.4)", textTransform: "uppercase" }}>
                       📋+{pkg.postSelectionDays}gün seçim
                     </span>
                   )}
                   {pkg.availableSlots && pkg.availableSlots.length > 0 && (
-                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.5)" }}>
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.02)", padding: "2px 6px", borderRadius: 0, color: "rgba(0,0,0,0.4)" }}>
                       🕐{pkg.availableSlots.length} slot
                     </span>
                   )}
                   {pkg.workingDays && pkg.workingDays.length > 0 && pkg.workingDays.length < 7 && (
-                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(59,130,246,0.08)", padding: "2px 6px", borderRadius: 0, color: "rgba(147,197,253,0.7)" }}>
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(59,130,246,0.06)", padding: "2px 6px", borderRadius: 0, color: "rgba(37,99,235,0.7)" }}>
                       📅{pkg.workingDays.length} gün
                     </span>
                   )}
                   {pkg.addons && pkg.addons.length > 0 && (
-                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.4)" }}>
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.02)", padding: "2px 6px", borderRadius: 0, color: "rgba(0,0,0,0.3)" }}>
                       +{pkg.addons.length} ek hizmet
                     </span>
                   )}
                   {pkg.customFields && pkg.customFields.length > 0 && (
-                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.4)" }}>
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.02)", padding: "2px 6px", borderRadius: 0, color: "rgba(0,0,0,0.3)" }}>
                       📝{pkg.customFields.length} alan
                     </span>
                   )}
@@ -300,51 +300,51 @@ export default function PackagesPage() {
             {ungrouped.map((pkg) => (
               <div key={pkg.id} style={{
                 padding: "12px 14px", borderRadius: 0,
-                border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(0,0,0,0.08)", background: "rgba(0,0,0,0.02)",
               }}>
                 {/* Row 1: Name + Price + Actions */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", minWidth: 0 }}>
                     <div style={{ minWidth: 0 }}>
                       <div style={{ fontWeight: 700, fontSize: "0.9rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pkg.name}</div>
-                      <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.55)" }}>{pkg.description?.substring(0, 60)}{pkg.description?.length > 60 ? "..." : ""}</div>
+                      <div style={{ fontSize: "0.72rem", color: "rgba(0,0,0,0.45)" }}>{pkg.description?.substring(0, 60)}{pkg.description?.length > 60 ? "..." : ""}</div>
                     </div>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
                     <span style={{ fontWeight: 900, fontSize: "0.9rem" }}>{pkg.price}₺</span>
-                    <button onClick={() => startEdit(pkg)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
+                    <button onClick={() => startEdit(pkg)} style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", color: "#1a1a1a", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
                       <Edit2 size={12} />
                     </button>
-                    <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(255,68,68,0.05)", border: "1px solid rgba(255,68,68,0.15)", color: "#ff6b6b", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
+                    <button onClick={() => handleDelete(pkg.id)} style={{ background: "rgba(220,38,38,0.05)", border: "1px solid rgba(220,38,38,0.12)", color: "#dc2626", padding: "5px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
                       <Trash2 size={12} />
                     </button>
                   </div>
                 </div>
                 {/* Row 2: Tags */}
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
-                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(0,0,0,0.03)", padding: "3px 8px", borderRadius: 0, color: "rgba(0,0,0,0.5)", textTransform: "uppercase" }}>
                     {getTimeTypeLabel(pkg.timeType)}
                   </span>
-                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                  <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(0,0,0,0.03)", padding: "3px 8px", borderRadius: 0, color: "rgba(0,0,0,0.5)", textTransform: "uppercase" }}>
                     {pkg.maxCapacity}/periyot
                   </span>
                   {pkg.sessionDuration && (
-                    <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", padding: "3px 8px", borderRadius: 0, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>
+                    <span style={{ fontSize: "0.62rem", fontWeight: 800, background: "rgba(0,0,0,0.03)", padding: "3px 8px", borderRadius: 0, color: "rgba(0,0,0,0.5)", textTransform: "uppercase" }}>
                       ⏱{pkg.sessionDuration}dk
                     </span>
                   )}
                   {pkg.availableSlots && pkg.availableSlots.length > 0 && (
-                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.5)" }}>
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.02)", padding: "2px 6px", borderRadius: 0, color: "rgba(0,0,0,0.4)" }}>
                       🕐{pkg.availableSlots.length} slot
                     </span>
                   )}
                   {pkg.addons && pkg.addons.length > 0 && (
-                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.4)" }}>
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.02)", padding: "2px 6px", borderRadius: 0, color: "rgba(0,0,0,0.3)" }}>
                       +{pkg.addons.length} ek hizmet
                     </span>
                   )}
                   {pkg.customFields && pkg.customFields.length > 0 && (
-                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.04)", padding: "2px 6px", borderRadius: 0, color: "rgba(255,255,255,0.4)" }}>
+                    <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.02)", padding: "2px 6px", borderRadius: 0, color: "rgba(0,0,0,0.3)" }}>
                       📝{pkg.customFields.length} alan
                     </span>
                   )}
@@ -356,7 +356,7 @@ export default function PackagesPage() {
       )}
 
       {packages.length === 0 && (
-        <div style={{ textAlign: "center", padding: "3rem", color: "rgba(255,255,255,0.2)" }}>
+        <div style={{ textAlign: "center", padding: "3rem", color: "rgba(0,0,0,0.15)" }}>
           <PackageIcon size={32} style={{ margin: "0 auto 8px", opacity: 0.3 }} />
           <p style={{ fontSize: "0.8rem" }}>Henüz paket yok</p>
         </div>
@@ -364,11 +364,11 @@ export default function PackagesPage() {
 
       {/* ── Modal ── */}
       {isModalOpen && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, width: "100%", maxWidth: "440px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.3)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
+          <div style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, width: "100%", maxWidth: "440px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1rem", fontWeight: 900, margin: 0 }}>{editingId ? "Düzenle" : "Yeni Paket"}</h2>
-              <button onClick={() => setIsModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}><X size={18} /></button>
+              <button onClick={() => setIsModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.25)", cursor: "pointer" }}><X size={18} /></button>
             </div>
 
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
@@ -382,14 +382,14 @@ export default function PackagesPage() {
                 <div>
                   <div style={lbl}>Kategori</div>
                   <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} style={sel}>
-                    {CATEGORIES.map(c => <option key={c.value} value={c.value} style={{ background: "#111" }}>{c.icon} {c.label}</option>)}
+                    {CATEGORIES.map(c => <option key={c.value} value={c.value} style={{ background: "#fff" }}>{c.icon} {c.label}</option>)}
                   </select>
                 </div>
                 )}
                 <div>
                   <div style={lbl}>Zaman Tipi</div>
                   <select value={formData.timeType} onChange={(e) => setFormData({...formData, timeType: e.target.value, availableSlots: []})} style={sel}>
-                    {(features.categories ? TIME_TYPES_PHOTO : TIME_TYPES_GENERAL).map(t => <option key={t.value} value={t.value} style={{ background: "#111" }}>{t.label}</option>)}
+                    {(features.categories ? TIME_TYPES_PHOTO : TIME_TYPES_GENERAL).map(t => <option key={t.value} value={t.value} style={{ background: "#fff" }}>{t.label}</option>)}
                   </select>
                 </div>
               </div>
@@ -451,10 +451,10 @@ export default function PackagesPage() {
                 }
 
                 return (
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "12px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", borderRadius: 0, padding: "12px", display: "flex", flexDirection: "column", gap: "12px" }}>
                   {/* Duration */}
                   <div>
-                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: "6px" }}>
+                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: "6px" }}>
                       ⏱ Seans Süresi
                     </div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
@@ -466,9 +466,9 @@ export default function PackagesPage() {
                             style={{
                               padding: "7px 12px", borderRadius: 0, fontSize: "0.7rem", fontWeight: 700,
                               cursor: "pointer", transition: "all 0.15s",
-                              border: active ? "1px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.08)",
-                              background: active ? "rgba(168,85,247,0.2)" : "rgba(255,255,255,0.03)",
-                              color: active ? "#c084fc" : "rgba(255,255,255,0.35)",
+                              border: active ? "1px solid rgba(0,0,0,0.3)" : "1px solid rgba(0,0,0,0.06)",
+                              background: active ? "rgba(168,85,247,0.1)" : "rgba(0,0,0,0.02)",
+                              color: active ? "#7c3aed" : "rgba(0,0,0,0.25)",
                             }}
                           >
                             {active ? "✓ " : ""}{d.label}
@@ -480,18 +480,18 @@ export default function PackagesPage() {
 
                   {/* Working Hours */}
                   <div>
-                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: "6px" }}>
+                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: "6px" }}>
                       🕐 Çalışma Saatleri
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                       <select value={workStart} onChange={(e) => regenSlots({ workStartTime: e.target.value })}
                         style={{ ...sel, flex: 1, padding: "7px 8px", fontSize: "0.75rem" }}>
-                        {HOURS.map(h => <option key={h} value={h} style={{ background: "#111" }}>{h}</option>)}
+                        {HOURS.map(h => <option key={h} value={h} style={{ background: "#fff" }}>{h}</option>)}
                       </select>
-                      <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem", fontWeight: 700 }}>→</span>
+                      <span style={{ color: "rgba(0,0,0,0.25)", fontSize: "0.7rem", fontWeight: 700 }}>→</span>
                       <select value={workEnd} onChange={(e) => regenSlots({ workEndTime: e.target.value })}
                         style={{ ...sel, flex: 1, padding: "7px 8px", fontSize: "0.75rem" }}>
-                        {HOURS.map(h => <option key={h} value={h} style={{ background: "#111" }}>{h}</option>)}
+                        {HOURS.map(h => <option key={h} value={h} style={{ background: "#fff" }}>{h}</option>)}
                       </select>
                     </div>
                   </div>
@@ -503,7 +503,7 @@ export default function PackagesPage() {
                         <input type="checkbox" checked={lunchEnabled}
                           onChange={(e) => regenSlots({ lunchBreakEnabled: e.target.checked })}
                           style={{ width: 14, height: 14 }} />
-                        <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase" }}>
+                        <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase" }}>
                           🍽 Öğle Arası
                         </span>
                       </label>
@@ -512,12 +512,12 @@ export default function PackagesPage() {
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                         <select value={lunchStart} onChange={(e) => regenSlots({ lunchStartTime: e.target.value })}
                           style={{ ...sel, flex: 1, padding: "7px 8px", fontSize: "0.75rem" }}>
-                          {HOURS.map(h => <option key={h} value={h} style={{ background: "#111" }}>{h}</option>)}
+                          {HOURS.map(h => <option key={h} value={h} style={{ background: "#fff" }}>{h}</option>)}
                         </select>
-                        <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem", fontWeight: 700 }}>→</span>
+                        <span style={{ color: "rgba(0,0,0,0.25)", fontSize: "0.7rem", fontWeight: 700 }}>→</span>
                         <select value={lunchEnd} onChange={(e) => regenSlots({ lunchEndTime: e.target.value })}
                           style={{ ...sel, flex: 1, padding: "7px 8px", fontSize: "0.75rem" }}>
-                          {HOURS.map(h => <option key={h} value={h} style={{ background: "#111" }}>{h}</option>)}
+                          {HOURS.map(h => <option key={h} value={h} style={{ background: "#fff" }}>{h}</option>)}
                         </select>
                       </div>
                     )}
@@ -525,8 +525,8 @@ export default function PackagesPage() {
 
                   {/* Generated Slots Preview */}
                   {(formData.availableSlots || []).length > 0 && (
-                    <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)", padding: "8px", fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", lineHeight: 1.8 }}>
-                      <span style={{ fontWeight: 800, color: "rgba(255,255,255,0.5)" }}>
+                    <div style={{ background: "rgba(0,0,0,0.01)", border: "1px solid rgba(0,0,0,0.04)", padding: "8px", fontSize: "0.6rem", color: "rgba(0,0,0,0.3)", lineHeight: 1.8 }}>
+                      <span style={{ fontWeight: 800, color: "rgba(0,0,0,0.4)" }}>
                         {formData.availableSlots.length} slot oluşturuldu:
                       </span>{" "}
                       {formData.availableSlots.slice(0, 12).join(", ")}
@@ -539,8 +539,8 @@ export default function PackagesPage() {
 
               {/* Slot Configuration for SLOT_2H / SLOT_4H */}
               {(formData.timeType === "SLOT_2H" || formData.timeType === "SLOT_4H") && (
-                <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "10px" }}>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: "8px" }}>
+                <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", borderRadius: 0, padding: "10px" }}>
+                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: "8px" }}>
                     🕐 Aktif Saat Dilimleri
                   </div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
@@ -554,9 +554,9 @@ export default function PackagesPage() {
                           style={{
                             padding: "6px 10px", borderRadius: 0, fontSize: "0.7rem", fontWeight: 700,
                             cursor: "pointer", transition: "all 0.15s",
-                            border: active ? "1px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.08)",
-                            background: active ? "rgba(168,85,247,0.2)" : "rgba(255,255,255,0.03)",
-                            color: active ? "#c084fc" : "rgba(255,255,255,0.35)",
+                            border: active ? "1px solid rgba(0,0,0,0.3)" : "1px solid rgba(0,0,0,0.06)",
+                            background: active ? "rgba(168,85,247,0.1)" : "rgba(0,0,0,0.02)",
+                            color: active ? "#7c3aed" : "rgba(0,0,0,0.25)",
                           }}
                         >
                           {active ? "✓ " : ""}{slot.label}
@@ -565,7 +565,7 @@ export default function PackagesPage() {
                     })}
                   </div>
                   {(formData.availableSlots || []).length === 0 && (
-                    <p style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.2)", marginTop: "6px", textAlign: "center" }}>
+                    <p style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.15)", marginTop: "6px", textAlign: "center" }}>
                       En az bir saat dilimi seçmelisiniz
                     </p>
                   )}
@@ -573,8 +573,8 @@ export default function PackagesPage() {
               )}
 
               {/* Çalışma Günleri */}
-              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "10px" }}>
-                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: "8px" }}>
+              <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", borderRadius: 0, padding: "10px" }}>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: "8px" }}>
                   📅 Çalışma Günleri
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
@@ -602,9 +602,9 @@ export default function PackagesPage() {
                         style={{
                           padding: "8px 14px", borderRadius: 0, fontSize: "0.75rem", fontWeight: 700,
                           cursor: "pointer", transition: "all 0.15s", minWidth: 44, textAlign: "center",
-                          border: active ? "1px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.08)",
-                          background: active ? "rgba(59,130,246,0.2)" : "rgba(255,255,255,0.03)",
-                          color: active ? "#93c5fd" : "rgba(255,255,255,0.35)",
+                          border: active ? "1px solid rgba(0,0,0,0.3)" : "1px solid rgba(0,0,0,0.06)",
+                          background: active ? "rgba(59,130,246,0.1)" : "rgba(0,0,0,0.02)",
+                          color: active ? "#2563eb" : "rgba(0,0,0,0.25)",
                         }}
                       >
                         {active ? "✓ " : ""}{day.label}
@@ -613,7 +613,7 @@ export default function PackagesPage() {
                   })}
                 </div>
                 {(formData.workingDays || []).length === 0 && (
-                  <p style={{ fontSize: "0.65rem", color: "rgba(255,100,100,0.5)", marginTop: "6px", textAlign: "center" }}>
+                  <p style={{ fontSize: "0.65rem", color: "rgba(220,38,38,0.6)", marginTop: "6px", textAlign: "center" }}>
                     ⚠ Hiç gün seçilmedi — bu paket için randevu alınamaz
                   </p>
                 )}
@@ -633,7 +633,7 @@ export default function PackagesPage() {
 
               <div>
                 <div style={{...lbl, color: "rgba(167, 139, 250, 0.9)"}}>📹 Online Görüşme Linki (İsteğe Bağlı)</div>
-                <input type="url" value={formData.meetingLink} onChange={(e) => setFormData({...formData, meetingLink: e.target.value})} style={{...inp, borderColor: formData.meetingLink ? "rgba(167, 139, 250, 0.3)" : "rgba(255,255,255,0.08)", background: formData.meetingLink ? "rgba(167, 139, 250, 0.02)" : "rgba(255,255,255,0.03)"}} placeholder="https://zoom.us/... (Eğer bu hizmet online ise girin)" />
+                <input type="url" value={formData.meetingLink} onChange={(e) => setFormData({...formData, meetingLink: e.target.value})} style={{...inp, borderColor: formData.meetingLink ? "rgba(167, 139, 250, 0.3)" : "rgba(0,0,0,0.08)", background: formData.meetingLink ? "rgba(167, 139, 250, 0.04)" : "#fff"}} placeholder="https://zoom.us/... (Eğer bu hizmet online ise girin)" />
               </div>
 
               <div>
@@ -642,22 +642,22 @@ export default function PackagesPage() {
               </div>
 
               {/* Addons */}
-              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "10px" }}>
+              <div style={{ background: "rgba(0,0,0,0.01)", border: "1px solid rgba(0,0,0,0.05)", borderRadius: 0, padding: "10px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-                  <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Ek Hizmetler</span>
-                  <button type="button" onClick={addAddon} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "3px 8px", borderRadius: 0, cursor: "pointer", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "3px" }}>
+                  <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.25)", textTransform: "uppercase" }}>Ek Hizmetler</span>
+                  <button type="button" onClick={addAddon} style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", color: "#1a1a1a", padding: "3px 8px", borderRadius: 0, cursor: "pointer", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "3px" }}>
                     <PlusCircle size={10} /> Ekle
                   </button>
                 </div>
                 {formData.addons.length === 0 ? (
-                  <p style={{ color: "rgba(255,255,255,0.15)", fontSize: "0.7rem", textAlign: "center", padding: "6px 0" }}>Ek hizmet yok</p>
+                  <p style={{ color: "rgba(0,0,0,0.15)", fontSize: "0.7rem", textAlign: "center", padding: "6px 0" }}>Ek hizmet yok</p>
                 ) : (
                   <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                     {formData.addons.map((addon, i) => (
                       <div key={i} style={{ display: "flex", gap: "4px", alignItems: "center" }}>
                         <input type="text" placeholder="Hizmet adı" value={addon.title} onChange={(e) => updateAddon(i, "title", e.target.value)} style={{ ...inp, flex: 2, padding: "6px 8px", fontSize: "0.75rem" }} />
                         <input type="text" placeholder="₺" value={addon.price} onChange={(e) => updateAddon(i, "price", e.target.value)} style={{ ...inp, flex: 0.7, padding: "6px 8px", fontSize: "0.75rem" }} />
-                        <button type="button" onClick={() => removeAddon(i)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)", width: 26, height: 26, borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={11} /></button>
+                        <button type="button" onClick={() => removeAddon(i)} style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", color: "rgba(0,0,0,0.5)", width: 26, height: 26, borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={11} /></button>
                       </div>
                     ))}
                   </div>
@@ -665,39 +665,39 @@ export default function PackagesPage() {
               </div>
 
               {/* Custom Fields */}
-              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "10px" }}>
+              <div style={{ background: "rgba(0,0,0,0.01)", border: "1px solid rgba(0,0,0,0.05)", borderRadius: 0, padding: "10px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-                  <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Özel Alanlar</span>
+                  <span style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.25)", textTransform: "uppercase" }}>Özel Alanlar</span>
                   <button type="button" onClick={() => setFormData({ ...formData, customFields: [...formData.customFields, { label: "", type: "text", placeholder: "", options: "", required: false }] })}
-                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "3px 8px", borderRadius: 0, cursor: "pointer", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "3px" }}>
+                    style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", color: "#1a1a1a", padding: "3px 8px", borderRadius: 0, cursor: "pointer", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "3px" }}>
                     <PlusCircle size={10} /> Ekle
                   </button>
                 </div>
                 {formData.customFields.length === 0 ? (
-                  <p style={{ color: "rgba(255,255,255,0.15)", fontSize: "0.7rem", textAlign: "center", padding: "6px 0" }}>Özel alan yok</p>
+                  <p style={{ color: "rgba(0,0,0,0.15)", fontSize: "0.7rem", textAlign: "center", padding: "6px 0" }}>Özel alan yok</p>
                 ) : (
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                     {formData.customFields.map((field, i) => (
-                      <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)", borderRadius: 0, padding: "8px" }}>
+                      <div key={i} style={{ background: "rgba(0,0,0,0.01)", border: "1px solid rgba(0,0,0,0.04)", borderRadius: 0, padding: "8px" }}>
                         <div style={{ display: "flex", gap: "4px", alignItems: "center", marginBottom: "4px" }}>
                           <input type="text" placeholder="Alan adı" value={field.label} onChange={(e) => { const cf = [...formData.customFields]; cf[i] = { ...cf[i], label: e.target.value }; setFormData({ ...formData, customFields: cf }); }}
                             style={{ ...inp, flex: 2, padding: "6px 8px", fontSize: "0.75rem" }} />
                           <select value={field.type} onChange={(e) => { const cf = [...formData.customFields]; cf[i] = { ...cf[i], type: e.target.value }; setFormData({ ...formData, customFields: cf }); }}
                             style={{ ...sel, flex: 1, padding: "6px 8px", fontSize: "0.7rem" }}>
-                            <option value="text" style={{ background: "#111" }}>📝 Metin</option>
-                            <option value="dropdown" style={{ background: "#111" }}>📋 Dropdown</option>
-                            <option value="checkbox" style={{ background: "#111" }}>☑️ Onay</option>
+                            <option value="text" style={{ background: "#fff" }}>📝 Metin</option>
+                            <option value="dropdown" style={{ background: "#fff" }}>📋 Dropdown</option>
+                            <option value="checkbox" style={{ background: "#fff" }}>☑️ Onay</option>
                           </select>
-                          <label style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "0.6rem", color: "rgba(255,255,255,0.3)", whiteSpace: "nowrap", cursor: "pointer" }}>
+                          <label style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "0.6rem", color: "rgba(0,0,0,0.25)", whiteSpace: "nowrap", cursor: "pointer" }}>
                             <input type="checkbox" checked={field.required || false} onChange={(e) => { const cf = [...formData.customFields]; cf[i] = { ...cf[i], required: e.target.checked }; setFormData({ ...formData, customFields: cf }); }}
                               style={{ width: "12px", height: "12px" }} /> Zorunlu
                           </label>
                           <button type="button" onClick={() => setFormData({ ...formData, customFields: formData.customFields.filter((_, idx) => idx !== i) })}
-                            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)", width: 24, height: 24, borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={10} /></button>
+                            style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", color: "rgba(0,0,0,0.5)", width: 24, height: 24, borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><X size={10} /></button>
                         </div>
                         {field.type === "text" && <input type="text" placeholder="Placeholder metin..." value={field.placeholder || ""} onChange={(e) => { const cf = [...formData.customFields]; cf[i] = { ...cf[i], placeholder: e.target.value }; setFormData({ ...formData, customFields: cf }); }} style={{ ...inp, padding: "5px 8px", fontSize: "0.7rem" }} />}
                         {field.type === "dropdown" && <input type="text" placeholder="Seçenekler (virgülle)" value={field.options || ""} onChange={(e) => { const cf = [...formData.customFields]; cf[i] = { ...cf[i], options: e.target.value }; setFormData({ ...formData, customFields: cf }); }} style={{ ...inp, padding: "5px 8px", fontSize: "0.7rem" }} />}
-                        {field.type === "checkbox" && <p style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.2)", margin: "2px 0 0" }}>Onay kutusu olarak gösterilir</p>}
+                        {field.type === "checkbox" && <p style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.15)", margin: "2px 0 0" }}>Onay kutusu olarak gösterilir</p>}
                       </div>
                     ))}
                   </div>
@@ -706,15 +706,15 @@ export default function PackagesPage() {
 
               {/* Error Display */}
               {submitError && (
-                <div style={{ background: "rgba(255,60,60,0.08)", border: "1px solid rgba(255,60,60,0.2)", padding: "10px 14px", fontSize: "0.7rem", color: "rgba(255,120,120,0.9)", lineHeight: 1.6, wordBreak: "break-all", userSelect: "text" }}>
+                <div style={{ background: "rgba(220,38,38,0.06)", border: "1px solid rgba(220,38,38,0.12)", padding: "10px 14px", fontSize: "0.7rem", color: "#dc2626", lineHeight: 1.6, wordBreak: "break-all", userSelect: "text" }}>
                   <strong>Hata:</strong> {submitError}
                 </div>
               )}
 
               {/* Buttons */}
               <div style={{ display: "flex", gap: "0.5rem", marginTop: "4px" }}>
-                <button type="button" onClick={() => setIsModalOpen(false)} style={{ flex: 1, padding: "0.7rem", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "rgba(255,255,255,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>
-                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : "KAYDET"}</button>
+                <button type="button" onClick={() => setIsModalOpen(false)} style={{ flex: 1, padding: "0.7rem", borderRadius: 0, border: "1px solid rgba(0,0,0,0.12)", background: "transparent", color: "rgba(0,0,0,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>
+                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "#1a1a1a", color: "#fff", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : "KAYDET"}</button>
               </div>
             </form>
           </div>
