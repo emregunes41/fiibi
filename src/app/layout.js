@@ -168,7 +168,7 @@ export default async function RootLayout({ children }) {
   const usingSectorTexture = !hasCustomBg && SECTOR_TEXTURES.includes(businessType);
 
   // Palette — her zaman light mode (dark mode kaldırıldı)
-  const palette = getPalette(siteConfig?.siteTheme && !PALETTES_DARK.includes(siteConfig.siteTheme) ? siteConfig.siteTheme : "light");
+  const palette = getPalette("light");
 
   const tpl = getTemplate(siteConfig?.siteTemplate || "classic");
 
@@ -210,7 +210,7 @@ export default async function RootLayout({ children }) {
             bgUrl={siteConfig?.heroBgUrl || ""} 
             bgColor={siteConfig?.heroBgColor || palette.bg}
             businessType={siteConfig?._tenant?.businessType || "other"}
-            forceDarkMode={forceDark}
+            forceDarkMode={false}
           />
 
           <CartWrapper>
