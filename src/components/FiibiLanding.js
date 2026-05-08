@@ -90,6 +90,11 @@ export default function FiibiLanding() {
   const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [loginIdentifier, setLoginIdentifier] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState("");
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -132,6 +137,29 @@ export default function FiibiLanding() {
   }, []);
 
   const wrap = { maxWidth: 1200, margin: "0 auto", padding: "0 32px", width: "100%" };
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setLoginLoading(true);
+    setLoginError("");
+    try {
+      const res = await fetch("/api/central-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier: loginIdentifier, password: loginPassword }),
+      });
+      const data = await res.json();
+      if (data.success && data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      } else {
+        setLoginError(data.error || "Giriş başarısız.");
+        setLoginLoading(false);
+      }
+    } catch {
+      setLoginError("Bir hata oluştu.");
+      setLoginLoading(false);
+    }
+  }
 
   function handleBusinessName(value) {
     const slug = value.toLowerCase()
@@ -188,6 +216,87 @@ export default function FiibiLanding() {
   const selectedPlanObj = plans.find(p => p.id === form.selectedPlan);
 
   // --- REGISTER FLOW ---
+  // ── GİRİŞ MODAL ──
+  if (showLogin) {
+    return (
+      <div style={{ fontFamily: "'DM Sans', sans-serif", minHeight: "100vh", background: C.black, color: C.white, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 16px" }}>
+        <div style={{ width: "100%", maxWidth: 420 }}>
+          <button onClick={() => { setShowLogin(false); setLoginError(""); }}
+            style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", fontSize: 13, cursor: "pointer", marginBottom: 24, padding: 0, display: "flex", alignItems: "center", gap: 6, fontFamily: "'DM Sans', sans-serif" }}>
+            ← Ana Sayfa
+          </button>
+
+          <div style={{ marginBottom: 36 }}>
+            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8 }}>Paneline Giriş Yap</h2>
+            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", margin: 0 }}>Telefon numarası veya e-posta ile giriş yapın.</p>
+          </div>
+
+          <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {loginError && (
+              <div style={{ background: "rgba(255,60,60,0.08)", border: "1px solid rgba(255,60,60,0.2)", color: "#ff6b6b", padding: "12px 16px", fontSize: 13, fontWeight: 600 }}>
+                {loginError}
+              </div>
+            )}
+
+            <div>
+              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: 6, letterSpacing: "0.05em" }}>Telefon veya E-Posta</label>
+              <input
+                type="text"
+                value={loginIdentifier}
+                onChange={(e) => setLoginIdentifier(e.target.value)}
+                required
+                placeholder="05XX XXX XX XX"
+                style={{
+                  width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.1)", color: "#fff", fontSize: 15,
+                  outline: "none", fontFamily: "'DM Sans', sans-serif", boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: 6, letterSpacing: "0.05em" }}>Şifre</label>
+              <input
+                type="password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+                style={{
+                  width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.1)", color: "#fff", fontSize: 15,
+                  outline: "none", fontFamily: "'DM Sans', sans-serif", boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loginLoading}
+              style={{
+                ...btnStyle,
+                marginTop: 8,
+                opacity: loginLoading ? 0.6 : 1,
+                cursor: loginLoading ? "not-allowed" : "pointer",
+              }}
+            >
+              {loginLoading ? "Yönlendiriliyor..." : "Giriş Yap →"}
+            </button>
+          </form>
+
+          <div style={{ marginTop: 32, textAlign: "center" }}>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)" }}>
+              Hesabınız yok mu?{" "}
+              <button onClick={() => { setShowLogin(false); setShowRegister(true); }} style={{ background: "none", border: "none", color: C.orange, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", padding: 0 }}>
+                Ücretsiz Başla
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (showRegister) {
     return (
       <div style={{ fontFamily: "'DM Sans', sans-serif", minHeight: "100vh", background: C.black, color: C.white, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 16px" }}>
@@ -394,6 +503,11 @@ export default function FiibiLanding() {
             <a href="#ozellikler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.features}</a>
             <a href="#sektorler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.sectors}</a>
             <a href="#fiyatlar" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.pricing}</a>
+            <button onClick={() => setShowLogin(true)} style={{
+              background: "transparent", color: scrolled ? C.secondary : "rgba(255,255,255,0.8)", padding: "10px 20px",
+              fontSize: 14, fontWeight: 600, border: scrolled ? `1px solid rgba(0,0,0,0.12)` : "1px solid rgba(255,255,255,0.2)", cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
+              transition: "all 0.2s"
+            }}>Giriş Yap</button>
             <button onClick={() => setShowRegister(true)} style={{
               background: C.orange, color: C.white, padding: "10px 24px",
               fontSize: 14, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
