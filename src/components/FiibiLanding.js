@@ -7,6 +7,7 @@ import { getBusinessTypeList } from "@/lib/business-types";
 
 import { useLanguage } from "@/components/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import ThemePreviewCard from "@/components/ThemePreviewCard";
 
 const C = {
   orange: "#FF5F1F", orangeLight: "#FFAA4C", orangeDark: "#D94800",
@@ -343,52 +344,16 @@ export default function FiibiLanding() {
             <>
               <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8 }}>Temanızı Seçin</h2>
               <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>Sitenizin genel görünümünü belirleyin. Sonra değiştirebilirsiniz.</p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10, marginBottom: 24 }}>
-                {require("@/lib/templates").getTemplateList().map(t => {
-                  const sel = form.siteTemplate === t.id;
-                  const p = t.preview;
-                  return (
-                    <div key={t.id} onClick={() => setForm(prev => ({ ...prev, siteTemplate: t.id }))}
-                      style={{
-                        cursor: "pointer", overflow: "hidden", transition: "all 0.2s",
-                        border: sel ? `2px solid ${C.orange}` : "1px solid rgba(255,255,255,0.08)",
-                        background: sel ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.01)",
-                        position: "relative",
-                      }}>
-                      {/* Mini Site Mockup */}
-                      <div style={{ padding: 10, background: p.bg, minHeight: 90, position: "relative" }}>
-                        {/* Mini navbar */}
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                          <div style={{ width: 20, height: 5, borderRadius: p.radius / 4, background: p.text, opacity: 0.7 }} />
-                          <div style={{ display: "flex", gap: 3 }}>
-                            <div style={{ width: 12, height: 3, borderRadius: p.radius / 4, background: p.text, opacity: 0.2 }} />
-                            <div style={{ width: 12, height: 3, borderRadius: p.radius / 4, background: p.text, opacity: 0.2 }} />
-                          </div>
-                        </div>
-                        {/* Mini hero */}
-                        <div style={{ width: "65%", height: 8, borderRadius: p.radius / 4, background: p.accent, marginBottom: 5, opacity: 0.9 }} />
-                        <div style={{ width: "40%", height: 4, borderRadius: p.radius / 4, background: p.text, opacity: 0.2, marginBottom: 10 }} />
-                        {/* Mini cards */}
-                        <div style={{ display: "flex", gap: 4 }}>
-                          <div style={{ flex: 1, height: 28, borderRadius: p.radius / 2, background: p.card, border: `1px solid ${p.text}11` }}>
-                            <div style={{ width: "55%", height: 3, borderRadius: 2, background: p.accent, margin: "6px 6px 3px", opacity: 0.6 }} />
-                            <div style={{ width: "75%", height: 2, borderRadius: 2, background: p.text, margin: "0 6px", opacity: 0.12 }} />
-                          </div>
-                          <div style={{ flex: 1, height: 28, borderRadius: p.radius / 2, background: p.card, border: `1px solid ${p.text}11` }}>
-                            <div style={{ width: "45%", height: 3, borderRadius: 2, background: p.accent, margin: "6px 6px 3px", opacity: 0.6 }} />
-                            <div style={{ width: "65%", height: 2, borderRadius: 2, background: p.text, margin: "0 6px", opacity: 0.12 }} />
-                          </div>
-                        </div>
-                      </div>
-                      {/* Tema info */}
-                      <div style={{ padding: "10px 12px" }}>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: C.white, marginBottom: 3 }}>{t.emoji} {t.name}</div>
-                        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", lineHeight: 1.4 }}>{t.desc}</div>
-                      </div>
-                      {sel && <div style={{ position: "absolute", top: 8, right: 8 }}><div style={{ width: 18, height: 18, background: C.orange, display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{color: C.white, fontSize: 10}}>✓</span></div></div>}
-                    </div>
-                  );
-                })}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12, marginBottom: 24 }}>
+                {require("@/lib/templates").getTemplateList().map(t => (
+                  <ThemePreviewCard
+                    key={t.id}
+                    template={t}
+                    selected={form.siteTemplate === t.id}
+                    onClick={() => setForm(prev => ({ ...prev, siteTemplate: t.id }))}
+                    businessName={form.businessName || "Studio"}
+                  />
+                ))}
               </div>
               <button onClick={() => setStep(3)} style={btnStyle}>
                 Devam →

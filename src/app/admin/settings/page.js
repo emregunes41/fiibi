@@ -19,6 +19,7 @@ import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, 
 import { getPlanLimits, hasFeature } from "@/lib/plan-limits";
 import MembersList from "../components/MembersList";
 import PostsManager from "./PostsManager";
+import ThemePreviewCard from "@/components/ThemePreviewCard";
 
 const inp = {
   width: "100%", boxSizing: "border-box",
@@ -1742,50 +1743,15 @@ export default function SettingsPage() {
             <label style={label}>Site Teması</label>
             <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 16, marginTop: -2 }}>Sitenizin genel görünümünü, yazı tipini ve düzenini belirler.</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
-              {require("@/lib/templates").getTemplateList().map(t => {
-                const selected = (config.siteTemplate || "classic") === t.id;
-                const p = t.preview;
-                return (
-                  <button key={t.id} onClick={() => setConfig({ ...config, siteTemplate: t.id })} style={{
-                    padding: 0, background: selected ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.01)",
-                    border: selected ? "2px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.08)",
-                    cursor: "pointer", textAlign: "left", overflow: "hidden", transition: "all 0.2s",
-                  }}>
-                    {/* Mini Site Mockup */}
-                    <div style={{ padding: 12, background: p.bg, minHeight: 110, position: "relative" }}>
-                      {/* Mini navbar */}
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                        <div style={{ width: 24, height: 6, borderRadius: p.radius / 4, background: p.text, opacity: 0.7 }} />
-                        <div style={{ display: "flex", gap: 4 }}>
-                          <div style={{ width: 16, height: 4, borderRadius: p.radius / 4, background: p.text, opacity: 0.2 }} />
-                          <div style={{ width: 16, height: 4, borderRadius: p.radius / 4, background: p.text, opacity: 0.2 }} />
-                        </div>
-                      </div>
-                      {/* Mini hero title */}
-                      <div style={{ width: "70%", height: 10, borderRadius: p.radius / 4, background: p.accent, marginBottom: 6, opacity: 0.9, fontWeight: t.fontWeight.heading }} />
-                      <div style={{ width: "45%", height: 6, borderRadius: p.radius / 4, background: p.text, opacity: 0.25, marginBottom: 14 }} />
-                      {/* Mini cards */}
-                      <div style={{ display: "flex", gap: 6 }}>
-                        <div style={{ flex: 1, height: 36, borderRadius: p.radius / 2, background: p.card, border: `1px solid ${p.text}11`, boxShadow: t.cardStyle === "elevated" ? "0 2px 8px rgba(0,0,0,0.08)" : "none" }}>
-                          <div style={{ width: "60%", height: 4, borderRadius: 2, background: p.accent, margin: "8px 8px 4px", opacity: 0.6 }} />
-                          <div style={{ width: "80%", height: 3, borderRadius: 2, background: p.text, margin: "0 8px", opacity: 0.15 }} />
-                        </div>
-                        <div style={{ flex: 1, height: 36, borderRadius: p.radius / 2, background: p.card, border: `1px solid ${p.text}11`, boxShadow: t.cardStyle === "elevated" ? "0 2px 8px rgba(0,0,0,0.08)" : "none" }}>
-                          <div style={{ width: "50%", height: 4, borderRadius: 2, background: p.accent, margin: "8px 8px 4px", opacity: 0.6 }} />
-                          <div style={{ width: "70%", height: 3, borderRadius: 2, background: p.text, margin: "0 8px", opacity: 0.15 }} />
-                        </div>
-                      </div>
-                      {/* Mini button */}
-                      <div style={{ width: 40, height: 10, borderRadius: t.buttonStyle === "pill" ? 99 : (t.buttonStyle === "rounded" ? 6 : p.radius / 2), background: t.buttonStyle === "outline" ? "transparent" : p.accent, border: t.buttonStyle === "outline" ? `1px solid ${p.accent}` : "none", marginTop: 10, opacity: 0.8 }} />
-                    </div>
-                    {/* Tema bilgisi */}
-                    <div style={{ padding: "10px 14px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 3 }}>{t.emoji} {t.name} {selected && "✓"}</div>
-                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", lineHeight: 1.4 }}>{t.desc}</div>
-                    </div>
-                  </button>
-                );
-              })}
+              {require("@/lib/templates").getTemplateList().map(t => (
+                <ThemePreviewCard
+                  key={t.id}
+                  template={t}
+                  selected={(config.siteTemplate || "classic") === t.id}
+                  onClick={() => setConfig({ ...config, siteTemplate: t.id })}
+                  businessName={config.businessName || "Studio"}
+                />
+              ))}
             </div>
           </div>
 
