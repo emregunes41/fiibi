@@ -57,10 +57,13 @@ export async function generateMetadata() {
   }
 
   let siteConfig = null;
+  let tenant = null;
   try {
     siteConfig = await getSiteConfig();
+    const { getCurrentTenant } = await import("@/lib/tenant");
+    tenant = await getCurrentTenant();
   } catch (e) {
-    console.error("Metadata getSiteConfig error:", e);
+    console.error("Metadata error:", e);
   }
   const businessName = tenant?.businessName || siteConfig?.businessName || "Studio";
   const seoTitle = siteConfig?.seoTitle || businessName;
