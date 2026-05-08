@@ -11,6 +11,9 @@ import { getPalette } from "@/lib/palettes";
 import { getTemplate } from "@/lib/templates";
 import { PLATFORM } from "@/lib/constants";
 
+// Dark mode kaldırıldı — bu id'ler varsa light'a fallback
+const PALETTES_DARK = ["dark", "slate", "coffee", "ocean", "forest", "wine", "midnight", "charcoal"];
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -164,13 +167,8 @@ export default async function RootLayout({ children }) {
   const businessType = siteConfig?._tenant?.businessType || "other";
   const usingSectorTexture = !hasCustomBg && SECTOR_TEXTURES.includes(businessType);
 
-  let palette = getPalette(siteConfig?.siteTheme || "dark");
-  const forceDark = siteConfig?.forceDarkMode === true;
-  
-  // Sektör texture'ları beyaz arka planlı → otomatik light mode (forceDarkMode kapalıysa)
-  if (usingSectorTexture && !forceDark) {
-    palette = getPalette("light");
-  }
+  // Palette — her zaman light mode (dark mode kaldırıldı)
+  const palette = getPalette(siteConfig?.siteTheme && !PALETTES_DARK.includes(siteConfig.siteTheme) ? siteConfig.siteTheme : "light");
 
   const tpl = getTemplate(siteConfig?.siteTemplate || "classic");
 
@@ -178,7 +176,7 @@ export default async function RootLayout({ children }) {
     <html suppressHydrationWarning
       lang="tr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      {...(!palette.isDark ? { "data-light": "" } : {})}
+      data-light=""
       data-template={tpl.id}
       style={{
         "--bg": palette.bg,

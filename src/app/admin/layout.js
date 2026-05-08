@@ -70,12 +70,12 @@ function AdminLayoutInner({ children }) {
   const sidebarContent = (
     <>
       <div style={{ fontWeight: 900, fontSize: "1.75rem", letterSpacing: "-0.04em", marginBottom: "3.5rem", paddingLeft: "0.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span>{brandName}<span style={{ color: "rgba(255,255,255,0.4)", fontSize: "1.1rem" }}>.{terms.brandSuffix}</span></span>
+        <span>{brandName}<span style={{ color: "rgba(0,0,0,0.3)", fontSize: "1.1rem" }}>.{terms.brandSuffix}</span></span>
         {/* Close button only on mobile */}
         <button
           onClick={() => setSidebarOpen(false)}
           className="md:hidden"
-          style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: "4px" }}
+          style={{ background: "none", border: "none", color: "rgba(0,0,0,0.4)", cursor: "pointer", padding: "4px" }}
         >
           <X size={20} />
         </button>
@@ -87,17 +87,17 @@ function AdminLayoutInner({ children }) {
           style={{
             display: "flex", alignItems: "center", justifyContent: "space-between",
             width: "100%", padding: "12px 16px", borderRadius: 0,
-            background: "rgba(255,255,255,0.1)", border: "1px dashed rgba(255,255,255,0.2)", color: "#fff",
+            background: "rgba(0,0,0,0.05)", border: "1px dashed rgba(0,0,0,0.15)", color: "#1a1a1a",
             fontWeight: 800, fontSize: "0.95rem", cursor: "pointer",
             transition: "all 0.2s"
           }}
-          className="hover:bg-white/20"
+          className="hover:bg-black/10"
         >
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <Plus size={18} strokeWidth={2.5} />
             İçerik Ekle
           </div>
-          <ChevronRight size={16} style={{ transform: quickAddOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s", color: "rgba(255,255,255,0.5)" }} />
+          <ChevronRight size={16} style={{ transform: quickAddOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s", color: "rgba(0,0,0,0.4)" }} />
         </button>
 
         {quickAddOpen && (
@@ -106,29 +106,29 @@ function AdminLayoutInner({ children }) {
             display: "flex", flexDirection: "column",
             animation: "popDown 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
             transformOrigin: "top center",
-            borderLeft: "2px solid rgba(255,255,255,0.1)",
+            borderLeft: "2px solid rgba(0,0,0,0.1)",
             marginLeft: "8px", paddingLeft: "8px"
           }}>
             <Link href="/admin/settings?tab=icerik&subTab=banner" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-white">
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
                 <span style={{ fontSize: "14px" }}>🖼️</span> Banner Yükle
               </div>
             </Link>
             
             <Link href="/admin/settings?tab=icerik&subTab=portfolio" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-white">
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
                 <span style={{ fontSize: "14px" }}>📸</span> Portfolyo Ekle
               </div>
             </Link>
             
             <Link href="/admin/settings?tab=icerik&subTab=blog" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-white">
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
                 <span style={{ fontSize: "14px" }}>📝</span> Blog Yazısı
               </div>
             </Link>
             
             <Link href="/admin/settings?tab=icerik&subTab=icerik_blok" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-white">
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
                 <span style={{ fontSize: "14px" }}>📰</span> İçerik Bloğu
               </div>
             </Link>
@@ -143,13 +143,13 @@ function AdminLayoutInner({ children }) {
             <Link key={item.name} href={item.href} style={{ textDecoration: "none" }}>
               <div style={{
                 display: "flex", alignItems: "center", gap: "1rem", padding: "1rem 1.25rem", borderRadius: 0,
-                background: isActive ? "rgba(255,255,255,0.1)" : "transparent",
-                color: isActive ? "#fff" : "rgba(255,255,255,0.65)",
+                background: isActive ? "rgba(0,0,0,0.06)" : "transparent",
+                color: isActive ? "#1a1a1a" : "rgba(0,0,0,0.55)",
                 fontWeight: isActive ? 700 : 500,
                 transition: "all 0.2s",
-                border: isActive ? "1px solid rgba(255,255,255,0.1)" : "1px solid transparent"
-              }} className="hover:bg-white/5">
-                <item.icon size={20} color={isActive ? "#fff" : "rgba(255,255,255,0.5)"} />
+                border: isActive ? "1px solid rgba(0,0,0,0.08)" : "1px solid transparent"
+              }} className="hover:bg-black/5">
+                <item.icon size={20} color={isActive ? "#1a1a1a" : "rgba(0,0,0,0.4)"} />
                 {item.name}
               </div>
             </Link>
@@ -191,23 +191,23 @@ function AdminLayoutInner({ children }) {
   ) : null;
 
   return (
-    <div className="admin-theme" style={{ display: "flex", minHeight: "100vh", background: "#0a0a0a", color: "#fff", "--bg": "#0a0a0a", "--bg-card": "#111", "--text": "#fff", "--text-muted": "rgba(255,255,255,0.45)", "--text-subtle": "rgba(255,255,255,0.3)", "--border": "rgba(255,255,255,0.08)", "--accent": "#fff", "--btn-bg": "#fff", "--btn-text": "#000" }}>
+    <div className="admin-theme" style={{ display: "flex", minHeight: "100vh", background: "#ffffff", color: "#1a1a1a", "--bg": "#ffffff", "--bg-card": "#f5f5f5", "--text": "#1a1a1a", "--text-muted": "rgba(0,0,0,0.45)", "--text-subtle": "rgba(0,0,0,0.3)", "--border": "rgba(0,0,0,0.08)", "--accent": "#1a1a1a", "--btn-bg": "#1a1a1a", "--btn-text": "#ffffff" }}>
       
       {/* Mobile Top Bar */}
       <div className="md:hidden" style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
-        background: "#0a0a0a", borderBottom: "1px solid rgba(255,255,255,0.08)",
+        background: "#ffffff", borderBottom: "1px solid rgba(0,0,0,0.08)",
         display: "flex", flexDirection: "column"
       }}>
         <div style={{ padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <button
             onClick={() => setSidebarOpen(true)}
-            style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", padding: "4px" }}
+            style={{ background: "none", border: "none", color: "#1a1a1a", cursor: "pointer", padding: "4px" }}
           >
             <Menu size={22} />
           </button>
           <span style={{ fontWeight: 800, fontSize: "0.9rem", letterSpacing: "-0.02em" }}>
-            {brandName}<span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>.{bt?.terms?.brandSuffix || "panel"}</span>
+            {brandName}<span style={{ color: "rgba(0,0,0,0.35)", fontWeight: 400 }}>.{bt?.terms?.brandSuffix || "panel"}</span>
           </span>
           <div style={{ width: "30px" }} /> {/* spacer */}
         </div>
@@ -227,8 +227,8 @@ function AdminLayoutInner({ children }) {
       )}
 
       {/* Desktop Sidebar Background */}
-      <div className="hidden md:block" style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: "280px", zIndex: 0, overflow: "hidden", borderRight: "1px solid rgba(255,255,255,0.1)" }}>
-         <div style={{ position: "absolute", inset: 0, background: "#0a0a0a", opacity: 0.95, zIndex: 1 }} />
+      <div className="hidden md:block" style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: "280px", zIndex: 0, overflow: "hidden", borderRight: "1px solid rgba(0,0,0,0.08)" }}>
+         <div style={{ position: "absolute", inset: 0, background: "#ffffff", opacity: 0.95, zIndex: 1 }} />
       </div>
 
       {/* Sidebar Content - Desktop: static, Mobile: slide-over */}
@@ -241,8 +241,8 @@ function AdminLayoutInner({ children }) {
           zIndex: 60,
           padding: "2.5rem 1.5rem", 
           display: "flex", flexDirection: "column",
-          background: "#0a0a0a",
-          borderRight: "1px solid rgba(255,255,255,0.08)",
+          background: "#ffffff",
+          borderRight: "1px solid rgba(0,0,0,0.08)",
           transition: "transform 0.3s ease",
           overflowY: "auto",
         }}
@@ -257,7 +257,7 @@ function AdminLayoutInner({ children }) {
       <main style={{ 
         flex: 1, 
         position: "relative", overflowY: "auto", overflowX: "hidden",
-        background: "rgba(255,255,255,0.03)",
+        background: "#f8f8f8",
         minWidth: 0, // prevents overflow on mobile
       }}>
         {/* Mobile top padding for the top bar */}
