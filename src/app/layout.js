@@ -57,15 +57,12 @@ export async function generateMetadata() {
   }
 
   let siteConfig = null;
-  let tenant = null;
   try {
     siteConfig = await getSiteConfig();
-    const { getCurrentTenant } = await import("@/lib/tenant");
-    tenant = await getCurrentTenant();
   } catch (e) {
-    console.error("Metadata error:", e);
+    console.error("Metadata getSiteConfig error:", e);
   }
-  const businessName = tenant?.businessName || siteConfig?.businessName || "Studio";
+  const businessName = siteConfig?.businessName || "Studio";
   const seoTitle = siteConfig?.seoTitle || businessName;
   const seoDescription = siteConfig?.seoDescription || `${businessName} — Online randevu ve hizmet yönetimi.`;
   
@@ -220,7 +217,7 @@ export default async function RootLayout({ children }) {
 
           <CartWrapper>
             <PageTracker />
-            <Navbar businessName={tenant?.businessName || siteConfig?.businessName || "Studio"} logoUrl={siteConfig?.logoUrl} accentColor={accentColor} />
+            <Navbar businessName={currentTenant?.businessName || siteConfig?.businessName || "Studio"} logoUrl={siteConfig?.logoUrl} accentColor={accentColor} />
             {children}
             <div className="md:hidden h-32 shrink-0 w-full" />
             <a 
