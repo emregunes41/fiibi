@@ -134,7 +134,7 @@ async function sendDomainEmail(to, businessName, domain, expiresAt, type) {
   };
 
   const template = templates[type];
-  if (!template || !to) return;
+  if (!template || !to || !resend) return;
 
   try {
     await resend.emails.send({

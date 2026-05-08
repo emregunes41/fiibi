@@ -302,7 +302,7 @@ async function sendEmail(to, businessName, type) {
   };
 
   const template = templates[type];
-  if (!template) return;
+  if (!template || !resend) return;
 
   try {
     await resend.emails.send({

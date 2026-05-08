@@ -152,27 +152,27 @@ export default async function RootLayout({ children }) {
     console.error("Layout getSiteConfig error:", e);
   }
 
-  const accentColor = siteConfig.accentColor || "#ffffff";
-  const fontFamily = siteConfig.fontFamily || "geist";
+  const accentColor = siteConfig?.accentColor || "#ffffff";
+  const fontFamily = siteConfig?.fontFamily || "geist";
   const fontCSS = FONT_MAP[fontFamily] || FONT_MAP.geist;
   const googleFontUrl = GOOGLE_FONTS[fontFamily] ? `https://fonts.googleapis.com/css2?family=${GOOGLE_FONTS[fontFamily]}&display=swap` : null;
 
   // Palette
   const DEFAULT_ASSETS = ["/assets/hero.mp4", "/assets/hero.jpg", ""];
   const SECTOR_TEXTURES = ["photographer","doctor","dentist","psychologist","dietitian","coach","beauty","veterinarian","physiotherapist","tutor","lawyer","consultant","fitness","veterinary"];
-  const hasCustomBg = siteConfig.heroBgUrl && siteConfig.heroBgUrl.length > 0 && !DEFAULT_ASSETS.includes(siteConfig.heroBgUrl);
-  const businessType = siteConfig._tenant?.businessType || "other";
+  const hasCustomBg = siteConfig?.heroBgUrl && siteConfig.heroBgUrl.length > 0 && !DEFAULT_ASSETS.includes(siteConfig.heroBgUrl);
+  const businessType = siteConfig?._tenant?.businessType || "other";
   const usingSectorTexture = !hasCustomBg && SECTOR_TEXTURES.includes(businessType);
 
-  let palette = getPalette(siteConfig.siteTheme || "dark");
-  const forceDark = siteConfig.forceDarkMode === true;
+  let palette = getPalette(siteConfig?.siteTheme || "dark");
+  const forceDark = siteConfig?.forceDarkMode === true;
   
   // Sektör texture'ları beyaz arka planlı → otomatik light mode (forceDarkMode kapalıysa)
   if (usingSectorTexture && !forceDark) {
     palette = getPalette("light");
   }
 
-  const tpl = getTemplate(siteConfig.siteTemplate || "classic");
+  const tpl = getTemplate(siteConfig?.siteTemplate || "classic");
 
   return (
     <html suppressHydrationWarning
