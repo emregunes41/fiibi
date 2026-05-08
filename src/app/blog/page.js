@@ -46,7 +46,7 @@ export default async function BlogPage() {
           Blog & Haberler
         </h1>
         <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "1.1rem", marginBottom: 48, lineHeight: 1.6 }}>
-          {siteConfig?.businessName || bt.terms.brandSuffix} tarafından paylaşılan son yazılar, ipuçları ve güncellemeler.
+          {tenant?.businessName || siteConfig?.businessName || bt.terms.brandSuffix} tarafından paylaşılan son yazılar, ipuçları ve güncellemeler.
         </p>
 
         {posts.length === 0 ? (

@@ -11,7 +11,7 @@ export async function generateMetadata() {
 export default async function KullanimSartlariPage() {
   const tenant = await getCurrentTenant();
   const siteConfig = tenant ? await getSiteConfig() : null;
-  const businessName = siteConfig?.businessName || tenant?.businessName || "Platform";
+  const businessName = tenant?.businessName || siteConfig?.businessName || "Platform";
   const email = siteConfig?.email || tenant?.ownerEmail || "[E-posta]";
 
   const content = `
