@@ -191,12 +191,12 @@ function AdminLayoutInner({ children }) {
   ) : null;
 
   return (
-    <div className="admin-theme" style={{ display: "flex", minHeight: "100vh", background: "var(--bg, #0a0a0a)", color: "var(--text, #fff)" }}>
+    <div className="admin-theme" style={{ display: "flex", minHeight: "100vh", background: "#0a0a0a", color: "#fff", "--bg": "#0a0a0a", "--bg-card": "#111", "--text": "#fff", "--text-muted": "rgba(255,255,255,0.45)", "--text-subtle": "rgba(255,255,255,0.3)", "--border": "rgba(255,255,255,0.08)", "--accent": "#fff", "--btn-bg": "#fff", "--btn-text": "#000" }}>
       
       {/* Mobile Top Bar */}
       <div className="md:hidden" style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
-        background: "var(--bg, #0a0a0a)", borderBottom: "1px solid rgba(255,255,255,0.08)",
+        background: "#0a0a0a", borderBottom: "1px solid rgba(255,255,255,0.08)",
         display: "flex", flexDirection: "column"
       }}>
         <div style={{ padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -228,7 +228,7 @@ function AdminLayoutInner({ children }) {
 
       {/* Desktop Sidebar Background */}
       <div className="hidden md:block" style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: "280px", zIndex: 0, overflow: "hidden", borderRight: "1px solid rgba(255,255,255,0.1)" }}>
-         <div style={{ position: "absolute", inset: 0, background: "var(--bg, #0a0a0a)", opacity: 0.95, zIndex: 1 }} />
+         <div style={{ position: "absolute", inset: 0, background: "#0a0a0a", opacity: 0.95, zIndex: 1 }} />
       </div>
 
       {/* Sidebar Content - Desktop: static, Mobile: slide-over */}
@@ -241,7 +241,7 @@ function AdminLayoutInner({ children }) {
           zIndex: 60,
           padding: "2.5rem 1.5rem", 
           display: "flex", flexDirection: "column",
-          background: "var(--bg, #0a0a0a)",
+          background: "#0a0a0a",
           borderRight: "1px solid rgba(255,255,255,0.08)",
           transition: "transform 0.3s ease",
           overflowY: "auto",
