@@ -111,7 +111,7 @@ export default function FiibiLanding() {
   const [plans, setPlans] = useState(buildPlans({}));
   
   const [form, setForm] = useState({
-    businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "", referralCode: "", businessType: "", verificationCode: "", kvkkAccepted: false, serviceAgreementAccepted: false
+    businessName: "", ownerName: "", ownerEmail: "", ownerPhone: "", password: "", slug: "", selectedPlan: "", referralCode: "", businessType: "", verificationCode: "", kvkkAccepted: false, serviceAgreementAccepted: false, siteTemplate: "classic"
   });
 
   const allBusinessTypes = getBusinessTypeList();
@@ -191,7 +191,7 @@ export default function FiibiLanding() {
       return;
     }
 
-    setStep(5);
+    setStep(6);
     setLoading(false);
   }
 
@@ -204,11 +204,12 @@ export default function FiibiLanding() {
       ownerPhone: form.ownerPhone, password: form.password, slug: form.slug,
       selectedPlan: form.selectedPlan, referralCode: form.referralCode,
       businessType: form.businessType, verificationCode: form.verificationCode,
-      kvkkAccepted: form.kvkkAccepted, serviceAgreementAccepted: form.serviceAgreementAccepted
+      kvkkAccepted: form.kvkkAccepted, serviceAgreementAccepted: form.serviceAgreementAccepted,
+      siteTemplate: form.siteTemplate || "classic"
     });
     if (res.error) { setError(res.error); setLoading(false); return; }
     setResult(res.tenant);
-    setStep(6);
+    setStep(7);
     setLoading(false);
   }
 
@@ -300,14 +301,14 @@ export default function FiibiLanding() {
   if (showRegister) {
     return (
       <div style={{ fontFamily: "'DM Sans', sans-serif", minHeight: "100vh", background: C.black, color: C.white, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 16px" }}>
-        <div style={{ width: "100%", maxWidth: step === 1 ? 720 : 480 }}>
+        <div style={{ width: "100%", maxWidth: (step === 1 || step === 2) ? 720 : 480 }}>
           <button onClick={() => { if (step > 1) setStep(step - 1); else { setShowRegister(false); setStep(1); } }}
             style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", fontSize: 13, cursor: "pointer", marginBottom: 24, padding: 0, display: "flex", alignItems: "center", gap: 6, fontFamily: "'DM Sans', sans-serif" }}>
             ← {step === 1 ? "Ana Sayfa" : "Geri"}
           </button>
 
           <div style={{ display: "flex", gap: 6, marginBottom: 32 }}>
-            {[1, 2, 3, 4, 5, 6].map(s => (
+            {[1, 2, 3, 4, 5, 6, 7].map(s => (
               <div key={s} style={{ flex: 1, height: 3, background: s <= step ? C.white : "rgba(255,255,255,0.06)", transition: "all 0.4s" }} />
             ))}
           </div>
@@ -337,8 +338,66 @@ export default function FiibiLanding() {
             </>
           )}
 
-          {/* Step 2: Paket */}
+          {/* Step 2: Tema Seçimi */}
           {step === 2 && (
+            <>
+              <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8 }}>Temanızı Seçin</h2>
+              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>Sitenizin genel görünümünü belirleyin. Sonra değiştirebilirsiniz.</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10, marginBottom: 24 }}>
+                {require("@/lib/templates").getTemplateList().map(t => {
+                  const sel = form.siteTemplate === t.id;
+                  const p = t.preview;
+                  return (
+                    <div key={t.id} onClick={() => setForm(prev => ({ ...prev, siteTemplate: t.id }))}
+                      style={{
+                        cursor: "pointer", overflow: "hidden", transition: "all 0.2s",
+                        border: sel ? `2px solid ${C.orange}` : "1px solid rgba(255,255,255,0.08)",
+                        background: sel ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.01)",
+                        position: "relative",
+                      }}>
+                      {/* Mini Site Mockup */}
+                      <div style={{ padding: 10, background: p.bg, minHeight: 90, position: "relative" }}>
+                        {/* Mini navbar */}
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                          <div style={{ width: 20, height: 5, borderRadius: p.radius / 4, background: p.text, opacity: 0.7 }} />
+                          <div style={{ display: "flex", gap: 3 }}>
+                            <div style={{ width: 12, height: 3, borderRadius: p.radius / 4, background: p.text, opacity: 0.2 }} />
+                            <div style={{ width: 12, height: 3, borderRadius: p.radius / 4, background: p.text, opacity: 0.2 }} />
+                          </div>
+                        </div>
+                        {/* Mini hero */}
+                        <div style={{ width: "65%", height: 8, borderRadius: p.radius / 4, background: p.accent, marginBottom: 5, opacity: 0.9 }} />
+                        <div style={{ width: "40%", height: 4, borderRadius: p.radius / 4, background: p.text, opacity: 0.2, marginBottom: 10 }} />
+                        {/* Mini cards */}
+                        <div style={{ display: "flex", gap: 4 }}>
+                          <div style={{ flex: 1, height: 28, borderRadius: p.radius / 2, background: p.card, border: `1px solid ${p.text}11` }}>
+                            <div style={{ width: "55%", height: 3, borderRadius: 2, background: p.accent, margin: "6px 6px 3px", opacity: 0.6 }} />
+                            <div style={{ width: "75%", height: 2, borderRadius: 2, background: p.text, margin: "0 6px", opacity: 0.12 }} />
+                          </div>
+                          <div style={{ flex: 1, height: 28, borderRadius: p.radius / 2, background: p.card, border: `1px solid ${p.text}11` }}>
+                            <div style={{ width: "45%", height: 3, borderRadius: 2, background: p.accent, margin: "6px 6px 3px", opacity: 0.6 }} />
+                            <div style={{ width: "65%", height: 2, borderRadius: 2, background: p.text, margin: "0 6px", opacity: 0.12 }} />
+                          </div>
+                        </div>
+                      </div>
+                      {/* Tema info */}
+                      <div style={{ padding: "10px 12px" }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: C.white, marginBottom: 3 }}>{t.emoji} {t.name}</div>
+                        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", lineHeight: 1.4 }}>{t.desc}</div>
+                      </div>
+                      {sel && <div style={{ position: "absolute", top: 8, right: 8 }}><div style={{ width: 18, height: 18, background: C.orange, display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{color: C.white, fontSize: 10}}>✓</span></div></div>}
+                    </div>
+                  );
+                })}
+              </div>
+              <button onClick={() => setStep(3)} style={btnStyle}>
+                Devam →
+              </button>
+            </>
+          )}
+
+          {/* Step 3: Paket */}
+          {step === 3 && (
             <>
               <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8 }}>Planınızı Seçin</h2>
               <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>7 gün ücretsiz deneyin, beğenmezseniz iptal edin.</p>
@@ -368,15 +427,15 @@ export default function FiibiLanding() {
                   );
                 })}
               </div>
-              <button onClick={() => form.selectedPlan && setStep(3)} disabled={!form.selectedPlan} style={{ ...btnStyle, opacity: form.selectedPlan ? 1 : 0.3 }}>
+              <button onClick={() => form.selectedPlan && setStep(4)} disabled={!form.selectedPlan} style={{ ...btnStyle, opacity: form.selectedPlan ? 1 : 0.3 }}>
                 Devam →
               </button>
             </>
           )}
 
-          {/* Step 3: İşletme */}
-          {step === 3 && (
-            <form onSubmit={(e) => { e.preventDefault(); setStep(4); }}>
+          {/* Step 4: İşletme */}
+          {step === 4 && (
+            <form onSubmit={(e) => { e.preventDefault(); setStep(5); }}>
               <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>İşletme Bilgileri</h2>
                 <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>İşletme adınız ve web adresiniz.</p>
@@ -397,8 +456,8 @@ export default function FiibiLanding() {
             </form>
           )}
 
-          {/* Step 4: Hesap */}
-          {step === 4 && (
+          {/* Step 5: Hesap */}
+          {step === 5 && (
             <form onSubmit={handleAccountSubmit}>
               <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>Hesap Bilgileri</h2>
@@ -445,8 +504,8 @@ export default function FiibiLanding() {
             </form>
           )}
 
-          {/* Step 5: Doğrulama (OTP) */}
-          {step === 5 && (
+          {/* Step 6: Doğrulama (OTP) */}
+          {step === 6 && (
             <form onSubmit={handleVerifyAndRegister}>
               <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>E-Posta Doğrulama</h2>
@@ -462,8 +521,8 @@ export default function FiibiLanding() {
             </form>
           )}
 
-          {/* Step 6: Başarılı */}
-          {step === 6 && result && (
+          {/* Step 7: Başarılı */}
+          {step === 7 && result && (
             <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: "56px 40px", textAlign: "center" }}>
               <div style={{ width: 80, height: 80, background: "rgba(255,255,255,0.04)", border: "2px solid rgba(255,255,255,0.15)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 24, borderRadius: 0 }}>
                 <span style={{ fontSize: 32, color: C.white }}>✓</span>

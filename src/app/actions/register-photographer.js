@@ -58,7 +58,7 @@ export async function registerBusiness(data) {
     const { 
       businessName, ownerName, ownerEmail, ownerPhone, password, slug, 
       selectedPlan, referralCode: inputReferral, businessType, verificationCode,
-      kvkkAccepted, serviceAgreementAccepted 
+      kvkkAccepted, serviceAgreementAccepted, siteTemplate 
     } = data;
 
     // Validasyon
@@ -182,6 +182,7 @@ export async function registerBusiness(data) {
           notifyPayment: true,
           notifyReminder: true,
           notifyPhotosReady: true,
+          siteTemplate: siteTemplate || "classic",
         }
       });
 
