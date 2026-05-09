@@ -1680,17 +1680,22 @@ export default function SettingsPage() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
               {config.instagramReels.map((reel, i) => {
                 // Eski format uyumluluğu: string → object
-                const reelObj = typeof reel === "string" ? { url: reel, coverUrl: "" } : reel;
+                const reelObj = typeof reel === "string" ? { url: reel, coverUrl: "", coverType: "image" } : reel;
+                const isVideo = reelObj.coverType === "video" || (reelObj.coverUrl && /\.(mp4|mov|webm)/i.test(reelObj.coverUrl));
                 return (
                   <div key={i} style={{ position: "relative", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, overflow: "hidden" }}>
-                    {/* Kapak Görseli */}
+                    {/* Kapak Görseli / Video */}
                     <div style={{ aspectRatio: "9/16", background: "#111", position: "relative", overflow: "hidden" }}>
                       {reelObj.coverUrl ? (
-                        <img src={reelObj.coverUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        isVideo ? (
+                          <video src={reelObj.coverUrl} autoPlay muted loop playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        ) : (
+                          <img src={reelObj.coverUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        )
                       ) : (
                         <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
                           <div style={{ fontSize: 28, opacity: 0.2 }}>🎬</div>
-                          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>Kapak fotoğrafı ekle</div>
+                          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>Fotoğraf veya video ekle</div>
                         </div>
                       )}
                       {/* Silme butonu */}
@@ -1707,12 +1712,13 @@ export default function SettingsPage() {
                     <div style={{ padding: "8px 10px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                       <CldUploadWidget
                         uploadPreset="fiibi_unsigned"
-                        options={{ maxFiles: 1, sources: ["local", "camera"], resourceType: "image", folder: "reels" }}
+                        options={{ maxFiles: 1, sources: ["local", "camera"], resourceType: "auto", folder: "reels" }}
                         onSuccess={(result) => {
                           const reels = [...config.instagramReels].map((r, idx) => {
                             if (idx !== i) return r;
                             const obj = typeof r === "string" ? { url: r, coverUrl: "" } : { ...r };
                             obj.coverUrl = result.info.secure_url;
+                            obj.coverType = result.info.resource_type === "video" ? "video" : "image";
                             return obj;
                           });
                           setConfig({ ...config, instagramReels: reels });
@@ -1720,7 +1726,7 @@ export default function SettingsPage() {
                       >
                         {({ open }) => (
                           <button onClick={() => open()} style={{ width: "100%", padding: "6px 0", fontSize: 11, fontWeight: 600, background: reelObj.coverUrl ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", cursor: "pointer", borderRadius: 4, marginBottom: 6 }}>
-                            {reelObj.coverUrl ? "📷 Kapağı Değiştir" : "📷 Kapak Yükle"}
+                            {reelObj.coverUrl ? "🔄 Kapağı Değiştir" : "📷 Fotoğraf / Video Yükle"}
                           </button>
                         )}
                       </CldUploadWidget>

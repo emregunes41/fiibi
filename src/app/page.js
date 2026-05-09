@@ -185,10 +185,16 @@ export default async function HomePage() {
               </h2>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(${validReels.length <= 2 ? '220px' : '180px'}, 1fr))`, gap: 14, justifyItems: "center" }}>
-              {validReels.map((reel, i) => (
+              {validReels.map((reel, i) => {
+                const isVideo = reel.coverType === "video" || /\.(mp4|mov|webm)/i.test(reel.coverUrl);
+                return (
                 <a key={i} href={reel.url} target="_blank" rel="noopener noreferrer" style={{ display: "block", width: "100%", maxWidth: 260, aspectRatio: "9/16", borderRadius: 16, overflow: "hidden", position: "relative", textDecoration: "none", transition: "transform 0.3s, box-shadow 0.3s" }} className="hover:-translate-y-2 hover:shadow-xl">
-                  {/* Cover image */}
-                  <img src={reel.coverUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  {/* Cover media */}
+                  {isVideo ? (
+                    <video src={reel.coverUrl} autoPlay muted loop playsInline style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  ) : (
+                    <img src={reel.coverUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  )}
                   {/* Subtle dark gradient at bottom */}
                   <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "40%", background: "linear-gradient(to top, rgba(0,0,0,0.5), transparent)", zIndex: 1 }} />
                   {/* Play button */}
@@ -204,7 +210,8 @@ export default async function HomePage() {
                     <Instagram size={16} color="white" style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.6))" }} />
                   </div>
                 </a>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
