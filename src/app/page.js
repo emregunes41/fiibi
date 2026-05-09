@@ -405,12 +405,16 @@ export default async function HomePage() {
                         WhatsApp
                       </a>
                     )}
-                    {siteConfig?.instagram && (
-                      <a href={siteConfig.instagram} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
+                    {siteConfig?.instagram && (() => {
+                      const raw = siteConfig.instagram.trim();
+                      const igUrl = raw.startsWith("http") ? raw : `https://www.instagram.com/${raw.replace(/^@/, "")}`;
+                      return (
+                      <a href={igUrl} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
                         <span className="w-8 h-8 flex items-center justify-center group-hover:bg-[#E1306C]/20 group-hover:border-[#E1306C]/30 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><Instagram size={13} strokeWidth={1.5} /></span>
                         Instagram
                       </a>
-                    )}
+                      );
+                    })()}
                     {siteConfig?.googleMapsUrl && (
                       <a href={siteConfig.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
                         <span className="w-8 h-8 flex items-center justify-center group-hover:bg-[#4285F4]/20 group-hover:border-[#4285F4]/30 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><MapPin size={13} strokeWidth={1.5} /></span>
