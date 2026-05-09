@@ -413,6 +413,7 @@ model GlobalSettings {
   phone        String   @default("")
   email        String   @default("")
   instagram    String   @default("")
+  instagramReels Json    @default("[]")
   whatsapp     String   @default("")
   cashPromoText String  @default("")
   heroBgType   String   @default("video")

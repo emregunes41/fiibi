@@ -215,7 +215,8 @@ export default function SettingsPage() {
     setSaving(true);
     setMessage("");
     setIsError(false);
-    const res = await updateSiteConfig(config);
+    const { _reelInput, _tenant, ...saveData } = config;
+    const res = await updateSiteConfig(saveData);
     if (res.success) {
       setMessage("Ayarlar başarıyla güncellendi.");
       router.refresh();
