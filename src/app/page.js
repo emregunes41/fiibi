@@ -170,6 +170,14 @@ export default async function HomePage() {
     reels: () => {
       const reels = Array.isArray(siteConfig?.instagramReels) ? siteConfig.instagramReels : [];
       if (reels.length === 0) return null;
+      const gradients = [
+        "linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%)",
+        "linear-gradient(135deg, #405de6 0%, #833ab4 50%, #c13584 100%)",
+        "linear-gradient(135deg, #fd1d1d 0%, #e1306c 50%, #c13584 100%)",
+        "linear-gradient(135deg, #fcb045 0%, #fd1d1d 50%, #833ab4 100%)",
+        "linear-gradient(135deg, #c13584 0%, #833ab4 50%, #405de6 100%)",
+        "linear-gradient(135deg, #e1306c 0%, #fd1d1d 50%, #fcb045 100%)",
+      ];
       return (
         <section key="reels" className="py-16 border-t border-white/5">
           <div className="section-container">
@@ -181,21 +189,31 @@ export default async function HomePage() {
                 Son Paylaşımlar
               </h2>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(${reels.length === 1 ? '300px' : '250px'}, 1fr))`, gap: 12, justifyItems: "center" }}>
+            <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(${reels.length <= 2 ? '200px' : '160px'}, 1fr))`, gap: 14, justifyItems: "center" }}>
               {reels.map((url, i) => {
                 const match = url.match(/\/(reel|p)\/([A-Za-z0-9_-]+)/);
-                const reelId = match ? match[2] : null;
-                const type = match ? match[1] : "reel";
-                if (!reelId) return null;
+                if (!match) return null;
                 return (
-                  <a key={i} href={url} target="_blank" rel="noopener noreferrer" style={{ display: "block", width: "100%", maxWidth: 320, overflow: "hidden", borderRadius: "var(--radius)", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", textDecoration: "none", transition: "border-color 0.2s, transform 0.2s" }} className="hover:border-white/15 hover:-translate-y-1">
-                    <iframe
-                      src={`https://www.instagram.com/${type}/${reelId}/embed/`}
-                      style={{ width: "100%", height: 380, border: "none", pointerEvents: "none" }}
-                      scrolling="no"
-                      allowTransparency="true"
-                      loading="lazy"
-                    />
+                  <a key={i} href={url} target="_blank" rel="noopener noreferrer" style={{ display: "block", width: "100%", maxWidth: 240, aspectRatio: "9/16", borderRadius: 16, overflow: "hidden", position: "relative", textDecoration: "none", transition: "transform 0.3s, box-shadow 0.3s", background: gradients[i % gradients.length] }} className="hover:-translate-y-2 hover:shadow-lg">
+                    {/* Dark overlay */}
+                    <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.15)", zIndex: 1 }} />
+                    {/* Play button */}
+                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>
+                      <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(255,255,255,0.2)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,255,255,0.3)", transition: "transform 0.2s, background 0.2s" }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white" style={{ marginLeft: 2 }}>
+                          <polygon points="5,3 19,12 5,21" />
+                        </svg>
+                      </div>
+                    </div>
+                    {/* Instagram icon */}
+                    <div style={{ position: "absolute", top: 12, right: 12, zIndex: 2, opacity: 0.7 }}>
+                      <Instagram size={18} color="white" />
+                    </div>
+                    {/* Reels label */}
+                    <div style={{ position: "absolute", bottom: 14, left: 14, right: 14, zIndex: 2 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.9)", letterSpacing: "0.02em" }}>Reels</div>
+                      <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>Instagram'da izle →</div>
+                    </div>
                   </a>
                 );
               })}
