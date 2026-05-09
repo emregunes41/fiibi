@@ -796,27 +796,40 @@ export default function SettingsPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
               <label style={label}>Instagram</label>
-              <div style={{ position: "relative" }}>
-                <Instagram size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.3)", pointerEvents: "none" }} />
+              <div style={{ display: "flex" }}>
+                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRight: "none", padding: "0 10px", display: "flex", alignItems: "center", fontSize: 12, color: "rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>
+                  <Instagram size={12} style={{ marginRight: 6, opacity: 0.5 }} />instagram.com/
+                </div>
                 <input
                   type="text"
                   value={config.instagram}
-                  onChange={(e) => setConfig({ ...config, instagram: e.target.value })}
-                  style={inpIcon}
-                  placeholder="https://instagram.com/studyonuz"
+                  onChange={(e) => {
+                    let val = e.target.value.replace(/^@/, "").replace(/\s/g, "");
+                    if (val.includes("instagram.com/")) val = val.split("instagram.com/").pop();
+                    setConfig({ ...config, instagram: val });
+                  }}
+                  style={{ ...inp, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                  placeholder="kullaniciadi"
                 />
               </div>
             </div>
             <div>
               <label style={label}>WhatsApp</label>
-              <div style={{ position: "relative" }}>
-                <MessageCircle size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.3)", pointerEvents: "none" }} />
+              <div style={{ display: "flex" }}>
+                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRight: "none", padding: "0 10px", display: "flex", alignItems: "center", fontSize: 12, color: "rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>
+                  <MessageCircle size={12} style={{ marginRight: 6, opacity: 0.5 }} />+90
+                </div>
                 <input
-                  type="text"
-                  value={config.whatsapp}
-                  onChange={(e) => setConfig({ ...config, whatsapp: e.target.value })}
-                  style={inpIcon}
-                  placeholder="905550000000"
+                  type="tel"
+                  value={config.whatsapp ? config.whatsapp.replace(/^90/, "") : ""}
+                  onChange={(e) => {
+                    let val = e.target.value.replace(/\D/g, "");
+                    if (val.startsWith("0")) val = val.slice(1);
+                    setConfig({ ...config, whatsapp: val ? "90" + val : "" });
+                  }}
+                  style={{ ...inp, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                  placeholder="5XX XXX XX XX"
+                  maxLength={10}
                 />
               </div>
             </div>
