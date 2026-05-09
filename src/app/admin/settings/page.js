@@ -1711,7 +1711,7 @@ export default function SettingsPage() {
                     {/* Upload + URL bilgisi */}
                     <div style={{ padding: "8px 10px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                       <CldUploadWidget
-                        uploadPreset="fiibi_unsigned"
+                        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
                         options={{ maxFiles: 1, sources: ["local", "camera"], resourceType: "auto", folder: "reels" }}
                         onSuccess={(result) => {
                           const reels = [...config.instagramReels].map((r, idx) => {
