@@ -138,7 +138,7 @@ export default async function HomePage() {
   const footerTagline = siteConfig?.footerTagline || bt.defaultSlogan;
 
   // Section ordering
-  const DEFAULT_ORDER = ["events", "banners", "content", "portfolio", "blog", "services"];
+  const DEFAULT_ORDER = ["events", "banners", "reels", "content", "portfolio", "blog", "services"];
   let sectionOrder = DEFAULT_ORDER;
   try {
     const saved = siteConfig?.sectionOrder;
@@ -166,6 +166,44 @@ export default async function HomePage() {
         </div>
       </section>
     ) : null,
+
+    reels: () => {
+      const reels = Array.isArray(siteConfig?.instagramReels) ? siteConfig.instagramReels : [];
+      if (reels.length === 0) return null;
+      return (
+        <section key="reels" className="py-16 border-t border-white/5">
+          <div className="section-container">
+            <div style={{ marginBottom: 32, textAlign: "center" }}>
+              <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>
+                <Instagram size={12} style={{ display: "inline", verticalAlign: "middle", marginRight: 6 }} />INSTAGRAM
+              </div>
+              <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: "var(--heading-weight)", letterSpacing: "-0.03em", margin: 0 }}>
+                Son Paylaşımlar
+              </h2>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(${reels.length === 1 ? '300px' : '250px'}, 1fr))`, gap: 12, justifyItems: "center" }}>
+              {reels.map((url, i) => {
+                const match = url.match(/\/(reel|p)\/([A-Za-z0-9_-]+)/);
+                const reelId = match ? match[2] : null;
+                const type = match ? match[1] : "reel";
+                if (!reelId) return null;
+                return (
+                  <a key={i} href={url} target="_blank" rel="noopener noreferrer" style={{ display: "block", width: "100%", maxWidth: 320, overflow: "hidden", borderRadius: "var(--radius)", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", textDecoration: "none", transition: "border-color 0.2s, transform 0.2s" }} className="hover:border-white/15 hover:-translate-y-1">
+                    <iframe
+                      src={`https://www.instagram.com/${type}/${reelId}/embed/`}
+                      style={{ width: "100%", height: 380, border: "none", pointerEvents: "none" }}
+                      scrolling="no"
+                      allowTransparency="true"
+                      loading="lazy"
+                    />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      );
+    },
 
     content: () => contentBlocks && contentBlocks.filter(b => b.isActive).length > 0 ? (
       <section key="content" className="border-t border-white/5" style={{ paddingTop: 20, paddingBottom: 40 }}>

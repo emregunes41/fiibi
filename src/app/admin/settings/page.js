@@ -848,6 +848,88 @@ export default function SettingsPage() {
               />
             </div>
           </div>
+
+          {/* Instagram Reels */}
+          <div style={{ marginTop: 20 }}>
+            <label style={label}>Instagram Reels</label>
+            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 12, marginTop: -2 }}>Reels URL'lerini ekleyin, sitenizde önizlemesiyle birlikte görünsün.</p>
+            
+            <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+              <input
+                type="text"
+                value={config._reelInput || ""}
+                onChange={(e) => setConfig({ ...config, _reelInput: e.target.value })}
+                style={{ ...inp, flex: 1 }}
+                placeholder="https://www.instagram.com/reel/XXXXX/"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const url = (config._reelInput || "").trim();
+                    if (!url) return;
+                    const reels = Array.isArray(config.instagramReels) ? [...config.instagramReels] : [];
+                    if (reels.length >= 6) return;
+                    if (reels.includes(url)) return;
+                    setConfig({ ...config, instagramReels: [...reels, url], _reelInput: "" });
+                  }
+                }}
+              />
+              <button
+                onClick={() => {
+                  const url = (config._reelInput || "").trim();
+                  if (!url) return;
+                  const reels = Array.isArray(config.instagramReels) ? [...config.instagramReels] : [];
+                  if (reels.length >= 6) return;
+                  if (reels.includes(url)) return;
+                  setConfig({ ...config, instagramReels: [...reels, url], _reelInput: "" });
+                }}
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "0 16px", fontSize: 12, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
+              >
+                + Ekle
+              </button>
+            </div>
+
+            {Array.isArray(config.instagramReels) && config.instagramReels.length > 0 && (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 8 }}>
+                {config.instagramReels.map((url, i) => {
+                  // Extract reel ID from URL
+                  const match = url.match(/\/(reel|p)\/([A-Za-z0-9_-]+)/);
+                  const reelId = match ? match[2] : null;
+                  return (
+                    <div key={i} style={{ position: "relative", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", overflow: "hidden" }}>
+                      {reelId ? (
+                        <iframe
+                          src={`https://www.instagram.com/reel/${reelId}/embed/`}
+                          style={{ width: "100%", height: 220, border: "none" }}
+                          scrolling="no"
+                          allowTransparency="true"
+                        />
+                      ) : (
+                        <div style={{ height: 220, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, color: "rgba(255,255,255,0.3)", padding: 12, textAlign: "center" }}>
+                          Geçersiz URL
+                        </div>
+                      )}
+                      <button
+                        onClick={() => {
+                          const reels = [...config.instagramReels];
+                          reels.splice(i, 1);
+                          setConfig({ ...config, instagramReels: reels });
+                        }}
+                        style={{ position: "absolute", top: 6, right: 6, width: 22, height: 22, background: "rgba(0,0,0,0.7)", border: "none", color: "#fff", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10 }}
+                      >
+                        ✕
+                      </button>
+                      <div style={{ padding: "6px 8px", borderTop: "1px solid rgba(255,255,255,0.06)", fontSize: 10, color: "rgba(255,255,255,0.25)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {url}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {Array.isArray(config.instagramReels) && config.instagramReels.length > 0 && (
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", marginTop: 8 }}>{config.instagramReels.length}/6 reel eklendi</div>
+            )}
+          </div>
         </div>}
 
         {/* 5. Bildirim Kanalları */}
