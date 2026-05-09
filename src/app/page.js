@@ -170,6 +170,9 @@ export default async function HomePage() {
     reels: () => {
       const reels = Array.isArray(siteConfig?.instagramReels) ? siteConfig.instagramReels : [];
       if (reels.length === 0) return null;
+      // Filter only reels with cover images
+      const validReels = reels.map(r => typeof r === "string" ? { url: r, coverUrl: "" } : r).filter(r => r.coverUrl);
+      if (validReels.length === 0) return null;
       return (
         <section key="reels" className="py-16 border-t border-white/5">
           <div className="section-container">
@@ -181,37 +184,27 @@ export default async function HomePage() {
                 Son Paylaşımlar
               </h2>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(${reels.length <= 2 ? '220px' : '180px'}, 1fr))`, gap: 14, justifyItems: "center" }}>
-              {reels.map((url, i) => {
-                const match = url.match(/\/(reel|p)\/([A-Za-z0-9_-]+)/);
-                if (!match) return null;
-                const type = match[1];
-                const reelId = match[2];
-                return (
-                  <a key={i} href={url} target="_blank" rel="noopener noreferrer" style={{ display: "block", width: "100%", maxWidth: 260, aspectRatio: "9/16", borderRadius: 16, overflow: "hidden", position: "relative", textDecoration: "none", transition: "transform 0.3s, box-shadow 0.3s", background: "#111" }} className="hover:-translate-y-2 hover:shadow-lg">
-                    {/* Cropped iframe - shifts up to hide profile header, overflow clips footer */}
-                    <iframe
-                      src={`https://www.instagram.com/${type}/${reelId}/embed/`}
-                      style={{ position: "absolute", top: -64, left: -1, width: "calc(100% + 2px)", height: "calc(100% + 160px)", border: "none", pointerEvents: "none" }}
-                      scrolling="no"
-                      allowTransparency="true"
-                      loading="lazy"
-                    />
-                    {/* Play button overlay */}
-                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 3, background: "rgba(0,0,0,0.08)" }}>
-                      <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,255,255,0.2)", transition: "transform 0.2s" }}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white" style={{ marginLeft: 2 }}>
-                          <polygon points="5,3 19,12 5,21" />
-                        </svg>
-                      </div>
+            <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(${validReels.length <= 2 ? '220px' : '180px'}, 1fr))`, gap: 14, justifyItems: "center" }}>
+              {validReels.map((reel, i) => (
+                <a key={i} href={reel.url} target="_blank" rel="noopener noreferrer" style={{ display: "block", width: "100%", maxWidth: 260, aspectRatio: "9/16", borderRadius: 16, overflow: "hidden", position: "relative", textDecoration: "none", transition: "transform 0.3s, box-shadow 0.3s" }} className="hover:-translate-y-2 hover:shadow-xl">
+                  {/* Cover image */}
+                  <img src={reel.coverUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  {/* Subtle dark gradient at bottom */}
+                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "40%", background: "linear-gradient(to top, rgba(0,0,0,0.5), transparent)", zIndex: 1 }} />
+                  {/* Play button */}
+                  <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>
+                    <div style={{ width: 50, height: 50, borderRadius: "50%", background: "rgba(0,0,0,0.3)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,255,255,0.25)", transition: "transform 0.2s, background 0.2s" }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="white" style={{ marginLeft: 2 }}>
+                        <polygon points="5,3 19,12 5,21" />
+                      </svg>
                     </div>
-                    {/* Instagram icon */}
-                    <div style={{ position: "absolute", top: 10, right: 10, zIndex: 4, opacity: 0.8 }}>
-                      <Instagram size={16} color="white" style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.5))" }} />
-                    </div>
-                  </a>
-                );
-              })}
+                  </div>
+                  {/* Instagram icon */}
+                  <div style={{ position: "absolute", top: 10, right: 10, zIndex: 3, opacity: 0.9 }}>
+                    <Instagram size={16} color="white" style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.6))" }} />
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
         </section>

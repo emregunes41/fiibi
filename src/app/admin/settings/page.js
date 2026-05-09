@@ -1637,7 +1637,7 @@ export default function SettingsPage() {
 
       {/* ── Instagram Reels ── */}
       {activeTab === "icerik" && subTab === "reels" && <div style={sectionCard}>
-        {sectionHeader(Instagram, "Instagram Reels", "Reels URL'lerini ekleyin, sitenizde önizlemesiyle birlikte görünsün.")}
+        {sectionHeader(Instagram, "Instagram Reels", "Reels URL'lerini ve kapak fotoğraflarını ekleyin.")}
 
         <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
           <input
@@ -1653,8 +1653,9 @@ export default function SettingsPage() {
                 if (!url) return;
                 const reels = Array.isArray(config.instagramReels) ? [...config.instagramReels] : [];
                 if (reels.length >= 6) return;
-                if (reels.includes(url)) return;
-                setConfig({ ...config, instagramReels: [...reels, url], _reelInput: "" });
+                const exists = reels.some(r => (typeof r === "string" ? r : r.url) === url);
+                if (exists) return;
+                setConfig({ ...config, instagramReels: [...reels, { url, coverUrl: "" }], _reelInput: "" });
               }
             }}
           />
@@ -1664,8 +1665,9 @@ export default function SettingsPage() {
               if (!url) return;
               const reels = Array.isArray(config.instagramReels) ? [...config.instagramReels] : [];
               if (reels.length >= 6) return;
-              if (reels.includes(url)) return;
-              setConfig({ ...config, instagramReels: [...reels, url], _reelInput: "" });
+              const exists = reels.some(r => (typeof r === "string" ? r : r.url) === url);
+              if (exists) return;
+              setConfig({ ...config, instagramReels: [...reels, { url, coverUrl: "" }], _reelInput: "" });
             }}
             style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "0 16px", fontSize: 12, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
           >
@@ -1675,37 +1677,56 @@ export default function SettingsPage() {
 
         {Array.isArray(config.instagramReels) && config.instagramReels.length > 0 ? (
           <>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10 }}>
-              {config.instagramReels.map((url, i) => {
-                const match = url.match(/\/(reel|p)\/([A-Za-z0-9_-]+)/);
-                const reelId = match ? match[2] : null;
-                const type = match ? match[1] : "reel";
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
+              {config.instagramReels.map((reel, i) => {
+                // Eski format uyumluluğu: string → object
+                const reelObj = typeof reel === "string" ? { url: reel, coverUrl: "" } : reel;
                 return (
-                  <div key={i} style={{ position: "relative", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", overflow: "hidden" }}>
-                    {reelId ? (
-                      <iframe
-                        src={`https://www.instagram.com/${type}/${reelId}/embed/`}
-                        style={{ width: "100%", height: 280, border: "none" }}
-                        scrolling="no"
-                        allowTransparency="true"
-                      />
-                    ) : (
-                      <div style={{ height: 280, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, color: "rgba(255,255,255,0.3)", padding: 12, textAlign: "center" }}>
-                        Geçersiz URL
+                  <div key={i} style={{ position: "relative", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, overflow: "hidden" }}>
+                    {/* Kapak Görseli */}
+                    <div style={{ aspectRatio: "9/16", background: "#111", position: "relative", overflow: "hidden" }}>
+                      {reelObj.coverUrl ? (
+                        <img src={reelObj.coverUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      ) : (
+                        <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                          <div style={{ fontSize: 28, opacity: 0.2 }}>🎬</div>
+                          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>Kapak fotoğrafı ekle</div>
+                        </div>
+                      )}
+                      {/* Silme butonu */}
+                      <button
+                        onClick={() => {
+                          const reels = [...config.instagramReels];
+                          reels.splice(i, 1);
+                          setConfig({ ...config, instagramReels: reels });
+                        }}
+                        style={{ position: "absolute", top: 6, right: 6, width: 22, height: 22, background: "rgba(0,0,0,0.7)", border: "none", color: "#fff", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, zIndex: 5 }}
+                      >✕</button>
+                    </div>
+                    {/* Upload + URL bilgisi */}
+                    <div style={{ padding: "8px 10px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                      <CldUploadWidget
+                        uploadPreset="fiibi_unsigned"
+                        options={{ maxFiles: 1, sources: ["local", "camera"], resourceType: "image", folder: "reels" }}
+                        onSuccess={(result) => {
+                          const reels = [...config.instagramReels].map((r, idx) => {
+                            if (idx !== i) return r;
+                            const obj = typeof r === "string" ? { url: r, coverUrl: "" } : { ...r };
+                            obj.coverUrl = result.info.secure_url;
+                            return obj;
+                          });
+                          setConfig({ ...config, instagramReels: reels });
+                        }}
+                      >
+                        {({ open }) => (
+                          <button onClick={() => open()} style={{ width: "100%", padding: "6px 0", fontSize: 11, fontWeight: 600, background: reelObj.coverUrl ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", cursor: "pointer", borderRadius: 4, marginBottom: 6 }}>
+                            {reelObj.coverUrl ? "📷 Kapağı Değiştir" : "📷 Kapak Yükle"}
+                          </button>
+                        )}
+                      </CldUploadWidget>
+                      <div style={{ fontSize: 9, color: "rgba(255,255,255,0.2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {reelObj.url}
                       </div>
-                    )}
-                    <button
-                      onClick={() => {
-                        const reels = [...config.instagramReels];
-                        reels.splice(i, 1);
-                        setConfig({ ...config, instagramReels: reels });
-                      }}
-                      style={{ position: "absolute", top: 6, right: 6, width: 24, height: 24, background: "rgba(0,0,0,0.7)", border: "none", color: "#fff", fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10 }}
-                    >
-                      ✕
-                    </button>
-                    <div style={{ padding: "8px 10px", borderTop: "1px solid rgba(255,255,255,0.06)", fontSize: 10, color: "rgba(255,255,255,0.25)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {url}
                     </div>
                   </div>
                 );
