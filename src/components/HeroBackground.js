@@ -46,13 +46,10 @@ export default function HeroBackground({ bgType, bgUrl, bgColor, businessType, f
 
   if (bgType === "color") {
     return (
-      <>
-        <div 
-          className="global-video-bg" 
-          style={{ background: bgColor || "#000000" }} 
-        />
-        <div className="global-video-overlay" />
-      </>
+      <div 
+        className="global-video-bg" 
+        style={{ background: bgColor || "#000000" }} 
+      />
     );
   }
 
