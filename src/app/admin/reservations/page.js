@@ -754,13 +754,13 @@ export default function ReservationsPage() {
                         style={{
                           padding: "4px 6px", borderRadius: 0, fontSize: "0.68rem",
                           border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)",
-                          color: "#fff", outline: "none",
+                          color: "#fff", outline: "none", colorScheme: "dark",
                         }}
                       >
-                        <option value="PENDING">Bekleyen</option>
-                        <option value="CONFIRMED">Onayla</option>
-                        <option value="COMPLETED">Tamamlandı</option>
-                        <option value="CANCELLED">İptal Et</option>
+                        <option value="PENDING" style={{color:"#fff", background:"#222"}}>Bekleyen</option>
+                        <option value="CONFIRMED" style={{color:"#fff", background:"#222"}}>Onayla</option>
+                        <option value="COMPLETED" style={{color:"#fff", background:"#222"}}>Tamamlandı</option>
+                        <option value="CANCELLED" style={{color:"#fff", background:"#222"}}>İptal Et</option>
                       </select>
                       <button 
                         onClick={() => { setReminderResult(null); setDetailModal({ isOpen: true, data: res }); }}

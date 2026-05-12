@@ -174,13 +174,13 @@ export default function ReservationHubModal({
                 style={{
                   padding: "4px 10px", borderRadius: 0, fontSize: "0.65rem", fontWeight: 800, textTransform: "uppercase",
                   background: sc.bg, color: sc.c, border: sc.b, outline: "none", cursor: "pointer",
-                  WebkitAppearance: "none", appearance: "none"
+                  WebkitAppearance: "none", appearance: "none", colorScheme: "dark"
                 }}
               >
-                <option value="PENDING" style={{ color: "#000" }}>Bekleyen</option>
-                <option value="CONFIRMED" style={{ color: "#000" }}>Onaylı</option>
-                <option value="COMPLETED" style={{ color: "#000" }}>Tamamlandı</option>
-                <option value="CANCELLED" style={{ color: "#000" }}>İptal</option>
+                <option value="PENDING" style={{color:"#fff", background:"#222"}}>Bekleyen</option>
+                <option value="CONFIRMED" style={{color:"#fff", background:"#222"}}>Onaylı</option>
+                <option value="COMPLETED" style={{color:"#fff", background:"#222"}}>Tamamlandı</option>
+                <option value="CANCELLED" style={{color:"#fff", background:"#222"}}>İptal</option>
               </select>
               <button onClick={enterEditMode} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
                 <Edit2 size={11} /> Düzenle
@@ -486,7 +486,7 @@ export default function ReservationHubModal({
                       <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>+ Yeni Ödeme Ekle</div>
                       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "6px" }}>
                         <input required type="number" placeholder="Tutar ₺" style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem", minWidth: 80}} value={paymentForm.amount} onChange={(e) => setPaymentForm({...paymentForm, amount: e.target.value})} />
-                        <select style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem", minWidth: 80}} value={paymentForm.method} onChange={(e) => setPaymentForm({...paymentForm, method: e.target.value})}>
+                        <select style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem", minWidth: 80, colorScheme: "dark"}} value={paymentForm.method} onChange={(e) => setPaymentForm({...paymentForm, method: e.target.value})}>
                           <option value="CASH">Nakit</option>
                           <option value="BANK_TRANSFER">Havale/EFT</option>
                           {paymentMode !== "cash" && <option value="CREDIT_CARD">Kart</option>}
@@ -516,13 +516,13 @@ export default function ReservationHubModal({
                        setData(prev => ({ ...prev, workflowStatus: newWfStatus }));
                        if(onUpdate) onUpdate();
                      }}
-                     style={{ ...inp, fontSize: "0.72rem", padding: "6px" }}
+                     style={{ ...inp, fontSize: "0.72rem", padding: "6px", colorScheme: "dark" }}
                    >
-                     <option value="PENDING" style={{color:"#000"}}>Çekim Bekleniyor</option>
-                     <option value="EDITING" style={{color:"#000"}}>Düzenleniyor (İşleniyor)</option>
-                     <option value="SELECTION_PENDING" style={{color:"#000"}}>Müşteri Seçimi Bekleniyor</option>
-                     <option value="PREPARING" style={{color:"#000"}}>Proje Hazırlanıyor</option>
-                     <option value="COMPLETED" style={{color:"#000"}}>İşlem Tamamlandı</option>
+                     <option value="PENDING" style={{color:"#fff", background:"#222"}}>Çekim Bekleniyor</option>
+                     <option value="EDITING" style={{color:"#fff", background:"#222"}}>Düzenleniyor (İşleniyor)</option>
+                     <option value="SELECTION_PENDING" style={{color:"#fff", background:"#222"}}>Müşteri Seçimi Bekleniyor</option>
+                     <option value="PREPARING" style={{color:"#fff", background:"#222"}}>Proje Hazırlanıyor</option>
+                     <option value="COMPLETED" style={{color:"#fff", background:"#222"}}>İşlem Tamamlandı</option>
                    </select>
                  </div>
                  <div style={{ flex: 2, minWidth: 200, display: "flex", gap: "6px" }}>
