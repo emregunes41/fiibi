@@ -510,7 +510,7 @@ export default function FiibiLanding() {
 
   // --- LANDING PAGE ---
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", color: C.black, background: C.white, minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", color: C.black, background: C.white, minHeight: "100vh", overflowX: "hidden" }}>
 
       {/* ── NAV ── */}
       <nav style={{
@@ -521,9 +521,9 @@ export default function FiibiLanding() {
         borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "none",
         transition: "all 0.3s", padding: "0 32px",
       }}>
-        <div style={{ ...wrap, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div className="fiibi-nav-wrapper" style={{ ...wrap, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px" }}>
           {scrolled ? <Logo size={40} /> : <Logo dark size={60} />}
-          <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+          <div className="fiibi-nav-buttons" style={{ display: "flex", alignItems: "center", gap: 28 }}>
             <a href="#ozellikler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.features}</a>
             <a href="#sektorler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.sectors}</a>
             <a href="#fiyatlar" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.pricing}</a>
@@ -536,7 +536,7 @@ export default function FiibiLanding() {
               background: C.orange, color: C.white, padding: "10px 24px",
               fontSize: 14, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
             }}>{t.landing.nav.startFree}</button>
-            <div style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)" }}>
+            <div className="fiibi-lang-switch" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)" }}>
               <LanguageSwitcher />
             </div>
           </div>
@@ -551,6 +551,16 @@ export default function FiibiLanding() {
           .fiibi-grid-sectors{grid-template-columns:repeat(3,1fr) !important;}
           .fiibi-stats{flex-direction:column !important;gap:24px !important;}
           .fiibi-hero-form{flex-direction:column !important;}
+          .fiibi-nav-buttons{gap:6px !important;}
+          .fiibi-nav-buttons button{padding:8px 12px !important;font-size:12px !important;}
+          .fiibi-nav-wrapper{padding:0 12px !important;}
+          .fiibi-lang-switch{display:none !important;}
+        }
+        @media(max-width:400px){
+          .fiibi-nav-buttons button{padding:7px 10px !important;font-size:11px !important;}
+        }
+        @media(max-width:768px){
+          .fiibi-hero-content{padding:60px 16px 32px !important;}
         }
       `}</style>
 
@@ -562,7 +572,7 @@ export default function FiibiLanding() {
         <div style={{ position: "absolute", top: "10%", left: "15%", width: 500, height: 500, background: `radial-gradient(circle, ${C.orange}12, transparent 70%)`, pointerEvents: "none" }} />
         <div style={{ position: "absolute", bottom: "5%", right: "10%", width: 400, height: 400, background: `radial-gradient(circle, ${C.orangeLight}08, transparent 70%)`, pointerEvents: "none" }} />
 
-        <div style={{ ...wrap, textAlign: "center", position: "relative", zIndex: 1, padding: "80px 32px 48px" }}>
+        <div className="fiibi-hero-content" style={{ ...wrap, textAlign: "center", position: "relative", zIndex: 1, padding: "80px 32px 48px" }}>
 
           <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", marginBottom: 32, lineHeight: 1.6, maxWidth: 420, margin: "0 auto 32px" }}>
             {t.landing.hero.subtitle}
