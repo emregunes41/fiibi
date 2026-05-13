@@ -45,8 +45,8 @@ html[data-light] body {
 }
 
 /* Catch-all: Force dark text on ALL elements in light mode */
-/* React renders inline styles as rgb() not hex, so attribute selectors won't match */
-html[data-light] body *:not(button):not(a) {
+/* Inverted buttons (#fff bg, colored bg) are protected by more specific rules below */
+html[data-light] body * {
   color: var(--text) !important;
 }
 
