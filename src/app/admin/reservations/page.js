@@ -374,9 +374,9 @@ export default function ReservationsPage() {
             {dayPopup && (
               <>
                 <div onClick={() => setDayPopup(null)} style={{ position: "fixed", inset: 0, zIndex: 999 }} />
-                <div style={{
+                <div className="admin-modal-content" style={{
                   position: "fixed", left: Math.min(dayPopup.x, window.innerWidth - 260), top: Math.min(dayPopup.y, window.innerHeight - 200),
-                  zIndex: 1000, background: "#111", border: "1px solid rgba(255,255,255,0.15)",
+                  zIndex: 1000, border: "1px solid rgba(255,255,255,0.15)",
                   borderRadius: 0, padding: "10px 12px", minWidth: 220, maxWidth: 280, maxHeight: 250, overflowY: "auto",
                   boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
                 }}>
@@ -804,7 +804,7 @@ export default function ReservationsPage() {
       {/* ── New Reservation Modal ── */}
       {isModalOpen && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "420px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
+          <div className="admin-modal-content" style={{ border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "420px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>Yeni Rezervasyon</h2>
               <button onClick={() => setIsModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={18} /></button>
@@ -1106,7 +1106,7 @@ export default function ReservationsPage() {
       {/* ── Quick Event Modal ── */}
       {quickEventModal && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "380px", padding: "1.25rem", position: "relative", margin: "3rem 0" }}>
+          <div className="admin-modal-content" style={{ border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "380px", padding: "1.25rem", position: "relative", margin: "3rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>
                 <Star size={16} style={{ marginRight: 6, verticalAlign: "middle", color: "rgba(255,255,255,0.5)" }} />
@@ -1206,7 +1206,7 @@ export default function ReservationsPage() {
       {/* ── iCal Instructions Modal ── */}
       {isIcalModalOpen && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
-          <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", width: "100%", maxWidth: "500px", padding: "1.5rem", position: "relative" }}>
+          <div className="admin-modal-content" style={{ border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", width: "100%", maxWidth: "500px", padding: "1.5rem", position: "relative" }}>
             <button onClick={() => setIsIcalModalOpen(false)} style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={20} /></button>
             <h2 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "0 0 1rem 0", color: "#fff", display: "flex", alignItems: "center", gap: "8px" }}>
               <Calendar size={20} style={{ color: "#22c55e" }} /> Takvim Bağlantısı Kopyalandı!

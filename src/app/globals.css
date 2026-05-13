@@ -263,6 +263,19 @@ html[data-light] .admin-modal-content {
   background-color: #ffffff !important;
 }
 
+.detail-modal-container {
+  /* dark mode handled by inline CSS in component */
+}
+html[data-light] .detail-modal-container {
+  background: #ffffff !important;
+}
+
+/* Option elements in selects */
+html[data-light] option {
+  background: #ffffff !important;
+  color: var(--text) !important;
+}
+
 .admin-trial-banner {
   position: sticky;
   top: 56px;
