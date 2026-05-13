@@ -1073,11 +1073,11 @@ export default function ReservationsPage() {
       {/* ── Day Action Menu ── */}
       {dayActionMenu && (
         <div style={{ position: "fixed", inset: 0, zIndex: 999 }} onClick={() => setDayActionMenu(null)}>
-          <div style={{
+          <div className="admin-modal-content" style={{
             position: "fixed",
             left: Math.min(dayActionMenu.x, window.innerWidth - 200),
             top: Math.min(dayActionMenu.y, window.innerHeight - 120),
-            background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.15)",
+            border: "1px solid rgba(255,255,255,0.15)",
             padding: "4px", minWidth: 180, zIndex: 1001,
           }} onClick={(e) => e.stopPropagation()}>
             <button onClick={() => {
