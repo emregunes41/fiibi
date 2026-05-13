@@ -27,6 +27,7 @@ model Tenant {
   planExpiresAt   DateTime?
   subscriptionStartedAt DateTime?             // Abonelik başlangıç tarihi
   lastPaymentAt   DateTime?                   // Son başarılı ödeme tarihi
+  lastPaymentOid  String?                     // Son ödeme PayTR merchant_oid (idempotent kontrol)
   nextPaymentAt   DateTime?                   // Sonraki ödeme tarihi
   gracePeriodEndsAt DateTime?                 // 3 günlük tolerans bitiş tarihi
 

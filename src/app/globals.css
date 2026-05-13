@@ -39,75 +39,147 @@ html[data-light] {
   color: var(--text) !important;
 }
 
-/* ─── LIGHT MODE: Force dark text/borders over white backgrounds ─── */
+/* ─── LIGHT MODE: Comprehensive theme inversion ─── */
 html[data-light] body {
   color: var(--text) !important;
 }
 
-/* General text override — but NOT for elements inside inverted buttons */
-html[data-light] body *:not(button):not(a) {
+/* ── TEXT: All hardcoded white text → dark text ── */
+html[data-light] [style*="color: #fff"],
+html[data-light] [style*="color:#fff"],
+html[data-light] [style*="color: #ffffff"],
+html[data-light] [style*="color:#ffffff"],
+html[data-light] [style*='color: "#fff"'],
+html[data-light] [style*='color: "#ffffff"'] {
   color: var(--text) !important;
 }
 
-/* Override inline rgba(255,255,255,...) styles — navbar, cards, sections */
-html[data-light] [style*="rgba(255"] {
-  color: var(--text) !important;
+/* All hardcoded black text → stays dark (good for light mode) */
+/* color: #000 is fine in light mode, skip */
+
+/* rgba(255,255,255, OPACITY) text → rgba(0,0,0, OPACITY) text */
+html[data-light] [style*="color: rgba(255,255,255,0.1"],
+html[data-light] [style*="color: rgba(255,255,255,0.15"],
+html[data-light] [style*="color: rgba(255,255,255,0.2"],
+html[data-light] [style*="color: rgba(255,255,255,0.25"] {
+  color: rgba(0,0,0,0.25) !important;
+}
+html[data-light] [style*="color: rgba(255,255,255,0.3"],
+html[data-light] [style*="color: rgba(255,255,255,0.35"],
+html[data-light] [style*="color: rgba(255,255,255,0.4"],
+html[data-light] [style*="color: rgba(255,255,255,0.45"],
+html[data-light] [style*="color: rgba(255,255,255,0.5"] {
+  color: rgba(0,0,0,0.5) !important;
+}
+html[data-light] [style*="color: rgba(255,255,255,0.55"],
+html[data-light] [style*="color: rgba(255,255,255,0.6"],
+html[data-light] [style*="color: rgba(255,255,255,0.65"],
+html[data-light] [style*="color: rgba(255,255,255,0.7"] {
+  color: rgba(0,0,0,0.65) !important;
+}
+html[data-light] [style*="color: rgba(255,255,255,0.8"],
+html[data-light] [style*="color: rgba(255,255,255,0.85"],
+html[data-light] [style*="color: rgba(255,255,255,0.9"],
+html[data-light] [style*="color: rgba(255,255,255,0.95"],
+html[data-light] [style*="color: rgba(255,255,255,1"] {
+  color: rgba(0,0,0,0.85) !important;
 }
 
-/* Borders in light mode */
+/* ── BACKGROUNDS: semi-transparent white → semi-transparent black (granular) ── */
+html[data-light] [style*="background: rgba(255,255,255,0.0"],
+html[data-light] [style*="background:rgba(255,255,255,0.0"] {
+  background: rgba(0,0,0,0.02) !important;
+}
+html[data-light] [style*="background: rgba(255,255,255,0.1"],
+html[data-light] [style*="background:rgba(255,255,255,0.1"] {
+  background: rgba(0,0,0,0.06) !important;
+}
+html[data-light] [style*="background: rgba(255,255,255,0.2"],
+html[data-light] [style*="background:rgba(255,255,255,0.2"],
+html[data-light] [style*="background: rgba(255,255,255,0.3"],
+html[data-light] [style*="background:rgba(255,255,255,0.3"] {
+  background: rgba(0,0,0,0.08) !important;
+}
+html[data-light] [style*="background: rgba(255,255,255,0.4"],
+html[data-light] [style*="background:rgba(255,255,255,0.4"],
+html[data-light] [style*="background: rgba(255,255,255,0.5"],
+html[data-light] [style*="background:rgba(255,255,255,0.5"],
+html[data-light] [style*="background: rgba(255,255,255,0.6"],
+html[data-light] [style*="background:rgba(255,255,255,0.6"],
+html[data-light] [style*="background: rgba(255,255,255,0.7"],
+html[data-light] [style*="background:rgba(255,255,255,0.7"] {
+  background: rgba(0,0,0,0.1) !important;
+}
+html[data-light] [style*="background: rgba(255,255,255,0.8"],
+html[data-light] [style*="background:rgba(255,255,255,0.8"],
+html[data-light] [style*="background: rgba(255,255,255,0.9"],
+html[data-light] [style*="background:rgba(255,255,255,0.9"] {
+  background: rgba(0,0,0,0.15) !important;
+}
+
+/* ── BORDERS: white-based → black-based ── */
 html[data-light] [style*="border"] {
   border-color: rgba(0,0,0,0.1) !important;
 }
-
-/* Backgrounds that were semi-transparent white → semi-transparent black */
-html[data-light] [style*="background: rgba(255"] {
-  background: rgba(0,0,0,0.03) !important;
-}
-html[data-light] [style*="background:rgba(255"] {
-  background: rgba(0,0,0,0.03) !important;
+/* Dividers (1px height backgrounds) */
+html[data-light] [style*="background: rgba(255,255,255,0.04)"][style*="height: 1px"],
+html[data-light] [style*="background: rgba(255,255,255,0.06)"][style*="height: 1px"] {
+  background: rgba(0,0,0,0.08) !important;
 }
 
-/* Backgrounds that were semi-transparent black → semi-transparent white (Navbar, Modals) */
+/* ── MODAL OVERLAYS: dark overlay → light overlay ── */
 html[data-light] [style*="background: rgba(0,0,0,0.5)"],
 html[data-light] [style*="background: rgba(0, 0, 0, 0.5)"],
+html[data-light] [style*="background: rgba(0,0,0,0.6)"],
+html[data-light] [style*="background: rgba(0, 0, 0, 0.6)"] {
+  background: rgba(0,0,0,0.3) !important;
+}
+html[data-light] [style*="background: rgba(0,0,0,0.75)"],
+html[data-light] [style*="background: rgba(0, 0, 0, 0.75)"],
 html[data-light] [style*="background: rgba(0,0,0,0.8)"],
 html[data-light] [style*="background: rgba(0, 0, 0, 0.8)"] {
-  background: rgba(255,255,255,0.8) !important;
+  background: rgba(0,0,0,0.4) !important;
 }
 html[data-light] [style*="background: rgba(0,0,0,0.95)"],
 html[data-light] [style*="background: rgba(0, 0, 0, 0.95)"] {
   background: rgba(255,255,255,0.95) !important;
 }
 
-/* ─── INVERTED BUTTONS: #fff bg → dark bg with white text ─── */
-html[data-light] button[style*="background: #fff"],
-html[data-light] button[style*="background:#fff"],
-html[data-light] button[style*='background: "#fff"'] {
-  background: #1a1a1a !important;
-  color: #ffffff !important;
-}
-html[data-light] button[style*="background: #fff"] *,
-html[data-light] button[style*="background:#fff"] *,
-html[data-light] button[style*='background: "#fff"'] * {
-  color: #ffffff !important;
+/* ── HARDCODED DARK BACKGROUNDS → LIGHT ── */
+html[data-light] [style*="background: #111"],
+html[data-light] [style*="background:#111"],
+html[data-light] [style*="background: #0a0a0a"],
+html[data-light] [style*="background:#0a0a0a"] {
+  background: #ffffff !important;
 }
 
-/* Non-button elements with white bg (badges, labels etc.) */
+/* ── INVERTED BUTTONS: #fff bg → dark bg ── */
+html[data-light] button[style*="background: #fff"],
+html[data-light] button[style*="background:#fff"] {
+  background: var(--text) !important;
+  color: var(--bg) !important;
+}
+html[data-light] button[style*="background: #fff"] *,
+html[data-light] button[style*="background:#fff"] * {
+  color: var(--bg) !important;
+}
+
+/* Non-button inverted elements (selected state badges etc.) */
 html[data-light] span[style*="background: #fff"],
 html[data-light] div[style*="background: #fff"],
 html[data-light] span[style*="background:#fff"],
 html[data-light] div[style*="background:#fff"] {
-  background: #1a1a1a !important;
-  color: #ffffff !important;
+  background: var(--text) !important;
+  color: var(--bg) !important;
 }
 html[data-light] span[style*="background: #fff"] *,
 html[data-light] div[style*="background: #fff"] *,
 html[data-light] span[style*="background:#fff"] *,
 html[data-light] div[style*="background:#fff"] * {
-  color: #ffffff !important;
+  color: var(--bg) !important;
 }
 
-/* Elements using CSS variables for inverse colors */
+/* ── CSS VARIABLE INVERSE ELEMENTS ── */
 html[data-light] [style*="color: var(--bg)"] {
   color: #ffffff !important;
 }
@@ -117,7 +189,6 @@ html[data-light] [style*="background: var(--accent)"],
 html[data-light] [style*="background:var(--accent)"],
 html[data-light] [style*="background: var(--btn-bg)"],
 html[data-light] [style*="background:var(--btn-bg)"] {
-  background: #1a1a1a !important;
   color: #ffffff !important;
 }
 html[data-light] [style*="background: var(--text)"] *,
@@ -130,10 +201,10 @@ html[data-light] [style*="background:var(--btn-bg)"] * {
 }
 html[data-light] [style*="color: var(--accent)"],
 html[data-light] [style*="color: var(--btn-bg)"] {
-  color: #1a1a1a !important;
+  color: var(--text) !important;
 }
 
-/* Inputs and selects in light mode */
+/* ── INPUTS: Properly style for light mode ── */
 html[data-light] input,
 html[data-light] textarea,
 html[data-light] select {
@@ -141,28 +212,41 @@ html[data-light] select {
   background: rgba(0,0,0,0.04) !important;
   border-color: rgba(0,0,0,0.15) !important;
 }
-
 html[data-light] input::placeholder,
 html[data-light] textarea::placeholder {
   color: rgba(0,0,0,0.4) !important;
 }
 
-/* Green/Blue accent buttons should keep their colors */
+/* ── COLORED ACCENT BUTTONS: Keep their own colors ── */
 html[data-light] button[style*="background: #22c55e"],
 html[data-light] button[style*="background:#22c55e"],
 html[data-light] button[style*="background: #3b82f6"],
-html[data-light] button[style*="background:#3b82f6"] {
+html[data-light] button[style*="background:#3b82f6"],
+html[data-light] button[style*="background: #ef4444"],
+html[data-light] button[style*="background:#ef4444"],
+html[data-light] button[style*="background: #f59e0b"],
+html[data-light] button[style*="background:#f59e0b"] {
   color: #ffffff !important;
 }
 html[data-light] button[style*="background: #22c55e"] *,
 html[data-light] button[style*="background:#22c55e"] *,
 html[data-light] button[style*="background: #3b82f6"] *,
-html[data-light] button[style*="background:#3b82f6"] * {
+html[data-light] button[style*="background:#3b82f6"] *,
+html[data-light] button[style*="background: #ef4444"] *,
+html[data-light] button[style*="background:#ef4444"] *,
+html[data-light] button[style*="background: #f59e0b"] *,
+html[data-light] button[style*="background:#f59e0b"] * {
   color: #ffffff !important;
 }
 
-/* Links */
-html[data-light] a[style*="color: #fff"] {
+/* Gradient backgrounds with color values (e.g. booking flow category cards) */
+html[data-light] [style*="linear-gradient"] {
+  /* Preserve gradients as-is */
+}
+
+/* ── LINKS ── */
+html[data-light] a[style*="color: #fff"],
+html[data-light] a[style*="color:#fff"] {
   color: var(--text) !important;
 }
 

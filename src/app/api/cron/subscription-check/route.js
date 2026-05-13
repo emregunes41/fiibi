@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { createPaytrToken, generateMerchantOid } from "@/lib/paytr";
 import { Resend } from "resend";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -21,6 +22,7 @@ export async function GET(request) {
 
   const now = new Date();
   const results = {
+    autoCharged: 0,
     graceStarted: 0,
     frozen: 0,
     warningsSent: 0,
@@ -70,28 +72,14 @@ export async function GET(request) {
       try {
         // Kayıtlı kart var mı kontrol et
         if (tenant.paytrUtoken && tenant.paytrCtoken) {
-          // Otomatik çekim dene (PayTR Recurring Payment)
+          // Otomatik çekim dene (PayTR Direkt API Recurring Payment)
           const chargeResult = await attemptRecurringCharge(tenant);
 
           if (chargeResult.success) {
-            // Başarılı — plan yenile
-            const planDuration = tenant.selectedPlan === "yearly"
-              ? 365 * 24 * 60 * 60 * 1000
-              : 30 * 24 * 60 * 60 * 1000;
-
-            await prisma.tenant.update({
-              where: { id: tenant.id },
-              data: {
-                plan: "pro",
-                lastPaymentAt: now,
-                planExpiresAt: new Date(now.getTime() + planDuration),
-                nextPaymentAt: new Date(now.getTime() + planDuration),
-                failedPayments: 0,
-              },
-            });
-
+            // Başarılı — Callback'ten plan yenilenecek
+            // (PayTR callback'e bildirim gönderecek, plan orada güncellenir)
             await sendEmail(tenant.ownerEmail, tenant.businessName, "payment_success");
-            results.autoCharged = (results.autoCharged || 0) + 1;
+            results.autoCharged++;
             continue; // Bu tenant'ı atla, tolerans başlatma
           }
         }
@@ -150,8 +138,8 @@ export async function GET(request) {
 }
 
 /**
- * Kayıtlı karttan otomatik çekim (PayTR Recurring Payment)
- * PayTR Direkt API + Non3D + Kart Saklama yetkisi gerektirir
+ * PayTR Direkt API — Kayıtlı karttan tekrarlayan ödeme (Non3D + Recurring)
+ * Kart saklama token'ları (utoken + ctoken) ile server-side ödeme çeker
  */
 async function attemptRecurringCharge(tenant) {
   try {
@@ -163,35 +151,52 @@ async function attemptRecurringCharge(tenant) {
       return { success: false, error: "PayTR config missing" };
     }
 
-    // Fiyatlandırma — DB'deki değerler kuruş cinsinden (2499 = 24.99₺)
-    const config = await prisma.platformConfig.findUnique({ where: { id: "main" } });
-    const pricing = config?.pricing || { monthly: 2499, yearly: 24999 };
+    // Fiyatlandırma
+    let config;
+    try {
+      config = await prisma.platformConfig.findUnique({ where: { id: "main" } });
+    } catch { /* ignore */ }
+    const pricing = config?.pricing || { monthly: 249900, yearly: 2499900 };
     const planPriceKurus = tenant.selectedPlan === "yearly" ? pricing.yearly : pricing.monthly;
 
-    const merchant_oid = `REC_${tenant.id}_${Date.now()}`;
+    const merchant_oid = generateMerchantOid("REC", tenant.id);
     const email = tenant.ownerEmail;
-    const payment_amount = planPriceKurus.toString(); // PayTR kuruş bekliyor
-    const user_ip = "1.1.1.1"; // Recurring için sabit IP kullanılabilir
+    const payment_amount = planPriceKurus.toString();
+    const user_ip = "1.1.1.1"; // Recurring için server IP
     const currency = "TL";
     const test_mode = process.env.NODE_ENV === "production" ? "0" : "1";
-    const non_3d = "1"; // Non3D — 3D onay yok
+    const non_3d = "1"; // Non3D — 3D doğrulama yok (recurring)
     const payment_type = "card";
     const installment_count = "0";
     const recurring_payment = "1";
-    const user_basket = JSON.stringify([["Fiibi Pro Abonelik Yenileme", (planPriceKurus / 100).toFixed(2), 1]]); // Sepet TL cinsinden
+    const non3d_test_failed = "0";
+    const card_type = "";
+    const debug_on = "0";
+    const client_lang = "tr";
 
-    const merchant_ok_url = `${process.env.NEXT_PUBLIC_APP_URL || "https://fiibi.co"}/api/paytr/subscription-callback`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://fiibi.co";
+    const merchant_ok_url = `${baseUrl}/api/paytr/subscription-callback`;
     const merchant_fail_url = merchant_ok_url;
 
-    // Hash
-    const crypto = await import("crypto");
-    const hash_str = `${merchant_id}${user_ip}${merchant_oid}${email}${payment_amount}${payment_type}${installment_count}${currency}${test_mode}${non_3d}`;
-    const token = crypto.default
-      .createHmac("sha256", merchant_key)
-      .update(hash_str + merchant_salt)
-      .digest("base64");
+    const user_basket = JSON.stringify([
+      ["Fiibi Pro Abonelik Yenileme", (planPriceKurus / 100).toFixed(2), 1],
+    ]);
 
-    // PayTR'ye recurring ödeme isteği
+    // Token oluştur (Direkt API formülü)
+    const paytr_token = createPaytrToken({
+      merchantId: merchant_id,
+      userIp: user_ip,
+      merchantOid: merchant_oid,
+      email,
+      paymentAmount: payment_amount,
+      paymentType: payment_type,
+      installmentCount: installment_count,
+      currency,
+      testMode: test_mode,
+      non3d: non_3d,
+    });
+
+    // PayTR'ye recurring ödeme isteği (server-side POST)
     const params = new URLSearchParams({
       merchant_id,
       user_ip,
@@ -209,10 +214,12 @@ async function attemptRecurringCharge(tenant) {
       user_address: "Fiibi Platform",
       user_phone: tenant.ownerPhone || "05000000000",
       user_basket,
-      debug_on: "0",
-      paytr_token: token,
-      non3d_test_failed: "0",
-      card_type: "",
+      debug_on,
+      client_lang,
+      paytr_token,
+      non3d_test_failed,
+      card_type,
+      // Kart saklama token'ları
       utoken: tenant.paytrUtoken,
       ctoken: tenant.paytrCtoken,
       recurring_payment,
@@ -230,14 +237,14 @@ async function attemptRecurringCharge(tenant) {
     try {
       const result = JSON.parse(resultText);
       if (result.status === "success") {
-        console.log(`✅ Recurring charge success for ${tenant.slug}: ${payment_amount} kuruş`);
+        console.log(`✅ Recurring charge submitted for ${tenant.slug}: ${payment_amount} kuruş`);
         return { success: true };
       } else {
         console.log(`❌ Recurring charge failed for ${tenant.slug}: ${result.err_msg || "unknown"}`);
         return { success: false, error: result.err_msg };
       }
     } catch {
-      console.log(`❌ Recurring charge response parse error for ${tenant.slug}`);
+      console.log(`❌ Recurring charge response parse error for ${tenant.slug}: ${resultText.substring(0, 200)}`);
       return { success: false, error: "Response parse error" };
     }
   } catch (error) {
@@ -315,4 +322,3 @@ async function sendEmail(to, businessName, type) {
     console.error(`Email send error (${type}) to ${to}:`, err);
   }
 }
-
