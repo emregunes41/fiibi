@@ -49,6 +49,16 @@ html[data-light] body {
 html[data-light] body * {
   color: var(--text) !important;
 }
+/* Theme preview cards show their own palette — reset to inherit */
+html[data-light] .theme-preview-card > div:first-child,
+html[data-light] .theme-preview-card > div:first-child * {
+  color: inherit !important;
+}
+/* But the label area below should use admin text color */
+html[data-light] .theme-preview-label,
+html[data-light] .theme-preview-label * {
+  color: var(--text) !important;
+}
 
 /* ── TEXT: All hardcoded white text → dark text ── */
 html[data-light] [style*="color: #fff"],

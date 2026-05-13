@@ -25,7 +25,7 @@ export default function ThemePreviewCard({ template, selected, onClick, business
   const borderColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
 
   return (
-    <button onClick={onClick} style={{
+    <button onClick={onClick} className="theme-preview-card" style={{
       padding: 0, cursor: "pointer", textAlign: "left", overflow: "hidden",
       transition: "all 0.2s", width: "100%",
       border: selected ? "2px solid #f97316" : "1px solid rgba(255,255,255,0.1)",
@@ -147,16 +147,15 @@ export default function ThemePreviewCard({ template, selected, onClick, business
         </div>
       </div>
 
-      {/* ── Tema Adı ── */}
-      <div style={{
+      <div className="theme-preview-label" style={{
         padding: "10px 14px",
         borderTop: "1px solid rgba(255,255,255,0.06)",
         background: selected ? "rgba(255,255,255,0.04)" : "transparent",
       }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>
           {t.emoji} {t.name} {selected && "✓"}
         </div>
-        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", lineHeight: 1.4 }}>{t.desc}</div>
+        <div style={{ fontSize: 10, opacity: 0.5, lineHeight: 1.4 }}>{t.desc}</div>
       </div>
     </button>
   );
