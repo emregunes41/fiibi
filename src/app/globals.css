@@ -44,6 +44,12 @@ html[data-light] body {
   color: var(--text) !important;
 }
 
+/* Catch-all: Force dark text on ALL elements in light mode */
+/* React renders inline styles as rgb() not hex, so attribute selectors won't match */
+html[data-light] body *:not(button):not(a) {
+  color: var(--text) !important;
+}
+
 /* ── TEXT: All hardcoded white text → dark text ── */
 html[data-light] [style*="color: #fff"],
 html[data-light] [style*="color:#fff"],
