@@ -110,8 +110,21 @@ export default async function HomePage() {
   // Hero text: use DB values directly, fallback to sector defaults only if empty
   const heroSubtitle = siteConfig?.heroSubtitle || bt.heroSub;
   const heroTitle = siteConfig?.heroTitle || bt.heroTitle;
+  
+  const FONT_MAP = {
+    geist: "var(--font-geist-sans), system-ui, sans-serif",
+    inter: "'Inter', system-ui, sans-serif",
+    playfair: "'Playfair Display', Georgia, serif",
+    poppins: "'Poppins', system-ui, sans-serif",
+    montserrat: "'Montserrat', system-ui, sans-serif",
+    lora: "'Lora', Georgia, serif",
+    raleway: "'Raleway', system-ui, sans-serif",
+    cormorant: "'Cormorant Garamond', Georgia, serif",
+  };
+  const heroTitleFont = siteConfig?.heroTitleFont ? FONT_MAP[siteConfig.heroTitleFont] : undefined;
 
   const heroText = "var(--text)";
+  const customHeroTitleColor = siteConfig?.heroTitleColor || heroText;
   const heroAccent = "color-mix(in srgb, var(--text) 40%, transparent)";
   const tpl = getTemplate(siteConfig?.siteTemplate || "classic");
 
@@ -386,7 +399,7 @@ export default async function HomePage() {
           <span className="uppercase mb-6 block" style={{ color: heroAccent, fontSize: "var(--hero-sub-size)", letterSpacing: tpl.heroStyle === "magazine" ? "0.25em" : "0.5em", fontWeight: "var(--body-weight)" }}>
             {heroSubtitle}
           </span>
-          <h1 className="font-serif mb-8 leading-[1.1] text-justify-balanced" style={{ color: heroText, fontSize: "var(--hero-title-size)", fontWeight: "var(--heading-weight)", letterSpacing: tpl.heroStyle === "cinematic" ? "-0.04em" : "-0.02em" }}>
+          <h1 className="font-serif mb-8 leading-[1.1] text-justify-balanced" style={{ color: customHeroTitleColor, fontSize: "var(--hero-title-size)", fontWeight: "var(--heading-weight)", letterSpacing: tpl.heroStyle === "cinematic" ? "-0.04em" : "-0.02em", ...(heroTitleFont ? { fontFamily: heroTitleFont } : {}) }}>
             {renderTitle(heroTitle)}
           </h1>
           {tpl.showDividerLine && <div className="h-20 w-[1px] mx-auto mb-8 hidden md:block" style={{ background: `linear-gradient(to bottom, ${heroAccent}, transparent)` }} />}

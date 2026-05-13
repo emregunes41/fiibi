@@ -408,8 +408,10 @@ model GlobalSettings {
   forceDarkMode   Boolean  @default(false)
 
   // Mevcut alanlar
-  heroTitle    String   @default("")
-  heroSubtitle String   @default("")
+  heroTitle       String   @default("")
+  heroTitleColor  String?  @default("")
+  heroTitleFont   String?  @default("")
+  heroSubtitle    String   @default("")
   address      String   @default("")
   phone        String   @default("")
   email        String   @default("")
