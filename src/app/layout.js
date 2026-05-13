@@ -167,8 +167,8 @@ export default async function RootLayout({ children }) {
   const businessType = siteConfig?._tenant?.businessType || "other";
   const usingSectorTexture = !hasCustomBg && SECTOR_TEXTURES.includes(businessType);
 
-  // Palette — her zaman light mode (dark mode kaldırıldı)
-  const palette = getPalette("light");
+  // Palette — dark mode (tüm bileşenler dark theme için yazıldı)
+  const palette = getPalette("dark");
 
   const tpl = getTemplate(siteConfig?.siteTemplate || "classic");
 
@@ -176,7 +176,6 @@ export default async function RootLayout({ children }) {
     <html suppressHydrationWarning
       lang="tr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      data-light=""
       data-template={tpl.id}
       style={{
         "--bg": palette.bg,
