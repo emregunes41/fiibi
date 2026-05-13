@@ -30,9 +30,260 @@ html {
   color-scheme: dark;
 }
 
+html[data-light] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --accent: #1a1a1a;
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+/* ─── LIGHT MODE: Comprehensive theme inversion ─── */
+html[data-light] body {
+  color: var(--text) !important;
+}
+
+/* Catch-all: Force dark text on ALL elements in light mode */
+/* Inverted buttons (#fff bg, colored bg) are protected by more specific rules below */
+html[data-light] body * {
+  color: var(--text) !important;
+}
+/* Theme preview cards show their own palette — reset to inherit */
+html[data-light] .theme-preview-card > div:first-child,
+html[data-light] .theme-preview-card > div:first-child * {
+  color: inherit !important;
+}
+/* But the label area below should use admin text color */
+html[data-light] .theme-preview-label,
+html[data-light] .theme-preview-label * {
+  color: var(--text) !important;
+}
+
+/* ── TEXT: All hardcoded white text → dark text ── */
+html[data-light] [style*="color: #fff"],
+html[data-light] [style*="color:#fff"],
+html[data-light] [style*="color: #ffffff"],
+html[data-light] [style*="color:#ffffff"],
+html[data-light] [style*='color: "#fff"'],
+html[data-light] [style*='color: "#ffffff"'] {
+  color: var(--text) !important;
+}
+
+/* All hardcoded black text → stays dark (good for light mode) */
+/* color: #000 is fine in light mode, skip */
+
+/* rgba(255,255,255, OPACITY) text → rgba(0,0,0, OPACITY) text */
+html[data-light] [style*="color: rgba(255,255,255,0.1"],
+html[data-light] [style*="color: rgba(255,255,255,0.15"],
+html[data-light] [style*="color: rgba(255,255,255,0.2"],
+html[data-light] [style*="color: rgba(255,255,255,0.25"] {
+  color: rgba(0,0,0,0.25) !important;
+}
+html[data-light] [style*="color: rgba(255,255,255,0.3"],
+html[data-light] [style*="color: rgba(255,255,255,0.35"],
+html[data-light] [style*="color: rgba(255,255,255,0.4"],
+html[data-light] [style*="color: rgba(255,255,255,0.45"],
+html[data-light] [style*="color: rgba(255,255,255,0.5"] {
+  color: rgba(0,0,0,0.5) !important;
+}
+html[data-light] [style*="color: rgba(255,255,255,0.55"],
+html[data-light] [style*="color: rgba(255,255,255,0.6"],
+html[data-light] [style*="color: rgba(255,255,255,0.65"],
+html[data-light] [style*="color: rgba(255,255,255,0.7"] {
+  color: rgba(0,0,0,0.65) !important;
+}
+html[data-light] [style*="color: rgba(255,255,255,0.8"],
+html[data-light] [style*="color: rgba(255,255,255,0.85"],
+html[data-light] [style*="color: rgba(255,255,255,0.9"],
+html[data-light] [style*="color: rgba(255,255,255,0.95"],
+html[data-light] [style*="color: rgba(255,255,255,1"] {
+  color: rgba(0,0,0,0.85) !important;
+}
+
+/* ── BACKGROUNDS: semi-transparent white → semi-transparent black (granular) ── */
+html[data-light] [style*="background: rgba(255,255,255,0.0"],
+html[data-light] [style*="background:rgba(255,255,255,0.0"] {
+  background: rgba(0,0,0,0.02) !important;
+}
+html[data-light] [style*="background: rgba(255,255,255,0.1"],
+html[data-light] [style*="background:rgba(255,255,255,0.1"] {
+  background: rgba(0,0,0,0.06) !important;
+}
+html[data-light] [style*="background: rgba(255,255,255,0.2"],
+html[data-light] [style*="background:rgba(255,255,255,0.2"],
+html[data-light] [style*="background: rgba(255,255,255,0.3"],
+html[data-light] [style*="background:rgba(255,255,255,0.3"] {
+  background: rgba(0,0,0,0.08) !important;
+}
+html[data-light] [style*="background: rgba(255,255,255,0.4"],
+html[data-light] [style*="background:rgba(255,255,255,0.4"],
+html[data-light] [style*="background: rgba(255,255,255,0.5"],
+html[data-light] [style*="background:rgba(255,255,255,0.5"],
+html[data-light] [style*="background: rgba(255,255,255,0.6"],
+html[data-light] [style*="background:rgba(255,255,255,0.6"],
+html[data-light] [style*="background: rgba(255,255,255,0.7"],
+html[data-light] [style*="background:rgba(255,255,255,0.7"] {
+  background: rgba(0,0,0,0.1) !important;
+}
+html[data-light] [style*="background: rgba(255,255,255,0.8"],
+html[data-light] [style*="background:rgba(255,255,255,0.8"],
+html[data-light] [style*="background: rgba(255,255,255,0.9"],
+html[data-light] [style*="background:rgba(255,255,255,0.9"] {
+  background: rgba(0,0,0,0.15) !important;
+}
+
+/* ── BORDERS: white-based → black-based ── */
+html[data-light] [style*="border"] {
+  border-color: rgba(0,0,0,0.1) !important;
+}
+/* Dividers (1px height backgrounds) */
+html[data-light] [style*="background: rgba(255,255,255,0.04)"][style*="height: 1px"],
+html[data-light] [style*="background: rgba(255,255,255,0.06)"][style*="height: 1px"] {
+  background: rgba(0,0,0,0.08) !important;
+}
+
+/* ── MODAL OVERLAYS: dark overlay → light overlay ── */
+html[data-light] [style*="background: rgba(0,0,0,0.5)"],
+html[data-light] [style*="background: rgba(0, 0, 0, 0.5)"],
+html[data-light] [style*="background: rgba(0,0,0,0.6)"],
+html[data-light] [style*="background: rgba(0, 0, 0, 0.6)"] {
+  background: rgba(0,0,0,0.3) !important;
+}
+html[data-light] [style*="background: rgba(0,0,0,0.75)"],
+html[data-light] [style*="background: rgba(0, 0, 0, 0.75)"],
+html[data-light] [style*="background: rgba(0,0,0,0.8)"],
+html[data-light] [style*="background: rgba(0, 0, 0, 0.8)"] {
+  background: rgba(0,0,0,0.4) !important;
+}
+html[data-light] [style*="background: rgba(0,0,0,0.95)"],
+html[data-light] [style*="background: rgba(0, 0, 0, 0.95)"] {
+  background: rgba(255,255,255,0.95) !important;
+}
+
+/* ── HARDCODED DARK BACKGROUNDS → LIGHT ── */
+html[data-light] [style*="background: #111"],
+html[data-light] [style*="background:#111"],
+html[data-light] [style*="background: #0a0a0a"],
+html[data-light] [style*="background:#0a0a0a"] {
+  background: #ffffff !important;
+}
+
+/* ── INVERTED BUTTONS: #fff bg → dark bg ── */
+html[data-light] button[style*="background: #fff"],
+html[data-light] button[style*="background:#fff"] {
+  background: var(--text) !important;
+  color: var(--bg) !important;
+}
+html[data-light] button[style*="background: #fff"] *,
+html[data-light] button[style*="background:#fff"] * {
+  color: var(--bg) !important;
+}
+
+/* Non-button inverted elements (selected state badges etc.) */
+html[data-light] span[style*="background: #fff"],
+html[data-light] div[style*="background: #fff"],
+html[data-light] span[style*="background:#fff"],
+html[data-light] div[style*="background:#fff"] {
+  background: var(--text) !important;
+  color: var(--bg) !important;
+}
+html[data-light] span[style*="background: #fff"] *,
+html[data-light] div[style*="background: #fff"] *,
+html[data-light] span[style*="background:#fff"] *,
+html[data-light] div[style*="background:#fff"] * {
+  color: var(--bg) !important;
+}
+
+/* ── CSS VARIABLE INVERSE ELEMENTS ── */
+html[data-light] [style*="color: var(--bg)"] {
+  color: #ffffff !important;
+}
+html[data-light] [style*="background: var(--text)"],
+html[data-light] [style*="background:var(--text)"],
+html[data-light] [style*="background: var(--accent)"],
+html[data-light] [style*="background:var(--accent)"],
+html[data-light] [style*="background: var(--btn-bg)"],
+html[data-light] [style*="background:var(--btn-bg)"] {
+  color: #ffffff !important;
+}
+html[data-light] [style*="background: var(--text)"] *,
+html[data-light] [style*="background:var(--text)"] *,
+html[data-light] [style*="background: var(--accent)"] *,
+html[data-light] [style*="background:var(--accent)"] *,
+html[data-light] [style*="background: var(--btn-bg)"] *,
+html[data-light] [style*="background:var(--btn-bg)"] * {
+  color: #ffffff !important;
+}
+html[data-light] [style*="color: var(--accent)"],
+html[data-light] [style*="color: var(--btn-bg)"] {
+  color: var(--text) !important;
+}
+
+/* ── INPUTS: Properly style for light mode ── */
+html[data-light] input,
+html[data-light] textarea,
+html[data-light] select {
+  color: var(--text) !important;
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.15) !important;
+}
+html[data-light] input::placeholder,
+html[data-light] textarea::placeholder {
+  color: rgba(0,0,0,0.4) !important;
+}
+
+/* ── COLORED ACCENT BUTTONS: Keep their own colors ── */
+html[data-light] button[style*="background: #22c55e"],
+html[data-light] button[style*="background:#22c55e"],
+html[data-light] button[style*="background: #3b82f6"],
+html[data-light] button[style*="background:#3b82f6"],
+html[data-light] button[style*="background: #ef4444"],
+html[data-light] button[style*="background:#ef4444"],
+html[data-light] button[style*="background: #f59e0b"],
+html[data-light] button[style*="background:#f59e0b"] {
+  color: #ffffff !important;
+}
+html[data-light] button[style*="background: #22c55e"] *,
+html[data-light] button[style*="background:#22c55e"] *,
+html[data-light] button[style*="background: #3b82f6"] *,
+html[data-light] button[style*="background:#3b82f6"] *,
+html[data-light] button[style*="background: #ef4444"] *,
+html[data-light] button[style*="background:#ef4444"] *,
+html[data-light] button[style*="background: #f59e0b"] *,
+html[data-light] button[style*="background:#f59e0b"] * {
+  color: #ffffff !important;
+}
+
+/* Gradient backgrounds with color values (e.g. booking flow category cards) */
+html[data-light] [style*="linear-gradient"] {
+  /* Preserve gradients as-is */
+}
+
+/* ── LINKS ── */
+html[data-light] a[style*="color: #fff"],
+html[data-light] a[style*="color:#fff"] {
+  color: var(--text) !important;
+}
 
 .admin-modal-content {
   background-color: #111;
+}
+html[data-light] .admin-modal-content {
+  background-color: #ffffff !important;
+}
+
+.detail-modal-container {
+  /* dark mode handled by inline CSS in component */
+}
+html[data-light] .detail-modal-container {
+  background: #ffffff !important;
+}
+
+/* Option elements in selects */
+html[data-light] option {
+  background: #ffffff !important;
+  color: var(--text) !important;
 }
 
 .admin-trial-banner {
@@ -46,23 +297,199 @@ html {
   }
 }
 
+/* Modals and dropdowns hardcoded to #111 */
+html[data-light] [style*="background: #111"],
+html[data-light] [style*="background:#111"] {
+  background: #ffffff !important;
+}
+
+html[data-light] [style*="backgroundColor"] {
+  /* handled by var(--bg) already */
+}
+
+/* Specific component overrides */
+html[data-light] nav,
+html[data-light] nav * {
+  /* removed greedy color override */
+}
+html[data-light] .scrolled-nav-bg {
+  background: rgba(255,255,255,0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+html[data-light] footer,
+html[data-light] footer * {
+  /* removed greedy color override */
+}
+
+/* Glass panels in light mode */
+html[data-light] .glass-panel {
+  background: rgba(255,255,255,0.7) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
 
 /* Scrollbar */
+html[data-light] ::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15) !important;
+}
+html[data-light] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.3) !important;
+}
+
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+  color: var(--text, #ffffff);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+body {
+  background: transparent !important;
+}
+
+body {
+  font-family: var(--font-site, var(--font-sans, system-ui, sans-serif));
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-serif, .font-jakarta {
+  font-family: var(--font-site, var(--font-sans, system-ui, sans-serif));
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ─────── PALETTE OVERRIDES ─────── */
+/* Tailwind text-white → palette text rengi */
+.text-white { color: var(--text) !important; }
+
+/* Opacity varyasyonları */
+.text-white\/5  { color: color-mix(in srgb, var(--text) 5%, transparent) !important; }
+.text-white\/10 { color: color-mix(in srgb, var(--text) 10%, transparent) !important; }
+.text-white\/15 { color: color-mix(in srgb, var(--text) 15%, transparent) !important; }
+.text-white\/20 { color: color-mix(in srgb, var(--text) 20%, transparent) !important; }
+.text-white\/25 { color: color-mix(in srgb, var(--text) 25%, transparent) !important; }
+.text-white\/30 { color: color-mix(in srgb, var(--text) 30%, transparent) !important; }
+.text-white\/40 { color: color-mix(in srgb, var(--text) 40%, transparent) !important; }
+.text-white\/50 { color: color-mix(in srgb, var(--text) 50%, transparent) !important; }
+.text-white\/60 { color: color-mix(in srgb, var(--text) 60%, transparent) !important; }
+.text-white\/70 { color: color-mix(in srgb, var(--text) 70%, transparent) !important; }
+.text-white\/80 { color: color-mix(in srgb, var(--text) 80%, transparent) !important; }
+.text-white\/90 { color: color-mix(in srgb, var(--text) 90%, transparent) !important; }
+
+/* bg-white varyasyonları */
+.bg-white { background-color: var(--text) !important; }
+.bg-white\/5 { background-color: color-mix(in srgb, var(--text) 5%, transparent) !important; }
+.bg-white\/10 { background-color: color-mix(in srgb, var(--text) 10%, transparent) !important; }
+.bg-white\/20 { background-color: color-mix(in srgb, var(--text) 20%, transparent) !important; }
+
+/* border-white varyasyonları */
+.border-white { border-color: var(--text) !important; }
+.border-white\/5  { border-color: color-mix(in srgb, var(--text) 5%, transparent) !important; }
+.border-white\/10 { border-color: color-mix(in srgb, var(--text) 10%, transparent) !important; }
+.border-white\/20 { border-color: color-mix(in srgb, var(--text) 20%, transparent) !important; }
+.border-white\/30 { border-color: color-mix(in srgb, var(--text) 30%, transparent) !important; }
+
+/* bg-black → palette bg */
+.bg-black { background-color: var(--bg) !important; }
+.text-black { color: var(--bg) !important; }
+
+/* hover varyasyonları */
+.hover\:text-white:hover { color: var(--text) !important; }
+.hover\:bg-white:hover { background-color: var(--text) !important; }
+.group-hover\:bg-white:is(:where(.group):hover *) { background-color: var(--text) !important; }
+.group-hover\:text-black:is(:where(.group):hover *) { color: var(--bg) !important; }
+
+/* Tailwind arbitrary values — [0.04] gibi — bunlar sınıf adında köşeli parantez kullanır */
+[class*="bg-white\\/\\["] { background-color: color-mix(in srgb, var(--text) 4%, transparent) !important; }
+[class*="border-white\\/\\["] { border-color: color-mix(in srgb, var(--text) 6%, transparent) !important; }
+[class*="text-white\\/\\["] { color: color-mix(in srgb, var(--text) 13%, transparent) !important; }
+[class*="from-white\\/"] { --tw-gradient-from: color-mix(in srgb, var(--text) 40%, transparent) !important; }
+
+/* ─────── END PALETTE OVERRIDES ─────── */
+
+.text-justify-balanced {
+  text-wrap: balance;
+}
+
+.section-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 5vw;
+}
+
+.glass-panel {
+  background: color-mix(in srgb, var(--text) 2%, transparent);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.premium-border {
+  border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.reveal-text {
+  animation: reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+@keyframes reveal {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+::selection {
+  background: var(--accent, var(--text));
+  color: var(--bg, #000);
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.15);
-  border-radius: 10px;
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.3);
+  background: color-mix(in srgb, var(--text) 30%, transparent);
 }
 
-html, body {
-  min-height: 100%;
+.logo-glow {
+  filter: drop-shadow(0 0 15px color-mix(in srgb, var(--text) 20%, transparent));
+}
+
+.global-video-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  pointer-events: none;
+}
+
+.global-video-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: 
+    linear-gradient(to bottom, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.18) 100%),
+    radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%);
+  pointer-events: none;
+}
+
+button {
+  cursor: pointer;
 }

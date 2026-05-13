@@ -19,7 +19,7 @@ import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, 
 import { getPlanLimits, hasFeature } from "@/lib/plan-limits";
 import MembersList from "../components/MembersList";
 import PostsManager from "./PostsManager";
-
+import ThemePreviewCard from "@/components/ThemePreviewCard";
 
 const inp = {
   width: "100%", boxSizing: "border-box",
@@ -1867,7 +1867,22 @@ export default function SettingsPage() {
         {activeTab === "tasarim" && subTab === "tema" && <div style={sectionCard}>
           {sectionHeader(Palette, "Marka & Kimlik", "Tema, logo, işletme adı ve SEO ayarları.")}
 
-          {/* Tema Seçimi Kaldırıldı */}
+          {/* Tema Seçimi */}
+          <div style={{ marginBottom: 28 }}>
+            <label style={label}>Site Teması</label>
+            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 16, marginTop: -2 }}>Sitenizin genel görünümünü, yazı tipini ve düzenini belirler.</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
+              {require("@/lib/templates").getTemplateList().map(t => (
+                <ThemePreviewCard
+                  key={t.id}
+                  template={t}
+                  selected={(config.siteTemplate || "classic") === t.id}
+                  onClick={() => setConfig({ ...config, siteTemplate: t.id })}
+                  businessName={config.businessName || "Studio"}
+                />
+              ))}
+            </div>
+          </div>
 
 
           {/* Logo */}
