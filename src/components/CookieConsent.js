@@ -102,6 +102,7 @@ export default function CookieConsent() {
                 style={{
                   background: "var(--btn-bg, #FEFEFE)",
                   color: "var(--btn-text, #010101)",
+                  "--force-color": "var(--btn-text, #010101)",
                   border: "none",
                   padding: "8px 20px",
                   borderRadius: 6,

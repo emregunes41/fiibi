@@ -44,6 +44,17 @@ html[data-light] body {
   color: var(--text) !important;
 }
 
+/* Catch-all: Force dark text on ALL elements in light mode */
+html[data-light] body * {
+  color: var(--text) !important;
+}
+
+/* Force-dark: Overlays like cart drawer keep their dark theme */
+html[data-light] .force-dark,
+html[data-light] .force-dark * {
+  color: var(--force-color, #FEFEFE) !important;
+}
+
 /* Override utility classes that might force white text */
 html[data-light] .text-white {
   color: var(--text) !important;
@@ -135,10 +146,7 @@ html[data-light] [style*="background:rgba(255,255,255,0.9"] {
 }
 
 /* ── BORDERS: white-based → black-based ── */
-html[data-light] [style*="border: 1px solid rgba(255,255,255"],
-html[data-light] [style*="border:1px solid rgba(255,255,255"],
-html[data-light] [style*="borderTop: 1px solid rgba(255,255,255"],
-html[data-light] [style*="borderBottom: 1px solid rgba(255,255,255"] {
+html[data-light] [style*="border"] {
   border-color: rgba(0,0,0,0.1) !important;
 }
 /* Dividers (1px height backgrounds) */

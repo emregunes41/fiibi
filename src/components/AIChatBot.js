@@ -226,6 +226,7 @@ export default function AIChatBot() {
                         ? "#FEFEFE" 
                         : "rgba(255, 255, 255, 0.06)",
                       color: msg.role === "user" ? "#010101" : "#FEFEFE",
+                      "--force-color": msg.role === "user" ? "#010101" : "#FEFEFE",
                       fontSize: 13,
                       lineHeight: 1.5,
                       fontWeight: msg.role === "user" ? 500 : 400,
@@ -269,7 +270,7 @@ export default function AIChatBot() {
                           background: "#FEFEFE", display: "flex", alignItems: "center", justifyContent: "center",
                           flexShrink: 0,
                         }}>
-                          <ArrowRight size={14} style={{ color: "#010101" }} />
+                          <ArrowRight size={14} style={{ color: "#010101", "--force-color": "#010101" }} />
                         </div>
                       </motion.a>
                     )}
@@ -367,7 +368,7 @@ export default function AIChatBot() {
                     transition: "all 0.2s",
                   }}
                 >
-                  <Send size={16} style={{ color: input.trim() && !isLoading ? "#010101" : "rgba(255, 255, 255, 0.2)" }} />
+                  <Send size={16} style={{ color: input.trim() && !isLoading ? "#010101" : "rgba(255, 255, 255, 0.2)", "--force-color": input.trim() && !isLoading ? "#010101" : "rgba(255, 255, 255, 0.2)" }} />
                 </button>
               </div>
             </div>
