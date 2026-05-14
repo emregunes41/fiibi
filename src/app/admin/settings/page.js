@@ -367,45 +367,6 @@ export default function SettingsPage() {
               required
             />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
-            <div>
-              <label style={label}>Anasayfa Başlık Rengi</label>
-              <div style={{ display: "flex", gap: 8 }}>
-                <input
-                  type="color"
-                  value={config.heroTitleColor || "#ffffff"}
-                  onChange={(e) => setConfig({ ...config, heroTitleColor: e.target.value })}
-                  style={{ width: 44, height: 44, padding: 0, border: "none", borderRadius: 4, cursor: "pointer", background: "none" }}
-                />
-                <input
-                  type="text"
-                  value={config.heroTitleColor || ""}
-                  onChange={(e) => setConfig({ ...config, heroTitleColor: e.target.value })}
-                  style={inp}
-                  placeholder="#ffffff (Varsayılan)"
-                />
-              </div>
-            </div>
-            <div>
-              <label style={label}>Anasayfa Başlık Fontu</label>
-              <select
-                value={config.heroTitleFont || ""}
-                onChange={(e) => setConfig({ ...config, heroTitleFont: e.target.value })}
-                style={{ ...inp, cursor: "pointer", appearance: "auto" }}
-              >
-                <option value="">Varsayılan Font</option>
-                <option value="geist">Geist (Modern Sans)</option>
-                <option value="inter">Inter (Sade Sans)</option>
-                <option value="playfair">Playfair Display (Zarif Serif)</option>
-                <option value="cormorant">Cormorant (Klasik Serif)</option>
-                <option value="poppins">Poppins (Yuvarlak Sans)</option>
-                <option value="montserrat">Montserrat (Geometrik)</option>
-                <option value="lora">Lora (Edebi Serif)</option>
-                <option value="raleway">Raleway (İnce Sans)</option>
-              </select>
-            </div>
-          </div>
-
 
           <div>
             <label style={label}>Hero Üst Başlık (Küçük)</label>

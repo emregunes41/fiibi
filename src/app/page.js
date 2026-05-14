@@ -111,9 +111,6 @@ export default async function HomePage() {
   const heroSubtitle = siteConfig?.heroSubtitle || bt.heroSub;
   const heroTitle = siteConfig?.heroTitle || bt.heroTitle;
   const heroText = "var(--text)";
-  // Use actual DB color value, not CSS variable (avoids light-mode override wars)
-  const customHeroTitleColor = siteConfig?.heroTitleColor || null;
-  const heroTitleFont = siteConfig?.heroTitleFont ? "var(--hero-title-font)" : undefined;
   const heroAccent = "color-mix(in srgb, var(--text) 40%, transparent)";
   const tpl = getTemplate(siteConfig?.siteTemplate || "classic");
 
@@ -377,7 +374,7 @@ export default async function HomePage() {
   };
 
   return (
-    <main className="relative min-h-screen w-full" {...(customHeroTitleColor ? { "data-heading-color": customHeroTitleColor } : {})}>
+    <main className="relative min-h-screen w-full">
       {preloadUrls.map((url, i) => (
         <link key={i} rel="preload" as="image" href={url} />
       ))}
@@ -388,7 +385,7 @@ export default async function HomePage() {
           <span className="uppercase mb-6 block" style={{ color: heroAccent, fontSize: "var(--hero-sub-size)", letterSpacing: tpl.heroStyle === "magazine" ? "0.25em" : "0.5em", fontWeight: "var(--body-weight)" }}>
             {heroSubtitle}
           </span>
-          <h1 className="font-serif mb-8 leading-[1.1] text-justify-balanced" style={{ color: customHeroTitleColor, fontSize: "var(--hero-title-size)", fontWeight: "var(--heading-weight)", letterSpacing: tpl.heroStyle === "cinematic" ? "-0.04em" : "-0.02em", ...(heroTitleFont ? { fontFamily: heroTitleFont } : {}) }}>
+          <h1 className="font-serif mb-8 leading-[1.1] text-justify-balanced" style={{ fontSize: "var(--hero-title-size)", fontWeight: "var(--heading-weight)", letterSpacing: tpl.heroStyle === "cinematic" ? "-0.04em" : "-0.02em" }}>
             {renderTitle(heroTitle)}
           </h1>
           {tpl.showDividerLine && <div className="h-20 w-[1px] mx-auto mb-8 hidden md:block" style={{ background: `linear-gradient(to bottom, ${heroAccent}, transparent)` }} />}
