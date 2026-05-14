@@ -19,7 +19,7 @@ export default function ProfileLayoutClient({ user, children }) {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#000", color: "#fff" }}>
+    <div className="force-dark" style={{ minHeight: "100vh", background: "#000", color: "#fff" }}>
       {/* Top Bar */}
       <div style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,

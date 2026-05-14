@@ -49,6 +49,14 @@ html[data-light] body {
 html[data-light] body * {
   color: var(--text) !important;
 }
+/* Force-dark sections (customer profile) keep their own inline colors/backgrounds */
+html[data-light] .force-dark,
+html[data-light] .force-dark * {
+  color: revert !important;
+  background: revert !important;
+  background-color: revert !important;
+  border-color: revert !important;
+}
 /* Theme preview cards show their own palette — reset to inherit */
 html[data-light] .theme-preview-card > div:first-child,
 html[data-light] .theme-preview-card > div:first-child * {
