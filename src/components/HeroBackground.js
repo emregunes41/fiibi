@@ -62,7 +62,14 @@ export default function HeroBackground({ bgType, bgUrl, bgColor, businessType, f
           className="global-video-bg" 
           style={{ objectFit: "cover" }}
         />
-        <div className="global-video-overlay" style={{ background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.15) 100%)" }} />
+        <div 
+          className="global-video-overlay" 
+          style={{ 
+            background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%), radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 80%)",
+            backdropFilter: "blur(4px) saturate(110%)",
+            WebkitBackdropFilter: "blur(4px) saturate(110%)"
+          }} 
+        />
       </>
     );
   }
@@ -77,7 +84,14 @@ export default function HeroBackground({ bgType, bgUrl, bgColor, businessType, f
       >
         <source src={bgUrl || "/assets/hero.mp4"} type="video/mp4" />
       </video>
-      <div className="global-video-overlay" style={{ background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.15) 100%)" }} />
+      <div 
+        className="global-video-overlay" 
+        style={{ 
+          background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%), radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 80%)",
+          backdropFilter: "blur(4px) saturate(110%)",
+          WebkitBackdropFilter: "blur(4px) saturate(110%)"
+        }} 
+      />
     </>
   );
 }
