@@ -6,7 +6,7 @@ import { User, UserCircle, Menu, X as CloseIcon, ShoppingBag } from "lucide-reac
 import { useState, useEffect } from "react";
 import { useCart } from "./CartContext";
 import { useLanguage } from "@/components/LanguageContext";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
+// import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Navbar({ businessName = "Studio", logoUrl = null }) {
   const pathname = usePathname();
@@ -153,7 +153,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
 
             {/* Desktop Right Items */}
             <div className="hidden md:flex" style={{ alignItems: "center", gap: 16 }}>
-              <LanguageSwitcher />
+              {/* <LanguageSwitcher /> */}
               
               {/* Cart - only for photographers */}
               {isPhotographer && (
@@ -236,7 +236,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
 
             {/* Mobile Right Items */}
             <div className="flex md:hidden" style={{ alignItems: "center", gap: 10 }}>
-              <LanguageSwitcher />
+              {/* <LanguageSwitcher /> */}
               
               {/* Cart - only for photographers */}
               {isPhotographer && (

@@ -6,7 +6,7 @@ import { sendVerificationCode } from "@/app/actions/verification";
 import { getBusinessTypeList } from "@/lib/business-types";
 
 import { useLanguage } from "@/components/LanguageContext";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
+// import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ThemePreviewCard from "@/components/ThemePreviewCard";
 
 const C = {
@@ -537,7 +537,7 @@ export default function FiibiLanding() {
               fontSize: 14, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
             }}>{t.landing.nav.startFree}</button>
             <div className="fiibi-lang-switch" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)" }}>
-              <LanguageSwitcher />
+              {/* <LanguageSwitcher /> */}
             </div>
           </div>
         </div>
