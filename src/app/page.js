@@ -111,8 +111,8 @@ export default async function HomePage() {
   const heroSubtitle = siteConfig?.heroSubtitle || bt.heroSub;
   const heroTitle = siteConfig?.heroTitle || bt.heroTitle;
   const heroText = "var(--text)";
-  // Use CSS custom property from layout.js if set, fallback to --text
-  const customHeroTitleColor = siteConfig?.heroTitleColor ? "var(--hero-title-color)" : heroText;
+  // Use actual DB color value, not CSS variable (avoids light-mode override wars)
+  const customHeroTitleColor = siteConfig?.heroTitleColor || null;
   const heroTitleFont = siteConfig?.heroTitleFont ? "var(--hero-title-font)" : undefined;
   const heroAccent = "color-mix(in srgb, var(--text) 40%, transparent)";
   const tpl = getTemplate(siteConfig?.siteTemplate || "classic");
@@ -377,7 +377,7 @@ export default async function HomePage() {
   };
 
   return (
-    <main className="relative min-h-screen w-full">
+    <main className="relative min-h-screen w-full" {...(customHeroTitleColor ? { "data-heading-color": customHeroTitleColor } : {})}>
       {preloadUrls.map((url, i) => (
         <link key={i} rel="preload" as="image" href={url} />
       ))}

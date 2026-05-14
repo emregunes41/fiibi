@@ -11,11 +11,12 @@
   --hero-title-font: ;
 }
 
-/* Apply custom heading color/font from settings to all homepage headings */
-html[data-light] section h1,
-html[data-light] section h2,
-html[data-light] section h3 {
-  color: var(--hero-title-color, var(--text)) !important;
+/* Apply custom heading color/font from settings — attribute selector beats body * specificity */
+[data-heading-color] h1,
+[data-heading-color] h2,
+[data-heading-color] h3,
+[data-heading-color] span[class*="uppercase"] {
+  color: var(--hero-title-color) !important;
   font-family: var(--hero-title-font, inherit) !important;
 }
 
