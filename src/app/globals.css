@@ -12,11 +12,11 @@
 }
 
 /* Apply custom heading color/font from settings to all homepage headings */
-main > section h1,
-main > section h2,
-main > section h3 {
-  color: var(--hero-title-color, inherit);
-  font-family: var(--hero-title-font, inherit);
+html[data-light] main > section h1,
+html[data-light] main > section h2,
+html[data-light] main > section h3 {
+  color: var(--hero-title-color, var(--text)) !important;
+  font-family: var(--hero-title-font, inherit) !important;
 }
 
 @theme inline {
