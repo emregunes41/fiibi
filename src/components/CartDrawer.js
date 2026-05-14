@@ -346,6 +346,7 @@ export default function CartDrawer() {
 
           {/* Drawer */}
           <motion.div
+            className="force-dark"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}

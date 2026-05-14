@@ -59,6 +59,16 @@ html[data-light] body {
 html[data-light] body * {
   color: var(--text) !important;
 }
+/* Force-dark: Overlays like cart drawer, modals keep their dark theme */
+html[data-light] .force-dark,
+html[data-light] .force-dark *,
+html[data-light] .force-dark *::before,
+html[data-light] .force-dark *::after {
+  color: unset !important;
+  background-color: unset !important;
+  background: unset !important;
+  border-color: unset !important;
+}
 
 /* Theme preview cards show their own palette — reset to inherit */
 html[data-light] .theme-preview-card > div:first-child,
