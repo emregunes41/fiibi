@@ -19,17 +19,17 @@ export default function ProfileLayoutClient({ user, children }) {
   ];
 
   return (
-    <div className="force-dark" style={{ minHeight: "100vh", background: "#000", color: "#fff" }}>
+    <div className="force-dark" style={{ minHeight: "100vh", background: "#000", color: "#fff", position: "relative", zIndex: 50 }}>
       {/* Top Bar */}
       <div style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        background: "rgba(0,0,0,0.9)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+        background: "rgba(0,0,0,0.95)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
         borderBottom: "1px solid rgba(255,255,255,0.06)",
         padding: "0 16px",
       }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
           {/* Left: Logo */}
-          <Link href="/" style={{ textDecoration: "none", color: "inherit", fontWeight: 800, fontSize: "0.9rem", letterSpacing: "-0.02em", display: "flex", alignItems: "center", gap: 8 }}>
+          <Link href="/" style={{ textDecoration: "none", color: "#fff", fontWeight: 800, fontSize: "0.9rem", letterSpacing: "-0.02em", display: "flex", alignItems: "center", gap: 8 }}>
             <Home size={14} style={{ color: "rgba(255,255,255,0.4)" }} />
             STUDIO
           </Link>
@@ -77,7 +77,7 @@ export default function ProfileLayoutClient({ user, children }) {
       </div>
 
       {/* Main Content */}
-      <main style={{ paddingTop: 56, minHeight: "100vh", background: "rgba(255,255,255,0.02)" }}>
+      <main style={{ paddingTop: 56, minHeight: "100vh", background: "#000" }}>
         <div style={{ padding: "clamp(16px, 4vw, 56px)", maxWidth: 1200, margin: "0 auto", marginTop: 20 }}>
           {children}
           {/* Mobile Bottom Spacer */}

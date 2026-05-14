@@ -57,6 +57,13 @@ html[data-light] .force-dark * {
   background-color: revert !important;
   border-color: revert !important;
 }
+/* Prevent purple visited links inside force-dark */
+.force-dark a,
+.force-dark a:visited,
+.force-dark a:link {
+  color: inherit;
+  text-decoration: none;
+}
 /* Theme preview cards show their own palette — reset to inherit */
 html[data-light] .theme-preview-card > div:first-child,
 html[data-light] .theme-preview-card > div:first-child * {
