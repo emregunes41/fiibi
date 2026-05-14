@@ -52,7 +52,7 @@ export default function CookieConsent() {
       pointerEvents: "none",
       animation: "cookieSlideUp 0.5s ease-out",
     }}>
-      <div style={{
+      <div className="force-dark" style={{
         maxWidth: 520,
         margin: "0 auto",
         background: "var(--bg-card, rgba(15,15,15,0.97))",

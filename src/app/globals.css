@@ -45,15 +45,9 @@ html[data-light] body {
 }
 
 /* Catch-all: Force dark text on ALL elements in light mode */
-/* Inverted buttons (#fff bg, colored bg) are protected by more specific rules below */
-html[data-light] body * {
+/* .force-dark overlays (cart, chatbot, cookie banner) are EXCLUDED */
+html[data-light] body *:not(.force-dark):not(.force-dark *) {
   color: var(--text) !important;
-}
-/* Force-dark: Overlays like cart drawer keep their dark theme */
-/* Only override color — background/border use inline styles that don't match light mode selectors */
-html[data-light] .force-dark,
-html[data-light] .force-dark * {
-  color: unset !important;
 }
 
 /* Theme preview cards show their own palette — reset to inherit */
@@ -67,86 +61,78 @@ html[data-light] .theme-preview-label * {
   color: var(--text) !important;
 }
 
-/* ── TEXT: All hardcoded white text → dark text ── */
-html[data-light] [style*="color: #fff"],
-html[data-light] [style*="color:#fff"],
-html[data-light] [style*="color: #ffffff"],
-html[data-light] [style*="color:#ffffff"],
-html[data-light] [style*='color: "#fff"'],
-html[data-light] [style*='color: "#ffffff"'] {
+/* ── TEXT: All hardcoded white text → dark text (exclude force-dark) ── */
+html[data-light] :not(.force-dark) > [style*="color: #fff"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color:#fff"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: #ffffff"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color:#ffffff"]:not(.force-dark *) {
   color: var(--text) !important;
 }
 
-/* All hardcoded black text → stays dark (good for light mode) */
-/* color: #000 is fine in light mode, skip */
-
-/* rgba(255,255,255, OPACITY) text → rgba(0,0,0, OPACITY) text */
-html[data-light] [style*="color: rgba(255,255,255,0.1"],
-html[data-light] [style*="color: rgba(255,255,255,0.15"],
-html[data-light] [style*="color: rgba(255,255,255,0.2"],
-html[data-light] [style*="color: rgba(255,255,255,0.25"] {
+/* rgba(255,255,255, OPACITY) text → rgba(0,0,0, OPACITY) text (exclude force-dark) */
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.1"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.15"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.2"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.25"]:not(.force-dark *) {
   color: rgba(0,0,0,0.25) !important;
 }
-html[data-light] [style*="color: rgba(255,255,255,0.3"],
-html[data-light] [style*="color: rgba(255,255,255,0.35"],
-html[data-light] [style*="color: rgba(255,255,255,0.4"],
-html[data-light] [style*="color: rgba(255,255,255,0.45"],
-html[data-light] [style*="color: rgba(255,255,255,0.5"] {
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.3"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.35"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.4"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.45"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.5"]:not(.force-dark *) {
   color: rgba(0,0,0,0.5) !important;
 }
-html[data-light] [style*="color: rgba(255,255,255,0.55"],
-html[data-light] [style*="color: rgba(255,255,255,0.6"],
-html[data-light] [style*="color: rgba(255,255,255,0.65"],
-html[data-light] [style*="color: rgba(255,255,255,0.7"] {
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.55"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.6"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.65"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.7"]:not(.force-dark *) {
   color: rgba(0,0,0,0.65) !important;
 }
-html[data-light] [style*="color: rgba(255,255,255,0.8"],
-html[data-light] [style*="color: rgba(255,255,255,0.85"],
-html[data-light] [style*="color: rgba(255,255,255,0.9"],
-html[data-light] [style*="color: rgba(255,255,255,0.95"],
-html[data-light] [style*="color: rgba(255,255,255,1"] {
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.8"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.85"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.9"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,0.95"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="color: rgba(255,255,255,1"]:not(.force-dark *) {
   color: rgba(0,0,0,0.85) !important;
 }
 
-/* ── BACKGROUNDS: semi-transparent white → semi-transparent black (granular) ── */
-html[data-light] [style*="background: rgba(255,255,255,0.0"],
-html[data-light] [style*="background:rgba(255,255,255,0.0"] {
+/* ── BACKGROUNDS: semi-transparent white → semi-transparent black (exclude force-dark) ── */
+html[data-light] :not(.force-dark) > [style*="background: rgba(255,255,255,0.0"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background:rgba(255,255,255,0.0"]:not(.force-dark *) {
   background: rgba(0,0,0,0.02) !important;
 }
-html[data-light] [style*="background: rgba(255,255,255,0.1"],
-html[data-light] [style*="background:rgba(255,255,255,0.1"] {
+html[data-light] :not(.force-dark) > [style*="background: rgba(255,255,255,0.1"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background:rgba(255,255,255,0.1"]:not(.force-dark *) {
   background: rgba(0,0,0,0.06) !important;
 }
-html[data-light] [style*="background: rgba(255,255,255,0.2"],
-html[data-light] [style*="background:rgba(255,255,255,0.2"],
-html[data-light] [style*="background: rgba(255,255,255,0.3"],
-html[data-light] [style*="background:rgba(255,255,255,0.3"] {
+html[data-light] :not(.force-dark) > [style*="background:rgba(255,255,255,0.3"]:not(.force-dark *) {
   background: rgba(0,0,0,0.08) !important;
 }
-html[data-light] [style*="background: rgba(255,255,255,0.4"],
-html[data-light] [style*="background:rgba(255,255,255,0.4"],
-html[data-light] [style*="background: rgba(255,255,255,0.5"],
-html[data-light] [style*="background:rgba(255,255,255,0.5"],
-html[data-light] [style*="background: rgba(255,255,255,0.6"],
-html[data-light] [style*="background:rgba(255,255,255,0.6"],
-html[data-light] [style*="background: rgba(255,255,255,0.7"],
-html[data-light] [style*="background:rgba(255,255,255,0.7"] {
+html[data-light] :not(.force-dark) > [style*="background: rgba(255,255,255,0.4"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background:rgba(255,255,255,0.4"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background: rgba(255,255,255,0.5"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background:rgba(255,255,255,0.5"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background: rgba(255,255,255,0.6"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background:rgba(255,255,255,0.6"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background: rgba(255,255,255,0.7"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background:rgba(255,255,255,0.7"]:not(.force-dark *) {
   background: rgba(0,0,0,0.1) !important;
 }
-html[data-light] [style*="background: rgba(255,255,255,0.8"],
-html[data-light] [style*="background:rgba(255,255,255,0.8"],
-html[data-light] [style*="background: rgba(255,255,255,0.9"],
-html[data-light] [style*="background:rgba(255,255,255,0.9"] {
+html[data-light] :not(.force-dark) > [style*="background: rgba(255,255,255,0.8"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background:rgba(255,255,255,0.8"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background: rgba(255,255,255,0.9"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background:rgba(255,255,255,0.9"]:not(.force-dark *) {
   background: rgba(0,0,0,0.15) !important;
 }
 
-/* ── BORDERS: white-based → black-based ── */
-html[data-light] [style*="border"] {
+/* ── BORDERS: white-based → black-based (exclude force-dark) ── */
+html[data-light] *:not(.force-dark):not(.force-dark *) [style*="border"] {
   border-color: rgba(0,0,0,0.1) !important;
 }
 /* Dividers (1px height backgrounds) */
-html[data-light] [style*="background: rgba(255,255,255,0.04)"][style*="height: 1px"],
-html[data-light] [style*="background: rgba(255,255,255,0.06)"][style*="height: 1px"] {
+html[data-light] :not(.force-dark) > [style*="background: rgba(255,255,255,0.04)"][style*="height: 1px"]:not(.force-dark *),
+html[data-light] :not(.force-dark) > [style*="background: rgba(255,255,255,0.06)"][style*="height: 1px"]:not(.force-dark *) {
   background: rgba(0,0,0,0.08) !important;
 }
 
