@@ -62,7 +62,7 @@ export default function HeroBackground({ bgType, bgUrl, bgColor, businessType, f
           className="global-video-bg" 
           style={{ objectFit: "cover" }}
         />
-        <div className="global-video-overlay" />
+        <div className="global-video-overlay" style={{ background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.15) 100%)" }} />
       </>
     );
   }
@@ -77,7 +77,7 @@ export default function HeroBackground({ bgType, bgUrl, bgColor, businessType, f
       >
         <source src={bgUrl || "/assets/hero.mp4"} type="video/mp4" />
       </video>
-      <div className="global-video-overlay" />
+      <div className="global-video-overlay" style={{ background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.15) 100%)" }} />
     </>
   );
 }
