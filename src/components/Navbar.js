@@ -50,7 +50,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  if (pathname.startsWith("/admin") || pathname.startsWith("/profile")) return null;
+  if (pathname.startsWith("/admin")) return null;
 
   return (
     <>
