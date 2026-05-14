@@ -110,21 +110,10 @@ export default async function HomePage() {
   // Hero text: use DB values directly, fallback to sector defaults only if empty
   const heroSubtitle = siteConfig?.heroSubtitle || bt.heroSub;
   const heroTitle = siteConfig?.heroTitle || bt.heroTitle;
-  
-  const FONT_MAP = {
-    geist: "var(--font-geist-sans), system-ui, sans-serif",
-    inter: "'Inter', system-ui, sans-serif",
-    playfair: "'Playfair Display', Georgia, serif",
-    poppins: "'Poppins', system-ui, sans-serif",
-    montserrat: "'Montserrat', system-ui, sans-serif",
-    lora: "'Lora', Georgia, serif",
-    raleway: "'Raleway', system-ui, sans-serif",
-    cormorant: "'Cormorant Garamond', Georgia, serif",
-  };
-  const heroTitleFont = siteConfig?.heroTitleFont ? FONT_MAP[siteConfig.heroTitleFont] : undefined;
-
   const heroText = "var(--text)";
-  const customHeroTitleColor = siteConfig?.heroTitleColor || heroText;
+  // Use CSS custom property from layout.js if set, fallback to --text
+  const customHeroTitleColor = siteConfig?.heroTitleColor ? "var(--hero-title-color)" : heroText;
+  const heroTitleFont = siteConfig?.heroTitleFont ? "var(--hero-title-font)" : undefined;
   const heroAccent = "color-mix(in srgb, var(--text) 40%, transparent)";
   const tpl = getTemplate(siteConfig?.siteTemplate || "classic");
 

@@ -195,10 +195,15 @@ export default async function RootLayout({ children }) {
         "--body-weight": tpl.fontWeight.body,
         "--hero-title-size": tpl.heroTitleSize,
         "--hero-sub-size": tpl.heroSubSize,
+        "--hero-title-color": siteConfig?.heroTitleColor || "",
+        "--hero-title-font": siteConfig?.heroTitleFont ? ({"geist":"var(--font-geist-sans),system-ui,sans-serif","inter":"'Inter',system-ui,sans-serif","playfair":"'Playfair Display',Georgia,serif","cormorant":"'Cormorant Garamond',Georgia,serif","poppins":"'Poppins',system-ui,sans-serif","montserrat":"'Montserrat',system-ui,sans-serif","lora":"'Lora',Georgia,serif","raleway":"'Raleway',system-ui,sans-serif"}[siteConfig.heroTitleFont] || "") : "",
       }}
     >
       <head>
         {googleFontUrl && <link rel="stylesheet" href={googleFontUrl} />}
+        {siteConfig?.heroTitleFont && siteConfig.heroTitleFont !== fontFamily && GOOGLE_FONTS[siteConfig.heroTitleFont] && (
+          <link rel="stylesheet" href={`https://fonts.googleapis.com/css2?family=${GOOGLE_FONTS[siteConfig.heroTitleFont]}&display=swap`} />
+        )}
       </head>
       <body suppressHydrationWarning
         className="min-h-full flex flex-col font-sans"

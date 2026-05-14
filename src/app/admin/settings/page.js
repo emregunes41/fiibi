@@ -369,7 +369,7 @@ export default function SettingsPage() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
             <div>
-              <label style={label}>Başlık Rengi</label>
+              <label style={label}>Anasayfa Başlık Rengi</label>
               <div style={{ display: "flex", gap: 8 }}>
                 <input
                   type="color"
@@ -387,7 +387,7 @@ export default function SettingsPage() {
               </div>
             </div>
             <div>
-              <label style={label}>Başlık Fontu</label>
+              <label style={label}>Anasayfa Başlık Fontu</label>
               <select
                 value={config.heroTitleFont || ""}
                 onChange={(e) => setConfig({ ...config, heroTitleFont: e.target.value })}

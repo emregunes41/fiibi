@@ -7,6 +7,16 @@
 
   --background: var(--bg);
   --foreground: var(--text);
+  --hero-title-color: ;
+  --hero-title-font: ;
+}
+
+/* Apply custom heading color/font from settings to all homepage headings */
+main > section h1,
+main > section h2,
+main > section h3 {
+  color: var(--hero-title-color, inherit);
+  font-family: var(--hero-title-font, inherit);
 }
 
 @theme inline {
