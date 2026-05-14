@@ -77,7 +77,7 @@ export default function CookieConsent() {
               margin: "0 0 6px",
               fontSize: 14,
               fontWeight: 700,
-              color: "var(--text, #fff)",
+              color: "var(--text, #FEFEFE)",
             }}>
               Çerez Kullanımı
             </p>
@@ -100,8 +100,8 @@ export default function CookieConsent() {
               <button
                 onClick={handleAccept}
                 style={{
-                  background: "var(--btn-bg, #fff)",
-                  color: "var(--btn-text, #000)",
+                  background: "var(--btn-bg, #FEFEFE)",
+                  color: "var(--btn-text, #010101)",
                   border: "none",
                   padding: "8px 20px",
                   borderRadius: 6,

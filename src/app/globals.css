@@ -44,17 +44,11 @@ html[data-light] body {
   color: var(--text) !important;
 }
 
-/* Catch-all: Force dark text on ALL elements in light mode */
-/* Inverted buttons (#fff bg, colored bg) are protected by more specific rules below */
-html[data-light] body * {
+/* Override utility classes that might force white text */
+html[data-light] .text-white {
   color: var(--text) !important;
 }
-/* Force-dark: Overlays like cart drawer keep their dark theme */
-/* Only override color — background/border use inline styles that don't match light mode selectors */
-html[data-light] .force-dark,
-html[data-light] .force-dark * {
-  color: unset !important;
-}
+
 
 /* Theme preview cards show their own palette — reset to inherit */
 html[data-light] .theme-preview-card > div:first-child,
@@ -141,7 +135,10 @@ html[data-light] [style*="background:rgba(255,255,255,0.9"] {
 }
 
 /* ── BORDERS: white-based → black-based ── */
-html[data-light] [style*="border"] {
+html[data-light] [style*="border: 1px solid rgba(255,255,255"],
+html[data-light] [style*="border:1px solid rgba(255,255,255"],
+html[data-light] [style*="borderTop: 1px solid rgba(255,255,255"],
+html[data-light] [style*="borderBottom: 1px solid rgba(255,255,255"] {
   border-color: rgba(0,0,0,0.1) !important;
 }
 /* Dividers (1px height backgrounds) */
