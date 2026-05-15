@@ -309,16 +309,16 @@ export default function ReservationsPage() {
             </div>
 
             {/* Day Headers */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(255,255,255,0.25)", borderBottom: "none" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(0,0,0,0.12)", borderBottom: "none" }}>
               {dayNames.map(d => (
-                <div key={d} style={{ textAlign: "center", fontSize: "0.65rem", fontWeight: 600, color: "rgba(255,255,255,0.5)", padding: "10px 0", textTransform: "uppercase", letterSpacing: "0.05em", borderRight: "1px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.03)" }}>{d}</div>
+                <div key={d} style={{ textAlign: "center", fontSize: "0.65rem", fontWeight: 600, color: "rgba(0,0,0,0.45)", padding: "10px 0", textTransform: "uppercase", letterSpacing: "0.05em", borderRight: "1px solid rgba(0,0,0,0.12)", background: "rgba(0,0,0,0.02)" }}>{d}</div>
               ))}
             </div>
 
             {/* Calendar Grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(255,255,255,0.25)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(0,0,0,0.12)" }}>
               {cells.map((day, idx) => {
-                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 110, borderRight: "1px solid rgba(255,255,255,0.25)", borderBottom: "1px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.015)" }} />;
+                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 110, borderRight: "1px solid rgba(0,0,0,0.12)", borderBottom: "1px solid rgba(0,0,0,0.12)", background: "rgba(255,255,255,0.015)" }} />;
                 const dayRes = resByDay[day] || [];
                 const hasRes = dayRes.length > 0;
                 const todayStyle = isToday(day);
@@ -328,7 +328,7 @@ export default function ReservationsPage() {
 
                 return (
                   <div key={day} onClick={(e) => { e.stopPropagation(); setSelectedDay({ day, reservations: dayRes }); setDayPopup(null); setTimeout(() => { const el = document.getElementById('selected-day-panel'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 50); }} style={{
-                    minHeight: 110, borderRight: "1px solid rgba(255,255,255,0.25)", borderBottom: "1px solid rgba(255,255,255,0.25)",
+                    minHeight: 110, borderRight: "1px solid rgba(0,0,0,0.12)", borderBottom: "1px solid rgba(0,0,0,0.12)",
                     padding: "4px 5px", cursor: "pointer", position: "relative", overflow: "hidden",
                     background: isSelected ? "rgba(255,255,255,0.06)" : isDayBlocked ? "rgba(255,60,60,0.04)" : "transparent",
                     transition: "background 0.15s",
@@ -376,7 +376,7 @@ export default function ReservationsPage() {
                   <button onClick={() => setSelectedDay(null)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 6 }}><X size={18} /></button>
                 </div>
                 {selectedDay.reservations.length === 0 ? (
-                  <div style={{ padding: "32px 16px", textAlign: "center", color: "rgba(255,255,255,0.25)", fontSize: "0.8rem" }}>Bu güne ait rezervasyon bulunmuyor.</div>
+                  <div style={{ padding: "32px 16px", textAlign: "center", color: "rgba(0,0,0,0.35)", fontSize: "0.8rem" }}>Bu güne ait rezervasyon bulunmuyor.</div>
                 ) : (
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     {selectedDay.reservations.map(r => {
@@ -975,7 +975,7 @@ export default function ReservationsPage() {
                               setFormData({...formData, selectedAddons: cur, totalAmount: total > 0 ? total.toLocaleString("tr-TR") : ""});
                             }} style={{
                               padding: "5px 10px", borderRadius: 0, fontSize: "0.65rem", cursor: "pointer",
-                              border: isSelected ? "1px solid rgba(255,255,255,0.25)" : "1px solid rgba(255,255,255,0.08)",
+                              border: isSelected ? "1px solid rgba(255,255,255,0.15)" : "1px solid rgba(255,255,255,0.08)",
                               background: isSelected ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.03)",
                               color: isSelected ? "#fff" : "rgba(255,255,255,0.55)", fontWeight: isSelected ? 700 : 500,
                             }}>
