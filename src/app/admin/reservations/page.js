@@ -1111,7 +1111,7 @@ export default function ReservationsPage() {
         }}
         isPhotographer={isPhotographer}
         terms={terms}
-        paymentMode={paymentMode}
+        paymentMode={siteConfig?.paymentMode || "cash"}
         onDelete={handleDeleteReservation}
       />
 
