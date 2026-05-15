@@ -8,6 +8,7 @@ import { getBusinessType } from "@/lib/business-types";
 import { useAdminSession } from "../AdminSessionContext";
 import Link from "next/link";
 import ReservationHubModal from "../components/ReservationHubModal";
+import EventsAdminPage from "../events/page";
 
 const inp = {
   padding: "0.7rem 0.8rem", borderRadius: 0, fontSize: "0.8rem",
@@ -16,6 +17,7 @@ const inp = {
 };
 
 export default function ReservationsPage() {
+  const [activeTab, setActiveTab] = useState("reservations");
   const [reservations, setReservations] = useState([]);
   const [packages, setPackages] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -158,8 +160,26 @@ export default function ReservationsPage() {
 
   return (
     <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", gap: "0.75rem", flexWrap: "wrap" }}>
+      
+      <div style={{ display: "flex", gap: "24px", marginBottom: "24px", borderBottom: "1px solid rgba(255,255,255,0.1)", overflowX: "auto", scrollbarWidth: "none" }}>
+         <button onClick={() => setActiveTab("reservations")} style={{ background: "none", border: "none", borderBottom: activeTab === "reservations" ? "2px solid #fff" : "2px solid transparent", color: activeTab === "reservations" ? "#fff" : "rgba(255,255,255,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
+            {terms.appointments} Yönetimi
+         </button>
+         {modules.moduleEvents !== false && (
+           <button onClick={() => setActiveTab("events")} style={{ background: "none", border: "none", borderBottom: activeTab === "events" ? "2px solid #fff" : "2px solid transparent", color: activeTab === "events" ? "#fff" : "rgba(255,255,255,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
+              Grup Dersleri & Etkinlikler
+           </button>
+         )}
+      </div>
+
+      {activeTab === "events" ? (
+        <div style={{ marginTop: "-20px" }}>
+          <EventsAdminPage />
+        </div>
+      ) : (
+        <>
+          {/* Header */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", gap: "0.75rem", flexWrap: "wrap" }}>
         <div>
           <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>Rezervasyonlar</h1>
           <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.75rem", margin: "4px 0 0" }}>{reservations.filter(r => r.status !== "DELETED").length} kayıt</p>
@@ -1271,6 +1291,8 @@ export default function ReservationsPage() {
             </div>
           </div>
         </div>
+      )}
+      </>
       )}
 
     </div>
