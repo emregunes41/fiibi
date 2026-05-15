@@ -2200,10 +2200,34 @@ export default function SettingsPage() {
           
           <div style={{ position: "relative" }}>
             {!planLimits.customDomain && (
-              <Link href="/admin/subscription" style={{ position: "absolute", inset: 0, zIndex: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }} title="Bu özellik için Pro plana geçmelisiniz.">
-                <div style={{ background: "#FF5F1F", color: "#fff", padding: "12px 24px", fontWeight: 800, fontSize: 14, display: "flex", alignItems: "center", gap: 10, boxShadow: "0 10px 30px rgba(255,95,31,0.3)" }}>
-                  <Lock size={18} />
-                  Bu Özellik İçin Pro Plana Geçin
+              <Link href="/admin/subscription" style={{ position: "absolute", inset: 0, zIndex: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}>
+                <div style={{
+                  background: "rgba(15, 15, 15, 0.95)",
+                  backdropFilter: "blur(16px)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  borderRadius: 16,
+                  padding: "32px 32px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 12,
+                  boxShadow: "0 24px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+                  transform: "translateY(-10px)",
+                  maxWidth: 320,
+                  textAlign: "center",
+                  transition: "all 0.3s ease"
+                }} className="hover:-translate-y-4 hover:shadow-[0_32px_64px_rgba(255,95,31,0.15)]">
+                  <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(255,95,31,0.1)", color: "#FF5F1F", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 4 }}>
+                    <Lock size={26} strokeWidth={2.5} />
+                  </div>
+                  <h4 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>Pro Plana Özel</h4>
+                  <p style={{ margin: 0, fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>
+                    Sitenize özel alan adı (domain) bağlamak için planınızı Pro'ya yükseltin.
+                  </p>
+                  <div style={{ marginTop: 12, background: "#fff", color: "#000", padding: "12px 24px", borderRadius: 8, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 8, transition: "transform 0.2s" }}>
+                    <ArrowUp size={16} strokeWidth={2.5} />
+                    Planı Yükselt
+                  </div>
                 </div>
               </Link>
             )}
