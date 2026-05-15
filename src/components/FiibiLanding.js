@@ -849,8 +849,13 @@ export default function FiibiLanding() {
             <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.15em" }}>Güvenli Ödeme Altyapısı</div>
             <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", justifyContent: "center", opacity: 0.8 }}>
               <img src="/assets/iyzico_footer.svg" alt="iyzico Korumalı Alışveriş" style={{ height: 28 }} />
-              <span style={{ fontSize: 16, fontWeight: 900, color: "#fff", letterSpacing: "-0.5px", opacity: 0.6 }}>PayTR</span>
+              <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" style={{ fontSize: 16, fontWeight: 900, color: "#fff", letterSpacing: "-0.5px", opacity: 0.6, textDecoration: "none" }}>PayTR</a>
             </div>
+            <p style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", textAlign: "center", maxWidth: 420, lineHeight: 1.6, margin: 0 }}>
+              Bu internet sitesindeki ödeme hizmetleri{" "}
+              <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.3)", textDecoration: "underline" }}>PAYTR Ödeme ve Elektronik Para Kuruluşu A.Ş.</a>
+              {" "}tarafından sağlanmaktadır.
+            </p>
           </div>
 
         <div style={{ ...wrap, borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 24, paddingTop: 20, textAlign: "center" }}>

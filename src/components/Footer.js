@@ -89,8 +89,13 @@ export default function Footer({ businessName = "Studio", phone = "", email = ""
         <div className="text-[10px] font-bold text-white/50 tracking-[0.15em] uppercase">Güvenli Ödeme Altyapısı</div>
         <div className="flex items-center justify-center gap-6 flex-wrap opacity-80">
           <img src="/assets/iyzico_footer.svg" alt="iyzico Korumalı Alışveriş" className="h-6" />
-          <span className="text-sm font-black text-white tracking-tighter opacity-60">PayTR</span>
+          <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" className="text-sm font-black text-white tracking-tighter opacity-60 hover:opacity-100 transition-opacity no-underline">PayTR</a>
         </div>
+        <p className="text-[10px] text-white/30 text-center max-w-md leading-relaxed mt-1">
+          Bu internet sitesindeki ödeme hizmetleri{" "}
+          <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white/60 underline transition-colors">PAYTR Ödeme ve Elektronik Para Kuruluşu A.Ş.</a>
+          {" "}tarafından sağlanmaktadır.
+        </p>
       </div>
 
       <div className="max-w-7xl mx-auto border-t border-white/5 mt-8 pt-8 text-center text-white/30 text-xs">
