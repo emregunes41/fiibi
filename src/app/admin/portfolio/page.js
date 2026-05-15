@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { CldUploadWidget } from "next-cloudinary";
-import { UploadCloud, Image as ImageIcon, Trash2, Plus, X, ArrowLeft, Folder, RefreshCw } from "lucide-react";
+import { UploadCloud, Image as ImageIcon, Trash2, Plus, X, ArrowLeft, Folder, RefreshCw, Crown } from "lucide-react";
 import { thumbnailUrl } from "@/lib/image-utils";
+import { useAdminSession } from "../AdminSessionContext";
 import { 
   getPortfolioCategories, 
   createPortfolioCategory, 
@@ -21,6 +22,8 @@ const inp = {
 const lbl = { display: "block", fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", marginBottom: "5px", letterSpacing: "0.04em" };
 
 export default function PortfolioAdminPage() {
+  const { session: adminSession } = useAdminSession();
+  const tenantPlan = adminSession?.tenant?.plan || "trial";
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [newCatName, setNewCatName] = useState("");
@@ -28,6 +31,7 @@ export default function PortfolioAdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [activeCategoryId, setActiveCategoryId] = useState(null);
+  const [uploadError, setUploadError] = useState("");
 
   const activeCategory = categories.find(c => c.id === activeCategoryId);
 
@@ -67,9 +71,13 @@ export default function PortfolioAdminPage() {
 
   const handleUploadSuccess = async (result, categoryId) => {
     if (result.event === "success") {
+      setUploadError("");
       const url = result.info.secure_url;
       const publicId = result.info.public_id;
-      await addPhotoToPortfolio(categoryId, url, publicId);
+      const res = await addPhotoToPortfolio(categoryId, url, publicId);
+      if (res.error) {
+        setUploadError(res.error);
+      }
       loadCategories();
     }
   };
@@ -125,6 +133,44 @@ export default function PortfolioAdminPage() {
             )}
           </CldUploadWidget>
         </div>
+
+        {/* Photo Limit Bar (Basic plan only) */}
+        {(() => {
+          const totalPhotos = categories.reduce((sum, c) => sum + (c.photos?.length || 0), 0);
+          const maxPhotos = tenantPlan === "pro" ? Infinity : 20;
+          const isNearLimit = totalPhotos >= maxPhotos - 3 && maxPhotos !== Infinity;
+          const isAtLimit = totalPhotos >= maxPhotos;
+          if (maxPhotos === Infinity) return null;
+          return (
+            <div style={{ padding: "12px 16px", background: isAtLimit ? "rgba(239,68,68,0.06)" : isNearLimit ? "rgba(245,158,11,0.06)" : "rgba(255,255,255,0.02)", border: `1px solid ${isAtLimit ? "rgba(239,68,68,0.15)" : isNearLimit ? "rgba(245,158,11,0.15)" : "rgba(255,255,255,0.06)"}`, marginBottom: 16, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: isAtLimit ? "#ef4444" : "#fff", marginBottom: 6 }}>
+                  {totalPhotos} / {maxPhotos} fotoğraf
+                  {isAtLimit && " — Limit doldu!"}
+                </div>
+                <div style={{ width: "100%", height: 4, background: "rgba(255,255,255,0.1)" }}>
+                  <div style={{ width: `${Math.min(100, (totalPhotos / maxPhotos) * 100)}%`, height: "100%", background: isAtLimit ? "#ef4444" : isNearLimit ? "#f59e0b" : "#fff", transition: "width 0.3s" }} />
+                </div>
+              </div>
+              {isNearLimit && (
+                <a href="/admin/subscription" style={{ fontSize: 11, fontWeight: 800, color: "#8b5cf6", background: "rgba(139,92,246,0.15)", padding: "6px 12px", textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 4 }}>
+                  <Crown size={12} /> Pro'ya Yükselt
+                </a>
+              )}
+            </div>
+          );
+        })()}
+
+        {/* Upload Error */}
+        {uploadError && (
+          <div style={{ padding: "14px 16px", background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", marginBottom: 16, display: "flex", alignItems: "center", gap: 10 }}>
+            <Crown size={16} style={{ color: "#8b5cf6", flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#ef4444" }}>{uploadError}</div>
+              <a href="/admin/subscription" style={{ fontSize: 11, color: "#8b5cf6", textDecoration: "underline" }}>Pro plana yükselt →</a>
+            </div>
+          </div>
+        )}
 
         {/* Photos Grid */}
         {activeCategory.photos?.length === 0 ? (
