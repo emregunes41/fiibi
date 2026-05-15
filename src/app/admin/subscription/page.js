@@ -75,10 +75,7 @@ export default function SubscriptionPage() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [billingCycle, setBillingCycle] = useState("yearly");
   const [showComparison, setShowComparison] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
-  const [cardForm, setCardForm] = useState({ number: "", expMonth: "", expYear: "", cvv: "", name: "" });
-  const formRef = useRef(null);
 
   const handleStartPayment = async (planId) => {
     setSelectedPlan(planId);
@@ -88,58 +85,31 @@ export default function SubscriptionPage() {
     // Update selectedPlan in DB
     const periodType = planId.includes("yearly") ? "yearly" : "monthly";
     try {
+      setPaymentLoading(true);
       await fetch("/api/auth/update-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tenantId: tenantInfo.id, selectedPlan: periodType }),
       });
-    } catch {}
 
-    setShowPaymentModal(true);
-  };
-
-  const handlePayment = async () => {
-    if (!cardForm.number || !cardForm.expMonth || !cardForm.expYear || !cardForm.cvv || !cardForm.name) {
-      alert("Lütfen tüm kart bilgilerini doldurun.");
-      return;
-    }
-    setPaymentLoading(true);
-    try {
-      const res = await fetch("/api/paytr/direct-payment", {
+      // PayTR iFrame Token al ve yönlendir
+      const res = await fetch("/api/paytr/subscription-token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tenantId: tenantInfo.id }),
       });
       const data = await res.json();
-      if (!data.success) { alert(data.error || "Hata oluştu"); setPaymentLoading(false); return; }
-
-      // Hidden form ile PayTR'ye POST et
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = data.formAction;
-      // API'den gelen tüm hidden field'ları ekle
-      Object.entries(data.formData).forEach(([key, value]) => {
-        const input = document.createElement("input");
-        input.type = "hidden"; input.name = key; input.value = value;
-        form.appendChild(input);
-      });
-      // Kart bilgilerini ekle (Direkt API'de biz topluyoruz)
-      const cardFields = {
-        cc_owner: cardForm.name,
-        card_number: cardForm.number.replace(/\s/g, ""),
-        expiry_month: cardForm.expMonth.padStart(2, "0"),
-        expiry_year: cardForm.expYear.length === 2 ? "20" + cardForm.expYear : cardForm.expYear,
-        cvv: cardForm.cvv,
-      };
-      Object.entries(cardFields).forEach(([key, value]) => {
-        const input = document.createElement("input");
-        input.type = "hidden"; input.name = key; input.value = value;
-        form.appendChild(input);
-      });
-      document.body.appendChild(form);
-      form.submit();
-    } catch (err) {
-      alert("Ödeme başlatılamadı: " + err.message);
+      
+      if (!data.success) {
+        alert(data.error || "Hata oluştu");
+        setPaymentLoading(false);
+        return;
+      }
+      
+      // PayTR güvenli ödeme sayfasına yönlendir
+      window.location.href = data.iframeUrl;
+    } catch (e) {
+      alert("Ödeme başlatılamadı: " + e.message);
       setPaymentLoading(false);
     }
   };
@@ -320,7 +290,9 @@ export default function SubscriptionPage() {
                 }}
               >
                 <Zap size={14} />
-                {plan === p.tier ? "Planı Yenile" : plan === "pro" && p.tier === "basic" ? "Basic'e Geç" : "Planı Seç"}
+                {paymentLoading && selectedPlan === p.id 
+                  ? "Yönlendiriliyor..." 
+                  : plan === p.tier ? "Planı Yenile" : plan === "pro" && p.tier === "basic" ? "Basic'e Geç" : "Planı Seç"}
               </button>
             </div>
           </div>
@@ -407,77 +379,7 @@ export default function SubscriptionPage() {
           )}
         </div>
       )}
-      {/* Payment Modal */}
-      {showPaymentModal && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
-          onClick={() => { if (!paymentLoading) { setShowPaymentModal(false); setPaymentLoading(false); } }}>
-          <div className="admin-modal-content" style={{ border: "1px solid rgba(255,255,255,0.1)", width: "100%", maxWidth: 420, padding: 32 }}
-            onClick={e => e.stopPropagation()}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
-              <CreditCard size={20} style={{ color: "#f59e0b" }} />
-              <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0 }}>Ödeme Bilgileri</h2>
-            </div>
 
-            {selectedPlan && (() => { const p = plans.find(x => x.id === selectedPlan); return p ? (
-              <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "12px 16px", marginBottom: 20, display: "flex", justifyContent: "space-between" }}>
-                <span style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>{p.name} — {p.period}</span>
-                <span style={{ fontSize: 15, fontWeight: 800 }}>{(p.price / 100).toLocaleString("tr-TR", { minimumFractionDigits: 2 })} ₺</span>
-              </div>
-            ) : null; })()}
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <div>
-                <label style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 6, display: "block" }}>Kart Üzerindeki İsim</label>
-                <input value={cardForm.name} onChange={e => setCardForm({ ...cardForm, name: e.target.value.toUpperCase() })}
-                  placeholder="AD SOYAD" style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", fontSize: 14, fontWeight: 600, outline: "none", boxSizing: "border-box" }} />
-              </div>
-              <div>
-                <label style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 6, display: "block" }}>Kart Numarası</label>
-                <input value={cardForm.number} onChange={e => {
-                  let v = e.target.value.replace(/\D/g, "").substring(0, 16);
-                  v = v.replace(/(.{4})/g, "$1 ").trim();
-                  setCardForm({ ...cardForm, number: v });
-                }} placeholder="0000 0000 0000 0000" maxLength={19}
-                  style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", fontSize: 16, fontWeight: 600, letterSpacing: "0.05em", outline: "none", boxSizing: "border-box" }} />
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 6, display: "block" }}>Ay</label>
-                  <input value={cardForm.expMonth} onChange={e => setCardForm({ ...cardForm, expMonth: e.target.value.replace(/\D/g, "").substring(0, 2) })}
-                    placeholder="MM" maxLength={2}
-                    style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", fontSize: 14, fontWeight: 600, textAlign: "center", outline: "none", boxSizing: "border-box" }} />
-                </div>
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 6, display: "block" }}>Yıl</label>
-                  <input value={cardForm.expYear} onChange={e => setCardForm({ ...cardForm, expYear: e.target.value.replace(/\D/g, "").substring(0, 4) })}
-                    placeholder="YYYY" maxLength={4}
-                    style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", fontSize: 14, fontWeight: 600, textAlign: "center", outline: "none", boxSizing: "border-box" }} />
-                </div>
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 6, display: "block" }}>CVV</label>
-                  <input value={cardForm.cvv} onChange={e => setCardForm({ ...cardForm, cvv: e.target.value.replace(/\D/g, "").substring(0, 4) })}
-                    placeholder="•••" maxLength={4} type="password"
-                    style={{ width: "100%", padding: "12px 14px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", fontSize: 14, fontWeight: 600, textAlign: "center", outline: "none", boxSizing: "border-box" }} />
-                </div>
-              </div>
-            </div>
-
-            <button onClick={handlePayment} disabled={paymentLoading}
-              style={{ width: "100%", marginTop: 24, padding: "14px 0", background: paymentLoading ? "rgba(245,158,11,0.5)" : "#f59e0b", color: "#000", border: "none", fontSize: 14, fontWeight: 800, cursor: paymentLoading ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-              {paymentLoading ? (
-                <><div style={{ width: 16, height: 16, border: "2px solid rgba(0,0,0,0.2)", borderTop: "2px solid #000", borderRadius: "50%", animation: "spin 1s linear infinite" }} /> İşleniyor...</>
-              ) : (
-                <><Lock size={14} /> Güvenli Ödeme Yap</>
-              )}
-            </button>
-
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 16, fontSize: 10, color: "rgba(255,255,255,0.25)" }}>
-              <Shield size={12} />
-              <span>256-bit SSL ile korunmaktadır. Kart bilgileriniz PayTR güvencesindedir.</span>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
