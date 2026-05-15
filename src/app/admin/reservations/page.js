@@ -52,6 +52,7 @@ export default function ReservationsPage() {
   const [dayPopup, setDayPopup] = useState(null);
   const [blockedDays, setBlockedDays] = useState([]);
   const [dayActionMenu, setDayActionMenu] = useState(null); // { dateStr, x, y }
+  const [selectedDay, setSelectedDay] = useState(null); // { day, reservations[] }
   const { session: adminSession } = useAdminSession();
   const businessType = adminSession?.tenant?.businessType || null;
 
@@ -244,270 +245,170 @@ export default function ReservationsPage() {
         </button>
       </div>
 
-      {/* ═══ CALENDAR VIEW ═══ */}
+
+      {/* ═══ CALENDAR VIEW — Google Calendar Style ═══ */}
       {viewMode === "calendar" && (() => {
         const dayNames = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"];
         const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-        
         const firstDay = new Date(calYear, calMonth, 1);
         const lastDay = new Date(calYear, calMonth + 1, 0);
         const daysInMonth = lastDay.getDate();
         let startWeekday = firstDay.getDay() - 1;
         if (startWeekday < 0) startWeekday = 6;
-        
         const today = new Date();
         const isToday = (d) => d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear();
 
-        // Group reservations by day — hem ana eventDate hem de customFieldAnswers içindeki
-        // _eventDateISO tarihlerini kontrol et (çoklu paket = çoklu tarih desteği)
-        // Her entry'de _dayPackageName bilgisi de saklanır (takvimde doğru mekan göstermek için)
         const resByDay = {};
         const addToDay = (d, r, pkgName) => {
           if (d.getMonth() === calMonth && d.getFullYear() === calYear) {
             const day = d.getDate();
             if (!resByDay[day]) resByDay[day] = [];
-            // Aynı rezervasyonu aynı güne tekrar ekleme
-            if (!resByDay[day].some(existing => existing.id === r.id)) {
-              resByDay[day].push({ ...r, _dayPackageName: pkgName || null });
-            }
+            if (!resByDay[day].some(ex => ex.id === r.id)) resByDay[day].push({ ...r, _dayPackageName: pkgName || null });
           }
         };
         reservations.filter(r => r.status !== "DELETED").forEach(r => {
-          // Ana eventDate
-          if (r.eventDate) {
-            addToDay(new Date(r.eventDate), r, null);
-          }
-          // customFieldAnswers içindeki ek tarihler (_eventDateISO)
-          const cfa = r.customFieldAnswers || [];
-          cfa.filter(a => a.label === "_eventDateISO" && a.value).forEach(a => {
-            addToDay(new Date(a.value), r, a.packageName || null);
-          });
+          if (r.eventDate) addToDay(new Date(r.eventDate), r, null);
+          (r.customFieldAnswers || []).filter(a => a.label === "_eventDateISO" && a.value).forEach(a => addToDay(new Date(a.value), r, a.packageName || null));
         });
 
         const cells = [];
         for (let i = 0; i < startWeekday; i++) cells.push(null);
         for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
-        const prevMonth = () => {
-          if (calMonth === 0) { setCalMonth(11); setCalYear(calYear - 1); }
-          else setCalMonth(calMonth - 1);
+        const prevMonth = () => { if (calMonth === 0) { setCalMonth(11); setCalYear(calYear - 1); } else setCalMonth(calMonth - 1); setSelectedDay(null); };
+        const nextMonth = () => { if (calMonth === 11) { setCalMonth(0); setCalYear(calYear + 1); } else setCalMonth(calMonth + 1); setSelectedDay(null); };
+        const goToday = () => { setCalMonth(today.getMonth()); setCalYear(today.getFullYear()); setSelectedDay(null); };
+
+        const getDayLabel = (r) => {
+          if (!isPhotographer) return displayName(r);
+          const venueLabels = ["mekan","konum","salon","yer","adres","lokasyon","düğün salonu","nerede","alanı","alan"];
+          const cfa = r.customFieldAnswers || [];
+          const dayPkgName = r._dayPackageName;
+          const scopedCfa = dayPkgName ? cfa.filter(a => a.packageName === dayPkgName) : cfa;
+          const venueField = scopedCfa.find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
+          if (venueField?.value) return venueField.value;
+          if (dayPkgName) return dayPkgName;
+          return r.venueName || displayName(r);
         };
-        const nextMonth = () => {
-          if (calMonth === 11) { setCalMonth(0); setCalYear(calYear + 1); }
-          else setCalMonth(calMonth + 1);
-        };
-        const goToday = () => { setCalMonth(today.getMonth()); setCalYear(today.getFullYear()); };
 
         return (
           <div>
-            {/* Month Navigation */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <button onClick={prevMonth} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "6px 8px", cursor: "pointer", color: "rgba(255,255,255,0.5)", display: "flex" }}>
-                  <ChevronLeft size={14} />
-                </button>
-                <h2 style={{ fontSize: "1rem", fontWeight: 800, margin: 0, minWidth: 140, textAlign: "center" }}>
-                  {monthNames[calMonth]} {calYear}
-                </h2>
-                <button onClick={nextMonth} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "6px 8px", cursor: "pointer", color: "rgba(255,255,255,0.5)", display: "flex" }}>
-                  <ChevronRight size={14} />
-                </button>
+            {/* Month Nav */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <button onClick={goToday} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, padding: "7px 16px", cursor: "pointer", color: "#fff", fontSize: "0.75rem", fontWeight: 700 }}>Bugün</button>
+                <div style={{ display: "flex", gap: 2 }}>
+                  <button onClick={prevMonth} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.6)", display: "flex", padding: 6 }}><ChevronLeft size={20} /></button>
+                  <button onClick={nextMonth} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.6)", display: "flex", padding: 6 }}><ChevronRight size={20} /></button>
+                </div>
+                <h2 style={{ fontSize: "1.15rem", fontWeight: 700, margin: 0 }}>{monthNames[calMonth]} {calYear}</h2>
               </div>
-              <div style={{ display: "flex", gap: 6 }}>
-                <button onClick={() => { setQuickEventForm({ venueName: "", phone: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" }); setQuickEventModal(true); }} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "5px 12px", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
-                  <Star size={11} /> Olay Ekle
-                </button>
-                <button onClick={goToday} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "5px 12px", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", fontWeight: 700 }}>
-                  Bugün
-                </button>
-              </div>
+              <button onClick={() => { setQuickEventForm({ venueName: "", phone: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" }); setQuickEventModal(true); }} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 0, padding: "7px 14px", cursor: "pointer", color: "rgba(255,255,255,0.7)", fontSize: "0.7rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 5 }}>
+                <Plus size={14} /> Olay Ekle
+              </button>
             </div>
 
             {/* Day Headers */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2, marginBottom: 2 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
               {dayNames.map(d => (
-                <div key={d} style={{ textAlign: "center", fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", padding: "8px 0" }}>
-                  {d}
-                </div>
+                <div key={d} style={{ textAlign: "center", fontSize: "0.65rem", fontWeight: 600, color: "rgba(255,255,255,0.4)", padding: "10px 0", textTransform: "uppercase", letterSpacing: "0.05em" }}>{d}</div>
               ))}
             </div>
 
             {/* Calendar Grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gridAutoRows: "85px", gap: 2, overflowX: "hidden" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(255,255,255,0.06)", borderTop: "none" }}>
               {cells.map((day, idx) => {
-                if (day === null) return <div key={`e${idx}`} style={{ background: "rgba(255,255,255,0.01)", borderRadius: 0 }} />;
-                
+                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 100, borderRight: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)", background: "rgba(255,255,255,0.01)" }} />;
                 const dayRes = resByDay[day] || [];
                 const hasRes = dayRes.length > 0;
                 const todayStyle = isToday(day);
-                const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                 const isDayBlocked = blockedDays.includes(dateStr);
+                const isSelected = selectedDay?.day === day;
 
                 return (
-                  <div key={day} onClick={(e) => {
-                    e.stopPropagation();
-                    setDayActionMenu({ dateStr, x: e.clientX, y: e.clientY, day });
-                  }} style={{
-                    height: "100%", borderRadius: 0, padding: "3px 4px",
-                    background: isDayBlocked ? "rgba(255,60,60,0.06)" : todayStyle ? "rgba(255,255,255,0.04)" : hasRes ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
-                    border: isDayBlocked ? "1px solid rgba(255,60,60,0.2)" : todayStyle ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(255,255,255,0.04)",
-                    cursor: "pointer", overflow: "hidden",
-                    transition: "all 0.15s", position: "relative",
+                  <div key={day} onClick={(e) => { e.stopPropagation(); setSelectedDay({ day, reservations: dayRes }); setDayPopup(null); }} style={{
+                    minHeight: 100, borderRight: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)",
+                    padding: "4px 5px", cursor: "pointer", position: "relative",
+                    background: isSelected ? "rgba(255,255,255,0.06)" : isDayBlocked ? "rgba(255,60,60,0.04)" : "transparent",
+                    transition: "background 0.15s",
                   }}>
-                    <div style={{ fontSize: "0.7rem", fontWeight: todayStyle ? 800 : 600, color: isDayBlocked ? "rgba(255,80,80,0.7)" : todayStyle ? "rgba(255,255,255,0.5)" : hasRes ? "#fff" : "rgba(255,255,255,0.3)", marginBottom: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      {day}
-                      {isDayBlocked && <span style={{ fontSize: "0.45rem", fontWeight: 900, color: "rgba(255,80,80,0.6)", textTransform: "uppercase" }}>KAPALI</span>}
+                    <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}>
+                      <span style={{
+                        fontSize: "0.75rem", fontWeight: todayStyle ? 700 : 500,
+                        width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center",
+                        borderRadius: "50%",
+                        background: todayStyle ? "#4285f4" : "transparent",
+                        color: todayStyle ? "#fff" : isDayBlocked ? "rgba(255,80,80,0.6)" : hasRes ? "#fff" : "rgba(255,255,255,0.4)",
+                      }}>{day}</span>
                     </div>
-                    {dayRes.slice(0, dayRes.length <= 3 ? 3 : 2).map((r) => {
-                      const sc = statusColor(r.status);
-                      // O güne ait paket ismini al (çoklu tarih desteği)
-                      const dayPkgName = r._dayPackageName;
-                      const getDayLabel = () => {
-                        if (!isPhotographer) return displayName(r);
-                        const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede", "alanı", "alan"];
-                        const cfa = r.customFieldAnswers || [];
-                        // Eğer bu gün belirli bir pakete aitse, sadece o paketin mekan alanına bak
-                        const scopedCfa = dayPkgName ? cfa.filter(a => a.packageName === dayPkgName) : cfa;
-                        const venueField = scopedCfa.find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
-                        if (venueField?.value) return venueField.value;
-                        // Paket adını göster (mekan yoksa)
-                        if (dayPkgName) return dayPkgName;
-                        return r.venueName || displayName(r);
-                      };
-                      return (
-                        <div
-                          key={r.id}
-                          onClick={(e) => { e.stopPropagation(); setReminderResult(null); setDetailModal({ isOpen: true, data: r }); }}
-                          style={{
-                            fontSize: "0.55rem", fontWeight: 700, padding: "2px 4px",
-                            borderRadius: 0, marginBottom: 2, cursor: "pointer",
-                            background: sc.bg, color: sc.c, whiteSpace: "nowrap",
-                            overflow: "hidden", textOverflow: "ellipsis",
-                            transition: "all 0.15s",
-                          }}
-                          title={getDayLabel()}
-                        >
-                          {getDayLabel()}
-                        </div>
-                      );
-                    })}
-                    {dayRes.length > 3 && (
-                      <div onClick={(e) => {
-                        e.stopPropagation();
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setDayPopup({ day, reservations: dayRes, x: rect.left, y: rect.bottom + 4 });
-                      }} style={{ fontSize: "0.48rem", color: "rgba(34,197,94,0.8)", fontWeight: 700, paddingLeft: 2, cursor: "pointer" }}>
-                        +{dayRes.length - 2} daha
-                      </div>
-                    )}
+                    {isDayBlocked && <div style={{ fontSize: "0.48rem", fontWeight: 800, color: "rgba(255,80,80,0.5)", textAlign: "center", marginBottom: 2 }}>KAPALI</div>}
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      {dayRes.slice(0, 3).map(r => {
+                        const chipColor = r.status === "CONFIRMED" ? "#4285f4" : r.status === "COMPLETED" ? "#34a853" : r.status === "CANCELLED" ? "#5f6368" : "#4285f4";
+                        return (
+                          <div key={r.id} onClick={(e) => { e.stopPropagation(); setReminderResult(null); setDetailModal({ isOpen: true, data: r }); }}
+                            style={{ fontSize: "0.58rem", fontWeight: 600, padding: "2px 5px", background: `${chipColor}22`, color: `${chipColor}cc`, borderRadius: 4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", borderLeft: `3px solid ${chipColor}` }}
+                            title={getDayLabel(r)}
+                          >{r.eventTime ? `${r.eventTime} ` : ""}{getDayLabel(r)}</div>
+                        );
+                      })}
+                      {dayRes.length > 3 && <div style={{ fontSize: "0.52rem", color: "#8ab4f8", fontWeight: 700, paddingLeft: 4 }}>+{dayRes.length - 3} daha</div>}
+                    </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* Day Popup - tüm rezervasyonlar */}
-            {dayPopup && (
-              <>
-                <div onClick={() => setDayPopup(null)} style={{ position: "fixed", inset: 0, zIndex: 999 }} />
-                <div className="admin-modal-content" style={{
-                  position: "fixed", left: Math.min(dayPopup.x, window.innerWidth - 260), top: Math.min(dayPopup.y, window.innerHeight - 200),
-                  zIndex: 1000, border: "1px solid rgba(255,255,255,0.15)",
-                  borderRadius: 0, padding: "10px 12px", minWidth: 220, maxWidth: 280, maxHeight: 250, overflowY: "auto",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
-                }}>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 8 }}>
-                    {dayPopup.day} {monthNames[calMonth]} — {dayPopup.reservations.length} Rezervasyon
+            {/* Selected Day Panel */}
+            {selectedDay && (
+              <div style={{ marginTop: 16, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ width: 42, height: 42, background: "#4285f4", borderRadius: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                      <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>{selectedDay.day}</span>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#fff" }}>{selectedDay.day} {monthNames[calMonth]} {calYear}</div>
+                      <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)" }}>{selectedDay.reservations.length === 0 ? "Rezervasyon yok" : `${selectedDay.reservations.length} rezervasyon`}</div>
+                    </div>
                   </div>
-                  {dayPopup.reservations.map((r) => {
-                    const sc = statusColor(r.status);
-                    return (
-                      <div key={r.id} onClick={() => { setDayPopup(null); setReminderResult(null); setDetailModal({ isOpen: true, data: r }); }}
-                        style={{
-                          padding: "6px 8px", marginBottom: 4, cursor: "pointer",
-                          background: sc.bg, border: `1px solid ${sc.b.split('solid ')[1]}`,
-                          fontSize: "0.65rem", fontWeight: 700, color: sc.c,
-                          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-                          transition: "all 0.15s",
-                        }}>
-                        {displayName(r)}
-                        {r.eventTime && <span style={{ color: "rgba(255,255,255,0.3)", marginLeft: 6 }}>{r.eventTime}</span>}
-                      </div>
-                    );
-                  })}
+                  <button onClick={() => setSelectedDay(null)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 6 }}><X size={18} /></button>
                 </div>
-              </>
-            )}
-
-            {/* Day detail panel - reservations for selected month summary */}
-            {(() => {
-              const monthRes = reservations.filter(r => {
-                if (r.status === "DELETED") return false;
-                // Ana eventDate kontrolü
-                if (r.eventDate) {
-                  const d = new Date(r.eventDate);
-                  if (d.getMonth() === calMonth && d.getFullYear() === calYear) return true;
-                }
-                // _eventDateISO ek tarih kontrolü
-                const cfa = r.customFieldAnswers || [];
-                return cfa.some(a => {
-                  if (a.label !== "_eventDateISO" || !a.value) return false;
-                  const d = new Date(a.value);
-                  return d.getMonth() === calMonth && d.getFullYear() === calYear;
-                });
-              }).sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
-
-              if (monthRes.length === 0) return null;
-              return (
-                <div style={{ marginTop: 14, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "12px" }}>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 8 }}>
-                    {monthNames[calMonth]} Rezervasyonları ({monthRes.length})
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    {monthRes.map(r => {
+                {selectedDay.reservations.length === 0 ? (
+                  <div style={{ padding: "32px 16px", textAlign: "center", color: "rgba(255,255,255,0.25)", fontSize: "0.8rem" }}>Bu güne ait rezervasyon bulunmuyor.</div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    {selectedDay.reservations.map(r => {
                       const sc = statusColor(r.status);
-                      const d = new Date(r.eventDate);
+                      const pkgs = r.packages?.map(p => p.name).join(", ") || "";
+                      const venueLabels = ["mekan","konum","salon","yer","adres","lokasyon","düğün salonu","nerede","alanı","alan"];
+                      const venueField = (r.customFieldAnswers || []).find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
+                      const venue = venueField?.value || r.venueName || "";
+                      const chipColor = r.status === "CONFIRMED" ? "#4285f4" : r.status === "COMPLETED" ? "#34a853" : r.status === "CANCELLED" ? "#5f6368" : "#4285f4";
                       return (
-                        <div
-                          key={r.id}
-                          onClick={() => { setReminderResult(null); setDetailModal({ isOpen: true, data: r }); }}
-                          style={{
-                            display: "flex", justifyContent: "space-between", alignItems: "center",
-                            padding: "8px 10px", borderRadius: 0, cursor: "pointer",
-                            background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)",
-                            transition: "all 0.15s",
-                          }}
+                        <div key={r.id} onClick={() => { setReminderResult(null); setDetailModal({ isOpen: true, data: r }); setSelectedDay(null); }}
+                          style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", borderBottom: "1px solid rgba(255,255,255,0.04)", cursor: "pointer", transition: "background 0.15s" }}
+                          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}
+                          onMouseLeave={e => e.currentTarget.style.background = "transparent"}
                         >
-                          <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
-                            <div style={{ width: 32, textAlign: "center", flexShrink: 0 }}>
-                              <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>{d.getDate()}</div>
-                              <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.3)", fontWeight: 600 }}>
-                                {["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"][d.getDay()]}
-                              </div>
-                            </div>
-                            <div style={{ minWidth: 0 }}>
-                              <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                {displayName(r)}
-                              </div>
-                              <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)" }}>
-                                {r.eventTime || ""} · {(() => {
-                                  const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede", "alanı", "alan"];
-                                  const cfa = r.customFieldAnswers || [];
-                                  const venueField = cfa.find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
-                                  return venueField?.value || r.venueName || r.packages.map(p => p.name).join(", ") || "";
-                                })()}
-                              </div>
-                            </div>
+                          <div style={{ width: 4, height: 40, borderRadius: 2, flexShrink: 0, background: chipColor }} />
+                          <div style={{ width: 50, flexShrink: 0, textAlign: "center" }}>
+                            <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "#fff" }}>{r.eventTime || "—"}</div>
                           </div>
-                          <span style={{ padding: "2px 6px", borderRadius: 0, fontSize: "0.52rem", fontWeight: 800, textTransform: "uppercase", background: sc.bg, color: sc.c, flexShrink: 0 }}>
-                            {statusLabel(r.status)}
-                          </span>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{displayName(r)}</div>
+                            <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{[pkgs, venue].filter(Boolean).join(" · ")}</div>
+                          </div>
+                          <span style={{ padding: "3px 8px", fontSize: "0.58rem", fontWeight: 800, textTransform: "uppercase", background: sc.bg, color: sc.c, flexShrink: 0 }}>{statusLabel(r.status)}</span>
+                          <ChevronRight size={16} style={{ color: "rgba(255,255,255,0.2)", flexShrink: 0 }} />
                         </div>
                       );
                     })}
                   </div>
-                </div>
-              );
-            })()}
+                )}
+              </div>
+            )}
           </div>
         );
       })()}
