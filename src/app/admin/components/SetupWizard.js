@@ -272,7 +272,8 @@ export default function SetupWizard({ config }) {
                   maxFiles: 1, 
                   resourceType: "image", 
                   folder: "logos",
-                  maxFilesize: 125829120 // 120MB limit
+                  maxImageFileSize: 5242880, // 5MB limit for images
+                  maxVideoFileSize: 125829120 // 120MB limit for videos
                 }}
                 onSuccess={(result) => setForm({ ...form, logoUrl: result.info.secure_url })}
               >
