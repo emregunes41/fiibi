@@ -155,7 +155,7 @@ export async function registerBusiness(data) {
       });
 
       // 2. Admin hesabı oluştur
-      await tx.admin.create({
+      const adminUser = await tx.admin.create({
         data: {
           username: cleanSlug + "_admin",
           password: hashedPassword,
@@ -186,8 +186,10 @@ export async function registerBusiness(data) {
         }
       });
 
-      return tenant;
+      return { tenant, adminUser };
     });
+
+    const { tenant, adminUser } = result;
 
     // Doğrulama kodunu sil
     await prisma.verificationCode.delete({
@@ -204,7 +206,7 @@ export async function registerBusiness(data) {
 
     const adminToken = await signToken({
       id: adminUser.id,
-      tenantId: result.id,
+      tenantId: tenant.id,
       role: "admin",
     });
 
@@ -212,10 +214,10 @@ export async function registerBusiness(data) {
       success: true,
       token: adminToken,
       tenant: {
-        id: result.id,
-        slug: result.slug,
-        businessName: result.businessName,
-        businessType: result.businessType,
+        id: tenant.id,
+        slug: tenant.slug,
+        businessName: tenant.businessName,
+        businessType: tenant.businessType,
       }
     };
 
