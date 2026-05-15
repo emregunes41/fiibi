@@ -899,7 +899,7 @@ export default function SettingsPage() {
               background: config.smsEnabled ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.03)",
               border: `1px solid ${config.smsEnabled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
               borderRadius: 0, padding: "18px 16px", cursor: isPro ? "pointer" : "default", transition: "all 0.2s",
-              opacity: isPro ? 1 : 0.5,
+              opacity: isPro ? 1 : 0.6,
             }}
               onClick={() => isPro && setConfig({ ...config, smsEnabled: !config.smsEnabled })}
             >
@@ -907,51 +907,33 @@ export default function SettingsPage() {
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <Phone size={16} style={{ color: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.3)" }} />
                   <span style={{ fontSize: 13, fontWeight: 800, color: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>SMS</span>
-                  {!isPro && <span style={{ fontSize: 9, fontWeight: 800, color: "#8b5cf6", background: "rgba(139,92,246,0.15)", padding: "2px 6px" }}>PRO</span>}
+                  {!isPro && (
+                    <Link href="/admin/subscription" style={{ fontSize: 9, fontWeight: 800, color: "#8b5cf6", background: "rgba(139,92,246,0.15)", padding: "4px 8px", textDecoration: "none", borderRadius: 4, display: "flex", alignItems: "center", gap: 4 }} onClick={(e) => e.stopPropagation()}>
+                       PRO Özellik — Planı Yükselt
+                    </Link>
+                  )}
                 </div>
-                <div style={{
-                  width: 40, height: 22, borderRadius: 0, position: "relative",
-                  background: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
-                }}>
+                {isPro && (
                   <div style={{
-                    width: 18, height: 18, borderRadius: 0, background: "#fff",
-                    position: "absolute", top: 2, transition: "all 0.2s",
-                    left: config.smsEnabled ? 20 : 2,
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
-                  }} />
-                </div>
+                    width: 40, height: 22, borderRadius: 0, position: "relative",
+                    background: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
+                  }}>
+                    <div style={{
+                      width: 18, height: 18, borderRadius: 0, background: "#fff",
+                      position: "absolute", top: 2, transition: "all 0.2s",
+                      left: config.smsEnabled ? 20 : 2,
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+                    }} />
+                  </div>
+                )}
               </div>
               <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", margin: 0 }}>
-                {isPro ? "Netgsm API ile SMS bildirimleri" : "SMS bildirimleri Pro plana dahildir."}
+                {isPro ? "Netgsm API ile SMS bildirimleri" : "SMS bildirimleri Pro plana dahildir. Aktif etmek için planınızı yükseltin."}
               </p>
             </div>
           </div>
 
-          {/* Resend API - E-posta aktifken göster */}
-          {config.emailEnabled && (
-            <div style={{
-              background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 0, padding: 20, marginBottom: 12,
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                <Mail size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
-                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Resend API (E-posta)</span>
-              </div>
-              <div>
-                <label style={label}>API Key</label>
-                <input
-                  type="password"
-                  value={config.resendApiKey || ""}
-                  onChange={(e) => setConfig({ ...config, resendApiKey: e.target.value })}
-                  style={inp}
-                  placeholder="re_xxxxxxxxxxxxxxxxxxxxxxxxx"
-                />
-              </div>
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 10, lineHeight: 1.6 }}>
-                📖 <a href="https://resend.com" target="_blank" rel="noopener" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "underline" }}>resend.com</a> → API Keys bölümünden alabilirsiniz. Boş bırakırsanız .env dosyasındaki key kullanılır.
-              </p>
-            </div>
-          )}
+
 
           {/* Netgsm API - SMS aktifken göster */}
           {config.smsEnabled && (
@@ -1097,7 +1079,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 6. Rezervasyon Sözleşmesi */}
-        {activeTab === "sistem" && subTab === "sozlesme" && <div style={sectionCard}>
+        {activeTab === "satis" && subTab === "sozlesme" && <div style={sectionCard}>
           {sectionHeader(FileText, "Yasal Sözleşmeler", "Müşterinin ödeme öncesi onaylaması gereken sözleşme ve metinler.")}
 
           <div style={{ marginBottom: 24 }}>
@@ -1162,7 +1144,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* İndirim Kodları Section */}
-        {activeTab === "sistem" && subTab === "indirim" && <div style={sectionCard}>
+        {activeTab === "satis" && subTab === "indirim" && <div style={sectionCard}>
           {sectionHeader(Tag, "İndirim Kodları", "Müşterilere verebileceğiniz indirim kuponları")}
 
           {/* Create new code */}
