@@ -394,6 +394,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
       {/* Floating cart indicator */}
       {cart.itemCount > 0 && (
         <motion.div
+          className="force-dark"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           style={{
@@ -415,16 +416,16 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
           }}
           onClick={() => cart.setIsOpen(true)}
         >
-          <ShoppingBag size={16} style={{ color: "rgba(255, 255, 255, 0.5)" }} />
+          <ShoppingBag size={16} style={{ "--force-color": "rgba(255, 255, 255, 0.5)", color: "rgba(255, 255, 255, 0.5)" }} />
           <div>
-            <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.3)" }}>{cart.itemCount} paket</div>
-            <div style={{ fontSize: "15px", fontWeight: 700, color: "#FEFEFE" }}>{fmt(cart.cartTotal())}₺</div>
+            <div style={{ "--force-color": "rgba(255, 255, 255, 0.5)", fontSize: "11px", color: "rgba(255, 255, 255, 0.3)" }}>{cart.itemCount} paket</div>
+            <div style={{ "--force-color": "#FEFEFE", fontSize: "15px", fontWeight: 700, color: "#FEFEFE" }}>{fmt(cart.cartTotal())}₺</div>
           </div>
           <div style={{
             width: "32px", height: "32px", borderRadius: 0, background: "#FEFEFE",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
-            <ArrowRight size={14} style={{ color: "#010101" }} />
+            <ArrowRight size={14} style={{ "--force-color": "#010101", color: "#010101" }} />
           </div>
         </motion.div>
       )}

@@ -152,21 +152,31 @@ html[data-light] [style*="border: 2px solid #ffffff"] {
   border-color: var(--text) !important;
 }
 html[data-light] [style*="border: 1px solid rgba(255,255,255,0.5"],
+html[data-light] [style*="border: 1px solid rgba(255, 255, 255, 0.5"],
 html[data-light] [style*="border: 1px solid rgba(255,255,255,0.4"],
-html[data-light] [style*="border: 1px solid rgba(255,255,255,0.3"] {
+html[data-light] [style*="border: 1px solid rgba(255, 255, 255, 0.4"],
+html[data-light] [style*="border: 1px solid rgba(255,255,255,0.3"],
+html[data-light] [style*="border: 1px solid rgba(255, 255, 255, 0.3"] {
   border-color: rgba(0,0,0,0.35) !important;
 }
 html[data-light] [style*="border: 1px solid rgba(255,255,255,0.25"],
-html[data-light] [style*="border: 1px solid rgba(255,255,255,0.2"] {
+html[data-light] [style*="border: 1px solid rgba(255, 255, 255, 0.25"],
+html[data-light] [style*="border: 1px solid rgba(255,255,255,0.2"],
+html[data-light] [style*="border: 1px solid rgba(255, 255, 255, 0.2"] {
   border-color: rgba(0,0,0,0.2) !important;
 }
 html[data-light] [style*="border: 1px solid rgba(255,255,255,0.15"],
-html[data-light] [style*="border: 1px solid rgba(255,255,255,0.1"] {
+html[data-light] [style*="border: 1px solid rgba(255, 255, 255, 0.15"],
+html[data-light] [style*="border: 1px solid rgba(255,255,255,0.1"],
+html[data-light] [style*="border: 1px solid rgba(255, 255, 255, 0.1"] {
   border-color: rgba(0,0,0,0.1) !important;
 }
 html[data-light] [style*="border: 1px solid rgba(255,255,255,0.08"],
+html[data-light] [style*="border: 1px solid rgba(255, 255, 255, 0.08"],
 html[data-light] [style*="border: 1px solid rgba(255,255,255,0.06"],
-html[data-light] [style*="border: 1px solid rgba(255,255,255,0.04"] {
+html[data-light] [style*="border: 1px solid rgba(255, 255, 255, 0.06"],
+html[data-light] [style*="border: 1px solid rgba(255,255,255,0.04"],
+html[data-light] [style*="border: 1px solid rgba(255, 255, 255, 0.04"] {
   border-color: rgba(0,0,0,0.06) !important;
 }
 /* Dividers (1px height backgrounds) */
