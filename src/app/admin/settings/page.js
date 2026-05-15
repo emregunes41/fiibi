@@ -2216,11 +2216,11 @@ export default function SettingsPage() {
           <div style={{ position: "relative" }}>
             {!planLimits.customDomain && (
               <div style={{ position: "absolute", inset: 0, zIndex: 10, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(2px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", borderRadius: 8 }}>
-                <div style={{ padding: "30px", textAlign: "center", background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, boxShadow: "0 10px 40px rgba(0,0,0,0.5)", maxWidth: 400 }}>
-                  <div style={{ fontSize: 32, marginBottom: 16 }}>⭐</div>
-                  <h3 style={{ fontSize: 18, margin: "0 0 8px 0", color: "#fff", fontWeight: 800 }}>Pro Plana Özel Özellik</h3>
-                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", marginBottom: 20, lineHeight: 1.5 }}>Özel alan adı (domain) satın almak veya mevcut alan adınızı bağlamak için planınızı yükseltmeniz gerekmektedir.</p>
-                  <Link href="/admin/subscription" style={{ display: "inline-block", background: "var(--text)", color: "var(--bg)", padding: "12px 24px", fontSize: 13, fontWeight: 700, textDecoration: "none", borderRadius: 4 }}>Planı Yükselt</Link>
+                <div style={{ padding: "40px", textAlign: "center", background: "#000", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, boxShadow: "0 20px 40px rgba(0,0,0,0.5)", maxWidth: 400 }}>
+                  <div style={{ fontSize: 40, marginBottom: 16 }}>⭐</div>
+                  <h3 style={{ fontSize: 20, margin: "0 0 12px 0", color: "#fff", fontWeight: 800 }}>Sadece Pro Plana Özel</h3>
+                  <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 24, lineHeight: 1.5 }}>Kendi alan adınızı (domain) bağlamak veya sistem üzerinden yeni bir domain satın almak için planınızı yükseltmeniz gerekmektedir.</p>
+                  <Link href="/admin/subscription" style={{ display: "inline-block", background: "#fff", color: "#000", padding: "14px 28px", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 0 }}>Planları İncele</Link>
                 </div>
               </div>
             )}
