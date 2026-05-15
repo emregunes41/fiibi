@@ -163,7 +163,7 @@ export default function ReservationsPage() {
          <button onClick={() => setActiveTab("reservations")} style={{ background: "none", border: "none", borderBottom: activeTab === "reservations" ? "2px solid #fff" : "2px solid transparent", color: activeTab === "reservations" ? "#fff" : "rgba(255,255,255,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
             {terms.appointments} Yönetimi
          </button>
-         {modules.moduleEvents !== false && (
+         {siteConfig?.moduleEvents !== false && (
            <button onClick={() => setActiveTab("events")} style={{ background: "none", border: "none", borderBottom: activeTab === "events" ? "2px solid #fff" : "2px solid transparent", color: activeTab === "events" ? "#fff" : "rgba(255,255,255,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
               Grup Dersleri & Etkinlikler
            </button>
