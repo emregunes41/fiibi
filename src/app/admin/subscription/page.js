@@ -218,28 +218,23 @@ export default function SubscriptionPage() {
         </div>
       )}
 
-      {/* Billing Cycle Toggle */}
+      {/* Billing Cycle — Şu an sadece yıllık aktif (Non3D onayı bekleniyor) */}
       <div style={{
         display: "flex", justifyContent: "center", gap: 0, marginBottom: 28,
         background: "rgba(255,255,255,0.04)", padding: 4, width: "fit-content", margin: "0 auto 28px",
         borderRadius: 8,
       }}>
-        {["monthly", "yearly"].map(cycle => (
-          <button
-            key={cycle}
-            onClick={() => setBillingCycle(cycle)}
-            style={{
-              padding: "8px 24px", fontSize: 12, fontWeight: 700,
-              background: billingCycle === cycle ? "rgba(255,255,255,0.12)" : "transparent",
-              color: billingCycle === cycle ? "#fff" : "rgba(255,255,255,0.4)",
-              border: "none", cursor: "pointer", borderRadius: 6,
-              transition: "all 0.2s",
-            }}
-          >
-            {cycle === "monthly" ? "Aylık" : "Yıllık"}
-            {cycle === "yearly" && <span style={{ marginLeft: 6, fontSize: 10, color: "#4ade80", fontWeight: 800 }}>Tasarruf</span>}
-          </button>
-        ))}
+        <button
+          style={{
+            padding: "8px 24px", fontSize: 12, fontWeight: 700,
+            background: "rgba(255,255,255,0.12)",
+            color: "#fff",
+            border: "none", cursor: "default", borderRadius: 6,
+          }}
+        >
+          Yıllık
+          <span style={{ marginLeft: 6, fontSize: 10, color: "#4ade80", fontWeight: 800 }}>Tasarruf</span>
+        </button>
       </div>
 
       {/* Plans Grid */}
