@@ -419,26 +419,28 @@ export async function hardDeleteReservation(id) {
 
 export async function getReservations() {
   const tenantId = await getTenantId();
-  return await prisma.reservation.findMany({
+  const all = await prisma.reservation.findMany({
     where: { 
-      tenantId: tenantId || "NONE",
-      NOT: { orderType: "PRODUCT" }
+      tenantId: tenantId || "NONE"
     },
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
   });
+  // Filter out PRODUCT orders and DRAFT status in JS to avoid Prisma NOT filter issues on Vercel
+  return all.filter(r => r.orderType !== "PRODUCT" && r.status !== "DRAFT");
 }
 
 export async function getOrders() {
   const tenantId = await getTenantId();
-  return await prisma.reservation.findMany({
+  const all = await prisma.reservation.findMany({
     where: { 
-      tenantId: tenantId || "NONE",
-      orderType: { in: ["PRODUCT", "MIXED"] }
+      tenantId: tenantId || "NONE"
     },
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
   });
+  // Filter for PRODUCT/MIXED orders, exclude DRAFTs in JS
+  return all.filter(r => (r.orderType === "PRODUCT" || r.orderType === "MIXED") && r.status !== "DRAFT");
 }
 
 export async function checkAvailability(date, packageId, time = null) {
