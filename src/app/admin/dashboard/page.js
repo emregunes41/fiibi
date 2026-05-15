@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth";
 import { getSiteConfig } from "../core-actions";
 import DashboardClient from "./DashboardClient";
+import { getPlanLimits } from "@/lib/plan-limits";
 
 async function getDashboardTenantId() {
   const tenant = await getCurrentTenant();
@@ -36,6 +37,8 @@ export default async function AdminDashboard() {
   if (siteConfig && !siteConfig.setupCompleted) {
     return <DashboardClient config={siteConfig} />;
   }
+
+  const planLimits = getPlanLimits(tenant?.plan || "trial");
 
   const tenantFilter = { tenantId };
 
@@ -154,7 +157,7 @@ export default async function AdminDashboard() {
       ) : null}
 
       {/* Domain Warning */}
-      {!tenant?.customDomain && (
+      {!tenant?.customDomain && planLimits.customDomain && (
         <div style={{ padding: 16, background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.3)", marginBottom: 24, display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <AlertCircle size={20} color="#f59e0b" style={{ flexShrink: 0 }} />
@@ -250,12 +253,14 @@ export default async function AdminDashboard() {
             </div>
             <div style={{ fontSize: 13, fontWeight: 700 }}>Online Ödeme Başvurusu</div>
           </Link>
-          <Link href="/admin/settings?tab=genel&subTab=domain" style={{ display: "flex", alignItems: "center", gap: 12, padding: 12, background: tenant?.customDomain ? "rgba(34,197,94,0.1)" : "rgba(255,255,255,0.04)", border: tenant?.customDomain ? "1px solid rgba(34,197,94,0.2)" : "1px solid rgba(255,255,255,0.08)", textDecoration: "none", color: "#fff" }}>
-            <div style={{ width: 24, height: 24, borderRadius: "50%", background: tenant?.customDomain ? "#22c55e" : "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {tenant?.customDomain ? <CheckCircle2 size={14} color="#000" /> : <span style={{ fontSize: 12, fontWeight: 800 }}>4</span>}
-            </div>
-            <div style={{ fontSize: 13, fontWeight: 700 }}>Alan Adınızı Bağlayın</div>
-          </Link>
+          {planLimits.customDomain && (
+            <Link href="/admin/settings?tab=genel&subTab=domain" style={{ display: "flex", alignItems: "center", gap: 12, padding: 12, background: tenant?.customDomain ? "rgba(34,197,94,0.1)" : "rgba(255,255,255,0.04)", border: tenant?.customDomain ? "1px solid rgba(34,197,94,0.2)" : "1px solid rgba(255,255,255,0.08)", textDecoration: "none", color: "#fff" }}>
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: tenant?.customDomain ? "#22c55e" : "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {tenant?.customDomain ? <CheckCircle2 size={14} color="#000" /> : <span style={{ fontSize: 12, fontWeight: 800 }}>4</span>}
+              </div>
+              <div style={{ fontSize: 13, fontWeight: 700 }}>Alan Adınızı Bağlayın</div>
+            </Link>
+          )}
         </div>
       </div>
 

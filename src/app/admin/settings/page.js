@@ -2210,7 +2210,16 @@ export default function SettingsPage() {
         {activeTab === "genel" && subTab === "domain" && <div style={sectionCard}>
           {sectionHeader(Globe, "Alan Adı (Domain) Ayarları", "Sitenize kendi alan adınızdan (www.siteniz.com) ulaşılmasını sağlayın.")}
           
-          <div style={{ marginBottom: 32, padding: "24px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)" }}>
+          {!planLimits.customDomain ? (
+            <div style={{ padding: "40px 20px", textAlign: "center", background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.08)" }}>
+              <div style={{ fontSize: 32, marginBottom: 16, opacity: 0.5 }}>⭐</div>
+              <h3 style={{ fontSize: 16, margin: "0 0 8px 0", color: "#fff" }}>Bu özellik Pro planda mevcuttur</h3>
+              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginBottom: 20 }}>Özel alan adı (domain) bağlamak veya satın almak için planınızı yükseltmeniz gerekmektedir.</p>
+              <Link href="/admin/subscription" style={{ display: "inline-block", background: "var(--text)", color: "var(--bg)", padding: "10px 20px", fontSize: 13, fontWeight: 700, textDecoration: "none", borderRadius: 4 }}>Planları İncele</Link>
+            </div>
+          ) : (
+            <>
+              <div style={{ marginBottom: 32, padding: "24px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 style={{ fontSize: 16, margin: "0 0 8px 0", color: "var(--text)" }}>Yeni Domain Satın Al (Sıfır Ayar)</h3>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: "0 0 16px 0", lineHeight: 1.5 }}>
               Sistemimiz üzerinden doğrudan domain satın alabilirsiniz. DNS, SSL veya yönlendirme ayarlarına gerek kalmadan saniyeler içinde domaininiz yayına girer.
@@ -2405,6 +2414,8 @@ export default function SettingsPage() {
             {domainSaving ? "Kaydediliyor..." : "Domain'i Kaydet"}
           </button>
           {domainMessage && <p style={{ fontSize: 12, marginTop: 12, color: domainMessage.includes("Hata") ? "#ef4444" : "#22c55e", fontWeight: 600 }}>{domainMessage}</p>}
+            </>
+          )}
         </div>}
 
         {/* Status Message */}
