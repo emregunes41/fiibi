@@ -15,6 +15,10 @@
     {
       "path": "/api/cron/reviews",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/platform-transfers",
+      "schedule": "0 7 * * *"
     }
   ]
 }

@@ -27,6 +27,12 @@ export default async function BookingPage() {
   const { terms, features } = bt;
   const isPhotographer = (tenant?.businessType || "photographer") === "photographer";
 
+  // GUARD: Kart ödeme sadece onaylanmış satıcılar için açık
+  // subMerchantStatus !== APPROVED ise paymentMode zorunlu olarak "cash" olur
+  const effectivePaymentMode = tenant?.subMerchantStatus === "APPROVED"
+    ? (siteConfig?.paymentMode || "cash")
+    : "cash";
+
   return (
     <main
       style={{
@@ -82,9 +88,9 @@ export default async function BookingPage() {
         </div>
 
         {isPhotographer ? (
-          <BookingFlow initialPackages={packages} blockedDays={blockedDays} paymentMode={siteConfig?.paymentMode || 'cash'} />
+          <BookingFlow initialPackages={packages} blockedDays={blockedDays} paymentMode={effectivePaymentMode} />
         ) : (
-          <SimpleBookingFlow initialPackages={packages} blockedDays={blockedDays} paymentMode={siteConfig?.paymentMode || 'cash'} />
+          <SimpleBookingFlow initialPackages={packages} blockedDays={blockedDays} paymentMode={effectivePaymentMode} />
         )}
       </div>
     </main>
