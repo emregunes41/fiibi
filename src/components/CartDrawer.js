@@ -23,19 +23,19 @@ const fmt = (n) => n.toLocaleString("tr-TR");
 
 const inputStyle = {
   width: "100%",
-  background: "rgba(255, 255, 255, 0.06)",
-  border: "1px solid rgba(255, 255, 255, 0.15)",
+  background: "rgba(0, 0, 0, 0.06)",
+  border: "1px solid rgba(0, 0, 0, 0.15)",
   borderRadius: 0,
   padding: "14px 16px",
   fontSize: "13px",
-  color: "#FEFEFE",
+  color: "#000000",
   outline: "none",
   boxSizing: "border-box",
 };
 
 const labelStyle = {
   fontSize: "11px",
-  color: "rgba(255, 255, 255, 0.5)",
+  color: "rgba(0, 0, 0, 0.5)",
   fontWeight: 600,
   display: "block",
   marginBottom: "6px",
@@ -346,7 +346,7 @@ export default function CartDrawer() {
 
           {/* Drawer */}
           <motion.div
-            className="force-dark"
+            
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -354,8 +354,8 @@ export default function CartDrawer() {
             style={{
               position: "fixed", top: 0, right: 0, bottom: 0,
               width: "min(420px, 95vw)",
-              background: "#0a0a0f",
-              borderLeft: "1px solid rgba(255,255,255,0.1)",
+              background: "#ffffff",
+              borderLeft: "1px solid rgba(0, 0, 0,0.1)",
               zIndex: 5001,
               display: "flex", flexDirection: "column",
               boxShadow: "-20px 0 60px rgba(0,0,0,0.5)",
@@ -363,7 +363,7 @@ export default function CartDrawer() {
           >
             {/* Header */}
             <div style={{
-              padding: "24px", borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+              padding: "24px", borderBottom: "1px solid rgba(0, 0, 0, 0.08)",
               display: "flex", justifyContent: "space-between", alignItems: "center",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -376,24 +376,24 @@ export default function CartDrawer() {
                       setCheckoutStep("contact");
                     }
                   }} style={{
-                    background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.06)",
-                    borderRadius: 0, padding: "6px", cursor: "pointer", color: "rgba(255, 255, 255, 0.4)",
+                    background: "rgba(0, 0, 0, 0.03)", border: "1px solid rgba(0, 0, 0, 0.06)",
+                    borderRadius: 0, padding: "6px", cursor: "pointer", color: "rgba(0, 0, 0, 0.4)",
                   }}>
                     <ArrowLeft size={14} />
                   </button>
                 )}
                 <div>
-                  <div style={{ fontSize: "16px", fontWeight: 700, color: "#FEFEFE" }}>
+                  <div style={{ fontSize: "16px", fontWeight: 700, color: "#000000" }}>
                     {submitResult ? (submitResult.success ? "Tamamlandı" : "Hata") : iframeToken ? "Kart ile Ödeme" : !checkoutMode ? "Sepetim" : checkoutStep === "contact" ? textContactInfo : "Ödeme Yöntemi"}
                   </div>
-                  <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.4)" }}>
+                  <div style={{ fontSize: "11px", color: "rgba(0, 0, 0, 0.4)" }}>
                     {submitResult ? "" : iframeToken ? "Güvenli ödeme" : !checkoutMode ? `${itemCount} ürün/paket` : checkoutStep === "contact" ? textContactStep : "Adım 2/2 — Ödeme seçin"}
                   </div>
                 </div>
               </div>
               <button onClick={() => { setIsOpen(false); setCheckoutMode(false); }} style={{
-                background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.06)",
-                borderRadius: 0, padding: "8px", cursor: "pointer", color: "rgba(255, 255, 255, 0.6)",
+                background: "rgba(0, 0, 0, 0.03)", border: "1px solid rgba(0, 0, 0, 0.06)",
+                borderRadius: 0, padding: "8px", cursor: "pointer", color: "rgba(0, 0, 0, 0.6)",
               }}>
                 <X size={16} />
               </button>
@@ -407,7 +407,7 @@ export default function CartDrawer() {
                 {!checkoutMode && (
                   <motion.div key="cart-view" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                     {items.length === 0 ? (
-                      <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(255, 255, 255, 0.3)" }}>
+                      <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(0, 0, 0, 0.3)" }}>
                         <ShoppingBag size={40} style={{ margin: "0 auto 16px", opacity: 0.5 }} />
                         <p style={{ fontSize: "14px" }}>Sepetiniz boş</p>
                       </div>
@@ -425,7 +425,7 @@ export default function CartDrawer() {
                           return (
                             <div key={item.pkg.id} style={{
                               padding: "16px", borderRadius: 0,
-                              border: "1px solid rgba(255, 255, 255, 0.1)",
+                              border: "1px solid rgba(0, 0, 0, 0.1)",
                               background: meta.gradient,
                               position: "relative",
                             }}>
@@ -441,19 +441,20 @@ export default function CartDrawer() {
                                 }}>
                                   <Icon size={10} /> {meta.label}
                                 </div>
-                                <button onClick={() => removeItem(item.pkg.id)} style={{
-                                  background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.06)",
-                                  borderRadius: 0, padding: "6px", cursor: "pointer", color: "rgba(255, 255, 255, 0.4)",
+                                <button
+                              className="force-dark" onClick={() => removeItem(item.pkg.id)} style={{
+                                  background: "rgba(0, 0, 0, 0.03)", border: "1px solid rgba(0, 0, 0, 0.06)",
+                                  borderRadius: 0, padding: "6px", cursor: "pointer", color: "rgba(0, 0, 0, 0.4)",
                                 }}>
                                   <Trash2 size={12} />
                                 </button>
                               </div>
 
                               {/* Package name + month */}
-                              <div style={{ fontSize: "14px", fontWeight: 600, color: "#FEFEFE", marginBottom: "4px" }}>
+                              <div style={{ fontSize: "14px", fontWeight: 600, color: "#000000", marginBottom: "4px" }}>
                                 {item.pkg.name}
                               </div>
-                              <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.6)", marginBottom: "12px" }}>
+                              <div style={{ fontSize: "11px", color: "rgba(0, 0, 0, 0.6)", marginBottom: "12px" }}>
                                 {MF[item.month - 1]} {item.year}
                               </div>
 
@@ -461,30 +462,30 @@ export default function CartDrawer() {
                               {item.details && (
                                 <div style={{
                                   padding: "10px", borderRadius: 0, marginBottom: "12px",
-                                  background: "rgba(255, 255, 255, 0.05)", border: "1px solid rgba(255, 255, 255, 0.1)",
+                                  background: "rgba(0, 0, 0, 0.05)", border: "1px solid rgba(0, 0, 0, 0.1)",
                                 }}>
                                   {item.details.date && (
-                                    <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px", fontSize: "12px", color: "rgba(255, 255, 255, 0.7)" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px", fontSize: "12px", color: "rgba(0, 0, 0, 0.7)" }}>
                                       <Calendar size={11} style={{ opacity: 0.7 }} />
                                       {new Date(item.details.date).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
                                     </div>
                                   )}
                                   {item.details.timeLabel && (
-                                    <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px", fontSize: "12px", color: "rgba(255, 255, 255, 0.7)" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px", fontSize: "12px", color: "rgba(0, 0, 0, 0.7)" }}>
                                       <Clock size={11} style={{ opacity: 0.7 }} />
                                       {item.details.timeLabel}
                                     </div>
                                   )}
                                   {item.details.notes && (
-                                    <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", fontSize: "11px", color: "rgba(255, 255, 255, 0.6)" }}>
+                                    <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", fontSize: "11px", color: "rgba(0, 0, 0, 0.6)" }}>
                                       <FileText size={11} style={{ opacity: 0.7, marginTop: "2px" }} />
                                       <span>{item.details.notes}</span>
                                     </div>
                                   )}
                                   {item.details.customFieldAnswers && item.details.customFieldAnswers.length > 0 && (
-                                    <div style={{ marginTop: "6px", paddingTop: "6px", borderTop: "1px solid rgba(255, 255, 255, 0.05)" }}>
+                                    <div style={{ marginTop: "6px", paddingTop: "6px", borderTop: "1px solid rgba(0, 0, 0, 0.05)" }}>
                                       {item.details.customFieldAnswers.map((a, i) => (
-                                        <div key={i} style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.4)", marginBottom: "2px" }}>
+                                        <div key={i} style={{ fontSize: "11px", color: "rgba(0, 0, 0, 0.4)", marginBottom: "2px" }}>
                                           <span style={{ fontWeight: 600 }}>{a.label}:</span> {a.type === "checkbox" ? "✓" : a.value}
                                         </div>
                                       ))}
@@ -497,7 +498,7 @@ export default function CartDrawer() {
                               {item.addons.length > 0 && (
                                 <div style={{ marginBottom: "8px" }}>
                                   {item.addons.map((a, i) => (
-                                    <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "rgba(255, 255, 255, 0.4)", marginBottom: "3px" }}>
+                                    <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "rgba(0, 0, 0, 0.4)", marginBottom: "3px" }}>
                                       <span>+ {a.title}</span>
                                       <span>{a.price}₺</span>
                                     </div>
@@ -507,10 +508,10 @@ export default function CartDrawer() {
 
                               {/* Price */}
                               <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline", gap: "4px" }}>
-                                <span style={{ fontSize: "16px", fontWeight: 700, color: "#FEFEFE" }}>
+                                <span style={{ fontSize: "16px", fontWeight: 700, color: "#000000" }}>
                                   {fmt(pkgPrice + addonPrice)}
                                 </span>
-                                <span style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.4)" }}>₺</span>
+                                <span style={{ fontSize: "11px", color: "rgba(0, 0, 0, 0.4)" }}>₺</span>
                               </div>
                             </div>
                           );
@@ -533,8 +534,8 @@ export default function CartDrawer() {
                       }}>
                         <Sparkles size={24} style={{ color: "#f59e0b" }} />
                       </div>
-                      <h3 style={{ fontSize: 16, fontWeight: 800, color: "#FEFEFE", margin: "0 0 6px" }}>Bir Şey Eksik Olmasın!</h3>
-                      <p style={{ fontSize: 12, color: "rgba(255, 255, 255, 0.4)", margin: 0, lineHeight: 1.5 }}>
+                      <h3 style={{ fontSize: 16, fontWeight: 800, color: "#000000", margin: "0 0 6px" }}>Bir Şey Eksik Olmasın!</h3>
+                      <p style={{ fontSize: 12, color: "rgba(0, 0, 0, 0.4)", margin: 0, lineHeight: 1.5 }}>
                         Bu hizmetleri de eklemek ister misiniz?
                       </p>
                     </div>
@@ -557,7 +558,7 @@ export default function CartDrawer() {
                               background: `linear-gradient(135deg, ${suggestion.color}11 0%, transparent 60%)`,
                               border: `1px solid ${suggestion.color}33`,
                               cursor: "pointer", textAlign: "left",
-                              transition: "all 0.2s", color: "#FEFEFE",
+                              transition: "all 0.2s", color: "#000000",
                             }}
                           >
                             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -570,8 +571,8 @@ export default function CartDrawer() {
                               </div>
                               <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>{suggestion.title}</div>
-                                <div style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.7)", fontWeight: 600, marginBottom: 2 }}>{suggestion.desc}</div>
-                                <div style={{ fontSize: 11, color: "rgba(255, 255, 255, 0.4)" }}>
+                                <div style={{ fontSize: 13, color: "rgba(0, 0, 0, 0.7)", fontWeight: 600, marginBottom: 2 }}>{suggestion.desc}</div>
+                                <div style={{ fontSize: 11, color: "rgba(0, 0, 0, 0.4)" }}>
                                   {typeof suggestion.pkg.price === 'number' ? `${suggestion.pkg.price} ₺` : suggestion.pkg.price}
                                 </div>
                               </div>
@@ -587,8 +588,8 @@ export default function CartDrawer() {
                         );
                       })}
                     </div>
-
                     <button
+                      className="force-dark"
                       onClick={() => {
                         setShowUpsell(false);
                         setCheckoutMode(true);
@@ -597,7 +598,7 @@ export default function CartDrawer() {
                       style={{
                         width: "100%", marginTop: 20, padding: "14px",
                         borderRadius: 0, border: "none",
-                        background: "#FEFEFE", color: "#010101", "--force-color": "#010101",
+                        background: "#000000", color: "#ffffff",
                         fontSize: 13, fontWeight: 700, cursor: "pointer",
                         display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                       }}
@@ -613,9 +614,9 @@ export default function CartDrawer() {
                     {/* Order summary */}
                     <div style={{
                       padding: "16px", borderRadius: 0, marginBottom: "24px",
-                      background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.1)",
+                      background: "rgba(0, 0, 0, 0.04)", border: "1px solid rgba(0, 0, 0, 0.1)",
                     }}>
-                      <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255, 255, 255, 0.4)", marginBottom: "10px" }}>
+                      <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(0, 0, 0, 0.4)", marginBottom: "10px" }}>
                         Sipariş Özeti
                       </div>
                       {items.map((item) => {
@@ -626,27 +627,27 @@ export default function CartDrawer() {
                         const ad = (item.addons || []).reduce((s, a) => s + (parseInt(a.price) || 0), 0);
                         return (
                           <div key={item.pkg.id} style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", marginBottom: "6px" }}>
-                            <span style={{ color: "rgba(255, 255, 255, 0.6)" }}>{item.pkg.name}</span>
-                            <span style={{ color: "#FEFEFE", fontWeight: 600 }}>{fmt(p + ad)}₺</span>
+                            <span style={{ color: "rgba(0, 0, 0, 0.6)" }}>{item.pkg.name}</span>
+                            <span style={{ color: "#000000", fontWeight: 600 }}>{fmt(p + ad)}₺</span>
                           </div>
                         );
                       })}
-                      <div style={{ borderTop: "1px solid rgba(255, 255, 255, 0.04)", marginTop: "10px", paddingTop: "10px", display: "flex", justifyContent: "space-between" }}>
-                        <span style={{ fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255, 255, 255, 0.4)" }}>Toplam</span>
-                        <span style={{ fontSize: "18px", fontWeight: 700, color: "#FEFEFE" }}>{fmt(cartTotal())}₺</span>
+                      <div style={{ borderTop: "1px solid rgba(0, 0, 0, 0.04)", marginTop: "10px", paddingTop: "10px", display: "flex", justifyContent: "space-between" }}>
+                        <span style={{ fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(0, 0, 0, 0.4)" }}>Toplam</span>
+                        <span style={{ fontSize: "18px", fontWeight: 700, color: "#000000" }}>{fmt(cartTotal())}₺</span>
                       </div>
                     </div>
 
                     {/* Discount Code Input */}
                     <div style={{
                       padding: "14px 16px", borderRadius: 0, marginBottom: "24px",
-                      background: discountResult ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.03)",
-                      border: `1px solid ${discountResult ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
+                      background: discountResult ? "rgba(0, 0, 0,0.03)" : "rgba(0, 0, 0,0.03)",
+                      border: `1px solid ${discountResult ? "rgba(0, 0, 0,0.12)" : "rgba(0, 0, 0,0.08)"}`,
                       transition: "all 0.3s",
                     }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                        <Tag size={12} style={{ color: discountResult ? "#fff" : "rgba(255,255,255,0.4)" }} />
-                        <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: discountResult ? "#fff" : "rgba(255,255,255,0.4)" }}>
+                        <Tag size={12} style={{ color: discountResult ? "#000" : "rgba(0, 0, 0,0.4)" }} />
+                        <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: discountResult ? "#000" : "rgba(0, 0, 0,0.4)" }}>
                           {discountResult ? "İndirim Uygulandı!" : "İndirim Kodunuz Var Mı?"}
                         </span>
                       </div>
@@ -669,8 +670,8 @@ export default function CartDrawer() {
                             disabled={discountLoading || !discountCode.trim()}
                             style={{
                               padding: "0 18px", borderRadius: 0, border: "none",
-                              background: discountCode.trim() ? "#fff" : "rgba(255,255,255,0.06)",
-                              color: discountCode.trim() ? "#000" : "rgba(255,255,255,0.2)",
+                              background: discountCode.trim() ? "#000" : "rgba(0, 0, 0,0.06)",
+                              color: discountCode.trim() ? "#ffffff" : "rgba(0, 0, 0,0.2)",
                               fontWeight: 700, fontSize: 12, cursor: discountCode.trim() ? "pointer" : "not-allowed",
                               flexShrink: 0, transition: "all 0.2s",
                             }}
@@ -682,24 +683,24 @@ export default function CartDrawer() {
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <div>
                             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <Check size={14} style={{ color: "#FEFEFE" }} />
-                              <span style={{ fontSize: 14, fontWeight: 800, color: "#FEFEFE", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: "#FEFEFE" }}>%{discountResult.discountPercent}</span>
+                              <Check size={14} style={{ color: "#000000" }} />
+                              <span style={{ fontSize: 14, fontWeight: 800, color: "#000000", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: "#000000" }}>%{discountResult.discountPercent}</span>
                             </div>
                             {discountResult.description && (
-                              <div style={{ fontSize: 11, color: "rgba(255, 255, 255, 0.4)", marginTop: 4, marginLeft: 22 }}>{discountResult.description}</div>
+                              <div style={{ fontSize: 11, color: "rgba(0, 0, 0, 0.4)", marginTop: 4, marginLeft: 22 }}>{discountResult.description}</div>
                             )}
                           </div>
                           <button onClick={() => { setDiscountResult(null); setDiscountCode(""); setDiscountError(""); }} style={{
-                            background: "none", border: "none", color: "rgba(255, 255, 255, 0.4)", cursor: "pointer", padding: 4, fontSize: 11,
+                            background: "none", border: "none", color: "rgba(0, 0, 0, 0.4)", cursor: "pointer", padding: 4, fontSize: 11,
                           }}>Kaldır</button>
                         </div>
                       )}
-                      {discountError && <div style={{ fontSize: 11, color: "rgba(255, 255, 255, 0.6)", marginTop: 8, fontWeight: 600 }}>{discountError}</div>}
+                      {discountError && <div style={{ fontSize: 11, color: "rgba(0, 0, 0, 0.6)", marginTop: 8, fontWeight: 600 }}>{discountError}</div>}
                     </div>
 
                     {/* Contact Form */}
-                    <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255, 255, 255, 0.4)", marginBottom: "16px" }}>
+                    <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(0, 0, 0, 0.4)", marginBottom: "16px" }}>
                       İletişim Bilgileri
                     </div>
 
@@ -716,7 +717,7 @@ export default function CartDrawer() {
                           }}
                         />
                         {contactForm.brideName && !brideNameValid && (
-                          <p style={{ fontSize: "10px", color: "rgba(255, 255, 255, 0.6)", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
+                          <p style={{ fontSize: "10px", color: "rgba(0, 0, 0, 0.6)", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
                         )}
                       </div>
 
@@ -733,12 +734,12 @@ export default function CartDrawer() {
                             }}
                           />
                           {contactForm.groomName && !groomNameValid && (
-                            <p style={{ fontSize: "10px", color: "rgba(255, 255, 255, 0.6)", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
+                            <p style={{ fontSize: "10px", color: "rgba(0, 0, 0, 0.6)", margin: "4px 0 0" }}>En az 2 karakter olmalı</p>
                           )}
                         </div>
                       )}
                       
-                      {hasService && <div style={{ height: "1px", background: "rgba(255, 255, 255, 0.04)", margin: "4px 0" }} />}
+                      {hasService && <div style={{ height: "1px", background: "rgba(0, 0, 0, 0.04)", margin: "4px 0" }} />}
 
                       <div>
                         <label style={labelStyle}>
@@ -753,7 +754,7 @@ export default function CartDrawer() {
                           maxLength={16}
                         />
                         {contactForm.bridePhone && !bridePhoneValid && (
-                          <p style={{ fontSize: "10px", color: "rgba(255, 255, 255, 0.6)", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
+                          <p style={{ fontSize: "10px", color: "rgba(0, 0, 0, 0.6)", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
                         )}
                       </div>
 
@@ -771,12 +772,12 @@ export default function CartDrawer() {
                             maxLength={16}
                           />
                           {contactForm.groomPhone && !groomPhoneValid && (
-                            <p style={{ fontSize: "10px", color: "rgba(255, 255, 255, 0.6)", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
+                            <p style={{ fontSize: "10px", color: "rgba(0, 0, 0, 0.6)", margin: "4px 0 0" }}>Geçerli bir telefon numarası girin</p>
                           )}
                         </div>
                       )}
 
-                      <div style={{ height: "1px", background: "rgba(255, 255, 255, 0.04)", margin: "4px 0" }} />
+                      <div style={{ height: "1px", background: "rgba(0, 0, 0, 0.04)", margin: "4px 0" }} />
 
                       <div>
                         <label style={labelStyle}>
@@ -790,13 +791,13 @@ export default function CartDrawer() {
                           }}
                         />
                         {contactForm.brideEmail && !emailValid && (
-                          <p style={{ fontSize: "10px", color: "rgba(255, 255, 255, 0.6)", margin: "4px 0 0" }}>Geçerli bir e-posta adresi girin (ör: ornek@email.com)</p>
+                          <p style={{ fontSize: "10px", color: "rgba(0, 0, 0, 0.6)", margin: "4px 0 0" }}>Geçerli bir e-posta adresi girin (ör: ornek@email.com)</p>
                         )}
                       </div>
 
                       {hasPhysicalProduct && (
                         <>
-                          <div style={{ height: "1px", background: "rgba(255, 255, 255, 0.04)", margin: "4px 0" }} />
+                          <div style={{ height: "1px", background: "rgba(0, 0, 0, 0.04)", margin: "4px 0" }} />
                           <div>
                             <label style={labelStyle}>
                               <Box size={10} style={{ display: "inline", marginRight: "4px" }} /> Kargo Adresi *
@@ -809,13 +810,13 @@ export default function CartDrawer() {
                               }}
                             />
                             {contactForm.shippingAddress && !shippingAddressValid && (
-                              <p style={{ fontSize: "10px", color: "rgba(255, 255, 255, 0.6)", margin: "4px 0 0" }}>Tam ve açık bir adres girin (en az 10 karakter)</p>
+                              <p style={{ fontSize: "10px", color: "rgba(0, 0, 0, 0.6)", margin: "4px 0 0" }}>Tam ve açık bir adres girin (en az 10 karakter)</p>
                             )}
                           </div>
                         </>
                       )}
 
-                      <div style={{ height: "1px", background: "rgba(255, 255, 255, 0.04)", margin: "4px 0" }} />
+                      <div style={{ height: "1px", background: "rgba(0, 0, 0, 0.04)", margin: "4px 0" }} />
 
                       <div>
                         <label style={labelStyle}>
@@ -827,13 +828,13 @@ export default function CartDrawer() {
                         />
                       </div>
 
-                      <div style={{ height: "1px", background: "rgba(255, 255, 255, 0.04)", margin: "4px 0" }} />
+                      <div style={{ height: "1px", background: "rgba(0, 0, 0, 0.04)", margin: "4px 0" }} />
 
                       {/* Şifre Belirleme */}
-                      <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255, 255, 255, 0.4)", marginTop: "4px" }}>
+                      <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(0, 0, 0, 0.4)", marginTop: "4px" }}>
                         🔐 Hesap Şifresi Belirleyin
                       </div>
-                      <p style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.3)", margin: "0 0 8px", lineHeight: 1.5 }}>
+                      <p style={{ fontSize: "11px", color: "rgba(0, 0, 0, 0.3)", margin: "0 0 8px", lineHeight: 1.5 }}>
                         {textStatusMsg}
                       </p>
 
@@ -848,13 +849,13 @@ export default function CartDrawer() {
                           />
                           <button type="button" onClick={() => setShowPassword(!showPassword)} style={{
                             position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
-                            background: "none", border: "none", cursor: "pointer", color: "rgba(255, 255, 255, 0.3)", padding: 4,
+                            background: "none", border: "none", cursor: "pointer", color: "rgba(0, 0, 0, 0.3)", padding: 4,
                           }}>
                             {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                           </button>
                         </div>
                         {contactForm.password && contactForm.password.length < 6 && (
-                          <p style={{ fontSize: "10px", color: "rgba(255, 255, 255, 0.6)", margin: "4px 0 0" }}>En az 6 karakter olmalı</p>
+                          <p style={{ fontSize: "10px", color: "rgba(0, 0, 0, 0.6)", margin: "4px 0 0" }}>En az 6 karakter olmalı</p>
                         )}
                       </div>
 
@@ -867,7 +868,7 @@ export default function CartDrawer() {
                           placeholder="Şifrenizi tekrar girin" style={inputStyle}
                         />
                         {contactForm.passwordConfirm && contactForm.password !== contactForm.passwordConfirm && (
-                          <p style={{ fontSize: "10px", color: "rgba(255, 255, 255, 0.6)", margin: "4px 0 0" }}>Şifreler eşleşmiyor</p>
+                          <p style={{ fontSize: "10px", color: "rgba(0, 0, 0, 0.6)", margin: "4px 0 0" }}>Şifreler eşleşmiyor</p>
                         )}
                       </div>
                     </div>
@@ -878,7 +879,7 @@ export default function CartDrawer() {
                 {checkoutMode && !submitResult && checkoutStep === "payment_method" && (
                   <motion.div key="checkout-payment" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
                     <div style={{ marginBottom: 24 }}>
-                      <p style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.5)", lineHeight: 1.6, margin: 0 }}>
+                      <p style={{ fontSize: 13, color: "rgba(0, 0, 0, 0.5)", lineHeight: 1.6, margin: 0 }}>
                         Ödeme yönteminizi seçin. Nakit ödemelerde fiyat aynı kalır, kart ile ödemelerde %15 hizmet bedeli eklenir.
                       </p>
                     </div>
@@ -890,24 +891,24 @@ export default function CartDrawer() {
                         style={{
                           display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer",
                           padding: "16px", borderRadius: 0,
-                          background: contractAccepted ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
-                          border: `1px solid ${contractAccepted ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
+                          background: contractAccepted ? "rgba(0, 0, 0,0.04)" : "rgba(0, 0, 0,0.02)",
+                          border: `1px solid ${contractAccepted ? "rgba(0, 0, 0,0.12)" : "rgba(0, 0, 0,0.08)"}`,
                           transition: "all 0.2s",
                         }}
                       >
                         <div style={{
                           width: 20, height: 20, borderRadius: 0, flexShrink: 0, marginTop: 1,
-                          border: `2px solid ${contractAccepted ? "#fff" : "rgba(255,255,255,0.25)"}`,
-                          background: contractAccepted ? "#fff" : "transparent",
+                          border: `2px solid ${contractAccepted ? "#000" : "rgba(0, 0, 0,0.25)"}`,
+                          background: contractAccepted ? "#000" : "transparent",
                           display: "flex", alignItems: "center", justifyContent: "center",
                           transition: "all 0.2s",
                         }}>
                           {contractAccepted && (
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                           )}
                         </div>
-                        <span style={{ fontSize: 13, color: contractAccepted ? "#fff" : "rgba(255,255,255,0.5)", lineHeight: 1.5, transition: "all 0.2s" }}>
-                          Siparişimi tamamlayarak, <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "rgba(255, 255, 255, 0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Hizmet Sözleşmesi</a>'ni, <a href="/sozlesme?tab=kvkk" target="_blank" style={{ color: "rgba(255, 255, 255, 0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>KVKK Aydınlatma Metni</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "rgba(255, 255, 255, 0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okuduğumu ve kabul ettiğimi onaylıyorum. *
+                        <span style={{ fontSize: 13, color: contractAccepted ? "#000" : "rgba(0, 0, 0,0.5)", lineHeight: 1.5, transition: "all 0.2s" }}>
+                          Siparişimi tamamlayarak, <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "rgba(0, 0, 0, 0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Hizmet Sözleşmesi</a>'ni, <a href="/sozlesme?tab=kvkk" target="_blank" style={{ color: "rgba(0, 0, 0, 0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>KVKK Aydınlatma Metni</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "rgba(0, 0, 0, 0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okuduğumu ve kabul ettiğimi onaylıyorum. *
                         </span>
                       </div>
                     </div>
@@ -918,23 +919,23 @@ export default function CartDrawer() {
                       disabled={isSubmitting || !contractAccepted}
                       style={{
                         width: "100%", padding: "20px", borderRadius: 0, marginBottom: 12,
-                        background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.12)",
+                        background: "rgba(0, 0, 0, 0.04)", border: "1px solid rgba(0, 0, 0, 0.12)",
                         cursor: (isSubmitting || !contractAccepted) ? "not-allowed" : "pointer", textAlign: "left",
-                        transition: "all 0.2s", color: "#FEFEFE",
+                        transition: "all 0.2s", color: "#000000",
                         opacity: (!contractAccepted) ? 0.4 : 1,
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                        <div style={{ width: 48, height: 48, borderRadius: 0, background: "rgba(255, 255, 255, 0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          <Banknote size={22} style={{ color: "#FEFEFE" }} />
+                        <div style={{ width: 48, height: 48, borderRadius: 0, background: "rgba(0, 0, 0, 0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <Banknote size={22} style={{ color: "#000000" }} />
                         </div>
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Nakit / Havale</div>
-                          <div style={{ fontSize: 11, color: "rgba(255, 255, 255, 0.4)", lineHeight: 1.4 }}>Sizinle telefonla iletişime geçeceğiz</div>
+                          <div style={{ fontSize: 11, color: "rgba(0, 0, 0, 0.4)", lineHeight: 1.4 }}>Sizinle telefonla iletişime geçeceğiz</div>
                         </div>
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontSize: 20, fontWeight: 800, color: "#FEFEFE" }}>{fmt(effectiveTotal)}₺</div>
-                          <div style={{ fontSize: 10, color: "rgba(255, 255, 255, 0.5)", fontWeight: 600, textTransform: "uppercase" }}>{discountResult ? `%${discountResult.discountPercent} indirimli` : "Aynı fiyat"}</div>
+                          <div style={{ fontSize: 20, fontWeight: 800, color: "#000000" }}>{fmt(effectiveTotal)}₺</div>
+                          <div style={{ fontSize: 10, color: "rgba(0, 0, 0, 0.5)", fontWeight: 600, textTransform: "uppercase" }}>{discountResult ? `%${discountResult.discountPercent} indirimli` : "Aynı fiyat"}</div>
                         </div>
                       </div>
                     </button>
@@ -948,21 +949,21 @@ export default function CartDrawer() {
                         width: "100%", padding: "20px", borderRadius: 0, marginBottom: 12,
                         background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.2)",
                         cursor: (isSubmitting || !contractAccepted) ? "not-allowed" : "pointer", textAlign: "left",
-                        transition: "all 0.2s", color: "#FEFEFE",
+                        transition: "all 0.2s", color: "#000000",
                         opacity: (!contractAccepted) ? 0.4 : 1,
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                         <div style={{ width: 48, height: 48, borderRadius: 0, background: "rgba(96,165,250,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          <CreditCard size={22} style={{ color: "rgba(255, 255, 255, 0.5)" }} />
+                          <CreditCard size={22} style={{ color: "rgba(0, 0, 0, 0.5)" }} />
                         </div>
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Kredi Kartı</div>
-                          <div style={{ fontSize: 11, color: "rgba(255, 255, 255, 0.4)", lineHeight: 1.4 }}>Online güvenli ödeme</div>
+                          <div style={{ fontSize: 11, color: "rgba(0, 0, 0, 0.4)", lineHeight: 1.4 }}>Online güvenli ödeme</div>
                           <img src="/assets/iyzico_checkout.svg" alt="iyzico ile Öde" style={{ height: 16, marginTop: 8, opacity: 0.8 }} />
                         </div>
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontSize: 20, fontWeight: 800, color: "rgba(255, 255, 255, 0.5)" }}>{fmt(cardTotal)}₺</div>
+                          <div style={{ fontSize: 20, fontWeight: 800, color: "rgba(0, 0, 0, 0.5)" }}>{fmt(cardTotal)}₺</div>
                           <div style={{ fontSize: 10, color: "rgba(96,165,250,0.6)", fontWeight: 600, textTransform: "uppercase" }}>+%15 hizmet bedeli</div>
                         </div>
                       </div>
@@ -970,14 +971,14 @@ export default function CartDrawer() {
                     )}
 
                     {/* Info note */}
-                    <div style={{ marginTop: 16, padding: "12px 14px", borderRadius: 0, background: "rgba(255, 255, 255, 0.02)", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
-                      <div style={{ fontSize: 11, color: "rgba(255, 255, 255, 0.35)", lineHeight: 1.6 }}>
+                    <div style={{ marginTop: 16, padding: "12px 14px", borderRadius: 0, background: "rgba(0, 0, 0, 0.02)", border: "1px solid rgba(0, 0, 0, 0.05)" }}>
+                      <div style={{ fontSize: 11, color: "rgba(0, 0, 0, 0.35)", lineHeight: 1.6 }}>
                         💡 Nakit/havale tercih ederseniz, rezervasyonunuz oluşturulur ve ödeme detayları için sizinle iletişime geçilir.
                       </div>
                     </div>
 
                     {isSubmitting && (
-                      <div style={{ textAlign: "center", marginTop: 20, color: "rgba(255, 255, 255, 0.5)", fontSize: 13, fontWeight: 600 }}>
+                      <div style={{ textAlign: "center", marginTop: 20, color: "rgba(0, 0, 0, 0.5)", fontSize: 13, fontWeight: 600 }}>
                         İşleniyor...
                       </div>
                     )}
@@ -989,15 +990,15 @@ export default function CartDrawer() {
                   <motion.div key="paytr-view" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
                     <div style={{ marginBottom: 16 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                        <CreditCard size={18} style={{ color: "rgba(255, 255, 255, 0.5)" }} />
+                        <CreditCard size={18} style={{ color: "rgba(0, 0, 0, 0.5)" }} />
                         <span style={{ fontSize: 16, fontWeight: 700 }}>Kart ile Ödeme</span>
                       </div>
-                      <p style={{ fontSize: 12, color: "rgba(255, 255, 255, 0.4)", margin: 0 }}>
+                      <p style={{ fontSize: 12, color: "rgba(0, 0, 0, 0.4)", margin: 0 }}>
                         Aşağıdaki formu doldurarak güvenli ödemenizi tamamlayın.
                       </p>
                       <img src="/assets/iyzico_checkout.svg" alt="iyzico ile Öde" style={{ height: 20, marginTop: 12, opacity: 0.8 }} />
                     </div>
-                    <div style={{ borderRadius: 0, overflow: "hidden", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+                    <div style={{ borderRadius: 0, overflow: "hidden", border: "1px solid rgba(0, 0, 0, 0.1)" }}>
                       <iframe
                         src={`https://www.paytr.com/odeme/guvenli/${iframeToken}`}
                         style={{ width: "100%", height: 460, border: "none" }}
@@ -1008,8 +1009,8 @@ export default function CartDrawer() {
                       onClick={() => { setIframeToken(null); setCheckoutStep("payment_method"); }}
                       style={{
                         marginTop: 16, width: "100%", padding: 12, borderRadius: 0,
-                        background: "transparent", border: "1px solid rgba(255, 255, 255, 0.1)",
-                        color: "rgba(255, 255, 255, 0.5)", fontWeight: 600, fontSize: 12, cursor: "pointer",
+                        background: "transparent", border: "1px solid rgba(0, 0, 0, 0.1)",
+                        color: "rgba(0, 0, 0, 0.5)", fontWeight: 600, fontSize: 12, cursor: "pointer",
                       }}
                     >
                       ← Vazgeç
@@ -1024,8 +1025,8 @@ export default function CartDrawer() {
                       <div style={{
                         width: "80px", height: "80px", margin: "0 auto 24px",
                         borderRadius: 0,
-                        background: submitResult.success ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.04)",
-                        border: `2px solid ${submitResult.success ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.1)"}`,
+                        background: submitResult.success ? "rgba(0, 0, 0,0.06)" : "rgba(0, 0, 0,0.04)",
+                        border: `2px solid ${submitResult.success ? "rgba(0, 0, 0,0.15)" : "rgba(0, 0, 0,0.1)"}`,
                         display: "flex", alignItems: "center", justifyContent: "center",
                         fontSize: "36px",
                       }}>
@@ -1033,12 +1034,12 @@ export default function CartDrawer() {
                       </div>
                       <div style={{
                         fontSize: "22px", fontWeight: 800,
-                        color: submitResult.success ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.5)",
+                        color: submitResult.success ? "rgba(0, 0, 0,0.7)" : "rgba(0, 0, 0,0.5)",
                         marginBottom: "12px",
                       }}>
                         {submitResult.success ? textSuccessTitle : "Hata"}
                       </div>
-                      <p style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.5)", lineHeight: 1.7, maxWidth: 320, margin: "0 auto 24px" }}>
+                      <p style={{ fontSize: "14px", color: "rgba(0, 0, 0, 0.5)", lineHeight: 1.7, maxWidth: 320, margin: "0 auto 24px" }}>
                         {submitResult.message}
                       </p>
                     </div>
@@ -1047,35 +1048,35 @@ export default function CartDrawer() {
                       <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "0 4px" }}>
 
                         <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.12)", display: "flex", alignItems: "flex-start", gap: 12 }}>
-                          <Mail size={18} style={{ color: "rgba(255, 255, 255, 0.5)", flexShrink: 0, marginTop: 2 }} />
-                          <span style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.55)", lineHeight: 1.6 }}>
-                            Belirlediğiniz <strong style={{ color: "#FEFEFE" }}>giriş şifresi</strong> ile hesabınıza giriş yapabilir ve rezervasyon durumunuzu takip edebilirsiniz.
+                          <Mail size={18} style={{ color: "rgba(0, 0, 0, 0.5)", flexShrink: 0, marginTop: 2 }} />
+                          <span style={{ fontSize: 13, color: "rgba(0, 0, 0, 0.55)", lineHeight: 1.6 }}>
+                            Belirlediğiniz <strong style={{ color: "#000000" }}>giriş şifresi</strong> ile hesabınıza giriş yapabilir ve rezervasyon durumunuzu takip edebilirsiniz.
                           </span>
                         </div>
 
-                        <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.06)", display: "flex", alignItems: "flex-start", gap: 12 }}>
-                          <User size={18} style={{ color: "rgba(255, 255, 255, 0.7)", flexShrink: 0, marginTop: 2 }} />
-                          <span style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.55)", lineHeight: 1.6 }}>
-                            <strong style={{ color: "#FEFEFE" }}>Profilinizden</strong> rezervasyon durumunuzu takip edebilir, ödeme geçmişinizi görebilir ve tüm süreci yönetebilirsiniz.
+                        <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(0, 0, 0, 0.03)", border: "1px solid rgba(0, 0, 0, 0.06)", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                          <User size={18} style={{ color: "rgba(0, 0, 0, 0.7)", flexShrink: 0, marginTop: 2 }} />
+                          <span style={{ fontSize: 13, color: "rgba(0, 0, 0, 0.55)", lineHeight: 1.6 }}>
+                            <strong style={{ color: "#000000" }}>Profilinizden</strong> rezervasyon durumunuzu takip edebilir, ödeme geçmişinizi görebilir ve tüm süreci yönetebilirsiniz.
                           </span>
                         </div>
 
                         {submitResult.type === "cash" && (
-                          <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.08)", display: "flex", alignItems: "flex-start", gap: 12 }}>
-                            <Phone size={18} style={{ color: "#FEFEFE", flexShrink: 0, marginTop: 2 }} />
-                            <span style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.55)", lineHeight: 1.6 }}>
-                              Ekibimiz en kısa sürede sizinle <strong style={{ color: "#FEFEFE" }}>telefonla</strong> iletişime geçecek ve ödeme detaylarını paylaşacak.
+                          <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(0, 0, 0, 0.04)", border: "1px solid rgba(0, 0, 0, 0.08)", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                            <Phone size={18} style={{ color: "#000000", flexShrink: 0, marginTop: 2 }} />
+                            <span style={{ fontSize: 13, color: "rgba(0, 0, 0, 0.55)", lineHeight: 1.6 }}>
+                              Ekibimiz en kısa sürede sizinle <strong style={{ color: "#000000" }}>telefonla</strong> iletişime geçecek ve ödeme detaylarını paylaşacak.
                             </span>
                           </div>
                         )}
-
                         <button
+                          className="force-dark"
                           onClick={() => {
                             window.location.href = "/";
                           }}
                           style={{
                             marginTop: 16, width: "100%", padding: "14px", borderRadius: 0,
-                            background: "#FEFEFE", color: "#010101", "--force-color": "#010101", border: "none",
+                            background: "#000000", color: "#ffffff", border: "none",
                             fontWeight: 700, fontSize: 14, cursor: "pointer",
                           }}
                         >
@@ -1093,26 +1094,26 @@ export default function CartDrawer() {
             {items.length > 0 && !submitResult && (
               <div style={{
                 padding: "20px",
-                borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+                borderTop: "1px solid rgba(0, 0, 0, 0.08)",
                 background: "rgba(0, 0, 0, 0.3)",
               }}>
                 {/* Total */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "16px" }}>
-                  <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255, 255, 255, 0.4)" }}>
+                  <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(0, 0, 0, 0.4)" }}>
                     TOPLAM
                   </div>
                   <div>
-                    <span style={{ fontSize: "24px", fontWeight: 700, color: "#FEFEFE" }}>{fmt(discountResult ? effectiveTotal : rawTotal)}</span>
-                    <span style={{ fontSize: "13px", color: "rgba(255, 255, 255, 0.45)", fontWeight: 400, marginLeft: "2px" }}>₺</span>
+                    <span style={{ fontSize: "24px", fontWeight: 700, color: "#000000" }}>{fmt(discountResult ? effectiveTotal : rawTotal)}</span>
+                    <span style={{ fontSize: "13px", color: "rgba(0, 0, 0, 0.45)", fontWeight: 400, marginLeft: "2px" }}>₺</span>
                   </div>
                 </div>
                 {discountResult && (
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, padding: "8px 10px", borderRadius: 0, background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, padding: "8px 10px", borderRadius: 0, background: "rgba(0, 0, 0, 0.04)", border: "1px solid rgba(0, 0, 0, 0.08)" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Tag size={11} style={{ color: "#FEFEFE" }} />
-                      <span style={{ fontSize: 11, fontWeight: 700, color: "#FEFEFE", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
+                      <Tag size={11} style={{ color: "#000000" }} />
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#000000", fontFamily: "monospace" }}>{discountCode.toUpperCase()}</span>
                     </div>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: "#FEFEFE" }}>-{fmt(discountAmount)}₺</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "#000000" }}>-{fmt(discountAmount)}₺</span>
                   </div>
                 )}
 
@@ -1120,8 +1121,8 @@ export default function CartDrawer() {
                   <div style={{ display: "flex", gap: "10px" }}>
                     <button onClick={clearCart} style={{
                       flex: 1, padding: "14px", borderRadius: 0,
-                      border: "1px solid rgba(255, 255, 255, 0.06)", background: "transparent",
-                      color: "rgba(255, 255, 255, 0.45)", fontSize: "12px", fontWeight: 600,
+                      border: "1px solid rgba(0, 0, 0, 0.06)", background: "transparent",
+                      color: "rgba(0, 0, 0, 0.45)", fontSize: "12px", fontWeight: 600,
                       cursor: "pointer", transition: "all 0.2s",
                     }}>
                       Temizle
@@ -1133,9 +1134,11 @@ export default function CartDrawer() {
                         setCheckoutMode(true);
                         setCheckoutStep("contact");
                       }
-                    }} style={{
+                    }}
+                    className="force-dark"
+                    style={{
                       flex: 2, padding: "14px", borderRadius: 0,
-                      border: "none", background: "#FEFEFE", color: "#010101", "--force-color": "#010101",
+                      border: "none", background: "#000000", color: "#ffffff",
                       fontSize: "13px", fontWeight: 700, cursor: "pointer",
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                       transition: "all 0.2s",
@@ -1145,13 +1148,14 @@ export default function CartDrawer() {
                   </div>
                 ) : checkoutStep === "contact" ? (
                   <button
+                    className="force-dark"
                     onClick={() => setCheckoutStep("payment_method")}
                     disabled={!isContactValid}
                     style={{
                       width: "100%", padding: "16px", borderRadius: 0,
                       border: "none",
-                      background: isContactValid ? "#fff" : "rgba(255,255,255,0.04)",
-                      color: isContactValid ? "#000" : "rgba(255,255,255,0.15)",
+                      background: isContactValid ? "#000000" : "rgba(0, 0, 0,0.04)",
+                      color: isContactValid ? "#ffffff" : "rgba(0, 0, 0,0.15)",
                       fontSize: "14px", fontWeight: 700,
                       cursor: isContactValid ? "pointer" : "not-allowed",
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
