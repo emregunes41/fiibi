@@ -422,8 +422,10 @@ export async function getReservations() {
   return await prisma.reservation.findMany({
     where: { 
       tenantId: tenantId || "NONE",
-      orderType: { not: "PRODUCT" },
-      status: { not: "DRAFT" }
+      NOT: [
+        { orderType: "PRODUCT" },
+        { status: "DRAFT" }
+      ]
     },
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
@@ -436,7 +438,7 @@ export async function getOrders() {
     where: { 
       tenantId: tenantId || "NONE",
       orderType: { in: ["PRODUCT", "MIXED"] },
-      status: { not: "DRAFT" }
+      NOT: { status: "DRAFT" }
     },
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
