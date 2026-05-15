@@ -27,7 +27,7 @@ export default function OrdersPage() {
     setIsLoading(true);
     try {
       const data = await getOrders();
-      setOrders(data || []);
+      setOrders((data || []).filter(r => r.status !== "DRAFT"));
     } catch(e) {}
     setIsLoading(false);
   };

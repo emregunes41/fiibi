@@ -69,7 +69,7 @@ export default function ReservationsPage() {
         getBlockedDays(),
         getSiteConfig()
       ]);
-      setReservations(resData || []);
+      setReservations((resData || []).filter(r => r.status !== "DRAFT"));
       setPackages(pkgData || []);
       setBlockedDays(blocked || []);
       setSiteConfig(sc);

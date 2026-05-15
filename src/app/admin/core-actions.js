@@ -419,7 +419,7 @@ export async function hardDeleteReservation(id) {
 
 export async function getReservations() {
   const tenantId = await getTenantId();
-  const res = await prisma.reservation.findMany({
+  return await prisma.reservation.findMany({
     where: { 
       tenantId: tenantId || "NONE",
       NOT: { orderType: "PRODUCT" }
@@ -427,12 +427,11 @@ export async function getReservations() {
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
   });
-  return res.filter(r => r.status !== "DRAFT");
 }
 
 export async function getOrders() {
   const tenantId = await getTenantId();
-  const res = await prisma.reservation.findMany({
+  return await prisma.reservation.findMany({
     where: { 
       tenantId: tenantId || "NONE",
       orderType: { in: ["PRODUCT", "MIXED"] }
@@ -440,7 +439,6 @@ export async function getOrders() {
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
   });
-  return res.filter(r => r.status !== "DRAFT");
 }
 
 export async function checkAvailability(date, packageId, time = null) {
