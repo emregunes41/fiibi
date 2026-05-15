@@ -124,8 +124,7 @@ export default function PortfolioAdminPage() {
             options={{ 
               multiple: true, 
               cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-              maxFilesize: 5242880, // 5MB
-              clientAllowedFormats: ["png", "jpeg", "jpg", "webp"]
+              maxFilesize: 125829120 // 120MB limit
             }}
           >
             {({ open }) => (
