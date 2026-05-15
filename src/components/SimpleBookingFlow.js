@@ -9,8 +9,8 @@ import { getBusinessType } from "@/lib/business-types";
 /* ─── Styles ─── */
 const card = (on) => ({
   padding: "20px",
-  border: `1px solid ${on ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.1)"}`,
-  background: on ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
+  border: `1px solid ${on ? "rgba(254, 254, 254, 0.8)" : "rgba(254, 254, 254, 0.3)"}`,
+  background: on ? "rgba(254, 254, 254, 0.5)" : "rgba(254, 254, 254, 0.2)",
   cursor: "pointer",
   transition: "all 0.2s",
 });
@@ -278,9 +278,9 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                             padding: "12px 8px", border: "none", fontSize: "13px", fontWeight: 600,
                             cursor: isBooked ? "not-allowed" : "pointer",
                             transition: "all 0.15s",
-                            background: isSelected ? "rgba(255,255,255,0.15)" : isBooked ? "rgba(255,0,0,0.05)" : "rgba(255,255,255,0.03)",
-                            color: isSelected ? "#fff" : isBooked ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.5)",
-                            border: isSelected ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.06)",
+                            background: isSelected ? "rgba(254, 254, 254, 0.5)" : isBooked ? "rgba(255,0,0,0.05)" : "rgba(254, 254, 254, 0.2)",
+                            color: isSelected ? "#000" : isBooked ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.5)",
+                            border: isSelected ? "1px solid rgba(254, 254, 254, 0.8)" : "1px solid rgba(254, 254, 254, 0.3)",
                             textDecoration: isBooked ? "line-through" : "none",
                           }}
                         >
@@ -399,8 +399,8 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                     onClick={() => setPaymentMethod(m.value)}
                     style={{
                       flex: 1, padding: "16px", cursor: "pointer",
-                      border: paymentMethod === m.value ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.08)",
-                      background: paymentMethod === m.value ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)",
+                      border: paymentMethod === m.value ? "1px solid rgba(254, 254, 254, 0.8)" : "1px solid rgba(254, 254, 254, 0.3)",
+                      background: paymentMethod === m.value ? "rgba(254, 254, 254, 0.5)" : "rgba(254, 254, 254, 0.2)",
                       color: paymentMethod === m.value ? "#fff" : "rgba(255,255,255,0.4)",
                       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
                       fontSize: "13px", fontWeight: 600, transition: "all 0.2s",
