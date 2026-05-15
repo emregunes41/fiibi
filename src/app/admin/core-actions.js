@@ -422,7 +422,8 @@ export async function getReservations() {
   return await prisma.reservation.findMany({
     where: { 
       tenantId: tenantId || "NONE",
-      NOT: { orderType: "PRODUCT" }
+      orderType: { not: "PRODUCT" },
+      status: { not: "DRAFT" }
     },
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
@@ -434,7 +435,8 @@ export async function getOrders() {
   return await prisma.reservation.findMany({
     where: { 
       tenantId: tenantId || "NONE",
-      orderType: { in: ["PRODUCT", "MIXED"] }
+      orderType: { in: ["PRODUCT", "MIXED"] },
+      status: { not: "DRAFT" }
     },
     include: { packages: true, payments: { orderBy: { createdAt: 'desc' } }, albumModel: true },
     orderBy: { createdAt: 'desc' }
@@ -598,7 +600,7 @@ export async function savePendingReservation(data) {
         paidAmount: data.paidAmount,
         selectedAddons: data.selectedAddons || [],
         customFieldAnswers: data.customFieldAnswers || [],
-        status: "PENDING",
+        status: (paymentPref === "CREDIT_CARD" || paymentPref === "CARD" || paymentPref === "ONLINE") ? "DRAFT" : "PENDING",
         paymentStatus: "UNPAID",
         paymentPreference: paymentPref,
         workflowStatus: "PENDING",
@@ -607,37 +609,39 @@ export async function savePendingReservation(data) {
       }
     });
 
-    // Send "Reservation Received" email with full details (NOT confirmation)
-    try {
-      const packageNames = packagesData.map(p => p.name).join(', ');
-      await notifyReservationReceived(data.brideEmail, data.bridePhone, data.brideName, {
-        date: data.date,
-        totalAmount: data.totalAmount,
-        packages: packageNames,
-        groomName: data.groomName,
-        bridePhone: data.bridePhone,
-        eventTime: data.time,
-        paymentPreference: data.paymentPreference,
-        notes: data.notes,
-      });
-    } catch (emailErr) {
-      console.error("Reservation received email error:", emailErr);
-    }
+    if (reservation.status !== "DRAFT") {
+      // Send "Reservation Received" email with full details (NOT confirmation)
+      try {
+        const packageNames = packagesData.map(p => p.name).join(', ');
+        await notifyReservationReceived(data.brideEmail, data.bridePhone, data.brideName, {
+          date: data.date,
+          totalAmount: data.totalAmount,
+          packages: packageNames,
+          groomName: data.groomName,
+          bridePhone: data.bridePhone,
+          eventTime: data.time,
+          paymentPreference: data.paymentPreference,
+          notes: data.notes,
+        });
+      } catch (emailErr) {
+        console.error("Reservation received email error:", emailErr);
+      }
 
-    // Notify admin about new reservation
-    try {
-      const packageNames = packagesData.map(p => p.name).join(', ');
-      const { notifyAdminNewReservation } = await import("../actions/admin-notifications");
-      await notifyAdminNewReservation({
-        brideName: data.brideName,
-        groomName: data.groomName,
-        bridePhone: data.bridePhone,
-        brideEmail: data.brideEmail,
-        eventDate: data.date,
-        totalAmount: data.totalAmount,
-        packageNames
-      });
-    } catch (e) { console.error("Admin notify error:", e); }
+      // Notify admin about new reservation
+      try {
+        const packageNames = packagesData.map(p => p.name).join(', ');
+        const { notifyAdminNewReservation } = await import("../actions/admin-notifications");
+        await notifyAdminNewReservation({
+          brideName: data.brideName,
+          groomName: data.groomName,
+          bridePhone: data.bridePhone,
+          brideEmail: data.brideEmail,
+          eventDate: data.date,
+          totalAmount: data.totalAmount,
+          packageNames
+        });
+      } catch (e) { console.error("Admin notify error:", e); }
+    }
 
     return { success: true, id: reservation.id };
   } catch (error) {

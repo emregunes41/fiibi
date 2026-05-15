@@ -58,7 +58,7 @@ export async function POST(req) {
     // ---------------------------------------------
 
     const reservationId = merchant_oid.split('X')[0];
-    const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    const reservation = await prisma.reservation.findUnique({ where: { id: reservationId }, include: { packages: true } });
     
     if (!reservation) {
       console.error(`PAYTR CALLBACK ERROR: Reservation not found for ${reservationId}`);
@@ -146,6 +146,40 @@ export async function POST(req) {
           remaining: Math.max(0, totalAmount - totalPaid)
         });
       } catch (e) { console.error("Admin notify error:", e); }
+
+      // DRAFT'tan Onaylıya geçiş (İlk ödeme tamamlandı)
+      if (reservation.status === "DRAFT") {
+        const packageNames = reservation.packages?.map(p => p.name).join(', ') || "";
+        
+        try {
+          const { notifyReservationReceived } = await import("@/app/actions/notify");
+          await notifyReservationReceived(reservation.brideEmail, reservation.bridePhone, reservation.brideName, {
+            date: reservation.eventDate?.toISOString()?.split('T')[0] || "",
+            totalAmount: reservation.totalAmount,
+            packages: packageNames,
+            groomName: reservation.groomName,
+            bridePhone: reservation.bridePhone,
+            eventTime: reservation.eventTime,
+            paymentPreference: reservation.paymentPreference,
+            notes: reservation.notes,
+          });
+        } catch (emailErr) {
+          console.error("Delayed reservation received email error:", emailErr);
+        }
+
+        try {
+          const { notifyAdminNewReservation } = await import("@/app/actions/admin-notifications");
+          await notifyAdminNewReservation({
+            brideName: reservation.brideName,
+            groomName: reservation.groomName,
+            bridePhone: reservation.bridePhone,
+            brideEmail: reservation.brideEmail,
+            eventDate: reservation.eventDate?.toISOString()?.split('T')[0] || "",
+            totalAmount: reservation.totalAmount,
+            packageNames
+          });
+        } catch (e) { console.error("Delayed admin notify error:", e); }
+      }
       
       console.log(`PAYMENT SUCCESS for Reservation: ${reservationId} - ${paidAmountTL} TL`);
     } else {
