@@ -75,7 +75,9 @@ export async function POST(req) {
       .update(hashStr)
       .digest("base64");
 
-    const baseUrl = await getTenantUrl(tenant);
+    const host = headersList.get("host") || "fiibi.co";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const baseUrl = `${protocol}://${host}`;
 
     const formData = new URLSearchParams();
     formData.append("merchant_id", merchant_id);

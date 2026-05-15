@@ -85,7 +85,9 @@ export async function POST(req) {
 
     const token = generatePaytrToken(params);
 
-    const baseUrl = process.env.NEXT_PUBLIC_URL || "https://www.fiibi.co";
+    const host = headersList.get("host") || "fiibi.co";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const baseUrl = `${protocol}://${host}`;
     const okUrl = `${baseUrl}/admin/settings?tab=domain&status=success`;
     const failUrl = `${baseUrl}/admin/settings?tab=domain&status=fail`;
 

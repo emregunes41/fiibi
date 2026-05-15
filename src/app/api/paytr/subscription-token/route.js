@@ -34,13 +34,16 @@ export async function POST(request) {
     const pricing = config?.pricing || { monthly: 2499, yearly: 24999 };
     const planPriceKurus = tenant.selectedPlan === "yearly" ? pricing.yearly : pricing.monthly;
 
-    // PayTR iFrame token parametreleri
     const merchant_oid = `SUB_${tenant.id}_${Date.now()}`;
     const email = tenant.ownerEmail;
     const payment_amount = planPriceKurus.toString(); // PayTR kuruş bekliyor
     const user_ip = request.headers.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
-    const merchant_ok_url = `${process.env.NEXT_PUBLIC_APP_URL || "https://fiibi.co"}/api/paytr/subscription-callback`;
-    const merchant_fail_url = `${process.env.NEXT_PUBLIC_APP_URL || "https://fiibi.co"}/api/paytr/subscription-callback`;
+    const host = request.headers.get("host") || "fiibi.co";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const baseUrl = `${protocol}://${host}`;
+
+    const merchant_ok_url = `${baseUrl}/admin/subscription?payment=success`;
+    const merchant_fail_url = `${baseUrl}/admin/subscription?payment=fail`;
     const user_basket = JSON.stringify([["Fiibi Pro Abonelik", (planPriceKurus / 100).toFixed(2), 1]]); // Sepet TL cinsinden
     const currency = "TL";
     const test_mode = process.env.NODE_ENV === "production" ? "0" : "1";

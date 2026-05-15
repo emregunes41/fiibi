@@ -49,7 +49,9 @@ export async function POST(request) {
     const card_type = ""; // BIN sorgusu yapmadığımız için boş
     const debug_on = process.env.NODE_ENV === "production" ? "0" : "1";
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://fiibi.co";
+    const host = request.headers.get("host") || "fiibi.co";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const baseUrl = `${protocol}://${host}`;
     const merchant_ok_url = `${baseUrl}/admin/subscription?payment=success`;
     const merchant_fail_url = `${baseUrl}/admin/subscription?payment=failed`;
 
