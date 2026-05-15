@@ -109,7 +109,7 @@ export async function GET(request) {
           continue;
         }
 
-        const commissionRate = tenant.commissionRate || 5;
+        const commissionRate = tenant.commissionRate || 6;
         const { submerchantAmount } = calculateTransferAmounts(totalAmountKurus, commissionRate);
 
         // Transfer ID oluştur

@@ -54,7 +54,7 @@ model Tenant {
   iban            String?                     // IBAN
   legalAddress    String?                     // Resmi adres
   taxPlateUrl     String?                     // Vergi levhası / Kimlik fotoğrafı URL'i
-  commissionRate  Float     @default(5)       // Platform komisyon oranı (%)
+  commissionRate  Float     @default(6)       // Platform komisyon oranı (%)
   subMerchantStatus String  @default("NOT_STARTED") // NOT_STARTED, PENDING, APPROVED, REJECTED
   subMerchantKey  String?                     // PayTR sub-merchant key (onay sonrası)
   sellerAgreementAccepted Boolean @default(false) // Satıcı sözleşmesi onayı

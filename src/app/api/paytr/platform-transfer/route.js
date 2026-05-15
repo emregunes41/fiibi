@@ -96,7 +96,7 @@ export async function POST(req) {
       submerchantAmountKurus = Math.round(customSubmerchantAmount * 100);
     } else {
       // Otomatik komisyon hesaplama
-      const commissionRate = tenant.commissionRate || 5;
+      const commissionRate = tenant.commissionRate || 6;
       const { submerchantAmount } = calculateTransferAmounts(totalAmountKurus, commissionRate);
       submerchantAmountKurus = submerchantAmount;
     }
