@@ -21,6 +21,12 @@ export async function POST(request) {
     const failed_reason_code = formData.get("failed_reason_code");
     const failed_reason_msg = formData.get("failed_reason_msg");
 
+    // PayTR test pings (mağaza onayı sırasında) boş veri gönderebilir
+    if (!merchant_oid) {
+      console.log("PayTR Test Ping alındı (subscription).");
+      return new Response("OK");
+    }
+
     // PayTR kart saklama token'ları (store_card aktifse döner)
     const utoken = formData.get("utoken");
     const ctoken = formData.get("ctoken");

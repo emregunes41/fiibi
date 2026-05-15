@@ -14,6 +14,12 @@ export async function POST(req) {
       hash
     } = data;
 
+    // PayTR mağaza onay aşamasında test pings atabilir
+    if (!merchant_oid) {
+      console.log("PayTR Test Ping (veya eksik veri) alındı.");
+      return new Response("OK");
+    }
+
     const reservationId = merchant_oid.split('X')[0];
     const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
     
