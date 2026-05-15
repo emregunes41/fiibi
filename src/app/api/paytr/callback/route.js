@@ -4,8 +4,14 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req) {
   try {
-    const body = await req.formData();
-    const data = Object.fromEntries(body.entries());
+    let data = {};
+    try {
+      const body = await req.formData();
+      data = Object.fromEntries(body.entries());
+    } catch (e) {
+      console.log("PayTR Test Ping: FormData parse error. Returning OK.");
+      return new Response("OK");
+    }
 
     const {
       merchant_oid,

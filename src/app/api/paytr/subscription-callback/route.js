@@ -12,7 +12,13 @@ import { verifyCallbackHash, parseMerchantOid } from "@/lib/paytr";
  */
 export async function POST(request) {
   try {
-    const formData = await request.formData();
+    let formData;
+    try {
+      formData = await request.formData();
+    } catch (e) {
+      console.log("PayTR Test Ping: FormData parse error. Returning OK.");
+      return new Response("OK");
+    }
 
     const merchant_oid = formData.get("merchant_oid");
     const status = formData.get("status"); // "success" veya "failed"

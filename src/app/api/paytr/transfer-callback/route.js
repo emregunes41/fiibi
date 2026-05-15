@@ -14,7 +14,13 @@ import { verifyTransferCallbackHash } from "@/lib/paytr-transfer";
  */
 export async function POST(req) {
   try {
-    const formData = await req.formData();
+    let formData;
+    try {
+      formData = await req.formData();
+    } catch (e) {
+      console.log("[TRANSFER CALLBACK] PayTR Test Ping: FormData parse error. Returning OK.");
+      return new Response("OK");
+    }
     const transIdsRaw = formData.get("trans_ids");
     const hash = formData.get("hash");
 
