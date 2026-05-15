@@ -43,7 +43,8 @@ export async function POST(req) {
 
     const paymentAmountStr = String(Math.round(Number(amount) * 100)); // Kuruş cinsinden
     // OID artık kısa — domain bilgisi veritabanında saklanıyor
-    const merchantOidStr = `DMN_${tenantId}_${Date.now()}`;
+    const cleanTenantId = tenantId.replace(/[^a-zA-Z0-9]/g, "");
+    const merchantOidStr = `DMNX${cleanTenantId}X${Date.now()}`;
 
     // ── Satın alma detaylarını veritabanına kaydet (OID kırpılma sorunu çözümü) ──
     await prisma.tenant.update({

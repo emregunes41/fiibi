@@ -34,7 +34,8 @@ export async function POST(request) {
     const pricing = config?.pricing || { monthly: 2499, yearly: 24999 };
     const planPriceKurus = tenant.selectedPlan === "yearly" ? pricing.yearly : pricing.monthly;
 
-    const merchant_oid = `SUB_${tenant.id}_${Date.now()}`;
+    const cleanTenantId = tenant.id.replace(/[^a-zA-Z0-9]/g, "");
+    const merchant_oid = `SUBX${cleanTenantId}X${Date.now()}`;
     const email = tenant.ownerEmail;
     const payment_amount = planPriceKurus.toString(); // PayTR kuruş bekliyor
     const user_ip = request.headers.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";

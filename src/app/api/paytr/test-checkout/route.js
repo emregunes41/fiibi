@@ -22,7 +22,7 @@ export async function POST(request) {
     const buyerEmail = body.email || "test@fiibi.co";
     const buyerName = body.name || "Test Kullanıcı";
 
-    const merchant_oid = `TEST_${Date.now()}`;
+    const merchant_oid = `TESTX${Date.now()}`;
     const payment_amount = "1000"; // 10.00 TL = 1000 kuruş
     const user_ip = request.headers.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
 

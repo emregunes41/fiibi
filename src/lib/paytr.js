@@ -64,23 +64,25 @@ export function verifyCallbackHash({ merchantOid, status, totalAmount, hash }) {
 
 /**
  * Benzersiz sipariş numarası oluştur
- * Format: SUB_{tenantId}_{timestamp}
+ * Format: SUBXtenantIdXtimestamp (alfanumerik, özel karakter yok)
  */
 export function generateMerchantOid(prefix, tenantId) {
-  return `${prefix}_${tenantId}_${Date.now()}`;
+  // tenantId içindeki özel karakterleri temizle
+  const cleanId = tenantId.replace(/[^a-zA-Z0-9]/g, "");
+  return `${prefix}X${cleanId}X${Date.now()}`;
 }
 
 /**
  * merchant_oid'den tenant ID çıkar
- * "SUB_clxyz123_1715520000000" → "clxyz123"
+ * "SUBXclxyz123X1715520000000" → "clxyz123"
  */
 export function parseMerchantOid(merchantOid) {
-  const parts = merchantOid.split("_");
+  const parts = merchantOid.split("X");
   if (parts.length < 3) return null;
   return {
     type: parts[0], // SUB, REC
     tenantId: parts[1],
-    timestamp: parts[2],
+    timestamp: parts.slice(2).join("X"),
   };
 }
 

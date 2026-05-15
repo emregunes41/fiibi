@@ -39,8 +39,8 @@ export async function POST(req) {
       return new Response("OK");
     }
 
-    // Eğer abonelik ödemesi ise (merchant_oid "SUB_" ile başlıyor)
-    if (merchant_oid && merchant_oid.startsWith("SUB_")) {
+    // Eğer abonelik ödemesi ise (merchant_oid "SUBX" ile başlıyor)
+    if (merchant_oid && merchant_oid.startsWith("SUBX")) {
       console.log("Routing to subscription-callback...");
       const newFormData = new FormData();
       for (const [key, value] of Object.entries(data)) {
@@ -50,8 +50,8 @@ export async function POST(req) {
       fetch(`${baseUrl}/api/paytr/subscription-callback`, { method: "POST", body: newFormData }).catch(console.error);
       return new Response("OK");
     }
-    // Eğer test ödemesi ise (merchant_oid "TEST_" ile başlıyor)
-    if (merchant_oid && merchant_oid.startsWith("TEST_")) {
+    // Eğer test ödemesi ise (merchant_oid "TESTX" ile başlıyor)
+    if (merchant_oid && merchant_oid.startsWith("TESTX")) {
       console.log(`[TEST PAYMENT] merchant_oid: ${merchant_oid}, status: ${status}, amount: ${total_amount}`);
       return new Response("OK");
     }

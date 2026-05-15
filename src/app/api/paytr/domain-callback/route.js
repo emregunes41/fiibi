@@ -30,9 +30,9 @@ export async function POST(req) {
     }
 
     if (status === "success") {
-      // OID formatı: DMN_tenantId_timestamp
-      if (merchant_oid.startsWith("DMN_")) {
-        const parts = merchant_oid.split("_");
+      // OID formatı: DMNXtenantIdXtimestamp
+      if (merchant_oid.startsWith("DMNX")) {
+        const parts = merchant_oid.split("X");
         if (parts.length >= 3) {
           const tenantId = parts[1];
 
