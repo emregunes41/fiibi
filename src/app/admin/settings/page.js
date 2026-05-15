@@ -78,10 +78,12 @@ const SUB_TABS = {
   ],
   sistem: [
     { id: "odeme", label: "Ödeme" },
-    { id: "sozlesme", label: "Sözleşmeler" },
-    { id: "indirim", label: "İndirimler" },
     { id: "bildirim", label: "Bildirimler" },
     { id: "ai", label: "Yapay Zeka" }
+  ],
+  satis: [
+    { id: "indirim", label: "İndirim Kodları" },
+    { id: "sozlesme", label: "Sözleşmeler" }
   ]
 };
 
@@ -266,6 +268,7 @@ export default function SettingsPage() {
             {[
               { id: "genel", label: "Genel Ayarlar", icon: Globe },
               { id: "sistem", label: "Sistem, Ödeme vb.", icon: CreditCard },
+              { id: "satis", label: "Satış & Pazarlama", icon: Tag },
               { id: "musteriler", label: terms.clients || "Müşteriler", icon: Users },
             ].map(tab => {
               const Icon = tab.icon;
@@ -290,7 +293,7 @@ export default function SettingsPage() {
         {/* Right Content Area */}
         <div className="flex-1 min-w-0">
           
-          {SUB_TABS[activeTab] && (
+          {SUB_TABS[activeTab] && activeTab !== "tasarim" && activeTab !== "icerik" && (
             <div style={{ display: "flex", gap: 12, marginBottom: 24, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
               {SUB_TABS[activeTab].map(st => (
                 <button
@@ -2215,17 +2218,12 @@ export default function SettingsPage() {
           
           <div style={{ position: "relative" }}>
             {!planLimits.customDomain && (
-              <div style={{ position: "absolute", inset: 0, zIndex: 10, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(2px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", borderRadius: 8 }}>
-                <div style={{ padding: "40px", textAlign: "center", background: "#000", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, boxShadow: "0 20px 40px rgba(0,0,0,0.5)", maxWidth: 400 }}>
-                  <div style={{ fontSize: 40, marginBottom: 16 }}>⭐</div>
-                  <h3 style={{ fontSize: 20, margin: "0 0 12px 0", color: "#fff", fontWeight: 800 }}>Sadece Pro Plana Özel</h3>
-                  <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 24, lineHeight: 1.5 }}>Kendi alan adınızı (domain) bağlamak veya sistem üzerinden yeni bir domain satın almak için planınızı yükseltmeniz gerekmektedir.</p>
-                  <Link href="/admin/subscription" style={{ display: "inline-block", background: "#fff", color: "#000", padding: "14px 28px", fontSize: 14, fontWeight: 800, textDecoration: "none", borderRadius: 0 }}>Planları İncele</Link>
-                </div>
-              </div>
+              <Link href="/admin/subscription" style={{ position: "absolute", inset: 0, zIndex: 10, cursor: "pointer" }} title="Bu özellik için Pro plana geçmelisiniz.">
+                {/* Şeffaf katman: tıklamaları yakalar ve yönlendirir */}
+              </Link>
             )}
             
-            <div style={{ opacity: !planLimits.customDomain ? 0.3 : 1, pointerEvents: !planLimits.customDomain ? "none" : "auto", userSelect: !planLimits.customDomain ? "none" : "auto" }}>
+            <div style={{ opacity: !planLimits.customDomain ? 0.4 : 1, pointerEvents: !planLimits.customDomain ? "none" : "auto", userSelect: !planLimits.customDomain ? "none" : "auto", filter: !planLimits.customDomain ? "grayscale(100%)" : "none" }}>
               <div style={{ marginBottom: 32, padding: "24px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 style={{ fontSize: 16, margin: "0 0 8px 0", color: "var(--text)" }}>Yeni Domain Satın Al (Sıfır Ayar)</h3>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: "0 0 16px 0", lineHeight: 1.5 }}>

@@ -44,7 +44,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
   const [bookedSlots, setBookedSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [contact, setContact] = useState({ name: "", phone: "", email: "", notes: "" });
-  const [paymentMethod, setPaymentMethod] = useState("cash"); // cash or card
+  const [paymentMethod, setPaymentMethod] = useState("CREDIT_CARD");
   const [submitting, setSubmitting] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [result, setResult] = useState(null);
@@ -386,38 +386,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
               </div>
             </div>
 
-            {/* Payment Method */}
-            <div style={{ marginBottom: "24px" }}>
-              <div style={lbl}>Ödeme Yöntemi</div>
-              <div style={{ display: "flex", gap: "8px" }}>
-                {[
-                  { value: "cash", label: "Nakit / Havale", icon: <Banknote size={16} /> },
-                  ...(paymentMode !== "cash" ? [{ value: "card", label: "Kredi Kartı", icon: <CreditCard size={16} /> }] : []),
-                ].map(m => (
-                  <button
-                    key={m.value}
-                    onClick={() => setPaymentMethod(m.value)}
-                    style={{
-                      flex: 1, padding: "16px", cursor: "pointer",
-                      border: paymentMethod === m.value ? "1px solid rgba(254, 254, 254, 0.8)" : "1px solid rgba(254, 254, 254, 0.3)",
-                      background: paymentMethod === m.value ? "rgba(254, 254, 254, 0.5)" : "rgba(254, 254, 254, 0.2)",
-                      color: paymentMethod === m.value ? "#fff" : "rgba(255,255,255,0.4)",
-                      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                      fontSize: "13px", fontWeight: 600, transition: "all 0.2s",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      {m.icon} {m.label}
-                    </div>
-                    {m.value === "card" && (
-                      <div style={{ marginTop: 8 }}>
-                        <img src="/assets/iyzico_checkout.svg" alt="iyzico ile Öde" style={{ height: 16, opacity: 0.8 }} />
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
+
 
             {result?.error && (
               <div style={{ padding: "12px 16px", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", marginBottom: "16px", fontSize: "13px", color: "#fca5a5", display: "flex", gap: "8px", alignItems: "flex-start" }}>

@@ -58,7 +58,6 @@ export default function ReservationsPage() {
   const bt = getBusinessType(businessType);
   const { terms } = bt;
   const isPhotographer = businessType === "photographer";
-  const [paymentMode, setPaymentMode] = useState("cash");
 
   const [siteConfig, setSiteConfig] = useState(null);
 
@@ -73,7 +72,6 @@ export default function ReservationsPage() {
       setReservations(resData || []);
       setPackages(pkgData || []);
       setBlockedDays(blocked || []);
-      setPaymentMode(sc?.paymentMode || "cash");
       setSiteConfig(sc);
     } catch (e) {}
   }
@@ -1221,7 +1219,7 @@ export default function ReservationsPage() {
                     {[
                       { v: "CASH", l: "💵 Nakit" },
                       { v: "BANK_TRANSFER", l: "🏦 Havale" },
-                      ...(paymentMode !== "cash" ? [{ v: "CREDIT_CARD", l: "💳 Kart" }] : []),
+                      { v: "CREDIT_CARD", l: "💳 Kart" },
                     ].map(m => (
                       <button key={m.v} type="button" onClick={() => setQuickEventForm({...quickEventForm, paymentMethod: m.v})}
                         style={{

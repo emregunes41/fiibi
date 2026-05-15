@@ -63,7 +63,7 @@ export default function CartDrawer() {
   const [contractAccepted, setContractAccepted] = useState(false);
   const [showUpsell, setShowUpsell] = useState(false);
   const [allPackages, setAllPackages] = useState([]);
-  const [paymentMode, setPaymentMode] = useState("cash");
+
 
   // Discount code state
   const [discountCode, setDiscountCode] = useState("");
@@ -75,7 +75,6 @@ export default function CartDrawer() {
   useEffect(() => {
     getSiteConfig().then(cfg => {
       if (cfg?.contractText) setContractText(cfg.contractText);
-      setPaymentMode(cfg?.paymentMode || "cash");
     });
     getPackages().then(pkgs => setAllPackages(pkgs || []));
   }, []);
@@ -120,7 +119,7 @@ export default function CartDrawer() {
   const rawTotal = cartTotal();
   const discountAmount = discountResult ? Math.round(rawTotal * discountResult.discountPercent / 100) : 0;
   const effectiveTotal = rawTotal - discountAmount;
-  const cardTotal = Math.round(effectiveTotal * 1.15);
+  const cardTotal = effectiveTotal;
 
   const handleApplyDiscount = async () => {
     if (!discountCode.trim()) return;
@@ -880,7 +879,7 @@ export default function CartDrawer() {
                   <motion.div key="checkout-payment" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
                     <div style={{ marginBottom: 24 }}>
                       <p style={{ fontSize: 13, color: "rgba(0, 0, 0, 0.5)", lineHeight: 1.6, margin: 0 }}>
-                        Ödeme yönteminizi seçin. Nakit ödemelerde fiyat aynı kalır, kart ile ödemelerde %15 hizmet bedeli eklenir.
+                        Siparişinizi tamamlamak için güvenli online ödeme adımına geçebilirsiniz.
                       </p>
                     </div>
 
@@ -913,35 +912,7 @@ export default function CartDrawer() {
                       </div>
                     </div>
 
-                    {/* Cash Option */}
-                    <button
-                      onClick={handleCashCheckout}
-                      disabled={isSubmitting || !contractAccepted}
-                      style={{
-                        width: "100%", padding: "20px", borderRadius: 0, marginBottom: 12,
-                        background: "rgba(0, 0, 0, 0.04)", border: "1px solid rgba(0, 0, 0, 0.12)",
-                        cursor: (isSubmitting || !contractAccepted) ? "not-allowed" : "pointer", textAlign: "left",
-                        transition: "all 0.2s", color: "#000000",
-                        opacity: (!contractAccepted) ? 0.4 : 1,
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                        <div style={{ width: 48, height: 48, borderRadius: 0, background: "rgba(0, 0, 0, 0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          <Banknote size={22} style={{ color: "#000000" }} />
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Nakit / Havale</div>
-                          <div style={{ fontSize: 11, color: "rgba(0, 0, 0, 0.4)", lineHeight: 1.4 }}>Sizinle telefonla iletişime geçeceğiz</div>
-                        </div>
-                        <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontSize: 20, fontWeight: 800, color: "#000000" }}>{fmt(effectiveTotal)}₺</div>
-                          <div style={{ fontSize: 10, color: "rgba(0, 0, 0, 0.5)", fontWeight: 600, textTransform: "uppercase" }}>{discountResult ? `%${discountResult.discountPercent} indirimli` : "Aynı fiyat"}</div>
-                        </div>
-                      </div>
-                    </button>
-
                     {/* Card Option */}
-                    {paymentMode !== "cash" && (
                     <button
                       onClick={handleCardCheckout}
                       disabled={isSubmitting || !contractAccepted}
@@ -958,24 +929,15 @@ export default function CartDrawer() {
                           <CreditCard size={22} style={{ color: "rgba(0, 0, 0, 0.5)" }} />
                         </div>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Kredi Kartı</div>
-                          <div style={{ fontSize: 11, color: "rgba(0, 0, 0, 0.4)", lineHeight: 1.4 }}>Online güvenli ödeme</div>
+                          <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Güvenli Ödeme</div>
+                          <div style={{ fontSize: 11, color: "rgba(0, 0, 0, 0.4)", lineHeight: 1.4 }}>Online güvenli ödeme ile siparişinizi tamamlayın</div>
                           <img src="/assets/iyzico_checkout.svg" alt="iyzico ile Öde" style={{ height: 16, marginTop: 8, opacity: 0.8 }} />
                         </div>
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontSize: 20, fontWeight: 800, color: "rgba(0, 0, 0, 0.5)" }}>{fmt(cardTotal)}₺</div>
-                          <div style={{ fontSize: 10, color: "rgba(96,165,250,0.6)", fontWeight: 600, textTransform: "uppercase" }}>+%15 hizmet bedeli</div>
+                          <div style={{ fontSize: 20, fontWeight: 800, color: "#000" }}>{fmt(cardTotal)}₺</div>
                         </div>
                       </div>
                     </button>
-                    )}
-
-                    {/* Info note */}
-                    <div style={{ marginTop: 16, padding: "12px 14px", borderRadius: 0, background: "rgba(0, 0, 0, 0.02)", border: "1px solid rgba(0, 0, 0, 0.05)" }}>
-                      <div style={{ fontSize: 11, color: "rgba(0, 0, 0, 0.35)", lineHeight: 1.6 }}>
-                        💡 Nakit/havale tercih ederseniz, rezervasyonunuz oluşturulur ve ödeme detayları için sizinle iletişime geçilir.
-                      </div>
-                    </div>
 
                     {isSubmitting && (
                       <div style={{ textAlign: "center", marginTop: 20, color: "rgba(0, 0, 0, 0.5)", fontSize: 13, fontWeight: 600 }}>

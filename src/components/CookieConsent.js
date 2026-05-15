@@ -100,9 +100,8 @@ export default function CookieConsent() {
               <button
                 onClick={handleAccept}
                 style={{
-                  background: "var(--btn-bg, #FEFEFE)",
-                  color: "var(--btn-text, #010101)",
-                  "--force-color": "var(--btn-text, #010101)",
+                  background: "#fff",
+                  color: "#000",
                   border: "none",
                   padding: "8px 20px",
                   borderRadius: 6,

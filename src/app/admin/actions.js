@@ -161,9 +161,7 @@ export async function autoLoginWithToken(token) {
     });
 
     const cookieStore = await cookies();
-    cookieStore.set({
-      name: "admin_token",
-      value: sessionToken, // Kısa ömürlü auto-login token değil, yeni session token
+    cookieStore.set("admin_token", sessionToken, {
       httpOnly: true,
       path: "/",
       secure: process.env.NODE_ENV === "production",
