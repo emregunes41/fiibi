@@ -860,6 +860,41 @@ export default function FiibiLanding() {
             </p>
           </div>
 
+        {/* Test Ödeme Bölümü */}
+        <div style={{ ...wrap, borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 24, paddingTop: 24, textAlign: "center" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.2)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 10 }}>🧪 Ödeme Testi</div>
+          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 14, lineHeight: 1.6, maxWidth: 360, margin: "0 auto 14px" }}>
+            PayTR entegrasyonunu test etmek için 10₺ test ödemesi yapabilirsiniz. Gerçek ücretlendirme yapılmaz.
+          </p>
+          <button
+            onClick={async () => {
+              try {
+                const res = await fetch("/api/paytr/test-checkout", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ email: "test@fiibi.co", name: "Test Kullanıcı" }),
+                });
+                const data = await res.json();
+                if (data.success && data.iframeUrl) {
+                  window.location.href = data.iframeUrl;
+                } else {
+                  alert(data.error || "Ödeme başlatılamadı");
+                }
+              } catch (e) {
+                alert("Hata: " + e.message);
+              }
+            }}
+            style={{
+              background: "rgba(255,95,31,0.15)", border: "1px solid rgba(255,95,31,0.3)",
+              color: "#FF5F1F", padding: "10px 28px", fontSize: 12, fontWeight: 700,
+              cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
+              transition: "all 0.2s",
+            }}
+          >
+            🔒 Test Ödemesi Yap — 10,00 ₺
+          </button>
+        </div>
+
         <div style={{ ...wrap, borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 24, paddingTop: 20, textAlign: "center" }}>
           <span style={{ fontSize: 11, color: "rgba(255,255,255,0.15)" }}>© {new Date().getFullYear()} fiibi. {t.footer.rights}</span>
         </div>

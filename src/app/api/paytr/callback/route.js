@@ -50,6 +50,11 @@ export async function POST(req) {
       fetch(`${baseUrl}/api/paytr/subscription-callback`, { method: "POST", body: newFormData }).catch(console.error);
       return new Response("OK");
     }
+    // Eğer test ödemesi ise (merchant_oid "TEST_" ile başlıyor)
+    if (merchant_oid && merchant_oid.startsWith("TEST_")) {
+      console.log(`[TEST PAYMENT] merchant_oid: ${merchant_oid}, status: ${status}, amount: ${total_amount}`);
+      return new Response("OK");
+    }
     // ---------------------------------------------
 
     const reservationId = merchant_oid.split('X')[0];
