@@ -242,26 +242,27 @@ export default function ReservationsPage() {
 
         // Group reservations by day — hem ana eventDate hem de customFieldAnswers içindeki
         // _eventDateISO tarihlerini kontrol et (çoklu paket = çoklu tarih desteği)
+        // Her entry'de _dayPackageName bilgisi de saklanır (takvimde doğru mekan göstermek için)
         const resByDay = {};
-        const addToDay = (d, r) => {
+        const addToDay = (d, r, pkgName) => {
           if (d.getMonth() === calMonth && d.getFullYear() === calYear) {
             const day = d.getDate();
             if (!resByDay[day]) resByDay[day] = [];
             // Aynı rezervasyonu aynı güne tekrar ekleme
             if (!resByDay[day].some(existing => existing.id === r.id)) {
-              resByDay[day].push(r);
+              resByDay[day].push({ ...r, _dayPackageName: pkgName || null });
             }
           }
         };
         reservations.filter(r => r.status !== "DELETED").forEach(r => {
           // Ana eventDate
           if (r.eventDate) {
-            addToDay(new Date(r.eventDate), r);
+            addToDay(new Date(r.eventDate), r, null);
           }
           // customFieldAnswers içindeki ek tarihler (_eventDateISO)
           const cfa = r.customFieldAnswers || [];
           cfa.filter(a => a.label === "_eventDateISO" && a.value).forEach(a => {
-            addToDay(new Date(a.value), r);
+            addToDay(new Date(a.value), r, a.packageName || null);
           });
         });
 
@@ -341,6 +342,20 @@ export default function ReservationsPage() {
                     </div>
                     {dayRes.slice(0, dayRes.length <= 3 ? 3 : 2).map((r) => {
                       const sc = statusColor(r.status);
+                      // O güne ait paket ismini al (çoklu tarih desteği)
+                      const dayPkgName = r._dayPackageName;
+                      const getDayLabel = () => {
+                        if (!isPhotographer) return displayName(r);
+                        const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede", "alanı", "alan"];
+                        const cfa = r.customFieldAnswers || [];
+                        // Eğer bu gün belirli bir pakete aitse, sadece o paketin mekan alanına bak
+                        const scopedCfa = dayPkgName ? cfa.filter(a => a.packageName === dayPkgName) : cfa;
+                        const venueField = scopedCfa.find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
+                        if (venueField?.value) return venueField.value;
+                        // Paket adını göster (mekan yoksa)
+                        if (dayPkgName) return dayPkgName;
+                        return r.venueName || displayName(r);
+                      };
                       return (
                         <div
                           key={r.id}
@@ -352,21 +367,9 @@ export default function ReservationsPage() {
                             overflow: "hidden", textOverflow: "ellipsis",
                             transition: "all 0.15s",
                           }}
-                          title={(() => {
-                            if (!isPhotographer) return displayName(r);
-                            const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede", "alanı", "alan"];
-                            const cfa = r.customFieldAnswers || [];
-                            const venueField = cfa.find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
-                            return venueField?.value || r.venueName || displayName(r);
-                          })()}
+                          title={getDayLabel()}
                         >
-                          {(() => {
-                            if (!isPhotographer) return displayName(r);
-                            const venueLabels = ["mekan", "konum", "salon", "yer", "adres", "lokasyon", "düğün salonu", "nerede", "alanı", "alan"];
-                            const cfa = r.customFieldAnswers || [];
-                            const venueField = cfa.find(a => a.value && venueLabels.some(l => a.label?.toLowerCase().includes(l)));
-                            return venueField?.value || r.venueName || displayName(r);
-                          })()}
+                          {getDayLabel()}
                         </div>
                       );
                     })}
