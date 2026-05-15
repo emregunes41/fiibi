@@ -8,7 +8,7 @@ import { getBusinessType } from "@/lib/business-types";
 import { useAdminSession } from "../AdminSessionContext";
 import Link from "next/link";
 import ReservationHubModal from "../components/ReservationHubModal";
-import EventsAdminPage from "../events/page";
+import EventsView from "../components/EventsView";
 
 const inp = {
   padding: "0.7rem 0.8rem", borderRadius: 0, fontSize: "0.8rem",
@@ -172,7 +172,7 @@ export default function ReservationsPage() {
 
       {activeTab === "events" ? (
         <div style={{ marginTop: "-20px" }}>
-          <EventsAdminPage />
+          <EventsView />
         </div>
       ) : (
         <>
