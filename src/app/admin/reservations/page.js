@@ -309,16 +309,16 @@ export default function ReservationsPage() {
             </div>
 
             {/* Day Headers */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(255,255,255,0.12)", borderBottom: "none" }}>
               {dayNames.map(d => (
-                <div key={d} style={{ textAlign: "center", fontSize: "0.65rem", fontWeight: 600, color: "rgba(255,255,255,0.4)", padding: "10px 0", textTransform: "uppercase", letterSpacing: "0.05em" }}>{d}</div>
+                <div key={d} style={{ textAlign: "center", fontSize: "0.65rem", fontWeight: 600, color: "rgba(255,255,255,0.4)", padding: "10px 0", textTransform: "uppercase", letterSpacing: "0.05em", borderRight: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.02)" }}>{d}</div>
               ))}
             </div>
 
             {/* Calendar Grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(255,255,255,0.06)", borderTop: "none" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(255,255,255,0.12)", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
               {cells.map((day, idx) => {
-                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 100, borderRight: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)", background: "rgba(255,255,255,0.01)" }} />;
+                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 110, borderRight: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.015)" }} />;
                 const dayRes = resByDay[day] || [];
                 const hasRes = dayRes.length > 0;
                 const todayStyle = isToday(day);
@@ -328,8 +328,8 @@ export default function ReservationsPage() {
 
                 return (
                   <div key={day} onClick={(e) => { e.stopPropagation(); setSelectedDay({ day, reservations: dayRes }); setDayPopup(null); }} style={{
-                    minHeight: 100, borderRight: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)",
-                    padding: "4px 5px", cursor: "pointer", position: "relative",
+                    minHeight: 110, borderRight: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)",
+                    padding: "4px 5px", cursor: "pointer", position: "relative", overflow: "hidden",
                     background: isSelected ? "rgba(255,255,255,0.06)" : isDayBlocked ? "rgba(255,60,60,0.04)" : "transparent",
                     transition: "background 0.15s",
                   }}>
@@ -343,7 +343,7 @@ export default function ReservationsPage() {
                       }}>{day}</span>
                     </div>
                     {isDayBlocked && <div style={{ fontSize: "0.48rem", fontWeight: 800, color: "rgba(255,80,80,0.5)", textAlign: "center", marginBottom: 2 }}>KAPALI</div>}
-                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2, overflow: "hidden" }}>
                       {dayRes.slice(0, 3).map(r => {
                         const chipColor = r.status === "CONFIRMED" ? "#4285f4" : r.status === "COMPLETED" ? "#34a853" : r.status === "CANCELLED" ? "#5f6368" : "#4285f4";
                         return (
