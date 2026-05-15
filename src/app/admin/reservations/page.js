@@ -309,16 +309,16 @@ export default function ReservationsPage() {
             </div>
 
             {/* Day Headers */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(255,255,255,0.12)", borderBottom: "none" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(255,255,255,0.25)", borderBottom: "none" }}>
               {dayNames.map(d => (
-                <div key={d} style={{ textAlign: "center", fontSize: "0.65rem", fontWeight: 600, color: "rgba(255,255,255,0.4)", padding: "10px 0", textTransform: "uppercase", letterSpacing: "0.05em", borderRight: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.02)" }}>{d}</div>
+                <div key={d} style={{ textAlign: "center", fontSize: "0.65rem", fontWeight: 600, color: "rgba(255,255,255,0.5)", padding: "10px 0", textTransform: "uppercase", letterSpacing: "0.05em", borderRight: "1px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.03)" }}>{d}</div>
               ))}
             </div>
 
             {/* Calendar Grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(255,255,255,0.12)", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(255,255,255,0.25)" }}>
               {cells.map((day, idx) => {
-                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 110, borderRight: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.015)" }} />;
+                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 110, borderRight: "1px solid rgba(255,255,255,0.25)", borderBottom: "1px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.015)" }} />;
                 const dayRes = resByDay[day] || [];
                 const hasRes = dayRes.length > 0;
                 const todayStyle = isToday(day);
@@ -328,7 +328,7 @@ export default function ReservationsPage() {
 
                 return (
                   <div key={day} onClick={(e) => { e.stopPropagation(); setSelectedDay({ day, reservations: dayRes }); setDayPopup(null); setTimeout(() => { const el = document.getElementById('selected-day-panel'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 50); }} style={{
-                    minHeight: 110, borderRight: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)",
+                    minHeight: 110, borderRight: "1px solid rgba(255,255,255,0.25)", borderBottom: "1px solid rgba(255,255,255,0.25)",
                     padding: "4px 5px", cursor: "pointer", position: "relative", overflow: "hidden",
                     background: isSelected ? "rgba(255,255,255,0.06)" : isDayBlocked ? "rgba(255,60,60,0.04)" : "transparent",
                     transition: "background 0.15s",
