@@ -13,7 +13,7 @@ import { useAdminSession } from "../AdminSessionContext";
 import { CldUploadWidget } from "next-cloudinary";
 import {
   Save, Home, Phone, Mail, Instagram, MessageCircle, MapPin,
-  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot, Image as ImageIcon, ArrowUp, ArrowDown, Eye, EyeOff, UploadCloud, Building2, Shield, CreditCard, GripVertical, Layers, Package, Users
+  Type, Sparkles, Layout, Globe, CheckCircle2, AlertCircle, Loader2, Banknote, Monitor, Upload, Palette, FileText, Tag, Trash2, Plus, Power, Bot, Image as ImageIcon, ArrowUp, ArrowDown, Eye, EyeOff, UploadCloud, Building2, Shield, CreditCard, GripVertical, Layers, Package, Users, Lock
 } from "lucide-react";
 import { PLATFORM, LEGAL_TYPES } from "@/lib/constants";
 import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, getKVKKText } from "@/lib/contracts";
@@ -2218,8 +2218,11 @@ export default function SettingsPage() {
           
           <div style={{ position: "relative" }}>
             {!planLimits.customDomain && (
-              <Link href="/admin/subscription" style={{ position: "absolute", inset: 0, zIndex: 10, cursor: "pointer" }} title="Bu özellik için Pro plana geçmelisiniz.">
-                {/* Şeffaf katman: tıklamaları yakalar ve yönlendirir */}
+              <Link href="/admin/subscription" style={{ position: "absolute", inset: 0, zIndex: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }} title="Bu özellik için Pro plana geçmelisiniz.">
+                <div style={{ background: "#FF5F1F", color: "#fff", padding: "12px 24px", fontWeight: 800, fontSize: 14, display: "flex", alignItems: "center", gap: 10, boxShadow: "0 10px 30px rgba(255,95,31,0.3)" }}>
+                  <Lock size={18} />
+                  Bu Özellik İçin Pro Plana Geçin
+                </div>
               </Link>
             )}
             
