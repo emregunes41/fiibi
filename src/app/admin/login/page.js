@@ -22,7 +22,7 @@ export default function AdminLogin() {
       setIsLoading(true);
       autoLoginWithToken(token).then((res) => {
         if (res?.success) {
-          router.push("/admin/dashboard");
+          window.location.href = "/admin/dashboard";
         } else {
           setError("Otomatik giriş başarısız oldu veya süresi doldu.");
           setIsLoading(false);

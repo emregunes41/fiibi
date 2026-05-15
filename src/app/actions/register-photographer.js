@@ -205,9 +205,9 @@ export async function registerBusiness(data) {
     }).catch(err => console.error("[onboarding] Email error:", err));
 
     const adminToken = await signToken({
-      id: adminUser.id,
+      adminId: adminUser.id,
+      username: adminUser.username,
       tenantId: tenant.id,
-      role: "admin",
     });
 
     return {
