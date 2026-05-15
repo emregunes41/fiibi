@@ -2210,15 +2210,19 @@ export default function SettingsPage() {
         {activeTab === "genel" && subTab === "domain" && <div style={sectionCard}>
           {sectionHeader(Globe, "Alan Adı (Domain) Ayarları", "Sitenize kendi alan adınızdan (www.siteniz.com) ulaşılmasını sağlayın.")}
           
-          {!planLimits.customDomain ? (
-            <div style={{ padding: "40px 20px", textAlign: "center", background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.08)" }}>
-              <div style={{ fontSize: 32, marginBottom: 16, opacity: 0.5 }}>⭐</div>
-              <h3 style={{ fontSize: 16, margin: "0 0 8px 0", color: "#fff" }}>Bu özellik Pro planda mevcuttur</h3>
-              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginBottom: 20 }}>Özel alan adı (domain) bağlamak veya satın almak için planınızı yükseltmeniz gerekmektedir.</p>
-              <Link href="/admin/subscription" style={{ display: "inline-block", background: "var(--text)", color: "var(--bg)", padding: "10px 20px", fontSize: 13, fontWeight: 700, textDecoration: "none", borderRadius: 4 }}>Planları İncele</Link>
-            </div>
-          ) : (
-            <>
+          <div style={{ position: "relative" }}>
+            {!planLimits.customDomain && (
+              <div style={{ position: "absolute", inset: 0, zIndex: 10, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(2px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", borderRadius: 8 }}>
+                <div style={{ padding: "30px", textAlign: "center", background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, boxShadow: "0 10px 40px rgba(0,0,0,0.5)", maxWidth: 400 }}>
+                  <div style={{ fontSize: 32, marginBottom: 16 }}>⭐</div>
+                  <h3 style={{ fontSize: 18, margin: "0 0 8px 0", color: "#fff", fontWeight: 800 }}>Pro Plana Özel Özellik</h3>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", marginBottom: 20, lineHeight: 1.5 }}>Özel alan adı (domain) satın almak veya mevcut alan adınızı bağlamak için planınızı yükseltmeniz gerekmektedir.</p>
+                  <Link href="/admin/subscription" style={{ display: "inline-block", background: "var(--text)", color: "var(--bg)", padding: "12px 24px", fontSize: 13, fontWeight: 700, textDecoration: "none", borderRadius: 4 }}>Planı Yükselt</Link>
+                </div>
+              </div>
+            )}
+            
+            <div style={{ opacity: !planLimits.customDomain ? 0.3 : 1, pointerEvents: !planLimits.customDomain ? "none" : "auto", userSelect: !planLimits.customDomain ? "none" : "auto" }}>
               <div style={{ marginBottom: 32, padding: "24px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 style={{ fontSize: 16, margin: "0 0 8px 0", color: "var(--text)" }}>Yeni Domain Satın Al (Sıfır Ayar)</h3>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: "0 0 16px 0", lineHeight: 1.5 }}>
@@ -2414,8 +2418,8 @@ export default function SettingsPage() {
             {domainSaving ? "Kaydediliyor..." : "Domain'i Kaydet"}
           </button>
           {domainMessage && <p style={{ fontSize: 12, marginTop: 12, color: domainMessage.includes("Hata") ? "#ef4444" : "#22c55e", fontWeight: 600 }}>{domainMessage}</p>}
-            </>
-          )}
+            </div>
+          </div>
         </div>}
 
         {/* Status Message */}
