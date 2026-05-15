@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { getCurrentTenant, getTenantSiteConfig } from "@/lib/tenant";
 import { prisma } from "@/lib/prisma";
+import { hasFeature } from "@/lib/plan-limits";
 
 let openai;
 function getOpenAI() {
@@ -68,6 +69,12 @@ export async function POST(request) {
     const settings = await getTenantConfig();
     if (settings && settings.chatbotEnabled === false) {
       return NextResponse.json({ error: "Chatbot şu anda devre dışı." }, { status: 403 });
+    }
+
+    // Plan bazlı chatbot kontrolü: sadece Pro plan kullanabilir
+    const tenantPlan = settings?._tenant?.plan || "trial";
+    if (!hasFeature(tenantPlan, "chatbotEnabled")) {
+      return NextResponse.json({ error: "Chatbot özelliği Pro plan ile kullanılabilir." }, { status: 403 });
     }
 
     const systemPrompt = await buildSystemPrompt(settings);

@@ -1115,6 +1115,15 @@ export async function updateSiteConfig(data) {
       if (existing) settingsId = existing.id;
     }
 
+    // Plan bazlı özellik kısıtlaması: Pro olmayan planlar için Pro-only özellikleri zorla kapat
+    const { getPlanLimits } = await import("@/lib/plan-limits");
+    const tenantPlan = tenant?.plan || "trial";
+    const limits = getPlanLimits(tenantPlan);
+    const enforcedSmsEnabled = limits.smsEnabled ? (smsEnabled ?? false) : false;
+    const enforcedChatbotEnabled = limits.chatbotEnabled ? (chatbotEnabled ?? true) : false;
+    const enforcedHeroBgType = limits.heroBgChange ? (heroBgType || "video") : (heroBgType === "video" ? "video" : heroBgType);
+    const enforcedHeroBgUrl = limits.heroBgChange ? (heroBgUrl || "/assets/hero.mp4") : (heroBgUrl || "/assets/hero.mp4");
+
     await prisma.globalSettings.update({
       where: { id: settingsId },
       data: {
@@ -1136,7 +1145,7 @@ export async function updateSiteConfig(data) {
         preliminaryInfoText: preliminaryInfoText || "",
         kvkkText: kvkkText || "",
         emailEnabled: emailEnabled ?? true,
-        smsEnabled: smsEnabled ?? false,
+        smsEnabled: enforcedSmsEnabled,
         resendApiKey: resendApiKey || "",
         netgsmUsercode: netgsmUsercode || "",
         netgsmPassword: netgsmPassword || "",
@@ -1146,7 +1155,7 @@ export async function updateSiteConfig(data) {
         notifyReminder: notifyReminder ?? true,
         notifyPhotosReady: notifyPhotosReady ?? true,
         googleMapsUrl: googleMapsUrl || "",
-        chatbotEnabled: chatbotEnabled ?? true,
+        chatbotEnabled: enforcedChatbotEnabled,
         chatbotInstructions: chatbotInstructions || "",
         showContactOnHome: showContactOnHome ?? true,
         showPhoneOnHome: showPhoneOnHome ?? true,

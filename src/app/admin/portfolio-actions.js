@@ -85,6 +85,19 @@ export async function addPhotoToPortfolio(categoryId, url, publicId) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
+    // Plan bazlı portfolyo fotoğraf limiti kontrolü
+    const tenant = await getCurrentTenant();
+    if (tenant) {
+      const { checkPortfolioLimit } = await import("@/lib/plan-limits");
+      const totalPhotos = await prisma.portfolioPhoto.count({
+        where: { category: { tenantId: tenant.id } }
+      });
+      const limitCheck = checkPortfolioLimit(tenant.plan, totalPhotos);
+      if (!limitCheck.allowed) {
+        return { error: `Portfolyo fotoğraf limitine ulaştınız (${limitCheck.limit} fotoğraf). Pro plana yükselterek sınırsız fotoğraf yükleyebilirsiniz.` };
+      }
+    }
+
     const photo = await prisma.portfolioPhoto.create({
       data: {
         categoryId,

@@ -5,6 +5,7 @@ import { sendReservationReceivedEmail, sendReservationConfirmedEmail } from "./s
 import { sendSMS } from "./send-sms";
 import { getCurrentTenant, getTenantUrl } from "@/lib/tenant";
 import { PLATFORM } from "@/lib/constants";
+import { hasFeature } from "@/lib/plan-limits";
 
 /**
  * Bildirim ayarlarını yükle (tenant-aware)
@@ -22,6 +23,10 @@ export async function getNotificationSettings() {
     // Tenant bilgisini settings'e ekle
     if (tenant) {
       settings = { ...settings, _tenant: tenant };
+      // Plan bazlı SMS enforcement: Basic plan'da SMS gönderilmez
+      if (!hasFeature(tenant.plan, "smsEnabled")) {
+        settings = { ...settings, smsEnabled: false };
+      }
     }
     return settings || { emailEnabled: true, smsEnabled: false, notifyReservation: true, notifyPayment: true, notifyReminder: true, notifyPhotosReady: true };
   } catch {
