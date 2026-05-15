@@ -35,7 +35,7 @@ const PLAN_LIMITS = {
   },
   pro: {
     label: "Pro",
-    maxUploadMB: 10000,           // 10 GB
+    maxUploadMB: 5000,            // 5 GB
     maxPortfolioPhotos: Infinity,
     smsEnabled: true,
     emailEnabled: true,
@@ -108,7 +108,7 @@ export const PLAN_COMPARISON = [
   { feature: "Sınırsız Rezervasyon",      basic: true,     pro: true },
   { feature: "Sınırsız Paket/Hizmet",     basic: true,     pro: true },
   { feature: "Portfolyo Yönetimi",        basic: "20 fotoğraf", pro: "Sınırsız" },
-  { feature: "İçerik Yükleme Limiti",     basic: "100 MB",  pro: "10 GB" },
+  { feature: "İçerik Yükleme Limiti",     basic: "100 MB",  pro: "5 GB" },
   { feature: "Arka Plan Özelleştirme",    basic: false,    pro: true },
   { feature: "AI Chatbot",               basic: false,    pro: true },
   { feature: "Özel Alan Adı (Domain)",    basic: false,    pro: true },

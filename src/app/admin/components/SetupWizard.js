@@ -268,7 +268,13 @@ export default function SetupWizard({ config }) {
             <div style={{ flex: 1 }}>
               <CldUploadWidget
                 uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                options={{ maxFiles: 1, resourceType: "image", folder: "logos" }}
+                options={{ 
+                  maxFiles: 1, 
+                  resourceType: "image", 
+                  folder: "logos",
+                  maxFilesize: 5242880, // 5MB limit
+                  clientAllowedFormats: ["png", "jpeg", "jpg", "webp", "svg"]
+                }}
                 onSuccess={(result) => setForm({ ...form, logoUrl: result.info.secure_url })}
               >
                 {({ open }) => (

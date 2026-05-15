@@ -422,7 +422,7 @@ export default function SettingsPage() {
                   setPendingMediaType(res.info.resource_type === "video" ? "video" : "image");
                 }
               }}
-              options={{ multiple: false, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, resourceType: "auto" }}
+              options={{ multiple: false, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, resourceType: "auto", maxFilesize: 15728640 }}
             >
               {({ open }) => (
                 <button
@@ -1600,7 +1600,7 @@ export default function SettingsPage() {
             )}
             <CldUploadWidget
               uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-              options={{ maxFiles: 10, resourceType: "image" }}
+              options={{ maxFiles: 10, resourceType: "image", maxFilesize: 5242880, clientAllowedFormats: ["png", "jpeg", "jpg", "webp"] }}
               onSuccess={(result) => {
                 setCbForm(p => ({ ...p, imageUrls: [...p.imageUrls, result.info.secure_url] }));
               }}
@@ -1712,7 +1712,7 @@ export default function SettingsPage() {
                     <div style={{ padding: "8px 10px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                       <CldUploadWidget
                         uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                        options={{ maxFiles: 1, sources: ["local", "camera"], resourceType: "auto", folder: "reels" }}
+                        options={{ maxFiles: 1, sources: ["local", "camera"], resourceType: "auto", folder: "reels", maxFilesize: 10485760 }}
                         onSuccess={(result) => {
                           const reels = [...config.instagramReels].map((r, idx) => {
                             if (idx !== i) return r;
@@ -1796,7 +1796,7 @@ export default function SettingsPage() {
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                     <CldUploadWidget
                       uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                      options={{ maxFiles: 5, resourceType: "image", folder: "portfolio" }}
+                      options={{ maxFiles: 5, resourceType: "image", folder: "portfolio", maxFilesize: 5242880, clientAllowedFormats: ["png", "jpeg", "jpg", "webp"] }}
                       onSuccess={async (result) => {
                         if (result.event === "success") {
                           await addPhotoToPortfolio(cat.id, result.info.secure_url, result.info.public_id);
@@ -1884,7 +1884,7 @@ export default function SettingsPage() {
               )}
               <CldUploadWidget
                 uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                options={{ maxFiles: 1, resourceType: "image", folder: "logos" }}
+                options={{ maxFiles: 1, resourceType: "image", folder: "logos", maxFilesize: 5242880, clientAllowedFormats: ["png", "jpeg", "jpg", "webp", "svg"] }}
                 onSuccess={(result) => setConfig({ ...config, logoUrl: result.info.secure_url })}
               >
                 {({ open }) => (
@@ -2092,7 +2092,7 @@ export default function SettingsPage() {
                   setSmForm(p => ({ ...p, taxPlateUrl: res.info.secure_url }));
                 }
               }}
-              options={{ multiple: false, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, resourceType: "image" }}
+              options={{ multiple: false, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, resourceType: "image", maxFilesize: 5242880, clientAllowedFormats: ["png", "jpeg", "jpg", "webp"] }}
             >
               {({ open }) => (
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>

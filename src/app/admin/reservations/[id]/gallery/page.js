@@ -97,7 +97,9 @@ export default function GalleryManagementPage() {
               options={{ 
                 multiple: true, 
                 maxFiles: 100,
-                cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+                cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+                maxFilesize: 5242880, // 5MB limit
+                clientAllowedFormats: ["png", "jpeg", "jpg", "webp"]
               }}
             >
               {({ open }) => {

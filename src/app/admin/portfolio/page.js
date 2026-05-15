@@ -121,7 +121,12 @@ export default function PortfolioAdminPage() {
           <CldUploadWidget
             uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""}
             onSuccess={(res) => handleUploadSuccess(res, activeCategory.id)}
-            options={{ multiple: true, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+            options={{ 
+              multiple: true, 
+              cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+              maxFilesize: 5242880, // 5MB
+              clientAllowedFormats: ["png", "jpeg", "jpg", "webp"]
+            }}
           >
             {({ open }) => (
               <button
