@@ -73,12 +73,12 @@ const SUB_TABS = {
     { id: "banner", label: "Banner'lar" },
     { id: "reels", label: "Instagram Reels" },
     { id: "portfolio", label: "Portfolyo" },
-    { id: "blog", label: "Blog & Yazılar" },
-    { id: "sozlesme", label: "Sözleşmeler" },
-    { id: "indirim", label: "İndirimler" }
+    { id: "blog", label: "Blog & Yazılar" }
   ],
   sistem: [
     { id: "odeme", label: "Ödeme" },
+    { id: "sozlesme", label: "Sözleşmeler" },
+    { id: "indirim", label: "İndirimler" },
     { id: "bildirim", label: "Bildirimler" },
     { id: "ai", label: "Yapay Zeka" }
   ]
@@ -251,37 +251,39 @@ export default function SettingsPage() {
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>Sistem & Ayarlar</h1>
+        <h1 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", margin: 0 }}>
+          {activeTab === "tasarim" ? "Tasarım & Düzen" : activeTab === "icerik" ? "İçerik Yönetimi" : "Sistem & Ayarlar"}
+        </h1>
       </div>
 
       {/* Layout Split */}
       <div className="flex flex-col md:flex-row gap-8">
         
         {/* Left Sidebar Navigation */}
-        <div className="w-full md:w-56 shrink-0 flex flex-row md:flex-col gap-1 overflow-x-auto border-b md:border-b-0 border-white/10 pb-4 md:pb-0 mb-4 md:mb-0" style={{ scrollbarWidth: "none" }}>
-          {[
-            { id: "genel", label: "Genel Ayarlar", icon: Globe },
-            { id: "tasarim", label: "Tasarım & Düzen", icon: Palette },
-            { id: "icerik", label: "İçerik Yönetimi", icon: FileText },
-            { id: "sistem", label: "Ödeme & Bildirim", icon: CreditCard },
-            { id: "musteriler", label: terms.clients || "Müşteriler", icon: Users },
-          ].map(tab => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button key={tab.id} onClick={() => { setActiveTab(tab.id); if (SUB_TABS[tab.id]) setSubTab(SUB_TABS[tab.id][0].id); }} type="button" style={{
-                display: "flex", alignItems: "center", gap: 10,
-                padding: "12px 16px", fontSize: 13, fontWeight: isActive ? 700 : 500,
-                color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
-                background: isActive ? "rgba(255,255,255,0.06)" : "transparent", 
-                border: "none", borderRadius: 0,
-                cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap", textAlign: "left"
-              }} className="hover:bg-white/5">
-                <Icon size={16} /> {tab.label}
-              </button>
-            )
-          })}
-        </div>
+        {activeTab !== "tasarim" && activeTab !== "icerik" && (
+          <div className="w-full md:w-56 shrink-0 flex flex-row md:flex-col gap-1 overflow-x-auto border-b md:border-b-0 border-white/10 pb-4 md:pb-0 mb-4 md:mb-0" style={{ scrollbarWidth: "none" }}>
+            {[
+              { id: "genel", label: "Genel Ayarlar", icon: Globe },
+              { id: "sistem", label: "Sistem, Ödeme vb.", icon: CreditCard },
+              { id: "musteriler", label: terms.clients || "Müşteriler", icon: Users },
+            ].map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button key={tab.id} onClick={() => { setActiveTab(tab.id); if (SUB_TABS[tab.id]) setSubTab(SUB_TABS[tab.id][0].id); }} type="button" style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "12px 16px", fontSize: 13, fontWeight: isActive ? 700 : 500,
+                  color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
+                  background: isActive ? "rgba(255,255,255,0.06)" : "transparent", 
+                  border: "none", borderRadius: 0,
+                  cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap", textAlign: "left"
+                }} className="hover:bg-white/5">
+                  <Icon size={16} /> {tab.label}
+                </button>
+              )
+            })}
+          </div>
+        )}
 
 
         {/* Right Content Area */}
@@ -1091,7 +1093,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* 6. Rezervasyon Sözleşmesi */}
-        {activeTab === "icerik" && subTab === "sozlesme" && <div style={sectionCard}>
+        {activeTab === "sistem" && subTab === "sozlesme" && <div style={sectionCard}>
           {sectionHeader(FileText, "Yasal Sözleşmeler", "Müşterinin ödeme öncesi onaylaması gereken sözleşme ve metinler.")}
 
           <div style={{ marginBottom: 24 }}>
@@ -1156,7 +1158,7 @@ export default function SettingsPage() {
         </div>}
 
         {/* İndirim Kodları Section */}
-        {activeTab === "icerik" && subTab === "indirim" && <div style={sectionCard}>
+        {activeTab === "sistem" && subTab === "indirim" && <div style={sectionCard}>
           {sectionHeader(Tag, "İndirim Kodları", "Müşterilere verebileceğiniz indirim kuponları")}
 
           {/* Create new code */}

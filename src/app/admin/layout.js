@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, CalendarDays, LogOut, Book, Users, Image, Menu, X, Settings, Plus, Wallet, Crown, AlertTriangle, Gift, Ticket, ShoppingBag, Box, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Package, CalendarDays, LogOut, Book, Users, Image, Menu, X, Settings, Plus, Wallet, Crown, AlertTriangle, Gift, Ticket, ShoppingBag, Box, ChevronRight, Palette } from "lucide-react";
 import { logoutAdmin } from "@/app/admin/actions";
 import { useState, useEffect } from "react";
 import { getBusinessType } from "@/lib/business-types";
@@ -20,6 +20,7 @@ function AdminLayoutInner({ children }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [quickAddOpen, setQuickAddOpen] = useState(false);
+  const [designMenuOpen, setDesignMenuOpen] = useState(false);
   const { session, loading: sessionLoading } = useAdminSession();
 
   const brandName = (session?.tenant?.businessName || "STUDIO").toUpperCase();
@@ -60,7 +61,7 @@ function AdminLayoutInner({ children }) {
     modules.moduleReservations !== false && { name: terms.appointments, href: "/admin/reservations", icon: CalendarDays },
     modules.moduleEvents !== false && { name: "Etkinlikler", href: "/admin/events", icon: Ticket },
     { name: "Muhasebe", href: "/admin/muhasebe", icon: Wallet },
-    { name: "Sistem", href: "/admin/settings", icon: Settings },
+    { name: "Ayarlar", href: "/admin/settings", icon: Settings },
     { name: "Abonelik", href: "/admin/subscription", icon: Crown },
   ].filter(Boolean) : [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -109,33 +110,93 @@ function AdminLayoutInner({ children }) {
             borderLeft: "2px solid rgba(0,0,0,0.1)",
             marginLeft: "8px", paddingLeft: "8px"
           }}>
-            <Link href="/admin/settings?tab=icerik&subTab=banner" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
+            <Link href="/admin/settings?tab=icerik&subTab=banner" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
                 <span style={{ fontSize: "14px" }}>🖼️</span> Banner Yükle
               </div>
             </Link>
             
-            <Link href="/admin/settings?tab=icerik&subTab=portfolio" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
+            <Link href="/admin/settings?tab=icerik&subTab=portfolio" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
                 <span style={{ fontSize: "14px" }}>📸</span> Portfolyo Ekle
               </div>
             </Link>
             
-            <Link href="/admin/settings?tab=icerik&subTab=blog" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
+            <Link href="/admin/settings?tab=icerik&subTab=blog" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
                 <span style={{ fontSize: "14px" }}>📝</span> Blog Yazısı
               </div>
             </Link>
             
-            <Link href="/admin/settings?tab=icerik&subTab=icerik_blok" onClick={() => setQuickAddOpen(false)} style={{ textDecoration: "none" }}>
+            <Link href="/admin/settings?tab=icerik&subTab=icerik_blok" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
                 <span style={{ fontSize: "14px" }}>📰</span> İçerik Bloğu
+              </div>
+            </Link>
+
+            <Link href="/admin/settings?tab=icerik&subTab=reels" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
+                <span style={{ fontSize: "14px" }}>📱</span> Instagram Reels
               </div>
             </Link>
           </div>
         )}
       </div>
 
+      <div style={{ position: "relative", marginBottom: "1.5rem" }}>
+        <button
+          onClick={() => setDesignMenuOpen(!designMenuOpen)}
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            width: "100%", padding: "12px 16px", borderRadius: 0,
+            background: "rgba(0,0,0,0.05)", border: "1px dashed rgba(0,0,0,0.15)", color: "#1a1a1a",
+            fontWeight: 800, fontSize: "0.95rem", cursor: "pointer",
+            transition: "all 0.2s"
+          }}
+          className="hover:bg-black/10"
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <Palette size={18} strokeWidth={2.5} />
+            Tasarım & Düzen
+          </div>
+          <ChevronRight size={16} style={{ transform: designMenuOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s", color: "rgba(0,0,0,0.4)" }} />
+        </button>
+
+        {designMenuOpen && (
+          <div style={{
+            marginTop: "0.5rem",
+            display: "flex", flexDirection: "column",
+            animation: "popDown 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+            transformOrigin: "top center",
+            borderLeft: "2px solid rgba(0,0,0,0.1)",
+            marginLeft: "8px", paddingLeft: "8px"
+          }}>
+            <Link href="/admin/settings?tab=tasarim&subTab=tema" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
+                <span style={{ fontSize: "14px" }}>🎨</span> Tema & Marka
+              </div>
+            </Link>
+            
+            <Link href="/admin/settings?tab=tasarim&subTab=hero" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
+                <span style={{ fontSize: "14px" }}>🎯</span> Hero & Karşılama
+              </div>
+            </Link>
+            
+            <Link href="/admin/settings?tab=tasarim&subTab=duzen" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
+                <span style={{ fontSize: "14px" }}>📐</span> Sayfa Düzeni
+              </div>
+            </Link>
+            
+            <Link href="/admin/settings?tab=tasarim&subTab=iletisim" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
+                <span style={{ fontSize: "14px" }}>📞</span> İletişim & Sosyal
+              </div>
+            </Link>
+          </div>
+        )}
+      </div>
       <nav style={{ display: "flex", flexDirection: "column", gap: "0.75rem", flex: 1 }}>
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
