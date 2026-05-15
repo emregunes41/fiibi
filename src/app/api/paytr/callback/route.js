@@ -21,10 +21,36 @@ export async function POST(req) {
     } = data;
 
     // PayTR mağaza onay aşamasında test pings atabilir
-    if (!merchant_oid) {
+    if (!merchant_oid && !data.trans_ids) {
       console.log("PayTR Test Ping (veya eksik veri) alındı.");
       return new Response("OK");
     }
+
+    // --- UNIVERSAL ROUTER (Marketplace Model) ---
+    // Eğer transfer işlemi bildirimi ise (merchant_oid yok ama trans_ids var)
+    if (data.trans_ids) {
+      console.log("Routing to transfer-callback...");
+      const newFormData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        newFormData.append(key, value);
+      }
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://fiibi.co";
+      fetch(`${baseUrl}/api/paytr/transfer-callback`, { method: "POST", body: newFormData }).catch(console.error);
+      return new Response("OK");
+    }
+
+    // Eğer abonelik ödemesi ise (merchant_oid "SUB_" ile başlıyor)
+    if (merchant_oid && merchant_oid.startsWith("SUB_")) {
+      console.log("Routing to subscription-callback...");
+      const newFormData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        newFormData.append(key, value);
+      }
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://fiibi.co";
+      fetch(`${baseUrl}/api/paytr/subscription-callback`, { method: "POST", body: newFormData }).catch(console.error);
+      return new Response("OK");
+    }
+    // ---------------------------------------------
 
     const reservationId = merchant_oid.split('X')[0];
     const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
