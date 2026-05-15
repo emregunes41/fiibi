@@ -327,7 +327,7 @@ export default function ReservationsPage() {
                 const isSelected = selectedDay?.day === day;
 
                 return (
-                  <div key={day} onClick={(e) => { e.stopPropagation(); setSelectedDay({ day, reservations: dayRes }); setDayPopup(null); }} style={{
+                  <div key={day} onClick={(e) => { e.stopPropagation(); setSelectedDay({ day, reservations: dayRes }); setDayPopup(null); setTimeout(() => { const el = document.getElementById('selected-day-panel'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 50); }} style={{
                     minHeight: 110, borderRight: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(255,255,255,0.12)",
                     padding: "4px 5px", cursor: "pointer", position: "relative", overflow: "hidden",
                     background: isSelected ? "rgba(255,255,255,0.06)" : isDayBlocked ? "rgba(255,60,60,0.04)" : "transparent",
@@ -362,7 +362,7 @@ export default function ReservationsPage() {
 
             {/* Selected Day Panel */}
             {selectedDay && (
-              <div style={{ marginTop: 16, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
+              <div id="selected-day-panel" style={{ marginTop: 16, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.12)" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                     <div style={{ width: 42, height: 42, background: "#4285f4", borderRadius: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
