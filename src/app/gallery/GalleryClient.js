@@ -322,15 +322,18 @@ export default function GalleryClient({ categories }) {
                   {/* Glassy overlay on hover via Tailwind/framer-motion could be better, but keeping it simple for now */}
                   <div style={{ 
                     position: "absolute", 
-                    inset: 0, 
-                    background: "linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.7) 100%)",
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.65) 100%)",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "flex-end",
-                    padding: "1rem"
+                    padding: "clamp(6px, 2vw, 16px)",
+                    maxHeight: "40%",
                   }}>
-                    <h3 style={{ fontSize: "0.9rem", fontWeight: 700, margin: 0, color: "#fff" }}>{cat.name}</h3>
-                    <p style={{ fontSize: "0.65rem", opacity: 0.5, margin: 0 }}>{photoCount} Görsel</p>
+                    <h3 style={{ fontSize: "clamp(0.6rem, 2vw, 0.9rem)", fontWeight: 700, margin: 0, color: "#fff", lineHeight: 1.2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cat.name}</h3>
+                    <p style={{ fontSize: "clamp(0.5rem, 1.5vw, 0.65rem)", opacity: 0.5, margin: 0 }}>{photoCount} Görsel</p>
                   </div>
                 </motion.div>
               );
