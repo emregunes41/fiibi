@@ -240,15 +240,29 @@ export default function ReservationsPage() {
         const today = new Date();
         const isToday = (d) => d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear();
 
-        // Group reservations by day using eventDate as single source of truth
+        // Group reservations by day — hem ana eventDate hem de customFieldAnswers içindeki
+        // _eventDateISO tarihlerini kontrol et (çoklu paket = çoklu tarih desteği)
         const resByDay = {};
-        reservations.filter(r => r.status !== "DELETED").forEach(r => {
-          const d = new Date(r.eventDate);
+        const addToDay = (d, r) => {
           if (d.getMonth() === calMonth && d.getFullYear() === calYear) {
             const day = d.getDate();
             if (!resByDay[day]) resByDay[day] = [];
-            resByDay[day].push(r);
+            // Aynı rezervasyonu aynı güne tekrar ekleme
+            if (!resByDay[day].some(existing => existing.id === r.id)) {
+              resByDay[day].push(r);
+            }
           }
+        };
+        reservations.filter(r => r.status !== "DELETED").forEach(r => {
+          // Ana eventDate
+          if (r.eventDate) {
+            addToDay(new Date(r.eventDate), r);
+          }
+          // customFieldAnswers içindeki ek tarihler (_eventDateISO)
+          const cfa = r.customFieldAnswers || [];
+          cfa.filter(a => a.label === "_eventDateISO" && a.value).forEach(a => {
+            addToDay(new Date(a.value), r);
+          });
         });
 
         const cells = [];
@@ -407,8 +421,18 @@ export default function ReservationsPage() {
             {(() => {
               const monthRes = reservations.filter(r => {
                 if (r.status === "DELETED") return false;
-                const d = new Date(r.eventDate);
-                return d.getMonth() === calMonth && d.getFullYear() === calYear;
+                // Ana eventDate kontrolü
+                if (r.eventDate) {
+                  const d = new Date(r.eventDate);
+                  if (d.getMonth() === calMonth && d.getFullYear() === calYear) return true;
+                }
+                // _eventDateISO ek tarih kontrolü
+                const cfa = r.customFieldAnswers || [];
+                return cfa.some(a => {
+                  if (a.label !== "_eventDateISO" || !a.value) return false;
+                  const d = new Date(a.value);
+                  return d.getMonth() === calMonth && d.getFullYear() === calYear;
+                });
               }).sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
 
               if (monthRes.length === 0) return null;
