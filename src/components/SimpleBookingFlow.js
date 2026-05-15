@@ -9,8 +9,8 @@ import { getBusinessType } from "@/lib/business-types";
 /* ─── Styles ─── */
 const card = (on) => ({
   padding: "20px",
-  border: `1px solid ${on ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.08)"}`,
-  background: on ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)",
+  border: `1px solid ${on ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.1)"}`,
+  background: on ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
   cursor: "pointer",
   transition: "all 0.2s",
 });

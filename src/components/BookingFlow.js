@@ -81,8 +81,8 @@ const S = {
     textAlign: "left",
     padding: "20px",
     borderRadius: 0,
-    border: `1px solid ${on ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.1)"}`,
-    background: on ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.025)",
+    border: `1px solid ${on ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.1)"}`,
+    background: on ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
     cursor: "pointer",
     transition: "all 0.3s ease",
     display: "flex",
@@ -406,25 +406,25 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
             gap: "12px",
             padding: "12px 20px",
             borderRadius: 0,
-            background: "rgba(10,10,15,0.9)",
+            background: "rgba(10, 10, 15, 0.9)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
             boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
             cursor: "pointer",
           }}
           onClick={() => cart.setIsOpen(true)}
         >
-          <ShoppingBag size={16} style={{ color: "rgba(255,255,255,0.5)" }} />
+          <ShoppingBag size={16} style={{ color: "rgba(255, 255, 255, 0.5)" }} />
           <div>
-            <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)" }}>{cart.itemCount} paket</div>
-            <div style={{ fontSize: "15px", fontWeight: 700, color: "#fff" }}>{fmt(cart.cartTotal())}₺</div>
+            <div style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.3)" }}>{cart.itemCount} paket</div>
+            <div style={{ fontSize: "15px", fontWeight: 700, color: "#FEFEFE" }}>{fmt(cart.cartTotal())}₺</div>
           </div>
           <div style={{
-            width: "32px", height: "32px", borderRadius: 0, background: "#fff",
+            width: "32px", height: "32px", borderRadius: 0, background: "#FEFEFE",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
-            <ArrowRight size={14} style={{ color: "#000" }} />
+            <ArrowRight size={14} style={{ color: "#010101" }} />
           </div>
         </motion.div>
       )}
