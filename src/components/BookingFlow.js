@@ -407,25 +407,23 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
             gap: "12px",
             padding: "12px 20px",
             borderRadius: 0,
-            background: "rgba(10, 10, 15, 0.9)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
+            background: "#FEFEFE",
+            border: "1px solid rgba(0, 0, 0, 0.1)",
+            boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
             cursor: "pointer",
           }}
           onClick={() => cart.setIsOpen(true)}
         >
-          <ShoppingBag size={16} style={{ "--force-color": "rgba(255, 255, 255, 0.5)", color: "rgba(255, 255, 255, 0.5)" }} />
+          <ShoppingBag size={16} style={{ "--force-color": "rgba(0, 0, 0, 0.6)", color: "rgba(0, 0, 0, 0.6)" }} />
           <div>
-            <div style={{ "--force-color": "rgba(255, 255, 255, 0.5)", fontSize: "11px", color: "rgba(255, 255, 255, 0.3)" }}>{cart.itemCount} paket</div>
-            <div style={{ "--force-color": "#FEFEFE", fontSize: "15px", fontWeight: 700, color: "#FEFEFE" }}>{fmt(cart.cartTotal())}₺</div>
+            <div style={{ "--force-color": "rgba(0, 0, 0, 0.5)", fontSize: "11px", color: "rgba(0, 0, 0, 0.5)" }}>{cart.itemCount} paket</div>
+            <div style={{ "--force-color": "#000", fontSize: "15px", fontWeight: 700, color: "#000" }}>{fmt(cart.cartTotal())}₺</div>
           </div>
           <div style={{
-            width: "32px", height: "32px", borderRadius: 0, background: "#FEFEFE",
+            width: "32px", height: "32px", borderRadius: 0, background: "#010101",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
-            <ArrowRight size={14} style={{ "--force-color": "#010101", color: "#010101" }} />
+            <ArrowRight size={14} style={{ "--force-color": "#FEFEFE", color: "#FEFEFE" }} />
           </div>
         </motion.div>
       )}
