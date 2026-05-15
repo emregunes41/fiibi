@@ -23,13 +23,13 @@ const MF = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos
 const fmt = (n) => n.toLocaleString("tr-TR");
 
 const inputStyle = {
-  width: "100%", background: "rgba(255,255,255,0.06)",
-  border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0,
-  padding: "14px 16px", fontSize: "13px", color: "#fff",
+  width: "100%", background: "rgba(0,0,0,0.06)",
+  border: "1px solid rgba(0,0,0,0.15)", borderRadius: 0,
+  padding: "14px 16px", fontSize: "13px", color: "#000",
   outline: "none", boxSizing: "border-box",
 };
 const labelStyle = {
-  fontSize: "11px", color: "rgba(255,255,255,0.5)", fontWeight: 600,
+  fontSize: "11px", color: "rgba(0,0,0,0.5)", fontWeight: 600,
   display: "block", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.1em",
 };
 
@@ -126,24 +126,24 @@ function AdminCartDrawer() {
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
             style={{
               position: "fixed", top: 0, right: 0, bottom: 0, width: "min(440px, 95vw)",
-              background: "#0a0a0f", borderLeft: "1px solid rgba(255,255,255,0.1)",
+              background: "#ffffff", borderLeft: "1px solid rgba(0,0,0,0.1)",
               zIndex: 5001, display: "flex", flexDirection: "column",
               boxShadow: "-20px 0 60px rgba(0,0,0,0.5)",
             }}
           >
             {/* Header */}
-            <div style={{ padding: "24px", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ padding: "24px", borderBottom: "1px solid rgba(0,0,0,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
-                <div style={{ fontSize: "16px", fontWeight: 700, color: "#fff" }}>
+                <div style={{ fontSize: "16px", fontWeight: 700, color: "#000" }}>
                   {submitResult ? (submitResult.success ? "✅ Tamamlandı" : "❌ Hata") : showContact ? "Müşteri Bilgileri" : "Admin Sepeti"}
                 </div>
-                <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
+                <div style={{ fontSize: "11px", color: "rgba(0,0,0,0.4)" }}>
                   {submitResult ? "" : showContact ? "Bilgileri doldurun ve kaydedin" : `${itemCount} paket`}
                 </div>
               </div>
               <button onClick={() => { setIsOpen(false); setShowContact(false); }} style={{
-                background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
-                borderRadius: 0, padding: "8px", cursor: "pointer", color: "rgba(255,255,255,0.6)",
+                background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)",
+                borderRadius: 0, padding: "8px", cursor: "pointer", color: "rgba(0,0,0,0.6)",
               }}><X size={16} /></button>
             </div>
 
@@ -151,16 +151,16 @@ function AdminCartDrawer() {
             <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
               {submitResult ? (
                 <div style={{ textAlign: "center", padding: "40px 20px" }}>
-                  <div style={{ width: 80, height: 80, margin: "0 auto 24px", borderRadius: 0, background: submitResult.success ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.04)", border: `2px solid ${submitResult.success ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.1)"}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36 }}>
+                  <div style={{ width: 80, height: 80, margin: "0 auto 24px", borderRadius: 0, background: submitResult.success ? "rgba(0,0,0,0.06)" : "rgba(0,0,0,0.04)", border: `2px solid ${submitResult.success ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.1)"}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36 }}>
                     {submitResult.success ? "🎉" : "❌"}
                   </div>
-                  <div style={{ fontSize: 22, fontWeight: 800, color: submitResult.success ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.5)", marginBottom: 12 }}>
+                  <div style={{ fontSize: 22, fontWeight: 800, color: submitResult.success ? "rgba(0,0,0,0.7)" : "rgba(0,0,0,0.5)", marginBottom: 12 }}>
                     {submitResult.success ? "Rezervasyon Oluşturuldu!" : "Hata"}
                   </div>
-                  <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", lineHeight: 1.7 }}>{submitResult.message}</p>
+                  <p style={{ fontSize: 14, color: "rgba(0,0,0,0.5)", lineHeight: 1.7 }}>{submitResult.message}</p>
                   <button onClick={() => { setSubmitResult(null); setShowContact(false); setIsOpen(false); }} style={{
                     marginTop: 24, width: "100%", padding: 14, borderRadius: 0,
-                    background: "#fff", color: "#000", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer",
+                    background: "#000", color: "#fff", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer",
                   }}>Tamam</button>
                 </div>
               ) : showContact ? (
@@ -172,31 +172,31 @@ function AdminCartDrawer() {
                     <input type="tel" value={contactForm.bridePhone} onChange={(e) => setContactForm(p => ({ ...p, bridePhone: e.target.value }))} placeholder="05XX XXX XX XX" style={inputStyle} /></div>
                   <div><label style={labelStyle}><Mail size={10} style={{ display: "inline", marginRight: 4 }} /> {isPhotographer ? "Gelin" : bt.terms.client} E-posta *</label>
                     <input type="email" value={contactForm.brideEmail} onChange={(e) => setContactForm(p => ({ ...p, brideEmail: e.target.value }))} placeholder="ornek@email.com" style={inputStyle} /></div>
-                  <div style={{ height: 1, background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
+                  <div style={{ height: 1, background: "rgba(0,0,0,0.04)", margin: "4px 0" }} />
                   <div><label style={labelStyle}><User size={10} style={{ display: "inline", marginRight: 4 }} /> {isPhotographer ? "Damat" : "İkinci Kişi"} Adı {isPhotographer ? "*" : ""}</label>
                     <input type="text" value={contactForm.groomName} onChange={(e) => setContactForm(p => ({ ...p, groomName: e.target.value }))} placeholder="Ad Soyad" style={inputStyle} /></div>
                   <div><label style={labelStyle}><Phone size={10} style={{ display: "inline", marginRight: 4 }} /> {isPhotographer ? "Damat" : "İkinci Kişi"} Telefon {isPhotographer ? "*" : ""}</label>
                     <input type="tel" value={contactForm.groomPhone} onChange={(e) => setContactForm(p => ({ ...p, groomPhone: e.target.value }))} placeholder="05XX XXX XX XX" style={inputStyle} /></div>
-                  <div style={{ height: 1, background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
+                  <div style={{ height: 1, background: "rgba(0,0,0,0.04)", margin: "4px 0" }} />
                   <div><label style={labelStyle}><Instagram size={10} style={{ display: "inline", marginRight: 4 }} /> Sosyal Medya</label>
                     <input type="text" value={contactForm.socialMedia} onChange={(e) => setContactForm(p => ({ ...p, socialMedia: e.target.value }))} placeholder="@instagram" style={inputStyle} /></div>
-                  <div style={{ height: 1, background: "rgba(255,255,255,0.04)", margin: "4px 0" }} />
+                  <div style={{ height: 1, background: "rgba(0,0,0,0.04)", margin: "4px 0" }} />
                   <div>
-                    <label style={{...labelStyle, color: "rgba(255,255,255,0.7)"}}><Banknote size={10} style={{ display: "inline", marginRight: 4 }} /> Alınan Ön Ödeme (Kapora) Tutarı - Opsiyonel</label>
+                    <label style={{...labelStyle, color: "rgba(0,0,0,0.7)"}}><Banknote size={10} style={{ display: "inline", marginRight: 4 }} /> Alınan Ön Ödeme (Kapora) Tutarı - Opsiyonel</label>
                     <input 
                       type="number" 
                       min="0"
                       value={initialPaymentAmount} 
                       onChange={(e) => setInitialPaymentAmount(e.target.value)} 
                       placeholder="Örn: 4000" 
-                      style={{ ...inputStyle, border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.03)" }} 
+                      style={{ ...inputStyle, border: "1px solid rgba(0,0,0,0.15)", background: "rgba(0,0,0,0.03)" }} 
                     />
                   </div>
                 </div>
               ) : (
                 /* Cart Items */
                 items.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(255,255,255,0.3)" }}>
+                  <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(0,0,0,0.3)" }}>
                     <ShoppingBag size={40} style={{ margin: "0 auto 16px", opacity: 0.5 }} />
                     <p style={{ fontSize: 14 }}>Sepet boş — sol taraftan paket ekleyin</p>
                   </div>
@@ -208,35 +208,35 @@ function AdminCartDrawer() {
                       const pkgPrice = item.price ?? (parseInt(item.pkg.price?.replace(/\D/g, "")) || 0);
                       const addonPrice = item.addons.reduce((s, a) => s + (parseInt(a.price) || 0), 0);
                       return (
-                        <div key={item.pkg.id} style={{ padding: 16, borderRadius: 0, border: "1px solid rgba(255,255,255,0.1)", background: `linear-gradient(135deg, ${meta.color}15 0%, transparent 60%)`, position: "relative" }}>
+                        <div key={item.pkg.id} style={{ padding: 16, borderRadius: 0, border: "1px solid rgba(0,0,0,0.1)", background: `linear-gradient(135deg, ${meta.color}15 0%, transparent 60%)`, position: "relative" }}>
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                             <div style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: meta.color, display: "flex", alignItems: "center", gap: 4 }}>
                               <Icon size={10} /> {meta.label}
                             </div>
-                            <button onClick={() => removeItem(item.pkg.id)} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: 6, cursor: "pointer", color: "rgba(255,255,255,0.4)" }}>
+                            <button onClick={() => removeItem(item.pkg.id)} style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, padding: 6, cursor: "pointer", color: "rgba(0,0,0,0.4)" }}>
                               <Trash2 size={12} />
                             </button>
                           </div>
-                          <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 4 }}>{item.pkg.name}</div>
-                          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>{MF[item.month - 1]} {item.year}</div>
+                          <div style={{ fontSize: 14, fontWeight: 600, color: "#000", marginBottom: 4 }}>{item.pkg.name}</div>
+                          <div style={{ fontSize: 11, color: "rgba(0,0,0,0.6)", marginBottom: 8 }}>{MF[item.month - 1]} {item.year}</div>
                           {item.details && (
-                            <div style={{ padding: 10, borderRadius: 0, marginBottom: 8, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                            <div style={{ padding: 10, borderRadius: 0, marginBottom: 8, background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)" }}>
                               {item.details.date && (
-                                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4, fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4, fontSize: 12, color: "rgba(0,0,0,0.7)" }}>
                                   <Calendar size={11} style={{ opacity: 0.7 }} />
                                   {new Date(item.details.date).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
                                 </div>
                               )}
                               {item.details.timeLabel && (
-                                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4, fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4, fontSize: 12, color: "rgba(0,0,0,0.7)" }}>
                                   <Clock size={11} style={{ opacity: 0.7 }} />
                                   {item.details.timeLabel}
                                 </div>
                               )}
                               {item.details.customFieldAnswers?.filter(a => a.value !== "" && a.value !== false).length > 0 && (
-                                <div style={{ marginTop: 4, paddingTop: 4, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                                <div style={{ marginTop: 4, paddingTop: 4, borderTop: "1px solid rgba(0,0,0,0.05)" }}>
                                   {item.details.customFieldAnswers.filter(a => a.value !== "" && a.value !== false).map((a, i) => (
-                                    <div key={i} style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 2 }}>
+                                    <div key={i} style={{ fontSize: 11, color: "rgba(0,0,0,0.4)", marginBottom: 2 }}>
                                       <span style={{ fontWeight: 600 }}>{a.label}:</span> {a.type === "checkbox" ? "✓" : a.value}
                                     </div>
                                   ))}
@@ -247,15 +247,15 @@ function AdminCartDrawer() {
                           {item.addons.length > 0 && (
                             <div style={{ marginBottom: 8 }}>
                               {item.addons.map((a, i) => (
-                                <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 3 }}>
+                                <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "rgba(0,0,0,0.4)", marginBottom: 3 }}>
                                   <span>+ {a.title}</span><span>{a.price}₺</span>
                                 </div>
                               ))}
                             </div>
                           )}
                           <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline", gap: 4 }}>
-                            <span style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>{fmt(pkgPrice + addonPrice)}</span>
-                            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>₺</span>
+                            <span style={{ fontSize: 16, fontWeight: 700, color: "#000" }}>{fmt(pkgPrice + addonPrice)}</span>
+                            <span style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>₺</span>
                           </div>
                         </div>
                       );
@@ -267,37 +267,37 @@ function AdminCartDrawer() {
 
             {/* Footer */}
             {items.length > 0 && !submitResult && (
-              <div style={{ padding: 20, borderTop: "1px solid rgba(255,255,255,0.08)", background: "rgba(0,0,0,0.3)" }}>
+              <div style={{ padding: 20, borderTop: "1px solid rgba(0,0,0,0.08)", background: "rgba(0,0,0,0.03)" }}>
                 {showContact && (
                   <div style={{ marginBottom: 16 }}>
-                    <label style={{...labelStyle, color: "rgba(255,255,255,0.7)"}}>Manuel İndirim Tutarı (TL) - İsteğe Bağlı</label>
+                    <label style={{...labelStyle, color: "rgba(0,0,0,0.7)"}}>Manuel İndirim Tutarı (TL) - İsteğe Bağlı</label>
                     <input 
                       type="number" 
                       min="0"
                       value={manualDiscount} 
                       onChange={(e) => setManualDiscount(e.target.value)} 
                       placeholder="Örn: 2000" 
-                      style={{ ...inputStyle, border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.03)" }} 
+                      style={{ ...inputStyle, border: "1px solid rgba(0,0,0,0.15)", background: "rgba(0,0,0,0.03)" }} 
                     />
                   </div>
                 )}
                 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)" }}>TOPLAM</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(0,0,0,0.4)" }}>TOPLAM</div>
                   <div style={{ textAlign: "right" }}>
                     {showContact && Number(manualDiscount) > 0 && (
-                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", textDecoration: "line-through", marginBottom: 2 }}>{fmt(cartTotal())} ₺</div>
+                      <div style={{ fontSize: 13, color: "rgba(0,0,0,0.3)", textDecoration: "line-through", marginBottom: 2 }}>{fmt(cartTotal())} ₺</div>
                     )}
-                    <span style={{ fontSize: 24, fontWeight: 700, color: "#fff" }}>{fmt(Math.max(0, cartTotal() - (Number(manualDiscount) || 0)))}</span>
-                    <span style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", fontWeight: 400, marginLeft: 2 }}>₺</span>
+                    <span style={{ fontSize: 24, fontWeight: 700, color: "#000" }}>{fmt(Math.max(0, cartTotal() - (Number(manualDiscount) || 0)))}</span>
+                    <span style={{ fontSize: 13, color: "rgba(0,0,0,0.45)", fontWeight: 400, marginLeft: 2 }}>₺</span>
                   </div>
                 </div>
                 {!showContact ? (
                   <div style={{ display: "flex", gap: 10 }}>
-                    <button onClick={clearCart} style={{ flex: 1, padding: 14, borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", background: "transparent", color: "rgba(255,255,255,0.45)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Temizle</button>
+                    <button onClick={clearCart} style={{ flex: 1, padding: 14, borderRadius: 0, border: "1px solid rgba(0,0,0,0.06)", background: "transparent", color: "rgba(0,0,0,0.45)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Temizle</button>
                     <button onClick={() => setShowContact(true)} style={{
                       flex: 2, padding: 14, borderRadius: 0, border: "none",
-                      background: "#fff", color: "#000", fontSize: 13, fontWeight: 700,
+                      background: "#000", color: "#fff", fontSize: 13, fontWeight: 700,
                       cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                     }}>
                       <ArrowRight size={14} /> Müşteri Bilgileri
@@ -306,8 +306,8 @@ function AdminCartDrawer() {
                 ) : (
                   <button onClick={handleSave} disabled={!isContactValid || isSubmitting} style={{
                     width: "100%", padding: 16, borderRadius: 0, border: "none",
-                    background: isContactValid ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.04)",
-                    color: isContactValid ? "#000" : "rgba(255,255,255,0.15)",
+                    background: isContactValid ? "rgba(0,0,0,0.8)" : "rgba(0,0,0,0.04)",
+                    color: isContactValid ? "#fff" : "rgba(0,0,0,0.15)",
                     fontSize: 14, fontWeight: 700, cursor: isContactValid ? "pointer" : "not-allowed",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                   }}>
