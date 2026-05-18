@@ -840,8 +840,10 @@ export default function FiibiLanding() {
             </div>
             <div>
               <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 14 }}>{t.nav.contact}</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <a href="mailto:destek@fiibi.co" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>destek@fiibi.co</a>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <a href="tel:05392052041" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>📞 0539 205 20 41</a>
+                <a href="mailto:destek@fiibi.co" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>✉️ destek@fiibi.co</a>
+                <span style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>📍 Cedit Mah. Goncagül Sok. No:14/2, İzmit / Kocaeli</span>
               </div>
             </div>
           </div>
