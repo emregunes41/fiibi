@@ -1,6 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { verifyCallbackHash, parseMerchantOid } from "@/lib/paytr";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+export async function GET() {
+  return new Response("OK", { status: 200, headers: { "Content-Type": "text/plain" } });
+}
+
 /**
  * PayTR Direkt API — 2. Adım (Bildirim URL / Callback)
  * 

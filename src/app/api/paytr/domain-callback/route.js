@@ -2,6 +2,13 @@ import { NextResponse } from "next/server";
 import { verifyPaytrCallback } from "@/lib/paytr";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+export async function GET() {
+  return new Response("OK", { status: 200, headers: { "Content-Type": "text/plain" } });
+}
+
 export async function POST(req) {
   try {
     const formData = await req.formData();

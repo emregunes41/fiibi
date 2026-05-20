@@ -2,6 +2,18 @@ import { NextResponse } from "next/server";
 import { verifyPaytrCallback } from "@/lib/paytr";
 import { prisma } from "@/lib/prisma";
 
+// Prevent any static optimization or redirect
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+// PayTR sometimes sends GET pings to test the endpoint
+export async function GET() {
+  return new Response("OK", {
+    status: 200,
+    headers: { "Content-Type": "text/plain" },
+  });
+}
+
 export async function POST(req) {
   try {
     let data = {};

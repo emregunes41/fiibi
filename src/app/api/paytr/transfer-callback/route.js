@@ -2,6 +2,13 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyTransferCallbackHash } from "@/lib/paytr-transfer";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+export async function GET() {
+  return new Response("OK", { status: 200, headers: { "Content-Type": "text/plain" } });
+}
+
 /**
  * POST /api/paytr/transfer-callback
  *
