@@ -55,9 +55,9 @@ export async function POST(request) {
     const merchant_ok_url = `${baseUrl}/admin/subscription?payment=success`;
     const merchant_fail_url = `${baseUrl}/admin/subscription?payment=failed`;
 
-    const user_basket = JSON.stringify([
+    const user_basket = Buffer.from(JSON.stringify([
       ["Fiibi Pro Abonelik", (planPriceKurus / 100).toFixed(2), 1],
-    ]);
+    ])).toString("base64");
 
     // Token oluştur
     const paytr_token = createPaytrToken({

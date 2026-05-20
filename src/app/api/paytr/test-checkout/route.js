@@ -33,7 +33,7 @@ export async function POST(request) {
     const merchant_ok_url = `${baseUrl}/?payment=success`;
     const merchant_fail_url = `${baseUrl}/?payment=fail`;
 
-    const user_basket = JSON.stringify([["Fiibi Test Ödeme", "10.00", 1]]);
+    const user_basket = Buffer.from(JSON.stringify([["Fiibi Test Odeme", "10.00", 1]])).toString("base64");
     const currency = "TL";
     const test_mode = "1"; // Her zaman test modu
     const no_installment = "1";

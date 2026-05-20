@@ -178,9 +178,9 @@ async function attemptRecurringCharge(tenant) {
     const merchant_ok_url = `${baseUrl}/api/paytr/subscription-callback`;
     const merchant_fail_url = merchant_ok_url;
 
-    const user_basket = JSON.stringify([
+    const user_basket = Buffer.from(JSON.stringify([
       ["Fiibi Pro Abonelik Yenileme", (planPriceKurus / 100).toFixed(2), 1],
-    ]);
+    ])).toString("base64");
 
     // Token oluştur (Direkt API formülü)
     const paytr_token = createPaytrToken({

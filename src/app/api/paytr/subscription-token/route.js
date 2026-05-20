@@ -45,7 +45,7 @@ export async function POST(request) {
 
     const merchant_ok_url = `${baseUrl}/admin/subscription?payment=success`;
     const merchant_fail_url = `${baseUrl}/admin/subscription?payment=fail`;
-    const user_basket = JSON.stringify([["Fiibi Pro Abonelik", (planPriceKurus / 100).toFixed(2), 1]]); // Sepet TL cinsinden
+    const user_basket = Buffer.from(JSON.stringify([["Fiibi Pro Abonelik", (planPriceKurus / 100).toFixed(2), 1]])).toString("base64");
     const currency = "TL";
     const test_mode = process.env.NODE_ENV === "production" ? "0" : "1";
     const no_installment = "1"; // Taksit yok
