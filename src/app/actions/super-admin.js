@@ -448,3 +448,175 @@ export async function impersonateTenant(tenantId) {
   return { success: true, url, slug: tenant.slug };
 }
 
+/**
+ * Muhasebe verilerini getir — Super Admin Finans Paneli
+ */
+export async function getAccountingData() {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  // 1. Tüm tenantlar + toplam gelir bilgileri
+  const tenants = await prisma.tenant.findMany({
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      slug: true,
+      businessName: true,
+      ownerName: true,
+      ownerEmail: true,
+      plan: true,
+      selectedPlan: true,
+      planExpiresAt: true,
+      lastPaymentAt: true,
+      nextPaymentAt: true,
+      commissionRate: true,
+      subMerchantStatus: true,
+      iban: true,
+      isFrozen: true,
+      isActive: true,
+      createdAt: true,
+      failedPayments: true,
+      paytrCtoken: true,
+      reservations: {
+        select: {
+          id: true,
+          totalAmount: true,
+          paidAmount: true,
+          paymentStatus: true,
+          paymentPreference: true,
+          status: true,
+          brideName: true,
+          createdAt: true,
+          orderType: true,
+          payments: {
+            select: { id: true, amount: true, method: true, createdAt: true }
+          }
+        },
+        orderBy: { createdAt: "desc" },
+      },
+    },
+  });
+
+  // 2. Fiyatlandırma bilgisi
+  let config;
+  try { config = await prisma.platformConfig.findUnique({ where: { id: "main" } }); } catch { /* ignore */ }
+  const pricing = config?.pricing || { basic_monthly: 1499, basic_yearly: 14999, pro_monthly: 2999, pro_yearly: 29999 };
+
+  // 3. Verileri işle
+  const now = new Date();
+  const thisMonth = now.getMonth();
+  const thisYear = now.getFullYear();
+
+  let totalPlatformRevenue = 0; // Toplam platform abonelik geliri (tahmini)
+  let totalTenantSales = 0;
+  let totalCommissionEarnings = 0;
+  let totalPendingPayments = 0;
+  let overdueCount = 0;
+  let activeSubscriptions = 0;
+
+  const tenantFinance = tenants.map(t => {
+    // Tenant satış hesabı
+    let sales = 0;
+    let collected = 0;
+    let pending = 0;
+    let monthlySales = 0;
+    let monthlyCollected = 0;
+    let reservationCount = t.reservations.length;
+    let paidReservations = 0;
+    let unpaidReservations = 0;
+    let partialReservations = 0;
+
+    t.reservations.forEach(r => {
+      const total = parseFloat(String(r.totalAmount || "0").replace(/[^\d.-]/g, "")) || 0;
+      const paid = r.payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+      sales += total;
+      collected += paid;
+
+      if (r.paymentStatus === "PAID") paidReservations++;
+      else if (r.paymentStatus === "PARTIAL") partialReservations++;
+      else unpaidReservations++;
+
+      // Bu ayki satışlar
+      const rDate = new Date(r.createdAt);
+      if (rDate.getMonth() === thisMonth && rDate.getFullYear() === thisYear) {
+        monthlySales += total;
+        monthlyCollected += paid;
+      }
+    });
+
+    pending = sales - collected;
+    const commission = (collected * (t.commissionRate || 0)) / 100;
+
+    totalTenantSales += sales;
+    totalCommissionEarnings += commission;
+    totalPendingPayments += Math.max(0, pending);
+
+    // Abonelik durumu
+    const isSubscribed = t.plan !== "trial" && t.planExpiresAt && new Date(t.planExpiresAt) > now;
+    if (isSubscribed) activeSubscriptions++;
+
+    // Abonelik geliri tahmini (ayda bir kere ödeme)
+    let subscriptionFee = 0;
+    if (t.plan === "pro" || t.plan === "basic") {
+      const planKey = `${t.plan}_${t.selectedPlan || "monthly"}`;
+      subscriptionFee = pricing[planKey] || pricing[`${t.plan}_monthly`] || 0;
+    }
+    if (t.lastPaymentAt) totalPlatformRevenue += subscriptionFee;
+
+    // Ödeme gecikmiş mi?
+    const isOverdue = t.plan !== "trial" && t.nextPaymentAt && new Date(t.nextPaymentAt) < now && !t.isFrozen;
+    if (isOverdue) overdueCount++;
+
+    return {
+      id: t.id,
+      slug: t.slug,
+      businessName: t.businessName,
+      ownerName: t.ownerName,
+      ownerEmail: t.ownerEmail,
+      plan: t.plan,
+      selectedPlan: t.selectedPlan,
+      commissionRate: t.commissionRate,
+      subMerchantStatus: t.subMerchantStatus,
+      iban: t.iban,
+      isFrozen: t.isFrozen,
+      isActive: t.isActive,
+      hasCard: !!t.paytrCtoken,
+      failedPayments: t.failedPayments,
+      lastPaymentAt: t.lastPaymentAt,
+      nextPaymentAt: t.nextPaymentAt,
+      isOverdue,
+      subscriptionFee,
+      // Satış verileri
+      totalSales: Math.round(sales),
+      totalCollected: Math.round(collected),
+      totalPending: Math.round(Math.max(0, pending)),
+      monthlySales: Math.round(monthlySales),
+      monthlyCollected: Math.round(monthlyCollected),
+      commissionAmount: Math.round(commission),
+      reservationCount,
+      paidReservations,
+      unpaidReservations,
+      partialReservations,
+    };
+  });
+
+  // Aylık gelir tahmini (aktif aboneliklerden)
+  const monthlyRecurring = tenantFinance
+    .filter(t => t.plan !== "trial" && !t.isFrozen)
+    .reduce((sum, t) => sum + t.subscriptionFee, 0);
+
+  return {
+    summary: {
+      totalTenants: tenants.length,
+      activeSubscriptions,
+      overdueCount,
+      monthlyRecurringRevenue: monthlyRecurring,
+      totalPlatformRevenue: Math.round(totalPlatformRevenue),
+      totalTenantSales: Math.round(totalTenantSales),
+      totalCommissionEarnings: Math.round(totalCommissionEarnings),
+      totalPendingPayments: Math.round(totalPendingPayments),
+    },
+    tenants: tenantFinance,
+    pricing,
+  };
+}
+

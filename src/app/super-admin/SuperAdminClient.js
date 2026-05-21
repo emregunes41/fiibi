@@ -6,19 +6,21 @@ import {
   Shield, Users, Building2, CreditCard, Snowflake, Trash2,
   RefreshCw, LogOut, ExternalLink, Crown, AlertTriangle, Check,
   BarChart, Database, Cloud, Mail, HardDrive, Image, Zap,
-  DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock, Key, Eye, X, FileText, Phone, Globe, Calendar
+  DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock, Key, Eye, X, FileText, Phone, Globe, Calendar,
+  Wallet, TrendingUp, ArrowUpRight, ArrowDownRight, Banknote, Receipt, PiggyBank, ChevronDown, ChevronUp, Filter,
 } from "lucide-react";
 import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
   changeTenantPlan, deleteTenant, superAdminLogout,
   getPlatformPricing, updatePlatformPricing,
   updateTenantCommission, updateSubMerchantStatus, resetTenantAdminPassword,
-  updateTenantField, impersonateTenant
+  updateTenantField, impersonateTenant, getAccountingData
 } from "@/app/actions/super-admin";
 import { getCloudinaryUsage, getDbUsage, getResendUsage, getVercelUsage } from "@/app/actions/platform-usage";
 
 const TABS = [
   { id: "overview", label: "Genel Bakış", icon: LayoutDashboard },
+  { id: "accounting", label: "Muhasebe", icon: Wallet },
   { id: "usage", label: "Kaynak Kullanımı", icon: BarChart },
   { id: "pricing", label: "Fiyatlandırma", icon: DollarSign },
   { id: "tenants", label: "Kullanıcılar", icon: Users },
@@ -34,6 +36,10 @@ export default function SuperAdminClient() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
   const [infoModal, setInfoModal] = useState(null);
+  const [accounting, setAccounting] = useState(null);
+  const [accountingLoading, setAccountingLoading] = useState(false);
+  const [accountingSort, setAccountingSort] = useState({ field: "totalSales", dir: "desc" });
+  const [accountingFilter, setAccountingFilter] = useState("all"); // all, overdue, active, frozen
   const router = useRouter();
 
   const domain = process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "localhost:3000";
@@ -61,6 +67,22 @@ export default function SuperAdminClient() {
     } catch (err) { console.error("loadData error:", err); }
     setLoading(false);
   }
+
+  async function loadAccounting() {
+    setAccountingLoading(true);
+    try {
+      const data = await getAccountingData();
+      if (data && !data.error) setAccounting(data);
+    } catch (err) { console.error("accounting error:", err); }
+    setAccountingLoading(false);
+  }
+
+  // Load accounting when tab switches to it
+  useEffect(() => {
+    if (tab === "accounting" && !accounting && !accountingLoading) {
+      loadAccounting();
+    }
+  }, [tab]);
 
   useEffect(() => { loadData(); }, []);
 
@@ -312,6 +334,212 @@ export default function SuperAdminClient() {
                   renderUsageBar("E-posta (Resend)", Mail, "#facc15", usage.resend.emailsThisMonth, usage.resend.monthlyLimit, "", `Günlük limit: ${usage.resend.dailyLimit}`, usage.resend.pct)
                 )}
               </div>
+            </>
+          )}
+
+          {/* ─── TAB: Muhasebe ─── */}
+          {tab === "accounting" && (
+            <>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+                <h2 style={sectionTitle}>Muhasebe & Finans</h2>
+                <button onClick={loadAccounting} disabled={accountingLoading} style={{ ...iconBtn, opacity: accountingLoading ? 0.5 : 1 }}>
+                  <RefreshCw size={15} style={{ animation: accountingLoading ? "spin 1s linear infinite" : "none" }} />
+                </button>
+              </div>
+
+              {accountingLoading && !accounting ? (
+                <div style={{ textAlign: "center", padding: 60, color: "rgba(255,255,255,0.3)" }}>
+                  <Wallet size={32} style={{ margin: "0 auto 12px", opacity: 0.5 }} />
+                  <div style={{ fontSize: 13 }}>Muhasebe verileri yükleniyor...</div>
+                </div>
+              ) : accounting ? (
+                <>
+                  {/* Özet Kartlar */}
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 28 }}>
+                    {[
+                      { label: "Aylık Tekrarlayan Gelir", value: `${(accounting.summary.monthlyRecurringRevenue / 100).toLocaleString("tr-TR")}₺`, sub: "MRR", icon: TrendingUp, color: "#4ade80", gradient: "rgba(74,222,128,0.06)" },
+                      { label: "Toplam Komisyon Geliri", value: `${accounting.summary.totalCommissionEarnings.toLocaleString("tr-TR")}₺`, sub: "Tahsil edilen", icon: PiggyBank, color: "#f59e0b", gradient: "rgba(245,158,11,0.06)" },
+                      { label: "Toplam Tenant Satışları", value: `${accounting.summary.totalTenantSales.toLocaleString("tr-TR")}₺`, sub: `${accounting.summary.totalTenants} işletme`, icon: Receipt, color: "#8b5cf6", gradient: "rgba(139,92,246,0.06)" },
+                      { label: "Ödeme Bekleyen", value: `${accounting.summary.totalPendingPayments.toLocaleString("tr-TR")}₺`, sub: "Açık bakiye", icon: Clock, color: "#facc15", gradient: "rgba(250,204,21,0.06)" },
+                      { label: "Aktif Abonelik", value: accounting.summary.activeSubscriptions, sub: `/ ${accounting.summary.totalTenants} toplam`, icon: CreditCard, color: "#38bdf8", gradient: "rgba(56,189,248,0.06)" },
+                      { label: "Gecikmiş Ödeme", value: accounting.summary.overdueCount, sub: "Takip gerekli", icon: AlertTriangle, color: accounting.summary.overdueCount > 0 ? "#f87171" : "rgba(255,255,255,0.3)", gradient: accounting.summary.overdueCount > 0 ? "rgba(248,113,113,0.06)" : "rgba(255,255,255,0.02)" },
+                    ].map((c, i) => (
+                      <div key={i} style={{ background: c.gradient, border: "1px solid rgba(255,255,255,0.06)", padding: "18px 20px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                          <c.icon size={15} style={{ color: c.color }} />
+                          <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "rgba(255,255,255,0.4)" }}>{c.label}</span>
+                        </div>
+                        <div style={{ fontSize: 26, fontWeight: 800, color: "#fff", marginBottom: 4 }}>{c.value}</div>
+                        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{c.sub}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Filtre + Sıralama */}
+                  <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
+                    <Filter size={14} style={{ color: "rgba(255,255,255,0.3)" }} />
+                    {[
+                      { id: "all", label: "Tümü" },
+                      { id: "overdue", label: "Gecikmiş" },
+                      { id: "active", label: "Aktif Abonelik" },
+                      { id: "frozen", label: "Dondurulmuş" },
+                      { id: "hasSales", label: "Satışı Var" },
+                    ].map(f => (
+                      <button key={f.id} onClick={() => setAccountingFilter(f.id)} style={{
+                        padding: "6px 14px", fontSize: 11, fontWeight: 600, cursor: "pointer",
+                        background: accountingFilter === f.id ? "rgba(139,92,246,0.15)" : "rgba(255,255,255,0.03)",
+                        border: `1px solid ${accountingFilter === f.id ? "rgba(139,92,246,0.3)" : "rgba(255,255,255,0.06)"}`,
+                        color: accountingFilter === f.id ? "#a78bfa" : "rgba(255,255,255,0.4)",
+                        transition: "all 0.15s",
+                      }}>{f.label}</button>
+                    ))}
+                  </div>
+
+                  {/* Tenant Finans Tablosu */}
+                  <div style={{ border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                    {/* Header */}
+                    <div style={{
+                      display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 0.8fr",
+                      padding: "12px 16px", background: "rgba(255,255,255,0.03)",
+                      borderBottom: "1px solid rgba(255,255,255,0.06)",
+                      fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
+                      color: "rgba(255,255,255,0.4)", gap: 8,
+                    }}>
+                      <span>İşletme</span>
+                      {["totalSales", "totalCollected", "totalPending", "commissionAmount", "monthlySales"].map(field => {
+                        const labels = { totalSales: "Toplam Satış", totalCollected: "Tahsilat", totalPending: "Bekleyen", commissionAmount: "Komisyon", monthlySales: "Bu Ay" };
+                        const isActive = accountingSort.field === field;
+                        return (
+                          <button key={field} onClick={() => setAccountingSort(prev => ({ field, dir: prev.field === field && prev.dir === "desc" ? "asc" : "desc" }))} style={{
+                            background: "none", border: "none", cursor: "pointer", padding: 0,
+                            display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end",
+                            fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
+                            color: isActive ? "#a78bfa" : "rgba(255,255,255,0.4)",
+                          }}>
+                            {labels[field]}
+                            {isActive && (accountingSort.dir === "desc" ? <ChevronDown size={10} /> : <ChevronUp size={10} />)}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Rows */}
+                    {(() => {
+                      let filtered = [...accounting.tenants];
+                      if (accountingFilter === "overdue") filtered = filtered.filter(t => t.isOverdue);
+                      else if (accountingFilter === "active") filtered = filtered.filter(t => t.plan !== "trial" && !t.isFrozen);
+                      else if (accountingFilter === "frozen") filtered = filtered.filter(t => t.isFrozen);
+                      else if (accountingFilter === "hasSales") filtered = filtered.filter(t => t.totalSales > 0);
+
+                      filtered.sort((a, b) => {
+                        const dir = accountingSort.dir === "desc" ? -1 : 1;
+                        return (a[accountingSort.field] - b[accountingSort.field]) * dir;
+                      });
+
+                      if (filtered.length === 0) return (
+                        <div style={{ padding: 32, textAlign: "center", color: "rgba(255,255,255,0.25)", fontSize: 13 }}>Bu filtreye uygun işletme yok</div>
+                      );
+
+                      return filtered.map(t => {
+                        const planBadge = { trial: { c: "#facc15", bg: "rgba(250,204,21,0.08)" }, basic: { c: "#8b5cf6", bg: "rgba(139,92,246,0.08)" }, pro: { c: "#f59e0b", bg: "rgba(245,158,11,0.08)" } }[t.plan] || { c: "#888", bg: "rgba(255,255,255,0.03)" };
+                        return (
+                          <div key={t.id} style={{
+                            display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 0.8fr",
+                            padding: "14px 16px", gap: 8, alignItems: "center",
+                            borderBottom: "1px solid rgba(255,255,255,0.04)",
+                            background: t.isOverdue ? "rgba(248,113,113,0.03)" : t.isFrozen ? "rgba(56,189,248,0.02)" : "transparent",
+                            transition: "background 0.15s",
+                          }}>
+                            {/* İşletme */}
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
+                                <span style={{ fontSize: 13, fontWeight: 700, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.businessName}</span>
+                                {t.isOverdue && <AlertTriangle size={12} style={{ color: "#f87171", flexShrink: 0 }} />}
+                                {t.isFrozen && <Snowflake size={12} style={{ color: "#38bdf8", flexShrink: 0 }} />}
+                              </div>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 10, color: "rgba(255,255,255,0.3)" }}>
+                                <span style={{ background: planBadge.bg, color: planBadge.c, padding: "1px 6px", fontWeight: 700, fontSize: 9, textTransform: "uppercase" }}>{t.plan}</span>
+                                <span>{t.reservationCount} rez</span>
+                                <span>%{t.commissionRate}</span>
+                              </div>
+                            </div>
+                            {/* Toplam Satış */}
+                            <div style={{ textAlign: "right" }}>
+                              <div style={{ fontSize: 14, fontWeight: 700, color: t.totalSales > 0 ? "#fff" : "rgba(255,255,255,0.2)" }}>{t.totalSales > 0 ? `${t.totalSales.toLocaleString("tr-TR")}₺` : "—"}</div>
+                            </div>
+                            {/* Tahsilat */}
+                            <div style={{ textAlign: "right" }}>
+                              <div style={{ fontSize: 14, fontWeight: 600, color: t.totalCollected > 0 ? "#4ade80" : "rgba(255,255,255,0.2)" }}>{t.totalCollected > 0 ? `${t.totalCollected.toLocaleString("tr-TR")}₺` : "—"}</div>
+                            </div>
+                            {/* Bekleyen */}
+                            <div style={{ textAlign: "right" }}>
+                              <div style={{ fontSize: 14, fontWeight: 600, color: t.totalPending > 0 ? "#facc15" : "rgba(255,255,255,0.15)" }}>{t.totalPending > 0 ? `${t.totalPending.toLocaleString("tr-TR")}₺` : "—"}</div>
+                            </div>
+                            {/* Komisyon */}
+                            <div style={{ textAlign: "right" }}>
+                              <div style={{ fontSize: 14, fontWeight: 600, color: t.commissionAmount > 0 ? "#f59e0b" : "rgba(255,255,255,0.15)" }}>{t.commissionAmount > 0 ? `${t.commissionAmount.toLocaleString("tr-TR")}₺` : "—"}</div>
+                            </div>
+                            {/* Bu Ay */}
+                            <div style={{ textAlign: "right" }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: t.monthlySales > 0 ? "#38bdf8" : "rgba(255,255,255,0.12)" }}>{t.monthlySales > 0 ? `${t.monthlySales.toLocaleString("tr-TR")}₺` : "—"}</div>
+                            </div>
+                          </div>
+                        );
+                      });
+                    })()}
+
+                    {/* Footer Totals */}
+                    <div style={{
+                      display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 0.8fr",
+                      padding: "14px 16px", gap: 8, alignItems: "center",
+                      borderTop: "2px solid rgba(255,255,255,0.1)",
+                      background: "rgba(139,92,246,0.04)",
+                    }}>
+                      <div style={{ fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.05em" }}>TOPLAM</div>
+                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#fff" }}>{accounting.summary.totalTenantSales.toLocaleString("tr-TR")}₺</div>
+                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#4ade80" }}>{(accounting.summary.totalTenantSales - accounting.summary.totalPendingPayments).toLocaleString("tr-TR")}₺</div>
+                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#facc15" }}>{accounting.summary.totalPendingPayments.toLocaleString("tr-TR")}₺</div>
+                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#f59e0b" }}>{accounting.summary.totalCommissionEarnings.toLocaleString("tr-TR")}₺</div>
+                      <div></div>
+                    </div>
+                  </div>
+
+                  {/* Kira Durumu */}
+                  {accounting.tenants.filter(t => t.isOverdue).length > 0 && (
+                    <div style={{ marginTop: 28 }}>
+                      <h3 style={{ fontSize: 14, fontWeight: 800, color: "#f87171", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
+                        <AlertTriangle size={16} /> Ödeme Gecikmiş Tenantlar
+                      </h3>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                        {accounting.tenants.filter(t => t.isOverdue).map(t => (
+                          <div key={t.id} style={{
+                            display: "flex", justifyContent: "space-between", alignItems: "center",
+                            padding: "12px 16px", background: "rgba(248,113,113,0.05)",
+                            border: "1px solid rgba(248,113,113,0.15)",
+                          }}>
+                            <div>
+                              <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{t.businessName}</div>
+                              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
+                                Son ödeme: {t.lastPaymentAt ? new Date(t.lastPaymentAt).toLocaleDateString("tr-TR") : "hiç"} · 
+                                Gecikme: {t.nextPaymentAt ? `${Math.ceil((new Date() - new Date(t.nextPaymentAt)) / (1000*60*60*24))} gün` : "—"} ·
+                                Kart: {t.hasCard ? "Kayıtlı" : "Yok"}
+                              </div>
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <span style={{ fontSize: 12, fontWeight: 700, color: "#f87171" }}>
+                                {t.failedPayments > 0 ? `${t.failedPayments} başarısız` : "Ödeme bekleniyor"}
+                              </span>
+                              <span style={{ fontSize: 13, fontWeight: 800, color: "#fff", background: "rgba(248,113,113,0.1)", padding: "4px 10px", border: "1px solid rgba(248,113,113,0.2)" }}>
+                                {(t.subscriptionFee / 100).toLocaleString("tr-TR")}₺
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : null}
             </>
           )}
 
