@@ -450,11 +450,14 @@ export async function impersonateTenant(tenantId) {
 
 /**
  * Muhasebe verilerini getir — Super Admin Finans Paneli
+ * SADECE PayTR kredi kartı (ONLINE) ödemeleri — Nakit/Manuel dahil değil
  */
 export async function getAccountingData() {
   if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
 
-  // 1. Tüm tenantlar + toplam gelir bilgileri
+  const PAYTR_FEE_RATE = 3.99; // PayTR komisyonu %3.99
+
+  // 1. Tüm tenant'lar + online ödemeli rezervasyonlar
   const tenants = await prisma.tenant.findMany({
     orderBy: { createdAt: "desc" },
     select: {
@@ -471,6 +474,7 @@ export async function getAccountingData() {
       commissionRate: true,
       subMerchantStatus: true,
       iban: true,
+      legalName: true,
       isFrozen: true,
       isActive: true,
       createdAt: true,
@@ -479,16 +483,16 @@ export async function getAccountingData() {
       reservations: {
         select: {
           id: true,
+          brideName: true,
           totalAmount: true,
           paidAmount: true,
           paymentStatus: true,
-          paymentPreference: true,
           status: true,
-          brideName: true,
           createdAt: true,
-          orderType: true,
+          paymentLogs: true,
           payments: {
-            select: { id: true, amount: true, method: true, createdAt: true }
+            where: { method: "ONLINE" }, // SADECE PayTR ödemeleri
+            select: { id: true, amount: true, method: true, note: true, createdAt: true }
           }
         },
         orderBy: { createdAt: "desc" },
@@ -496,77 +500,130 @@ export async function getAccountingData() {
     },
   });
 
-  // 2. Fiyatlandırma bilgisi
-  let config;
-  try { config = await prisma.platformConfig.findUnique({ where: { id: "main" } }); } catch { /* ignore */ }
-  const pricing = config?.pricing || { basic_monthly: 1499, basic_yearly: 14999, pro_monthly: 2999, pro_yearly: 29999 };
-
-  // 3. Verileri işle
   const now = new Date();
-  const thisMonth = now.getMonth();
-  const thisYear = now.getFullYear();
+  const VALOR_DAYS = 15;
 
-  let totalPlatformRevenue = 0; // Toplam platform abonelik geliri (tahmini)
-  let totalTenantSales = 0;
-  let totalCommissionEarnings = 0;
-  let totalPendingPayments = 0;
-  let overdueCount = 0;
-  let activeSubscriptions = 0;
+  let platformTotals = {
+    totalOnlinePayments: 0,      // PayTR'dan geçen toplam
+    totalPaytrFee: 0,            // PayTR'nin aldığı %3.99
+    totalPlatformCommission: 0,  // Brüt platform komisyonu
+    totalNetPlatformEarning: 0,  // Net platform kazancı (komisyon - paytr fee)
+    totalTransferred: 0,         // Tenant'a aktarılan
+    totalPendingTransfer: 0,     // Henüz aktarılmamış (valör bekleyen)
+    totalInValor: 0,             // 15 gün valör içinde olan
+    totalPendingCollection: 0,   // Henüz ödenmemiş (online ödeme beklenen) tutarlar
+  };
 
-  const tenantFinance = tenants.map(t => {
-    // Tenant satış hesabı
-    let sales = 0;
-    let collected = 0;
-    let pending = 0;
-    let monthlySales = 0;
-    let monthlyCollected = 0;
-    let reservationCount = t.reservations.length;
-    let paidReservations = 0;
-    let unpaidReservations = 0;
-    let partialReservations = 0;
+  const tenantFinance = [];
 
-    t.reservations.forEach(r => {
-      const total = parseFloat(String(r.totalAmount || "0").replace(/[^\d.-]/g, "")) || 0;
-      const paid = r.payments.reduce((sum, p) => sum + (p.amount || 0), 0);
-      sales += total;
-      collected += paid;
-
-      if (r.paymentStatus === "PAID") paidReservations++;
-      else if (r.paymentStatus === "PARTIAL") partialReservations++;
-      else unpaidReservations++;
-
-      // Bu ayki satışlar
-      const rDate = new Date(r.createdAt);
-      if (rDate.getMonth() === thisMonth && rDate.getFullYear() === thisYear) {
-        monthlySales += total;
-        monthlyCollected += paid;
-      }
-    });
-
-    pending = sales - collected;
-    const commission = (collected * (t.commissionRate || 0)) / 100;
-
-    totalTenantSales += sales;
-    totalCommissionEarnings += commission;
-    totalPendingPayments += Math.max(0, pending);
-
-    // Abonelik durumu
-    const isSubscribed = t.plan !== "trial" && t.planExpiresAt && new Date(t.planExpiresAt) > now;
-    if (isSubscribed) activeSubscriptions++;
-
-    // Abonelik geliri tahmini (ayda bir kere ödeme)
-    let subscriptionFee = 0;
-    if (t.plan === "pro" || t.plan === "basic") {
-      const planKey = `${t.plan}_${t.selectedPlan || "monthly"}`;
-      subscriptionFee = pricing[planKey] || pricing[`${t.plan}_monthly`] || 0;
+  for (const t of tenants) {
+    // Sadece online ödeme olan rezervasyonları filtrele
+    const reservationsWithOnline = t.reservations.filter(r => r.payments.length > 0);
+    
+    if (reservationsWithOnline.length === 0 && t.reservations.length === 0) {
+      // Hiç rezervasyonu yok, atlayabiliriz ama listeye dahil edelim
     }
-    if (t.lastPaymentAt) totalPlatformRevenue += subscriptionFee;
 
-    // Ödeme gecikmiş mi?
-    const isOverdue = t.plan !== "trial" && t.nextPaymentAt && new Date(t.nextPaymentAt) < now && !t.isFrozen;
-    if (isOverdue) overdueCount++;
+    let tenantOnlineTotal = 0;
+    let tenantPaytrFee = 0;
+    let tenantGrossCommission = 0;
+    let tenantNetCommission = 0;
+    let tenantTransferred = 0;
+    let tenantInValor = 0;
+    let tenantPendingTransfer = 0;
+    
+    const commissionRate = t.commissionRate || 6;
+    const netPlatformRate = Math.max(0, commissionRate - PAYTR_FEE_RATE);
 
-    return {
+    // Her bir online ödeme detayı
+    const paymentDetails = [];
+
+    for (const r of t.reservations) {
+      // Toplam tutar
+      const totalAmount = parseFloat(
+        String(r.totalAmount || "0").replace(/\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "") || "0"
+      );
+
+      for (const p of r.payments) {
+        const amount = p.amount || 0;
+        const paytrFee = Math.round(amount * PAYTR_FEE_RATE) / 100;
+        const grossComm = Math.round(amount * commissionRate) / 100;
+        const netComm = Math.round(amount * netPlatformRate) / 100;
+        const tenantShare = amount - grossComm;
+        const paymentDate = new Date(p.createdAt);
+
+        // Transfer durumu kontrol
+        const transferLog = (r.paymentLogs || []).find(
+          log => log.type === "PLATFORM_TRANSFER"
+        );
+        const isTransferred = !!transferLog;
+        const transferCompleted = transferLog?.transferCompleted === true;
+
+        // Valör hesapla
+        const valorEndDate = new Date(paymentDate);
+        valorEndDate.setDate(valorEndDate.getDate() + VALOR_DAYS);
+        const isInValor = now < valorEndDate && !isTransferred;
+        const valorDaysLeft = isInValor ? Math.ceil((valorEndDate - now) / (1000*60*60*24)) : 0;
+        const isPendingTransfer = !isInValor && !isTransferred;
+
+        tenantOnlineTotal += amount;
+        tenantPaytrFee += paytrFee;
+        tenantGrossCommission += grossComm;
+        tenantNetCommission += netComm;
+
+        if (isTransferred) tenantTransferred += tenantShare;
+        else if (isInValor) tenantInValor += tenantShare;
+        else tenantPendingTransfer += tenantShare;
+
+        paymentDetails.push({
+          paymentId: p.id,
+          reservationId: r.id,
+          customerName: r.brideName,
+          amount,
+          paytrFee: Math.round(paytrFee * 100) / 100,
+          grossCommission: Math.round(grossComm * 100) / 100,
+          netCommission: Math.round(netComm * 100) / 100,
+          tenantShare: Math.round(tenantShare * 100) / 100,
+          date: p.createdAt,
+          isTransferred,
+          transferCompleted,
+          isInValor,
+          valorDaysLeft,
+          isPendingTransfer,
+          transId: transferLog?.transId || null,
+          merchantOid: p.note?.match(/PayTR online ödeme: (.+)/)?.[1] || null,
+        });
+      }
+
+      // Ödenmemiş tutar (online ödeme beklenen)
+      if (r.payments.length === 0 && totalAmount > 0 && r.paymentStatus !== "PAID") {
+        // Henüz online ödeme alınmamış
+      }
+    }
+
+    // Tenant'ın toplam alacağı (online ödenmemiş)
+    let tenantPendingCollection = 0;
+    for (const r of t.reservations) {
+      const totalAmount = parseFloat(
+        String(r.totalAmount || "0").replace(/\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "") || "0"
+      );
+      const onlinePaid = r.payments.reduce((s, p) => s + (p.amount || 0), 0);
+      if (totalAmount > onlinePaid && r.paymentStatus !== "PAID") {
+        tenantPendingCollection += (totalAmount - onlinePaid);
+      }
+    }
+
+    // Platform toplamlarına ekle
+    platformTotals.totalOnlinePayments += tenantOnlineTotal;
+    platformTotals.totalPaytrFee += tenantPaytrFee;
+    platformTotals.totalPlatformCommission += tenantGrossCommission;
+    platformTotals.totalNetPlatformEarning += tenantNetCommission;
+    platformTotals.totalTransferred += tenantTransferred;
+    platformTotals.totalInValor += tenantInValor;
+    platformTotals.totalPendingTransfer += tenantPendingTransfer;
+    platformTotals.totalPendingCollection += tenantPendingCollection;
+
+    tenantFinance.push({
       id: t.id,
       slug: t.slug,
       businessName: t.businessName,
@@ -574,49 +631,42 @@ export async function getAccountingData() {
       ownerEmail: t.ownerEmail,
       plan: t.plan,
       selectedPlan: t.selectedPlan,
-      commissionRate: t.commissionRate,
+      commissionRate,
+      netPlatformRate: Math.round(netPlatformRate * 100) / 100,
       subMerchantStatus: t.subMerchantStatus,
       iban: t.iban,
+      legalName: t.legalName,
       isFrozen: t.isFrozen,
       isActive: t.isActive,
       hasCard: !!t.paytrCtoken,
       failedPayments: t.failedPayments,
       lastPaymentAt: t.lastPaymentAt,
       nextPaymentAt: t.nextPaymentAt,
-      isOverdue,
-      subscriptionFee,
-      // Satış verileri
-      totalSales: Math.round(sales),
-      totalCollected: Math.round(collected),
-      totalPending: Math.round(Math.max(0, pending)),
-      monthlySales: Math.round(monthlySales),
-      monthlyCollected: Math.round(monthlyCollected),
-      commissionAmount: Math.round(commission),
-      reservationCount,
-      paidReservations,
-      unpaidReservations,
-      partialReservations,
-    };
-  });
+      // Finansal
+      onlineTotal: Math.round(tenantOnlineTotal * 100) / 100,
+      paytrFee: Math.round(tenantPaytrFee * 100) / 100,
+      grossCommission: Math.round(tenantGrossCommission * 100) / 100,
+      netCommission: Math.round(tenantNetCommission * 100) / 100,
+      transferred: Math.round(tenantTransferred * 100) / 100,
+      inValor: Math.round(tenantInValor * 100) / 100,
+      pendingTransfer: Math.round(tenantPendingTransfer * 100) / 100,
+      pendingCollection: Math.round(tenantPendingCollection * 100) / 100,
+      onlinePaymentCount: paymentDetails.length,
+      reservationCount: t.reservations.length,
+      // Detaylı ödemeler
+      payments: paymentDetails,
+    });
+  }
 
-  // Aylık gelir tahmini (aktif aboneliklerden)
-  const monthlyRecurring = tenantFinance
-    .filter(t => t.plan !== "trial" && !t.isFrozen)
-    .reduce((sum, t) => sum + t.subscriptionFee, 0);
+  // Yuvarlama
+  for (const k of Object.keys(platformTotals)) {
+    platformTotals[k] = Math.round(platformTotals[k] * 100) / 100;
+  }
 
   return {
-    summary: {
-      totalTenants: tenants.length,
-      activeSubscriptions,
-      overdueCount,
-      monthlyRecurringRevenue: monthlyRecurring,
-      totalPlatformRevenue: Math.round(totalPlatformRevenue),
-      totalTenantSales: Math.round(totalTenantSales),
-      totalCommissionEarnings: Math.round(totalCommissionEarnings),
-      totalPendingPayments: Math.round(totalPendingPayments),
-    },
+    paytrFeeRate: PAYTR_FEE_RATE,
+    summary: platformTotals,
     tenants: tenantFinance,
-    pricing,
   };
 }
 

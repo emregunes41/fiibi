@@ -341,7 +341,7 @@ export default function SuperAdminClient() {
           {tab === "accounting" && (
             <>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                <h2 style={sectionTitle}>Muhasebe & Finans</h2>
+                <h2 style={sectionTitle}>Muhasebe & Finans (Sadece Online Ödemeler)</h2>
                 <button onClick={loadAccounting} disabled={accountingLoading} style={{ ...iconBtn, opacity: accountingLoading ? 0.5 : 1 }}>
                   <RefreshCw size={15} style={{ animation: accountingLoading ? "spin 1s linear infinite" : "none" }} />
                 </button>
@@ -357,12 +357,12 @@ export default function SuperAdminClient() {
                   {/* Özet Kartlar */}
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 28 }}>
                     {[
-                      { label: "Aylık Tekrarlayan Gelir", value: `${(accounting.summary.monthlyRecurringRevenue / 100).toLocaleString("tr-TR")}₺`, sub: "MRR", icon: TrendingUp, color: "#4ade80", gradient: "rgba(74,222,128,0.06)" },
-                      { label: "Toplam Komisyon Geliri", value: `${accounting.summary.totalCommissionEarnings.toLocaleString("tr-TR")}₺`, sub: "Tahsil edilen", icon: PiggyBank, color: "#f59e0b", gradient: "rgba(245,158,11,0.06)" },
-                      { label: "Toplam Tenant Satışları", value: `${accounting.summary.totalTenantSales.toLocaleString("tr-TR")}₺`, sub: `${accounting.summary.totalTenants} işletme`, icon: Receipt, color: "#8b5cf6", gradient: "rgba(139,92,246,0.06)" },
-                      { label: "Ödeme Bekleyen", value: `${accounting.summary.totalPendingPayments.toLocaleString("tr-TR")}₺`, sub: "Açık bakiye", icon: Clock, color: "#facc15", gradient: "rgba(250,204,21,0.06)" },
-                      { label: "Aktif Abonelik", value: accounting.summary.activeSubscriptions, sub: `/ ${accounting.summary.totalTenants} toplam`, icon: CreditCard, color: "#38bdf8", gradient: "rgba(56,189,248,0.06)" },
-                      { label: "Gecikmiş Ödeme", value: accounting.summary.overdueCount, sub: "Takip gerekli", icon: AlertTriangle, color: accounting.summary.overdueCount > 0 ? "#f87171" : "rgba(255,255,255,0.3)", gradient: accounting.summary.overdueCount > 0 ? "rgba(248,113,113,0.06)" : "rgba(255,255,255,0.02)" },
+                      { label: "Toplam Online Satış", value: `${accounting.summary.totalOnlinePayments.toLocaleString("tr-TR")}₺`, sub: "Tüm işletmeler (PayTR)", icon: Receipt, color: "#8b5cf6", gradient: "rgba(139,92,246,0.06)" },
+                      { label: "PayTR Kesintisi", value: `${accounting.summary.totalPaytrFee.toLocaleString("tr-TR")}₺`, sub: `%${accounting.paytrFeeRate} komisyon`, icon: ArrowDownRight, color: "#f87171", gradient: "rgba(248,113,113,0.06)" },
+                      { label: "Net Platform Kazancı", value: `${accounting.summary.totalNetPlatformEarning.toLocaleString("tr-TR")}₺`, sub: "PayTR kesintisi sonrası", icon: TrendingUp, color: "#4ade80", gradient: "rgba(74,222,128,0.06)" },
+                      { label: "Valörde Bekleyen (Tenant)", value: `${accounting.summary.totalInValor.toLocaleString("tr-TR")}₺`, sub: "15 gün içinde aktarılacak", icon: Clock, color: "#facc15", gradient: "rgba(250,204,21,0.06)" },
+                      { label: "Toplam Aktarılan", value: `${accounting.summary.totalTransferred.toLocaleString("tr-TR")}₺`, sub: "İşletmelere ödenen", icon: CheckCircle2, color: "#38bdf8", gradient: "rgba(56,189,248,0.06)" },
+                      { label: "Ödeme Bekleyen Müşteriler", value: `${accounting.summary.totalPendingCollection.toLocaleString("tr-TR")}₺`, sub: "Online tahsilat bekleyen tutar", icon: AlertTriangle, color: "rgba(255,255,255,0.3)", gradient: "rgba(255,255,255,0.02)" },
                     ].map((c, i) => (
                       <div key={i} style={{ background: c.gradient, border: "1px solid rgba(255,255,255,0.06)", padding: "18px 20px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
@@ -380,10 +380,9 @@ export default function SuperAdminClient() {
                     <Filter size={14} style={{ color: "rgba(255,255,255,0.3)" }} />
                     {[
                       { id: "all", label: "Tümü" },
-                      { id: "overdue", label: "Gecikmiş" },
-                      { id: "active", label: "Aktif Abonelik" },
-                      { id: "frozen", label: "Dondurulmuş" },
-                      { id: "hasSales", label: "Satışı Var" },
+                      { id: "hasSales", label: "Online Satışı Var" },
+                      { id: "hasValor", label: "Valörde Bekleyen Var" },
+                      { id: "pendingCollection", label: "Tahsilat Bekleyen" },
                     ].map(f => (
                       <button key={f.id} onClick={() => setAccountingFilter(f.id)} style={{
                         padding: "6px 14px", fontSize: 11, fontWeight: 600, cursor: "pointer",
@@ -399,15 +398,15 @@ export default function SuperAdminClient() {
                   <div style={{ border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
                     {/* Header */}
                     <div style={{
-                      display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 0.8fr",
+                      display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr 1fr 1fr",
                       padding: "12px 16px", background: "rgba(255,255,255,0.03)",
                       borderBottom: "1px solid rgba(255,255,255,0.06)",
                       fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
                       color: "rgba(255,255,255,0.4)", gap: 8,
                     }}>
                       <span>İşletme</span>
-                      {["totalSales", "totalCollected", "totalPending", "commissionAmount", "monthlySales"].map(field => {
-                        const labels = { totalSales: "Toplam Satış", totalCollected: "Tahsilat", totalPending: "Bekleyen", commissionAmount: "Komisyon", monthlySales: "Bu Ay" };
+                      {["onlineTotal", "netCommission", "inValor", "transferred", "pendingCollection"].map(field => {
+                        const labels = { onlineTotal: "Toplam Online", netCommission: "Platform Net", inValor: "Valörde Bekleyen", transferred: "Aktarılan", pendingCollection: "Ödeme Bekleyen" };
                         const isActive = accountingSort.field === field;
                         return (
                           <button key={field} onClick={() => setAccountingSort(prev => ({ field, dir: prev.field === field && prev.dir === "desc" ? "asc" : "desc" }))} style={{
@@ -426,14 +425,16 @@ export default function SuperAdminClient() {
                     {/* Rows */}
                     {(() => {
                       let filtered = [...accounting.tenants];
-                      if (accountingFilter === "overdue") filtered = filtered.filter(t => t.isOverdue);
-                      else if (accountingFilter === "active") filtered = filtered.filter(t => t.plan !== "trial" && !t.isFrozen);
-                      else if (accountingFilter === "frozen") filtered = filtered.filter(t => t.isFrozen);
-                      else if (accountingFilter === "hasSales") filtered = filtered.filter(t => t.totalSales > 0);
+                      if (accountingFilter === "hasSales") filtered = filtered.filter(t => t.onlineTotal > 0);
+                      else if (accountingFilter === "hasValor") filtered = filtered.filter(t => t.inValor > 0);
+                      else if (accountingFilter === "pendingCollection") filtered = filtered.filter(t => t.pendingCollection > 0);
+
+                      // Update default sort field to avoid errors with new field names
+                      const sortField = ["onlineTotal", "netCommission", "inValor", "transferred", "pendingCollection"].includes(accountingSort.field) ? accountingSort.field : "onlineTotal";
 
                       filtered.sort((a, b) => {
                         const dir = accountingSort.dir === "desc" ? -1 : 1;
-                        return (a[accountingSort.field] - b[accountingSort.field]) * dir;
+                        return (a[sortField] - b[sortField]) * dir;
                       });
 
                       if (filtered.length === 0) return (
@@ -441,47 +442,43 @@ export default function SuperAdminClient() {
                       );
 
                       return filtered.map(t => {
-                        const planBadge = { trial: { c: "#facc15", bg: "rgba(250,204,21,0.08)" }, basic: { c: "#8b5cf6", bg: "rgba(139,92,246,0.08)" }, pro: { c: "#f59e0b", bg: "rgba(245,158,11,0.08)" } }[t.plan] || { c: "#888", bg: "rgba(255,255,255,0.03)" };
                         return (
                           <div key={t.id} style={{
-                            display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 0.8fr",
+                            display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr 1fr 1fr",
                             padding: "14px 16px", gap: 8, alignItems: "center",
                             borderBottom: "1px solid rgba(255,255,255,0.04)",
-                            background: t.isOverdue ? "rgba(248,113,113,0.03)" : t.isFrozen ? "rgba(56,189,248,0.02)" : "transparent",
+                            background: "transparent",
                             transition: "background 0.15s",
                           }}>
                             {/* İşletme */}
                             <div style={{ minWidth: 0 }}>
                               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
                                 <span style={{ fontSize: 13, fontWeight: 700, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.businessName}</span>
-                                {t.isOverdue && <AlertTriangle size={12} style={{ color: "#f87171", flexShrink: 0 }} />}
-                                {t.isFrozen && <Snowflake size={12} style={{ color: "#38bdf8", flexShrink: 0 }} />}
                               </div>
                               <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 10, color: "rgba(255,255,255,0.3)" }}>
-                                <span style={{ background: planBadge.bg, color: planBadge.c, padding: "1px 6px", fontWeight: 700, fontSize: 9, textTransform: "uppercase" }}>{t.plan}</span>
-                                <span>{t.reservationCount} rez</span>
-                                <span>%{t.commissionRate}</span>
+                                <span>{t.onlinePaymentCount} ödeme</span>
+                                <span>Komisyon: %{t.commissionRate} (Net: %{t.netPlatformRate})</span>
                               </div>
                             </div>
-                            {/* Toplam Satış */}
+                            {/* Toplam Online Satış */}
                             <div style={{ textAlign: "right" }}>
-                              <div style={{ fontSize: 14, fontWeight: 700, color: t.totalSales > 0 ? "#fff" : "rgba(255,255,255,0.2)" }}>{t.totalSales > 0 ? `${t.totalSales.toLocaleString("tr-TR")}₺` : "—"}</div>
+                              <div style={{ fontSize: 14, fontWeight: 700, color: t.onlineTotal > 0 ? "#fff" : "rgba(255,255,255,0.2)" }}>{t.onlineTotal > 0 ? `${t.onlineTotal.toLocaleString("tr-TR")}₺` : "—"}</div>
                             </div>
-                            {/* Tahsilat */}
+                            {/* Platform Net Kazancı */}
                             <div style={{ textAlign: "right" }}>
-                              <div style={{ fontSize: 14, fontWeight: 600, color: t.totalCollected > 0 ? "#4ade80" : "rgba(255,255,255,0.2)" }}>{t.totalCollected > 0 ? `${t.totalCollected.toLocaleString("tr-TR")}₺` : "—"}</div>
+                              <div style={{ fontSize: 14, fontWeight: 600, color: t.netCommission > 0 ? "#4ade80" : "rgba(255,255,255,0.2)" }}>{t.netCommission > 0 ? `${t.netCommission.toLocaleString("tr-TR")}₺` : "—"}</div>
                             </div>
-                            {/* Bekleyen */}
+                            {/* Valörde */}
                             <div style={{ textAlign: "right" }}>
-                              <div style={{ fontSize: 14, fontWeight: 600, color: t.totalPending > 0 ? "#facc15" : "rgba(255,255,255,0.15)" }}>{t.totalPending > 0 ? `${t.totalPending.toLocaleString("tr-TR")}₺` : "—"}</div>
+                              <div style={{ fontSize: 14, fontWeight: 600, color: t.inValor > 0 ? "#facc15" : "rgba(255,255,255,0.15)" }}>{t.inValor > 0 ? `${t.inValor.toLocaleString("tr-TR")}₺` : "—"}</div>
                             </div>
-                            {/* Komisyon */}
+                            {/* Aktarılan */}
                             <div style={{ textAlign: "right" }}>
-                              <div style={{ fontSize: 14, fontWeight: 600, color: t.commissionAmount > 0 ? "#f59e0b" : "rgba(255,255,255,0.15)" }}>{t.commissionAmount > 0 ? `${t.commissionAmount.toLocaleString("tr-TR")}₺` : "—"}</div>
+                              <div style={{ fontSize: 14, fontWeight: 600, color: t.transferred > 0 ? "#38bdf8" : "rgba(255,255,255,0.15)" }}>{t.transferred > 0 ? `${t.transferred.toLocaleString("tr-TR")}₺` : "—"}</div>
                             </div>
-                            {/* Bu Ay */}
+                            {/* Ödeme Bekleyen */}
                             <div style={{ textAlign: "right" }}>
-                              <div style={{ fontSize: 13, fontWeight: 600, color: t.monthlySales > 0 ? "#38bdf8" : "rgba(255,255,255,0.12)" }}>{t.monthlySales > 0 ? `${t.monthlySales.toLocaleString("tr-TR")}₺` : "—"}</div>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: t.pendingCollection > 0 ? "#f87171" : "rgba(255,255,255,0.12)" }}>{t.pendingCollection > 0 ? `${t.pendingCollection.toLocaleString("tr-TR")}₺` : "—"}</div>
                             </div>
                           </div>
                         );
@@ -490,54 +487,19 @@ export default function SuperAdminClient() {
 
                     {/* Footer Totals */}
                     <div style={{
-                      display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 0.8fr",
+                      display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr 1fr 1fr",
                       padding: "14px 16px", gap: 8, alignItems: "center",
                       borderTop: "2px solid rgba(255,255,255,0.1)",
                       background: "rgba(139,92,246,0.04)",
                     }}>
                       <div style={{ fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.05em" }}>TOPLAM</div>
-                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#fff" }}>{accounting.summary.totalTenantSales.toLocaleString("tr-TR")}₺</div>
-                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#4ade80" }}>{(accounting.summary.totalTenantSales - accounting.summary.totalPendingPayments).toLocaleString("tr-TR")}₺</div>
-                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#facc15" }}>{accounting.summary.totalPendingPayments.toLocaleString("tr-TR")}₺</div>
-                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#f59e0b" }}>{accounting.summary.totalCommissionEarnings.toLocaleString("tr-TR")}₺</div>
-                      <div></div>
+                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#fff" }}>{accounting.summary.totalOnlinePayments.toLocaleString("tr-TR")}₺</div>
+                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#4ade80" }}>{accounting.summary.totalNetPlatformEarning.toLocaleString("tr-TR")}₺</div>
+                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#facc15" }}>{accounting.summary.totalInValor.toLocaleString("tr-TR")}₺</div>
+                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#38bdf8" }}>{accounting.summary.totalTransferred.toLocaleString("tr-TR")}₺</div>
+                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#f87171" }}>{accounting.summary.totalPendingCollection.toLocaleString("tr-TR")}₺</div>
                     </div>
                   </div>
-
-                  {/* Kira Durumu */}
-                  {accounting.tenants.filter(t => t.isOverdue).length > 0 && (
-                    <div style={{ marginTop: 28 }}>
-                      <h3 style={{ fontSize: 14, fontWeight: 800, color: "#f87171", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
-                        <AlertTriangle size={16} /> Ödeme Gecikmiş Tenantlar
-                      </h3>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                        {accounting.tenants.filter(t => t.isOverdue).map(t => (
-                          <div key={t.id} style={{
-                            display: "flex", justifyContent: "space-between", alignItems: "center",
-                            padding: "12px 16px", background: "rgba(248,113,113,0.05)",
-                            border: "1px solid rgba(248,113,113,0.15)",
-                          }}>
-                            <div>
-                              <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{t.businessName}</div>
-                              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
-                                Son ödeme: {t.lastPaymentAt ? new Date(t.lastPaymentAt).toLocaleDateString("tr-TR") : "hiç"} · 
-                                Gecikme: {t.nextPaymentAt ? `${Math.ceil((new Date() - new Date(t.nextPaymentAt)) / (1000*60*60*24))} gün` : "—"} ·
-                                Kart: {t.hasCard ? "Kayıtlı" : "Yok"}
-                              </div>
-                            </div>
-                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <span style={{ fontSize: 12, fontWeight: 700, color: "#f87171" }}>
-                                {t.failedPayments > 0 ? `${t.failedPayments} başarısız` : "Ödeme bekleniyor"}
-                              </span>
-                              <span style={{ fontSize: 13, fontWeight: 800, color: "#fff", background: "rgba(248,113,113,0.1)", padding: "4px 10px", border: "1px solid rgba(248,113,113,0.2)" }}>
-                                {(t.subscriptionFee / 100).toLocaleString("tr-TR")}₺
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </>
               ) : null}
             </>
