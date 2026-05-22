@@ -1,11 +1,16 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getCurrentAdminTenantId } from "@/lib/tenant";
+import { getCurrentTenant } from "@/lib/tenant";
 import { revalidatePath } from "next/cache";
 
+async function getTenantId() {
+  const tenant = await getCurrentTenant();
+  return tenant?.id || null;
+}
+
 export async function getBioLinks() {
-  const tenantId = await getCurrentAdminTenantId();
+  const tenantId = await getTenantId();
   if (!tenantId) return [];
   try {
     return await prisma.bioLink.findMany({
@@ -19,7 +24,7 @@ export async function getBioLinks() {
 }
 
 export async function createBioLink(data) {
-  const tenantId = await getCurrentAdminTenantId();
+  const tenantId = await getTenantId();
   if (!tenantId) throw new Error("Yetkisiz işlem");
 
   try {
@@ -44,7 +49,7 @@ export async function createBioLink(data) {
 }
 
 export async function updateBioLink(id, data) {
-  const tenantId = await getCurrentAdminTenantId();
+  const tenantId = await getTenantId();
   if (!tenantId) throw new Error("Yetkisiz işlem");
 
   try {
@@ -67,7 +72,7 @@ export async function updateBioLink(id, data) {
 }
 
 export async function deleteBioLink(id) {
-  const tenantId = await getCurrentAdminTenantId();
+  const tenantId = await getTenantId();
   if (!tenantId) throw new Error("Yetkisiz işlem");
 
   try {
@@ -84,7 +89,7 @@ export async function deleteBioLink(id) {
 }
 
 export async function reorderBioLinks(links) {
-  const tenantId = await getCurrentAdminTenantId();
+  const tenantId = await getTenantId();
   if (!tenantId) throw new Error("Yetkisiz işlem");
 
   try {
