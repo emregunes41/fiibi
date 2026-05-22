@@ -89,8 +89,13 @@ export async function POST(req) {
     const host = headersList.get("host") || "fiibi.co";
     const protocol = host.includes("localhost") ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;
-    const okUrl = `${baseUrl}/admin/settings?tab=domain&status=success`;
-    const failUrl = `${baseUrl}/admin/settings?tab=domain&status=fail`;
+    
+    const platformDomain = process.env.PLATFORM_DOMAIN || "fiibi.co";
+    const platformProtocol = platformDomain.includes("localhost") ? "http" : "https";
+    const platformBaseUrl = `${platformProtocol}://${platformDomain}`;
+
+    const okUrl = `${platformBaseUrl}/api/paytr/redirect?status=success&returnTo=${encodeURIComponent(`${baseUrl}/admin/settings?tab=domain&status=success`)}`;
+    const failUrl = `${platformBaseUrl}/api/paytr/redirect?status=fail&returnTo=${encodeURIComponent(`${baseUrl}/admin/settings?tab=domain&status=fail`)}`;
 
     const formData = new URLSearchParams({
       merchant_id: params.merchant_id,

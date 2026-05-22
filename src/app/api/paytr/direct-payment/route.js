@@ -52,8 +52,13 @@ export async function POST(request) {
     const host = request.headers.get("host") || "fiibi.co";
     const protocol = host.includes("localhost") ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;
-    const merchant_ok_url = `${baseUrl}/admin/subscription?payment=success`;
-    const merchant_fail_url = `${baseUrl}/admin/subscription?payment=failed`;
+
+    const platformDomain = process.env.PLATFORM_DOMAIN || "fiibi.co";
+    const platformProtocol = platformDomain.includes("localhost") ? "http" : "https";
+    const platformBaseUrl = `${platformProtocol}://${platformDomain}`;
+
+    const merchant_ok_url = `${platformBaseUrl}/api/paytr/redirect?status=success&returnTo=${encodeURIComponent(`${baseUrl}/admin/subscription?payment=success`)}`;
+    const merchant_fail_url = `${platformBaseUrl}/api/paytr/redirect?status=fail&returnTo=${encodeURIComponent(`${baseUrl}/admin/subscription?payment=failed`)}`;
 
     const user_basket = Buffer.from(JSON.stringify([
       ["Fiibi Pro Abonelik", (planPriceKurus / 100).toFixed(2), 1],

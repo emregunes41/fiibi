@@ -30,8 +30,12 @@ export async function POST(request) {
     const protocol = host.includes("localhost") ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;
 
-    const merchant_ok_url = `${baseUrl}/?payment=success`;
-    const merchant_fail_url = `${baseUrl}/?payment=fail`;
+    const platformDomain = process.env.PLATFORM_DOMAIN || "fiibi.co";
+    const platformProtocol = platformDomain.includes("localhost") ? "http" : "https";
+    const platformBaseUrl = `${platformProtocol}://${platformDomain}`;
+
+    const merchant_ok_url = `${platformBaseUrl}/api/paytr/redirect?status=success&returnTo=${encodeURIComponent(`${baseUrl}/?payment=success`)}`;
+    const merchant_fail_url = `${platformBaseUrl}/api/paytr/redirect?status=fail&returnTo=${encodeURIComponent(`${baseUrl}/?payment=fail`)}`;
 
     const user_basket = Buffer.from(JSON.stringify([["Fiibi Test Odeme", "10.00", 1]])).toString("base64");
     const currency = "TL";

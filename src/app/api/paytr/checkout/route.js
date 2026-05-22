@@ -79,6 +79,15 @@ export async function POST(req) {
     const protocol = host.includes("localhost") ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;
 
+    const platformDomain = process.env.PLATFORM_DOMAIN || "fiibi.co";
+    const platformProtocol = platformDomain.includes("localhost") ? "http" : "https";
+    const platformBaseUrl = `${platformProtocol}://${platformDomain}`;
+
+    // PayTR, ok_url ve fail_url'nin kayıtlı domain ile aynı olmasını ister.
+    // Bu yüzden önce ana domaine (fiibi.co) gidip, oradan asıl custom domaine geri yönlendiriyoruz.
+    const okUrl = `${platformBaseUrl}/api/paytr/redirect?status=success&returnTo=${encodeURIComponent(`${baseUrl}/profile`)}`;
+    const failUrl = `${platformBaseUrl}/api/paytr/redirect?status=fail&returnTo=${encodeURIComponent(`${baseUrl}/profile`)}`;
+
     const formData = new URLSearchParams();
     formData.append("merchant_id", merchant_id);
     formData.append("user_ip", params.user_ip);
@@ -93,8 +102,8 @@ export async function POST(req) {
     formData.append("user_name", user_name || "Müşteri");
     formData.append("user_address", user_address || "Türkiye");
     formData.append("user_phone", user_phone || "05000000000");
-    formData.append("merchant_ok_url", `${baseUrl}/profile`);
-    formData.append("merchant_fail_url", `${baseUrl}/profile`);
+    formData.append("merchant_ok_url", okUrl);
+    formData.append("merchant_fail_url", failUrl);
     formData.append("timeout_limit", "30");
     formData.append("currency", params.currency);
     formData.append("test_mode", params.test_mode);
