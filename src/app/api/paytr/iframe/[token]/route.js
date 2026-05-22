@@ -18,12 +18,12 @@ export async function GET(req, context) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Güvenli Ödeme</title>
         <style>
-          body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
-          iframe { width: 100%; height: 100%; border: none; }
+          body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: auto; background: transparent; }
+          iframe { width: 100%; height: 100%; border: none; min-height: 700px; }
         </style>
       </head>
       <body>
-        <iframe src="https://www.paytr.com/odeme/guvenli/${token}" id="paytriframe" frameborder="0" scrolling="no"></iframe>
+        <iframe src="https://www.paytr.com/odeme/guvenli/${token}" id="paytriframe" frameborder="0" scrolling="auto"></iframe>
         <script>
           window.addEventListener('message', function(event) {
             // Forward PayTR iframe resize and other messages to the top parent

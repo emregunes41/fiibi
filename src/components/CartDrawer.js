@@ -977,7 +977,7 @@ export default function CartDrawer() {
                       <iframe
                         id="paytriframe_drawer"
                         src={iframeToken.startsWith("http") ? iframeToken : `https://fiibi.co/api/paytr/iframe/${iframeToken}`}
-                        style={{ width: "100%", height: 600, border: "none" }}
+                        style={{ width: "100%", height: 700, minHeight: 700, border: "none" }}
                         frameBorder="0"
                         scrolling="yes"
                       />
