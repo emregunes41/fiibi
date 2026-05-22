@@ -20,6 +20,8 @@ import { getServiceAgreement, getDistanceSalesContract, getPreliminaryInfoForm, 
 import { getPlanLimits, hasFeature } from "@/lib/plan-limits";
 import MembersList from "../components/MembersList";
 import PostsManager from "./PostsManager";
+import BioLinksManager from "./BioLinksManager";
+import { getBioLinks } from "../biolinks-actions";
 
 
 const inp = {
@@ -74,7 +76,8 @@ const SUB_TABS = {
     { id: "banner", label: "Banner'lar" },
     { id: "reels", label: "Instagram Reels" },
     { id: "portfolio", label: "Portfolyo" },
-    { id: "blog", label: "Blog & Yazılar" }
+    { id: "blog", label: "Blog & Yazılar" },
+    { id: "biolinks", label: "Bio Linkleri" }
   ],
   sistem: [
     { id: "odeme", label: "Ödeme" },
@@ -136,6 +139,9 @@ export default function SettingsPage() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [portfolioUploading, setPortfolioUploading] = useState(false);
 
+  // Bio Links
+  const [bioLinks, setBioLinks] = useState([]);
+
   // Sub-Merchant
   const [smForm, setSmForm] = useState({ legalName: "", legalType: "personal", taxId: "", taxOffice: "", iban: "", legalAddress: "", taxPlateUrl: "", sellerAgreementAccepted: false });
   const [smSaving, setSmSaving] = useState(false);
@@ -186,6 +192,7 @@ export default function SettingsPage() {
     getBanners().then(setBanners);
     getContentBlocks().then(setContentBlocks);
     getPortfolioCategories().then(res => setPortfolioCategories(res?.categories || []));
+    getBioLinks().then(setBioLinks);
     // Load sub-merchant info
     getSubMerchantInfo().then((info) => {
       if (info && !info.error) {
@@ -588,6 +595,13 @@ export default function SettingsPage() {
         {activeTab === "icerik" && subTab === "blog" && (
           <div style={sectionCard}>
             <PostsManager />
+          </div>
+        )}
+
+        {/* BioLinks Manager */}
+        {activeTab === "icerik" && subTab === "biolinks" && (
+          <div style={sectionCard}>
+            <BioLinksManager initialLinks={bioLinks} />
           </div>
         )}
 
