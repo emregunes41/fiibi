@@ -119,7 +119,15 @@ export async function POST(req) {
       body: formData,
     });
 
-    const result = await response.json();
+    const responseText = await response.text();
+    let result;
+    try {
+      result = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error("PayTR Geçersiz Yanıt (JSON değil):", responseText);
+      return NextResponse.json({ error: "Ödeme altyapısından geçersiz yanıt alındı. Sistem yöneticisiyle iletişime geçin." }, { status: 502 });
+    }
+
     console.log("PayTR Response:", result);
 
     if (result.status === "success") {
