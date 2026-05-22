@@ -36,11 +36,20 @@ export default function PaymentSection({ reservation, compactMode = false, allow
   const pct = currentTotalAmount > 0 ? Math.min(100, (totalPaid / currentTotalAmount) * 100) : 0;
   const isPaid = totalPaid >= currentTotalAmount && currentTotalAmount > 0;
 
-  // Make sure payAmount stays updated with full amount if mode is "full"
   useEffect(() => {
     if (paymentMode === "full") {
       setPayAmount(currentRemaining.toString());
     }
+
+    const handleMessage = (e) => {
+      if (typeof e.data === 'string' && e.data.startsWith('paytr_')) {
+        const height = e.data.split('_')[1];
+        const iframe = document.getElementById('paytriframe_profile');
+        if (iframe && height) iframe.style.height = height + 'px';
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
   }, [paymentMode, currentRemaining]);
 
   const startPayment = async () => {
@@ -186,9 +195,11 @@ export default function PaymentSection({ reservation, compactMode = false, allow
               </button>
             </div>
             <iframe
+              id="paytriframe_profile"
               src={iframeToken.startsWith("http") ? iframeToken : `https://fiibi.co/api/paytr/iframe/${iframeToken}`}
-              style={{ width: "100%", height: 460, border: "none" }}
+              style={{ width: "100%", height: 600, border: "none" }}
               frameBorder="0"
+              scrolling="yes"
             />
           </div>
         )}

@@ -77,6 +77,16 @@ export default function CartDrawer() {
       if (cfg?.contractText) setContractText(cfg.contractText);
     });
     getPackages().then(pkgs => setAllPackages(pkgs || []));
+
+    const handleMessage = (e) => {
+      if (typeof e.data === 'string' && e.data.startsWith('paytr_')) {
+        const height = e.data.split('_')[1];
+        const iframe = document.getElementById('paytriframe_drawer');
+        if (iframe && height) iframe.style.height = height + 'px';
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   const passwordsMatch = contactForm.password && contactForm.password.length >= 6 && contactForm.password === contactForm.passwordConfirm;
@@ -965,9 +975,11 @@ export default function CartDrawer() {
                     </div>
                     <div style={{ borderRadius: 0, overflow: "hidden", border: "1px solid rgba(0, 0, 0, 0.1)" }}>
                       <iframe
+                        id="paytriframe_drawer"
                         src={iframeToken.startsWith("http") ? iframeToken : `https://fiibi.co/api/paytr/iframe/${iframeToken}`}
-                        style={{ width: "100%", height: 460, border: "none" }}
+                        style={{ width: "100%", height: 600, border: "none" }}
                         frameBorder="0"
+                        scrolling="yes"
                       />
                     </div>
                     <button
