@@ -9,8 +9,10 @@ import { getBusinessType } from "@/lib/business-types";
 /* ─── Styles ─── */
 const card = (on) => ({
   padding: "20px",
-  border: `1px solid ${on ? "rgba(254, 254, 254, 0.8)" : "rgba(254, 254, 254, 0.3)"}`,
-  background: on ? "rgba(254, 254, 254, 0.5)" : "rgba(254, 254, 254, 0.2)",
+  border: `1px solid ${on ? "rgba(255, 255, 255, 0.9)" : "rgba(255, 255, 255, 0.4)"}`,
+  background: on ? "rgba(255, 255, 255, 0.85)" : "rgba(255, 255, 255, 0.15)",
+  backdropFilter: "blur(16px)",
+  WebkitBackdropFilter: "blur(16px)",
   cursor: "pointer",
   transition: "all 0.2s",
 });
@@ -278,9 +280,12 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                             padding: "12px 8px", border: "none", fontSize: "13px", fontWeight: 600,
                             cursor: isBooked ? "not-allowed" : "pointer",
                             transition: "all 0.15s",
-                            background: isSelected ? "rgba(254, 254, 254, 0.5)" : isBooked ? "rgba(255,0,0,0.05)" : "rgba(254, 254, 254, 0.2)",
-                            color: isSelected ? "#000" : isBooked ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.5)",
-                            border: isSelected ? "1px solid rgba(254, 254, 254, 0.8)" : "1px solid rgba(254, 254, 254, 0.3)",
+                            background: isSelected ? "rgba(255, 255, 255, 0.85)" : isBooked ? "rgba(255,0,0,0.05)" : "rgba(255, 255, 255, 0.15)",
+                            backdropFilter: "blur(16px)",
+                            WebkitBackdropFilter: "blur(16px)",
+                            color: isSelected ? "#000" : isBooked ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.9)",
+                            textShadow: (!isSelected && !isBooked) ? "0 1px 3px rgba(0,0,0,0.4)" : "none",
+                            border: isSelected ? "1px solid rgba(255, 255, 255, 0.85)" : "1px solid rgba(255, 255, 255, 0.4)",
                             textDecoration: isBooked ? "line-through" : "none",
                           }}
                         >

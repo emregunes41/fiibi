@@ -75,10 +75,11 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             position: "relative",
             padding: scrolled ? "12px 28px" : "0 28px",
             borderRadius: `var(--radius)`,
-            background: scrolled ? "var(--nav-bg, rgba(0,0,0,0.5))" : "transparent",
-            backdropFilter: scrolled ? "blur(20px)" : "none",
-            WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-            border: scrolled ? "1px solid var(--border)" : "1px solid transparent",
+            background: "rgba(255, 255, 255, 0.15)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
             transition: "all 0.4s ease",
           }}
           className={scrolled ? "scrolled-nav-bg" : ""}

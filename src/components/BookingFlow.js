@@ -81,8 +81,10 @@ const S = {
     textAlign: "left",
     padding: "20px",
     borderRadius: 0,
-    border: `1px solid ${on ? "rgba(254, 254, 254, 0.8)" : "rgba(254, 254, 254, 0.3)"}`,
-    background: on ? "rgba(254, 254, 254, 0.5)" : "rgba(254, 254, 254, 0.2)",
+    border: `1px solid ${on ? "rgba(255, 255, 255, 0.9)" : "rgba(255, 255, 255, 0.4)"}`,
+    background: on ? "rgba(255, 255, 255, 0.85)" : "rgba(255, 255, 255, 0.15)",
+    backdropFilter: "blur(16px)",
+    WebkitBackdropFilter: "blur(16px)",
     cursor: "pointer",
     transition: "all 0.3s ease",
     display: "flex",
@@ -445,8 +447,10 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       onClick={() => { setCat(c.value); setMonth(null); }}
                       style={{
                         textAlign: "left", padding: "20px", borderRadius: 0,
-                        border: `1px solid ${on ? "rgba(254, 254, 254, 0.8)" : "rgba(254, 254, 254, 0.3)"}`,
-                        background: on ? `rgba(254, 254, 254, 0.5)` : "rgba(254, 254, 254, 0.2)",
+                        border: `1px solid ${on ? "rgba(255, 255, 255, 0.9)" : "rgba(255, 255, 255, 0.4)"}`,
+                        background: on ? `rgba(255, 255, 255, 0.85)` : "rgba(255, 255, 255, 0.15)",
+                        backdropFilter: "blur(16px)",
+                        WebkitBackdropFilter: "blur(16px)",
                         cursor: "pointer", transition: "all 0.3s", position: "relative",
                       }}
                     >
@@ -508,10 +512,12 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                         onClick={() => { setMonth(m); go(2); }}
                         style={{
                           padding: "14px 4px", borderRadius: 0,
-                          border: sel ? "2px solid #FEFEFE" : d < 0 ? "1px solid rgba(217,181,120,0.18)" : "1px solid rgba(254, 254, 254, 0.3)",
-                          background: sel ? "rgba(254, 254, 254, 0.5)" : d < 0 ? "rgba(217,181,120,0.05)" : "rgba(254, 254, 254, 0.2)",
+                          border: sel ? "2px solid #FEFEFE" : d < 0 ? "1px solid rgba(217,181,120,0.25)" : "1px solid rgba(255, 255, 255, 0.4)",
+                          background: sel ? "rgba(255, 255, 255, 0.85)" : d < 0 ? "rgba(217,181,120,0.15)" : "rgba(255, 255, 255, 0.15)",
+                          backdropFilter: "blur(16px)",
+                          WebkitBackdropFilter: "blur(16px)",
                           cursor: past ? "not-allowed" : "pointer",
-                          opacity: past ? 0.15 : 1, transition: "all 0.25s", textAlign: "center",
+                          opacity: past ? 0.3 : 1, transition: "all 0.25s", textAlign: "center",
                           position: "relative",
                           overflow: "hidden",
                         }}
@@ -734,9 +740,12 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       onClick={() => { if (!isPast && !isDisabledDay) setDetailForm(p => ({ ...p, date: dateStr, time: "" })); }}
                       style={{
                         aspectRatio: "1", borderRadius: 0,
-                        border: isSelected ? "2px solid #FEFEFE" : "1px solid rgba(254, 254, 254, 0.3)",
-                        background: isSelected ? "rgba(254, 254, 254, 0.5)" : (isPast || isDisabledDay) ? "transparent" : "rgba(254, 254, 254, 0.2)",
-                        color: isSelected ? "#000" : (isPast || isDisabledDay) ? "rgba(255,255,255,0.12)" : isSunday ? "rgba(255,100,100,0.6)" : "rgba(255,255,255,0.7)",
+                        border: isSelected ? "2px solid #FEFEFE" : "1px solid rgba(255, 255, 255, 0.35)",
+                        background: isSelected ? "rgba(255, 255, 255, 0.85)" : (isPast || isDisabledDay) ? "transparent" : "rgba(255, 255, 255, 0.15)",
+                        backdropFilter: (isPast || isDisabledDay) ? "none" : "blur(16px)",
+                        WebkitBackdropFilter: (isPast || isDisabledDay) ? "none" : "blur(16px)",
+                        color: isSelected ? "#000" : (isPast || isDisabledDay) ? "rgba(255,255,255,0.15)" : isSunday ? "rgba(255,100,100,0.8)" : "rgba(255,255,255,0.9)",
+                        textShadow: (!isSelected && !isPast && !isDisabledDay) ? "0 1px 3px rgba(0,0,0,0.4)" : "none",
                         fontSize: "13px", fontWeight: isSelected ? 800 : 600,
                         cursor: (isPast || isDisabledDay) ? "not-allowed" : "pointer",
                         transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center", padding: 0,
@@ -794,10 +803,14 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                           onClick={() => setDetailForm(p => ({ ...p, time: slot.value }))}
                           style={{
                             padding: "14px 8px", borderRadius: 0,
-                            border: sel ? "2px solid #FEFEFE" : `1px solid ${full ? "rgba(255,60,60,0.15)" : "rgba(254, 254, 254, 0.3)"}`,
-                            background: sel ? "rgba(254, 254, 254, 0.5)" : full ? "rgba(255,60,60,0.04)" : "rgba(254, 254, 254, 0.2)",
+                            border: sel ? "2px solid #FEFEFE" : `1px solid ${full ? "rgba(255,60,60,0.2)" : "rgba(255, 255, 255, 0.4)"}`,
+                            background: sel ? "rgba(255, 255, 255, 0.85)" : full ? "rgba(255,60,60,0.1)" : "rgba(255, 255, 255, 0.15)",
+                            backdropFilter: "blur(16px)",
+                            WebkitBackdropFilter: "blur(16px)",
+                            color: sel ? "#000" : full ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.9)",
+                            textShadow: (!sel && !full) ? "0 1px 3px rgba(0,0,0,0.4)" : "none",
                             cursor: full ? "not-allowed" : "pointer",
-                            opacity: full ? 0.5 : 1,
+                            opacity: full ? 0.6 : 1,
                             transition: "all 0.2s", textAlign: "center",
                           }}
                         >
