@@ -617,8 +617,9 @@ model Post {
 // ─── BİO LİNKLER (Linktree Alternatifi) ───────────────────────────
 model BioLink {
   id        String   @id @default(cuid())
+  type      String   @default("external") // external, packages, booking, portfolio
   title     String
-  url       String
+  url       String?  // Dış linkler için
   icon      String?  // Örn: instagram, whatsapp, map, calendar, link vs.
   isActive  Boolean  @default(true)
   order     Int      @default(0)

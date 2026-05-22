@@ -22,7 +22,7 @@ export default function BioLinksManager({ initialLinks }) {
   const [links, setLinks] = useState(initialLinks || []);
   const [editingId, setEditingId] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
-  const [formData, setFormData] = useState({ title: "", url: "", icon: "link", isActive: true });
+  const [formData, setFormData] = useState({ type: "external", title: "", url: "", icon: "link", isActive: true });
   const [loading, setLoading] = useState(false);
 
   const handleDragEnd = async (result) => {
@@ -35,18 +35,19 @@ export default function BioLinksManager({ initialLinks }) {
   };
 
   const resetForm = () => {
-    setFormData({ title: "", url: "", icon: "link", isActive: true });
+    setFormData({ type: "external", title: "", url: "", icon: "link", isActive: true });
     setIsAdding(false);
     setEditingId(null);
   };
 
   const handleSave = async () => {
-    if (!formData.title || !formData.url) return toast.error("Başlık ve link zorunludur");
-    setLoading(true);
+    const isExternal = formData.type === "external";
+    if (!formData.title) return toast.error("Başlık zorunludur");
+    if (isExternal && !formData.url) return toast.error("Dış linkler için URL zorunludur");
     
     // Ensure URL has http/https if it's not a relative path or mailto/tel
-    let finalUrl = formData.url.trim();
-    if (!finalUrl.startsWith('http') && !finalUrl.startsWith('/') && !finalUrl.startsWith('mailto:') && !finalUrl.startsWith('tel:')) {
+    let finalUrl = formData.url?.trim() || "";
+    if (isExternal && finalUrl && !finalUrl.startsWith('http') && !finalUrl.startsWith('/') && !finalUrl.startsWith('mailto:') && !finalUrl.startsWith('tel:')) {
       finalUrl = 'https://' + finalUrl;
     }
 
@@ -122,13 +123,34 @@ export default function BioLinksManager({ initialLinks }) {
         <div className="bg-white/5 border border-white/10 p-5 rounded-xl space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
+              <label className="block text-xs font-bold text-white/50 uppercase tracking-wider mb-2">Bağlantı Tipi</label>
+              <select value={formData.type || "external"} onChange={e => {
+                const type = e.target.value;
+                let autoIcon = "link";
+                let autoTitle = "";
+                if (type === "packages") { autoIcon = "shopping-bag"; autoTitle = "Paketler ve Fiyatlar"; }
+                if (type === "booking") { autoIcon = "calendar"; autoTitle = "Randevu Al"; }
+                if (type === "portfolio") { autoIcon = "image"; autoTitle = "Portfolyom"; }
+                setFormData({...formData, type, icon: autoIcon, title: autoTitle || formData.title, url: ""});
+              }} className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-primary outline-none appearance-none">
+                <option value="external">Dış Link (Instagram, WhatsApp vs.)</option>
+                <option value="packages">Hizmetler & Paketler (Sistem İçi)</option>
+                <option value="booking">Randevu / Takvim (Sistem İçi)</option>
+                <option value="portfolio">Portfolyo Galeri (Sistem İçi)</option>
+              </select>
+            </div>
+            <div>
               <label className="block text-xs font-bold text-white/50 uppercase tracking-wider mb-2">Başlık</label>
               <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="Örn: WhatsApp'tan Yazın" className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-primary outline-none" />
             </div>
-            <div>
-              <label className="block text-xs font-bold text-white/50 uppercase tracking-wider mb-2">Link (URL)</label>
-              <input type="text" value={formData.url} onChange={e => setFormData({...formData, url: e.target.value})} placeholder="Örn: https://wa.me/90532..." className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-primary outline-none" />
-            </div>
+            
+            {formData.type === "external" && (
+              <div>
+                <label className="block text-xs font-bold text-white/50 uppercase tracking-wider mb-2">Link (URL)</label>
+                <input type="text" value={formData.url || ""} onChange={e => setFormData({...formData, url: e.target.value})} placeholder="Örn: https://wa.me/90532..." className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-primary outline-none" />
+              </div>
+            )}
+            
             <div>
               <label className="block text-xs font-bold text-white/50 uppercase tracking-wider mb-2">İkon / Simge</label>
               <select value={formData.icon || "link"} onChange={e => setFormData({...formData, icon: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-primary outline-none appearance-none">
@@ -137,7 +159,7 @@ export default function BioLinksManager({ initialLinks }) {
                 ))}
               </select>
             </div>
-            <div className="flex items-center pt-8">
+            <div className="flex items-center pt-8 md:col-span-2">
               <label className="flex items-center gap-3 cursor-pointer">
                 <input type="checkbox" checked={formData.isActive} onChange={e => setFormData({...formData, isActive: e.target.checked})} className="w-5 h-5 accent-primary cursor-pointer" />
                 <span className="text-sm font-semibold text-white/80">Aktif (Sayfada Göster)</span>
@@ -172,10 +194,15 @@ export default function BioLinksManager({ initialLinks }) {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-1">
+                            {link.type !== "external" && <span className="bg-primary/20 text-primary text-[10px] px-2 py-0.5 rounded font-bold tracking-wider">MODÜL</span>}
                             <span className="text-white font-bold text-sm truncate">{link.title}</span>
                             {!link.isActive && <span className="bg-red-500/20 text-red-400 text-[10px] px-2 py-0.5 rounded uppercase font-bold tracking-wider">Gizli</span>}
                           </div>
-                          <div className="text-white/40 text-xs truncate max-w-[80%]">{link.url}</div>
+                          {link.type === "external" ? (
+                            <div className="text-white/40 text-xs truncate max-w-[80%]">{link.url}</div>
+                          ) : (
+                            <div className="text-white/40 text-xs truncate max-w-[80%] italic">Sayfa içi açılır pencere (Popup)</div>
+                          )}
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0">
                           <button onClick={() => toggleActive(link)} className={`p-2 rounded-lg transition-colors ${link.isActive ? "text-green-400 hover:bg-green-400/10" : "text-white/30 hover:bg-white/10"}`} title={link.isActive ? "Gizle" : "Göster"}>

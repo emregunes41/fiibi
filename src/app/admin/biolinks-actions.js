@@ -31,8 +31,9 @@ export async function createBioLink(data) {
     const count = await prisma.bioLink.count({ where: { tenantId } });
     const link = await prisma.bioLink.create({
       data: {
+        type: data.type || "external",
         title: data.title,
-        url: data.url,
+        url: data.url || null,
         icon: data.icon,
         isActive: data.isActive !== undefined ? data.isActive : true,
         order: count,
@@ -56,8 +57,9 @@ export async function updateBioLink(id, data) {
     const link = await prisma.bioLink.update({
       where: { id, tenantId },
       data: {
+        type: data.type,
         title: data.title,
-        url: data.url,
+        url: data.url || null,
         icon: data.icon,
         isActive: data.isActive,
       },
