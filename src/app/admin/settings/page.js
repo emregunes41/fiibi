@@ -2318,9 +2318,10 @@ export default function SettingsPage() {
                                     body: JSON.stringify({ domain: item.domain, amount: item.price * selectedYears, years: selectedYears })
                                   });
                                   const data = await res.json();
-                                  if (data.iframeToken) {
-                                    const iframeUrl = `https://www.paytr.com/odeme/guvenli/${data.iframeToken}`;
-                                    window.location.href = iframeUrl;
+                                  if (data.iframeUrl) {
+                                    window.location.href = data.iframeUrl;
+                                  } else if (data.iframeToken) {
+                                    window.location.href = data.iframeToken.startsWith("http") ? data.iframeToken : `https://fiibi.co/api/paytr/iframe/${data.iframeToken}`;
                                   } else {
                                     setDomainMessage(`❌ ${item.domain} ödemesi başlatılamadı: ` + (data.error || "Bilinmeyen hata"));
                                   }
@@ -2388,8 +2389,10 @@ export default function SettingsPage() {
                                body: JSON.stringify({ domain: domainForm.customDomain, amount: item.price * renewYears, years: renewYears, isRenewal: true })
                              });
                              const data = await res.json();
-                             if(data.iframeToken) {
-                               window.location.href = `https://www.paytr.com/odeme/guvenli/${data.iframeToken}`;
+                             if (data.iframeUrl) {
+                               window.location.href = data.iframeUrl;
+                             } else if (data.iframeToken) {
+                               window.location.href = data.iframeToken.startsWith("http") ? data.iframeToken : `https://fiibi.co/api/paytr/iframe/${data.iframeToken}`;
                              } else {
                                alert("Ödeme başlatılamadı: " + data.error);
                              }

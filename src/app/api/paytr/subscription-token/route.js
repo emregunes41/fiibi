@@ -121,7 +121,7 @@ export async function POST(request) {
       return NextResponse.json({
         success: true,
         token: result.token,
-        iframeUrl: `https://www.paytr.com/odeme/guvenli/${result.token}`,
+        iframeUrl: `${platformBaseUrl}/api/paytr/iframe/${result.token}`,
       });
     } else {
       console.error("PayTR token error:", result);

@@ -123,7 +123,10 @@ export async function POST(req) {
     console.log("PayTR Response:", result);
 
     if (result.status === "success") {
-      return NextResponse.json({ token: result.token });
+      return NextResponse.json({ 
+        token: result.token,
+        iframeUrl: `${platformBaseUrl}/api/paytr/iframe/${result.token}`
+      });
     } else {
       return NextResponse.json({ error: result.reason || "PayTR token alınamadı" }, { status: 400 });
     }

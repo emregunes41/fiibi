@@ -293,8 +293,11 @@ export default function CartDrawer() {
       });
 
       const data = await res.json();
-      if (data.token) {
-        setIframeToken(data.token);
+      if (data.iframeUrl) {
+        setIframeToken(data.iframeUrl);
+        clearCart();
+      } else if (data.token) {
+        setIframeToken(`https://fiibi.co/api/paytr/iframe/${data.token}`); // Fallback
         clearCart();
       } else {
         setSubmitResult({ success: false, message: "Ödeme başlatılamadı: " + (data.error || "Bilinmeyen hata") });
@@ -962,7 +965,7 @@ export default function CartDrawer() {
                     </div>
                     <div style={{ borderRadius: 0, overflow: "hidden", border: "1px solid rgba(0, 0, 0, 0.1)" }}>
                       <iframe
-                        src={`https://www.paytr.com/odeme/guvenli/${iframeToken}`}
+                        src={iframeToken.startsWith("http") ? iframeToken : `https://fiibi.co/api/paytr/iframe/${iframeToken}`}
                         style={{ width: "100%", height: 460, border: "none" }}
                         frameBorder="0"
                       />

@@ -70,8 +70,10 @@ export default function PaymentSection({ reservation, compactMode = false, allow
       });
 
       const data = await res.json();
-      if (data.token) {
-        setIframeToken(data.token);
+      if (data.iframeUrl) {
+        setIframeToken(data.iframeUrl);
+      } else if (data.token) {
+        setIframeToken(`https://fiibi.co/api/paytr/iframe/${data.token}`); // Fallback
       } else {
         alert("Ödeme başlatılamadı: " + (data.error || "Bilinmeyen hata"));
       }
@@ -184,7 +186,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
               </button>
             </div>
             <iframe
-              src={`https://www.paytr.com/odeme/guvenli/${iframeToken}`}
+              src={iframeToken.startsWith("http") ? iframeToken : `https://fiibi.co/api/paytr/iframe/${iframeToken}`}
               style={{ width: "100%", height: 460, border: "none" }}
               frameBorder="0"
             />

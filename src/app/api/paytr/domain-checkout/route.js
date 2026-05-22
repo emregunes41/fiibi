@@ -126,7 +126,11 @@ export async function POST(req) {
 
     const tokenData = await tokenRes.json();
     if (tokenData.status === "success") {
-      return NextResponse.json({ iframeToken: tokenData.token, merchant_oid: merchantOidStr });
+      return NextResponse.json({ 
+        iframeToken: tokenData.token, 
+        merchant_oid: merchantOidStr,
+        iframeUrl: `${platformBaseUrl}/api/paytr/iframe/${tokenData.token}`
+      });
     } else {
       console.error("PayTR Domain Token Error:", tokenData);
       return NextResponse.json({ error: tokenData.reason || "Ödeme başlatılamadı" }, { status: 400 });
