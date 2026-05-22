@@ -102,7 +102,7 @@ export default async function ProfilePage() {
                   
                   {/* Contract Approval Banner */}
                   {!res.contractApproved && (
-                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, padding: "20px 24px" }}>
+                    <div style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, padding: "20px 24px" }}>
                       <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
                         <div style={{ width: 44, height: 44, background: "rgba(255,255,255,0.1)", borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                           <AlertTriangle size={20} style={{ color: "rgba(255,255,255,0.7)" }} />
@@ -126,7 +126,7 @@ export default async function ProfilePage() {
                   )}
 
                   {/* ── Main Reservation Card ── */}
-                  <div style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden", opacity: !res.contractApproved ? 0.6 : 1, pointerEvents: !res.contractApproved ? "none" : "auto" }}>
+                  <div style={{ background: "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)", overflow: "hidden", opacity: !res.contractApproved ? 0.6 : 1, pointerEvents: !res.contractApproved ? "none" : "auto" }}>
                     
                     {/* Card Header */}
                     <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
@@ -443,7 +443,7 @@ export default async function ProfilePage() {
                 const currentIndex = shippingSteps.findIndex(s => s.id === currentStatus) !== -1 ? shippingSteps.findIndex(s => s.id === currentStatus) : 0;
 
                 return (
-                  <div key={order.id} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                  <div key={order.id} style={{ background: "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)", overflow: "hidden" }}>
                     
                     {/* Header */}
                     <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
