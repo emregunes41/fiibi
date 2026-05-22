@@ -138,6 +138,12 @@ function AdminLayoutInner({ children }) {
                 <span style={{ fontSize: "14px" }}>📱</span> Instagram Reels
               </div>
             </Link>
+
+            <Link href="/admin/settings?tab=icerik&subTab=biolinks" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
+                <span style={{ fontSize: "14px" }}>🔗</span> Bio Linki (Linktree)
+              </div>
+            </Link>
           </div>
         )}
       </div>
