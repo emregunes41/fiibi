@@ -601,17 +601,10 @@ export async function getAccountingData() {
       }
     }
 
-    // Tenant'ın toplam alacağı (online ödenmemiş)
+    // Nakit ödemelerin veya sisteme girilmeyen ödemelerin platform muhasebesinde "Tahsilat Bekleyen" olarak
+    // görünmesini engellemek için pendingCollection hesaplamasını iptal ediyoruz. Platform sadece online gerçekleşen 
+    // işlemleri baz alacak.
     let tenantPendingCollection = 0;
-    for (const r of t.reservations) {
-      const totalAmount = parseFloat(
-        String(r.totalAmount || "0").replace(/\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "") || "0"
-      );
-      const onlinePaid = r.payments.reduce((s, p) => s + (p.amount || 0), 0);
-      if (totalAmount > onlinePaid && r.paymentStatus !== "PAID") {
-        tenantPendingCollection += (totalAmount - onlinePaid);
-      }
-    }
 
     // Platform toplamlarına ekle
     platformTotals.totalOnlinePayments += tenantOnlineTotal;
