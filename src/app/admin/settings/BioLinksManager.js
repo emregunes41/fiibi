@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link2, Plus, Edit2, Trash2, GripVertical, Check, ExternalLink, X, Eye, EyeOff, ChevronRight } from "lucide-react";
-import { createBioLink, updateBioLink, deleteBioLink, reorderBioLinks } from "../biolinks-actions";
+import { createBioLink, updateBioLink, deleteBioLink, reorderBioLinks, getBioLinks } from "../biolinks-actions";
 import { toast } from "sonner";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
@@ -57,6 +57,30 @@ export default function BioLinksManager({ initialLinks }) {
   const [addingTemplate, setAddingTemplate] = useState(null); // selected template for adding
   const [formData, setFormData] = useState({ type: "external", title: "", url: "", icon: "link", isActive: true });
   const [loading, setLoading] = useState(false);
+
+  // initialLinks prop değişirse güncelle
+  useEffect(() => {
+    if (initialLinks && initialLinks.length > 0) {
+      setLinks(initialLinks);
+    }
+  }, [initialLinks]);
+
+  // Sayfa yenilendiğinde initialLinks boş gelebiliyor — kendi başına DB'den yükle
+  useEffect(() => {
+    async function loadLinks() {
+      try {
+        const data = await getBioLinks();
+        if (data && data.length > 0) {
+          setLinks(data);
+        }
+      } catch (err) {
+        console.error("BioLinks load error:", err);
+      }
+    }
+    if (!initialLinks || initialLinks.length === 0) {
+      loadLinks();
+    }
+  }, []);
 
   // ─── Drag & Drop ───
   const handleDragEnd = async (result) => {
