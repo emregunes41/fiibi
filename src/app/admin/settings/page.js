@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { getSiteConfig, updateSiteConfig, uploadHeroBg, getDiscountCodes, createDiscountCode, deleteDiscountCode, toggleDiscountCode, getSubMerchantInfo, updateSubMerchantInfo, getTenantDomainInfo, updateTenantDomain, checkDomainAvailability } from "../core-actions";
 import { getBanners, createBanner, updateBanner, deleteBanner, reorderBanners } from "../banner-actions";
@@ -98,6 +98,7 @@ export default function SettingsPage() {
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [uploadingBg, setUploadingBg] = useState(false);
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("genel");
   const [subTab, setSubTab] = useState("moduller");
   const { session: adminSession } = useAdminSession();
@@ -163,6 +164,13 @@ export default function SettingsPage() {
   const [renewLoading, setRenewLoading] = useState(false);
 
   useEffect(() => {
+    const tabParam = searchParams.get("tab");
+    const subTabParam = searchParams.get("subTab");
+    if (tabParam) setActiveTab(tabParam);
+    if (subTabParam) setSubTab(subTabParam);
+  }, [searchParams]);
+
+  useEffect(() => {
     async function loadConfig() {
       const data = await getSiteConfig();
       if (data) setConfig(data);
@@ -178,15 +186,6 @@ export default function SettingsPage() {
       if (data) setConfig(data);
       setLoading(false);
     });
-
-    // URL parametrelerinden sekme kontrolü
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const tabParam = params.get("tab");
-      const subTabParam = params.get("subTab");
-      if (tabParam) setActiveTab(tabParam);
-      if (subTabParam) setSubTab(subTabParam);
-    }
 
     loadDiscountCodes();
     getBanners().then(setBanners);

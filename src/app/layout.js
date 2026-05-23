@@ -81,6 +81,10 @@ export async function generateMetadata() {
     alternates: {
       canonical: canonicalUrl,
     },
+    icons: {
+      icon: siteConfig?.logoUrl || '/favicon.ico',
+      apple: siteConfig?.logoUrl || '/favicon.ico',
+    },
     openGraph: {
       title: seoTitle,
       description: seoDescription,
