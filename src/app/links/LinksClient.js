@@ -24,6 +24,25 @@ const socialColorMap = {
   tiktok: "from-[#00f2ea] to-[#ff0050]",
 };
 
+// Title-based gradient colors for the public page icon containers
+const titleGradientMap = {
+  "Instagram": "#f09433, #e6683c, #dc2743",
+  "TikTok": "#00f2ea, #ff0050",
+  "YouTube": "#FF0000, #CC0000",
+  "Facebook": "#1877F2, #0D47A1",
+  "Twitter / X": "#1DA1F2, #0d8ecf",
+  "LinkedIn": "#0A66C2, #004182",
+  "Pinterest": "#E60023, #BD081C",
+  "Spotify": "#1DB954, #158a3e",
+  "Threads": "#333, #000",
+  "WhatsApp": "#25D366, #128C7E",
+  "Telegram": "#26A5E4, #0088cc",
+  "E-Posta": "#EA4335, #c5221f",
+  "Telefon": "#4CAF50, #2E7D32",
+  "Google Maps": "#4285F4, #34A853",
+  "Google Yorum": "#FBBC05, #F9A825",
+};
+
 export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, bgUrl, bgColor, footerTagline }) {
   const [activeModal, setActiveModal] = useState(null);
   const [mounted, setMounted] = useState(false);
@@ -259,29 +278,33 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                   }}
                 >
                   {/* Icon Container */}
-                  <div style={{
-                    width: 40, height: 40, borderRadius: 12,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    flexShrink: 0,
-                    background: hasSocialGradient
-                      ? undefined
-                      : isInternal
-                        ? "rgba(139,92,246,0.12)"
-                        : "rgba(255,255,255,0.06)",
-                    border: hasSocialGradient ? "none" : "1px solid rgba(255,255,255,0.06)",
-                    ...(hasSocialGradient ? {
-                      backgroundImage: `linear-gradient(135deg, ${
-                        link.icon === "instagram" ? "#f09433, #e6683c, #dc2743" :
-                        link.icon === "whatsapp" ? "#25D366, #128C7E" :
-                        link.icon === "youtube" ? "#FF0000, #CC0000" :
-                        link.icon === "tiktok" ? "#00f2ea, #ff0050" :
-                        "rgba(255,255,255,0.1), rgba(255,255,255,0.05)"
-                      })`,
-                    } : {}),
-                    color: hasSocialGradient ? "#fff" : isInternal ? "#a78bfa" : "rgba(255,255,255,0.6)",
-                  }}>
-                    <IconComponent size={18} strokeWidth={2} />
-                  </div>
+                  {(() => {
+                    const titleGrad = titleGradientMap[link.title];
+                    const iconGrad = socialColorMap[link.icon];
+                    const hasGradient = titleGrad || iconGrad;
+                    const gradientColors = titleGrad || (
+                      link.icon === "instagram" ? "#f09433, #e6683c, #dc2743" :
+                      link.icon === "whatsapp" ? "#25D366, #128C7E" :
+                      link.icon === "youtube" ? "#FF0000, #CC0000" :
+                      link.icon === "tiktok" ? "#00f2ea, #ff0050" : null
+                    );
+                    return (
+                      <div style={{
+                        width: 40, height: 40, borderRadius: 12,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        flexShrink: 0,
+                        background: gradientColors
+                          ? `linear-gradient(135deg, ${gradientColors})`
+                          : isInternal
+                            ? "rgba(139,92,246,0.12)"
+                            : "rgba(255,255,255,0.06)",
+                        border: gradientColors ? "none" : "1px solid rgba(255,255,255,0.06)",
+                        color: gradientColors ? "#fff" : isInternal ? "#a78bfa" : "rgba(255,255,255,0.6)",
+                      }}>
+                        <IconComponent size={18} strokeWidth={2} />
+                      </div>
+                    );
+                  })()}
 
                   {/* Text */}
                   <div style={{ flex: 1, minWidth: 0 }}>
