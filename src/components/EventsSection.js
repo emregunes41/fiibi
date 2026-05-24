@@ -104,7 +104,7 @@ export default function EventsSection({ events }) {
                 <button 
                   disabled={remaining <= 0}
                   onClick={() => setSelectedEvent(ev)}
-                  style={{ width: "100%", padding: 14, background: remaining > 0 ? "var(--btn-bg)" : "rgba(255,255,255,0.05)", color: remaining > 0 ? "var(--btn-text)" : "rgba(255,255,255,0.3)", border: "none", borderRadius: "var(--radius)", fontWeight: 800, fontSize: 13, cursor: remaining > 0 ? "pointer" : "not-allowed", display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}
+                  style={{ width: "100%", padding: 14, background: remaining > 0 ? "var(--btn-bg)" : "rgba(0,0,0,0.04)", color: remaining > 0 ? "var(--btn-text)" : "rgba(0,0,0,0.25)", border: "none", borderRadius: "var(--radius)", fontWeight: 800, fontSize: 13, cursor: remaining > 0 ? "pointer" : "not-allowed", display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}
                 >
                   <Ticket size={16} />
                   {remaining > 0 ? "Kayıt Ol" : "Kontenjan Doldu"}
@@ -144,35 +144,35 @@ export default function EventsSection({ events }) {
                       {new Date(selectedEvent.date).toLocaleDateString("tr-TR", { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
-                  <button onClick={closeDialog} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={20} /></button>
+                  <button onClick={closeDialog} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.45)", cursor: "pointer" }}><X size={20} /></button>
                 </div>
                 
                 <form onSubmit={handleRegister} style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
                   {errorMsg && <div style={{ background: "rgba(239, 68, 68, 0.1)", color: "#ef4444", padding: "12px 16px", borderRadius: "var(--radius)", fontSize: 12, fontWeight: 600 }}>{errorMsg}</div>}
                   
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: 6 }}>Ad Soyad</label>
-                    <input required autoFocus type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: Ayşe Yılmaz" />
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", marginBottom: 6 }}>Ad Soyad</label>
+                    <input required autoFocus type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: "100%", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", color: "var(--text, #1a1a1a)", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: Ayşe Yılmaz" />
                   </div>
                   
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: 6 }}>Telefon Numarası</label>
-                    <input required type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} style={{ width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: 05xx xxx xx xx" />
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", marginBottom: 6 }}>Telefon Numarası</label>
+                    <input required type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} style={{ width: "100%", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", color: "var(--text, #1a1a1a)", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: 05xx xxx xx xx" />
                   </div>
                   
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: 6 }}>E-Posta</label>
-                    <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} style={{ width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: ayse@domain.com" />
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", marginBottom: 6 }}>E-Posta</label>
+                    <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} style={{ width: "100%", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", color: "var(--text, #1a1a1a)", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: ayse@domain.com" />
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: 6 }}>Sosyal Medya (Instagram / TikTok)</label>
-                    <input type="text" value={formData.socialMedia} onChange={e => setFormData({...formData, socialMedia: e.target.value})} style={{ width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: @kullaniciadi" />
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", marginBottom: 6 }}>Sosyal Medya (Instagram / TikTok)</label>
+                    <input type="text" value={formData.socialMedia} onChange={e => setFormData({...formData, socialMedia: e.target.value})} style={{ width: "100%", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", color: "var(--text, #1a1a1a)", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: @kullaniciadi" />
                   </div>
 
-                  <div style={{ marginTop: 8, padding: 16, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.6)" }}>Ödenecek Tutar</span>
-                    <span style={{ fontSize: 18, fontWeight: 800, color: "#fff" }}>{selectedEvent.price === "0" ? "Ücretsiz" : `${selectedEvent.price}₺`}</span>
+                  <div style={{ marginTop: 8, padding: 16, background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.04)", borderRadius: "var(--radius)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(0,0,0,0.55)" }}>Ödenecek Tutar</span>
+                    <span style={{ fontSize: 18, fontWeight: 800, color: "var(--text, #1a1a1a)" }}>{selectedEvent.price === "0" ? "Ücretsiz" : `${selectedEvent.price}₺`}</span>
                   </div>
                   
                   <button type="submit" disabled={status === "loading"} style={{ marginTop: 8, padding: "16px", background: "var(--btn-bg)", color: "var(--btn-text)", border: "none", borderRadius: "var(--radius)", fontWeight: 800, fontSize: 14, cursor: status === "loading" ? "not-allowed" : "pointer", opacity: status === "loading" ? 0.7 : 1 }}>

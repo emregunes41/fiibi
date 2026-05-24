@@ -31,7 +31,7 @@ export default function ProfileLayoutClient({ user, children }) {
       <div style={{
         position: "sticky", top: 80, zIndex: 50,
         background: "rgba(0,0,0,0.3)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
-        borderBottom: "1px solid rgba(255,255,255,0.08)",
+        borderBottom: "1px solid rgba(0,0,0,0.06)",
         padding: "0 16px",
       }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 48 }}>
@@ -43,8 +43,8 @@ export default function ProfileLayoutClient({ user, children }) {
                 <Link key={item.name} href={item.href} style={{
                   textDecoration: "none", display: "flex", alignItems: "center", gap: 6,
                   padding: "6px 14px", borderRadius: 6, fontSize: "0.75rem", fontWeight: isActive ? 700 : 500,
-                  color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
-                  background: isActive ? "rgba(255,255,255,0.1)" : "transparent",
+                  color: isActive ? "#fff" : "rgba(0,0,0,0.45)",
+                  background: isActive ? "rgba(0,0,0,0.08)" : "transparent",
                   transition: "all 0.2s",
                 }}>
                   <item.icon size={13} />
@@ -57,16 +57,16 @@ export default function ProfileLayoutClient({ user, children }) {
           {/* Right: User + Logout */}
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>{getInitials(user?.name)}</span>
+              <div style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.45)" }}>{getInitials(user?.name)}</span>
               </div>
-              <span className="hidden sm:block" style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>{user?.name}</span>
+              <span className="hidden sm:block" style={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.65)" }}>{user?.name}</span>
             </div>
             <form action={logoutUser}>
               <button type="submit" style={{
                 display: "flex", alignItems: "center", gap: 5, padding: "6px 12px",
-                background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: 6, color: "rgba(255,255,255,0.45)", fontSize: 11, fontWeight: 600,
+                background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)",
+                borderRadius: 6, color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 600,
                 cursor: "pointer", transition: "all 0.2s",
               }}>
                 <LogOut size={12} /> Çıkış

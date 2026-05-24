@@ -150,7 +150,7 @@ export default function BannerCarousel({ banners }) {
             <p
               style={{
                 fontSize: "clamp(0.7rem, 1.5vw, 0.9rem)",
-                color: "rgba(255,255,255,0.7)",
+                color: "rgba(0,0,0,0.65)",
                 margin: 0,
                 fontWeight: 500,
               }}
@@ -178,7 +178,7 @@ export default function BannerCarousel({ banners }) {
               zIndex: 10,
               background: "rgba(0,0,0,0.4)",
               backdropFilter: "blur(10px)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              border: "1px solid rgba(0,0,0,0.08)",
               borderRadius: 0,
               width: "clamp(28px, 4vw, 40px)",
               height: "clamp(28px, 4vw, 40px)",
@@ -206,7 +206,7 @@ export default function BannerCarousel({ banners }) {
               zIndex: 10,
               background: "rgba(0,0,0,0.4)",
               backdropFilter: "blur(10px)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              border: "1px solid rgba(0,0,0,0.08)",
               borderRadius: 0,
               width: "clamp(28px, 4vw, 40px)",
               height: "clamp(28px, 4vw, 40px)",
@@ -256,7 +256,7 @@ export default function BannerCarousel({ banners }) {
                 border: "none",
                 padding: 0,
                 cursor: "pointer",
-                background: "rgba(255,255,255,0.2)",
+                background: "rgba(0,0,0,0.15)",
                 overflow: "hidden",
                 position: "relative",
               }}

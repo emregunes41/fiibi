@@ -57,7 +57,7 @@ export default function CookieConsent() {
         margin: "0 auto",
         background: "var(--bg-card, rgba(15,15,15,0.97))",
         backdropFilter: "blur(20px)",
-        border: "1px solid var(--border, rgba(255,255,255,0.1))",
+        border: "1px solid var(--border, rgba(0,0,0,0.08))",
         borderRadius: 12,
         padding: "20px 24px",
         pointerEvents: "auto",
@@ -66,11 +66,11 @@ export default function CookieConsent() {
         <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
           <div style={{
             width: 36, height: 36, borderRadius: 8,
-            background: "var(--border, rgba(255,255,255,0.06))",
+            background: "var(--border, rgba(0,0,0,0.05))",
             display: "flex", alignItems: "center", justifyContent: "center",
             flexShrink: 0, marginTop: 2,
           }}>
-            <Cookie size={18} style={{ color: "var(--text-muted, rgba(255,255,255,0.6))" }} />
+            <Cookie size={18} style={{ color: "var(--text-muted, rgba(0,0,0,0.55))" }} />
           </div>
           <div style={{ flex: 1 }}>
             <p style={{
@@ -85,13 +85,13 @@ export default function CookieConsent() {
               margin: "0 0 16px",
               fontSize: 12,
               lineHeight: 1.6,
-              color: "var(--text-muted, rgba(255,255,255,0.5))",
+              color: "var(--text-muted, rgba(0,0,0,0.45))",
             }}>
               Bu site, oturum yönetimi için zorunlu çerezler ve site kullanım
               istatistikleri için analitik çerezler kullanmaktadır.{" "}
               <Link
                 href="/cerez-politikasi"
-                style={{ color: "var(--accent, rgba(255,255,255,0.7))", textDecoration: "underline" }}
+                style={{ color: "var(--accent, rgba(0,0,0,0.65))", textDecoration: "underline" }}
               >
                 Çerez Politikası
               </Link>
@@ -117,8 +117,8 @@ export default function CookieConsent() {
                 onClick={handleReject}
                 style={{
                   background: "transparent",
-                  color: "var(--text-muted, rgba(255,255,255,0.6))",
-                  border: "1px solid var(--border, rgba(255,255,255,0.1))",
+                  color: "var(--text-muted, rgba(0,0,0,0.55))",
+                  border: "1px solid var(--border, rgba(0,0,0,0.08))",
                   padding: "8px 20px",
                   borderRadius: 6,
                   fontSize: 12,
@@ -134,7 +134,7 @@ export default function CookieConsent() {
           <button
             onClick={handleReject}
             style={{
-              background: "none", border: "none", color: "var(--text-muted, rgba(255,255,255,0.3))",
+              background: "none", border: "none", color: "var(--text-muted, rgba(0,0,0,0.25))",
               cursor: "pointer", padding: 4, flexShrink: 0,
             }}
           >

@@ -51,8 +51,8 @@ export default function LoginPage() {
 
   const inputStyle = {
     width: "100%",
-    background: "rgba(255,255,255,0.06)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    background: "rgba(0,0,0,0.05)",
+    border: "1px solid rgba(0,0,0,0.08)",
     borderRadius: 0,
     padding: "14px 16px 14px 48px",
     color: "var(--text)",
@@ -66,33 +66,33 @@ export default function LoginPage() {
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "100px 24px 24px", background: "var(--bg)", position: "relative", overflow: "hidden" }}>
       {/* Background orbs */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-        <div style={{ position: "absolute", top: "20%", left: "15%", width: 300, height: 300, background: "rgba(255,255,255,0.03)", filter: "blur(120px)", borderRadius: 0 }} />
-        <div style={{ position: "absolute", bottom: "20%", right: "15%", width: 250, height: 250, background: "rgba(255,255,255,0.06)", filter: "blur(120px)", borderRadius: 0 }} />
+        <div style={{ position: "absolute", top: "20%", left: "15%", width: 300, height: 300, background: "rgba(0,0,0,0.02)", filter: "blur(120px)", borderRadius: 0 }} />
+        <div style={{ position: "absolute", bottom: "20%", right: "15%", width: 250, height: 250, background: "rgba(0,0,0,0.05)", filter: "blur(120px)", borderRadius: 0 }} />
       </div>
 
       <div style={{ width: "100%", maxWidth: 420, position: "relative", zIndex: 10 }}>
         {/* Card */}
-        <div style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(40px)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.15)", padding: "40px 36px", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
+        <div style={{ background: "rgba(0,0,0,0.05)", backdropFilter: "blur(40px)", borderRadius: 0, border: "1px solid rgba(0,0,0,0.1)", padding: "40px 36px", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
           
           {!showReset ? (
             <>
               {/* Login Form */}
               <div style={{ textAlign: "center", marginBottom: 32 }}>
                 <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 8 }}>Giriş Yap</h1>
-                <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>Hesabınıza giriş yapın</p>
+                <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 14 }}>Hesabınıza giriş yapın</p>
               </div>
 
               <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 {error && (
-                  <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", fontSize: 14, padding: "14px", borderRadius: 0, textAlign: "center", fontWeight: 500 }}>
+                  <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.55)", fontSize: 14, padding: "14px", borderRadius: 0, textAlign: "center", fontWeight: 500 }}>
                     {error}
                   </div>
                 )}
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
+                  <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
                   <div style={{ position: "relative" }}>
-                    <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.4)", pointerEvents: "none" }} />
+                    <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.35)", pointerEvents: "none" }} />
                     <input 
                       type="email" 
                       required 
@@ -100,19 +100,19 @@ export default function LoginPage() {
                       placeholder="ornek@mail.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.25)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
-                      onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.06)"; }}
+                      onFocus={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.2)"; e.target.style.background = "rgba(0,0,0,0.06)"; }}
+                      onBlur={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.08)"; e.target.style.background = "rgba(0,0,0,0.05)"; }}
                     />
                   </div>
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: 4, paddingRight: 4 }}>
-                    <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Şifre</label>
-                    <button type="button" onClick={() => { setShowReset(true); setResetEmail(email); }} style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Şifremi unuttum</button>
+                    <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Şifre</label>
+                    <button type="button" onClick={() => { setShowReset(true); setResetEmail(email); }} style={{ fontSize: 11, color: "rgba(0,0,0,0.4)", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Şifremi unuttum</button>
                   </div>
                   <div style={{ position: "relative" }}>
-                    <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.4)", pointerEvents: "none" }} />
+                    <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.35)", pointerEvents: "none" }} />
                     <input 
                       type="password" 
                       required 
@@ -120,8 +120,8 @@ export default function LoginPage() {
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.25)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
-                      onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.06)"; }}
+                      onFocus={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.2)"; e.target.style.background = "rgba(0,0,0,0.06)"; }}
+                      onBlur={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.08)"; e.target.style.background = "rgba(0,0,0,0.05)"; }}
                     />
                   </div>
                 </div>
@@ -136,10 +136,10 @@ export default function LoginPage() {
                 </button>
               </form>
 
-              <div style={{ textAlign: "center", marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)" }}>
+              <div style={{ textAlign: "center", marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(0,0,0,0.08)" }}>
+                <p style={{ fontSize: 14, color: "rgba(0,0,0,0.5)" }}>
                   Hesabınız yok mu?{" "}
-                  <Link href="/register" style={{ color: "#fff", fontWeight: 600, textDecoration: "none" }}>
+                  <Link href="/register" style={{ color: "var(--text, #1a1a1a)", fontWeight: 600, textDecoration: "none" }}>
                     Kayıt Ol
                   </Link>
                 </p>
@@ -149,21 +149,21 @@ export default function LoginPage() {
             <>
               {/* Reset Password Form */}
               <div style={{ marginBottom: 24 }}>
-                <button onClick={() => { setShowReset(false); setResetMessage(""); setResetError(""); }} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", padding: 0, fontSize: 12, marginBottom: 20 }}>
+                <button onClick={() => { setShowReset(false); setResetMessage(""); setResetError(""); }} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "rgba(0,0,0,0.45)", cursor: "pointer", padding: 0, fontSize: 12, marginBottom: 20 }}>
                   <ArrowLeft size={14} /> Geri Dön
                 </button>
                 <h1 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 8 }}>Şifre Sıfırlama</h1>
-                <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, lineHeight: 1.5 }}>E-posta adresinizi girin, yeni şifreniz e-posta ile gönderilecek.</p>
+                <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 13, lineHeight: 1.5 }}>E-posta adresinizi girin, yeni şifreniz e-posta ile gönderilecek.</p>
               </div>
 
               {resetMessage && (
-                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.15)", color: "#fff", fontSize: 13, padding: "14px", borderRadius: 0, textAlign: "center", fontWeight: 500, marginBottom: 16 }}>
+                <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.1)", color: "var(--text, #1a1a1a)", fontSize: 13, padding: "14px", borderRadius: 0, textAlign: "center", fontWeight: 500, marginBottom: 16 }}>
                   ✅ {resetMessage}
                 </div>
               )}
 
               {resetError && (
-                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", fontSize: 13, padding: "14px", borderRadius: 0, textAlign: "center", fontWeight: 500, marginBottom: 16 }}>
+                <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.55)", fontSize: 13, padding: "14px", borderRadius: 0, textAlign: "center", fontWeight: 500, marginBottom: 16 }}>
                   {resetError}
                 </div>
               )}
@@ -171,9 +171,9 @@ export default function LoginPage() {
               {!resetMessage && (
                 <form onSubmit={handleReset} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
+                    <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
                     <div style={{ position: "relative" }}>
-                      <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.4)", pointerEvents: "none" }} />
+                      <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.35)", pointerEvents: "none" }} />
                       <input 
                         type="email" 
                         required 
@@ -181,8 +181,8 @@ export default function LoginPage() {
                         placeholder="ornek@mail.com"
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
-                        onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.25)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
-                        onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.06)"; }}
+                        onFocus={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.2)"; e.target.style.background = "rgba(0,0,0,0.06)"; }}
+                        onBlur={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.08)"; e.target.style.background = "rgba(0,0,0,0.05)"; }}
                       />
                     </div>
                   </div>

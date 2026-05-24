@@ -138,7 +138,7 @@ export default function ClientGalleryPage() {
                           key={photo.id} 
                           onClick={() => !isLocked && handleToggle(photo, gallery)}
                           className={`relative aspect-square rounded-none overflow-hidden cursor-pointer border-2 transition-all ${
-                            photo.isSelected ? "border-white/30 scale-[0.98] shadow-[0_0_20px_rgba(255,255,255,0.1)]" : "border-transparent hover:border-white/20"
+                            photo.isSelected ? "border-white/30 scale-[0.98] shadow-[0_0_20px_rgba(0,0,0,0.08)]" : "border-transparent hover:border-white/20"
                           } ${isLocked ? "cursor-default opacity-80" : ""}`}
                         >
                           <Image 

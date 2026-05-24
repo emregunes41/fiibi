@@ -106,10 +106,10 @@ export default function AIChatBot() {
               width: 46,
               height: 46,
               borderRadius: 0,
-              background: "rgba(255,255,255,0.1)",
+              background: "rgba(0,0,0,0.08)",
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
-              border: "1px solid rgba(255,255,255,0.15)",
+              border: "1px solid rgba(0,0,0,0.1)",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
@@ -120,7 +120,7 @@ export default function AIChatBot() {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
           >
-            <MessageCircle size={20} style={{ color: "#fff" }} />
+            <MessageCircle size={20} style={{ color: "var(--text, #1a1a1a)" }} />
           </motion.button>
         )}
       </AnimatePresence>
@@ -141,32 +141,32 @@ export default function AIChatBot() {
               flexDirection: "column",
               overflow: "hidden",
               background: "#0a0a0f",
-              border: "1px solid rgba(255,255,255,0.1)",
-              boxShadow: "0 8px 48px rgba(0,0,0,0.6), 0 0 80px rgba(255,255,255,0.03)",
+              border: "1px solid rgba(0,0,0,0.08)",
+              boxShadow: "0 8px 48px rgba(0,0,0,0.6), 0 0 80px rgba(0,0,0,0.02)",
             }}
           >
             {/* Header */}
             <div style={{
               padding: "14px 16px",
-              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              borderBottom: "1px solid rgba(0,0,0,0.06)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              background: "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%)",
+              background: "linear-gradient(180deg, rgba(0,0,0,0.03) 0%, transparent 100%)",
               flexShrink: 0,
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{
                   width: 32, height: 32, borderRadius: 0,
-                  background: "rgba(255,255,255,0.08)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "rgba(0,0,0,0.06)",
+                  border: "1px solid rgba(0,0,0,0.08)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                  <MessageCircle size={15} style={{ color: "#fff" }} />
+                  <MessageCircle size={15} style={{ color: "var(--text, #1a1a1a)" }} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>Asistan</div>
-                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", gap: 4 }}>
+                  <div style={{ fontSize: 14, fontWeight: 800, color: "var(--text, #1a1a1a)", letterSpacing: "-0.02em" }}>Asistan</div>
+                  <div style={{ fontSize: 10, color: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center", gap: 4 }}>
                     <div style={{ width: 5, height: 5, borderRadius: 0, background: "#fff" }} />
                     Çevrimiçi
                   </div>
@@ -175,12 +175,12 @@ export default function AIChatBot() {
               <button 
                 onClick={() => setIsOpen(false)}
                 style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "rgba(0,0,0,0.04)",
+                  border: "1px solid rgba(0,0,0,0.08)",
                   borderRadius: 0,
                   padding: 6,
                   cursor: "pointer",
-                  color: "rgba(255,255,255,0.5)",
+                  color: "rgba(0,0,0,0.45)",
                 }}
               >
                 <X size={16} />
@@ -211,11 +211,11 @@ export default function AIChatBot() {
                   {msg.role === "assistant" && (
                     <div style={{
                       width: 28, height: 28, borderRadius: 0, flexShrink: 0,
-                      background: "rgba(255,255,255,0.08)",
+                      background: "rgba(0,0,0,0.06)",
                       display: "flex", alignItems: "center", justifyContent: "center",
                       marginTop: 2,
                     }}>
-                      <MessageCircle size={11} style={{ color: "rgba(255,255,255,0.6)" }} />
+                      <MessageCircle size={11} style={{ color: "rgba(0,0,0,0.55)" }} />
                     </div>
                   )}
                   <div style={{ maxWidth: "78%", display: "flex", flexDirection: "column", gap: 6 }}>
@@ -260,7 +260,7 @@ export default function AIChatBot() {
                         }}
                       >
                         <div>
-                          <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>
+                          <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>
                             Önerilen Paket
                           </div>
                           <div style={{ fontSize: 13, fontWeight: 700 }}>{msg.suggestedPackage}</div>
@@ -282,10 +282,10 @@ export default function AIChatBot() {
                 <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                   <div style={{
                     width: 28, height: 28, borderRadius: 0, flexShrink: 0,
-                    background: "rgba(255,255,255,0.08)",
+                    background: "rgba(0,0,0,0.06)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <MessageCircle size={11} style={{ color: "rgba(255,255,255,0.6)" }} />
+                    <MessageCircle size={11} style={{ color: "rgba(0,0,0,0.55)" }} />
                   </div>
                   <div style={{
                     padding: "12px 16px",
@@ -298,17 +298,17 @@ export default function AIChatBot() {
                     <motion.div
                       animate={{ opacity: [0.3, 1, 0.3] }}
                       transition={{ duration: 1, repeat: Infinity, delay: 0 }}
-                      style={{ width: 6, height: 6, borderRadius: 0, background: "rgba(255,255,255,0.5)" }}
+                      style={{ width: 6, height: 6, borderRadius: 0, background: "rgba(0,0,0,0.45)" }}
                     />
                     <motion.div
                       animate={{ opacity: [0.3, 1, 0.3] }}
                       transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
-                      style={{ width: 6, height: 6, borderRadius: 0, background: "rgba(255,255,255,0.5)" }}
+                      style={{ width: 6, height: 6, borderRadius: 0, background: "rgba(0,0,0,0.45)" }}
                     />
                     <motion.div
                       animate={{ opacity: [0.3, 1, 0.3] }}
                       transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
-                      style={{ width: 6, height: 6, borderRadius: 0, background: "rgba(255,255,255,0.5)" }}
+                      style={{ width: 6, height: 6, borderRadius: 0, background: "rgba(0,0,0,0.45)" }}
                     />
                   </div>
                 </div>
@@ -319,7 +319,7 @@ export default function AIChatBot() {
             <div style={{
               padding: "10px 14px",
               paddingBottom: "calc(10px + env(safe-area-inset-bottom, 0px))",
-              borderTop: "1px solid rgba(255,255,255,0.06)",
+              borderTop: "1px solid rgba(0,0,0,0.05)",
               background: "rgba(0,0,0,0.5)",
               flexShrink: 0,
             }}>

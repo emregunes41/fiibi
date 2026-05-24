@@ -32,27 +32,27 @@ export default function SozlesmeClient({ tenant, config }) {
   const CurrentIcon = currentTab?.icon || FileText;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#000", color: "#fff", padding: "60px 24px" }}>
+    <div style={{ minHeight: "100vh", background: "#000", color: "var(--text, #1a1a1a)", padding: "60px 24px" }}>
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         
-        <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.5)", textDecoration: "none", marginBottom: 32, fontSize: 14, fontWeight: 500, transition: "color 0.2s" }}>
+        <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(0,0,0,0.45)", textDecoration: "none", marginBottom: 32, fontSize: 14, fontWeight: 500, transition: "color 0.2s" }}>
           <ArrowLeft size={16} /> Ana Sayfaya Dön
         </Link>
         
         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 8 }}>
-          <div style={{ width: 48, height: 48, borderRadius: 0, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <BookOpen size={24} style={{ color: "rgba(255,255,255,0.7)" }} />
+          <div style={{ width: 48, height: 48, borderRadius: 0, background: "rgba(0,0,0,0.03)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <BookOpen size={24} style={{ color: "rgba(0,0,0,0.65)" }} />
           </div>
           <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>Yasal Sözleşmeler</h1>
         </div>
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 15, marginBottom: 32, marginLeft: 64 }}>
+        <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 15, marginBottom: 32, marginLeft: 64 }}>
           {PLATFORM.name} platform kullanım koşulları ve yasal metinler
         </p>
 
         {/* Tab Bar */}
         <div style={{ 
           display: "flex", gap: 0, marginBottom: 28, 
-          borderBottom: "1px solid rgba(255,255,255,0.08)", 
+          borderBottom: "1px solid rgba(0,0,0,0.06)", 
           overflowX: "auto",
           WebkitOverflowScrolling: "touch",
           scrollbarWidth: "none",
@@ -66,7 +66,7 @@ export default function SozlesmeClient({ tenant, config }) {
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   padding: "12px 20px", fontSize: 12, fontWeight: isActive ? 800 : 500,
-                  color: isActive ? "#fff" : "rgba(255,255,255,0.4)",
+                  color: isActive ? "#fff" : "rgba(0,0,0,0.35)",
                   background: "none", border: "none",
                   borderBottom: isActive ? "2px solid #fff" : "2px solid transparent",
                   cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap",
@@ -83,8 +83,8 @@ export default function SozlesmeClient({ tenant, config }) {
 
         {/* İçerik Kartı */}
         <div style={{ 
-          background: "rgba(255,255,255,0.03)", 
-          border: "1px solid rgba(255,255,255,0.08)", 
+          background: "rgba(0,0,0,0.02)", 
+          border: "1px solid rgba(0,0,0,0.06)", 
           borderRadius: 0, 
           padding: "clamp(24px, 5vw, 48px)",
           marginBottom: 40,
@@ -93,17 +93,17 @@ export default function SozlesmeClient({ tenant, config }) {
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
             <div style={{
               width: 36, height: 36, borderRadius: 0,
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: "rgba(0,0,0,0.05)",
+              border: "1px solid rgba(0,0,0,0.08)",
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>
-              <CurrentIcon size={16} style={{ color: "rgba(255,255,255,0.6)" }} />
+              <CurrentIcon size={16} style={{ color: "rgba(0,0,0,0.55)" }} />
             </div>
             <div>
-              <h2 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: "0 0 2px" }}>
+              <h2 style={{ fontSize: 16, fontWeight: 800, color: "var(--text, #1a1a1a)", margin: "0 0 2px" }}>
                 {currentTab?.label}
               </h2>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", margin: 0 }}>
+              <p style={{ fontSize: 12, color: "rgba(0,0,0,0.3)", margin: 0 }}>
                 {currentTab?.desc}
               </p>
             </div>
@@ -111,7 +111,7 @@ export default function SozlesmeClient({ tenant, config }) {
 
           {/* Sözleşme Metni */}
           <div style={{ 
-            color: "rgba(255,255,255,0.75)", 
+            color: "rgba(0,0,0,0.75)", 
             fontSize: 14, 
             lineHeight: 1.8, 
             whiteSpace: "pre-wrap",
@@ -124,15 +124,15 @@ export default function SozlesmeClient({ tenant, config }) {
         {/* Alt Bilgi */}
         <div style={{ 
           padding: "20px 24px", 
-          background: "rgba(255,255,255,0.02)", 
-          border: "1px solid rgba(255,255,255,0.06)",
+          background: "rgba(0,0,0,0.02)", 
+          border: "1px solid rgba(0,0,0,0.05)",
           marginBottom: 60,
           display: "flex", alignItems: "center", gap: 12,
         }}>
-          <Shield size={16} style={{ color: "rgba(255,255,255,0.3)", flexShrink: 0 }} />
-          <p style={{ margin: 0, color: "rgba(255,255,255,0.4)", fontSize: 12, lineHeight: 1.6 }}>
+          <Shield size={16} style={{ color: "rgba(0,0,0,0.25)", flexShrink: 0 }} />
+          <p style={{ margin: 0, color: "rgba(0,0,0,0.35)", fontSize: 12, lineHeight: 1.6 }}>
             Bu sayfadaki yasal metinler, hizmet veren işletme tarafından düzenlenmiştir. Altyapı: {PLATFORM.name} ({PLATFORM.legalName}).
-            Sorularınız için <strong style={{ color: "rgba(255,255,255,0.6)" }}>{PLATFORM.supportEmail}</strong> adresine yazabilirsiniz.
+            Sorularınız için <strong style={{ color: "rgba(0,0,0,0.55)" }}>{PLATFORM.supportEmail}</strong> adresine yazabilirsiniz.
           </p>
         </div>
       </div>

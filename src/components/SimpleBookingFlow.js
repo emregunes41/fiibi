@@ -18,17 +18,17 @@ const card = (on) => ({
 });
 const inp = {
   width: "100%", boxSizing: "border-box",
-  background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)",
-  padding: "14px 16px", fontSize: "14px", color: "#fff", outline: "none",
+  background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.1)",
+  padding: "14px 16px", fontSize: "14px", color: "var(--text, #1a1a1a)", outline: "none",
 };
 const lbl = {
-  fontSize: "11px", fontWeight: 700, color: "rgba(255,255,255,0.45)",
+  fontSize: "11px", fontWeight: 700, color: "rgba(0,0,0,0.4)",
   textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "6px", display: "block",
 };
 const btn = (active) => ({
   width: "100%", padding: "16px", border: "none",
-  background: active ? "#fff" : "rgba(255,255,255,0.04)",
-  color: active ? "#000" : "rgba(255,255,255,0.15)",
+  background: active ? "#fff" : "rgba(0,0,0,0.03)",
+  color: active ? "#000" : "rgba(0,0,0,0.1)",
   fontSize: "14px", fontWeight: 700, cursor: active ? "pointer" : "not-allowed",
   display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
 });
@@ -126,7 +126,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
   if (step === 0) {
     return (
       <div style={{ textAlign: "center", padding: "60px 0" }}>
-        <div style={{ width: 24, height: 24, border: "2px solid rgba(255,255,255,0.1)", borderTopColor: "rgba(255,255,255,0.5)", borderRadius: "50%", margin: "0 auto", animation: "spin 0.8s linear infinite" }} />
+        <div style={{ width: 24, height: 24, border: "2px solid rgba(0,0,0,0.08)", borderTopColor: "rgba(0,0,0,0.45)", borderRadius: "50%", margin: "0 auto", animation: "spin 0.8s linear infinite" }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -139,7 +139,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
         {[1,2,3,4].map(s => (
           <div key={s} style={{
             flex: 1, height: "3px",
-            background: step >= s ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.08)",
+            background: step >= s ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0.06)",
             transition: "all 0.3s",
           }} />
         ))}
@@ -162,30 +162,30 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                   <div key={pkg.id} onClick={() => setSelectedPkg(pkg)} style={card(on)}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                       <div>
-                        <div style={{ fontSize: "15px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+                        <div style={{ fontSize: "15px", fontWeight: 700, color: "var(--text, #1a1a1a)", marginBottom: "4px" }}>
                           {on && <Check size={14} style={{ marginRight: 6, verticalAlign: "middle" }} />}
                           {pkg.name}
                         </div>
                         {pkg.description && (
-                          <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginBottom: "6px", lineHeight: 1.5 }}>
+                          <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.35)", marginBottom: "6px", lineHeight: 1.5 }}>
                             {pkg.description}
                           </div>
                         )}
                         <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                           {duration && (
-                            <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.35)", display: "flex", alignItems: "center", gap: "4px" }}>
+                            <span style={{ fontSize: "11px", color: "rgba(0,0,0,0.3)", display: "flex", alignItems: "center", gap: "4px" }}>
                               <Clock size={10} /> {duration}
                             </span>
                           )}
                           {pkg.features && (
-                            <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)" }}>
+                            <span style={{ fontSize: "11px", color: "rgba(0,0,0,0.25)" }}>
                               {pkg.features}
                             </span>
                           )}
                         </div>
                       </div>
                       <div style={{ textAlign: "right", flexShrink: 0 }}>
-                        <div style={{ fontSize: "18px", fontWeight: 700, color: "#fff" }}>{fmt(price)}₺</div>
+                        <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--text, #1a1a1a)" }}>{fmt(price)}₺</div>
                       </div>
                     </div>
                   </div>
@@ -193,7 +193,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
               })}
             </div>
             {initialPackages.length === 0 && (
-              <div style={{ textAlign: "center", padding: "40px", color: "rgba(255,255,255,0.3)", border: "1px dashed rgba(255,255,255,0.1)" }}>
+              <div style={{ textAlign: "center", padding: "40px", color: "rgba(0,0,0,0.25)", border: "1px dashed rgba(0,0,0,0.08)" }}>
                 Henüz {terms.service.toLowerCase()} oluşturulmamış.
               </div>
             )}
@@ -208,13 +208,13 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
         {/* ═══ STEP 2: Tarih & Saat ═══ */}
         {step === 2 && (
           <motion.div key="s2" {...anim}>
-            <button onClick={() => setStep(1)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: "13px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "6px" }}>
+            <button onClick={() => setStep(1)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.35)", cursor: "pointer", fontSize: "13px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "6px" }}>
               <ArrowLeft size={14} /> Geri
             </button>
 
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "16px", marginBottom: "24px" }}>
-              <div style={{ fontSize: "14px", fontWeight: 700, color: "#fff" }}>{selectedPkg?.name}</div>
-              <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: "4px" }}>
+            <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", padding: "16px", marginBottom: "24px" }}>
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--text, #1a1a1a)" }}>{selectedPkg?.name}</div>
+              <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.35)", marginTop: "4px" }}>
                 {fmt(parseInt(selectedPkg?.price?.replace(/\D/g, "") || "0"))}₺
                 {selectedPkg?.sessionDuration && ` • ${selectedPkg.sessionDuration} dk`}
               </div>
@@ -265,7 +265,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
               <div>
                 <div style={lbl}><Clock size={11} style={{ display: "inline", marginRight: 4 }} /> Saat Seçin</div>
                 {loadingSlots ? (
-                  <div style={{ textAlign: "center", padding: "20px", color: "rgba(255,255,255,0.3)", fontSize: "13px" }}>Müsaitlik kontrol ediliyor...</div>
+                  <div style={{ textAlign: "center", padding: "20px", color: "rgba(0,0,0,0.25)", fontSize: "13px" }}>Müsaitlik kontrol ediliyor...</div>
                 ) : (
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))", gap: "6px" }}>
                     {getTimeSlots().map(slot => {
@@ -283,7 +283,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                             background: isSelected ? "rgba(255, 255, 255, 0.85)" : isBooked ? "rgba(255,0,0,0.05)" : "rgba(255, 255, 255, 0.15)",
                             backdropFilter: "blur(16px)",
                             WebkitBackdropFilter: "blur(16px)",
-                            color: isSelected ? "#000" : isBooked ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.9)",
+                            color: isSelected ? "#000" : isBooked ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0.85)",
                             textShadow: (!isSelected && !isBooked) ? "0 1px 3px rgba(0,0,0,0.4)" : "none",
                             border: isSelected ? "1px solid rgba(255, 255, 255, 0.85)" : "1px solid rgba(255, 255, 255, 0.4)",
                             textDecoration: isBooked ? "line-through" : "none",
@@ -309,14 +309,14 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
         {/* ═══ STEP 3: Kişisel Bilgiler ═══ */}
         {step === 3 && (
           <motion.div key="s3" {...anim}>
-            <button onClick={() => setStep(2)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: "13px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "6px" }}>
+            <button onClick={() => setStep(2)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.35)", cursor: "pointer", fontSize: "13px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "6px" }}>
               <ArrowLeft size={14} /> Geri
             </button>
 
             {/* Summary */}
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "16px", marginBottom: "24px" }}>
-              <div style={{ fontSize: "14px", fontWeight: 700, color: "#fff", marginBottom: "8px" }}>{selectedPkg?.name}</div>
-              <div style={{ display: "flex", gap: "16px", fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>
+            <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", padding: "16px", marginBottom: "24px" }}>
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--text, #1a1a1a)", marginBottom: "8px" }}>{selectedPkg?.name}</div>
+              <div style={{ display: "flex", gap: "16px", fontSize: "12px", color: "rgba(0,0,0,0.35)" }}>
                 <span><Calendar size={11} style={{ verticalAlign: "middle", marginRight: 4 }} />
                   {new Date(selectedDate).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
                 </span>
@@ -348,7 +348,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                 Devam <ArrowRight size={16} />
               </button>
               {!isContactValid && contact.name && (
-                <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.25)", textAlign: "center", marginTop: "8px" }}>
+                <div style={{ fontSize: "11px", color: "rgba(0,0,0,0.2)", textAlign: "center", marginTop: "8px" }}>
                   Tüm zorunlu alanları doldurun
                 </div>
               )}
@@ -359,13 +359,13 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
         {/* ═══ STEP 4: Ödeme Yöntemi & Onay ═══ */}
         {step === 4 && (
           <motion.div key="s4" {...anim}>
-            <button onClick={() => setStep(3)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: "13px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "6px" }}>
+            <button onClick={() => setStep(3)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.35)", cursor: "pointer", fontSize: "13px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "6px" }}>
               <ArrowLeft size={14} /> Geri
             </button>
 
             {/* Full Summary */}
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "20px", marginBottom: "24px" }}>
-              <div style={{ fontSize: "11px", fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "12px" }}>
+            <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", padding: "20px", marginBottom: "24px" }}>
+              <div style={{ fontSize: "11px", fontWeight: 700, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "12px" }}>
                 {terms.appointment} Özeti
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -377,15 +377,15 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                   { l: "Telefon", v: contact.phone },
                   { l: "E-posta", v: contact.email },
                 ].map((r, i) => (
-                  <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", padding: "4px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                    <span style={{ color: "rgba(255,255,255,0.4)" }}>{r.l}</span>
-                    <span style={{ color: "#fff", fontWeight: 600, textAlign: "right" }}>{r.v}</span>
+                  <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", padding: "4px 0", borderBottom: "1px solid rgba(0,0,0,0.03)" }}>
+                    <span style={{ color: "rgba(0,0,0,0.35)" }}>{r.l}</span>
+                    <span style={{ color: "var(--text, #1a1a1a)", fontWeight: 600, textAlign: "right" }}>{r.v}</span>
                   </div>
                 ))}
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "16px", paddingTop: "12px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-                <span style={{ fontSize: "13px", fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>TOPLAM</span>
-                <span style={{ fontSize: "20px", fontWeight: 700, color: "#fff" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "16px", paddingTop: "12px", borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+                <span style={{ fontSize: "13px", fontWeight: 700, color: "rgba(0,0,0,0.45)" }}>TOPLAM</span>
+                <span style={{ fontSize: "20px", fontWeight: 700, color: "var(--text, #1a1a1a)" }}>
                   {fmt(parseInt(selectedPkg?.price?.replace(/\D/g, "") || "0"))}₺
                 </span>
               </div>
@@ -400,11 +400,11 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
               </div>
             )}
 
-            <div style={{ marginBottom: 24, padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
+            <div style={{ marginBottom: 24, padding: "16px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)" }}>
               <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", marginBottom: 0 }}>
                 <input type="checkbox" checked={agreedToTerms} onChange={e => setAgreedToTerms(e.target.checked)} style={{ width: 18, height: 18, accentColor: "#000", marginTop: 2, cursor: "pointer" }} />
-                <span style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>
-                  <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "#fff", textDecoration: "underline" }}>Hizmet Sözleşmesi</a>'ni, <a href="/sozlesme?tab=kvkk" target="_blank" style={{ color: "#fff", textDecoration: "underline" }}>KVKK Aydınlatma Metni</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "#fff", textDecoration: "underline" }}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okudum, onaylıyorum.
+                <span style={{ fontSize: 13, color: "rgba(0,0,0,0.65)", lineHeight: 1.5 }}>
+                  <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "var(--text, #1a1a1a)", textDecoration: "underline" }}>Hizmet Sözleşmesi</a>'ni, <a href="/sozlesme?tab=kvkk" target="_blank" style={{ color: "var(--text, #1a1a1a)", textDecoration: "underline" }}>KVKK Aydınlatma Metni</a>'ni ve <a href="/sozlesme?tab=mesafeli" target="_blank" style={{ color: "var(--text, #1a1a1a)", textDecoration: "underline" }}>Ön Bilgilendirme ile Mesafeli Satış Sözleşmesi</a>'ni okudum, onaylıyorum.
                 </span>
               </label>
             </div>
@@ -430,15 +430,15 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
               }}>
                 ✅
               </div>
-              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#fff", marginBottom: "12px" }}>
+              <h2 style={{ fontSize: "22px", fontWeight: 800, color: "var(--text, #1a1a1a)", marginBottom: "12px" }}>
                 {terms.appointment}nuz Alındı!
               </h2>
-              <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: "400px", margin: "0 auto 24px" }}>
+              <p style={{ fontSize: "14px", color: "rgba(0,0,0,0.45)", lineHeight: 1.7, maxWidth: "400px", margin: "0 auto 24px" }}>
                 {terms.appointment}nuz başarıyla oluşturuldu. E-posta adresinize detaylar gönderildi.
               </p>
-              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", padding: "16px", maxWidth: "340px", margin: "0 auto 24px", textAlign: "left" }}>
-                <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginBottom: "6px" }}>{selectedPkg?.name}</div>
-                <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
+              <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", padding: "16px", maxWidth: "340px", margin: "0 auto 24px", textAlign: "left" }}>
+                <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.35)", marginBottom: "6px" }}>{selectedPkg?.name}</div>
+                <div style={{ fontSize: "13px", color: "rgba(0,0,0,0.55)" }}>
                   {new Date(selectedDate).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })} — {selectedTime}
                 </div>
               </div>

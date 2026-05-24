@@ -176,7 +176,7 @@ export default async function HomePage() {
         <section key="reels" className="py-16 border-t border-white/5">
           <div className="section-container">
             <div style={{ marginBottom: 32, textAlign: "center" }}>
-              <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>
+              <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.25)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>
                 <Instagram size={12} style={{ display: "inline", verticalAlign: "middle", marginRight: 6 }} />INSTAGRAM
               </div>
               <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: "var(--heading-weight)", letterSpacing: "-0.03em", margin: 0 }}>
@@ -198,7 +198,7 @@ export default async function HomePage() {
                   <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "40%", background: "linear-gradient(to top, rgba(0,0,0,0.5), transparent)", zIndex: 1 }} />
                   {/* Play button */}
                   <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>
-                    <div style={{ width: 50, height: 50, borderRadius: "50%", background: "rgba(0,0,0,0.3)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,255,255,0.25)", transition: "transform 0.2s, background 0.2s" }}>
+                    <div style={{ width: 50, height: 50, borderRadius: "50%", background: "rgba(0,0,0,0.3)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(0,0,0,0.2)", transition: "transform 0.2s, background 0.2s" }}>
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="white" style={{ marginLeft: 2 }}>
                         <polygon points="5,3 19,12 5,21" />
                       </svg>
@@ -272,11 +272,11 @@ export default async function HomePage() {
       <section key="blog" id="blog" className="py-20 border-t border-white/5">
         <div className="section-container">
           <div style={{ marginBottom: "3rem", textAlign: "center" }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>BLOG & HABERLER</div>
+            <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.25)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>BLOG & HABERLER</div>
             <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 8px 0" }}>
               Güncel Yazılar
             </h2>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.9rem", margin: 0 }}>Sektörel haberler ve faydalı ipuçları</p>
+            <p style={{ color: "rgba(0,0,0,0.45)", fontSize: "0.9rem", margin: 0 }}>Sektörel haberler ve faydalı ipuçları</p>
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24 }}>
             {posts.map(post => (
@@ -286,17 +286,17 @@ export default async function HomePage() {
                     <img src={post.imageUrl} alt={post.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
                 ) : (
-                  <div style={{ width: "100%", height: 200, background: "rgba(255,255,255,0.02)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ width: "100%", height: 200, background: "rgba(0,0,0,0.02)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <span style={{ fontSize: 40, opacity: 0.1 }}>📝</span>
                   </div>
                 )}
                 <div style={{ padding: 24, flex: 1, display: "flex", flexDirection: "column" }}>
-                  <div suppressHydrationWarning style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+                  <div suppressHydrationWarning style={{ fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.35)", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
                     <Calendar size={12} />
                     {new Date(post.publishedAt || post.createdAt).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', year: 'numeric' })}
                   </div>
                   <h3 style={{ fontSize: 18, fontWeight: 800, margin: "0 0 12px 0", lineHeight: 1.3 }}>{post.title}</h3>
-                  {post.excerpt && <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", margin: "0 0 20px 0", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden", flex: 1 }}>{post.excerpt}</p>}
+                  {post.excerpt && <p style={{ fontSize: 13, color: "rgba(0,0,0,0.45)", margin: "0 0 20px 0", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden", flex: 1 }}>{post.excerpt}</p>}
                   <div style={{ marginTop: "auto", fontSize: 13, fontWeight: 700, color: "var(--accent)", display: "flex", alignItems: "center", gap: 4 }}>
                     Devamını Oku <span style={{ fontSize: 16 }}>&rarr;</span>
                   </div>
@@ -311,15 +311,15 @@ export default async function HomePage() {
     services: () => (!features.categories && modules.moduleReservations !== false && packages.length > 0) ? (
       <section key="services" id="services" className={tpl.sectionBorder ? "border-t border-white/5" : ""} style={{ padding: `var(--section-spacing) 24px` }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>{terms.services}</div>
+          <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.25)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>{terms.services}</div>
           <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: "var(--heading-weight)", letterSpacing: "-0.03em", marginBottom: 48 }}>
             Sunduğumuz {terms.services}
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: tpl.cardStyle === "editorial" ? "1fr" : "repeat(auto-fit, minmax(260px, 1fr))", gap: tpl.radius > 10 ? 16 : 12 }}>
             {packages.map(pkg => (
               <div key={pkg.id} style={{
-                background: tpl.cardStyle === "glass" ? "rgba(255,255,255,0.03)" : tpl.cardStyle === "elevated" ? "var(--bg-card)" : "rgba(255,255,255,0.02)",
-                border: tpl.cardStyle === "glass" ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(255,255,255,0.06)",
+                background: tpl.cardStyle === "glass" ? "rgba(0,0,0,0.02)" : tpl.cardStyle === "elevated" ? "var(--bg-card)" : "rgba(0,0,0,0.02)",
+                border: tpl.cardStyle === "glass" ? "1px solid rgba(0,0,0,0.08)" : "1px solid rgba(0,0,0,0.05)",
                 padding: `var(--card-padding)`,
                 borderRadius: `var(--radius)`,
                 backdropFilter: tpl.cardStyle === "glass" ? "blur(20px)" : "none",
@@ -330,13 +330,13 @@ export default async function HomePage() {
               }}>
                 <div style={{ flex: 1 }}>
                   <h3 style={{ fontSize: 17, fontWeight: "var(--heading-weight)", marginBottom: 8 }}>{pkg.name}</h3>
-                  {pkg.description && <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, marginBottom: 16 }}>{pkg.description}</p>}
+                  {pkg.description && <p style={{ fontSize: 13, color: "rgba(0,0,0,0.4)", lineHeight: 1.6, marginBottom: 16 }}>{pkg.description}</p>}
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
                   <span style={{ fontSize: 22, fontWeight: 900 }}>{pkg.price?.toLocaleString("tr-TR")} ₺</span>
                   <Link href="/booking" style={{
-                    background: tpl.buttonStyle === "outline" ? "transparent" : tpl.buttonStyle === "pill" ? "var(--accent)" : "rgba(255,255,255,0.08)",
-                    border: tpl.buttonStyle === "outline" ? "1px solid rgba(255,255,255,0.3)" : tpl.buttonStyle === "text" ? "none" : "1px solid rgba(255,255,255,0.12)",
+                    background: tpl.buttonStyle === "outline" ? "transparent" : tpl.buttonStyle === "pill" ? "var(--accent)" : "rgba(0,0,0,0.06)",
+                    border: tpl.buttonStyle === "outline" ? "1px solid rgba(0,0,0,0.25)" : tpl.buttonStyle === "text" ? "none" : "1px solid rgba(0,0,0,0.1)",
                     padding: tpl.buttonStyle === "pill" ? "8px 22px" : "8px 18px",
                     color: tpl.buttonStyle === "pill" ? "var(--btn-text)" : "#fff",
                     fontSize: 12, fontWeight: 700, textDecoration: tpl.buttonStyle === "text" ? "underline" : "none",
@@ -346,9 +346,9 @@ export default async function HomePage() {
                   </Link>
                 </div>
                 {pkg.features && pkg.features.length > 0 && (
-                  <div style={{ marginTop: 16, paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 6 }}>
+                  <div style={{ marginTop: 16, paddingTop: 12, borderTop: "1px solid rgba(0,0,0,0.05)", display: "flex", flexDirection: "column", gap: 6 }}>
                     {pkg.features.map((f, i) => (
-                      <span key={i} style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>• {f}</span>
+                      <span key={i} style={{ fontSize: 12, color: "rgba(0,0,0,0.35)" }}>• {f}</span>
                     ))}
                   </div>
                 )}
@@ -428,19 +428,19 @@ export default async function HomePage() {
                   <div className="flex flex-col gap-3">
                     {siteConfig?.showPhoneOnHome !== false && (
                       <a href={`tel:${(siteConfig?.phone || "").replace(/\s/g, '')}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><Phone size={13} strokeWidth={1.5} /></span>
+                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.05)" }}><Phone size={13} strokeWidth={1.5} /></span>
                         {siteConfig?.phone || ""}
                       </a>
                     )}
                     {siteConfig?.showEmailOnHome !== false && (
                       <a href={`mailto:${siteConfig?.email || ""}`} className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><Mail size={13} strokeWidth={1.5} /></span>
+                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-white/10 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.05)" }}><Mail size={13} strokeWidth={1.5} /></span>
                         {siteConfig?.email || ""}
                       </a>
                     )}
                     {siteConfig?.showAddressOnHome !== false && siteConfig?.address && (
                       <div className="text-[13px] text-white/50 flex items-center gap-3">
-                        <span className="w-8 h-8 flex items-center justify-center flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><MapPin size={13} strokeWidth={1.5} /></span>
+                        <span className="w-8 h-8 flex items-center justify-center flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.05)" }}><MapPin size={13} strokeWidth={1.5} /></span>
                         {siteConfig.address}
                       </div>
                     )}
@@ -451,7 +451,7 @@ export default async function HomePage() {
                   <div className="flex flex-col gap-3">
                     {siteConfig?.whatsapp && (
                       <a href={`https://wa.me/${siteConfig.whatsapp}?text=Merhaba%2C%20bilgi%20almak%20istiyorum.`} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-[#25D366]/20 group-hover:border-[#25D366]/30 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><MessageCircle size={13} strokeWidth={1.5} /></span>
+                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-[#25D366]/20 group-hover:border-[#25D366]/30 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.05)" }}><MessageCircle size={13} strokeWidth={1.5} /></span>
                         WhatsApp
                       </a>
                     )}
@@ -460,14 +460,14 @@ export default async function HomePage() {
                       const igUrl = raw.startsWith("http") ? raw : `https://www.instagram.com/${raw.replace(/^@/, "")}`;
                       return (
                       <a href={igUrl} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-[#E1306C]/20 group-hover:border-[#E1306C]/30 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><Instagram size={13} strokeWidth={1.5} /></span>
+                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-[#E1306C]/20 group-hover:border-[#E1306C]/30 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.05)" }}><Instagram size={13} strokeWidth={1.5} /></span>
                         Instagram
                       </a>
                       );
                     })()}
                     {siteConfig?.googleMapsUrl && (
                       <a href={siteConfig.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="group text-[13px] text-white/50 hover:text-white transition-all no-underline flex items-center gap-3">
-                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-[#4285F4]/20 group-hover:border-[#4285F4]/30 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}><MapPin size={13} strokeWidth={1.5} /></span>
+                        <span className="w-8 h-8 flex items-center justify-center group-hover:bg-[#4285F4]/20 group-hover:border-[#4285F4]/30 transition-all flex-shrink-0" style={{ borderRadius: `var(--radius)`, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.05)" }}><MapPin size={13} strokeWidth={1.5} /></span>
                         Yol Tarifi
                       </a>
                     )}
@@ -482,10 +482,10 @@ export default async function HomePage() {
           <div className="section-container py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="text-[10px] text-white/20 uppercase tracking-[0.2em]">© {new Date().getFullYear()} {tenant?.businessName || siteConfig?.businessName || "Studio"}</span>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 16, justifyContent: "center" }}>
-              <Link href="/gizlilik-politikasi" style={{ color: "rgba(255,255,255,0.2)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Gizlilik Politikası</Link>
-              <Link href="/cerez-politikasi" style={{ color: "rgba(255,255,255,0.2)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Çerez Politikası</Link>
-              <Link href="/kullanim-sartlari" style={{ color: "rgba(255,255,255,0.2)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Kullanım Şartları</Link>
-              <Link href="/sozlesme" style={{ color: "rgba(255,255,255,0.2)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Yasal Sözleşmeler</Link>
+              <Link href="/gizlilik-politikasi" style={{ color: "rgba(0,0,0,0.15)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Gizlilik Politikası</Link>
+              <Link href="/cerez-politikasi" style={{ color: "rgba(0,0,0,0.15)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Çerez Politikası</Link>
+              <Link href="/kullanim-sartlari" style={{ color: "rgba(0,0,0,0.15)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Kullanım Şartları</Link>
+              <Link href="/sozlesme" style={{ color: "rgba(0,0,0,0.15)", fontSize: 10, textDecoration: "none", letterSpacing: "0.05em" }}>Yasal Sözleşmeler</Link>
             </div>
           </div>
         </div>

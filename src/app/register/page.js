@@ -29,8 +29,8 @@ export default function RegisterPage() {
 
   const inputStyle = {
     width: "100%",
-    background: "rgba(255,255,255,0.1)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    background: "rgba(0,0,0,0.08)",
+    border: "1px solid rgba(0,0,0,0.08)",
     borderRadius: 0,
     padding: "14px 16px 14px 48px",
     color: "var(--text)",
@@ -43,36 +43,36 @@ export default function RegisterPage() {
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "100px 24px 24px", background: "var(--bg)", position: "relative", overflow: "hidden" }}>
       {/* Background orbs */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-        <div style={{ position: "absolute", top: "20%", right: "15%", width: 300, height: 300, background: "rgba(255,255,255,0.03)", filter: "blur(120px)", borderRadius: 0 }} />
-        <div style={{ position: "absolute", bottom: "20%", left: "15%", width: 250, height: 250, background: "rgba(255,255,255,0.02)", filter: "blur(120px)", borderRadius: 0 }} />
+        <div style={{ position: "absolute", top: "20%", right: "15%", width: 300, height: 300, background: "rgba(0,0,0,0.02)", filter: "blur(120px)", borderRadius: 0 }} />
+        <div style={{ position: "absolute", bottom: "20%", left: "15%", width: 250, height: 250, background: "rgba(0,0,0,0.02)", filter: "blur(120px)", borderRadius: 0 }} />
       </div>
 
       <div style={{ width: "100%", maxWidth: 420, position: "relative", zIndex: 10 }}>
         {/* Logo */}
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 32 }}>
-          <div style={{ width: 80, height: 80, borderRadius: 0, background: "rgba(255,255,255,0.08)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 40px rgba(255,255,255,0.08)" }}>
-            <Camera size={32} style={{ color: "rgba(255,255,255,0.85)" }} />
+          <div style={{ width: 80, height: 80, borderRadius: 0, background: "rgba(0,0,0,0.06)", backdropFilter: "blur(20px)", border: "1px solid rgba(0,0,0,0.1)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 40px rgba(0,0,0,0.06)" }}>
+            <Camera size={32} style={{ color: "rgba(0,0,0,0.8)" }} />
           </div>
         </div>
 
         {/* Card */}
-        <div style={{ background: "rgba(255,255,255,0.05)", backdropFilter: "blur(40px)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.1)", padding: "40px 36px", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
+        <div style={{ background: "rgba(0,0,0,0.04)", backdropFilter: "blur(40px)", borderRadius: 0, border: "1px solid rgba(0,0,0,0.08)", padding: "40px 36px", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
           <div style={{ textAlign: "center", marginBottom: 32 }}>
             <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 8 }}>Hesap Oluştur</h1>
-            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14 }}>Hesap oluşturun</p>
+            <p style={{ color: "rgba(0,0,0,0.35)", fontSize: 14 }}>Hesap oluşturun</p>
           </div>
 
           <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {error && (
-              <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)", fontSize: 14, padding: "14px", borderRadius: 0, textAlign: "center", fontWeight: 500 }}>
+              <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.55)", fontSize: 14, padding: "14px", borderRadius: 0, textAlign: "center", fontWeight: 500 }}>
                 {error}
               </div>
             )}
 
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>Ad Soyad</label>
+              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>Ad Soyad</label>
               <div style={{ position: "relative" }}>
-                <User size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.45)", pointerEvents: "none" }} />
+                <User size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.4)", pointerEvents: "none" }} />
                 <input 
                   type="text" 
                   required 
@@ -80,16 +80,16 @@ export default function RegisterPage() {
                   placeholder="Adınız Soyadınız"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.25)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
-                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.1)"; }}
+                  onFocus={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.2)"; e.target.style.background = "rgba(0,0,0,0.06)"; }}
+                  onBlur={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.08)"; e.target.style.background = "rgba(0,0,0,0.08)"; }}
                 />
               </div>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
+              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
               <div style={{ position: "relative" }}>
-                <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.45)", pointerEvents: "none" }} />
+                <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.4)", pointerEvents: "none" }} />
                 <input 
                   type="email" 
                   required 
@@ -97,16 +97,16 @@ export default function RegisterPage() {
                   placeholder="ornek@mail.com"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.25)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
-                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.1)"; }}
+                  onFocus={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.2)"; e.target.style.background = "rgba(0,0,0,0.06)"; }}
+                  onBlur={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.08)"; e.target.style.background = "rgba(0,0,0,0.08)"; }}
                 />
               </div>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>Şifre</label>
+              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>Şifre</label>
               <div style={{ position: "relative" }}>
-                <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.45)", pointerEvents: "none" }} />
+                <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.4)", pointerEvents: "none" }} />
                 <input 
                   type="password" 
                   required 
@@ -115,8 +115,8 @@ export default function RegisterPage() {
                   placeholder="En az 6 karakter"
                   value={formData.password}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  onFocus={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.25)"; e.target.style.background = "rgba(255,255,255,0.08)"; }}
-                  onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.background = "rgba(255,255,255,0.1)"; }}
+                  onFocus={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.2)"; e.target.style.background = "rgba(0,0,0,0.06)"; }}
+                  onBlur={(e) => { e.target.style.borderColor = "rgba(0,0,0,0.08)"; e.target.style.background = "rgba(0,0,0,0.08)"; }}
                 />
               </div>
             </div>
@@ -129,8 +129,8 @@ export default function RegisterPage() {
                 onChange={(e) => setFormData({...formData, kvkkAccepted: e.target.checked})}
                 style={{ marginTop: 4 }} 
               />
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>
-                <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "rgba(255,255,255,0.9)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.3)" }}>Hizmet Sözleşmesi</a>'ni ve <a href="/sozlesme?tab=kvkk" target="_blank" style={{ color: "rgba(255,255,255,0.9)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.3)" }}>KVKK Aydınlatma Metni</a>'ni okudum ve kabul ediyorum.
+              <span style={{ fontSize: 12, color: "rgba(0,0,0,0.55)", lineHeight: 1.5 }}>
+                <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "rgba(0,0,0,0.85)", textDecoration: "none", borderBottom: "1px solid rgba(0,0,0,0.25)" }}>Hizmet Sözleşmesi</a>'ni ve <a href="/sozlesme?tab=kvkk" target="_blank" style={{ color: "rgba(0,0,0,0.85)", textDecoration: "none", borderBottom: "1px solid rgba(0,0,0,0.25)" }}>KVKK Aydınlatma Metni</a>'ni okudum ve kabul ediyorum.
               </span>
             </label>
 
@@ -144,10 +144,10 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <div style={{ textAlign: "center", marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>
+          <div style={{ textAlign: "center", marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(0,0,0,0.08)" }}>
+            <p style={{ fontSize: 14, color: "rgba(0,0,0,0.35)" }}>
               Zaten hesabınız var mı?{" "}
-              <Link href="/login" style={{ color: "#fff", fontWeight: 600, textDecoration: "none" }}>
+              <Link href="/login" style={{ color: "var(--text, #1a1a1a)", fontWeight: 600, textDecoration: "none" }}>
                 Giriş Yap
               </Link>
             </p>

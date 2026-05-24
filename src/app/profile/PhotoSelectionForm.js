@@ -34,20 +34,20 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
 
   if (!isEditing && initialSelection) {
     return (
-      <div style={{ marginTop: 24, padding: 20, background: "rgba(255,255,255,0.05)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)" }}>
+      <div style={{ marginTop: 24, padding: 20, background: "rgba(0,0,0,0.04)", borderRadius: 0, border: "1px solid rgba(0,0,0,0.06)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 12 }}>
           <div>
-            <h5 style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 4 }}>Yaptığınız Seçim</h5>
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Bu numaralar düzenleme için iletildi.</p>
+            <h5 style={{ fontSize: 13, fontWeight: 700, color: "var(--text, #1a1a1a)", marginBottom: 4 }}>Yaptığınız Seçim</h5>
+            <p style={{ fontSize: 11, color: "rgba(0,0,0,0.45)" }}>Bu numaralar düzenleme için iletildi.</p>
           </div>
           <button 
             onClick={() => setIsEditing(true)}
-            style={{ padding: "6px 12px", borderRadius: 0, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}
+            style={{ padding: "6px 12px", borderRadius: 0, background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.45)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}
           >
             <Edit3 size={12} /> Düzenle
           </button>
         </div>
-        <div style={{ padding: 16, background: "rgba(255,255,255,0.05)", borderRadius: 0, border: "1px dashed rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", fontSize: 14, lineHeight: 1.6, wordBreak: "break-word" }}>
+        <div style={{ padding: 16, background: "rgba(0,0,0,0.04)", borderRadius: 0, border: "1px dashed rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.75)", fontSize: 14, lineHeight: 1.6, wordBreak: "break-word" }}>
           {initialSelection}
         </div>
       </div>
@@ -55,13 +55,13 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
   }
 
   return (
-    <div style={{ marginTop: 24, padding: 24, background: "rgba(255,255,255,0.05)", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)" }}>
+    <div style={{ marginTop: 24, padding: 24, background: "rgba(0,0,0,0.04)", borderRadius: 0, border: "1px solid rgba(0,0,0,0.06)" }}>
       <div style={{ marginBottom: 16 }}>
-        <h5 style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Fotoğraf Seçimi Yapın</h5>
-        <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>
+        <h5 style={{ fontSize: 14, fontWeight: 700, color: "var(--text, #1a1a1a)", marginBottom: 6 }}>Fotoğraf Seçimi Yapın</h5>
+        <p style={{ fontSize: 12, color: "rgba(0,0,0,0.35)", lineHeight: 1.5 }}>
           Lütfen Drive üzerinden seçtiğiniz fotoğrafların dosya numaralarını araya virgül koyarak yazınız.
-          <span style={{ display: "block", color: "rgba(255,255,255,0.6)", fontSize: 12, marginTop: 6, fontWeight: 700 }}>⚠️ Toplam 30 adet fotoğraf seçmeniz gerekmektedir.</span>
-          <span style={{ display: "block", color: "rgba(255,255,255,0.45)", fontSize: 11, marginTop: 4 }}>Örn: DSC_0124, DSC_0245, DSC_0567...</span>
+          <span style={{ display: "block", color: "rgba(0,0,0,0.55)", fontSize: 12, marginTop: 6, fontWeight: 700 }}>⚠️ Toplam 30 adet fotoğraf seçmeniz gerekmektedir.</span>
+          <span style={{ display: "block", color: "rgba(0,0,0,0.4)", fontSize: 11, marginTop: 4 }}>Örn: DSC_0124, DSC_0245, DSC_0567...</span>
         </p>
       </div>
 
@@ -71,19 +71,19 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
           onChange={(e) => setSelection(e.target.value)}
           placeholder="Fotoğraf numaralarını buraya girin..."
           required
-          style={{ width: "100%", minHeight: 120, padding: 16, background: "rgba(0,0,0,0.2)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, color: "#fff", fontSize: 14, outline: "none", transition: "all 0.2s", resize: "none" }}
-          onFocus={(e) => e.target.style.borderColor = "rgba(255,255,255,0.3)"}
-          onBlur={(e) => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
+          style={{ width: "100%", minHeight: 120, padding: 16, background: "rgba(0,0,0,0.2)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, color: "var(--text, #1a1a1a)", fontSize: 14, outline: "none", transition: "all 0.2s", resize: "none" }}
+          onFocus={(e) => e.target.style.borderColor = "rgba(0,0,0,0.25)"}
+          onBlur={(e) => e.target.style.borderColor = "rgba(0,0,0,0.08)"}
         />
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          {message && <span style={{ fontSize: 12, color: message.includes("Hata") ? "rgba(255,255,255,0.6)" : "#fff", fontWeight: 600 }}>{message}</span>}
+          {message && <span style={{ fontSize: 12, color: message.includes("Hata") ? "rgba(0,0,0,0.55)" : "#fff", fontWeight: 600 }}>{message}</span>}
           <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
             {initialSelection && (
               <button 
                 type="button"
                 onClick={() => setIsEditing(false)}
-                style={{ background: "transparent", color: "rgba(255,255,255,0.4)", padding: "10px 16px", borderRadius: 0, fontSize: 13, border: "none", cursor: "pointer" }}
+                style={{ background: "transparent", color: "rgba(0,0,0,0.35)", padding: "10px 16px", borderRadius: 0, fontSize: 13, border: "none", cursor: "pointer" }}
               >
                 Vazgeç
               </button>

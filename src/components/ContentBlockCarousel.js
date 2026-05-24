@@ -96,7 +96,7 @@ export default function ContentBlockCarousel({ images }) {
             style={{
               width: i === current ? 20 : 6, height: 6,
               borderRadius: "var(--radius)", border: "none", padding: 0,
-              background: i === current ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.15)",
+              background: i === current ? "rgba(0,0,0,0.65)" : "rgba(0,0,0,0.1)",
               cursor: "pointer", transition: "all 0.3s",
               overflow: "hidden", position: "relative",
             }}
@@ -119,7 +119,7 @@ export default function ContentBlockCarousel({ images }) {
             position: "absolute", left: 8, top: "45%", transform: "translateY(-50%)",
             background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "var(--radius)",
             width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: "pointer", color: "rgba(255,255,255,0.7)",
+            cursor: "pointer", color: "rgba(0,0,0,0.65)",
           }}>
             <ChevronLeft size={14} />
           </button>
@@ -127,7 +127,7 @@ export default function ContentBlockCarousel({ images }) {
             position: "absolute", right: 8, top: "45%", transform: "translateY(-50%)",
             background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "var(--radius)",
             width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: "pointer", color: "rgba(255,255,255,0.7)",
+            cursor: "pointer", color: "rgba(0,0,0,0.65)",
           }}>
             <ChevronRight size={14} />
           </button>

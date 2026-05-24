@@ -9,27 +9,27 @@ export default function SuccessPage() {
       position: 'relative', overflow: 'hidden'
     }}>
       {/* Background Glow */}
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '400px', height: '400px', background: 'rgba(255,255,255,0.06)', filter: 'blur(100px)', zIndex: 0 }} />
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '400px', height: '400px', background: 'rgba(0,0,0,0.05)', filter: 'blur(100px)', zIndex: 0 }} />
 
       <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ 
-          width: '120px', height: '120px', borderRadius: 0, background: 'rgba(255,255,255,0.06)', 
+          width: '120px', height: '120px', borderRadius: 0, background: 'rgba(0,0,0,0.05)', 
           display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem',
           border: '1px solid rgba(16, 185, 129, 0.2)', boxShadow: '0 0 40px rgba(16, 185, 129, 0.1)'
         }}>
-          <CheckCircle size={60} color="rgba(255,255,255,0.6)" />
+          <CheckCircle size={60} color="rgba(0,0,0,0.55)" />
         </div>
 
         <h1 style={{ fontSize: '3.5rem', fontWeight: 900, letterSpacing: '-0.04em', marginBottom: '1.5rem' }}>Rezervasyon Alındı!</h1>
-        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1.2rem', maxWidth: '600px', lineHeight: 1.6, marginBottom: '3.5rem' }}>
+        <p style={{ color: 'rgba(0,0,0,0.45)', fontSize: '1.2rem', maxWidth: '600px', lineHeight: 1.6, marginBottom: '3.5rem' }}>
           Ödemeniz başarıyla tamamlandı. Detayları e-posta adresinize gönderdik. En kısa sürede sizinle iletişime geçeceğiz.
         </p>
 
         <div style={{ display: 'flex', gap: '1.5rem' }}>
           <Link href="/profile" style={{ 
-            textDecoration: 'none', background: 'rgba(255,255,255,0.05)', color: '#fff', 
+            textDecoration: 'none', background: 'rgba(0,0,0,0.04)', color: '#fff', 
             padding: '1.25rem 2.5rem', borderRadius: 0, fontWeight: 800, fontSize: '1rem',
-            border: '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s'
+            border: '1px solid rgba(0,0,0,0.08)', transition: 'all 0.2s'
           }} className="hover:bg-white/10">
             REZERVASYONLARIM
           </Link>

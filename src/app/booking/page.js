@@ -48,7 +48,7 @@ export default async function BookingPage() {
             style={{
               display: "inline-block",
               fontSize: "13px",
-              color: "rgba(255,255,255,0.45)",
+              color: "rgba(0,0,0,0.4)",
               textDecoration: "none",
               marginBottom: "40px",
               transition: "color 0.2s",
@@ -63,7 +63,7 @@ export default async function BookingPage() {
               letterSpacing: "-0.02em",
               lineHeight: 1.2,
               marginBottom: "12px",
-              color: "#fff",
+              color: "var(--text, #1a1a1a)",
             }}
           >
             {terms.appointment}nuzu Oluşturun
@@ -71,7 +71,7 @@ export default async function BookingPage() {
           <p
             style={{
               fontSize: "15px",
-              color: "rgba(255,255,255,0.55)",
+              color: "rgba(0,0,0,0.5)",
               lineHeight: 1.7,
               maxWidth: "480px",
             }}

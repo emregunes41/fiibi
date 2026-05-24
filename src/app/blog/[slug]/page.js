@@ -44,12 +44,12 @@ export default async function SinglePostPage({ params }) {
       <article style={{ maxWidth: 800, margin: "0 auto" }}>
         
         <div style={{ marginBottom: 40 }}>
-          <Link href="/#blog" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>
+          <Link href="/#blog" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(0,0,0,0.6)", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>
             <ArrowLeft size={16} /> Ana Sayfaya Dön
           </Link>
         </div>
 
-        <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 16, display: "flex", gap: 12 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(0,0,0,0.4)", marginBottom: 16, display: "flex", gap: 12 }}>
           <span style={{ display: "flex", alignItems: "center", gap: 6 }} suppressHydrationWarning>
             <Calendar size={14} /> {new Date(post.publishedAt).toLocaleDateString("tr-TR")}
           </span>
@@ -66,7 +66,7 @@ export default async function SinglePostPage({ params }) {
         )}
 
         <div 
-          style={{ fontSize: "1.1rem", lineHeight: 1.8, color: "rgba(255,255,255,0.8)" }}
+          style={{ fontSize: "1.1rem", lineHeight: 1.8, color: "rgba(0,0,0,0.8)" }}
           className="blog-content"
           dangerouslySetInnerHTML={{ __html: post.content }} 
         />
@@ -80,7 +80,7 @@ export default async function SinglePostPage({ params }) {
         .blog-content ul, .blog-content ol { margin-bottom: 1.5em; padding-left: 1.5em; }
         .blog-content li { margin-bottom: 0.5em; }
         .blog-content a { color: var(--accent, #fff); text-decoration: underline; }
-        .blog-content blockquote { border-left: 4px solid var(--accent, #fff); padding-left: 1em; margin-left: 0; font-style: italic; color: rgba(255,255,255,0.6); }
+        .blog-content blockquote { border-left: 4px solid var(--accent, #fff); padding-left: 1em; margin-left: 0; font-style: italic; color: rgba(0,0,0,0.6); }
         .blog-content img { max-width: 100%; height: auto; border-radius: 8px; margin: 2em 0; }
       `}} />
     </main>

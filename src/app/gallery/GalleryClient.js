@@ -117,7 +117,7 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
         {photos.map((_, i) => (
           <div key={i} style={{
             flex: 1, height: "2.5px", borderRadius: 0,
-            background: "rgba(255,255,255,0.15)", overflow: "hidden",
+            background: "rgba(0,0,0,0.15)", overflow: "hidden",
           }}>
             <div style={{
               height: "100%", borderRadius: 0, background: "#fff",
@@ -134,18 +134,18 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ color: "#fff", fontSize: "14px", fontWeight: 700 }}>{categoryName}</span>
-          <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "12px", fontFamily: "monospace" }}>
+          <span style={{ color: "var(--text, #1a1a1a)", fontSize: "14px", fontWeight: 700 }}>{categoryName}</span>
+          <span style={{ color: "rgba(0,0,0,0.4)", fontSize: "12px", fontFamily: "monospace" }}>
             {currentIndex + 1}/{photos.length}
           </span>
         </div>
         <button
           onClick={onClose}
           style={{
-            background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)",
+            background: "rgba(0,0,0,0.1)", backdropFilter: "blur(10px)",
             border: "none", borderRadius: 0, width: "36px", height: "36px",
             display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: "pointer", color: "#fff",
+            cursor: "pointer", color: "var(--text, #1a1a1a)",
           }}
         >
           <X size={18} />
@@ -173,10 +173,10 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
       {currentIndex > 0 && (
         <button onClick={goPrev} style={{
           position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)",
-          zIndex: 20, background: "rgba(255,255,255,0.08)", border: "none",
+          zIndex: 20, background: "rgba(0,0,0,0.08)", border: "none",
           borderRadius: 0, width: "40px", height: "40px",
           display: "flex", alignItems: "center", justifyContent: "center",
-          cursor: "pointer", color: "rgba(255,255,255,0.6)",
+          cursor: "pointer", color: "rgba(0,0,0,0.6)",
         }}>
           <ChevronLeft size={20} />
         </button>
@@ -184,10 +184,10 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
       {currentIndex < photos.length - 1 && (
         <button onClick={goNext} style={{
           position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)",
-          zIndex: 20, background: "rgba(255,255,255,0.08)", border: "none",
+          zIndex: 20, background: "rgba(0,0,0,0.08)", border: "none",
           borderRadius: 0, width: "40px", height: "40px",
           display: "flex", alignItems: "center", justifyContent: "center",
-          cursor: "pointer", color: "rgba(255,255,255,0.6)",
+          cursor: "pointer", color: "rgba(0,0,0,0.6)",
         }}>
           <ChevronRight size={20} />
         </button>
@@ -259,7 +259,7 @@ export default function GalleryClient({ categories }) {
         }}
       >
         <div style={{ marginBottom: "3rem", textAlign: "center" }}>
-          <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>GALERİ</div>
+          <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>GALERİ</div>
           <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 8px 0" }}>
             Portfolyo
           </h2>
@@ -276,8 +276,8 @@ export default function GalleryClient({ categories }) {
               gridColumn: "1 / -1",
               textAlign: "center",
               padding: "4rem 2rem",
-              color: "rgba(255,255,255,0.12)",
-              border: "1px dashed rgba(255,255,255,0.1)",
+              color: "rgba(0,0,0,0.12)",
+              border: "1px dashed rgba(0,0,0,0.1)",
               borderRadius: 0,
             }}>
               <ImageIcon size={32} strokeWidth={1} style={{ margin: "0 auto 0.75rem", opacity: 0.5 }} />
@@ -302,7 +302,7 @@ export default function GalleryClient({ categories }) {
                     borderRadius: 0,
                     overflow: "hidden",
                     aspectRatio: "3 / 4",
-                    background: "#111",
+                    background: "var(--bg, #fff)",
                   }}
                 >
                   {coverPhoto ? (
@@ -315,7 +315,7 @@ export default function GalleryClient({ categories }) {
                     />
                   ) : (
                     <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <ImageIcon size={24} strokeWidth={1} style={{ color: "rgba(255,255,255,0.1)" }} />
+                      <ImageIcon size={24} strokeWidth={1} style={{ color: "rgba(0,0,0,0.1)" }} />
                     </div>
                   )}
                   
@@ -332,7 +332,7 @@ export default function GalleryClient({ categories }) {
                     padding: "clamp(6px, 2vw, 16px)",
                     maxHeight: "40%",
                   }}>
-                    <h3 style={{ fontSize: "clamp(0.6rem, 2vw, 0.9rem)", fontWeight: 700, margin: 0, color: "#fff", lineHeight: 1.2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cat.name}</h3>
+                    <h3 style={{ fontSize: "clamp(0.6rem, 2vw, 0.9rem)", fontWeight: 700, margin: 0, color: "var(--text, #1a1a1a)", lineHeight: 1.2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cat.name}</h3>
                     <p style={{ fontSize: "clamp(0.5rem, 1.5vw, 0.65rem)", opacity: 0.5, margin: 0 }}>{photoCount} Görsel</p>
                   </div>
                 </motion.div>
