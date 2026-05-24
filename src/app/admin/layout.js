@@ -55,17 +55,14 @@ function AdminLayoutInner({ children }) {
   // Modül ayarları
   const modules = session?.tenant?.settings || { moduleReservations: true, moduleEvents: true };
 
-  const navItems = businessType ? [
+  const navItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     modules.moduleReservations !== false && { name: "Hizmet & Katalog", href: "/admin/catalog", icon: Package },
-    modules.moduleReservations !== false && { name: terms.appointments, href: "/admin/reservations", icon: CalendarDays },
+    modules.moduleReservations !== false && { name: terms.appointments || "Rezervasyonlar", href: "/admin/reservations", icon: CalendarDays },
     { name: "Muhasebe", href: "/admin/muhasebe", icon: Wallet },
     { name: "Ayarlar", href: "/admin/settings", icon: Settings },
     { name: "Abonelik", href: "/admin/subscription", icon: Crown },
-  ].filter(Boolean) : [
-    { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-    { name: "Ayarlar", href: "/admin/settings", icon: Settings },
-  ];
+  ].filter(Boolean);
 
   const sidebarContent = (
     <>
