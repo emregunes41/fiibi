@@ -89,20 +89,22 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             <Link href="/" className="group" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}>
               <div
                 style={{
-                  width: 44, height: 44,
+                  width: 64, height: 64,
                   borderRadius: "50%",
-                  background: logoUrl ? "transparent" : "var(--text)",
+                  background: logoUrl ? "var(--bg, #fff)" : "var(--text)",
                   color: "var(--bg)",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontFamily: "serif", fontSize: 20,
+                  fontFamily: "serif", fontSize: 24,
                   transition: "transform 0.3s",
-                  padding: logoUrl ? 2 : 0,
-                  border: logoUrl ? "2px solid rgba(0,0,0,0.1)" : "none",
-                  boxShadow: logoUrl ? "0 2px 8px rgba(0,0,0,0.08)" : "none",
+                  padding: logoUrl ? 3 : 0,
+                  border: logoUrl ? "2.5px solid rgba(0,0,0,0.08)" : "none",
+                  boxShadow: logoUrl ? "0 4px 16px rgba(0,0,0,0.1)" : "none",
                   overflow: "hidden",
                   flexShrink: 0,
+                  position: "relative",
+                  zIndex: 2,
                 }}
-                className="group-hover:rotate-12"
+                className="group-hover:scale-105"
               >
                 {logoUrl ? (
                   <img src={logoUrl} alt={businessName} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%", display: "block" }} />
