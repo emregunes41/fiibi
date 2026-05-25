@@ -96,10 +96,14 @@ export default function GalleryManagementPage() {
               onSuccess={handleUploadSuccess}
               options={{ 
                 multiple: true, 
-                maxFiles: 100,
+                maxFiles: 500, // Toplu yükleme limitini 500'e çıkardık
                 cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-                maxImageFileSize: 5242880, // 5MB limit for images
-                maxVideoFileSize: 125829120 // 120MB limit for videos
+                maxFileSize: 52428800, // Genel limit 50MB
+                maxImageFileSize: 52428800, // Fotoğraf limiti 50MB
+                maxVideoFileSize: 125829120, // 120MB limit for videos
+                clientAllowedFormats: ["jpg", "jpeg", "png", "webp", "heic", "avif"],
+                maxImageWidth: 2500, // Tarayıcıda yüklemeden önce küçült (max 2500px)
+                maxImageHeight: 2500 // Tarayıcıda yüklemeden önce küçült (max 2500px)
               }}
             >
               {({ open }) => {
