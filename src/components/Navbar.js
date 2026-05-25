@@ -113,8 +113,8 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                 )}
               </div>
               <span
-                className="hidden sm:block"
-                style={{ fontFamily: "serif", fontSize: 24, letterSpacing: "0.2em", color: "var(--text)", textTransform: "uppercase" }}
+                className="hidden lg:block"
+                style={{ fontFamily: "serif", fontSize: 20, letterSpacing: "0.15em", color: "var(--text)", textTransform: "uppercase", maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
               >
                 {businessName}
               </span>
