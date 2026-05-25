@@ -248,9 +248,9 @@ export default function SuperAdminClient() {
               )}
 
               {/* Quick usage summary */}
-              {usage && !usage.cloudinary?.error && (
+              {usage && (
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
-                  {renderUsageBar("Cloudinary", Cloud, "#f472b6", usage.cloudinary.storage.usedGB, usage.cloudinary.storage.limitGB, "GB", "Depolama", usage.cloudinary.storage.pct)}
+                  {!usage.cloudinary?.error && renderUsageBar("Cloudinary", Cloud, "#f472b6", usage.cloudinary.storage.usedGB, usage.cloudinary.storage.limitGB, "GB", "Depolama", usage.cloudinary.storage.pct)}
                   {usage.vercel && !usage.vercel.error && renderUsageBar("Vercel BW", HardDrive, "#4ade80", usage.vercel.bandwidth.usedGB, usage.vercel.bandwidth.limitGB, "GB", "Tahmini", usage.vercel.bandwidth.pct)}
                   {!usage.db?.error && renderUsageBar("Veritabanı", Database, "#8b5cf6", usage.db.estimatedSizeMB, usage.db.limitMB, "MB", `${usage.db.totalRows.toLocaleString("tr-TR")} satır`, usage.db.pct)}
                 </div>
