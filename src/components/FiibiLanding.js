@@ -100,6 +100,7 @@ export default function FiibiLanding() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [billingCycle, setBillingCycle] = useState("yearly"); // "monthly" or "yearly"
   
   const FEATURES = [
     { title: t.landing.stats.appointment, desc: "Müşterileriniz 7/24 online randevu alsın. Takvim otomatik yönetilsin.", icon: "📅" },
@@ -721,37 +722,78 @@ export default function FiibiLanding() {
         <div style={wrap}>
           <div style={{ textAlign: "center", marginBottom: 64 }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: C.orange, textTransform: "uppercase", letterSpacing: "0.12em" }}>{t.landing.pricing.tag}</span>
-            <h2 style={{ fontSize: 44, fontWeight: 800, color: C.black, letterSpacing: "-0.03em", marginTop: 12, lineHeight: 1.1 }}>
+            <h2 style={{ fontSize: 44, fontWeight: 800, color: C.black, letterSpacing: "-0.03em", marginTop: 12, lineHeight: 1.1, marginBottom: 24 }}>
               {t.landing.pricing.title}
             </h2>
+
+            {/* Monthly / Yearly Toggle */}
+            <div style={{ display: "inline-flex", background: "rgba(0,0,0,0.04)", padding: 4, borderRadius: 12, border: "1px solid rgba(0,0,0,0.06)" }}>
+              <button 
+                onClick={() => setBillingCycle("monthly")}
+                style={{
+                  padding: "10px 24px", fontSize: 14, fontWeight: 700, borderRadius: 8, border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s",
+                  background: billingCycle === "monthly" ? C.black : "transparent",
+                  color: billingCycle === "monthly" ? C.white : C.secondary,
+                }}
+              >
+                Aylık
+              </button>
+              <button 
+                onClick={() => setBillingCycle("yearly")}
+                style={{
+                  padding: "10px 24px", fontSize: 14, fontWeight: 700, borderRadius: 8, border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s",
+                  background: billingCycle === "yearly" ? C.black : "transparent",
+                  color: billingCycle === "yearly" ? C.white : C.secondary,
+                  display: "flex", alignItems: "center", gap: 8
+                }}
+              >
+                Yıllık
+                <span style={{ background: billingCycle === "yearly" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.08)", padding: "2px 8px", borderRadius: 12, fontSize: 10, letterSpacing: "0.05em" }}>
+                  %20 İndirim
+                </span>
+              </button>
+            </div>
           </div>
           <div className="fiibi-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, maxWidth: 760, margin: "0 auto" }}>
-            {/* Basic Yearly */}
+            {/* Basic Plan */}
             <div style={{ padding: "44px 36px", background: C.white }}>
               <div style={{ display: "inline-block", background: "rgba(139,92,246,0.1)", color: "#8b5cf6", padding: "4px 12px", fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>BASIC</div>
-              <div style={{ fontSize: 48, fontWeight: 800, color: C.black, letterSpacing: "-0.03em" }}>₺{(plans.find(p => p.id === "basic_yearly")?.price || 14999).toLocaleString("tr-TR")}</div>
-              <div style={{ fontSize: 14, color: C.muted, marginBottom: 6 }}>/ yıl · Temel özellikler</div>
-              <div style={{ fontSize: 13, color: "#8b5cf6", marginBottom: 28 }}>Aylık ~{(plans.find(p => p.id === "basic_yearly")?.monthlyEquiv || 1250).toLocaleString("tr-TR")} ₺</div>
+              <div style={{ fontSize: 48, fontWeight: 800, color: C.black, letterSpacing: "-0.03em" }}>
+                ₺{(plans.find(p => p.id === (billingCycle === "yearly" ? "basic_yearly" : "basic_monthly"))?.price || (billingCycle === "yearly" ? 14999 : 1499)).toLocaleString("tr-TR")}
+              </div>
+              <div style={{ fontSize: 14, color: C.muted, marginBottom: 6 }}>/ {billingCycle === "yearly" ? "yıl" : "ay"} · Temel özellikler</div>
+              {billingCycle === "yearly" && (
+                <div style={{ fontSize: 13, color: "#8b5cf6", marginBottom: 28 }}>Aylık ~{(plans.find(p => p.id === "basic_yearly")?.monthlyEquiv || 1250).toLocaleString("tr-TR")} ₺</div>
+              )}
+              {billingCycle === "monthly" && <div style={{ marginBottom: 28, height: 19 }}></div>}
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
-                {(plans.find(p => p.id === "basic_yearly")?.features || []).map(f => (
+                {(plans.find(p => p.id === (billingCycle === "yearly" ? "basic_yearly" : "basic_monthly"))?.features || []).map(f => (
                   <span key={f} style={{ fontSize: 14, color: C.secondary }}><span style={{ color: "#8b5cf6", marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
-              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "basic_yearly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, border: `2px solid ${C.black}`, background: "transparent", color: C.black, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
+              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: billingCycle === "yearly" ? "basic_yearly" : "basic_monthly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, border: `2px solid ${C.black}`, background: "transparent", color: C.black, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
             </div>
-            {/* Pro Yearly */}
+            
+            {/* Pro Plan */}
             <div style={{ padding: "44px 36px", background: C.black, color: C.white, position: "relative" }}>
-              <div style={{ position: "absolute", top: 16, right: 16, background: C.orange, color: C.white, padding: "4px 12px", fontSize: 10, fontWeight: 700 }}>TAVSİYE EDİLEN</div>
+              {billingCycle === "yearly" && (
+                <div style={{ position: "absolute", top: 16, right: 16, background: C.orange, color: C.white, padding: "4px 12px", fontSize: 10, fontWeight: 700 }}>TAVSİYE EDİLEN</div>
+              )}
               <div style={{ display: "inline-block", background: "rgba(245,158,11,0.15)", color: "#f59e0b", padding: "4px 12px", fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>PRO</div>
-              <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-0.03em" }}>₺{(plans.find(p => p.id === "pro_yearly")?.price || 29999).toLocaleString("tr-TR")}</div>
-              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 6 }}>/ yıl · Tüm özellikler</div>
-              <div style={{ fontSize: 13, color: C.orangeLight, marginBottom: 28 }}>Aylık ~{(plans.find(p => p.id === "pro_yearly")?.monthlyEquiv || 2500).toLocaleString("tr-TR")} ₺</div>
+              <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-0.03em" }}>
+                ₺{(plans.find(p => p.id === (billingCycle === "yearly" ? "pro_yearly" : "pro_monthly"))?.price || (billingCycle === "yearly" ? 29999 : 2999)).toLocaleString("tr-TR")}
+              </div>
+              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 6 }}>/ {billingCycle === "yearly" ? "yıl" : "ay"} · Tüm özellikler</div>
+              {billingCycle === "yearly" && (
+                <div style={{ fontSize: 13, color: C.orangeLight, marginBottom: 28 }}>Aylık ~{(plans.find(p => p.id === "pro_yearly")?.monthlyEquiv || 2500).toLocaleString("tr-TR")} ₺</div>
+              )}
+              {billingCycle === "monthly" && <div style={{ marginBottom: 28, height: 19 }}></div>}
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
-                {(plans.find(p => p.id === "pro_yearly")?.features || []).map(f => (
+                {(plans.find(p => p.id === (billingCycle === "yearly" ? "pro_yearly" : "pro_monthly"))?.features || []).map(f => (
                   <span key={f} style={{ fontSize: 14, color: "rgba(255,255,255,0.55)" }}><span style={{ color: C.orangeLight, marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
-              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: "pro_yearly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, background: C.orange, border: "none", color: C.white, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
+              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: billingCycle === "yearly" ? "pro_yearly" : "pro_monthly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, background: C.orange, border: "none", color: C.white, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
             </div>
           </div>
           <p style={{ textAlign: "center", marginTop: 24, fontSize: 15, color: C.secondary }}>

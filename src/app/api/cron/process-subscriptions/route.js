@@ -38,8 +38,14 @@ export async function GET(req) {
         // Fiyatlandırma
         let config;
         try { config = await prisma.platformConfig.findUnique({ where: { id: "main" } }); } catch { /* ignore */ }
-        const pricing = config?.pricing || { monthly: 249900, yearly: 2499900 }; // Kuruş cinsinden (2499 TL / 24999 TL)
-        const planPriceKurus = tenant.selectedPlan === "yearly" ? pricing.yearly : pricing.monthly;
+        const pricing = config?.pricing || { basic_monthly: 1499, basic_yearly: 14999, pro_monthly: 2999, pro_yearly: 29999 };
+        
+        let selectedPlanId = tenant.selectedPlan;
+        if (selectedPlanId === "monthly") selectedPlanId = "pro_monthly";
+        if (selectedPlanId === "yearly") selectedPlanId = "pro_yearly";
+        
+        const planPrice = pricing[selectedPlanId] || pricing.pro_monthly || 2999;
+        const planPriceKurus = Math.round(planPrice * 100);
 
         // PayTR Non-3D Parametreleri
         const merchant_oid = generateMerchantOid("CRON", tenant.id);
@@ -102,7 +108,7 @@ export async function GET(req) {
           
           // Sonraki ödeme tarihini hesapla
           const nextDate = new Date();
-          if (tenant.selectedPlan === "yearly") {
+          if (selectedPlanId.includes("yearly")) {
             nextDate.setFullYear(nextDate.getFullYear() + 1);
           } else {
             nextDate.setMonth(nextDate.getMonth() + 1);

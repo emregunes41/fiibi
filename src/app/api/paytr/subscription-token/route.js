@@ -31,8 +31,14 @@ export async function POST(request) {
 
     // Fiyatlandırma — DB'deki değerler kuruş cinsinden (2499 = 24.99₺)
     const config = await prisma.platformConfig.findUnique({ where: { id: "main" } });
-    const pricing = config?.pricing || { monthly: 2499, yearly: 24999 };
-    const planPriceKurus = tenant.selectedPlan === "yearly" ? pricing.yearly : pricing.monthly;
+    const pricing = config?.pricing || { basic_monthly: 1499, basic_yearly: 14999, pro_monthly: 2999, pro_yearly: 29999 };
+    
+    let selectedPlanId = tenant.selectedPlan;
+    if (selectedPlanId === "monthly") selectedPlanId = "pro_monthly";
+    if (selectedPlanId === "yearly") selectedPlanId = "pro_yearly";
+    
+    const planPrice = pricing[selectedPlanId] || pricing.pro_monthly || 2999;
+    const planPriceKurus = Math.round(planPrice * 100);
 
     const cleanTenantId = tenant.id.replace(/[^a-zA-Z0-9]/g, "");
     const merchant_oid = `SUBX${cleanTenantId}X${Date.now()}`;
@@ -49,7 +55,7 @@ export async function POST(request) {
 
     const merchant_ok_url = `${platformBaseUrl}/api/paytr/redirect?status=success&returnTo=${encodeURIComponent(`${baseUrl}/admin/subscription?payment=success`)}`;
     const merchant_fail_url = `${platformBaseUrl}/api/paytr/redirect?status=fail&returnTo=${encodeURIComponent(`${baseUrl}/admin/subscription?payment=fail`)}`;
-    const user_basket = Buffer.from(JSON.stringify([["Fiibi Pro Abonelik", (planPriceKurus / 100).toFixed(2), 1]])).toString("base64");
+    const user_basket = Buffer.from(JSON.stringify([[`Fiibi ${selectedPlanId.replace('_', ' ').toUpperCase()} Abonelik`, (planPriceKurus / 100).toFixed(2), 1]])).toString("base64");
     const currency = "TL";
     const test_mode = process.env.NODE_ENV === "production" ? "0" : "1";
     const no_installment = "1"; // Taksit yok

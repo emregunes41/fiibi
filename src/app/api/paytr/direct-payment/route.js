@@ -31,8 +31,15 @@ export async function POST(request) {
     try {
       config = await prisma.platformConfig.findUnique({ where: { id: "main" } });
     } catch { /* ignore */ }
-    const pricing = config?.pricing || { monthly: 249900, yearly: 2499900 };
-    const planPriceKurus = tenant.selectedPlan === "yearly" ? pricing.yearly : pricing.monthly;
+    const pricing = config?.pricing || { basic_monthly: 1499, basic_yearly: 14999, pro_monthly: 2999, pro_yearly: 29999 };
+    
+    // Geriye dönük uyumluluk (eski 'monthly' veya 'yearly' planları 'pro' olarak kabul et)
+    let selectedPlanId = tenant.selectedPlan;
+    if (selectedPlanId === "monthly") selectedPlanId = "pro_monthly";
+    if (selectedPlanId === "yearly") selectedPlanId = "pro_yearly";
+    
+    const planPrice = pricing[selectedPlanId] || pricing.pro_monthly || 2999;
+    const planPriceKurus = Math.round(planPrice * 100);
 
     // Direkt API parametreleri
     const merchant_oid = generateMerchantOid("SUB", tenant.id);
@@ -61,7 +68,7 @@ export async function POST(request) {
     const merchant_fail_url = `${platformBaseUrl}/api/paytr/redirect?status=fail&returnTo=${encodeURIComponent(`${baseUrl}/admin/subscription?payment=failed`)}`;
 
     const user_basket = Buffer.from(JSON.stringify([
-      ["Fiibi Pro Abonelik", (planPriceKurus / 100).toFixed(2), 1],
+      [`Fiibi ${selectedPlanId.replace('_', ' ').toUpperCase()} Abonelik`, (planPriceKurus / 100).toFixed(2), 1],
     ])).toString("base64");
 
     // Token oluştur
