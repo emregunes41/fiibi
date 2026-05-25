@@ -322,6 +322,7 @@ model Photo {
   originalName String?
   url          String
   isSelected   Boolean      @default(false)
+  note         String?
   createdAt    DateTime     @default(now())
 }
 

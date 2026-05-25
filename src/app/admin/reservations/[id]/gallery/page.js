@@ -179,8 +179,16 @@ export default function GalleryManagementPage() {
                   </div>
 
                   {photo.isSelected && (
-                    <div className="absolute bottom-2 left-2 bg-white text-black px-2 py-1 rounded-none text-[10px] font-bold">
-                      Seçildi
+                    <div className="absolute bottom-2 left-2 flex flex-col gap-1 items-start">
+                      <div className="bg-white text-black px-2 py-1 rounded-none text-[10px] font-bold">
+                        Seçildi
+                      </div>
+                      {photo.note && (
+                        <div className="bg-[#111] text-white px-2 py-1.5 rounded-none text-[10px] border border-white/20 max-w-[150px] shadow-lg whitespace-pre-wrap">
+                          <span className="font-bold text-white/50 block mb-0.5">Not:</span>
+                          {photo.note}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

@@ -5,12 +5,14 @@ import { getClientGalleries, togglePhotoSelection, completeSelection } from "../
 import { getSession } from "@/lib/auth";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle, Heart, Folder } from "lucide-react";
+import { ArrowLeft, CheckCircle, Heart, Folder, MessageSquare, X } from "lucide-react";
+import { savePhotoNote } from "../gallery-actions";
 
 export default function ClientGalleryPage() {
   const [galleries, setGalleries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [noteModal, setNoteModal] = useState({ isOpen: false, photo: null, note: "" });
 
   const loadData = async () => {
     setIsLoading(true);
@@ -67,6 +69,21 @@ export default function ClientGalleryPage() {
       alert("Seçimleriniz başarıyla iletildi!");
       window.location.href = "/profile";
     }
+  };
+
+  const handleSaveNote = async () => {
+    if (!noteModal.photo) return;
+    setIsLoading(true);
+    await savePhotoNote(noteModal.photo.id, noteModal.note);
+    
+    // Update local state
+    setGalleries(prev => prev.map(g => ({
+      ...g,
+      photos: g.photos.map(p => p.id === noteModal.photo.id ? { ...p, note: noteModal.note } : p)
+    })));
+    
+    setNoteModal({ isOpen: false, photo: null, note: "" });
+    setIsLoading(false);
   };
 
   if (isLoading) {
@@ -155,6 +172,29 @@ export default function ClientGalleryPage() {
                           }`}>
                             <Heart size={16} fill={photo.isSelected ? "currentColor" : "none"} />
                           </div>
+
+                          {/* Note Icon for Selected Photos */}
+                          {photo.isSelected && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setNoteModal({ isOpen: true, photo, note: photo.note || "" });
+                              }}
+                              className={`absolute top-3 right-3 w-8 h-8 rounded-none flex items-center justify-center backdrop-blur-md transition-all border border-white/20 hover:bg-white hover:text-black ${
+                                photo.note ? "bg-white text-black" : "bg-black/50 text-white"
+                              }`}
+                              title={photo.note ? "Notu Düzenle" : "Not Ekle"}
+                            >
+                              <MessageSquare size={14} />
+                            </button>
+                          )}
+                          
+                          {/* Note Indicator */}
+                          {photo.note && (
+                            <div className="absolute bottom-3 left-3 bg-black/80 backdrop-blur-md px-2 py-1 rounded-none text-[10px] text-white/90 max-w-[70%] truncate border border-white/10">
+                              💬 {photo.note}
+                            </div>
+                          )}
                         </div>
                       )
                     })}
@@ -165,6 +205,38 @@ export default function ClientGalleryPage() {
           </div>
         )}
       </div>
+
+      {/* Note Modal */}
+      {noteModal.isOpen && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#111] border border-white/10 p-6 w-full max-w-md relative">
+            <button 
+              onClick={() => setNoteModal({ isOpen: false, photo: null, note: "" })}
+              className="absolute top-4 right-4 text-white/50 hover:text-white"
+            >
+              <X size={20} />
+            </button>
+            <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              <MessageSquare size={18} /> Fotoğraf Notu
+            </h3>
+            <p className="text-white/50 text-sm mb-6">
+              Bu fotoğraf için fotoğrafçınıza iletmek istediğiniz özel bir not veya düzeltme isteği varsa buraya yazabilirsiniz.
+            </p>
+            <textarea
+              value={noteModal.note}
+              onChange={(e) => setNoteModal({ ...noteModal, note: e.target.value })}
+              placeholder="Örn: Arka plandaki kişiyi silebilir misiniz?"
+              className="w-full bg-white/5 border border-white/10 text-white p-4 h-32 focus:outline-none focus:border-white/30 mb-6 resize-none"
+            />
+            <button
+              onClick={handleSaveNote}
+              className="w-full bg-white text-black font-bold py-3 hover:bg-white/90 transition-colors"
+            >
+              Notu Kaydet
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

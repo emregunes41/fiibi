@@ -103,3 +103,27 @@ export async function completeSelection(galleryId, reservationId, coupleName, se
     return { error: error.message };
   }
 }
+
+export async function savePhotoNote(photoId, note) {
+  const auth = await requireUser();
+  if (auth?.error) return auth;
+
+  try {
+    const photo = await prisma.photo.findUnique({
+      where: { id: photoId },
+      include: { gallery: { include: { reservation: true } } }
+    });
+
+    if (!photo || photo.gallery.reservation.userId !== auth.session.userId) {
+      return { error: "Yetkisiz islem!" };
+    }
+
+    await prisma.photo.update({
+      where: { id: photoId },
+      data: { note }
+    });
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
