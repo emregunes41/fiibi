@@ -15,11 +15,12 @@ const PLAN_LIMITS = {
     maxPortfolioPhotos: 20,
     smsEnabled: false,
     emailEnabled: true,
-    onlinePayment: true,
+    onlinePayment: false,  // 🔥 KART GIRMEDEN KAPALI
     customDomain: false,
     chatbotEnabled: false,
     heroBgChange: false,
     moduleStore: false,
+    discoveryMarketplace: false, // 🔥 KART GIRMEDEN KAPALI
   },
   basic: {
     label: "Basic",
@@ -32,6 +33,7 @@ const PLAN_LIMITS = {
     chatbotEnabled: false,
     heroBgChange: false,
     moduleStore: false,
+    discoveryMarketplace: true,
   },
   pro: {
     label: "Pro",
@@ -44,6 +46,7 @@ const PLAN_LIMITS = {
     chatbotEnabled: true,
     heroBgChange: true,
     moduleStore: false,           // Tüm planlarda kapalı
+    discoveryMarketplace: true,
   },
 };
 

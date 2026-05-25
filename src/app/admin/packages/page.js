@@ -7,6 +7,7 @@ import MonthlyPriceManager from "./MonthlyPriceManager";
 import { getBusinessType } from "@/lib/business-types";
 import { useAdminSession } from "../AdminSessionContext";
 import AdminPageTabs from "../components/AdminPageTabs";
+import { hasFeature } from "@/lib/plan-limits";
 
 const CATEGORIES = [
   { value: "DIS_CEKIM", label: "Dış Çekim", icon: "🌿" },
@@ -96,6 +97,8 @@ export default function PackagesPage() {
 
   const bt = getBusinessType(businessType);
   const { features, terms } = bt;
+  
+  const canUseDiscovery = session?.tenant?.plan ? hasFeature(session.tenant.plan, "discoveryMarketplace") : false;
 
   const emptyForm = { ...emptyFormBase, category: features.categories ? "DIS_CEKIM" : "STANDARD" };
 
@@ -647,11 +650,21 @@ export default function PackagesPage() {
                     <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.3)" }}>Bu paket fiibi.co ana sayfasında listelensin</div>
                   </div>
                 </div>
-                <label style={{ position: "relative", width: 44, height: 24, cursor: "pointer", flexShrink: 0 }}>
-                  <input type="checkbox" checked={formData.showInDiscovery} onChange={(e) => setFormData({...formData, showInDiscovery: e.target.checked})} style={{ opacity: 0, width: 0, height: 0 }} />
-                  <span style={{ position: "absolute", inset: 0, borderRadius: 12, background: formData.showInDiscovery ? "#2563eb" : "rgba(0,0,0,0.12)", transition: "background 0.2s" }} />
-                  <span style={{ position: "absolute", top: 2, left: formData.showInDiscovery ? 22 : 2, width: 20, height: 20, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.2s" }} />
-                </label>
+                {canUseDiscovery ? (
+                  <label style={{ position: "relative", width: 44, height: 24, cursor: "pointer", flexShrink: 0 }}>
+                    <input type="checkbox" checked={formData.showInDiscovery} onChange={(e) => setFormData({...formData, showInDiscovery: e.target.checked})} style={{ opacity: 0, width: 0, height: 0 }} />
+                    <span style={{ position: "absolute", inset: 0, borderRadius: 12, background: formData.showInDiscovery ? "#2563eb" : "rgba(0,0,0,0.12)", transition: "background 0.2s" }} />
+                    <span style={{ position: "absolute", top: 2, left: formData.showInDiscovery ? 22 : 2, width: 20, height: 20, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.2s" }} />
+                  </label>
+                ) : (
+                  <button 
+                    type="button"
+                    onClick={() => alert("Keşfet vitrininde yer almak için lütfen Fiibi aboneliğinizi başlatın (Ödeme adımını tamamlayın).")}
+                    style={{ fontSize: "0.6rem", fontWeight: 800, background: "rgba(255,95,31,0.1)", color: "#FF5F1F", border: "1px solid rgba(255,95,31,0.2)", padding: "4px 8px", cursor: "pointer" }}
+                  >
+                    KİLİDİ AÇ
+                  </button>
+                )}
               </div>
 
               <div>

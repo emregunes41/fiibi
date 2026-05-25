@@ -3,8 +3,13 @@
 import { useState, useEffect } from "react";
 import { Plus, Users, Calendar, Clock, MapPin, Video, Trash2, Edit2, Download, CheckCircle, Ticket, Banknote, Users2, X, ImagePlus, Globe } from "lucide-react";
 import { getEvents, createEvent, updateEvent, deleteEvent, removeRegistration } from "../events/actions";
+import { useAdminSession } from "../AdminSessionContext";
+import { hasFeature } from "@/lib/plan-limits";
 
 export default function EventsView() {
+  const { session } = useAdminSession();
+  const canUseDiscovery = session?.tenant?.plan ? hasFeature(session.tenant.plan, "discoveryMarketplace") : false;
+
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -271,11 +276,21 @@ export default function EventsView() {
                     <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>Bu etkinlik fiibi.co ana sayfasında listelensin</div>
                   </div>
                 </div>
-                <label style={{ position: "relative", width: 44, height: 24, cursor: "pointer", flexShrink: 0 }}>
-                  <input type="checkbox" checked={formData.showInDiscovery} onChange={e => setFormData({...formData, showInDiscovery: e.target.checked})} style={{ opacity: 0, width: 0, height: 0 }} />
-                  <span style={{ position: "absolute", inset: 0, borderRadius: 12, background: formData.showInDiscovery ? "#2563eb" : "rgba(255,255,255,0.15)", transition: "background 0.2s" }} />
-                  <span style={{ position: "absolute", top: 2, left: formData.showInDiscovery ? 22 : 2, width: 20, height: 20, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.3)", transition: "left 0.2s" }} />
-                </label>
+                {canUseDiscovery ? (
+                  <label style={{ position: "relative", width: 44, height: 24, cursor: "pointer", flexShrink: 0 }}>
+                    <input type="checkbox" checked={formData.showInDiscovery} onChange={e => setFormData({...formData, showInDiscovery: e.target.checked})} style={{ opacity: 0, width: 0, height: 0 }} />
+                    <span style={{ position: "absolute", inset: 0, borderRadius: 12, background: formData.showInDiscovery ? "#2563eb" : "rgba(255,255,255,0.15)", transition: "background 0.2s" }} />
+                    <span style={{ position: "absolute", top: 2, left: formData.showInDiscovery ? 22 : 2, width: 20, height: 20, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.3)", transition: "left 0.2s" }} />
+                  </label>
+                ) : (
+                  <button 
+                    type="button"
+                    onClick={() => alert("Keşfet vitrininde yer almak için lütfen Fiibi aboneliğinizi başlatın (Ödeme adımını tamamlayın).")}
+                    style={{ fontSize: 11, fontWeight: 800, background: "rgba(255,95,31,0.1)", color: "#FF5F1F", border: "1px solid rgba(255,95,31,0.2)", padding: "4px 8px", cursor: "pointer" }}
+                  >
+                    KİLİDİ AÇ
+                  </button>
+                )}
               </div>
 
               <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
