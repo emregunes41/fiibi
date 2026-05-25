@@ -165,8 +165,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             <div className="hidden md:flex" style={{ alignItems: "center", gap: 16 }}>
               {/* <LanguageSwitcher /> */}
               
-              {/* Cart - only for photographers */}
-              {isPhotographer && (
+              {/* Cart */}
               <button
                 onClick={() => openCart(true)}
                 style={{
@@ -198,7 +197,6 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                   </span>
                 )}
               </button>
-              )}
 
               {/* Login / Panel */}
               {!loading && (
@@ -248,8 +246,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
             <div className="flex md:hidden" style={{ alignItems: "center", gap: 10 }}>
               {/* <LanguageSwitcher /> */}
               
-              {/* Cart - only for photographers */}
-              {isPhotographer && (
+              {/* Cart */}
               <button
                 onClick={() => openCart(true)}
                 style={{
@@ -276,7 +273,6 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                   </span>
                 )}
               </button>
-              )}
 
               {/* Hamburger */}
               <button
@@ -322,14 +318,12 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               {t.nav.contact}
             </Link>
 
-            {isPhotographer && (
             <button
               onClick={() => { setIsMenuOpen(false); openCart(true); }}
               style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}
             >
               <ShoppingBag size={18} /> Sepetim {itemCount > 0 && `(${itemCount})`}
             </button>
-            )}
 
 
             {user ? (
