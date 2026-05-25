@@ -82,8 +82,8 @@ export async function generateMetadata() {
       canonical: canonicalUrl,
     },
     icons: {
-      icon: siteConfig?.logoUrl || '/favicon.ico',
-      apple: siteConfig?.logoUrl || '/favicon.ico',
+      icon: siteConfig?.faviconUrl || siteConfig?.logoUrl || '/fiibi-logo.svg',
+      apple: siteConfig?.faviconUrl || siteConfig?.logoUrl || '/fiibi-logo.svg',
     },
     openGraph: {
       title: seoTitle,
