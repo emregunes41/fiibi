@@ -373,7 +373,23 @@ export default function ReservationsPage() {
                       <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)" }}>{selectedDay.reservations.length === 0 ? "Rezervasyon yok" : `${selectedDay.reservations.length} rezervasyon`}</div>
                     </div>
                   </div>
-                  <button onClick={() => setSelectedDay(null)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 6 }}><X size={18} /></button>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <button onClick={() => {
+                      const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(selectedDay.day).padStart(2,'0')}`;
+                      setQuickEventForm({ venueName: "", phone: "", eventDate: dateStr, startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
+                      setQuickEventModal(true);
+                    }} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 0, padding: "6px 12px", cursor: "pointer", color: "rgba(255,255,255,0.7)", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                      <Plus size={12} /> {isPhotographer ? "Olay Ekle" : `${terms.appointment} Ekle`}
+                    </button>
+                    <button onClick={async () => {
+                      const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(selectedDay.day).padStart(2,'0')}`;
+                      const res = await toggleBlockedDay(dateStr);
+                      if (res.success) setBlockedDays(res.blockedDays);
+                    }} style={{ background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "6px 12px", cursor: "pointer", color: (() => { const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(selectedDay.day).padStart(2,'0')}`; return blockedDays.includes(dateStr) ? "rgba(100,255,100,0.8)" : "rgba(255,100,100,0.8)"; })(), fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                      <Ban size={12} /> {(() => { const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(selectedDay.day).padStart(2,'0')}`; return blockedDays.includes(dateStr) ? "Günü Aç" : "Günü Kapat"; })()}
+                    </button>
+                    <button onClick={() => setSelectedDay(null)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 6 }}><X size={18} /></button>
+                  </div>
                 </div>
                 {selectedDay.reservations.length === 0 ? (
                   <div style={{ padding: "32px 16px", textAlign: "center", color: "rgba(0,0,0,0.35)", fontSize: "0.8rem" }}>Bu güne ait rezervasyon bulunmuyor.</div>
