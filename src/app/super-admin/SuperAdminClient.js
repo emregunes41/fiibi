@@ -231,6 +231,10 @@ export default function SuperAdminClient() {
                     { label: "Trial", value: stats.trialCount, icon: CreditCard, color: "#facc15" },
                     { label: "Toplam Rez.", value: stats.totalReservations, icon: Crown, color: "#f472b6" },
                     { label: "Toplam Üye", value: stats.totalUsers, icon: Users, color: "#a78bfa" },
+                    { label: "Toplam Paket", value: stats.totalPackages, icon: Database, color: "#f87171" },
+                    { label: "Toplam Foto", value: stats.totalPhotos, icon: Image, color: "#4ade80" },
+                    { label: "Toplam Ödeme", value: stats.totalPayments, icon: Wallet, color: "#38bdf8" },
+                    { label: "Toplam Banner", value: stats.totalBanners, icon: Image, color: "#fbbf24" },
                   ].map((s, i) => (
                     <div key={i} style={cardStyle}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>

@@ -159,6 +159,10 @@ export async function getPlatformStats() {
     totalPackages,
     totalPhotos,
     totalPayments,
+    totalBanners,
+    totalAlbumModels,
+    totalSettings,
+    totalAdmins,
     totalRows,
   };
 }
