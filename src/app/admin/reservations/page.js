@@ -674,36 +674,49 @@ export default function ReservationsPage() {
                   const ps = res.paymentStatus;
                   if (ps === "PAID") return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", color: "#fff", padding: "2px 6px", borderRadius: 0 }}>ÖDENDİ</span>;
                   if (ps === "PARTIAL") return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", padding: "2px 6px", borderRadius: 0 }}>KISMİ</span>;
-                  return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.3)", padding: "2px 6px", borderRadius: 0 }}>ÖDENMEDİ</span>;
-                })()}
-              </div>
+                  return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.05)              {/* Row 3: Phone + Quick Actions */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 12 }}>
+                
+                {/* Mobile Quick Contacts (WhatsApp / Call) */}
+                <div style={{ display: "flex", gap: "8px" }}>
+                  {res.bridePhone && (
+                    <>
+                      <a href={`tel:${res.bridePhone.replace(/\s+/g, '')}`} 
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, color: "#fff", textDecoration: "none", fontSize: "0.75rem", fontWeight: 700 }}>
+                        <Phone size={14} /> Ara
+                      </a>
+                      <a href={`https://wa.me/${res.bridePhone.replace(/[^0-9]/g, '')}`} 
+                        target="_blank" rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px", background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.3)", borderRadius: 6, color: "#4ade80", textDecoration: "none", fontSize: "0.75rem", fontWeight: 700 }}>
+                        <Instagram size={14} /> WhatsApp
+                      </a>
+                    </>
+                  )}
+                </div>
 
-              {/* Row 3: Phone + Actions */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: "3px" }}>
-                  <Phone size={10} /> {res.bridePhone}
-                </span>
-                <div style={{ display: "flex", gap: "6px" }}>
+                {/* Management Actions */}
+                <div style={{ display: "flex", gap: "6px", overflowX: "auto", paddingBottom: "4px" }}>
                   {res.status === "DELETED" ? (
                     <>
                       <button 
-                        onClick={() => handleStatusChange(res.id, "PENDING")}
+                        onClick={(e) => { e.stopPropagation(); handleStatusChange(res.id, "PENDING"); }}
                         style={{
-                          background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
-                          color: "rgba(255,255,255,0.7)", padding: "4px 8px", borderRadius: 0, fontSize: "0.65rem",
+                          flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+                          color: "rgba(255,255,255,0.7)", padding: "8px", borderRadius: 4, fontSize: "0.7rem",
                           cursor: "pointer", fontWeight: 700
                         }}
                       >
                         Geri Yükle
                       </button>
                       <button 
-                        onClick={() => handleHardDeleteReservation(res.id, res.brideName)}
+                        onClick={(e) => { e.stopPropagation(); handleHardDeleteReservation(res.id, res.brideName); }}
                         style={{
-                          background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-                          color: "rgba(255,255,255,0.5)", padding: "4px 8px", borderRadius: 0, fontSize: "0.65rem",
-                          cursor: "pointer", display: "flex", gap: "4px", alignItems: "center"
+                          flex: 1, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)",
+                          color: "#ef4444", padding: "8px", borderRadius: 4, fontSize: "0.7rem",
+                          cursor: "pointer", display: "flex", gap: "4px", alignItems: "center", justifyContent: "center", fontWeight: 700
                         }}
-                        title="Kalıcı Olarak Sil"
                       >
                         <Trash2 size={12} /> Kalıcı Sil
                       </button>
@@ -712,40 +725,42 @@ export default function ReservationsPage() {
                     <>
                       <select 
                         value={res.status}
+                        onClick={(e) => e.stopPropagation()}
                         onChange={(e) => handleStatusChange(res.id, e.target.value)}
                         style={{
-                          padding: "4px 6px", borderRadius: 0, fontSize: "0.68rem",
+                          flex: 1.5, padding: "8px", borderRadius: 4, fontSize: "0.75rem", fontWeight: 700,
                           border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)",
                           color: "#fff", outline: "none", colorScheme: "dark",
                         }}
                       >
-                        <option value="PENDING" style={{color:"#fff", background:"#222"}}>Bekleyen</option>
-                        <option value="CONFIRMED" style={{color:"#fff", background:"#222"}}>Onayla</option>
-                        <option value="COMPLETED" style={{color:"#fff", background:"#222"}}>Tamamlandı</option>
-                        <option value="CANCELLED" style={{color:"#fff", background:"#222"}}>İptal Et</option>
+                        <option value="PENDING" style={{color:"#fff", background:"#222"}}>⏳ Bekleyen</option>
+                        <option value="CONFIRMED" style={{color:"#fff", background:"#222"}}>✅ Onayla</option>
+                        <option value="COMPLETED" style={{color:"#fff", background:"#222"}}>🎉 Tamamlandı</option>
+                        <option value="CANCELLED" style={{color:"#fff", background:"#222"}}>❌ İptal Et</option>
                       </select>
+                      
                       <button 
-                        onClick={() => { setReminderResult(null); setDetailModal({ isOpen: true, data: res }); }}
+                        onClick={(e) => { e.stopPropagation(); setReminderResult(null); setDetailModal({ isOpen: true, data: res }); }}
                         style={{
-                          background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)",
-                          color: "rgba(255,255,255,0.5)", padding: "4px", borderRadius: 0,
-                          cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                          flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)",
+                          color: "#fff", padding: "8px", borderRadius: 4,
+                          cursor: "pointer", display: "flex", alignItems: "center", gap: 6, justifyContent: "center",
+                          fontSize: "0.75rem", fontWeight: 700
                         }}
-                        title="Düzenle"
                       >
-                        <Edit2 size={12} />
+                        <Edit2 size={14} /> Detay
                       </button>
 
                       <button 
-                        onClick={() => handleDeleteReservation(res.id, res.brideName)}
+                        onClick={(e) => { e.stopPropagation(); handleDeleteReservation(res.id, res.brideName); }}
                         style={{
-                          background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-                          color: "rgba(255,255,255,0.5)", padding: "4px", borderRadius: 0,
-                          cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                          width: 40, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
+                          color: "rgba(255,255,255,0.5)", padding: "8px", borderRadius: 4,
+                          cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
                         }}
                         title="Çöpe Taşı"
                       >
-                        <Trash2 size={12} />
+                        <Trash2 size={14} />
                       </button>
                     </>
                   )}
@@ -760,6 +775,17 @@ export default function ReservationsPage() {
           </div>
         )}
       </div>
+
+      {/* Mobile Floating Action Button (FAB) */}
+      <Link href="/admin/new-reservation" className="md:hidden" style={{
+        position: "fixed", bottom: "24px", right: "24px", width: "56px", height: "56px",
+        background: "#22c55e", color: "#000", borderRadius: "50%", display: "flex",
+        alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+        zIndex: 90, border: "2px solid rgba(255,255,255,0.2)"
+      }}>
+        <Plus size={24} strokeWidth={2.5} />
+      </Link>
+      
       </>
       )}
 
