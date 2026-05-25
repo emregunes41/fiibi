@@ -296,7 +296,7 @@ export async function createPackage(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, meetingLink, customFields, availableSlots, workingDays } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, meetingLink, customFields, availableSlots, workingDays, showInDiscovery } = data;
     const tenantId = await getTenantId();
     await prisma.photographyPackage.create({
       data: {
@@ -314,6 +314,7 @@ export async function createPackage(data) {
         customFields: customFields || [],
         availableSlots: availableSlots || [],
         workingDays: workingDays || [1, 2, 3, 4, 5],
+        showInDiscovery: showInDiscovery === true,
         tenantId,
       }
     });
@@ -332,7 +333,7 @@ export async function updatePackage(id, data) {
     const tenantId = await getTenantId();
     const existing = await prisma.photographyPackage.findFirst({ where: { id, tenantId } });
     if (!existing) return { error: "Paket bulunamadı." };
-    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, meetingLink, customFields, availableSlots, workingDays } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, meetingLink, customFields, availableSlots, workingDays, showInDiscovery } = data;
     await prisma.photographyPackage.update({
       where: { id },
       data: {
@@ -350,6 +351,7 @@ export async function updatePackage(id, data) {
         customFields: customFields || [],
         availableSlots: availableSlots || [],
         workingDays: workingDays || [1, 2, 3, 4, 5],
+        ...(showInDiscovery !== undefined ? { showInDiscovery: showInDiscovery === true } : {}),
       }
     });
     revalidatePath('/admin/packages');

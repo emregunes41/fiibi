@@ -8,6 +8,7 @@ import { getBusinessTypeList } from "@/lib/business-types";
 import { useLanguage } from "@/components/LanguageContext";
 // import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ThemePreviewCard from "@/components/ThemePreviewCard";
+import DiscoverSection from "@/components/DiscoverSection";
 
 const C = {
   orange: "#FF5F1F", orangeLight: "#FFAA4C", orangeDark: "#D94800",
@@ -524,6 +525,7 @@ export default function FiibiLanding() {
         <div className="fiibi-nav-wrapper" style={{ ...wrap, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px" }}>
           {scrolled ? <Logo size={40} /> : <Logo dark size={60} />}
           <div className="fiibi-nav-buttons" style={{ display: "flex", alignItems: "center", gap: 28 }}>
+            <a href="#kesfet" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>Keşfet</a>
             <a href="#ozellikler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.features}</a>
             <a href="#sektorler" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.sectors}</a>
             <a href="#fiyatlar" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.pricing}</a>
@@ -710,6 +712,9 @@ export default function FiibiLanding() {
           </div>
         </div>
       </Reveal>
+
+      {/* ── KEŞFET ── */}
+      <DiscoverSection />
 
       {/* ── PRICING ── */}
       <Reveal id="fiyatlar" style={{ padding: "100px 32px", background: C.bg }}>

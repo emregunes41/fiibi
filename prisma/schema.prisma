@@ -122,6 +122,7 @@ model PhotographyPackage {
   deliveryTimeDays Int           @default(14)
   postSelectionDays Int          @default(0)
   meetingLink  String?
+  showInDiscovery Boolean  @default(false)   // Keşfet sayfasında göster
   isActive     Boolean       @default(true)
   tenantId     String?
   tenant       Tenant?       @relation(fields: [tenantId], references: [id])

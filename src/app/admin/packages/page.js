@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, Edit2, Package as PackageIcon, PlusCircle, X } from "lucide-react";
+import { Plus, Trash2, Edit2, Package as PackageIcon, PlusCircle, X, Globe } from "lucide-react";
 import { getPackages, createPackage, updatePackage, deletePackage } from "../core-actions";
 import MonthlyPriceManager from "./MonthlyPriceManager";
 import { getBusinessType } from "@/lib/business-types";
@@ -79,7 +79,8 @@ const emptyFormBase = {
   category: "STANDARD", timeType: "CUSTOM_DURATION", maxCapacity: "1", 
   sessionDuration: "30",
   addons: [], customFields: [], deliveryTimeDays: "14", postSelectionDays: "0", availableSlots: [], meetingLink: "",
-  workingDays: [1, 2, 3, 4, 5] // Varsayılan: Pazartesi-Cuma
+  workingDays: [1, 2, 3, 4, 5], // Varsayılan: Pazartesi-Cuma
+  showInDiscovery: false,
 };
 
 export default function PackagesPage() {
@@ -134,7 +135,8 @@ export default function PackagesPage() {
       postSelectionDays: pkg.postSelectionDays?.toString() || "0",
       meetingLink: pkg.meetingLink || "",
       availableSlots: pkg.availableSlots || [],
-      workingDays: pkg.workingDays || [1, 2, 3, 4, 5]
+      workingDays: pkg.workingDays || [1, 2, 3, 4, 5],
+      showInDiscovery: pkg.showInDiscovery || false,
     });
     setIsModalOpen(true);
   };
@@ -634,6 +636,22 @@ export default function PackagesPage() {
               <div>
                 <div style={{...lbl, color: "rgba(167, 139, 250, 0.9)"}}>📹 Online Görüşme Linki (İsteğe Bağlı)</div>
                 <input type="url" value={formData.meetingLink} onChange={(e) => setFormData({...formData, meetingLink: e.target.value})} style={{...inp, borderColor: formData.meetingLink ? "rgba(167, 139, 250, 0.3)" : "rgba(0,0,0,0.08)", background: formData.meetingLink ? "rgba(167, 139, 250, 0.04)" : "#fff"}} placeholder="https://zoom.us/... (Eğer bu hizmet online ise girin)" />
+              </div>
+
+              {/* Keşfet Toggle */}
+              <div style={{ background: formData.showInDiscovery ? "rgba(59,130,246,0.06)" : "rgba(0,0,0,0.01)", border: `1px solid ${formData.showInDiscovery ? "rgba(59,130,246,0.2)" : "rgba(0,0,0,0.05)"}`, borderRadius: 0, padding: "12px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, transition: "all 0.2s" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <Globe size={16} style={{ color: formData.showInDiscovery ? "#2563eb" : "rgba(0,0,0,0.2)" }} />
+                  <div>
+                    <div style={{ fontSize: "0.75rem", fontWeight: 800, color: formData.showInDiscovery ? "#1a1a1a" : "rgba(0,0,0,0.5)" }}>Keşfet'te Göster</div>
+                    <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.3)" }}>Bu paket fiibi.co ana sayfasında listelensin</div>
+                  </div>
+                </div>
+                <label style={{ position: "relative", width: 44, height: 24, cursor: "pointer", flexShrink: 0 }}>
+                  <input type="checkbox" checked={formData.showInDiscovery} onChange={(e) => setFormData({...formData, showInDiscovery: e.target.checked})} style={{ opacity: 0, width: 0, height: 0 }} />
+                  <span style={{ position: "absolute", inset: 0, borderRadius: 12, background: formData.showInDiscovery ? "#2563eb" : "rgba(0,0,0,0.12)", transition: "background 0.2s" }} />
+                  <span style={{ position: "absolute", top: 2, left: formData.showInDiscovery ? 22 : 2, width: 20, height: 20, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.2)", transition: "left 0.2s" }} />
+                </label>
               </div>
 
               <div>
