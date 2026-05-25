@@ -634,6 +634,9 @@ export default function FiibiLanding() {
         </div>
       </section>
 
+      {/* ── KEŞFET ── */}
+      <DiscoverSection />
+
       {/* ── FEATURES ── */}
       <Reveal id="ozellikler" style={{ padding: "100px 32px", background: C.white }}>
         <div style={wrap}>
@@ -712,9 +715,6 @@ export default function FiibiLanding() {
           </div>
         </div>
       </Reveal>
-
-      {/* ── KEŞFET ── */}
-      <DiscoverSection />
 
       {/* ── PRICING ── */}
       <Reveal id="fiyatlar" style={{ padding: "100px 32px", background: C.bg }}>
