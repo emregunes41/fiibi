@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Calendar, Phone, Settings2, X, Edit2, Eye, Mail, User, Package, Clock, FileText, CreditCard, ChevronDown, ChevronUp, Instagram, ExternalLink, Trash2, Banknote, DollarSign, List, CalendarDays, ChevronLeft, ChevronRight, ArrowUpDown, Filter, Search, Star, Ban } from "lucide-react";
+import { Plus, Calendar, Phone, Settings2, X, Edit2, Eye, Mail, User, Package, Clock, FileText, CreditCard, ChevronDown, ChevronUp, Instagram, ExternalLink, Trash2, Banknote, DollarSign, List, CalendarDays, ChevronLeft, ChevronRight, ArrowUpDown, Filter, Search, Star, Ban, Images } from "lucide-react";
 import { getReservations, getPackages, createManualReservation, updateReservation, updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment, softDeleteReservation, hardDeleteReservation, createQuickEvent, getBlockedDays, toggleBlockedDay, getSiteConfig } from "../core-actions";
 import { sendContractReminder, resendCredentials } from "../reminder-actions";
 import { getBusinessType } from "@/lib/business-types";
@@ -752,6 +752,21 @@ export default function ReservationsPage() {
                         }}
                       >
                         <Edit2 size={14} /> Detay
+                      </button>
+
+                      <button 
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          window.location.href = `/admin/reservations/${res.id}/gallery`; 
+                        }}
+                        style={{
+                          flex: 1, background: "rgba(168,85,247,0.15)", border: "1px solid rgba(168,85,247,0.3)",
+                          color: "#c084fc", padding: "8px", borderRadius: 4,
+                          cursor: "pointer", display: "flex", alignItems: "center", gap: 6, justifyContent: "center",
+                          fontSize: "0.75rem", fontWeight: 700
+                        }}
+                      >
+                        <Images size={14} /> Galeri
                       </button>
 
                       <button 
