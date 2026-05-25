@@ -221,7 +221,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                   >
                     <UserCircle size={14} /> Panel
                   </Link>
-                ) : isPhotographer ? (
+                ) : (
                   <Link
                     href="/login"
                     style={{
@@ -240,7 +240,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                   >
                     <User size={14} /> {t.nav.clientLogin}
                   </Link>
-                ) : null
+                )
               )}
             </div>
 
@@ -336,11 +336,11 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
               <Link href="/profile" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "var(--text)", textDecoration: "none" }}>
                 Hesabım
               </Link>
-            ) : isPhotographer ? (
+            ) : (
               <Link href="/login" onClick={() => setIsMenuOpen(false)} style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.3em", color: "var(--text)", textDecoration: "none" }}>
                 {t.nav.clientLogin}
               </Link>
-            ) : null}
+            )}
           </div>
         )}
       </header>
