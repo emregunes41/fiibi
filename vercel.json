@@ -9,6 +9,10 @@
       "schedule": "0 3 * * *"
     },
     {
+      "path": "/api/cron/process-subscriptions",
+      "schedule": "0 2 * * *"
+    },
+    {
       "path": "/api/cron/domain-expiry-check",
       "schedule": "0 4 * * *"
     },
