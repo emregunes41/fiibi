@@ -9,6 +9,7 @@ import { useAdminSession } from "../AdminSessionContext";
 import Link from "next/link";
 import ReservationHubModal from "../components/ReservationHubModal";
 import EventsView from "../components/EventsView";
+import InstallPwaButton from "@/components/InstallPwaButton";
 
 const inp = {
   padding: "0.7rem 0.8rem", borderRadius: 0, fontSize: "0.8rem",
@@ -203,6 +204,8 @@ export default function ReservationsPage() {
           >
             <Calendar size={14} /> Google/Apple Takvim Senkronizasyon
           </button>
+          
+          <InstallPwaButton />
           
           <Link href="/admin/new-reservation"
             style={{ 

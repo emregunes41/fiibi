@@ -10,6 +10,7 @@ import { verifyAuth } from "@/lib/auth";
 import { getSiteConfig } from "../core-actions";
 import DashboardClient from "./DashboardClient";
 import { getPlanLimits } from "@/lib/plan-limits";
+import InstallPwaButton from "@/components/InstallPwaButton";
 
 async function getDashboardTenantId() {
   const tenant = await getCurrentTenant();
@@ -118,9 +119,14 @@ export default async function AdminDashboard() {
 
   return (
     <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
-      <div style={{ marginBottom: "1.5rem" }}>
-        <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: "4px" }}>Genel Bakış</h1>
-        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem" }}>Yönetim Paneli · {monthNames[now.getMonth()]} {now.getFullYear()}</p>
+      <div style={{ marginBottom: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
+        <div>
+          <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: "4px" }}>Genel Bakış</h1>
+          <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem" }}>Yönetim Paneli · {monthNames[now.getMonth()]} {now.getFullYear()}</p>
+        </div>
+        <div>
+          <InstallPwaButton />
+        </div>
       </div>
 
       {/* Sub-Merchant Warning */}
