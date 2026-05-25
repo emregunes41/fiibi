@@ -107,10 +107,11 @@ export default function SettingsPage() {
   const { features, terms } = bt;
   const isPhotographer = businessType === "photographer";
 
-  // Plan limitleri
-  const tenantPlan = adminSession?.tenant?.plan || "trial";
+  // Plan limitleri — session yüklenene kadar pro gibi davran (yanlış uyarı gösterme)
+  const sessionLoaded = !!adminSession?.tenant;
+  const tenantPlan = adminSession?.tenant?.plan?.toLowerCase() || (sessionLoaded ? "trial" : "pro");
   const planLimits = getPlanLimits(tenantPlan);
-  const isPro = tenantPlan === "pro";
+  const isPro = tenantPlan === "pro" || tenantPlan === "premium" || !sessionLoaded;
 
   // Discount codes
   const [discountCodes, setDiscountCodes] = useState([]);
