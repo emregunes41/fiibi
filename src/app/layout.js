@@ -81,10 +81,7 @@ export async function generateMetadata() {
     alternates: {
       canonical: canonicalUrl,
     },
-    icons: {
-      icon: siteConfig?.faviconUrl || siteConfig?.logoUrl || '/fiibi-logo.svg',
-      apple: siteConfig?.faviconUrl || siteConfig?.logoUrl || '/fiibi-logo.svg',
-    },
+    // icons handled by app/icon.js (dynamic circular favicon)
     openGraph: {
       title: seoTitle,
       description: seoDescription,
