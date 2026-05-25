@@ -2,7 +2,7 @@
   "name": "Fiibi Yönetim Paneli",
   "short_name": "Fiibi",
   "description": "Fiibi İşletme Yönetim Sistemi",
-  "start_url": "/admin/dashboard",
+  "start_url": "/admin/reservations",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
