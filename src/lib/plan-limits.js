@@ -22,6 +22,19 @@ const PLAN_LIMITS = {
     moduleStore: false,
     discoveryMarketplace: false, // 🔥 KART GIRMEDEN KAPALI
   },
+  bio: {
+    label: "Bio (Linktree)",
+    maxUploadMB: 50,
+    maxPortfolioPhotos: 0,
+    smsEnabled: false,
+    emailEnabled: false,
+    onlinePayment: false,
+    customDomain: false,
+    chatbotEnabled: false,
+    heroBgChange: false,
+    moduleStore: false,
+    discoveryMarketplace: false,
+  },
   basic: {
     label: "Basic",
     maxUploadMB: 100,

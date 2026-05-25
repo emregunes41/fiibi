@@ -53,13 +53,14 @@ function AdminLayoutInner({ children }) {
   const { features, terms } = bt;
   
   // Modül ayarları
+  const isBioPlan = session?.tenant?.plan === "bio";
   const modules = session?.tenant?.settings || { moduleReservations: true, moduleEvents: true };
 
   const navItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-    modules.moduleReservations !== false && { name: "Hizmet & Katalog", href: "/admin/catalog", icon: Package },
-    modules.moduleReservations !== false && { name: terms.appointments || "Rezervasyonlar", href: "/admin/reservations", icon: CalendarDays },
-    { name: "Muhasebe", href: "/admin/muhasebe", icon: Wallet },
+    (!isBioPlan && modules.moduleReservations !== false) && { name: "Hizmet & Katalog", href: "/admin/catalog", icon: Package },
+    (!isBioPlan && modules.moduleReservations !== false) && { name: terms.appointments || "Rezervasyonlar", href: "/admin/reservations", icon: CalendarDays },
+    !isBioPlan && { name: "Muhasebe", href: "/admin/muhasebe", icon: Wallet },
     { name: "Ayarlar", href: "/admin/settings", icon: Settings },
     { name: "Abonelik", href: "/admin/subscription", icon: Crown },
   ].filter(Boolean);
@@ -106,35 +107,39 @@ function AdminLayoutInner({ children }) {
             borderLeft: "2px solid rgba(0,0,0,0.1)",
             marginLeft: "8px", paddingLeft: "8px"
           }}>
-            <Link href="/admin/settings?tab=icerik&subTab=banner" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
-                <span style={{ fontSize: "14px" }}>🖼️</span> Banner Yükle
-              </div>
-            </Link>
-            
-            <Link href="/admin/settings?tab=icerik&subTab=portfolio" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
-                <span style={{ fontSize: "14px" }}>📸</span> Portfolyo Ekle
-              </div>
-            </Link>
-            
-            <Link href="/admin/settings?tab=icerik&subTab=blog" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
-                <span style={{ fontSize: "14px" }}>📝</span> Blog Yazısı
-              </div>
-            </Link>
-            
-            <Link href="/admin/settings?tab=icerik&subTab=icerik_blok" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
-                <span style={{ fontSize: "14px" }}>📰</span> İçerik Bloğu
-              </div>
-            </Link>
+            {!isBioPlan && (
+              <>
+                <Link href="/admin/settings?tab=icerik&subTab=banner" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
+                    <span style={{ fontSize: "14px" }}>🖼️</span> Banner Yükle
+                  </div>
+                </Link>
+                
+                <Link href="/admin/settings?tab=icerik&subTab=portfolio" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
+                    <span style={{ fontSize: "14px" }}>📸</span> Portfolyo Ekle
+                  </div>
+                </Link>
+                
+                <Link href="/admin/settings?tab=icerik&subTab=blog" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
+                    <span style={{ fontSize: "14px" }}>📝</span> Blog Yazısı
+                  </div>
+                </Link>
+                
+                <Link href="/admin/settings?tab=icerik&subTab=icerik_blok" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
+                    <span style={{ fontSize: "14px" }}>📰</span> İçerik Bloğu
+                  </div>
+                </Link>
 
-            <Link href="/admin/settings?tab=icerik&subTab=reels" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
-                <span style={{ fontSize: "14px" }}>📱</span> Instagram Reels
-              </div>
-            </Link>
+                <Link href="/admin/settings?tab=icerik&subTab=reels" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">
+                    <span style={{ fontSize: "14px" }}>📱</span> Instagram Reels
+                  </div>
+                </Link>
+              </>
+            )}
 
             <Link href="/admin/settings?tab=icerik&subTab=biolinks" onClick={() => setSidebarOpen(false)} style={{ textDecoration: "none" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", color: "rgba(0,0,0,0.6)", fontSize: "0.85rem", fontWeight: 600, transition: "all 0.2s" }} className="hover:text-black">

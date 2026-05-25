@@ -31,7 +31,11 @@ export default function SuperAdminClient() {
   const [tenants, setTenants] = useState([]);
   const [stats, setStats] = useState(null);
   const [usage, setUsage] = useState(null);
-  const [pricing, setPricing] = useState({ basic_monthly: 1499, basic_yearly: 14999, pro_monthly: 2999, pro_yearly: 29999 });
+  const [pricing, setPricing] = useState({ 
+    bio_monthly: 499, bio_yearly: 4999,
+    basic_monthly: 1499, basic_yearly: 14999, 
+    pro_monthly: 2999, pro_yearly: 29999 
+  });
   const [pricingSaved, setPricingSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
@@ -515,6 +519,8 @@ export default function SuperAdminClient() {
               <h2 style={sectionTitle}>Abonelik Fiyatları</h2>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 16 }}>
                 {[
+                  { key: "bio_monthly", label: "Bio Aylık", suffix: "₺/ay", color: "#38bdf8" },
+                  { key: "bio_yearly", label: "Bio Yıllık", suffix: "₺/yıl", color: "#38bdf8" },
                   { key: "basic_monthly", label: "Basic Aylık", suffix: "₺/ay", color: "#8b5cf6" },
                   { key: "basic_yearly", label: "Basic Yıllık", suffix: "₺/yıl", color: "#8b5cf6" },
                   { key: "pro_monthly", label: "Pro Aylık", suffix: "₺/ay", color: "#f59e0b" },

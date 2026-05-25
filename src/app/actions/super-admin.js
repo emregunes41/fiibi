@@ -193,7 +193,7 @@ export async function toggleTenantFreeze(tenantId) {
 export async function changeTenantPlan(tenantId, newPlan) {
   if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
 
-  const validPlans = ["trial", "basic", "pro"];
+  const validPlans = ["trial", "bio", "basic", "pro"];
   if (!validPlans.includes(newPlan)) return { error: "Geçersiz plan" };
 
   // Plan süresini belirle
@@ -248,8 +248,9 @@ export async function getPlatformPricing() {
 
   const config = await prisma.platformConfig.findUnique({ where: { id: "main" } });
   
-  // Varsayılan fiyatlar (Basic & Pro)
+  // Varsayılan fiyatlar (Bio, Basic & Pro)
   const defaults = {
+    bio_monthly: 499, bio_yearly: 4999,
     basic_monthly: 1499, basic_yearly: 14999,
     pro_monthly: 2999, pro_yearly: 29999,
   };
@@ -266,10 +267,11 @@ export async function getPlatformPricing() {
 export async function updatePlatformPricing(pricing) {
   if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
 
-  const { basic_monthly, basic_yearly, pro_monthly, pro_yearly } = pricing;
+  const { bio_monthly, bio_yearly, basic_monthly, basic_yearly, pro_monthly, pro_yearly } = pricing;
   if (!basic_monthly || !basic_yearly || !pro_monthly || !pro_yearly) return { error: "Tüm fiyatlar gerekli" };
 
   const priceData = {
+    bio_monthly: Number(bio_monthly || 499), bio_yearly: Number(bio_yearly || 4999),
     basic_monthly: Number(basic_monthly), basic_yearly: Number(basic_yearly),
     pro_monthly: Number(pro_monthly), pro_yearly: Number(pro_yearly),
   };
@@ -380,7 +382,7 @@ export async function updateTenantField(tenantId, field, value) {
 
   // Plan validasyonu
   if (field === "plan") {
-    const validPlans = ["trial", "basic", "pro"];
+    const validPlans = ["trial", "bio", "basic", "pro"];
     if (!validPlans.includes(value)) return { error: "Geçersiz plan." };
   }
 

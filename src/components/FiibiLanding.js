@@ -18,6 +18,14 @@ const C = {
 
 function buildPlans(prices) {
   return [
+    { id: "bio_monthly", tier: "bio", name: "Bio (Linktree)", period: "Aylık", price: prices.bio_monthly || 499, periodLabel: "/ay", popular: false, savings: null, features: [
+      "Tek bir Bio (Linktree) sayfası", "Sosyal medya linkleri", "Özelleştirilebilir butonlar", "Temel istatistikler"
+    ]},
+    { id: "bio_yearly", tier: "bio", name: "Bio (Linktree)", period: "Yıllık", price: prices.bio_yearly || 4999, periodLabel: "/yıl",
+      monthlyEquiv: Math.round((prices.bio_yearly || 4999) / 12), popular: false,
+      savings: Math.round(100 - ((prices.bio_yearly || 4999) / ((prices.bio_monthly || 499) * 12)) * 100),
+      features: ["Tek bir Bio (Linktree) sayfası", "Sosyal medya linkleri", "Özelleştirilebilir butonlar", "Temel istatistikler"]
+    },
     { id: "basic_monthly", tier: "basic", name: "Basic", period: "Aylık", price: prices.basic_monthly || 1499, periodLabel: "/ay", popular: false, savings: null, features: [
       "Sınırsız rezervasyon", "Sınırsız paket/hizmet", "Portfolyo (20 fotoğraf)", "E-posta bildirimleri", "Online ödeme", "100 MB içerik yükleme"
     ]},
@@ -754,7 +762,26 @@ export default function FiibiLanding() {
               </button>
             </div>
           </div>
-          <div className="fiibi-grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, maxWidth: 760, margin: "0 auto" }}>
+          <div className="fiibi-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 2, maxWidth: 1100, margin: "0 auto" }}>
+            {/* Bio Plan */}
+            <div style={{ padding: "44px 36px", background: C.white }}>
+              <div style={{ display: "inline-block", background: "rgba(56,189,248,0.1)", color: "#38bdf8", padding: "4px 12px", fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>BİO LINK</div>
+              <div style={{ fontSize: 48, fontWeight: 800, color: C.black, letterSpacing: "-0.03em" }}>
+                ₺{(plans.find(p => p.id === (billingCycle === "yearly" ? "bio_yearly" : "bio_monthly"))?.price || (billingCycle === "yearly" ? 4999 : 499)).toLocaleString("tr-TR")}
+              </div>
+              <div style={{ fontSize: 14, color: C.muted, marginBottom: 6 }}>/ {billingCycle === "yearly" ? "yıl" : "ay"} · Sadece Bio Link</div>
+              {billingCycle === "yearly" && (
+                <div style={{ fontSize: 13, color: "#38bdf8", marginBottom: 28 }}>Aylık ~{(plans.find(p => p.id === "bio_yearly")?.monthlyEquiv || 416).toLocaleString("tr-TR")} ₺</div>
+              )}
+              {billingCycle === "monthly" && <div style={{ marginBottom: 28, height: 19 }}></div>}
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
+                {(plans.find(p => p.id === (billingCycle === "yearly" ? "bio_yearly" : "bio_monthly"))?.features || []).map(f => (
+                  <span key={f} style={{ fontSize: 14, color: C.secondary }}><span style={{ color: "#38bdf8", marginRight: 8 }}>✓</span>{f}</span>
+                ))}
+              </div>
+              <button onClick={() => { setForm(prev => ({...prev, selectedPlan: billingCycle === "yearly" ? "bio_yearly" : "bio_monthly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, border: `2px solid ${C.black}`, background: "transparent", color: C.black, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
+            </div>
+            
             {/* Basic Plan */}
             <div style={{ padding: "44px 36px", background: C.white }}>
               <div style={{ display: "inline-block", background: "rgba(139,92,246,0.1)", color: "#8b5cf6", padding: "4px 12px", fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>BASIC</div>
