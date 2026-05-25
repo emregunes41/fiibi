@@ -1,0 +1,22 @@
+{
+  "name": "Fiibi Yönetim Paneli",
+  "short_name": "Fiibi",
+  "description": "Fiibi İşletme Yönetim Sistemi",
+  "start_url": "/admin/dashboard",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/fiibi-logo-dark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

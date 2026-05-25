@@ -78,6 +78,12 @@ export async function generateMetadata() {
   return { 
     title: seoTitle, 
     description: seoDescription,
+    manifest: "/manifest.json",
+    appleWebApp: {
+      capable: true,
+      title: seoTitle,
+      statusBarStyle: "black-translucent"
+    },
     alternates: {
       canonical: canonicalUrl,
     },
@@ -108,6 +114,7 @@ export async function generateMetadata() {
 }
 
 import { LanguageProvider } from "@/components/LanguageContext";
+import PwaRegister from "@/components/PwaRegister";
 
 export default async function RootLayout({ children }) {
   const headersList = await headers();
@@ -118,6 +125,7 @@ export default async function RootLayout({ children }) {
     return (
       <html lang="tr" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
         <body style={{ margin: 0, background: "#000", color: "#fff", fontFamily: "var(--font-geist-sans), system-ui, sans-serif" }}>
+          <PwaRegister />
           <PageTracker />
           {children}
         </body>
@@ -141,6 +149,7 @@ export default async function RootLayout({ children }) {
         </head>
         <body style={{ margin: 0, background: "#fff", color: "#1a1a1a", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
           <LanguageProvider>
+            <PwaRegister />
             <PageTracker />
             {children}
           </LanguageProvider>
@@ -205,6 +214,7 @@ export default async function RootLayout({ children }) {
         className="min-h-full flex flex-col font-sans"
         style={{ fontFamily: fontCSS, color: palette.text }}
       >
+        <PwaRegister />
         <LanguageProvider>
           <HeroBackground 
             bgType={siteConfig?.heroBgType || (siteConfig?.heroBgUrl ? "video" : "color")} 
