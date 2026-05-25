@@ -24,6 +24,7 @@ export async function createEvent(data) {
       maxParticipants: parseInt(data.maxParticipants),
       durationMinutes: parseInt(data.durationMinutes),
       price: data.price.toString(),
+      showInDiscovery: data.showInDiscovery === true,
       tenantId: tenant?.id || "NONE",
     }
   });
@@ -41,6 +42,7 @@ export async function updateEvent(id, data) {
       maxParticipants: parseInt(data.maxParticipants),
       durationMinutes: parseInt(data.durationMinutes),
       price: data.price.toString(),
+      ...(data.showInDiscovery !== undefined ? { showInDiscovery: data.showInDiscovery === true } : {}),
     }
   });
   revalidatePath("/admin/events");

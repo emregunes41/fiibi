@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Users, Calendar, Clock, MapPin, Video, Trash2, Edit2, Download, CheckCircle, Ticket, Banknote, Users2, X, ImagePlus } from "lucide-react";
+import { Plus, Users, Calendar, Clock, MapPin, Video, Trash2, Edit2, Download, CheckCircle, Ticket, Banknote, Users2, X, ImagePlus, Globe } from "lucide-react";
 import { getEvents, createEvent, updateEvent, deleteEvent, removeRegistration } from "../events/actions";
 
 export default function EventsView() {
@@ -13,7 +13,7 @@ export default function EventsView() {
   
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
-    title: "", description: "", date: "", durationMinutes: 60, price: "0", maxParticipants: 10, location: "", meetingLink: "", imageUrl: "", isActive: true
+    title: "", description: "", date: "", durationMinutes: 60, price: "0", maxParticipants: 10, location: "", meetingLink: "", imageUrl: "", isActive: true, showInDiscovery: false
   });
   const [uploadingImage, setUploadingImage] = useState(false);
   
@@ -93,11 +93,11 @@ export default function EventsView() {
       setFormData({
         title: event.title, description: event.description || "", date: localDateIso,
         durationMinutes: event.durationMinutes, price: event.price, maxParticipants: event.maxParticipants,
-        location: event.location || "", meetingLink: event.meetingLink || "", imageUrl: event.imageUrl || "", isActive: event.isActive,
+        location: event.location || "", meetingLink: event.meetingLink || "", imageUrl: event.imageUrl || "", isActive: event.isActive, showInDiscovery: event.showInDiscovery || false,
       });
     } else {
       setEditingId(null);
-      setFormData({ title: "", description: "", date: "", durationMinutes: 60, price: "0", maxParticipants: 10, location: "", meetingLink: "", imageUrl: "", isActive: true });
+      setFormData({ title: "", description: "", date: "", durationMinutes: 60, price: "0", maxParticipants: 10, location: "", meetingLink: "", imageUrl: "", isActive: true, showInDiscovery: false });
     }
     setFormOpen(true);
   };
@@ -261,6 +261,22 @@ export default function EventsView() {
                 <input type="checkbox" checked={formData.isActive} onChange={e => setFormData({...formData, isActive: e.target.checked})} style={{ width: 18, height: 18, accentColor: "#fff" }} />
                 <span style={{ fontSize: 14, fontWeight: 600 }}>Etkinliği Satışa/Kayıda Aç</span>
               </label>
+
+              {/* Keşfet Toggle */}
+              <div style={{ background: formData.showInDiscovery ? "rgba(59,130,246,0.08)" : "rgba(255,255,255,0.02)", border: `1px solid ${formData.showInDiscovery ? "rgba(59,130,246,0.25)" : "rgba(255,255,255,0.05)"}`, borderRadius: 0, padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, transition: "all 0.2s" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <Globe size={16} style={{ color: formData.showInDiscovery ? "#60a5fa" : "rgba(255,255,255,0.25)" }} />
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: formData.showInDiscovery ? "#fff" : "rgba(255,255,255,0.6)" }}>Keşfet'te Göster</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>Bu etkinlik fiibi.co ana sayfasında listelensin</div>
+                  </div>
+                </div>
+                <label style={{ position: "relative", width: 44, height: 24, cursor: "pointer", flexShrink: 0 }}>
+                  <input type="checkbox" checked={formData.showInDiscovery} onChange={e => setFormData({...formData, showInDiscovery: e.target.checked})} style={{ opacity: 0, width: 0, height: 0 }} />
+                  <span style={{ position: "absolute", inset: 0, borderRadius: 12, background: formData.showInDiscovery ? "#2563eb" : "rgba(255,255,255,0.15)", transition: "background 0.2s" }} />
+                  <span style={{ position: "absolute", top: 2, left: formData.showInDiscovery ? 22 : 2, width: 20, height: 20, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.3)", transition: "left 0.2s" }} />
+                </label>
+              </div>
 
               <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
                 <button type="button" onClick={() => setFormOpen(false)} style={{ flex: 1, padding: "14px", background: "rgba(255,255,255,0.05)", border: "none", color: "#fff", fontWeight: 700, borderRadius: 0, cursor: "pointer" }}>İptal</button>
