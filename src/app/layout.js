@@ -78,7 +78,7 @@ export async function generateMetadata() {
   return { 
     title: seoTitle, 
     description: seoDescription,
-    manifest: "/manifest.json",
+    manifest: "/api/manifest",
     appleWebApp: {
       capable: true,
       title: seoTitle,
