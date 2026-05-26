@@ -1,6 +1,8 @@
 "use server";
 
 import { getNotificationSettings, sendEmailWithResend } from "./notify";
+import { prisma } from "@/lib/prisma";
+import { getCurrentTenant } from "@/lib/tenant";
 
 const ADMIN_EMAIL_FALLBACK = "noreply@studio.com";
 
@@ -21,6 +23,19 @@ async function getAdminContext() {
       ? `${protocol}://${tenant.slug}.${domain}`
       : `${protocol}://${domain}`;
   return { settings, businessName, siteUrl };
+}
+
+/** Helper: Save notification to DB */
+async function saveNotification(message, type = "INFO") {
+  try {
+    const tenant = await getCurrentTenant();
+    const tenantId = tenant?.id || null;
+    await prisma.adminNotification.create({
+      data: { message, type, tenantId }
+    });
+  } catch (err) {
+    console.error("DB notification save error:", err);
+  }
 }
 
 const emailWrapper = async (title, content) => {
@@ -72,6 +87,10 @@ export async function notifyAdminNewReservation(reservation) {
     `;
 
     await sendEmailWithResend(settings, await getAdminEmail(), "📋 Yeni Rezervasyon Talebi!", await emailWrapper("Yeni Rezervasyon Talebi", content));
+    
+    // DB'ye kaydet
+    const dateStr = new Date(reservation.eventDate).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+    await saveNotification(`📋 Yeni Rezervasyon: ${reservation.brideName}${reservation.groomName ? ` & ${reservation.groomName}` : ''} — ${dateStr} — ${reservation.totalAmount || 0}₺`, "RESERVATION");
   } catch (err) {
     console.error("Admin notification error (new reservation):", err);
   }
@@ -104,6 +123,10 @@ export async function notifyAdminPaymentReceived({ brideName, bridePhone, amount
 
     const emoji = remaining <= 0 ? "🎉" : "💵";
     await sendEmailWithResend(settings, await getAdminEmail(), `${emoji} Ödeme Alındı: ${brideName} (+${amount.toLocaleString('tr-TR')}₺)`, await emailWrapper("Ödeme Bilgisi", content));
+    
+    // DB'ye kaydet
+    const methodLabels2 = { CASH: "Nakit", BANK_TRANSFER: "Havale", CREDIT_CARD: "Kart", ONLINE: "Online" };
+    await saveNotification(`💰 Ödeme: ${brideName} — +${amount.toLocaleString('tr-TR')}₺ (${methodLabels2[method] || method})${remaining <= 0 ? ' ✅ Tam ödendi!' : ` — Kalan: ${remaining.toLocaleString('tr-TR')}₺`}`, "PAYMENT");
   } catch (err) {
     console.error("Admin notification error (payment):", err);
   }
@@ -126,6 +149,9 @@ export async function notifyAdminContractApproved({ brideName, bridePhone, bride
       </table>
     `;
     await sendEmailWithResend(settings, await getAdminEmail(), `📝 Sözleşme Onaylandı: ${brideName}`, await emailWrapper("Sözleşme Onayı", content));
+    
+    // DB'ye kaydet
+    await saveNotification(`📝 Sözleşme Onayı: ${brideName} sözleşmeyi onayladı ✅`, "CONTRACT");
   } catch (err) {
     console.error("Admin notification error (contract):", err);
   }
@@ -149,6 +175,9 @@ export async function notifyAdminPhotoSelectionSubmitted({ brideName, bridePhone
       </table>
     `;
     await sendEmailWithResend(settings, await getAdminEmail(), `📷 Fotoğraf Seçimi: ${brideName} (${selectedCount} fotoğraf)`, await emailWrapper("Fotoğraf Seçimi Tamamlandı", content));
+    
+    // DB'ye kaydet
+    await saveNotification(`📷 Fotoğraf Seçimi: ${brideName} ${selectedCount} fotoğraf seçti`, "PHOTO_SELECTION");
   } catch (err) {
     console.error("Admin notification error (photo selection):", err);
   }
@@ -169,6 +198,9 @@ export async function notifyAdminAlbumSelected({ brideName, bridePhone, modelNam
       </table>
     `;
     await sendEmailWithResend(settings, await getAdminEmail(), `📒 Albüm Seçimi: ${brideName} → ${modelName}`, await emailWrapper("Albüm Modeli Seçildi", content));
+    
+    // DB'ye kaydet
+    await saveNotification(`📒 Albüm Seçimi: ${brideName} → ${modelName}`, "ALBUM");
   } catch (err) {
     console.error("Admin notification error (album):", err);
   }
@@ -196,6 +228,9 @@ export async function notifyAdminPaymentPreferenceChanged({ brideName, bridePhon
       ${!isCard ? '<p style="color:#666;font-size:13px;">Müşteriye IBAN bilgilerinizi iletmek için WhatsApp üzerinden iletişime geçebilirsiniz.</p>' : ''}
     `;
     await sendEmailWithResend(settings, await getAdminEmail(), `${isCard ? '💳' : '💵'} ${brideName}: ${isCard ? 'Karta Geçiş' : 'Nakite Dönüş'}`, await emailWrapper("Ödeme Tercihi Değişikliği", content));
+    
+    // DB'ye kaydet
+    await saveNotification(`💳 Ödeme Tercihi: ${brideName} ${isCard ? 'kredi kartına geçti' : 'nakite döndü'}`, "PAYMENT_PREF");
   } catch (err) {
     console.error("Admin notification error (preference change):", err);
   }

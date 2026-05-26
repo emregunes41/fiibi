@@ -70,7 +70,7 @@ export default async function AdminDashboard() {
     prisma.adminNotification.findMany({
       where: tenantFilter,
       orderBy: { createdAt: "desc" },
-      take: 10
+      take: 30
     }),
     prisma.reservation.findMany({
       where: { 
@@ -203,6 +203,9 @@ export default async function AdminDashboard() {
           <Link href="/admin/packages" style={{ padding: "8px 16px", background: "rgba(0,0,0,0.1)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>{terms.service} Ekle</Link>
         </div>
       )}
+
+      {/* Notifications */}
+      <NotificationList notifications={JSON.parse(JSON.stringify(notifications))} />
 
       {/* Stats Grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "8px", marginBottom: "1.5rem" }}>
