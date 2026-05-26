@@ -177,8 +177,8 @@ export default async function RootLayout({ children }) {
   const businessType = siteConfig?._tenant?.businessType || "other";
   const usingSectorTexture = !hasCustomBg && SECTOR_TEXTURES.includes(businessType);
 
-  // Palette — her zaman dark mode (sabitlendi)
-  const palette = getPalette("dark");
+  // Palette — her zaman light mode (sabitlendi)
+  const palette = getPalette("light");
 
   const tpl = getTemplate(siteConfig?.siteTemplate || "classic");
 
