@@ -68,10 +68,14 @@ export async function completeSelection(galleryId, reservationId, coupleName, se
       return { error: "Yetkisiz islem." };
     }
 
-    // 1. Seçim metnini rezervasyona kaydet (workflowStatus değişmeden bekler)
+    // 1. Seçim metnini rezervasyona kaydet, seçimi kilitle ve workflow durumunu 'PREPARING' (Hazırlanıyor) yap
     await prisma.reservation.update({
       where: { id: reservationId },
-      data: { selectedPhotos: selectedPhotoNames.join(', ') }
+      data: { 
+        selectedPhotos: selectedPhotoNames.join(', '),
+        selectionLocked: true,
+        workflowStatus: "PREPARING"
+      }
     });
 
     // 2. Admine sistem içi bildirim gönder

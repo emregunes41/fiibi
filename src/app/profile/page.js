@@ -365,7 +365,7 @@ export default async function ProfilePage() {
                           reservationId={res.id}
                           initialSelectedId={res.albumModelId}
                           models={albumModels}
-                          isLocked={res.selectionLocked}
+                          isLocked={res.selectionLocked && !!res.albumModelId}
                         />
                       )}
 
