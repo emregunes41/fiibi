@@ -302,7 +302,7 @@ export default function ClientGalleryPage() {
           
           <button 
             onClick={closeLightbox}
-            style={{ position: "absolute", top: 20, right: 20, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: 10, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
+            style={{ position: "absolute", top: 90, right: 20, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: 10, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
           >
             <X size={20} />
           </button>
@@ -342,15 +342,15 @@ export default function ClientGalleryPage() {
                style={{
                  position: "absolute", bottom: 40, 
                  background: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#000" : "rgba(255,255,255,0.9)",
-                 color: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#fff" : "#000", 
+                 color: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#ffffff !important" : "#000000 !important", 
                  border: "none", padding: "12px 24px", borderRadius: 4, 
                  display: "flex", alignItems: "center", gap: 8, fontSize: "0.9rem", fontWeight: 800, 
                  cursor: galleries[lightbox.galleryIndex].reservation.selectionLocked ? "default" : "pointer",
                  boxShadow: "0 4px 12px rgba(0,0,0,0.2)", zIndex: 10002
                }}
              >
-               <Heart size={18} fill={galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "currentColor" : "none"} /> 
-               <span style={{ color: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#fff" : "#000" }}>
+               <Heart size={18} fill={galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "currentColor" : "none"} style={{ color: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#ffffff" : "#000000" }} /> 
+               <span style={{ color: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#ffffff" : "#000000" }}>
                  {galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "Seçildi" : "Bu Fotoğrafı Seç"}
                </span>
              </button>

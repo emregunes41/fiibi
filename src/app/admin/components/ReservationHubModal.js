@@ -558,13 +558,29 @@ export default function ReservationHubModal({
                  </div>
                )}
                
-               {isPhotographer && (
+                {isPhotographer && (
                  <button 
                    onClick={() => window.location.href = `/admin/reservations/${r.id}/gallery`} 
                    style={{ background: "rgba(168,85,247,0.15)", border: "1px solid rgba(168,85,247,0.3)", color: "#c084fc", padding: "8px 12px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.75rem", fontWeight: 800, width: "100%", marginTop: "10px" }}
                  >
                    <Images size={14} /> Sistemi Kullanarak Fotoğraf Gönder (Galeri)
                  </button>
+               )}
+
+               {isPhotographer && r.selectedPhotos && (
+                 <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                   <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Müşterinin Seçtiği Fotoğraflar</div>
+                   <div style={{ fontSize: "0.7rem", color: "#fff", background: "rgba(255,255,255,0.04)", padding: "10px", borderRadius: 4, maxHeight: "200px", overflowY: "auto" }}>
+                     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                       {r.selectedPhotos.split(', ').map((name, i) => (
+                         <div key={i} style={{ padding: "4px 8px", background: "rgba(255,255,255,0.03)", borderRadius: 2, display: "flex", gap: "8px", alignItems: "center" }}>
+                           <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem", width: "16px" }}>{i + 1}.</span>
+                           <span style={{ fontWeight: 600 }}>{name}</span>
+                         </div>
+                       ))}
+                     </div>
+                   </div>
+                 </div>
                )}
              </div>
              
