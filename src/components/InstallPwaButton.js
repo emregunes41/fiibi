@@ -71,7 +71,7 @@ export default function InstallPwaButton() {
       {/* iOS Modal */}
       {showIosPrompt && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", zIndex: 9999, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
-          <div style={{ background: "#1a1a1a", borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: "24px", width: "100%", maxWidth: 400, color: "#1a1a1a", position: "relative", animation: "slideUp 0.3s ease-out" }}>
+          <div style={{ background: "#1a1a1a", borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: "24px", width: "100%", maxWidth: 400, color: "#ffffff", position: "relative", animation: "slideUp 0.3s ease-out" }}>
             <button onClick={() => setShowIosPrompt(false)} style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.1)", border: "none", color: "#1a1a1a", borderRadius: "50%", width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}><X size={16} /></button>
             <h3 style={{ margin: "0 0 16px 0", fontSize: "1.2rem", fontWeight: 800 }}>Uygulamayı Yükle</h3>
             <p style={{ margin: "0 0 20px 0", fontSize: "0.9rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>
@@ -82,7 +82,7 @@ export default function InstallPwaButton() {
               <li>Menüyü aşağı kaydırıp <strong>"Ana Ekrana Ekle" (Add to Home Screen)</strong> seçeneğine tıklayın.</li>
               <li>Sağ üstteki <strong>"Ekle"</strong> butonuna basarak kurulumu tamamlayın.</li>
             </ol>
-            <button onClick={() => setShowIosPrompt(false)} style={{ width: "100%", padding: "12px", background: "#1a1a1a", color: "#1a1a1a", fontWeight: 800, border: "none", borderRadius: 8, marginTop: 24, cursor: "pointer", fontSize: "1rem" }}>
+            <button onClick={() => setShowIosPrompt(false)} style={{ width: "100%", padding: "12px", background: "#1a1a1a", color: "#ffffff", fontWeight: 800, border: "none", borderRadius: 8, marginTop: 24, cursor: "pointer", fontSize: "1rem" }}>
               Anladım
             </button>
           </div>

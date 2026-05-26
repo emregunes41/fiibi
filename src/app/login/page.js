@@ -129,7 +129,7 @@ export default function LoginPage() {
                 <button 
                   type="submit" 
                   disabled={isLoading}
-                  style={{ width: "100%", background: "#1a1a1a", color: "#1a1a1a", fontWeight: 700, padding: "14px", borderRadius: 0, marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 15, transition: "all 0.2s ease", opacity: isLoading ? 0.5 : 1 }}
+                  style={{ width: "100%", background: "#1a1a1a", color: "#ffffff", fontWeight: 700, padding: "14px", borderRadius: 0, marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 15, transition: "all 0.2s ease", opacity: isLoading ? 0.5 : 1 }}
                 >
                   {isLoading ? <Loader2 className="animate-spin" size={18} /> : <LogIn size={18} />}
                   Giriş Yap
@@ -190,7 +190,7 @@ export default function LoginPage() {
                   <button 
                     type="submit" 
                     disabled={resetLoading}
-                    style={{ width: "100%", background: "#1a1a1a", color: "#1a1a1a", fontWeight: 700, padding: "14px", borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 14, transition: "all 0.2s ease", opacity: resetLoading ? 0.5 : 1 }}
+                    style={{ width: "100%", background: "#1a1a1a", color: "#ffffff", fontWeight: 700, padding: "14px", borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 14, transition: "all 0.2s ease", opacity: resetLoading ? 0.5 : 1 }}
                   >
                     {resetLoading ? <Loader2 className="animate-spin" size={18} /> : <Mail size={18} />}
                     Yeni Şifre Gönder

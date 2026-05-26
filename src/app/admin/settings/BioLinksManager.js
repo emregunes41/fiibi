@@ -292,7 +292,7 @@ export default function BioLinksManager({ initialLinks }) {
                 <button onClick={handleSave} disabled={loading} style={{
                   display: "flex", alignItems: "center", gap: 6,
                   padding: "8px 20px", fontSize: 12, fontWeight: 700,
-                  background: "#1a1a1a", color: "#1a1a1a", border: "none",
+                  background: "#1a1a1a", color: "#ffffff", border: "none",
                   cursor: "pointer", opacity: loading ? 0.5 : 1,
                   transition: "opacity 0.2s",
                 }}>

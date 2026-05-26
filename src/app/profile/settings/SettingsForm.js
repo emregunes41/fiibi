@@ -203,7 +203,7 @@ export default function SettingsForm({ user }) {
             <button 
               type="submit" 
               disabled={isSaving}
-              style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", borderRadius: 0, padding: "14px 24px", fontSize: 13, fontWeight: 700, transition: "all 0.2s", cursor: isSaving ? "not-allowed" : "pointer", opacity: isSaving ? 0.7 : 1 }}
+              style={{ background: "#1a1a1a", color: "#ffffff", border: "none", borderRadius: 0, padding: "14px 24px", fontSize: 13, fontWeight: 700, transition: "all 0.2s", cursor: isSaving ? "not-allowed" : "pointer", opacity: isSaving ? 0.7 : 1 }}
               className="flex items-center justify-center gap-2 w-full md:w-auto"
             >
               <Save size={16} /> {isSaving ? "Kaydediliyor..." : "Kaydet"}

@@ -91,7 +91,7 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
             <button
               type="submit"
               disabled={loading || !selection.trim()}
-              style={{ background: "#1a1a1a", color: "#1a1a1a", padding: "10px 24px", borderRadius: 0, fontWeight: 700, fontSize: 13, border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s", opacity: loading ? 0.6 : 1 }}
+              style={{ background: "#1a1a1a", color: "#ffffff", padding: "10px 24px", borderRadius: 0, fontWeight: 700, fontSize: 13, border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s", opacity: loading ? 0.6 : 1 }}
             >
               {loading ? "Kaydediliyor..." : <><Send size={14} /> Seçimi Kaydet</>}
             </button>

@@ -102,7 +102,7 @@ export default function SetupWizard({ config }) {
   };
 
   const btnPrimary = {
-    flex: 2, padding: "14px", background: "#1a1a1a", color: "#1a1a1a", border: "none",
+    flex: 2, padding: "14px", background: "#1a1a1a", color: "#ffffff", border: "none",
     fontSize: 13, fontWeight: 800, cursor: "pointer", display: "flex",
     alignItems: "center", justifyContent: "center", gap: 8, transition: "all 0.2s",
   };

@@ -1060,7 +1060,7 @@ export default function ReservationsPage() {
 
               <div style={{ display: "flex", gap: "0.5rem", marginTop: "4px" }}>
                 <button type="button" onClick={() => setIsModalOpen(false)} style={{ flex: 1, padding: "0.7rem", borderRadius: 0, border: "1px solid rgba(0,0,0,0.08)", background: "transparent", color: "rgba(0,0,0,0.65)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>
-                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "#1a1a1a", color: "#1a1a1a", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : "KAYDET"}</button>
+                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "#1a1a1a", color: "#ffffff", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : "KAYDET"}</button>
               </div>
             </form>
           </div>

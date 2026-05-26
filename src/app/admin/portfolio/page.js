@@ -131,7 +131,7 @@ export default function PortfolioAdminPage() {
             {({ open }) => (
               <button
                 onClick={() => open()}
-                style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+                style={{ background: "#1a1a1a", color: "#ffffff", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
               >
                 <UploadCloud size={16} /> Görsel Yükle
               </button>
@@ -218,7 +218,7 @@ export default function PortfolioAdminPage() {
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+          style={{ background: "#1a1a1a", color: "#ffffff", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
         >
           <Plus size={16} /> Yeni Konsept
         </button>
@@ -307,7 +307,7 @@ export default function PortfolioAdminPage() {
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "0.5rem" }}>
                 <button type="button" onClick={() => setIsModalOpen(false)} style={{ background: "transparent", color: "rgba(0,0,0,0.6)", border: "none", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", padding: "0.5rem 1rem" }}>İptal</button>
-                <button type="submit" disabled={isCreating} style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isCreating ? 0.7 : 1 }}>
+                <button type="submit" disabled={isCreating} style={{ background: "#1a1a1a", color: "#ffffff", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isCreating ? 0.7 : 1 }}>
                   {isCreating ? "Oluşturuluyor..." : "Oluştur"}
                 </button>
               </div>

@@ -649,7 +649,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                   onClick={() => cart.setIsOpen(true)}
                   style={{
                     padding: "14px 28px", borderRadius: 0,
-                    background: "#fff", border: "none", color: "#000",
+                    background: "#1a1a1a", border: "none", color: "#ffffff",
                     fontSize: "13px", fontWeight: 700, cursor: "pointer",
                     display: "flex", alignItems: "center", gap: "8px",
                     transition: "all 0.2s",
@@ -1055,7 +1055,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       onClick={() => { setAddedFeedback(false); cart.setIsOpen(true); }}
                       style={{
                         flex: 1, padding: "14px", borderRadius: 0,
-                        border: "none", background: "#1a1a1a", color: "#1a1a1a",
+                        border: "none", background: "#1a1a1a", color: "#ffffff",
                         fontSize: "13px", fontWeight: 700, cursor: "pointer",
                         display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
                       }}

@@ -250,7 +250,7 @@ export default function SettingsPage() {
         <AlertCircle size={32} style={{ color: "rgba(0,0,0,0.65)", margin: "0 auto 12px" }} />
         <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Bağlantı Kesildi</h2>
         <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 13, marginBottom: 20 }}>Ayarları yükleyemiyoruz.</p>
-        <button onClick={() => window.location.reload()} style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", borderRadius: 0, padding: "10px 24px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+        <button onClick={() => window.location.reload()} style={{ background: "#1a1a1a", color: "#ffffff", border: "none", borderRadius: 0, padding: "10px 24px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
           Yenile
         </button>
       </div>
@@ -502,7 +502,7 @@ export default function SettingsPage() {
                   }}
                   style={{
                     padding: "10px 20px", borderRadius: 0, border: "none",
-                    background: "#1a1a1a", color: "#1a1a1a", fontWeight: 800, fontSize: 12,
+                    background: "#1a1a1a", color: "#ffffff", fontWeight: 800, fontSize: 12,
                     cursor: "pointer", display: "flex", alignItems: "center", gap: 6,
                   }}
                 >
@@ -2238,7 +2238,7 @@ export default function SettingsPage() {
                   <p style={{ margin: 0, fontSize: 13, color: "rgba(0,0,0,0.65)", lineHeight: 1.6 }}>
                     Sitenize özel alan adı (domain) bağlamak için planınızı Pro'ya yükseltin.
                   </p>
-                  <div style={{ marginTop: 12, background: "#1a1a1a", color: "#1a1a1a", padding: "12px 24px", borderRadius: 8, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 8, transition: "transform 0.2s" }}>
+                  <div style={{ marginTop: 12, background: "#1a1a1a", color: "#ffffff", padding: "12px 24px", borderRadius: 8, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 8, transition: "transform 0.2s" }}>
                     <ArrowUp size={16} strokeWidth={2.5} />
                     Planı Yükselt
                   </div>
@@ -2407,7 +2407,7 @@ export default function SettingsPage() {
                       }
                       setRenewLoading(false);
                     }}
-                    style={{ background: "#3b82f6", color: "#1a1a1a", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer", borderRadius: "4px" }}
+                    style={{ background: "#3b82f6", color: "#ffffff", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer", borderRadius: "4px" }}
                   >
                     {renewLoading ? "Bekleyiniz..." : "Süreyi Uzat"}
                   </button>
@@ -2468,7 +2468,7 @@ export default function SettingsPage() {
           disabled={saving}
           style={{
             width: "100%", padding: 16, borderRadius: 0, border: "none",
-            background: "#1a1a1a", color: "#1a1a1a", fontWeight: 800, fontSize: 13,
+            background: "#1a1a1a", color: "#ffffff", fontWeight: 800, fontSize: 13,
             textTransform: "uppercase", letterSpacing: "0.08em",
             cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.5 : 1,
             display: "flex", alignItems: "center", justifyContent: "center", gap: 10,

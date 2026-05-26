@@ -42,7 +42,7 @@ export default function ReservationsError({ error, reset }) {
       <button
         onClick={() => reset()}
         style={{
-          background: "#1a1a1a", color: "#1a1a1a",
+          background: "#1a1a1a", color: "#ffffff",
           border: "none",
           padding: "12px 24px",
           fontWeight: 700,

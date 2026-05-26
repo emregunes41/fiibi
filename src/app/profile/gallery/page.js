@@ -141,7 +141,7 @@ export default function ClientGalleryPage() {
   return (
     <div>
       {/* KESİNLİKLE BEYAZ TEMALI GALERİ KONTEYNERİ */}
-      <div style={{ background: "#1a1a1a", color: "#1a1a1a", padding: "30px", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 4, minHeight: "80vh" }}>
+      <div style={{ background: "#ffffff", color: "#1a1a1a", padding: "30px", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 4, minHeight: "80vh" }}>
         
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "30px", borderBottom: "1px solid rgba(0,0,0,0.06)", paddingBottom: "20px" }}>
@@ -249,8 +249,8 @@ export default function ClientGalleryPage() {
                           style={{ 
                             position: "absolute", top: 6, left: 6, width: 24, height: 24, borderRadius: 2, 
                             display: "flex", alignItems: "center", justifyContent: "center",
-                            background: photo.isSelected ? "#000" : "rgba(0,0,0,0.7)",
-                            color: photo.isSelected ? "#fff" : "rgba(0,0,0,0.5)",
+                            background: photo.isSelected ? "rgba(0,0,0,0.85)" : "rgba(0,0,0,0.7)",
+                            color: photo.isSelected ? "#ffffff" : "rgba(0,0,0,0.5)",
                             border: photo.isSelected ? "none" : "1px solid rgba(0,0,0,0.15)",
                             zIndex: 10
                           }}
@@ -263,7 +263,7 @@ export default function ClientGalleryPage() {
                           onClick={(e) => { e.stopPropagation(); openLightbox(gIndex, pIndex); }}
                           style={{ 
                             position: "absolute", top: 6, right: 6, width: 24, height: 24, borderRadius: 2, 
-                            background: "rgba(0,0,0,0.7)", border: "1px solid rgba(0,0,0,0.15)", color: "#000",
+                            background: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff",
                             display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 10
                           }}
                           title="Büyük Göster"
@@ -277,8 +277,8 @@ export default function ClientGalleryPage() {
                             onClick={(e) => { e.stopPropagation(); setNoteModal({ isOpen: true, photo, note: photo.note || "" }); }}
                             style={{ 
                               position: "absolute", bottom: 6, right: 6, width: 24, height: 24, borderRadius: 2, 
-                              background: photo.note ? "#000" : "rgba(0,0,0,0.7)", border: photo.note ? "none" : "1px solid rgba(0,0,0,0.15)", 
-                              color: photo.note ? "#fff" : "#000", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 10
+                              background: photo.note ? "rgba(0,0,0,0.85)" : "rgba(0,0,0,0.7)", border: photo.note ? "none" : "1px solid rgba(0,0,0,0.15)", 
+                              color: photo.note ? "#fff" : "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 10
                             }}
                             title="Not Ekle/Düzenle"
                           >
@@ -313,21 +313,21 @@ export default function ClientGalleryPage() {
           
           <button 
             onClick={closeLightbox}
-            style={{ position: "absolute", top: 90, right: 20, background: "rgba(0,0,0,0.1)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", padding: 10, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
+            style={{ position: "absolute", top: 90, right: 20, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", color: "#ffffff", padding: 10, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
           >
             <X size={20} />
           </button>
 
           <button 
             onClick={prevPhoto}
-            style={{ position: "absolute", left: 20, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.1)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", padding: 14, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
+            style={{ position: "absolute", left: 20, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", color: "#ffffff", padding: 14, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
           >
             <ChevronLeft size={24} />
           </button>
 
           <button 
             onClick={nextPhoto}
-            style={{ position: "absolute", right: 20, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.1)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", padding: 14, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
+            style={{ position: "absolute", right: 20, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", color: "#ffffff", padding: 14, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
           >
             <ChevronRight size={24} />
           </button>
@@ -360,7 +360,7 @@ export default function ClientGalleryPage() {
                }}
                style={{
                  position: "absolute", bottom: 40, 
-                 background: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#000000" : "rgba(0,0,0,0.9)",
+                 background: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#22c55e" : "rgba(255,255,255,0.15)",
                  border: "none", padding: "12px 24px", borderRadius: 4, 
                  display: "flex", alignItems: "center", gap: 8, fontSize: "0.9rem", fontWeight: 800, 
                  cursor: galleries[lightbox.galleryIndex].reservation.selectionLocked ? "default" : "pointer",
@@ -374,7 +374,7 @@ export default function ClientGalleryPage() {
              </button>
           </div>
 
-          <div style={{ position: "absolute", bottom: 20, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.6)", padding: "6px 14px", borderRadius: 4, color: "#1a1a1a", fontSize: "0.75rem", fontWeight: 700 }}>
+          <div style={{ position: "absolute", bottom: 20, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.6)", padding: "6px 14px", borderRadius: 4, color: "#ffffff", fontSize: "0.75rem", fontWeight: 700 }}>
              {lightbox.photoIndex + 1} / {galleries[lightbox.galleryIndex].photos.length}
           </div>
         </div>
@@ -424,7 +424,7 @@ export default function ClientGalleryPage() {
           <div style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.1)", borderRadius: 4, width: "100%", maxWidth: 800, position: "relative", boxShadow: "0 10px 25px rgba(0,0,0,0.2)" }}>
             <button 
               onClick={() => window.location.href = "/profile"}
-              style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.05)", border: "none", color: "#000", padding: 8, borderRadius: 4, cursor: "pointer", zIndex: 10 }}
+              style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.05)", border: "none", color: "#1a1a1a", padding: 8, borderRadius: 4, cursor: "pointer", zIndex: 10 }}
             >
               <X size={16} />
             </button>

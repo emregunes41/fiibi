@@ -115,7 +115,7 @@ export default async function ProfilePage() {
                           <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
                             <ContractPreviewModal customText={siteConfig?.contractText} />
                             <form action={approveContract.bind(null, res.id)}>
-                              <button type="submit" className="hover:opacity-80" style={{ background: "rgba(0,0,0,0.65)", color: "#000", fontWeight: 700, fontSize: 13, padding: "10px 20px", borderRadius: 0, border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, transition: "opacity 0.2s" }}>
+                              <button type="submit" className="hover:opacity-80" style={{ background: "#1a1a1a", color: "#ffffff", fontWeight: 700, fontSize: 13, padding: "10px 20px", borderRadius: 0, border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, transition: "opacity 0.2s" }}>
                                 <CheckCircle size={16} /> Okudum ve Onaylıyorum
                               </button>
                             </form>
@@ -143,7 +143,7 @@ export default async function ProfilePage() {
                               fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
                               padding: "3px 8px", borderRadius: 0,
                               background: res.status === "CONFIRMED" ? "rgba(0,0,0,0.05)" : "rgba(0,0,0,0.03)",
-                              color: res.status === "CONFIRMED" ? "#fff" : "rgba(0,0,0,0.65)",
+                              color: res.status === "CONFIRMED" ? "#ffffff" : "rgba(0,0,0,0.65)",
                               border: `1px solid ${res.status === "CONFIRMED" ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0.08)"}`,
                             }}>
                               {res.status === "CONFIRMED" ? "Onaylı" : "Bekliyor"}
@@ -305,8 +305,8 @@ export default async function ProfilePage() {
                               <div key={step.id} style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, textAlign: "center", flex: 1 }}>
                                 <div style={{
                                   width: 26, height: 26, borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, transition: "all 0.3s",
-                                  ...(isCompleted ? { background: "#1a1a1a", color: "#1a1a1a" } :
-                                    isCurrent ? { background: "#1a1a1a", color: "#1a1a1a", boxShadow: "0 0 12px rgba(0,0,0,0.25)" } :
+                                  ...(isCompleted ? { background: "#1a1a1a", color: "#ffffff" } :
+                                    isCurrent ? { background: "#1a1a1a", color: "#ffffff", boxShadow: "0 0 12px rgba(0,0,0,0.25)" } :
                                     { background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.65)" })
                                 }}>
                                   {isCompleted ? "✓" : (idx + 1)}
@@ -330,7 +330,7 @@ export default async function ProfilePage() {
                             <h5 style={{ fontWeight: 700, color: "var(--text, #1a1a1a)", fontSize: 13 }}>Fotoğraflarınız Hazır! 🎉</h5>
                             <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 11 }}>Albüme gidecek fotoğrafları seçebilirsiniz.</p>
                           </div>
-                          <Link href="/profile/gallery" style={{ background: "#1a1a1a", color: "#1a1a1a", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap" }}>
+                          <Link href="/profile/gallery" style={{ background: "#1a1a1a", color: "#ffffff", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap" }}>
                             Seçimi Başlat
                           </Link>
                         </div>
@@ -376,7 +376,7 @@ export default async function ProfilePage() {
                             <h5 style={{ fontWeight: 700, color: "var(--text, #1a1a1a)", fontSize: 13 }}>Teslimatınız Hazır! 📸</h5>
                             <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 11 }}>Tüm dosyalarınıza aşağıdaki bağlantıdan ulaşabilirsiniz.</p>
                           </div>
-                          <a href={res.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#1a1a1a", color: "#1a1a1a", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
+                          <a href={res.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#1a1a1a", color: "#ffffff", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
                             <ExternalLink size={14} /> Klasöre Git
                           </a>
                         </div>
@@ -479,7 +479,7 @@ export default async function ProfilePage() {
                                 <div key={step.id} style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 8, textAlign: "center", flex: 1 }}>
                                   <div style={{
                                     width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, transition: "all 0.3s",
-                                    ...(isCompleted ? { background: "#60a5fa", color: "#000", boxShadow: "0 0 12px rgba(96,165,250,0.4)" } :
+                                    ...(isCompleted ? { background: "#60a5fa", color: "#ffffff", boxShadow: "0 0 12px rgba(96,165,250,0.4)" } :
                                       { background: "var(--bg, #fff)", border: "2px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.65)" })
                                   }}>
                                     {isCompleted ? <CheckCircle size={14} /> : (idx + 1)}
@@ -509,7 +509,7 @@ export default async function ProfilePage() {
                             <h5 style={{ fontWeight: 700, color: "#60a5fa", fontSize: 13, marginBottom: "4px" }}>Paketiniz Yola Çıktı!</h5>
                             <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12 }}>Aşağıdaki bağlantıyı kullanarak kargo durumunuzu sorgulayabilirsiniz.</p>
                           </div>
-                          <a href={order.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#60a5fa", color: "#000", padding: "10px 20px", fontWeight: 800, fontSize: 13, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 8 }}>
+                          <a href={order.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#60a5fa", color: "#ffffff", padding: "10px 20px", fontWeight: 800, fontSize: 13, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 8 }}>
                             Kargo Takip Sayfası
                           </a>
                         </div>

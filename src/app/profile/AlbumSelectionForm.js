@@ -107,7 +107,7 @@ export default function AlbumSelectionForm({ reservationId, initialSelectedId, m
         <button
           onClick={handleSubmit}
           disabled={!selectedId || isSubmitting}
-          style={{ width: "100%", padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", background: selectedId ? "rgba(0,0,0,0.45)" : "rgba(0,0,0,0.04)", color: selectedId ? "#fff" : "rgba(0,0,0,0.25)", border: "none", borderRadius: 0, fontSize: 14, fontWeight: 700, cursor: selectedId && !isSubmitting ? "pointer" : "default", transition: "all 0.2s" }}
+          style={{ width: "100%", padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", background: selectedId ? "#1a1a1a" : "rgba(0,0,0,0.04)", color: selectedId ? "#fff" : "rgba(0,0,0,0.25)", border: "none", borderRadius: 0, fontSize: 14, fontWeight: 700, cursor: selectedId && !isSubmitting ? "pointer" : "default", transition: "all 0.2s" }}
         >
           <span>{isSubmitting ? "Kaydediliyor..." : selectedId === initialSelectedId && selectedId !== "" ? "Seçimi Güncelle" : "Seçimi Onayla ve Gönder"}</span>
           <ArrowRight size={18} />

@@ -307,7 +307,7 @@ export default function ReservationHubModal({
 
                 <div style={{ display: "flex", gap: "8px", marginTop: "10px" }}>
                    <button onClick={() => setIsEditMode(false)} style={{ flex: 1, padding: "8px", background: "rgba(0,0,0,0.05)", border: "none", color: "#1a1a1a", cursor: "pointer", fontWeight: 600 }}>İptal</button>
-                   <button disabled={isLoading} onClick={handleSaveEdit} style={{ flex: 2, padding: "8px", background: "#1a1a1a", color: "#1a1a1a", border: "none", cursor: "pointer", fontWeight: 800 }}>{isLoading ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}</button>
+                   <button disabled={isLoading} onClick={handleSaveEdit} style={{ flex: 2, padding: "8px", background: "#1a1a1a", color: "#ffffff", border: "none", cursor: "pointer", fontWeight: 800 }}>{isLoading ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}</button>
                 </div>
               </div>
             ) : (

@@ -212,7 +212,7 @@ export default function PackagesPage() {
         </p>
         <button
           onClick={openNew}
-          style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", borderRadius: 0, padding: "8px 16px", fontSize: "0.8rem", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem" }}
+          style={{ background: "#1a1a1a", color: "#ffffff", border: "none", borderRadius: 0, padding: "8px 16px", fontSize: "0.8rem", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem" }}
         >
           <Plus size={14} /> Yeni {terms.service}
         </button>
@@ -747,7 +747,7 @@ export default function PackagesPage() {
               {/* Buttons */}
               <div style={{ display: "flex", gap: "0.5rem", marginTop: "4px" }}>
                 <button type="button" onClick={() => setIsModalOpen(false)} style={{ flex: 1, padding: "0.7rem", borderRadius: 0, border: "1px solid rgba(0,0,0,0.12)", background: "transparent", color: "rgba(0,0,0,0.65)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>
-                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "#1a1a1a", color: "#1a1a1a", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : "KAYDET"}</button>
+                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "#1a1a1a", color: "#ffffff", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : "KAYDET"}</button>
               </div>
             </form>
           </div>

@@ -444,7 +444,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
               </div>
               <a href="/" style={{
                 display: "inline-flex", alignItems: "center", gap: "8px",
-                padding: "14px 32px", background: "#1a1a1a", color: "#1a1a1a",
+                padding: "14px 32px", background: "#1a1a1a", color: "#ffffff",
                 textDecoration: "none", fontSize: "14px", fontWeight: 700,
               }}>
                 Ana Sayfaya Dön

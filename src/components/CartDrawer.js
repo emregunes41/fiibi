@@ -682,7 +682,7 @@ export default function CartDrawer() {
                             disabled={discountLoading || !discountCode.trim()}
                             style={{
                               padding: "0 18px", borderRadius: 0, border: "none",
-                              background: discountCode.trim() ? "#000" : "rgba(0, 0, 0,0.06)",
+                              background: discountCode.trim() ? "#1a1a1a" : "rgba(0, 0, 0,0.06)",
                               color: discountCode.trim() ? "#ffffff" : "rgba(0, 0, 0,0.2)",
                               fontWeight: 700, fontSize: 12, cursor: discountCode.trim() ? "pointer" : "not-allowed",
                               flexShrink: 0, transition: "all 0.2s",
@@ -911,7 +911,7 @@ export default function CartDrawer() {
                         <div style={{
                           width: 20, height: 20, borderRadius: 0, flexShrink: 0, marginTop: 1,
                           border: `2px solid ${contractAccepted ? "#000" : "rgba(0, 0, 0,0.25)"}`,
-                          background: contractAccepted ? "#000" : "transparent",
+                          background: contractAccepted ? "#1a1a1a" : "transparent",
                           display: "flex", alignItems: "center", justifyContent: "center",
                           transition: "all 0.2s",
                         }}>
@@ -1131,7 +1131,7 @@ export default function CartDrawer() {
                     style={{
                       width: "100%", padding: "16px", borderRadius: 0,
                       border: "none",
-                      background: isContactValid ? "#000000" : "rgba(0, 0, 0,0.04)",
+                      background: isContactValid ? "#1a1a1a" : "rgba(0, 0, 0,0.04)",
                       color: isContactValid ? "#ffffff" : "rgba(0, 0, 0,0.15)",
                       fontSize: "14px", fontWeight: 700,
                       cursor: isContactValid ? "pointer" : "not-allowed",

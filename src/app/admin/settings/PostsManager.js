@@ -108,7 +108,7 @@ export default function PostsAdminPage() {
           <h1 style={{ fontSize: 20, fontWeight: 800, margin: "0 0 4px 0" }}>Blog & Yazılar</h1>
           <p style={{ color: "rgba(0,0,0,0.65)", margin: 0, fontSize: 13 }}>Sitenizde görünecek blog yazılarını ve haberleri yönetin.</p>
         </div>
-        <button onClick={() => openForm()} style={{ display: "flex", alignItems: "center", gap: 8, background: "#1a1a1a", color: "#1a1a1a", border: "none", padding: "10px 16px", borderRadius: 0, fontWeight: 700, cursor: "pointer", fontSize: 13 }}>
+        <button onClick={() => openForm()} style={{ display: "flex", alignItems: "center", gap: 8, background: "#1a1a1a", color: "#ffffff", border: "none", padding: "10px 16px", borderRadius: 0, fontWeight: 700, cursor: "pointer", fontSize: 13 }}>
           <Plus size={16} /> Yeni Yazı
         </button>
       </div>

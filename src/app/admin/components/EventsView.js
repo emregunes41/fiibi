@@ -119,7 +119,7 @@ export default function EventsView() {
           <h1 style={{ fontSize: 28, fontWeight: 800, margin: "0 0 8px 0" }}>Grup Dersleri & Etkinlikler</h1>
           <p style={{ color: "rgba(0,0,0,0.65)", margin: 0, fontSize: 14 }}>Online veya yüz yüze toplu etkinlikler ekleyin, kayıt alın.</p>
         </div>
-        <button onClick={() => openForm()} style={{ display: "flex", alignItems: "center", gap: 8, background: "#1a1a1a", color: "#1a1a1a", border: "none", padding: "12px 20px", borderRadius: 0, fontWeight: 700, cursor: "pointer" }}>
+        <button onClick={() => openForm()} style={{ display: "flex", alignItems: "center", gap: 8, background: "#1a1a1a", color: "#ffffff", border: "none", padding: "12px 20px", borderRadius: 0, fontWeight: 700, cursor: "pointer" }}>
           <Plus size={18} /> Yeni Etkinlik
         </button>
       </div>

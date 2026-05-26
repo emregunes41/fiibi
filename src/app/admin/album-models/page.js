@@ -104,7 +104,7 @@ export default function AlbumModelsPage() {
         </p>
         <button 
           onClick={openNew}
-          style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+          style={{ background: "#1a1a1a", color: "#ffffff", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
         >
           <Plus size={16} /> Yeni Model Ekle
         </button>
@@ -191,7 +191,7 @@ export default function AlbumModelsPage() {
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1rem" }}>
                 <button type="button" onClick={() => setIsModalOpen(false)} style={{ background: "transparent", color: "rgba(0,0,0,0.6)", border: "none", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", padding: "0.5rem 1rem" }}>İptal</button>
-                <button type="submit" disabled={isLoading} style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isLoading ? 0.7 : 1 }}>
+                <button type="submit" disabled={isLoading} style={{ background: "#1a1a1a", color: "#ffffff", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isLoading ? 0.7 : 1 }}>
                   {isLoading ? "Ekleniyor..." : "Ekle"}
                 </button>
               </div>
