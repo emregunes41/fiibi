@@ -100,7 +100,7 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
       transition={{ duration: 0.2 }}
       style={{
         position: "fixed", inset: 0, zIndex: 9999,
-        background: "#000",
+        background: "#ffffff",
         display: "flex", flexDirection: "column",
         userSelect: "none",
       }}

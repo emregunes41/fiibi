@@ -9,8 +9,8 @@ import { useAdminSession } from "../AdminSessionContext";
 import AdminPageTabs from "../components/AdminPageTabs";
 
 const inp = {
-  width: "100%", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.18)",
-  borderRadius: 0, padding: "0.7rem 0.8rem", color: "#fff", outline: "none",
+  width: "100%", background: "rgba(0,0,0,0.08)", border: "1px solid rgba(0,0,0,0.18)",
+  borderRadius: 0, padding: "0.7rem 0.8rem", color: "#1a1a1a", outline: "none",
   fontSize: "0.8rem", boxSizing: "border-box",
 };
 
@@ -99,12 +99,12 @@ export default function AlbumModelsPage() {
       ].filter(Boolean)} />
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.85rem", margin: 0 }}>
+        <p style={{ color: "rgba(0,0,0,0.45)", fontSize: "0.85rem", margin: 0 }}>
           Müşterilerin seçebileceği albüm tasarımlarını yönetin
         </p>
         <button 
           onClick={openNew}
-          style={{ background: "#fff", color: "#000", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
+          style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", padding: "0.7rem 1.2rem", borderRadius: 0, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}
         >
           <Plus size={16} /> Yeni Model Ekle
         </button>
@@ -112,14 +112,14 @@ export default function AlbumModelsPage() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
         {models.map(model => (
-          <div key={model.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+          <div key={model.id} style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
             <div style={{ width: "100%", height: "200px", position: "relative", backgroundColor: "rgba(0,0,0,0.5)" }}>
               {/* Using img tag to avoid next/image domain config issues for external urls */}
               <img src={model.imageUrl} alt={model.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               <div style={{ position: "absolute", top: 10, right: 10, display: "flex", gap: "0.4rem" }}>
                 <button
                   onClick={() => handleDelete(model.id)}
-                  style={{ background: "rgba(239,68,68,0.9)", color: "#fff", border: "none", padding: "6px", borderRadius: 0, cursor: "pointer" }}
+                  style={{ background: "rgba(239,68,68,0.9)", color: "#1a1a1a", border: "none", padding: "6px", borderRadius: 0, cursor: "pointer" }}
                 >
                   <Trash2 size={14} />
                 </button>
@@ -127,10 +127,10 @@ export default function AlbumModelsPage() {
             </div>
             
             <div style={{ padding: "1.2rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Albüm Tasarımı</div>
-              <h3 style={{ fontSize: "1.1rem", fontWeight: 800, margin: 0, color: "#fff" }}>{model.name}</h3>
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Albüm Tasarımı</div>
+              <h3 style={{ fontSize: "1.1rem", fontWeight: 800, margin: 0, color: "#1a1a1a" }}>{model.name}</h3>
               {model.description && (
-                <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.5)", margin: 0, marginTop: "0.3rem", lineHeight: 1.5 }}>
+                <p style={{ fontSize: "0.75rem", color: "rgba(0,0,0,0.5)", margin: 0, marginTop: "0.3rem", lineHeight: 1.5 }}>
                   {model.description}
                 </p>
               )}
@@ -141,7 +141,7 @@ export default function AlbumModelsPage() {
           </div>
         ))}
         {models.length === 0 && (
-          <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "4rem 0", color: "rgba(255,255,255,0.4)" }}>
+          <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "4rem 0", color: "rgba(0,0,0,0.4)" }}>
             <Book size={48} style={{ opacity: 0.2, margin: "0 auto 1rem" }} />
             <p>Henüz albüm modeli eklenmemiş.</p>
           </div>
@@ -150,8 +150,8 @@ export default function AlbumModelsPage() {
 
       {isModalOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-          <div className="admin-modal-content" style={{ border: "1px solid rgba(255,255,255,0.1)", padding: "2rem", borderRadius: 0, width: "100%", maxWidth: "450px", maxHeight: "90vh", overflowY: "auto", position: "relative" }}>
-            <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>
+          <div className="admin-modal-content" style={{ border: "1px solid rgba(0,0,0,0.1)", padding: "2rem", borderRadius: 0, width: "100%", maxWidth: "450px", maxHeight: "90vh", overflowY: "auto", position: "relative" }}>
+            <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", color: "rgba(0,0,0,0.5)", cursor: "pointer" }}>
               <X size={20} />
             </button>
             
@@ -166,7 +166,7 @@ export default function AlbumModelsPage() {
               <div>
                 <label style={lbl}>Görsel Yükle</label>
                 <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                  <ImageIcon size={18} color="rgba(255,255,255,0.4)" />
+                  <ImageIcon size={18} color="rgba(0,0,0,0.4)" />
                   <div style={{ flex: 1, position: "relative" }}>
                     <input 
                       type="file" 
@@ -176,7 +176,7 @@ export default function AlbumModelsPage() {
                       required 
                     />
                     {selectedFile && (
-                      <div style={{ fontSize: "0.7rem", color: "#fff", marginTop: "4px" }}>
+                      <div style={{ fontSize: "0.7rem", color: "#1a1a1a", marginTop: "4px" }}>
                         Seçildi: {selectedFile.name}
                       </div>
                     )}
@@ -191,7 +191,7 @@ export default function AlbumModelsPage() {
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1rem" }}>
                 <button type="button" onClick={() => setIsModalOpen(false)} style={{ background: "transparent", color: "rgba(255,255,255,0.6)", border: "none", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", padding: "0.5rem 1rem" }}>İptal</button>
-                <button type="submit" disabled={isLoading} style={{ background: "#fff", color: "#000", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isLoading ? 0.7 : 1 }}>
+                <button type="submit" disabled={isLoading} style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isLoading ? 0.7 : 1 }}>
                   {isLoading ? "Ekleniyor..." : "Ekle"}
                 </button>
               </div>

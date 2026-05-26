@@ -79,14 +79,14 @@ function Logo({ dark, size = 36 }) {
 
 const labelStyle = {
   display: "block", fontSize: 11, fontWeight: 600,
-  color: "rgba(255,255,255,0.45)", marginBottom: 6,
+  color: "rgba(0,0,0,0.45)", marginBottom: 6,
   textTransform: "uppercase", letterSpacing: "0.06em"
 };
 const inputStyle = {
   width: "100%", boxSizing: "border-box",
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid rgba(255,255,255,0.08)", padding: "13px 14px",
-  color: "#fff", fontSize: 14, outline: "none",
+  background: "rgba(0,0,0,0.04)",
+  border: "1px solid rgba(0,0,0,0.08)", padding: "13px 14px",
+  color: "#1a1a1a", fontSize: 14, outline: "none",
   fontFamily: "'DM Sans', sans-serif"
 };
 const btnStyle = {
@@ -234,13 +234,13 @@ export default function FiibiLanding() {
       <div style={{ fontFamily: "'DM Sans', sans-serif", minHeight: "100vh", background: C.black, color: C.white, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 16px" }}>
         <div style={{ width: "100%", maxWidth: 420 }}>
           <button onClick={() => { setShowLogin(false); setLoginError(""); }}
-            style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", fontSize: 13, cursor: "pointer", marginBottom: 24, padding: 0, display: "flex", alignItems: "center", gap: 6, fontFamily: "'DM Sans', sans-serif" }}>
+            style={{ background: "none", border: "none", color: "rgba(0,0,0,0.4)", fontSize: 13, cursor: "pointer", marginBottom: 24, padding: 0, display: "flex", alignItems: "center", gap: 6, fontFamily: "'DM Sans', sans-serif" }}>
             ← Ana Sayfa
           </button>
 
           <div style={{ marginBottom: 36 }}>
             <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8 }}>Paneline Giriş Yap</h2>
-            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", margin: 0 }}>Telefon numarası veya e-posta ile giriş yapın.</p>
+            <p style={{ fontSize: 15, color: "rgba(0,0,0,0.4)", margin: 0 }}>Telefon numarası veya e-posta ile giriş yapın.</p>
           </div>
 
           <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -251,7 +251,7 @@ export default function FiibiLanding() {
             )}
 
             <div>
-              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: 6, letterSpacing: "0.05em" }}>Telefon veya E-Posta</label>
+              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", marginBottom: 6, letterSpacing: "0.05em" }}>Telefon veya E-Posta</label>
               <input
                 type="text"
                 value={loginIdentifier}
@@ -259,15 +259,15 @@ export default function FiibiLanding() {
                 required
                 placeholder="05XX XXX XX XX"
                 style={{
-                  width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.1)", color: "#fff", fontSize: 15,
+                  width: "100%", padding: "14px 16px", background: "rgba(0,0,0,0.04)",
+                  border: "1px solid rgba(0,0,0,0.1)", color: "#1a1a1a", fontSize: 15,
                   outline: "none", fontFamily: "'DM Sans', sans-serif", boxSizing: "border-box",
                 }}
               />
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: 6, letterSpacing: "0.05em" }}>Şifre</label>
+              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", marginBottom: 6, letterSpacing: "0.05em" }}>Şifre</label>
               <input
                 type="password"
                 value={loginPassword}
@@ -275,8 +275,8 @@ export default function FiibiLanding() {
                 required
                 placeholder="••••••••"
                 style={{
-                  width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.1)", color: "#fff", fontSize: 15,
+                  width: "100%", padding: "14px 16px", background: "rgba(0,0,0,0.04)",
+                  border: "1px solid rgba(0,0,0,0.1)", color: "#1a1a1a", fontSize: 15,
                   outline: "none", fontFamily: "'DM Sans', sans-serif", boxSizing: "border-box",
                 }}
               />
@@ -297,7 +297,7 @@ export default function FiibiLanding() {
           </form>
 
           <div style={{ marginTop: 32, textAlign: "center" }}>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)" }}>
+            <p style={{ fontSize: 13, color: "rgba(0,0,0,0.3)" }}>
               Hesabınız yok mu?{" "}
               <button onClick={() => { setShowLogin(false); setShowRegister(true); }} style={{ background: "none", border: "none", color: C.orange, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", padding: 0 }}>
                 Ücretsiz Başla
@@ -314,13 +314,13 @@ export default function FiibiLanding() {
       <div style={{ fontFamily: "'DM Sans', sans-serif", minHeight: "100vh", background: C.black, color: C.white, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 16px" }}>
         <div style={{ width: "100%", maxWidth: (step === 1 || step === 2) ? 720 : 480 }}>
           <button onClick={() => { if (step > 1) setStep(step - 1); else { setShowRegister(false); setStep(1); } }}
-            style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", fontSize: 13, cursor: "pointer", marginBottom: 24, padding: 0, display: "flex", alignItems: "center", gap: 6, fontFamily: "'DM Sans', sans-serif" }}>
+            style={{ background: "none", border: "none", color: "rgba(0,0,0,0.4)", fontSize: 13, cursor: "pointer", marginBottom: 24, padding: 0, display: "flex", alignItems: "center", gap: 6, fontFamily: "'DM Sans', sans-serif" }}>
             ← {step === 1 ? "Ana Sayfa" : "Geri"}
           </button>
 
           <div style={{ display: "flex", gap: 6, marginBottom: 32 }}>
             {[1, 2, 3, 4, 5, 6, 7].map(s => (
-              <div key={s} style={{ flex: 1, height: 3, background: s <= step ? C.white : "rgba(255,255,255,0.06)", transition: "all 0.4s" }} />
+              <div key={s} style={{ flex: 1, height: 3, background: s <= step ? C.white : "rgba(0,0,0,0.06)", transition: "all 0.4s" }} />
             ))}
           </div>
 
@@ -328,16 +328,16 @@ export default function FiibiLanding() {
           {step === 1 && (
             <>
               <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8 }}>Sektörünüzü Seçin</h2>
-              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>Size özel bir deneyim oluşturalım.</p>
+              <p style={{ fontSize: 15, color: "rgba(0,0,0,0.4)", marginBottom: 32 }}>Size özel bir deneyim oluşturalım.</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 8, marginBottom: 24 }}>
                 {allBusinessTypes.filter(b => b.id !== "other").map((bt) => {
                   const sel = form.businessType === bt.id;
                   return (
                     <div key={bt.id} onClick={() => setForm(prev => ({ ...prev, businessType: bt.id }))}
-                      style={{ background: sel ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)", border: sel ? `2px solid ${C.orange}` : "1px solid rgba(255,255,255,0.06)", cursor: "pointer", transition: "all 0.2s", padding: "20px 14px", textAlign: "center", position: "relative" }}>
+                      style={{ background: sel ? "rgba(0,0,0,0.06)" : "rgba(0,0,0,0.02)", border: sel ? `2px solid ${C.orange}` : "1px solid rgba(0,0,0,0.06)", cursor: "pointer", transition: "all 0.2s", padding: "20px 14px", textAlign: "center", position: "relative" }}>
                       <div style={{ fontSize: 32, marginBottom: 12 }}>{bt.icon}</div>
                       <div style={{ fontSize: 13, fontWeight: 700, color: sel ? C.white : "rgba(255,255,255,0.7)", marginBottom: 4 }}>{bt.name}</div>
-                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: 1.4 }}>{bt.desc}</div>
+                      <div style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", lineHeight: 1.4 }}>{bt.desc}</div>
                       {sel && <div style={{ position: "absolute", top: 8, right: 8 }}><div style={{ width: 18, height: 18, background: C.orange, display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{color: C.white, fontSize: 10}}>✓</span></div></div>}
                     </div>
                   );
@@ -353,7 +353,7 @@ export default function FiibiLanding() {
           {step === 2 && (
             <>
               <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8 }}>Temanızı Seçin</h2>
-              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>Sitenizin genel görünümünü belirleyin. Sonra değiştirebilirsiniz.</p>
+              <p style={{ fontSize: 15, color: "rgba(0,0,0,0.4)", marginBottom: 32 }}>Sitenizin genel görünümünü belirleyin. Sonra değiştirebilirsiniz.</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12, marginBottom: 24 }}>
                 {require("@/lib/templates").getTemplateList().map(t => (
                   <ThemePreviewCard
@@ -375,27 +375,27 @@ export default function FiibiLanding() {
           {step === 3 && (
             <>
               <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8 }}>Planınızı Seçin</h2>
-              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>7 gün ücretsiz deneyin, beğenmezseniz iptal edin.</p>
+              <p style={{ fontSize: 15, color: "rgba(0,0,0,0.4)", marginBottom: 32 }}>7 gün ücretsiz deneyin, beğenmezseniz iptal edin.</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 24 }}>
                 {plans.filter(p => p.period === "Yıllık").map((p) => {
                   const sel = form.selectedPlan === p.id;
                   return (
                     <div key={p.id} onClick={() => setForm(prev => ({ ...prev, selectedPlan: p.id }))}
-                      style={{ background: sel ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)", border: sel ? `2px solid ${C.orange}` : p.popular ? "2px solid rgba(255,255,255,0.15)" : "1px solid rgba(255,255,255,0.06)", cursor: "pointer", transition: "all 0.2s", position: "relative" }}>
+                      style={{ background: sel ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.02)", border: sel ? `2px solid ${C.orange}` : p.popular ? "2px solid rgba(0,0,0,0.15)" : "1px solid rgba(0,0,0,0.06)", cursor: "pointer", transition: "all 0.2s", position: "relative" }}>
                       {p.popular && (
                         <div style={{ background: C.white, color: C.black, fontSize: 10, fontWeight: 800, padding: "4px 12px", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                           En Popüler
                         </div>
                       )}
                       <div style={{ padding: "24px 20px" }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.5)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>{p.name}</div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(0,0,0,0.5)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>{p.name}</div>
                         <div style={{ marginBottom: 4 }}>
                           <span style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.03em" }}>{p.price.toLocaleString("tr-TR")}</span>
-                          <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginLeft: 4 }}>₺</span>
-                          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginLeft: 6 }}>{p.period}</span>
+                          <span style={{ fontSize: 14, color: "rgba(0,0,0,0.4)", marginLeft: 4 }}>₺</span>
+                          <span style={{ fontSize: 12, color: "rgba(0,0,0,0.3)", marginLeft: 6 }}>{p.period}</span>
                         </div>
-                        {p.monthlyEquiv && <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginBottom: 2 }}>~{p.monthlyEquiv.toLocaleString("tr-TR")} ₺/ay</div>}
-                        {p.savings && <div style={{ display: "inline-block", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", padding: "2px 8px", fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.6)", marginTop: 4 }}>%{p.savings} TASARRUF</div>}
+                        {p.monthlyEquiv && <div style={{ fontSize: 12, color: "rgba(0,0,0,0.5)", marginBottom: 2 }}>~{p.monthlyEquiv.toLocaleString("tr-TR")} ₺/ay</div>}
+                        {p.savings && <div style={{ display: "inline-block", background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.12)", padding: "2px 8px", fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.6)", marginTop: 4 }}>%{p.savings} TASARRUF</div>}
                         {sel && <div style={{ position: "absolute", top: p.popular ? 32 : 12, right: 12 }}><div style={{ width: 22, height: 22, background: C.orange, display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{color: C.white, fontSize: 12}}>✓</span></div></div>}
                       </div>
                     </div>
@@ -411,19 +411,19 @@ export default function FiibiLanding() {
           {/* Step 4: İşletme */}
           {step === 4 && (
             <form onSubmit={(e) => { e.preventDefault(); setStep(5); }}>
-              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
+              <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", padding: "32px 28px" }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>İşletme Bilgileri</h2>
-                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>İşletme adınız ve web adresiniz.</p>
+                <p style={{ fontSize: 14, color: "rgba(0,0,0,0.4)", marginBottom: 32 }}>İşletme adınız ve web adresiniz.</p>
                 <div style={{ marginBottom: 24 }}>
                   <label style={labelStyle}>İşletme Adı *</label>
                   <input type="text" required value={form.businessName} onChange={e => handleBusinessName(e.target.value)} placeholder="İşletme adınız" style={inputStyle} />
-                  {form.slug && <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.35)" }}>→ <span style={{ color: "rgba(255,255,255,0.6)" }}>{form.slug}.{domain}</span></div>}
+                  {form.slug && <div style={{ marginTop: 8, fontSize: 12, color: "rgba(0,0,0,0.35)" }}>→ <span style={{ color: "rgba(255,255,255,0.6)" }}>{form.slug}.{domain}</span></div>}
                 </div>
                 <div style={{ marginBottom: 32 }}>
                   <label style={labelStyle}>URL Adresi *</label>
                   <div style={{ display: "flex" }}>
                     <input type="text" required value={form.slug} onChange={e => setForm(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') }))} placeholder="ahmet" style={{ ...inputStyle, borderRight: "none", flex: 1 }} />
-                    <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: "0 14px", display: "flex", alignItems: "center", fontSize: 13, color: "rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>.{domain}</div>
+                    <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", padding: "0 14px", display: "flex", alignItems: "center", fontSize: 13, color: "rgba(0,0,0,0.3)", whiteSpace: "nowrap" }}>.{domain}</div>
                   </div>
                 </div>
                 <button type="submit" disabled={!form.businessName || !form.slug} style={{ ...btnStyle, opacity: (!form.businessName || !form.slug) ? 0.4 : 1 }}>Devam →</button>
@@ -434,9 +434,9 @@ export default function FiibiLanding() {
           {/* Step 5: Hesap */}
           {step === 5 && (
             <form onSubmit={handleAccountSubmit}>
-              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
+              <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", padding: "32px 28px" }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>Hesap Bilgileri</h2>
-                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}>Admin paneline giriş bilgileriniz.</p>
+                <p style={{ fontSize: 14, color: "rgba(0,0,0,0.4)", marginBottom: 32 }}>Admin paneline giriş bilgileriniz.</p>
                 <div style={{ marginBottom: 20 }}><label style={labelStyle}>Ad Soyad *</label><input type="text" required value={form.ownerName} onChange={e => setForm(prev => ({ ...prev, ownerName: e.target.value }))} placeholder="Ahmet Yılmaz" style={inputStyle} /></div>
                 <div style={{ marginBottom: 20 }}><label style={labelStyle}>E-posta *</label><input type="email" required value={form.ownerEmail} onChange={e => setForm(prev => ({ ...prev, ownerEmail: e.target.value }))} placeholder="ahmet@gmail.com" style={inputStyle} /></div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
@@ -448,16 +448,16 @@ export default function FiibiLanding() {
                   <input type="text" value={form.referralCode} onChange={e => setForm(prev => ({ ...prev, referralCode: e.target.value.toUpperCase() }))} placeholder="ABC123" maxLength={6} style={{ ...inputStyle, letterSpacing: "0.1em", textTransform: "uppercase" }} />
                 </div>
                 {selectedPlanObj && (
-                  <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: "16px 20px", marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.12)", padding: "16px 20px", marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
                       <div style={{ fontSize: 13, fontWeight: 700, color: C.white }}>{selectedPlanObj.name} Plan</div>
-                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)" }}>7 gün ücretsiz deneme</div>
+                      <div style={{ fontSize: 12, color: "rgba(0,0,0,0.35)" }}>7 gün ücretsiz deneme</div>
                     </div>
-                    <div style={{ fontSize: 20, fontWeight: 800 }}>{selectedPlanObj.price.toLocaleString("tr-TR")} <span style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>₺{selectedPlanObj.period}</span></div>
+                    <div style={{ fontSize: 20, fontWeight: 800 }}>{selectedPlanObj.price.toLocaleString("tr-TR")} <span style={{ fontSize: 13, color: "rgba(0,0,0,0.4)" }}>₺{selectedPlanObj.period}</span></div>
                   </div>
                 )}
                 
-                <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24, padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24, padding: "16px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)" }}>
                   <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
                     <input type="checkbox" required checked={form.kvkkAccepted} onChange={e => setForm(prev => ({ ...prev, kvkkAccepted: e.target.checked }))} style={{ marginTop: 4 }} />
                     <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>
@@ -472,9 +472,9 @@ export default function FiibiLanding() {
                   </label>
                 </div>
 
-                {error && <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: 14, fontSize: 14, color: "rgba(255,255,255,0.6)", textAlign: "center", marginBottom: 20 }}>{error}</div>}
+                {error && <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.12)", padding: 14, fontSize: 14, color: "rgba(255,255,255,0.6)", textAlign: "center", marginBottom: 20 }}>{error}</div>}
                 <button type="submit" disabled={loading || !form.kvkkAccepted || !form.serviceAgreementAccepted} style={{ ...btnStyle, opacity: (loading || !form.kvkkAccepted || !form.serviceAgreementAccepted) ? 0.5 : 1 }}>{loading ? "Kontrol Ediliyor..." : "Devam →"}</button>
-                <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.2)" }}>Sonraki adımda e-posta doğrulaması yapılacaktır.</div>
+                <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "rgba(0,0,0,0.2)" }}>Sonraki adımda e-posta doğrulaması yapılacaktır.</div>
               </div>
             </form>
           )}
@@ -482,30 +482,30 @@ export default function FiibiLanding() {
           {/* Step 6: Doğrulama (OTP) */}
           {step === 6 && (
             <form onSubmit={handleVerifyAndRegister}>
-              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 28px" }}>
+              <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", padding: "32px 28px" }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>E-Posta Doğrulama</h2>
-                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 32 }}><strong>{form.ownerEmail}</strong> adresine gönderilen 6 haneli doğrulama kodunu girin.</p>
+                <p style={{ fontSize: 14, color: "rgba(0,0,0,0.4)", marginBottom: 32 }}><strong>{form.ownerEmail}</strong> adresine gönderilen 6 haneli doğrulama kodunu girin.</p>
                 <div style={{ marginBottom: 20 }}>
                   <label style={labelStyle}>Doğrulama Kodu *</label>
                   <input type="text" required value={form.verificationCode} onChange={e => setForm(prev => ({ ...prev, verificationCode: e.target.value }))} placeholder="123456" maxLength={6} style={{ ...inputStyle, textAlign: "center", fontSize: 24, letterSpacing: "0.2em", fontWeight: 800 }} />
                 </div>
-                {error && <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", padding: 14, fontSize: 14, color: "rgba(255,255,255,0.6)", textAlign: "center", marginBottom: 20 }}>{error}</div>}
+                {error && <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.12)", padding: 14, fontSize: 14, color: "rgba(255,255,255,0.6)", textAlign: "center", marginBottom: 20 }}>{error}</div>}
                 <button type="submit" disabled={loading || form.verificationCode.length !== 6} style={{ ...btnStyle, opacity: (loading || form.verificationCode.length !== 6) ? 0.5 : 1 }}>{loading ? "Oluşturuluyor..." : "Doğrula ve Ücretsiz Başla"}</button>
-                <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.2)" }}>7 gün ücretsiz · İstediğiniz zaman iptal · Kart bilginiz kayıt sonrası alınacak</div>
+                <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "rgba(0,0,0,0.2)" }}>7 gün ücretsiz · İstediğiniz zaman iptal · Kart bilginiz kayıt sonrası alınacak</div>
               </div>
             </form>
           )}
 
           {/* Step 7: Başarılı */}
           {step === 7 && result && (
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: "56px 40px", textAlign: "center" }}>
-              <div style={{ width: 80, height: 80, background: "rgba(255,255,255,0.04)", border: "2px solid rgba(255,255,255,0.15)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 24, borderRadius: 0 }}>
+            <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", padding: "56px 40px", textAlign: "center" }}>
+              <div style={{ width: 80, height: 80, background: "rgba(0,0,0,0.04)", border: "2px solid rgba(0,0,0,0.15)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 24, borderRadius: 0 }}>
                 <span style={{ fontSize: 32, color: C.white }}>✓</span>
               </div>
               <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 12 }}>Hazırsınız! 🎉</h2>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 16, marginBottom: 40 }}><strong style={{ color: C.white }}>{result.businessName}</strong> işletmeniz oluşturuldu.</p>
-              <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", padding: 24, marginBottom: 20 }}>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>İşletme Adresiniz</div>
+              <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 16, marginBottom: 40 }}><strong style={{ color: C.white }}>{result.businessName}</strong> işletmeniz oluşturuldu.</p>
+              <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", padding: 24, marginBottom: 20 }}>
+                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>İşletme Adresiniz</div>
                 <code style={{ fontSize: 20, fontWeight: 700, color: C.white, wordBreak: "break-all" }}>{result.slug}.{domain}</code>
               </div>
               <a href={`http://${result.slug}.${domain}/admin/login${result.token ? "?auto_login=" + result.token : ""}`} style={{ display: "inline-flex", alignItems: "center", gap: 10, background: C.white, color: C.black, padding: "16px 40px", fontWeight: 800, fontSize: 15, textDecoration: "none", marginTop: 24 }}>
@@ -540,7 +540,7 @@ export default function FiibiLanding() {
             <a href="#fiyatlar" className="fiibi-nav-link" style={{ color: scrolled ? C.secondary : "rgba(255,255,255,0.7)", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>{t.landing.nav.pricing}</a>
             <button onClick={() => setShowLogin(true)} style={{
               background: "transparent", color: scrolled ? C.secondary : "rgba(255,255,255,0.8)", padding: "10px 20px",
-              fontSize: 14, fontWeight: 600, border: scrolled ? `1px solid rgba(0,0,0,0.12)` : "1px solid rgba(255,255,255,0.2)", cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14, fontWeight: 600, border: scrolled ? `1px solid rgba(0,0,0,0.12)` : "1px solid rgba(0,0,0,0.2)", cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
               transition: "all 0.2s"
             }}>Giriş Yap</button>
             <button onClick={() => setShowRegister(true)} style={{
@@ -585,7 +585,7 @@ export default function FiibiLanding() {
 
         <div className="fiibi-hero-content" style={{ ...wrap, textAlign: "center", position: "relative", zIndex: 1, padding: "80px 32px 48px" }}>
 
-          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", marginBottom: 32, lineHeight: 1.6, maxWidth: 420, margin: "0 auto 32px" }}>
+          <p style={{ fontSize: 15, color: "rgba(0,0,0,0.45)", marginBottom: 32, lineHeight: 1.6, maxWidth: 420, margin: "0 auto 32px" }}>
             {t.landing.hero.subtitle}
           </p>
 
@@ -602,9 +602,9 @@ export default function FiibiLanding() {
               onChange={e => handleBusinessName(e.target.value)}
               style={{
                 flex: 1, padding: "16px 20px", fontSize: 15, fontWeight: 500,
-                border: "none", outline: "none", background: "rgba(255,255,255,0.08)",
+                border: "none", outline: "none", background: "rgba(0,0,0,0.08)",
                 color: C.white, fontFamily: "'DM Sans', sans-serif",
-                borderRight: "1px solid rgba(255,255,255,0.06)",
+                borderRight: "1px solid rgba(0,0,0,0.06)",
               }}
             />
             <button
@@ -619,7 +619,7 @@ export default function FiibiLanding() {
             </button>
           </form>
 
-          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", marginTop: 14 }}>
+          <p style={{ fontSize: 12, color: "rgba(0,0,0,0.25)", marginTop: 14 }}>
             {t.landing.hero.note}
           </p>
         </div>
@@ -627,7 +627,7 @@ export default function FiibiLanding() {
         {/* Stats bar */}
         <div className="fiibi-stats" style={{
           display: "flex", justifyContent: "center", gap: 64,
-          padding: "40px 32px", borderTop: "1px solid rgba(255,255,255,0.06)", width: "100%",
+          padding: "40px 32px", borderTop: "1px solid rgba(0,0,0,0.06)", width: "100%",
           position: "relative", zIndex: 1,
         }}>
           {[
@@ -637,7 +637,7 @@ export default function FiibiLanding() {
           ].map(s => (
             <div key={s.label} style={{ textAlign: "center" }}>
               <div style={{ fontSize: 36, fontWeight: 800, color: C.white, letterSpacing: "-0.02em" }}>{s.num}</div>
-              <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", fontWeight: 500, marginTop: 4 }}>{s.label}</div>
+              <div style={{ fontSize: 13, color: "rgba(0,0,0,0.4)", fontWeight: 500, marginTop: 4 }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -688,10 +688,10 @@ export default function FiibiLanding() {
               { n: "02", t: "2", d: t.landing.how.s2 },
               { n: "03", t: "3", d: t.landing.how.s3 },
             ].map((s, i) => (
-              <div key={i} style={{ padding: "40px 32px", borderLeft: i > 0 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
+              <div key={i} style={{ padding: "40px 32px", borderLeft: i > 0 ? "1px solid rgba(0,0,0,0.06)" : "none" }}>
                 <div style={{ fontSize: 48, fontWeight: 800, color: C.orange, marginBottom: 20, letterSpacing: "-0.04em" }}>{s.n}</div>
                 <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>{s.t}</h3>
-                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", lineHeight: 1.7 }}>{s.d}</p>
+                <p style={{ fontSize: 14, color: "rgba(0,0,0,0.5)", lineHeight: 1.7 }}>{s.d}</p>
               </div>
             ))}
           </div>
@@ -756,7 +756,7 @@ export default function FiibiLanding() {
                 }}
               >
                 Yıllık
-                <span style={{ background: billingCycle === "yearly" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.08)", padding: "2px 8px", borderRadius: 12, fontSize: 10, letterSpacing: "0.05em" }}>
+                <span style={{ background: billingCycle === "yearly" ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.08)", padding: "2px 8px", borderRadius: 12, fontSize: 10, letterSpacing: "0.05em" }}>
                   %20 İndirim
                 </span>
               </button>
@@ -810,14 +810,14 @@ export default function FiibiLanding() {
               <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-0.03em" }}>
                 ₺{(plans.find(p => p.id === (billingCycle === "yearly" ? "pro_yearly" : "pro_monthly"))?.price || (billingCycle === "yearly" ? 29999 : 2999)).toLocaleString("tr-TR")}
               </div>
-              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", marginBottom: 6 }}>/ {billingCycle === "yearly" ? "yıl" : "ay"} · Tüm özellikler</div>
+              <div style={{ fontSize: 14, color: "rgba(0,0,0,0.4)", marginBottom: 6 }}>/ {billingCycle === "yearly" ? "yıl" : "ay"} · Tüm özellikler</div>
               {billingCycle === "yearly" && (
                 <div style={{ fontSize: 13, color: C.orangeLight, marginBottom: 28 }}>Aylık ~{(plans.find(p => p.id === "pro_yearly")?.monthlyEquiv || 2500).toLocaleString("tr-TR")} ₺</div>
               )}
               {billingCycle === "monthly" && <div style={{ marginBottom: 28, height: 19 }}></div>}
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 32 }}>
                 {(plans.find(p => p.id === (billingCycle === "yearly" ? "pro_yearly" : "pro_monthly"))?.features || []).map(f => (
-                  <span key={f} style={{ fontSize: 14, color: "rgba(255,255,255,0.55)" }}><span style={{ color: C.orangeLight, marginRight: 8 }}>✓</span>{f}</span>
+                  <span key={f} style={{ fontSize: 14, color: "rgba(0,0,0,0.55)" }}><span style={{ color: C.orangeLight, marginRight: 8 }}>✓</span>{f}</span>
                 ))}
               </div>
               <button onClick={() => { setForm(prev => ({...prev, selectedPlan: billingCycle === "yearly" ? "pro_yearly" : "pro_monthly"})); setShowRegister(true); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "14px", fontSize: 14, fontWeight: 700, background: C.orange, border: "none", color: C.white, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>{t.landing.pricing.startNow}</button>
@@ -899,47 +899,47 @@ export default function FiibiLanding() {
         <div style={{ ...wrap, display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 32 }}>
           <div>
             <Logo dark size={40} />
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginTop: 10, maxWidth: 280, lineHeight: 1.6 }}>
+            <p style={{ fontSize: 13, color: "rgba(0,0,0,0.3)", marginTop: 10, maxWidth: 280, lineHeight: 1.6 }}>
               {t.landing.footer.desc}
             </p>
           </div>
           <div style={{ display: "flex", gap: 48, flexWrap: "wrap" }}>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 14 }}>Platform</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.25)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 14 }}>Platform</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <a href="#ozellikler" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>{t.landing.nav.features}</a>
-                <a href="#fiyatlar" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>{t.landing.nav.pricing}</a>
-                <a href="#sektorler" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>{t.landing.nav.sectors}</a>
+                <a href="#ozellikler" style={{ fontSize: 13, color: "rgba(0,0,0,0.5)", textDecoration: "none" }}>{t.landing.nav.features}</a>
+                <a href="#fiyatlar" style={{ fontSize: 13, color: "rgba(0,0,0,0.5)", textDecoration: "none" }}>{t.landing.nav.pricing}</a>
+                <a href="#sektorler" style={{ fontSize: 13, color: "rgba(0,0,0,0.5)", textDecoration: "none" }}>{t.landing.nav.sectors}</a>
               </div>
             </div>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 14 }}>{t.nav.contact}</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.25)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 14 }}>{t.nav.contact}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <a href="tel:05392052041" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>📞 0539 205 20 41</a>
-                <a href="mailto:destek@fiibi.co" style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>✉️ destek@fiibi.co</a>
-                <span style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>📍 Cedit Mah. Goncagül Sok. No:14/2, İzmit / Kocaeli</span>
+                <a href="tel:05392052041" style={{ fontSize: 13, color: "rgba(0,0,0,0.5)", textDecoration: "none" }}>📞 0539 205 20 41</a>
+                <a href="mailto:destek@fiibi.co" style={{ fontSize: 13, color: "rgba(0,0,0,0.5)", textDecoration: "none" }}>✉️ destek@fiibi.co</a>
+                <span style={{ fontSize: 13, color: "rgba(0,0,0,0.4)", lineHeight: 1.5 }}>📍 Cedit Mah. Goncagül Sok. No:14/2, İzmit / Kocaeli</span>
               </div>
             </div>
           </div>
         </div>
         
-          <div style={{ width: "100%", marginTop: 40, borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 32, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.15em" }}>Güvenli Ödeme Altyapısı</div>
+          <div style={{ width: "100%", marginTop: 40, borderTop: "1px solid rgba(0,0,0,0.06)", paddingTop: 32, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.25)", textTransform: "uppercase", letterSpacing: "0.15em" }}>Güvenli Ödeme Altyapısı</div>
             <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", justifyContent: "center", opacity: 0.8 }}>
               <img src="/assets/iyzico_footer.svg" alt="iyzico Korumalı Alışveriş" style={{ height: 28 }} />
-              <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" style={{ fontSize: 16, fontWeight: 900, color: "#fff", letterSpacing: "-0.5px", opacity: 0.6, textDecoration: "none" }}>PayTR</a>
+              <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" style={{ fontSize: 16, fontWeight: 900, color: "#1a1a1a", letterSpacing: "-0.5px", opacity: 0.6, textDecoration: "none" }}>PayTR</a>
             </div>
-            <p style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", textAlign: "center", maxWidth: 420, lineHeight: 1.6, margin: 0 }}>
+            <p style={{ fontSize: 10, color: "rgba(0,0,0,0.2)", textAlign: "center", maxWidth: 420, lineHeight: 1.6, margin: 0 }}>
               Bu internet sitesindeki ödeme hizmetleri{" "}
-              <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.3)", textDecoration: "underline" }}>PAYTR Ödeme ve Elektronik Para Kuruluşu A.Ş.</a>
+              <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(0,0,0,0.3)", textDecoration: "underline" }}>PAYTR Ödeme ve Elektronik Para Kuruluşu A.Ş.</a>
               {" "}tarafından sağlanmaktadır.
             </p>
           </div>
 
         {/* Test Ödeme Bölümü */}
-        <div style={{ ...wrap, borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 24, paddingTop: 24, textAlign: "center" }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.2)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 10 }}>🧪 Ödeme Testi</div>
-          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 14, lineHeight: 1.6, maxWidth: 360, margin: "0 auto 14px" }}>
+        <div style={{ ...wrap, borderTop: "1px solid rgba(0,0,0,0.06)", marginTop: 24, paddingTop: 24, textAlign: "center" }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.2)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 10 }}>🧪 Ödeme Testi</div>
+          <p style={{ fontSize: 11, color: "rgba(0,0,0,0.3)", marginBottom: 14, lineHeight: 1.6, maxWidth: 360, margin: "0 auto 14px" }}>
             PayTR entegrasyonunu test etmek için 10₺ test ödemesi yapabilirsiniz. Gerçek ücretlendirme yapılmaz.
           </p>
           <button
@@ -971,8 +971,8 @@ export default function FiibiLanding() {
           </button>
         </div>
 
-        <div style={{ ...wrap, borderTop: "1px solid rgba(255,255,255,0.06)", marginTop: 24, paddingTop: 20, textAlign: "center" }}>
-          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.15)" }}>© {new Date().getFullYear()} fiibi. {t.footer.rights}</span>
+        <div style={{ ...wrap, borderTop: "1px solid rgba(0,0,0,0.06)", marginTop: 24, paddingTop: 20, textAlign: "center" }}>
+          <span style={{ fontSize: 11, color: "rgba(0,0,0,0.15)" }}>© {new Date().getFullYear()} fiibi. {t.footer.rights}</span>
         </div>
       </footer>
     </div>

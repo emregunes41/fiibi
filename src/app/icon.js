@@ -59,7 +59,7 @@ export default async function Icon() {
           justifyContent: "center",
           borderRadius: "50%",
           background: "#1a1a1a",
-          color: "#ffffff",
+          color: "#1a1a1a",
           fontSize: 34,
           fontWeight: 800,
           fontFamily: "sans-serif",

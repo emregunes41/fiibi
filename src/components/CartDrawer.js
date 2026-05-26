@@ -610,7 +610,7 @@ export default function CartDrawer() {
                       style={{
                         width: "100%", marginTop: 20, padding: "14px",
                         borderRadius: 0, border: "none",
-                        background: "#000000", color: "#ffffff",
+                        background: "#ffffff", color: "#1a1a1a",
                         fontSize: 13, fontWeight: 700, cursor: "pointer",
                         display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                       }}
@@ -1053,7 +1053,7 @@ export default function CartDrawer() {
                           }}
                           style={{
                             marginTop: 16, width: "100%", padding: "14px", borderRadius: 0,
-                            background: "#000000", color: "#ffffff", border: "none",
+                            background: "#ffffff", color: "#1a1a1a", border: "none",
                             fontWeight: 700, fontSize: 14, cursor: "pointer",
                           }}
                         >
@@ -1115,7 +1115,7 @@ export default function CartDrawer() {
                     className="force-dark"
                     style={{
                       flex: 2, padding: "14px", borderRadius: 0,
-                      border: "none", background: "#000000", color: "#ffffff",
+                      border: "none", background: "#ffffff", color: "#1a1a1a",
                       fontSize: "13px", fontWeight: 700, cursor: "pointer",
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                       transition: "all 0.2s",

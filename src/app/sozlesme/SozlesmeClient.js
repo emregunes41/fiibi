@@ -32,7 +32,7 @@ export default function SozlesmeClient({ tenant, config }) {
   const CurrentIcon = currentTab?.icon || FileText;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#000", color: "var(--text, #1a1a1a)", padding: "60px 24px" }}>
+    <div style={{ minHeight: "100vh", background: "#ffffff", color: "var(--text, #1a1a1a)", padding: "60px 24px" }}>
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         
         <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(0,0,0,0.45)", textDecoration: "none", marginBottom: 32, fontSize: 14, fontWeight: 500, transition: "color 0.2s" }}>

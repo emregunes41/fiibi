@@ -42,8 +42,8 @@ function AdminLayoutInner({ children }) {
   // Wait for session before rendering any sector-specific UI
   if (sessionLoading) {
     return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#0a0a0a" }}>
-        <div style={{ width: 20, height: 20, border: "2px solid rgba(255,255,255,0.1)", borderTop: "2px solid rgba(255,255,255,0.5)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#f8f8f8" }}>
+        <div style={{ width: 20, height: 20, border: "2px solid rgba(0,0,0,0.1)", borderTop: "2px solid rgba(0,0,0,0.5)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );

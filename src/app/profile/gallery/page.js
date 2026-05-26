@@ -141,7 +141,7 @@ export default function ClientGalleryPage() {
   return (
     <div>
       {/* KESİNLİKLE BEYAZ TEMALI GALERİ KONTEYNERİ */}
-      <div style={{ background: "#ffffff", color: "#000", padding: "30px", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 4, minHeight: "80vh" }}>
+      <div style={{ background: "#1a1a1a", color: "#1a1a1a", padding: "30px", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 4, minHeight: "80vh" }}>
         
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "30px", borderBottom: "1px solid rgba(0,0,0,0.06)", paddingBottom: "20px" }}>
@@ -313,21 +313,21 @@ export default function ClientGalleryPage() {
           
           <button 
             onClick={closeLightbox}
-            style={{ position: "absolute", top: 90, right: 20, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: 10, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
+            style={{ position: "absolute", top: 90, right: 20, background: "rgba(0,0,0,0.1)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", padding: 10, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
           >
             <X size={20} />
           </button>
 
           <button 
             onClick={prevPhoto}
-            style={{ position: "absolute", left: 20, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: 14, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
+            style={{ position: "absolute", left: 20, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.1)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", padding: 14, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
           >
             <ChevronLeft size={24} />
           </button>
 
           <button 
             onClick={nextPhoto}
-            style={{ position: "absolute", right: 20, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: 14, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
+            style={{ position: "absolute", right: 20, top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.1)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", padding: 14, borderRadius: 4, cursor: "pointer", zIndex: 10001 }}
           >
             <ChevronRight size={24} />
           </button>
@@ -374,7 +374,7 @@ export default function ClientGalleryPage() {
              </button>
           </div>
 
-          <div style={{ position: "absolute", bottom: 20, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.6)", padding: "6px 14px", borderRadius: 4, color: "#fff", fontSize: "0.75rem", fontWeight: 700 }}>
+          <div style={{ position: "absolute", bottom: 20, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.6)", padding: "6px 14px", borderRadius: 4, color: "#1a1a1a", fontSize: "0.75rem", fontWeight: 700 }}>
              {lightbox.photoIndex + 1} / {galleries[lightbox.galleryIndex].photos.length}
           </div>
         </div>
@@ -408,7 +408,7 @@ export default function ClientGalleryPage() {
             <button
               onClick={handleSaveNote}
               style={{ 
-                width: "100%", background: "#000", color: "#fff", border: "none", padding: "12px", 
+                width: "100%", background: "#ffffff", color: "#1a1a1a", border: "none", padding: "12px", 
                 borderRadius: 4, fontWeight: 800, fontSize: "0.75rem", cursor: "pointer" 
               }}
             >

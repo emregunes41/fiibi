@@ -70,8 +70,8 @@ export default function MonthlyPriceManager() {
 
   return (
     <div style={{ 
-      background: "rgba(255,255,255,0.05)", 
-      border: "1px solid rgba(255,255,255,0.08)", 
+      background: "rgba(0,0,0,0.05)", 
+      border: "1px solid rgba(0,0,0,0.08)", 
       borderRadius: 0, 
       padding: "1rem",
       marginBottom: "1.5rem"
@@ -79,7 +79,7 @@ export default function MonthlyPriceManager() {
       {/* Header Compact */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", gap: "10px", flexWrap: "wrap" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <Percent size={16} style={{ color: "rgba(255,255,255,0.5)" }} />
+          <Percent size={16} style={{ color: "rgba(0,0,0,0.5)" }} />
           <h2 style={{ fontSize: "0.9rem", fontWeight: 900, margin: 0 }}>Aylık Oranlar</h2>
           {message && (
             <span style={{ 
@@ -94,7 +94,7 @@ export default function MonthlyPriceManager() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <div style={{ display: "flex", background: "rgba(255,255,255,0.05)", padding: "2px", borderRadius: 0 }}>
+          <div style={{ display: "flex", background: "rgba(0,0,0,0.05)", padding: "2px", borderRadius: 0 }}>
             {CATEGORIES.map(cat => (
               <button
                 key={cat.value}
@@ -102,7 +102,7 @@ export default function MonthlyPriceManager() {
                 style={{
                   padding: "4px 8px", borderRadius: 0, fontSize: "0.65rem", fontWeight: 700, border: "none", cursor: "pointer", transition: "all 0.2s",
                   background: activeCategory === cat.value ? "#fff" : "transparent",
-                  color: activeCategory === cat.value ? "#000" : "rgba(255,255,255,0.4)"
+                  color: activeCategory === cat.value ? "#000" : "rgba(0,0,0,0.4)"
                 }}
               >
                 {cat.label}
@@ -110,10 +110,10 @@ export default function MonthlyPriceManager() {
             ))}
           </div>
           
-          <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "rgba(255,255,255,0.05)", padding: "2px 8px", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)" }}>
-            <button onClick={() => setSelectedYear(y => y - 1)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", display: "flex" }}><ChevronLeft size={12} /></button>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "rgba(0,0,0,0.05)", padding: "2px 8px", borderRadius: 0, border: "1px solid rgba(0,0,0,0.08)" }}>
+            <button onClick={() => setSelectedYear(y => y - 1)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.5)", cursor: "pointer", display: "flex" }}><ChevronLeft size={12} /></button>
             <span style={{ fontSize: "0.7rem", fontWeight: 800, width: "30px", textAlign: "center" }}>{selectedYear}</span>
-            <button onClick={() => setSelectedYear(y => y + 1)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", display: "flex" }}><ChevronRight size={12} /></button>
+            <button onClick={() => setSelectedYear(y => y + 1)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.5)", cursor: "pointer", display: "flex" }}><ChevronRight size={12} /></button>
           </div>
         </div>
       </div>
@@ -131,10 +131,10 @@ export default function MonthlyPriceManager() {
               padding: "8px", 
               borderRadius: 0, 
               background: "rgba(0,0,0,0.2)", 
-              border: "1px solid rgba(255,255,255,0.08)",
+              border: "1px solid rgba(0,0,0,0.08)",
               position: "relative"
             }}>
-              <label style={{ display: "block", fontSize: "0.55rem", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", fontWeight: 900, marginBottom: "4px" }}>{month}</label>
+              <label style={{ display: "block", fontSize: "0.55rem", textTransform: "uppercase", color: "rgba(0,0,0,0.45)", fontWeight: 900, marginBottom: "4px" }}>{month}</label>
               <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
                 <input
                   type="number"
@@ -143,12 +143,12 @@ export default function MonthlyPriceManager() {
                   onBlur={() => handleSave(idx)}
                   placeholder="0"
                   style={{ 
-                    width: "100%", background: "transparent", border: "none", borderBottom: "1px solid rgba(255,255,255,0.1)", 
+                    width: "100%", background: "transparent", border: "none", borderBottom: "1px solid rgba(0,0,0,0.1)", 
                     color: val < 0 ? "#fff" : val > 0 ? "#fbbf24" : "#fff",
                     fontSize: "0.85rem", fontWeight: 800, outline: "none", padding: "2px 0"
                   }}
                 />
-                <span style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", marginLeft: "2px" }}>%</span>
+                <span style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.4)", marginLeft: "2px" }}>%</span>
               </div>
             </div>
           );

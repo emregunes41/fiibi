@@ -137,7 +137,7 @@ export default function BannerCarousel({ banners }) {
               style={{
                 fontSize: "clamp(1rem, 3vw, 1.8rem)",
                 fontWeight: 800,
-                color: "#fff",
+                color: "#1a1a1a",
                 margin: "0 0 4px",
                 letterSpacing: "-0.02em",
                 lineHeight: 1.2,
@@ -186,7 +186,7 @@ export default function BannerCarousel({ banners }) {
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-              color: "#fff",
+              color: "#1a1a1a",
               transition: "all 0.2s",
             }}
           >
@@ -214,7 +214,7 @@ export default function BannerCarousel({ banners }) {
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-              color: "#fff",
+              color: "#1a1a1a",
               transition: "all 0.2s",
             }}
           >

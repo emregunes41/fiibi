@@ -26,35 +26,35 @@ import { getBioLinks } from "../biolinks-actions";
 
 const inp = {
   width: "100%", boxSizing: "border-box",
-  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-  borderRadius: 0, padding: "12px 16px", fontSize: 14, color: "#fff",
+  background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.1)",
+  borderRadius: 0, padding: "12px 16px", fontSize: 14, color: "#1a1a1a",
   outline: "none", transition: "all 0.2s",
 };
 
 const inpIcon = { ...inp, paddingLeft: 44 };
 
 const label = {
-  display: "block", fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)",
+  display: "block", fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.5)",
   textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, paddingLeft: 2,
 };
 
 const sectionCard = {
-  background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+  background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)",
   borderRadius: 0, padding: "24px", marginBottom: 24,
 };
 
 const sectionHeader = (Icon, title, desc) => (
   <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 24 }}>
     <div style={{
-      width: 40, height: 40, borderRadius: 0, background: "rgba(255,255,255,0.04)",
-      border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center",
+      width: 40, height: 40, borderRadius: 0, background: "rgba(0,0,0,0.04)",
+      border: "1px solid rgba(0,0,0,0.08)", display: "flex", alignItems: "center",
       justifyContent: "center", flexShrink: 0,
     }}>
       <Icon size={16} style={{ color: "rgba(255,255,255,0.6)" }} />
     </div>
     <div>
-      <h2 style={{ fontSize: 15, fontWeight: 700, color: "#fff", margin: "0 0 4px", letterSpacing: "0.01em" }}>{title}</h2>
-      <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", margin: 0, lineHeight: 1.4 }}>{desc}</p>
+      <h2 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", margin: "0 0 4px", letterSpacing: "0.01em" }}>{title}</h2>
+      <p style={{ fontSize: 13, color: "rgba(0,0,0,0.5)", margin: 0, lineHeight: 1.4 }}>{desc}</p>
     </div>
   </div>
 );
@@ -240,17 +240,17 @@ export default function SettingsPage() {
 
   if (loading) return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh" }}>
-      <Loader2 size={24} style={{ color: "rgba(255,255,255,0.3)", animation: "spin 1s linear infinite" }} />
+      <Loader2 size={24} style={{ color: "rgba(0,0,0,0.3)", animation: "spin 1s linear infinite" }} />
     </div>
   );
 
   if (!config) return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
-      <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "40px 32px", textAlign: "center", maxWidth: 360 }}>
-        <AlertCircle size={32} style={{ color: "rgba(255,255,255,0.4)", margin: "0 auto 12px" }} />
+      <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.1)", borderRadius: 0, padding: "40px 32px", textAlign: "center", maxWidth: 360 }}>
+        <AlertCircle size={32} style={{ color: "rgba(0,0,0,0.4)", margin: "0 auto 12px" }} />
         <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Bağlantı Kesildi</h2>
-        <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 20 }}>Ayarları yükleyemiyoruz.</p>
-        <button onClick={() => window.location.reload()} style={{ background: "#fff", color: "#000", border: "none", borderRadius: 0, padding: "10px 24px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+        <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 13, marginBottom: 20 }}>Ayarları yükleyemiyoruz.</p>
+        <button onClick={() => window.location.reload()} style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", borderRadius: 0, padding: "10px 24px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
           Yenile
         </button>
       </div>
@@ -284,8 +284,8 @@ export default function SettingsPage() {
                 <button key={tab.id} onClick={() => { setActiveTab(tab.id); if (SUB_TABS[tab.id]) setSubTab(SUB_TABS[tab.id][0].id); }} type="button" style={{
                   display: "flex", alignItems: "center", gap: 10,
                   padding: "12px 16px", fontSize: 13, fontWeight: isActive ? 700 : 500,
-                  color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
-                  background: isActive ? "rgba(255,255,255,0.06)" : "transparent", 
+                  color: isActive ? "#fff" : "rgba(0,0,0,0.5)",
+                  background: isActive ? "rgba(0,0,0,0.06)" : "transparent", 
                   border: "none", borderRadius: 0,
                   cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap", textAlign: "left"
                 }} className="hover:bg-white/5">
@@ -308,7 +308,7 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => setSubTab(st.id)}
                   style={{
-                    background: subTab === st.id ? "#fff" : "rgba(255,255,255,0.06)",
+                    background: subTab === st.id ? "#fff" : "rgba(0,0,0,0.06)",
                     color: subTab === st.id ? "#000" : "rgba(255,255,255,0.6)",
                     border: "none", borderRadius: 0, padding: "6px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap"
                   }}
@@ -333,31 +333,31 @@ export default function SettingsPage() {
           {sectionHeader(Layers, "Aktif Modüller", "Platformunuzda kullanmak istediğiniz araçları seçin. Kapatılan modüller sol menüden ve websitenizden gizlenir.")}
 
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 0 }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", borderRadius: 0 }}>
               <input 
                 type="checkbox" 
                 checked={config.moduleReservations ?? true} 
                 onChange={(e) => setConfig({ ...config, moduleReservations: e.target.checked })}
-                style={{ marginTop: 2, width: 18, height: 18, accentColor: "#fff", cursor: "pointer" }}
+                style={{ marginTop: 2, width: 18, height: 18, accentcolor: "#1a1a1a", cursor: "pointer" }}
               />
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 4 }}>Hizmetler & Randevu Sistemi</div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Hizmet/paket tanımlayarak müşterilerinizden rezervasyon almanızı sağlar.</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", marginBottom: 4 }}>Hizmetler & Randevu Sistemi</div>
+                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.4)" }}>Hizmet/paket tanımlayarak müşterilerinizden rezervasyon almanızı sağlar.</div>
               </div>
             </label>
 
 
 
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 0 }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer", padding: "16px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", borderRadius: 0 }}>
               <input 
                 type="checkbox" 
                 checked={config.moduleEvents ?? true} 
                 onChange={(e) => setConfig({ ...config, moduleEvents: e.target.checked })}
-                style={{ marginTop: 2, width: 18, height: 18, accentColor: "#fff", cursor: "pointer" }}
+                style={{ marginTop: 2, width: 18, height: 18, accentcolor: "#1a1a1a", cursor: "pointer" }}
               />
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 4 }}>Etkinlikler & Bilet Satışı</div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Atölye, seminer veya grup dersleri tanımlayıp bilet satmanızı sağlar.</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", marginBottom: 4 }}>Etkinlikler & Bilet Satışı</div>
+                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.4)" }}>Atölye, seminer veya grup dersleri tanımlayıp bilet satmanızı sağlar.</div>
               </div>
             </label>
           </div>
@@ -370,7 +370,7 @@ export default function SettingsPage() {
           <div style={{ marginBottom: 16 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
               <label style={label}>Hero Ana Başlık</label>
-              <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)", fontStyle: "italic" }}>Alt satır için Enter</span>
+              <span style={{ fontSize: 9, color: "rgba(0,0,0,0.25)", fontStyle: "italic" }}>Alt satır için Enter</span>
             </div>
             <textarea
               value={config.heroTitle}
@@ -395,28 +395,28 @@ export default function SettingsPage() {
         </div>}
 
         {/* 2. Preview Card */}
-        {activeTab === "tasarim" && subTab === "hero" && <div style={{ ...sectionCard, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
+        {activeTab === "tasarim" && subTab === "hero" && <div style={{ ...sectionCard, background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-            <Layout size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
-            <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Canlı Önizleme</span>
+            <Layout size={13} style={{ color: "rgba(0,0,0,0.35)" }} />
+            <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Canlı Önizleme</span>
           </div>
           <div style={{
-            background: "#000", borderRadius: 0, border: "1px solid rgba(255,255,255,0.06)",
+            background: "#ffffff", borderRadius: 0, border: "1px solid rgba(0,0,0,0.06)",
             padding: "40px 24px", textAlign: "center", position: "relative", overflow: "hidden",
           }}>
             {/* Glow */}
-            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 200, height: 200, background: "rgba(255,255,255,0.04)", borderRadius: 0, filter: "blur(60px)", pointerEvents: "none" }} />
+            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 200, height: 200, background: "rgba(0,0,0,0.04)", borderRadius: 0, filter: "blur(60px)", pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1 }}>
-              <span style={{ display: "block", fontSize: 8, textTransform: "uppercase", letterSpacing: "0.4em", color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>
+              <span style={{ display: "block", fontSize: 8, textTransform: "uppercase", letterSpacing: "0.4em", color: "rgba(0,0,0,0.35)", marginBottom: 10 }}>
                 {config.heroSubtitle || bt.heroSub || ""}
               </span>
-              <h1 style={{ fontSize: 22, fontFamily: "Georgia, serif", color: "#fff", lineHeight: 1.4, margin: "0 0 14px", whiteSpace: "pre-line" }}>
+              <h1 style={{ fontSize: 22, fontFamily: "Georgia, serif", color: "#1a1a1a", lineHeight: 1.4, margin: "0 0 14px", whiteSpace: "pre-line" }}>
                 {config.heroTitle || bt.heroTitle || ""}
               </h1>
-              <div style={{ width: 40, height: 1, background: "rgba(255,255,255,0.2)", margin: "0 auto" }} />
+              <div style={{ width: 40, height: 1, background: "rgba(0,0,0,0.2)", margin: "0 auto" }} />
             </div>
           </div>
-          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 12, fontStyle: "italic", lineHeight: 1.5 }}>
+          <p style={{ fontSize: 11, color: "rgba(0,0,0,0.3)", marginTop: 12, fontStyle: "italic", lineHeight: 1.5 }}>
             * Başlıktaki enter tuşu anasayfada tasarımın dengeli durmasını sağlar.
           </p>
         </div>}
@@ -443,8 +443,8 @@ export default function SettingsPage() {
                   onClick={() => open()}
                   style={{
                     width: "100%", padding: "20px", borderRadius: 0, cursor: "pointer",
-                    border: "2px dashed rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.02)",
-                    color: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 700,
+                    border: "2px dashed rgba(0,0,0,0.12)", background: "rgba(0,0,0,0.02)",
+                    color: "rgba(0,0,0,0.5)", fontSize: 13, fontWeight: 700,
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
                     transition: "all 0.2s",
                   }}
@@ -460,13 +460,13 @@ export default function SettingsPage() {
           {pendingBannerUrl && (
             <div style={{
               padding: 16, borderRadius: 0, marginBottom: 20,
-              background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)",
+              background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.1)",
             }}>
               <div style={{ display: "flex", gap: 14, marginBottom: 14 }}>
                 {pendingMediaType === "video" ? (
-                  <video src={pendingBannerUrl} style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 0, border: "1px solid rgba(255,255,255,0.1)" }} muted autoPlay loop />
+                  <video src={pendingBannerUrl} style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 0, border: "1px solid rgba(0,0,0,0.1)" }} muted autoPlay loop />
                 ) : (
-                  <img src={pendingBannerUrl} alt="Preview" style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 0, border: "1px solid rgba(255,255,255,0.1)" }} />
+                  <img src={pendingBannerUrl} alt="Preview" style={{ width: 120, height: 60, objectFit: "cover", borderRadius: 0, border: "1px solid rgba(0,0,0,0.1)" }} />
                 )}
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
                   <input type="text" placeholder="Başlık (opsiyonel)" value={bannerForm.title}
@@ -485,7 +485,7 @@ export default function SettingsPage() {
               />
               <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
                 <button type="button" onClick={() => { setPendingBannerUrl(""); setPendingMediaType("image"); setBannerForm({ title: "", subtitle: "", link: "" }); }}
-                  style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: 12, fontWeight: 700 }}
+                  style={{ background: "none", border: "none", color: "rgba(0,0,0,0.4)", cursor: "pointer", fontSize: 12, fontWeight: 700 }}
                 >İptal</button>
                 <button type="button"
                   disabled={bannerUploading}
@@ -502,7 +502,7 @@ export default function SettingsPage() {
                   }}
                   style={{
                     padding: "10px 20px", borderRadius: 0, border: "none",
-                    background: "#fff", color: "#000", fontWeight: 800, fontSize: 12,
+                    background: "#1a1a1a", color: "#1a1a1a", fontWeight: 800, fontSize: 12,
                     cursor: "pointer", display: "flex", alignItems: "center", gap: 6,
                   }}
                 >
@@ -519,8 +519,8 @@ export default function SettingsPage() {
               {banners.map((b, idx) => (
                 <div key={b.id} style={{
                   display: "flex", alignItems: "center", gap: 12, padding: "10px 12px",
-                  borderRadius: 0, background: b.isActive ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)",
-                  border: `1px solid ${b.isActive ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)"}`,
+                  borderRadius: 0, background: b.isActive ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.015)",
+                  border: `1px solid ${b.isActive ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0.05)"}`,
                   opacity: b.isActive ? 1 : 0.5,
                 }}>
                   {b.mediaType === "video" ? (
@@ -530,14 +530,14 @@ export default function SettingsPage() {
                   )}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span style={{ fontSize: 10, padding: "1px 5px", borderRadius: 0, background: b.mediaType === "video" ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.06)", color: b.mediaType === "video" ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.4)", fontWeight: 800 }}>
+                      <span style={{ fontSize: 10, padding: "1px 5px", borderRadius: 0, background: b.mediaType === "video" ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.06)", color: b.mediaType === "video" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.4)", fontWeight: 800 }}>
                         {b.mediaType === "video" ? "🎬" : "🖼️"}
                       </span>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {b.title || "(Başlıksız)"}
                       </span>
                     </div>
-                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>
+                    <div style={{ fontSize: 10, color: "rgba(0,0,0,0.35)" }}>
                       Sıra: {idx + 1} {b.subtitle && `· ${b.subtitle}`}
                     </div>
                   </div>
@@ -550,7 +550,7 @@ export default function SettingsPage() {
                         await reorderBanners(ids);
                         setBanners(await getBanners());
                       }}
-                      style={{ background: "none", border: "none", cursor: idx === 0 ? "not-allowed" : "pointer", padding: 4, color: "rgba(255,255,255,0.3)", opacity: idx === 0 ? 0.3 : 1 }}
+                      style={{ background: "none", border: "none", cursor: idx === 0 ? "not-allowed" : "pointer", padding: 4, color: "rgba(0,0,0,0.3)", opacity: idx === 0 ? 0.3 : 1 }}
                     ><ArrowUp size={14} /></button>
                     {/* Move down */}
                     <button type="button" disabled={idx === banners.length - 1}
@@ -560,7 +560,7 @@ export default function SettingsPage() {
                         await reorderBanners(ids);
                         setBanners(await getBanners());
                       }}
-                      style={{ background: "none", border: "none", cursor: idx === banners.length - 1 ? "not-allowed" : "pointer", padding: 4, color: "rgba(255,255,255,0.3)", opacity: idx === banners.length - 1 ? 0.3 : 1 }}
+                      style={{ background: "none", border: "none", cursor: idx === banners.length - 1 ? "not-allowed" : "pointer", padding: 4, color: "rgba(0,0,0,0.3)", opacity: idx === banners.length - 1 ? 0.3 : 1 }}
                     ><ArrowDown size={14} /></button>
                     {/* Toggle active */}
                     <button type="button"
@@ -568,7 +568,7 @@ export default function SettingsPage() {
                         await updateBanner(b.id, { isActive: !b.isActive });
                         setBanners(await getBanners());
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: b.isActive ? "#fff" : "rgba(255,255,255,0.25)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: b.isActive ? "#fff" : "rgba(0,0,0,0.25)" }}
                     >{b.isActive ? <Eye size={14} /> : <EyeOff size={14} />}</button>
                     {/* Delete */}
                     <button type="button"
@@ -578,14 +578,14 @@ export default function SettingsPage() {
                           setBanners(await getBanners());
                         }
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(255,255,255,0.4)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.4)" }}
                     ><Trash2 size={14} /></button>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(255,255,255,0.25)", fontSize: 12 }}>
+            <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(0,0,0,0.25)", fontSize: 12 }}>
               Henüz banner eklenmemiş.
             </div>
           )}
@@ -614,7 +614,7 @@ export default function SettingsPage() {
               <Sparkles size={16} style={{ color: "#8b5cf6" }} />
               <div>
                 <div style={{ fontSize: 12, fontWeight: 700, color: "#8b5cf6" }}>Pro Özelliği</div>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Arka plan özelleştirme Pro plana dahildir. <a href="/admin/subscription" style={{ color: "#8b5cf6", textDecoration: "underline" }}>Planı Yükselt</a></div>
+                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>Arka plan özelleştirme Pro plana dahildir. <a href="/admin/subscription" style={{ color: "#8b5cf6", textDecoration: "underline" }}>Planı Yükselt</a></div>
               </div>
             </div>
           )}
@@ -635,9 +635,9 @@ export default function SettingsPage() {
                   disabled={!isPro}
                   style={{
                     flex: 1, padding: "12px 8px", borderRadius: 0, border: "1px solid",
-                    borderColor: config.heroBgType === opt.value ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.08)",
-                    background: config.heroBgType === opt.value ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
-                    color: config.heroBgType === opt.value ? "#fff" : "rgba(255,255,255,0.5)",
+                    borderColor: config.heroBgType === opt.value ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.08)",
+                    background: config.heroBgType === opt.value ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.02)",
+                    color: config.heroBgType === opt.value ? "#fff" : "rgba(0,0,0,0.5)",
                     cursor: "pointer", fontSize: 12, fontWeight: 700, textAlign: "center",
                     transition: "all 0.2s"
                   }}
@@ -654,7 +654,7 @@ export default function SettingsPage() {
             <div style={{ marginBottom: 16 }}>
               <label style={label}>{config.heroBgType === "video" ? "Video Dosyası" : "Fotoğraf"} Yükle</label>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <Upload size={16} style={{ color: "rgba(255,255,255,0.4)", flexShrink: 0 }} />
+                <Upload size={16} style={{ color: "rgba(0,0,0,0.4)", flexShrink: 0 }} />
                 <input
                   type="file"
                   accept={config.heroBgType === "video" ? "video/*" : "image/*"}
@@ -697,8 +697,8 @@ export default function SettingsPage() {
               </div>
               {uploadingBg && <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", marginTop: 6 }}>Yükleniyor... (büyük dosyalar biraz sürebilir)</p>}
               {config.heroBgUrl && (
-                <div style={{ marginTop: 8, fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
-                  Mevcut: <span style={{ color: "#fff" }}>{config.heroBgUrl.length > 60 ? config.heroBgUrl.slice(0, 60) + "..." : config.heroBgUrl}</span>
+                <div style={{ marginTop: 8, fontSize: 11, color: "rgba(0,0,0,0.4)" }}>
+                  Mevcut: <span style={{ color: "#1a1a1a" }}>{config.heroBgUrl.length > 60 ? config.heroBgUrl.slice(0, 60) + "..." : config.heroBgUrl}</span>
                 </div>
               )}
             </div>
@@ -722,7 +722,7 @@ export default function SettingsPage() {
                   style={{ ...inp, maxWidth: 160 }}
                   placeholder="#000000"
                 />
-                <div style={{ width: 48, height: 48, borderRadius: 0, background: config.heroBgColor || "#000", border: "1px solid rgba(255,255,255,0.1)" }} />
+                <div style={{ width: 48, height: 48, borderRadius: 0, background: config.heroBgColor || "#000", border: "1px solid rgba(0,0,0,0.1)" }} />
               </div>
             </div>
           )}
@@ -748,7 +748,7 @@ export default function SettingsPage() {
             <div>
               <label style={label}>İletişim No</label>
               <div style={{ position: "relative" }}>
-                <Phone size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.3)", pointerEvents: "none" }} />
+                <Phone size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.3)", pointerEvents: "none" }} />
                 <input
                   type="text"
                   value={config.phone}
@@ -762,7 +762,7 @@ export default function SettingsPage() {
             <div>
               <label style={label}>E-Posta</label>
               <div style={{ position: "relative" }}>
-                <Mail size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.3)", pointerEvents: "none" }} />
+                <Mail size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.3)", pointerEvents: "none" }} />
                 <input
                   type="email"
                   value={config.email}
@@ -775,13 +775,13 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div style={{ marginTop: 24, padding: "16px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 16 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: 16 }}>
+          <div style={{ marginTop: 24, padding: "16px 20px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(0,0,0,0.06)", paddingBottom: 16 }}>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 4 }}>Tüm İletişim Bölümünü Göster</div>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Anasayfanın en altındaki tüm iletişim ve bağlantılar kutusunu açar/kapatır.</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a", marginBottom: 4 }}>Tüm İletişim Bölümünü Göster</div>
+                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>Anasayfanın en altındaki tüm iletişim ve bağlantılar kutusunu açar/kapatır.</div>
               </div>
-              <div onClick={() => setConfig({ ...config, showContactOnHome: !config.showContactOnHome })} style={{ width: 44, height: 24, borderRadius: 12, background: config.showContactOnHome !== false ? "var(--accent)" : "rgba(255,255,255,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s", flexShrink: 0 }}>
+              <div onClick={() => setConfig({ ...config, showContactOnHome: !config.showContactOnHome })} style={{ width: 44, height: 24, borderRadius: 12, background: config.showContactOnHome !== false ? "var(--accent)" : "rgba(0,0,0,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s", flexShrink: 0 }}>
                 <div style={{ width: 18, height: 18, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showContactOnHome !== false ? 23 : 3, boxShadow: "0 1px 3px rgba(0,0,0,0.3)" }} />
               </div>
             </div>
@@ -790,19 +790,19 @@ export default function SettingsPage() {
               <div style={{ display: "flex", flexDirection: "column", gap: 12, paddingLeft: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>Telefon Numarasını Göster</div>
-                  <div onClick={() => setConfig({ ...config, showPhoneOnHome: !config.showPhoneOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showPhoneOnHome !== false ? "var(--accent)" : "rgba(255,255,255,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
+                  <div onClick={() => setConfig({ ...config, showPhoneOnHome: !config.showPhoneOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showPhoneOnHome !== false ? "var(--accent)" : "rgba(0,0,0,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
                     <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showPhoneOnHome !== false ? 19 : 3 }} />
                   </div>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>E-Posta Adresini Göster</div>
-                  <div onClick={() => setConfig({ ...config, showEmailOnHome: !config.showEmailOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showEmailOnHome !== false ? "var(--accent)" : "rgba(255,255,255,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
+                  <div onClick={() => setConfig({ ...config, showEmailOnHome: !config.showEmailOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showEmailOnHome !== false ? "var(--accent)" : "rgba(0,0,0,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
                     <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showEmailOnHome !== false ? 19 : 3 }} />
                   </div>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>Fiziksel Adresi Göster</div>
-                  <div onClick={() => setConfig({ ...config, showAddressOnHome: !config.showAddressOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showAddressOnHome !== false ? "var(--accent)" : "rgba(255,255,255,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
+                  <div onClick={() => setConfig({ ...config, showAddressOnHome: !config.showAddressOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showAddressOnHome !== false ? "var(--accent)" : "rgba(0,0,0,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
                     <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showAddressOnHome !== false ? 19 : 3 }} />
                   </div>
                 </div>
@@ -819,7 +819,7 @@ export default function SettingsPage() {
             <div>
               <label style={label}>Instagram</label>
               <div style={{ display: "flex" }}>
-                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRight: "none", padding: "0 10px", display: "flex", alignItems: "center", fontSize: 12, color: "rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>
+                <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.1)", borderRight: "none", padding: "0 10px", display: "flex", alignItems: "center", fontSize: 12, color: "rgba(0,0,0,0.3)", whiteSpace: "nowrap" }}>
                   <Instagram size={12} style={{ marginRight: 6, opacity: 0.5 }} />instagram.com/
                 </div>
                 <input
@@ -838,7 +838,7 @@ export default function SettingsPage() {
             <div>
               <label style={label}>WhatsApp</label>
               <div style={{ display: "flex" }}>
-                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRight: "none", padding: "0 10px", display: "flex", alignItems: "center", fontSize: 12, color: "rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>
+                <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.1)", borderRight: "none", padding: "0 10px", display: "flex", alignItems: "center", fontSize: 12, color: "rgba(0,0,0,0.3)", whiteSpace: "nowrap" }}>
                   <MessageCircle size={12} style={{ marginRight: 6, opacity: 0.5 }} />+90
                 </div>
                 <input
@@ -860,7 +860,7 @@ export default function SettingsPage() {
           <div style={{ marginTop: 12 }}>
             <label style={label}>Google Maps Yol Tarifi Linki</label>
             <div style={{ position: "relative" }}>
-              <MapPin size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.3)", pointerEvents: "none" }} />
+              <MapPin size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.3)", pointerEvents: "none" }} />
               <input
                 type="text"
                 value={config.googleMapsUrl || ""}
@@ -880,20 +880,20 @@ export default function SettingsPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
             {/* Email Toggle */}
             <div style={{
-              background: config.emailEnabled ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.03)",
-              border: `1px solid ${config.emailEnabled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
+              background: config.emailEnabled ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.03)",
+              border: `1px solid ${config.emailEnabled ? "rgba(0,0,0,0.12)" : "rgba(0,0,0,0.08)"}`,
               borderRadius: 0, padding: "18px 16px", cursor: "pointer", transition: "all 0.2s",
             }}
               onClick={() => setConfig({ ...config, emailEnabled: !config.emailEnabled })}
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Mail size={16} style={{ color: config.emailEnabled ? "#fff" : "rgba(255,255,255,0.3)" }} />
-                  <span style={{ fontSize: 13, fontWeight: 800, color: config.emailEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>E-Posta</span>
+                  <Mail size={16} style={{ color: config.emailEnabled ? "#fff" : "rgba(0,0,0,0.3)" }} />
+                  <span style={{ fontSize: 13, fontWeight: 800, color: config.emailEnabled ? "#fff" : "rgba(0,0,0,0.5)" }}>E-Posta</span>
                 </div>
                 <div style={{
                   width: 40, height: 22, borderRadius: 0, position: "relative",
-                  background: config.emailEnabled ? "#fff" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
+                  background: config.emailEnabled ? "#fff" : "rgba(0,0,0,0.15)", transition: "all 0.2s",
                 }}>
                   <div style={{
                     width: 18, height: 18, borderRadius: 0, background: "#fff",
@@ -903,15 +903,15 @@ export default function SettingsPage() {
                   }} />
                 </div>
               </div>
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", margin: 0 }}>
+              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", margin: 0 }}>
                 Resend API ile e-posta bildirimleri
               </p>
             </div>
 
             {/* SMS Toggle */}
             <div style={{
-              background: config.smsEnabled ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.03)",
-              border: `1px solid ${config.smsEnabled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
+              background: config.smsEnabled ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.03)",
+              border: `1px solid ${config.smsEnabled ? "rgba(0,0,0,0.12)" : "rgba(0,0,0,0.08)"}`,
               borderRadius: 0, padding: "18px 16px", cursor: isPro ? "pointer" : "default", transition: "all 0.2s",
               opacity: isPro ? 1 : 0.6,
             }}
@@ -919,8 +919,8 @@ export default function SettingsPage() {
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Phone size={16} style={{ color: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.3)" }} />
-                  <span style={{ fontSize: 13, fontWeight: 800, color: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>SMS</span>
+                  <Phone size={16} style={{ color: config.smsEnabled ? "#fff" : "rgba(0,0,0,0.3)" }} />
+                  <span style={{ fontSize: 13, fontWeight: 800, color: config.smsEnabled ? "#fff" : "rgba(0,0,0,0.5)" }}>SMS</span>
                   {!isPro && (
                     <Link href="/admin/subscription" style={{ fontSize: 9, fontWeight: 800, color: "#8b5cf6", background: "rgba(139,92,246,0.15)", padding: "4px 8px", textDecoration: "none", borderRadius: 4, display: "flex", alignItems: "center", gap: 4 }} onClick={(e) => e.stopPropagation()}>
                        PRO Özellik — Planı Yükselt
@@ -930,7 +930,7 @@ export default function SettingsPage() {
                 {isPro && (
                   <div style={{
                     width: 40, height: 22, borderRadius: 0, position: "relative",
-                    background: config.smsEnabled ? "#fff" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
+                    background: config.smsEnabled ? "#fff" : "rgba(0,0,0,0.15)", transition: "all 0.2s",
                   }}>
                     <div style={{
                       width: 18, height: 18, borderRadius: 0, background: "#fff",
@@ -941,7 +941,7 @@ export default function SettingsPage() {
                   </div>
                 )}
               </div>
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", margin: 0 }}>
+              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", margin: 0 }}>
                 {isPro ? "Netgsm API ile SMS bildirimleri" : "SMS bildirimleri Pro plana dahildir. Aktif etmek için planınızı yükseltin."}
               </p>
             </div>
@@ -952,12 +952,12 @@ export default function SettingsPage() {
           {/* Netgsm API - SMS aktifken göster */}
           {config.smsEnabled && (
             <div style={{
-              background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)",
               borderRadius: 0, padding: 20, marginBottom: 12,
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                <Phone size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
-                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Netgsm API (SMS)</span>
+                <Phone size={13} style={{ color: "rgba(0,0,0,0.35)" }} />
+                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Netgsm API (SMS)</span>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
                 <div>
@@ -982,8 +982,8 @@ export default function SettingsPage() {
                   />
                 </div>
               </div>
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 10, lineHeight: 1.6 }}>
-                📖 <a href="https://www.netgsm.com.tr" target="_blank" rel="noopener" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "underline" }}>netgsm.com.tr</a> → Ayarlar → API Bilgileri bölümünden alabilirsiniz.
+              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.3)", marginTop: 10, lineHeight: 1.6 }}>
+                📖 <a href="https://www.netgsm.com.tr" target="_blank" rel="noopener" style={{ color: "rgba(0,0,0,0.5)", textDecoration: "underline" }}>netgsm.com.tr</a> → Ayarlar → API Bilgileri bölümünden alabilirsiniz.
               </p>
             </div>
           )}
@@ -991,10 +991,10 @@ export default function SettingsPage() {
           {/* SMS Test Butonu */}
           {config.smsEnabled && config.netgsmUsercode && (
             <div style={{
-              background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)",
               borderRadius: 0, padding: 16, marginBottom: 12,
             }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>
                 📱 SMS Test
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
@@ -1020,8 +1020,8 @@ export default function SettingsPage() {
                   }}
                   style={{
                     padding: "10px 18px", borderRadius: 0, border: "none", flexShrink: 0,
-                    background: testPhone.trim() && !testSmsLoading ? "#fff" : "rgba(255,255,255,0.06)",
-                    color: testPhone.trim() && !testSmsLoading ? "#000" : "rgba(255,255,255,0.3)",
+                    background: testPhone.trim() && !testSmsLoading ? "#fff" : "rgba(0,0,0,0.06)",
+                    color: testPhone.trim() && !testSmsLoading ? "#000" : "rgba(0,0,0,0.3)",
                     fontWeight: 800, fontSize: 11, cursor: testPhone.trim() && !testSmsLoading ? "pointer" : "not-allowed",
                     height: 42,
                   }}
@@ -1032,9 +1032,9 @@ export default function SettingsPage() {
               {testSmsResult && (
                 <div style={{
                   marginTop: 10, padding: "8px 12px", borderRadius: 0, fontSize: 11, fontWeight: 600,
-                  background: testSmsResult.success ? "rgba(255,255,255,0.06)" : "rgba(255,68,68,0.1)",
+                  background: testSmsResult.success ? "rgba(0,0,0,0.06)" : "rgba(255,68,68,0.1)",
                   color: testSmsResult.success ? "#fff" : "#ff6b6b",
-                  border: `1px solid ${testSmsResult.success ? "rgba(255,255,255,0.12)" : "rgba(255,68,68,0.2)"}`,
+                  border: `1px solid ${testSmsResult.success ? "rgba(0,0,0,0.12)" : "rgba(255,68,68,0.2)"}`,
                 }}>
                   {testSmsResult.success
                     ? "✅ SMS başarıyla gönderildi!"
@@ -1046,7 +1046,7 @@ export default function SettingsPage() {
 
           {/* Bildirim Tercihleri - Checkbox'lı */}
           <div style={{ marginTop: 8 }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Bildirim Tercihleri</p>
+            <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Bildirim Tercihleri</p>
             {[
               { key: "notifyReservation", icon: "📅", text: "Randevu onayı", desc: "Randevu oluşturulduğunda" },
               { key: "notifyPayment", icon: "💰", text: "Ödeme alındı", desc: "Ödeme başarılı olduğunda" },
@@ -1059,14 +1059,14 @@ export default function SettingsPage() {
                 style={{
                   display: "flex", alignItems: "center", gap: 12, padding: "12px 14px",
                   marginBottom: 6, borderRadius: 0, cursor: "pointer", transition: "all 0.2s",
-                  background: config[item.key] ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.01)",
-                  border: `1px solid ${config[item.key] ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.04)"}`,
+                  background: config[item.key] ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.01)",
+                  border: `1px solid ${config[item.key] ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0.04)"}`,
                 }}
               >
                 {/* Checkbox */}
                 <div style={{
                   width: 20, height: 20, borderRadius: 0, flexShrink: 0,
-                  border: `2px solid ${config[item.key] ? "#fff" : "rgba(255,255,255,0.2)"}`,
+                  border: `2px solid ${config[item.key] ? "#fff" : "rgba(0,0,0,0.2)"}`,
                   background: config[item.key] ? "#fff" : "transparent",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   transition: "all 0.2s",
@@ -1079,13 +1079,13 @@ export default function SettingsPage() {
                 <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
 
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: config[item.key] ? "#fff" : "rgba(255,255,255,0.4)", transition: "all 0.2s" }}>{item.text}</div>
-                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{item.desc}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: config[item.key] ? "#fff" : "rgba(0,0,0,0.4)", transition: "all 0.2s" }}>{item.text}</div>
+                  <div style={{ fontSize: 10, color: "rgba(0,0,0,0.3)" }}>{item.desc}</div>
                 </div>
 
                 <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
-                  {config.emailEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(255,255,255,0.1)", color: "#fff", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>EMAIL</span>}
-                  {config.smsEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>SMS</span>}
+                  {config.emailEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(0,0,0,0.1)", color: "#1a1a1a", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>EMAIL</span>}
+                  {config.smsEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.5)", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>SMS</span>}
                 </div>
               </div>
             ))}
@@ -1225,8 +1225,8 @@ export default function SettingsPage() {
               }}
               style={{
                 padding: "12px 20px", borderRadius: 0, border: "none",
-                background: (dcForm.code && dcForm.discountPercent) ? "#fff" : "rgba(255,255,255,0.06)",
-                color: (dcForm.code && dcForm.discountPercent) ? "#000" : "rgba(255,255,255,0.3)",
+                background: (dcForm.code && dcForm.discountPercent) ? "#fff" : "rgba(0,0,0,0.06)",
+                color: (dcForm.code && dcForm.discountPercent) ? "#000" : "rgba(0,0,0,0.3)",
                 fontWeight: 700, fontSize: 12, cursor: (dcForm.code && dcForm.discountPercent) ? "pointer" : "not-allowed",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
               }}
@@ -1240,27 +1240,27 @@ export default function SettingsPage() {
           {/* Existing codes */}
           {discountCodes.length > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Mevcut Kodlar ({discountCodes.length})</div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Mevcut Kodlar ({discountCodes.length})</div>
               {discountCodes.map((dc) => (
                 <div key={dc.id} style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
                   padding: "12px 14px", borderRadius: 0,
-                  background: dc.isActive ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.02)",
-                  border: `1px solid ${dc.isActive ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.06)"}`,
+                  background: dc.isActive ? "rgba(0,0,0,0.03)" : "rgba(0,0,0,0.02)",
+                  border: `1px solid ${dc.isActive ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0.06)"}`,
                   opacity: dc.isActive ? 1 : 0.5,
                 }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                      <span style={{ fontSize: 14, fontWeight: 800, color: "#fff", fontFamily: "monospace", letterSpacing: "0.05em" }}>{dc.code}</span>
+                      <span style={{ fontSize: 14, fontWeight: 800, color: "#1a1a1a", fontFamily: "monospace", letterSpacing: "0.05em" }}>{dc.code}</span>
                       <span style={{
                         fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 0,
-                        background: dc.isActive ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.06)",
-                        color: dc.isActive ? "#fff" : "rgba(255,255,255,0.3)",
+                        background: dc.isActive ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.06)",
+                        color: dc.isActive ? "#fff" : "rgba(0,0,0,0.3)",
                       }}>
                         %{dc.discountPercent} İndirim
                       </span>
                     </div>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>
+                    <div style={{ fontSize: 11, color: "rgba(0,0,0,0.35)" }}>
                       {dc.description && <span>{dc.description} · </span>}
                       Kullanım: {dc.usedCount}{dc.maxUses > 0 ? `/${dc.maxUses}` : " (Sınırsız)"}
                     </div>
@@ -1273,7 +1273,7 @@ export default function SettingsPage() {
                         setDiscountCodes(await getDiscountCodes());
                       }}
                       title={dc.isActive ? "Pasifleştir" : "Aktifleştir"}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: dc.isActive ? "#fff" : "rgba(255,255,255,0.25)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: dc.isActive ? "#fff" : "rgba(0,0,0,0.25)" }}
                     >
                       <Power size={14} />
                     </button>
@@ -1285,7 +1285,7 @@ export default function SettingsPage() {
                           setDiscountCodes(await getDiscountCodes());
                         }
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "rgba(255,255,255,0.4)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "rgba(0,0,0,0.4)" }}
                     >
                       <Trash2 size={14} />
                     </button>
@@ -1305,7 +1305,7 @@ export default function SettingsPage() {
               <Sparkles size={16} style={{ color: "#8b5cf6" }} />
               <div>
                 <div style={{ fontSize: 12, fontWeight: 700, color: "#8b5cf6" }}>Pro Özelliği</div>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>AI Chatbot Pro plana dahildir. <a href="/admin/subscription" style={{ color: "#8b5cf6", textDecoration: "underline" }}>Planı Yükselt</a></div>
+                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>AI Chatbot Pro plana dahildir. <a href="/admin/subscription" style={{ color: "#8b5cf6", textDecoration: "underline" }}>Planı Yükselt</a></div>
               </div>
             </div>
           )}
@@ -1313,8 +1313,8 @@ export default function SettingsPage() {
           {/* Toggle */}
           <div
             style={{
-              background: config.chatbotEnabled ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.03)",
-              border: `1px solid ${config.chatbotEnabled ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)"}`,
+              background: config.chatbotEnabled ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.03)",
+              border: `1px solid ${config.chatbotEnabled ? "rgba(0,0,0,0.12)" : "rgba(0,0,0,0.08)"}`,
               borderRadius: 0, padding: "18px 16px", cursor: isPro ? "pointer" : "default", transition: "all 0.2s",
               marginBottom: 16, opacity: isPro ? 1 : 0.5,
             }}
@@ -1322,12 +1322,12 @@ export default function SettingsPage() {
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Bot size={16} style={{ color: config.chatbotEnabled ? "#fff" : "rgba(255,255,255,0.3)" }} />
-                <span style={{ fontSize: 13, fontWeight: 800, color: config.chatbotEnabled ? "#fff" : "rgba(255,255,255,0.5)" }}>Chatbot Aktif</span>
+                <Bot size={16} style={{ color: config.chatbotEnabled ? "#fff" : "rgba(0,0,0,0.3)" }} />
+                <span style={{ fontSize: 13, fontWeight: 800, color: config.chatbotEnabled ? "#fff" : "rgba(0,0,0,0.5)" }}>Chatbot Aktif</span>
               </div>
               <div style={{
                 width: 40, height: 22, borderRadius: 0, position: "relative",
-                background: config.chatbotEnabled ? "#fff" : "rgba(255,255,255,0.15)", transition: "all 0.2s",
+                background: config.chatbotEnabled ? "#fff" : "rgba(0,0,0,0.15)", transition: "all 0.2s",
               }}>
                 <div style={{
                   width: 18, height: 18, borderRadius: 0, background: "#fff",
@@ -1337,7 +1337,7 @@ export default function SettingsPage() {
                 }} />
               </div>
             </div>
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", margin: 0 }}>
+            <p style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", margin: 0 }}>
               Anasayfada AI sohbet asistanını göster/gizle
             </p>
           </div>
@@ -1379,11 +1379,11 @@ export default function SettingsPage() {
 • Her zaman "siz" diye hitap et
 • Samimi ama profesyonel ol`}
               />
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 10, lineHeight: 1.8 }}>
-                💡 <strong style={{ color: "rgba(255,255,255,0.5)" }}>Nasıl çalışır:</strong> Buraya yazdığın her şey AI'ın "beynine" eklenir. Paket bilgileri ve iletişim bilgileri zaten otomatik olarak AI'a verilir — sen sadece davranışını, üslubunu ve özel kurallarını belirle.
+              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.3)", marginTop: 10, lineHeight: 1.8 }}>
+                💡 <strong style={{ color: "rgba(0,0,0,0.5)" }}>Nasıl çalışır:</strong> Buraya yazdığın her şey AI'ın "beynine" eklenir. Paket bilgileri ve iletişim bilgileri zaten otomatik olarak AI'a verilir — sen sadece davranışını, üslubunu ve özel kurallarını belirle.
               </p>
-              <div style={{ marginTop: 14, padding: "14px 16px", borderRadius: 0, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>Otomatik bilinen bilgiler</div>
+              <div style={{ marginTop: 14, padding: "14px 16px", borderRadius: 0, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>Otomatik bilinen bilgiler</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {[
                     "📦 Tüm paketler & fiyatlar",
@@ -1391,7 +1391,7 @@ export default function SettingsPage() {
                     "💵 Nakit/kart seçenekleri",
                     "🗓️ Rezervasyon yönlendirmesi",
                   ].map((item, i) => (
-                    <span key={i} style={{ fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 0, background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.06)" }}>{item}</span>
+                    <span key={i} style={{ fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 0, background: "rgba(0,0,0,0.04)", color: "rgba(0,0,0,0.5)", border: "1px solid rgba(0,0,0,0.06)" }}>{item}</span>
                   ))}
                 </div>
               </div>
@@ -1450,15 +1450,15 @@ export default function SettingsPage() {
 
             {/* Fixed sections indicator */}
             <div style={{
-              padding: "10px 14px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+              padding: "10px 14px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)",
               marginBottom: 8, display: "flex", alignItems: "center", gap: 10, opacity: 0.4,
             }}>
               <div style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>🏠</div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 12, fontWeight: 700 }}>Hero Bölümü</div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>Sabit · Her zaman en üstte</div>
+                <div style={{ fontSize: 10, color: "rgba(0,0,0,0.35)" }}>Sabit · Her zaman en üstte</div>
               </div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", fontWeight: 700 }}>SABİT</div>
+              <div style={{ fontSize: 10, color: "rgba(0,0,0,0.2)", fontWeight: 700 }}>SABİT</div>
             </div>
 
             {/* Orderable sections */}
@@ -1467,16 +1467,16 @@ export default function SettingsPage() {
                 const meta = SECTION_META[sId] || { icon: "❓", label: sId, desc: "" };
                 return (
                   <div key={sId} style={{
-                    padding: "12px 14px", background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.1)",
+                    padding: "12px 14px", background: "rgba(0,0,0,0.04)",
+                    border: "1px solid rgba(0,0,0,0.1)",
                     display: "flex", alignItems: "center", gap: 10,
                     transition: "all 0.2s",
                   }}>
                     {/* Order number */}
                     <div style={{
                       width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center",
-                      background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
-                      fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.5)",
+                      background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.1)",
+                      fontSize: 11, fontWeight: 800, color: "rgba(0,0,0,0.5)",
                     }}>
                       {idx + 1}
                     </div>
@@ -1486,28 +1486,28 @@ export default function SettingsPage() {
 
                     {/* Info */}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{meta.label}</div>
-                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 1 }}>{meta.desc}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>{meta.label}</div>
+                      <div style={{ fontSize: 10, color: "rgba(0,0,0,0.35)", marginTop: 1 }}>{meta.desc}</div>
                     </div>
 
                     {/* Move buttons */}
                     <div style={{ display: "flex", gap: 2, flexShrink: 0 }}>
                       <button type="button" disabled={idx === 0} onClick={() => moveSection(idx, -1)} style={{
                         width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center",
-                        background: idx === 0 ? "none" : "rgba(255,255,255,0.06)",
-                        border: idx === 0 ? "1px solid rgba(255,255,255,0.04)" : "1px solid rgba(255,255,255,0.1)",
+                        background: idx === 0 ? "none" : "rgba(0,0,0,0.06)",
+                        border: idx === 0 ? "1px solid rgba(0,0,0,0.04)" : "1px solid rgba(0,0,0,0.1)",
                         cursor: idx === 0 ? "not-allowed" : "pointer",
-                        color: idx === 0 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.6)",
+                        color: idx === 0 ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.6)",
                         transition: "all 0.15s",
                       }}>
                         <ArrowUp size={14} />
                       </button>
                       <button type="button" disabled={idx === currentOrder.length - 1} onClick={() => moveSection(idx, 1)} style={{
                         width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center",
-                        background: idx === currentOrder.length - 1 ? "none" : "rgba(255,255,255,0.06)",
-                        border: idx === currentOrder.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "1px solid rgba(255,255,255,0.1)",
+                        background: idx === currentOrder.length - 1 ? "none" : "rgba(0,0,0,0.06)",
+                        border: idx === currentOrder.length - 1 ? "1px solid rgba(0,0,0,0.04)" : "1px solid rgba(0,0,0,0.1)",
                         cursor: idx === currentOrder.length - 1 ? "not-allowed" : "pointer",
-                        color: idx === currentOrder.length - 1 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.6)",
+                        color: idx === currentOrder.length - 1 ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.6)",
                         transition: "all 0.15s",
                       }}>
                         <ArrowDown size={14} />
@@ -1520,26 +1520,26 @@ export default function SettingsPage() {
 
             {/* Fixed footer indicator */}
             <div style={{
-              padding: "10px 14px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+              padding: "10px 14px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)",
               marginTop: 8, display: "flex", alignItems: "center", gap: 10, opacity: 0.4,
             }}>
               <div style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>📍</div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 12, fontWeight: 700 }}>Footer & İletişim</div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)" }}>Sabit · Her zaman en altta</div>
+                <div style={{ fontSize: 10, color: "rgba(0,0,0,0.35)" }}>Sabit · Her zaman en altta</div>
               </div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", fontWeight: 700 }}>SABİT</div>
+              <div style={{ fontSize: 10, color: "rgba(0,0,0,0.2)", fontWeight: 700 }}>SABİT</div>
             </div>
 
             {/* Reset button */}
             <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", margin: 0 }}>
+              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.25)", margin: 0 }}>
                 💡 Yukarı/aşağı oklarla bölüm sırasını değiştirin. Değişiklikler otomatik kaydedilir.
               </p>
               <button type="button" onClick={resetOrder} style={{
-                padding: "8px 16px", background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                color: "rgba(255,255,255,0.4)", fontSize: 11, fontWeight: 700,
+                padding: "8px 16px", background: "rgba(0,0,0,0.04)",
+                border: "1px solid rgba(0,0,0,0.08)",
+                color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 700,
                 cursor: "pointer", whiteSpace: "nowrap",
               }}>
                 Sıfırla
@@ -1557,18 +1557,18 @@ export default function SettingsPage() {
         {contentBlocks.length > 0 && (
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
             {contentBlocks.map((cb) => (
-              <div key={cb.id} style={{ display: "flex", gap: 12, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: 12, alignItems: "center" }}>
+              <div key={cb.id} style={{ display: "flex", gap: 12, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", padding: 12, alignItems: "center" }}>
                 {cb.imageUrls && cb.imageUrls.length > 0 && (
                   <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
                     {cb.imageUrls.slice(0, 3).map((url, i) => (
                       <img key={i} src={url} alt="" style={{ width: 40, height: 40, objectFit: "cover" }} />
                     ))}
-                    {cb.imageUrls.length > 3 && <span style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", alignSelf: "center" }}>+{cb.imageUrls.length - 3}</span>}
+                    {cb.imageUrls.length > 3 && <span style={{ fontSize: 10, color: "rgba(0,0,0,0.3)", alignSelf: "center" }}>+{cb.imageUrls.length - 3}</span>}
                   </div>
                 )}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{cb.title || "(Başlıksız)"}</div>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cb.description || ""} — {cb.imageUrls?.length || 0} görsel</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a", marginBottom: 2 }}>{cb.title || "(Başlıksız)"}</div>
+                  <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cb.description || ""} — {cb.imageUrls?.length || 0} görsel</div>
                 </div>
                 <button onClick={async () => {
                   if (!confirm("Bu bloğu silmek istediğinize emin misiniz?")) return;
@@ -1595,7 +1595,7 @@ export default function SettingsPage() {
                 {cbForm.imageUrls.map((url, i) => (
                   <div key={i} style={{ position: "relative", width: 56, height: 56 }}>
                     <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    <button onClick={() => setCbForm(p => ({ ...p, imageUrls: p.imageUrls.filter((_, idx) => idx !== i) }))} style={{ position: "absolute", top: -4, right: -4, width: 16, height: 16, borderRadius: "50%", background: "#ef4444", border: "none", color: "#fff", fontSize: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1, padding: 0 }}>×</button>
+                    <button onClick={() => setCbForm(p => ({ ...p, imageUrls: p.imageUrls.filter((_, idx) => idx !== i) }))} style={{ position: "absolute", top: -4, right: -4, width: 16, height: 16, borderRadius: "50%", background: "#ef4444", border: "none", color: "#1a1a1a", fontSize: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1, padding: 0 }}>×</button>
                   </div>
                 ))}
               </div>
@@ -1608,7 +1608,7 @@ export default function SettingsPage() {
               }}
             >
               {({ open }) => (
-                <button type="button" onClick={() => open()} style={{ ...inp, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.5)" }}>
+                <button type="button" onClick={() => open()} style={{ ...inp, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: "rgba(0,0,0,0.5)" }}>
                   <UploadCloud size={14} />
                   Görsel Ekle
                 </button>
@@ -1627,8 +1627,8 @@ export default function SettingsPage() {
             setCbUploading(false);
           }} style={{
             padding: "12px 20px", borderRadius: 0, border: "none",
-            background: (cbForm.title || cbForm.imageUrls.length > 0) ? "#fff" : "rgba(255,255,255,0.06)",
-            color: (cbForm.title || cbForm.imageUrls.length > 0) ? "#000" : "rgba(255,255,255,0.3)",
+            background: (cbForm.title || cbForm.imageUrls.length > 0) ? "#fff" : "rgba(0,0,0,0.06)",
+            color: (cbForm.title || cbForm.imageUrls.length > 0) ? "#000" : "rgba(0,0,0,0.3)",
             fontWeight: 800, fontSize: 12, cursor: (cbForm.title || cbForm.imageUrls.length > 0) ? "pointer" : "not-allowed",
             display: "flex", alignItems: "center", gap: 8, width: "fit-content",
           }}>
@@ -1671,7 +1671,7 @@ export default function SettingsPage() {
               if (exists) return;
               setConfig({ ...config, instagramReels: [...reels, { url, coverUrl: "" }], _reelInput: "" });
             }}
-            style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "0 16px", fontSize: 12, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
+            style={{ background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.1)", color: "#1a1a1a", padding: "0 16px", fontSize: 12, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
           >
             + Ekle
           </button>
@@ -1685,9 +1685,9 @@ export default function SettingsPage() {
                 const reelObj = typeof reel === "string" ? { url: reel, coverUrl: "", coverType: "image" } : reel;
                 const isVideo = reelObj.coverType === "video" || (reelObj.coverUrl && /\.(mp4|mov|webm)/i.test(reelObj.coverUrl));
                 return (
-                  <div key={i} style={{ position: "relative", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, overflow: "hidden" }}>
+                  <div key={i} style={{ position: "relative", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 8, overflow: "hidden" }}>
                     {/* Kapak Görseli / Video */}
-                    <div style={{ aspectRatio: "9/16", background: "#111", position: "relative", overflow: "hidden" }}>
+                    <div style={{ aspectRatio: "9/16", background: "#ffffff", position: "relative", overflow: "hidden" }}>
                       {reelObj.coverUrl ? (
                         isVideo ? (
                           <video src={reelObj.coverUrl} autoPlay muted loop playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -1697,7 +1697,7 @@ export default function SettingsPage() {
                       ) : (
                         <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
                           <div style={{ fontSize: 28, opacity: 0.2 }}>🎬</div>
-                          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>Fotoğraf veya video ekle</div>
+                          <div style={{ fontSize: 10, color: "rgba(0,0,0,0.2)" }}>Fotoğraf veya video ekle</div>
                         </div>
                       )}
                       {/* Silme butonu */}
@@ -1707,11 +1707,11 @@ export default function SettingsPage() {
                           reels.splice(i, 1);
                           setConfig({ ...config, instagramReels: reels });
                         }}
-                        style={{ position: "absolute", top: 6, right: 6, width: 22, height: 22, background: "rgba(0,0,0,0.7)", border: "none", color: "#fff", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, zIndex: 5 }}
+                        style={{ position: "absolute", top: 6, right: 6, width: 22, height: 22, background: "rgba(0,0,0,0.7)", border: "none", color: "#1a1a1a", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, zIndex: 5 }}
                       >✕</button>
                     </div>
                     {/* Upload + URL bilgisi */}
-                    <div style={{ padding: "8px 10px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div style={{ padding: "8px 10px", borderTop: "1px solid rgba(0,0,0,0.06)" }}>
                       <CldUploadWidget
                         uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
                         options={{ maxFiles: 1, sources: ["local", "camera"], resourceType: "auto", folder: "reels", maxImageFileSize: 5242880, maxVideoFileSize: 125829120 }}
@@ -1727,12 +1727,12 @@ export default function SettingsPage() {
                         }}
                       >
                         {({ open }) => (
-                          <button onClick={() => open()} style={{ width: "100%", padding: "6px 0", fontSize: 11, fontWeight: 600, background: reelObj.coverUrl ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", cursor: "pointer", borderRadius: 4, marginBottom: 6 }}>
+                          <button onClick={() => open()} style={{ width: "100%", padding: "6px 0", fontSize: 11, fontWeight: 600, background: reelObj.coverUrl ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.08)", border: "1px solid rgba(0,0,0,0.1)", color: "#1a1a1a", cursor: "pointer", borderRadius: 4, marginBottom: 6 }}>
                             {reelObj.coverUrl ? "🔄 Kapağı Değiştir" : "📷 Fotoğraf / Video Yükle"}
                           </button>
                         )}
                       </CldUploadWidget>
-                      <div style={{ fontSize: 9, color: "rgba(255,255,255,0.2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <div style={{ fontSize: 9, color: "rgba(0,0,0,0.2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {reelObj.url}
                       </div>
                     </div>
@@ -1740,13 +1740,13 @@ export default function SettingsPage() {
                 );
               })}
             </div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginTop: 12 }}>{config.instagramReels.length}/6 reel eklendi</div>
+            <div style={{ fontSize: 11, color: "rgba(0,0,0,0.25)", marginTop: 12 }}>{config.instagramReels.length}/6 reel eklendi</div>
           </>
         ) : (
-          <div style={{ padding: "40px 20px", textAlign: "center", background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.08)" }}>
+          <div style={{ padding: "40px 20px", textAlign: "center", background: "rgba(0,0,0,0.02)", border: "1px dashed rgba(0,0,0,0.08)" }}>
             <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.3 }}>📱</div>
-            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", marginBottom: 4 }}>Henüz reel eklenmedi</div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.15)" }}>Instagram reel URL'sini yukarıdaki alana yapıştırıp ekleyin</div>
+            <div style={{ fontSize: 13, color: "rgba(0,0,0,0.3)", marginBottom: 4 }}>Henüz reel eklenmedi</div>
+            <div style={{ fontSize: 11, color: "rgba(0,0,0,0.15)" }}>Instagram reel URL'sini yukarıdaki alana yapıştırıp ekleyin</div>
           </div>
         )}
       </div>}
@@ -1776,8 +1776,8 @@ export default function SettingsPage() {
             }}
             style={{
               padding: "10px 18px", borderRadius: 0, border: "none",
-              background: newCategoryName.trim() ? "#fff" : "rgba(255,255,255,0.06)",
-              color: newCategoryName.trim() ? "#000" : "rgba(255,255,255,0.3)",
+              background: newCategoryName.trim() ? "#fff" : "rgba(0,0,0,0.06)",
+              color: newCategoryName.trim() ? "#000" : "rgba(0,0,0,0.3)",
               fontWeight: 800, fontSize: 12, cursor: newCategoryName.trim() ? "pointer" : "not-allowed",
               display: "flex", alignItems: "center", gap: 6, flexShrink: 0,
             }}
@@ -1791,10 +1791,10 @@ export default function SettingsPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {portfolioCategories.map((cat) => (
               <div key={cat.id} style={{
-                background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: 14,
+                background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", padding: 14,
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                  <span style={{ fontSize: 13, fontWeight: 800, color: "#fff" }}>{cat.name}</span>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a" }}>{cat.name}</span>
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                     <CldUploadWidget
                       uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
@@ -1808,8 +1808,8 @@ export default function SettingsPage() {
                     >
                       {({ open }) => (
                         <button type="button" onClick={() => open()} style={{
-                          padding: "4px 10px", borderRadius: 0, border: "1px solid rgba(255,255,255,0.12)",
-                          background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)",
+                          padding: "4px 10px", borderRadius: 0, border: "1px solid rgba(0,0,0,0.12)",
+                          background: "rgba(0,0,0,0.05)", color: "rgba(255,255,255,0.6)",
                           fontSize: 11, fontWeight: 700, cursor: "pointer",
                           display: "flex", alignItems: "center", gap: 4,
                         }}>
@@ -1825,7 +1825,7 @@ export default function SettingsPage() {
                           setPortfolioCategories((await getPortfolioCategories())?.categories || []);
                         }
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(255,255,255,0.3)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.3)" }}
                     ><Trash2 size={14} /></button>
                   </div>
                 </div>
@@ -1851,7 +1851,7 @@ export default function SettingsPage() {
                     ))}
                   </div>
                 ) : (
-                  <div style={{ textAlign: "center", padding: 16, color: "rgba(255,255,255,0.25)", fontSize: 11 }}>
+                  <div style={{ textAlign: "center", padding: 16, color: "rgba(0,0,0,0.25)", fontSize: 11 }}>
                     Henüz fotoğraf yok. Yüklemek için yukarıdaki butonu kullanın.
                   </div>
                 )}
@@ -1859,7 +1859,7 @@ export default function SettingsPage() {
             ))}
           </div>
         ) : (
-          <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(255,255,255,0.25)", fontSize: 12 }}>
+          <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(0,0,0,0.25)", fontSize: 12 }}>
             Henüz portfolyo kategorisi eklenmemiş.
           </div>
         )}
@@ -1876,12 +1876,12 @@ export default function SettingsPage() {
             <label style={label}>Logo</label>
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
               {config.logoUrl ? (
-                <div style={{ width: 64, height: 64, border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                <div style={{ width: 64, height: 64, border: "1px solid rgba(0,0,0,0.1)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
                   <img src={config.logoUrl} alt="Logo" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
                 </div>
               ) : (
-                <div style={{ width: 64, height: 64, border: "1px dashed rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <ImageIcon size={20} style={{ color: "rgba(255,255,255,0.2)" }} />
+                <div style={{ width: 64, height: 64, border: "1px dashed rgba(0,0,0,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <ImageIcon size={20} style={{ color: "rgba(0,0,0,0.2)" }} />
                 </div>
               )}
               <CldUploadWidget
@@ -1891,7 +1891,7 @@ export default function SettingsPage() {
               >
                 {({ open }) => (
                   <button type="button" onClick={() => open()} style={{
-                    padding: "8px 16px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
+                    padding: "8px 16px", background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.12)",
                     color: "rgba(255,255,255,0.6)", fontSize: 12, fontWeight: 700, cursor: "pointer", borderRadius: 0,
                     display: "flex", alignItems: "center", gap: 6
                   }}>
@@ -1901,7 +1901,7 @@ export default function SettingsPage() {
               </CldUploadWidget>
               {config.logoUrl && (
                 <button type="button" onClick={() => setConfig({ ...config, logoUrl: "" })} style={{
-                  padding: "8px", background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer"
+                  padding: "8px", background: "none", border: "none", color: "rgba(0,0,0,0.3)", cursor: "pointer"
                 }}>
                   <Trash2 size={14} />
                 </button>
@@ -1937,15 +1937,15 @@ export default function SettingsPage() {
         {activeTab === "sistem" && subTab === "odeme" && <div style={sectionCard}>
           {sectionHeader(Banknote, "Ödeme Ayarları", "Müşterilerinizden online ödeme almak için pazaryeri kaydınızı tamamlayın.")}
 
-          <div style={{ padding: "20px", textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: 13 }}>
+          <div style={{ padding: "20px", textAlign: "center", color: "rgba(0,0,0,0.4)", fontSize: 13 }}>
             Platformumuz, online ödemeler (Kredi Kartı) ve Nakit / Havale ödemelerini otomatik olarak yönetir.
             Kredi kartı ile ödeme alabilmek için lütfen aşağıdaki "Alt Üye İşyeri Kaydı" işlemini tamamlayın. Onaylandığında kredi kartı ödemeleri otomatik olarak aktifleşecektir.
           </div>
 
-          <div style={{ marginTop: 24, padding: "16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)" }}>
+          <div style={{ marginTop: 24, padding: "16px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)" }}>
             <label style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
               <div style={{
-                width: 40, height: 24, borderRadius: 12, background: config?.allowPaymentMethodChange ? "#4ade80" : "rgba(255,255,255,0.1)",
+                width: 40, height: 24, borderRadius: 12, background: config?.allowPaymentMethodChange ? "#4ade80" : "rgba(0,0,0,0.1)",
                 position: "relative", transition: "all 0.2s"
               }}>
                 <div style={{
@@ -1960,8 +1960,8 @@ export default function SettingsPage() {
                 style={{ display: "none" }}
               />
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Müşterilerin Ödeme Yöntemi Değiştirmesine İzin Ver</div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>Aktif edilirse, "Nakit" olarak seçilmiş bir ödemeyi müşteri kendisi +%15 farkla "Kredi Kartı" seçeneğine çevirebilir.</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a" }}>Müşterilerin Ödeme Yöntemi Değiştirmesine İzin Ver</div>
+                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.5)", marginTop: 2 }}>Aktif edilirse, "Nakit" olarak seçilmiş bir ödemeyi müşteri kendisi +%15 farkla "Kredi Kartı" seçeneğine çevirebilir.</div>
               </div>
             </label>
           </div>
@@ -1984,10 +1984,10 @@ export default function SettingsPage() {
                smStatus === "REJECTED" ? <AlertCircle size={18} style={{ color: "#ef4444" }} /> :
                <Shield size={18} style={{ color: "#facc15" }} /> }
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>
                   {smStatus === "APPROVED" ? "✅ Onaylandı" : smStatus === "REJECTED" ? "❌ Reddedildi" : "⏳ İnceleniyor"}
                 </div>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
+                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>
                   {smStatus === "APPROVED"
                     ? "Alt üye işyeri kaydınız onaylandı. Kredi kartı ödemesi alabilirsiniz."
                     : smStatus === "REJECTED"
@@ -2001,16 +2001,16 @@ export default function SettingsPage() {
           {/* Komisyon Bilgisi */}
           <div style={{
             padding: "14px 18px", marginBottom: 20,
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            background: "rgba(0,0,0,0.03)",
+            border: "1px solid rgba(0,0,0,0.08)",
             display: "flex", alignItems: "center", gap: 12,
           }}>
-            <CreditCard size={18} style={{ color: "rgba(255,255,255,0.5)" }} />
+            <CreditCard size={18} style={{ color: "rgba(0,0,0,0.5)" }} />
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>
                 Platform Komisyonu: %{smCommission}
               </div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>
+              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>
                 Her başarılı kredi kartı ödemesinden platform %{smCommission} komisyon keser, kalan tutarı IBAN hesabınıza aktarır.
               </div>
             </div>
@@ -2025,12 +2025,12 @@ export default function SettingsPage() {
                   onClick={() => setSmForm(p => ({ ...p, legalType: lt.value }))}
                   style={{
                     padding: "12px 14px", textAlign: "left", cursor: "pointer",
-                    background: smForm.legalType === lt.value ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
-                    border: smForm.legalType === lt.value ? "1px solid rgba(255,255,255,0.3)" : "1px solid rgba(255,255,255,0.08)",
+                    background: smForm.legalType === lt.value ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.02)",
+                    border: smForm.legalType === lt.value ? "1px solid rgba(0,0,0,0.3)" : "1px solid rgba(0,0,0,0.08)",
                     borderRadius: 0,
                   }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: smForm.legalType === lt.value ? "#fff" : "rgba(255,255,255,0.5)" }}>{lt.label}</div>
-                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>{lt.description}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: smForm.legalType === lt.value ? "#fff" : "rgba(0,0,0,0.5)" }}>{lt.label}</div>
+                  <div style={{ fontSize: 10, color: "rgba(0,0,0,0.3)", marginTop: 2 }}>{lt.description}</div>
                 </button>
               ))}
             </div>
@@ -2103,8 +2103,8 @@ export default function SettingsPage() {
                     onClick={() => open()}
                     style={{
                       padding: "10px 16px", borderRadius: 0, cursor: "pointer",
-                      border: "1px dashed rgba(255,255,255,0.2)", background: "rgba(255,255,255,0.03)",
-                      color: "#fff", fontSize: 12, fontWeight: 700,
+                      border: "1px dashed rgba(0,0,0,0.2)", background: "rgba(0,0,0,0.03)",
+                      color: "#1a1a1a", fontSize: 12, fontWeight: 700,
                       display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s"
                     }}
                   >
@@ -2136,13 +2136,13 @@ export default function SettingsPage() {
             style={{
               display: "flex", alignItems: "flex-start", gap: 12, padding: "16px",
               marginBottom: 20, cursor: "pointer",
-              background: smForm.sellerAgreementAccepted ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
-              border: `1px solid ${smForm.sellerAgreementAccepted ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.06)"}`,
+              background: smForm.sellerAgreementAccepted ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.02)",
+              border: `1px solid ${smForm.sellerAgreementAccepted ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.06)"}`,
               transition: "all 0.2s",
             }}>
             <div style={{
               width: 22, height: 22, borderRadius: 0, flexShrink: 0, marginTop: 1,
-              border: `2px solid ${smForm.sellerAgreementAccepted ? "#fff" : "rgba(255,255,255,0.2)"}`,
+              border: `2px solid ${smForm.sellerAgreementAccepted ? "#fff" : "rgba(0,0,0,0.2)"}`,
               background: smForm.sellerAgreementAccepted ? "#fff" : "transparent",
               display: "flex", alignItems: "center", justifyContent: "center",
               transition: "all 0.2s",
@@ -2150,10 +2150,10 @@ export default function SettingsPage() {
               {smForm.sellerAgreementAccepted && <CheckCircle2 size={14} style={{ color: "#000" }} />}
             </div>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: smForm.sellerAgreementAccepted ? "#fff" : "rgba(255,255,255,0.5)", marginBottom: 4 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: smForm.sellerAgreementAccepted ? "#fff" : "rgba(0,0,0,0.5)", marginBottom: 4 }}>
                 Satıcı Hizmet Sözleşmesini okudum ve kabul ediyorum *
               </div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: 1.6 }}>
+              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", lineHeight: 1.6 }}>
                 <a href="/sozlesme" target="_blank" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "underline" }}>Satıcı Hizmet Sözleşmesi</a>,{" "}
                 <a href="/sozlesme" target="_blank" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "underline" }}>KVKK Aydınlatma Metni</a> ve{" "}
                 <a href="/sozlesme" target="_blank" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "underline" }}>Mesafeli Satış Sözleşmesi</a> şartlarını kabul ediyorum.
@@ -2165,8 +2165,8 @@ export default function SettingsPage() {
           {smMessage && (
             <div style={{
               padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 10,
-              background: smError ? "rgba(255,68,68,0.06)" : "rgba(255,255,255,0.04)",
-              border: `1px solid ${smError ? "rgba(255,68,68,0.15)" : "rgba(255,255,255,0.1)"}`,
+              background: smError ? "rgba(255,68,68,0.06)" : "rgba(0,0,0,0.04)",
+              border: `1px solid ${smError ? "rgba(255,68,68,0.15)" : "rgba(0,0,0,0.1)"}`,
               color: smError ? "#ff8a8a" : "#fff",
             }}>
               {smError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
@@ -2195,8 +2195,8 @@ export default function SettingsPage() {
             }}
             style={{
               width: "100%", padding: 16, borderRadius: 0, border: "none",
-              background: (smForm.legalName && smForm.taxId && smForm.iban && smForm.taxPlateUrl && smForm.sellerAgreementAccepted) ? "#fff" : "rgba(255,255,255,0.06)",
-              color: (smForm.legalName && smForm.taxId && smForm.iban && smForm.taxPlateUrl && smForm.sellerAgreementAccepted) ? "#000" : "rgba(255,255,255,0.3)",
+              background: (smForm.legalName && smForm.taxId && smForm.iban && smForm.taxPlateUrl && smForm.sellerAgreementAccepted) ? "#fff" : "rgba(0,0,0,0.06)",
+              color: (smForm.legalName && smForm.taxId && smForm.iban && smForm.taxPlateUrl && smForm.sellerAgreementAccepted) ? "#000" : "rgba(0,0,0,0.3)",
               fontWeight: 800, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.08em",
               cursor: (smForm.legalName && smForm.taxId && smForm.iban && smForm.taxPlateUrl && smForm.sellerAgreementAccepted) ? "pointer" : "not-allowed",
               opacity: smSaving ? 0.5 : 1,
@@ -2218,14 +2218,14 @@ export default function SettingsPage() {
                 <div style={{
                   background: "rgba(15, 15, 15, 0.95)",
                   backdropFilter: "blur(16px)",
-                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  border: "1px solid rgba(0, 0, 0, 0.08)",
                   borderRadius: 16,
                   padding: "32px 32px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   gap: 12,
-                  boxShadow: "0 24px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+                  boxShadow: "0 24px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(0,0,0,0.1)",
                   transform: "translateY(-10px)",
                   maxWidth: 320,
                   textAlign: "center",
@@ -2234,11 +2234,11 @@ export default function SettingsPage() {
                   <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(255,95,31,0.1)", color: "#FF5F1F", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 4 }}>
                     <Lock size={26} strokeWidth={2.5} />
                   </div>
-                  <h4 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>Pro Plana Özel</h4>
-                  <p style={{ margin: 0, fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>
+                  <h4 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em" }}>Pro Plana Özel</h4>
+                  <p style={{ margin: 0, fontSize: 13, color: "rgba(0,0,0,0.5)", lineHeight: 1.6 }}>
                     Sitenize özel alan adı (domain) bağlamak için planınızı Pro'ya yükseltin.
                   </p>
-                  <div style={{ marginTop: 12, background: "#fff", color: "#000", padding: "12px 24px", borderRadius: 8, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 8, transition: "transform 0.2s" }}>
+                  <div style={{ marginTop: 12, background: "#1a1a1a", color: "#1a1a1a", padding: "12px 24px", borderRadius: 8, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 8, transition: "transform 0.2s" }}>
                     <ArrowUp size={16} strokeWidth={2.5} />
                     Planı Yükselt
                   </div>
@@ -2247,7 +2247,7 @@ export default function SettingsPage() {
             )}
             
             <div style={{ opacity: !planLimits.customDomain ? 0.4 : 1, pointerEvents: !planLimits.customDomain ? "none" : "auto", userSelect: !planLimits.customDomain ? "none" : "auto", filter: !planLimits.customDomain ? "grayscale(100%)" : "none" }}>
-              <div style={{ marginBottom: 32, padding: "24px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div style={{ marginBottom: 32, padding: "24px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.1)" }}>
             <h3 style={{ fontSize: 16, margin: "0 0 8px 0", color: "var(--text)" }}>Yeni Domain Satın Al (Sıfır Ayar)</h3>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: "0 0 16px 0", lineHeight: 1.5 }}>
               Sistemimiz üzerinden doğrudan domain satın alabilirsiniz. DNS, SSL veya yönlendirme ayarlarına gerek kalmadan saniyeler içinde domaininiz yayına girer.
@@ -2298,7 +2298,7 @@ export default function SettingsPage() {
                             <select 
                               value={selectedYears} 
                               onChange={(e) => setSelectedYears(Number(e.target.value))}
-                              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: "8px", borderRadius: "4px" }}
+                              style={{ background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", padding: "8px", borderRadius: "4px" }}
                             >
                               <option value={1} style={{color: "#000"}}>1 Yıl</option>
                               <option value={2} style={{color: "#000"}}>2 Yıl</option>
@@ -2330,7 +2330,7 @@ export default function SettingsPage() {
                                 }
                                 setDomainSaving(false);
                               }}
-                              style={{ background: "#22c55e", color: "#fff", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer", borderRadius: "4px" }}
+                              style={{ background: "#22c55e", color: "#1a1a1a", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer", borderRadius: "4px" }}
                             >
                               {domainSaving ? "Yükleniyor..." : "Satın Al"}
                             </button>
@@ -2366,7 +2366,7 @@ export default function SettingsPage() {
                   <select 
                     value={renewYears} 
                     onChange={(e) => setRenewYears(Number(e.target.value))}
-                    style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", padding: "8px", borderRadius: "4px" }}
+                    style={{ background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", padding: "8px", borderRadius: "4px" }}
                   >
                     <option value={1} style={{color: "#000"}}>1 Yıl Uzat</option>
                     <option value={2} style={{color: "#000"}}>2 Yıl Uzat</option>
@@ -2407,7 +2407,7 @@ export default function SettingsPage() {
                       }
                       setRenewLoading(false);
                     }}
-                    style={{ background: "#3b82f6", color: "#fff", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer", borderRadius: "4px" }}
+                    style={{ background: "#3b82f6", color: "#1a1a1a", border: "none", padding: "8px 16px", fontWeight: "bold", cursor: "pointer", borderRadius: "4px" }}
                   >
                     {renewLoading ? "Bekleyiniz..." : "Süreyi Uzat"}
                   </button>
@@ -2415,7 +2415,7 @@ export default function SettingsPage() {
               </div>
             )}
             {!domainForm.purchasedDomain && (
-              <div style={{ padding: "16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", marginTop: 16 }}>
+              <div style={{ padding: "16px", background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.1)", marginTop: 16 }}>
                 <p style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", margin: "0 0 8px 0", lineHeight: 1.5 }}>
                   Lütfen alan adınızı kaydetmeden önce <strong>Domain (DNS) Panelinizden</strong> sistemimize yönlendirme yaptığınızdan emin olun:
                 </p>
@@ -2453,8 +2453,8 @@ export default function SettingsPage() {
         {message && (
           <div style={{
             padding: "12px 16px", borderRadius: 0, display: "flex", alignItems: "center", gap: 10, marginBottom: 16,
-            background: isError ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.04)",
-            border: `1px solid ${isError ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.1)"}`,
+            background: isError ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.04)",
+            border: `1px solid ${isError ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.1)"}`,
             color: isError ? "rgba(255,255,255,0.6)" : "#fff",
           }}>
             {isError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
@@ -2468,7 +2468,7 @@ export default function SettingsPage() {
           disabled={saving}
           style={{
             width: "100%", padding: 16, borderRadius: 0, border: "none",
-            background: "#fff", color: "#000", fontWeight: 800, fontSize: 13,
+            background: "#1a1a1a", color: "#1a1a1a", fontWeight: 800, fontSize: 13,
             textTransform: "uppercase", letterSpacing: "0.08em",
             cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.5 : 1,
             display: "flex", alignItems: "center", justifyContent: "center", gap: 10,

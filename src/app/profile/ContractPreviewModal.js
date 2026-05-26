@@ -92,7 +92,7 @@ export default function ContractPreviewModal({ customText, businessName = "İşl
 
             {/* Footer */}
             <div style={{ padding: "16px 24px", borderTop: "1px solid rgba(0,0,0,0.06)", flexShrink: 0, display: "flex", justifyContent: "flex-end" }}>
-              <button onClick={() => setIsOpen(false)} style={{ background: "#fff", color: "#000", fontWeight: 700, fontSize: 14, padding: "10px 24px", borderRadius: 0, border: "none", cursor: "pointer", transition: "all 0.2s" }} className="hover:opacity-90">
+              <button onClick={() => setIsOpen(false)} style={{ background: "#1a1a1a", color: "#1a1a1a", fontWeight: 700, fontSize: 14, padding: "10px 24px", borderRadius: 0, border: "none", cursor: "pointer", transition: "all 0.2s" }} className="hover:opacity-90">
                 Pencereyi Kapat
               </button>
             </div>

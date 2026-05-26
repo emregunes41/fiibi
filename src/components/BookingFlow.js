@@ -81,8 +81,8 @@ const S = {
     textAlign: "left",
     padding: "20px",
     borderRadius: 0,
-    border: `1px solid ${on ? "rgba(255, 255, 255, 0.9)" : "rgba(255, 255, 255, 0.4)"}`,
-    background: on ? "rgba(255, 255, 255, 0.85)" : "rgba(255, 255, 255, 0.15)",
+    border: `1px solid ${on ? "rgba(255, 255, 255, 0.9)" : "rgba(0, 0, 0, 0.4)"}`,
+    background: on ? "rgba(255, 255, 255, 0.85)" : "rgba(0, 0, 0, 0.15)",
     backdropFilter: "blur(16px)",
     WebkitBackdropFilter: "blur(16px)",
     cursor: "pointer",
@@ -447,8 +447,8 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       onClick={() => { setCat(c.value); setMonth(null); }}
                       style={{
                         textAlign: "left", padding: "20px", borderRadius: 0,
-                        border: `1px solid ${on ? "rgba(255, 255, 255, 0.9)" : "rgba(255, 255, 255, 0.4)"}`,
-                        background: on ? `rgba(255, 255, 255, 0.85)` : "rgba(255, 255, 255, 0.15)",
+                        border: `1px solid ${on ? "rgba(255, 255, 255, 0.9)" : "rgba(0, 0, 0, 0.4)"}`,
+                        background: on ? `rgba(255, 255, 255, 0.85)` : "rgba(0, 0, 0, 0.15)",
                         backdropFilter: "blur(16px)",
                         WebkitBackdropFilter: "blur(16px)",
                         cursor: "pointer", transition: "all 0.3s", position: "relative",
@@ -512,8 +512,8 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                         onClick={() => { setMonth(m); go(2); }}
                         style={{
                           padding: "14px 4px", borderRadius: 0,
-                          border: sel ? "2px solid #FEFEFE" : d < 0 ? "1px solid rgba(217,181,120,0.25)" : "1px solid rgba(255, 255, 255, 0.4)",
-                          background: sel ? "rgba(255, 255, 255, 0.85)" : d < 0 ? "rgba(217,181,120,0.15)" : "rgba(255, 255, 255, 0.15)",
+                          border: sel ? "2px solid #FEFEFE" : d < 0 ? "1px solid rgba(217,181,120,0.25)" : "1px solid rgba(0, 0, 0, 0.4)",
+                          background: sel ? "rgba(255, 255, 255, 0.85)" : d < 0 ? "rgba(217,181,120,0.15)" : "rgba(0, 0, 0, 0.15)",
                           backdropFilter: "blur(16px)",
                           WebkitBackdropFilter: "blur(16px)",
                           cursor: past ? "not-allowed" : "pointer",
@@ -740,8 +740,8 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       onClick={() => { if (!isPast && !isDisabledDay) setDetailForm(p => ({ ...p, date: dateStr, time: "" })); }}
                       style={{
                         aspectRatio: "1", borderRadius: 0,
-                        border: isSelected ? "2px solid #FEFEFE" : "1px solid rgba(255, 255, 255, 0.35)",
-                        background: isSelected ? "rgba(255, 255, 255, 0.85)" : (isPast || isDisabledDay) ? "transparent" : "rgba(255, 255, 255, 0.15)",
+                        border: isSelected ? "2px solid #FEFEFE" : "1px solid rgba(0, 0, 0, 0.35)",
+                        background: isSelected ? "rgba(255, 255, 255, 0.85)" : (isPast || isDisabledDay) ? "transparent" : "rgba(0, 0, 0, 0.15)",
                         backdropFilter: (isPast || isDisabledDay) ? "none" : "blur(16px)",
                         WebkitBackdropFilter: (isPast || isDisabledDay) ? "none" : "blur(16px)",
                         color: isSelected ? "#000" : (isPast || isDisabledDay) ? "rgba(0,0,0,0.1)" : isSunday ? "rgba(255,100,100,0.8)" : "rgba(0,0,0,0.85)",
@@ -803,8 +803,8 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                           onClick={() => setDetailForm(p => ({ ...p, time: slot.value }))}
                           style={{
                             padding: "14px 8px", borderRadius: 0,
-                            border: sel ? "2px solid #FEFEFE" : `1px solid ${full ? "rgba(255,60,60,0.2)" : "rgba(255, 255, 255, 0.4)"}`,
-                            background: sel ? "rgba(255, 255, 255, 0.85)" : full ? "rgba(255,60,60,0.1)" : "rgba(255, 255, 255, 0.15)",
+                            border: sel ? "2px solid #FEFEFE" : `1px solid ${full ? "rgba(255,60,60,0.2)" : "rgba(0, 0, 0, 0.4)"}`,
+                            background: sel ? "rgba(255, 255, 255, 0.85)" : full ? "rgba(255,60,60,0.1)" : "rgba(0, 0, 0, 0.15)",
                             backdropFilter: "blur(16px)",
                             WebkitBackdropFilter: "blur(16px)",
                             color: sel ? "#000" : full ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.85)",
@@ -970,7 +970,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                               arr[idx] = { ...arr[idx], value: e.target.checked };
                               setDetailForm(p => ({ ...p, customFieldAnswers: arr }));
                             }}
-                            style={{ width: "18px", height: "18px", accentColor: "#fff", flexShrink: 0 }}
+                            style={{ width: "18px", height: "18px", accentcolor: "#1a1a1a", flexShrink: 0 }}
                           />
                           <span style={{ fontSize: "13px", color: answer.value ? "rgba(0,0,0,0.65)" : "rgba(0,0,0,0.25)" }}>
                             {field.label} {field.required && <span style={{ color: "rgba(0,0,0,0.1)" }}>*</span>}
@@ -1055,7 +1055,7 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
                       onClick={() => { setAddedFeedback(false); cart.setIsOpen(true); }}
                       style={{
                         flex: 1, padding: "14px", borderRadius: 0,
-                        border: "none", background: "#fff", color: "#000",
+                        border: "none", background: "#1a1a1a", color: "#1a1a1a",
                         fontSize: "13px", fontWeight: 700, cursor: "pointer",
                         display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
                       }}

@@ -132,7 +132,7 @@ export default function SuperAdminClient() {
   }
 
   const smStatusConfig = {
-    NOT_STARTED: { label: "Başvuru Yok", color: "rgba(255,255,255,0.3)", bg: "rgba(255,255,255,0.03)", border: "rgba(255,255,255,0.06)" },
+    NOT_STARTED: { label: "Başvuru Yok", color: "rgba(0,0,0,0.3)", bg: "rgba(0,0,0,0.03)", border: "rgba(0,0,0,0.06)" },
     PENDING: { label: "İnceleniyor", color: "#facc15", bg: "rgba(250,204,21,0.08)", border: "rgba(250,204,21,0.2)" },
     APPROVED: { label: "Onaylı", color: "#4ade80", bg: "rgba(74,222,128,0.08)", border: "rgba(74,222,128,0.2)" },
     REJECTED: { label: "Reddedildi", color: "#f87171", bg: "rgba(248,113,113,0.08)", border: "rgba(248,113,113,0.2)" },
@@ -155,35 +155,35 @@ export default function SuperAdminClient() {
             <Icon size={14} style={{ color }} />
             <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)" }}>{label}</span>
           </div>
-          <span style={{ fontSize: 11, fontWeight: 700, color: isDanger ? "#f87171" : isWarning ? "#fbbf24" : "rgba(255,255,255,0.4)" }}>{p}%</span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: isDanger ? "#f87171" : isWarning ? "#fbbf24" : "rgba(0,0,0,0.4)" }}>{p}%</span>
         </div>
-        <div style={{ height: 4, background: "rgba(255,255,255,0.06)", marginBottom: 8 }}>
+        <div style={{ height: 4, background: "rgba(0,0,0,0.06)", marginBottom: 8 }}>
           <div style={{ height: "100%", width: `${p}%`, background: isDanger ? "#f87171" : isWarning ? "#fbbf24" : color, transition: "width 0.5s ease" }} />
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
+          <span style={{ fontSize: 11, color: "rgba(0,0,0,0.3)" }}>
             {current?.toLocaleString("tr-TR")}{unit ? ` ${unit}` : ""} / {limit?.toLocaleString("tr-TR")}{unit ? ` ${unit}` : ""}
           </span>
-          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>{sub}</span>
+          <span style={{ fontSize: 10, color: "rgba(0,0,0,0.2)" }}>{sub}</span>
         </div>
       </div>
     );
   }
 
   if (loading && !stats) return (
-    <div style={{ minHeight: "100vh", background: "#0a0a0a", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div style={{ minHeight: "100vh", background: "#f8f8f8", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ textAlign: "center" }}>
         <Shield size={32} style={{ color: "#8b5cf6", marginBottom: 12 }} />
-        <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 13 }}>Platform yükleniyor...</div>
+        <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 13 }}>Platform yükleniyor...</div>
       </div>
     </div>
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0a0a0a", color: "#fff" }}>
+    <div style={{ minHeight: "100vh", background: "#f8f8f8", color: "#1a1a1a" }}>
 
       {/* Top Bar */}
-      <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "16px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ borderBottom: "1px solid rgba(0,0,0,0.06)", padding: "16px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <Shield size={20} style={{ color: "#8b5cf6" }} />
           <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.02em" }}>Super Admin</span>
@@ -197,7 +197,7 @@ export default function SuperAdminClient() {
       <div style={{ display: "flex", maxWidth: 1200, margin: "0 auto" }}>
 
         {/* Sidebar Tabs */}
-        <div style={{ width: 200, borderRight: "1px solid rgba(255,255,255,0.06)", padding: "16px 0", flexShrink: 0, minHeight: "calc(100vh - 60px)" }}>
+        <div style={{ width: 200, borderRight: "1px solid rgba(0,0,0,0.06)", padding: "16px 0", flexShrink: 0, minHeight: "calc(100vh - 60px)" }}>
           {TABS.map((t) => (
             <button
               key={t.id}
@@ -207,7 +207,7 @@ export default function SuperAdminClient() {
                 padding: "12px 20px", border: "none", cursor: "pointer",
                 background: tab === t.id ? "rgba(139,92,246,0.08)" : "transparent",
                 borderRight: tab === t.id ? "2px solid #8b5cf6" : "2px solid transparent",
-                color: tab === t.id ? "#fff" : "rgba(255,255,255,0.4)",
+                color: tab === t.id ? "#fff" : "rgba(0,0,0,0.4)",
                 fontSize: 13, fontWeight: tab === t.id ? 700 : 500,
                 transition: "all 0.15s",
               }}
@@ -243,7 +243,7 @@ export default function SuperAdminClient() {
                     <div key={i} style={cardStyle}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                         <s.icon size={14} style={{ color: s.color }} />
-                        <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</span>
+                        <span style={{ fontSize: 11, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</span>
                       </div>
                       <div style={{ fontSize: 28, fontWeight: 800 }}>{s.value}</div>
                     </div>
@@ -284,9 +284,9 @@ export default function SuperAdminClient() {
                           <Zap size={14} style={{ color: "#4ade80" }} />
                           <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)" }}>Serverless Functions</span>
                         </div>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>tahmini</span>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.4)" }}>tahmini</span>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "rgba(0,0,0,0.3)" }}>
                         <span>~{usage.vercel.functions.estimated} çağrı/ay</span>
                         <span>Limit: {usage.vercel.functions.limitLabel}</span>
                       </div>
@@ -304,7 +304,7 @@ export default function SuperAdminClient() {
                         {usage.cloudinary.missing ? "API Bağlı Değil" : "Hata"}
                       </span>
                     </div>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.25)" }}>.env → CLOUDINARY_API_KEY + SECRET</div>
+                    <div style={{ fontSize: 11, color: "rgba(0,0,0,0.25)" }}>.env → CLOUDINARY_API_KEY + SECRET</div>
                   </div>
                 ) : (
                   <>
@@ -356,7 +356,7 @@ export default function SuperAdminClient() {
               </div>
 
               {accountingLoading && !accounting ? (
-                <div style={{ textAlign: "center", padding: 60, color: "rgba(255,255,255,0.3)" }}>
+                <div style={{ textAlign: "center", padding: 60, color: "rgba(0,0,0,0.3)" }}>
                   <Wallet size={32} style={{ margin: "0 auto 12px", opacity: 0.5 }} />
                   <div style={{ fontSize: 13 }}>Muhasebe verileri yükleniyor...</div>
                 </div>
@@ -370,22 +370,22 @@ export default function SuperAdminClient() {
                       { label: "Net Platform Kazancı", value: `${accounting.summary.totalNetPlatformEarning.toLocaleString("tr-TR")}₺`, sub: "PayTR kesintisi sonrası", icon: TrendingUp, color: "#4ade80", gradient: "rgba(74,222,128,0.06)" },
                       { label: "Valörde Bekleyen (Tenant)", value: `${accounting.summary.totalInValor.toLocaleString("tr-TR")}₺`, sub: "15 gün içinde aktarılacak", icon: Clock, color: "#facc15", gradient: "rgba(250,204,21,0.06)" },
                       { label: "Toplam Aktarılan", value: `${accounting.summary.totalTransferred.toLocaleString("tr-TR")}₺`, sub: "İşletmelere ödenen", icon: CheckCircle2, color: "#38bdf8", gradient: "rgba(56,189,248,0.06)" },
-                      { label: "Ödeme Bekleyen Müşteriler", value: `${accounting.summary.totalPendingCollection.toLocaleString("tr-TR")}₺`, sub: "Online tahsilat bekleyen tutar", icon: AlertTriangle, color: "rgba(255,255,255,0.3)", gradient: "rgba(255,255,255,0.02)" },
+                      { label: "Ödeme Bekleyen Müşteriler", value: `${accounting.summary.totalPendingCollection.toLocaleString("tr-TR")}₺`, sub: "Online tahsilat bekleyen tutar", icon: AlertTriangle, color: "rgba(0,0,0,0.3)", gradient: "rgba(0,0,0,0.02)" },
                     ].map((c, i) => (
-                      <div key={i} style={{ background: c.gradient, border: "1px solid rgba(255,255,255,0.06)", padding: "18px 20px" }}>
+                      <div key={i} style={{ background: c.gradient, border: "1px solid rgba(0,0,0,0.06)", padding: "18px 20px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                           <c.icon size={15} style={{ color: c.color }} />
-                          <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "rgba(255,255,255,0.4)" }}>{c.label}</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "rgba(0,0,0,0.4)" }}>{c.label}</span>
                         </div>
-                        <div style={{ fontSize: 26, fontWeight: 800, color: "#fff", marginBottom: 4 }}>{c.value}</div>
-                        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{c.sub}</div>
+                        <div style={{ fontSize: 26, fontWeight: 800, color: "#1a1a1a", marginBottom: 4 }}>{c.value}</div>
+                        <div style={{ fontSize: 11, color: "rgba(0,0,0,0.3)" }}>{c.sub}</div>
                       </div>
                     ))}
                   </div>
 
                   {/* Filtre + Sıralama */}
                   <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
-                    <Filter size={14} style={{ color: "rgba(255,255,255,0.3)" }} />
+                    <Filter size={14} style={{ color: "rgba(0,0,0,0.3)" }} />
                     {[
                       { id: "all", label: "Tümü" },
                       { id: "hasSales", label: "Online Satışı Var" },
@@ -394,23 +394,23 @@ export default function SuperAdminClient() {
                     ].map(f => (
                       <button key={f.id} onClick={() => setAccountingFilter(f.id)} style={{
                         padding: "6px 14px", fontSize: 11, fontWeight: 600, cursor: "pointer",
-                        background: accountingFilter === f.id ? "rgba(139,92,246,0.15)" : "rgba(255,255,255,0.03)",
-                        border: `1px solid ${accountingFilter === f.id ? "rgba(139,92,246,0.3)" : "rgba(255,255,255,0.06)"}`,
-                        color: accountingFilter === f.id ? "#a78bfa" : "rgba(255,255,255,0.4)",
+                        background: accountingFilter === f.id ? "rgba(139,92,246,0.15)" : "rgba(0,0,0,0.03)",
+                        border: `1px solid ${accountingFilter === f.id ? "rgba(139,92,246,0.3)" : "rgba(0,0,0,0.06)"}`,
+                        color: accountingFilter === f.id ? "#a78bfa" : "rgba(0,0,0,0.4)",
                         transition: "all 0.15s",
                       }}>{f.label}</button>
                     ))}
                   </div>
 
                   {/* Tenant Finans Tablosu */}
-                  <div style={{ border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                  <div style={{ border: "1px solid rgba(0,0,0,0.06)", overflow: "hidden" }}>
                     {/* Header */}
                     <div style={{
                       display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr 1fr 1fr",
-                      padding: "12px 16px", background: "rgba(255,255,255,0.03)",
-                      borderBottom: "1px solid rgba(255,255,255,0.06)",
+                      padding: "12px 16px", background: "rgba(0,0,0,0.03)",
+                      borderBottom: "1px solid rgba(0,0,0,0.06)",
                       fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
-                      color: "rgba(255,255,255,0.4)", gap: 8,
+                      color: "rgba(0,0,0,0.4)", gap: 8,
                     }}>
                       <span>İşletme</span>
                       {["onlineTotal", "netCommission", "inValor", "transferred", "pendingCollection"].map(field => {
@@ -421,7 +421,7 @@ export default function SuperAdminClient() {
                             background: "none", border: "none", cursor: "pointer", padding: 0,
                             display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end",
                             fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em",
-                            color: isActive ? "#a78bfa" : "rgba(255,255,255,0.4)",
+                            color: isActive ? "#a78bfa" : "rgba(0,0,0,0.4)",
                           }}>
                             {labels[field]}
                             {isActive && (accountingSort.dir === "desc" ? <ChevronDown size={10} /> : <ChevronUp size={10} />)}
@@ -446,7 +446,7 @@ export default function SuperAdminClient() {
                       });
 
                       if (filtered.length === 0) return (
-                        <div style={{ padding: 32, textAlign: "center", color: "rgba(255,255,255,0.25)", fontSize: 13 }}>Bu filtreye uygun işletme yok</div>
+                        <div style={{ padding: 32, textAlign: "center", color: "rgba(0,0,0,0.25)", fontSize: 13 }}>Bu filtreye uygun işletme yok</div>
                       );
 
                       return filtered.map(t => {
@@ -454,39 +454,39 @@ export default function SuperAdminClient() {
                           <div key={t.id} style={{
                             display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr 1fr 1fr",
                             padding: "14px 16px", gap: 8, alignItems: "center",
-                            borderBottom: "1px solid rgba(255,255,255,0.04)",
+                            borderBottom: "1px solid rgba(0,0,0,0.04)",
                             background: "transparent",
                             transition: "background 0.15s",
                           }}>
                             {/* İşletme */}
                             <div style={{ minWidth: 0 }}>
                               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
-                                <span style={{ fontSize: 13, fontWeight: 700, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.businessName}</span>
+                                <span style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.businessName}</span>
                               </div>
-                              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 10, color: "rgba(255,255,255,0.3)" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 10, color: "rgba(0,0,0,0.3)" }}>
                                 <span>{t.onlinePaymentCount} ödeme</span>
                                 <span>Komisyon: %{t.commissionRate} (Net: %{t.netPlatformRate})</span>
                               </div>
                             </div>
                             {/* Toplam Online Satış */}
                             <div style={{ textAlign: "right" }}>
-                              <div style={{ fontSize: 14, fontWeight: 700, color: t.onlineTotal > 0 ? "#fff" : "rgba(255,255,255,0.2)" }}>{t.onlineTotal > 0 ? `${t.onlineTotal.toLocaleString("tr-TR")}₺` : "—"}</div>
+                              <div style={{ fontSize: 14, fontWeight: 700, color: t.onlineTotal > 0 ? "#fff" : "rgba(0,0,0,0.2)" }}>{t.onlineTotal > 0 ? `${t.onlineTotal.toLocaleString("tr-TR")}₺` : "—"}</div>
                             </div>
                             {/* Platform Net Kazancı */}
                             <div style={{ textAlign: "right" }}>
-                              <div style={{ fontSize: 14, fontWeight: 600, color: t.netCommission > 0 ? "#4ade80" : "rgba(255,255,255,0.2)" }}>{t.netCommission > 0 ? `${t.netCommission.toLocaleString("tr-TR")}₺` : "—"}</div>
+                              <div style={{ fontSize: 14, fontWeight: 600, color: t.netCommission > 0 ? "#4ade80" : "rgba(0,0,0,0.2)" }}>{t.netCommission > 0 ? `${t.netCommission.toLocaleString("tr-TR")}₺` : "—"}</div>
                             </div>
                             {/* Valörde */}
                             <div style={{ textAlign: "right" }}>
-                              <div style={{ fontSize: 14, fontWeight: 600, color: t.inValor > 0 ? "#facc15" : "rgba(255,255,255,0.15)" }}>{t.inValor > 0 ? `${t.inValor.toLocaleString("tr-TR")}₺` : "—"}</div>
+                              <div style={{ fontSize: 14, fontWeight: 600, color: t.inValor > 0 ? "#facc15" : "rgba(0,0,0,0.15)" }}>{t.inValor > 0 ? `${t.inValor.toLocaleString("tr-TR")}₺` : "—"}</div>
                             </div>
                             {/* Aktarılan */}
                             <div style={{ textAlign: "right" }}>
-                              <div style={{ fontSize: 14, fontWeight: 600, color: t.transferred > 0 ? "#38bdf8" : "rgba(255,255,255,0.15)" }}>{t.transferred > 0 ? `${t.transferred.toLocaleString("tr-TR")}₺` : "—"}</div>
+                              <div style={{ fontSize: 14, fontWeight: 600, color: t.transferred > 0 ? "#38bdf8" : "rgba(0,0,0,0.15)" }}>{t.transferred > 0 ? `${t.transferred.toLocaleString("tr-TR")}₺` : "—"}</div>
                             </div>
                             {/* Ödeme Bekleyen */}
                             <div style={{ textAlign: "right" }}>
-                              <div style={{ fontSize: 13, fontWeight: 600, color: t.pendingCollection > 0 ? "#f87171" : "rgba(255,255,255,0.12)" }}>{t.pendingCollection > 0 ? `${t.pendingCollection.toLocaleString("tr-TR")}₺` : "—"}</div>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: t.pendingCollection > 0 ? "#f87171" : "rgba(0,0,0,0.12)" }}>{t.pendingCollection > 0 ? `${t.pendingCollection.toLocaleString("tr-TR")}₺` : "—"}</div>
                             </div>
                           </div>
                         );
@@ -497,11 +497,11 @@ export default function SuperAdminClient() {
                     <div style={{
                       display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr 1fr 1fr",
                       padding: "14px 16px", gap: 8, alignItems: "center",
-                      borderTop: "2px solid rgba(255,255,255,0.1)",
+                      borderTop: "2px solid rgba(0,0,0,0.1)",
                       background: "rgba(139,92,246,0.04)",
                     }}>
-                      <div style={{ fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.05em" }}>TOPLAM</div>
-                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#fff" }}>{accounting.summary.totalOnlinePayments.toLocaleString("tr-TR")}₺</div>
+                      <div style={{ fontSize: 12, fontWeight: 800, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.05em" }}>TOPLAM</div>
+                      <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#1a1a1a" }}>{accounting.summary.totalOnlinePayments.toLocaleString("tr-TR")}₺</div>
                       <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#4ade80" }}>{accounting.summary.totalNetPlatformEarning.toLocaleString("tr-TR")}₺</div>
                       <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#facc15" }}>{accounting.summary.totalInValor.toLocaleString("tr-TR")}₺</div>
                       <div style={{ textAlign: "right", fontSize: 14, fontWeight: 800, color: "#38bdf8" }}>{accounting.summary.totalTransferred.toLocaleString("tr-TR")}₺</div>
@@ -527,7 +527,7 @@ export default function SuperAdminClient() {
                   { key: "pro_yearly", label: "Pro Yıllık", suffix: "₺/yıl", color: "#f59e0b" },
                 ].map((p) => (
                   <div key={p.key} style={cardStyle}>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>
                       {p.label}
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -536,8 +536,8 @@ export default function SuperAdminClient() {
                         value={pricing[p.key]}
                         onChange={(e) => { setPricing({ ...pricing, [p.key]: e.target.value }); setPricingSaved(false); }}
                         style={{
-                          background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                          color: "#fff", padding: "10px 14px", width: "100%", fontSize: 22, fontWeight: 800,
+                          background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.1)",
+                          color: "#1a1a1a", padding: "10px 14px", width: "100%", fontSize: 22, fontWeight: 800,
                           outline: "none"
                         }}
                       />
@@ -552,8 +552,8 @@ export default function SuperAdminClient() {
                   if (res.success) { setPricingSaved(true); setTimeout(() => setPricingSaved(false), 3000); }
                 }}
                 style={{
-                  background: pricingSaved ? "rgba(74,222,128,0.15)" : "rgba(255,255,255,0.06)",
-                  border: pricingSaved ? "1px solid rgba(74,222,128,0.3)" : "1px solid rgba(255,255,255,0.1)",
+                  background: pricingSaved ? "rgba(74,222,128,0.15)" : "rgba(0,0,0,0.06)",
+                  border: pricingSaved ? "1px solid rgba(74,222,128,0.3)" : "1px solid rgba(0,0,0,0.1)",
                   color: pricingSaved ? "#4ade80" : "#fff",
                   padding: "12px 24px", fontSize: 13, fontWeight: 700, cursor: "pointer",
                   display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s"
@@ -570,7 +570,7 @@ export default function SuperAdminClient() {
             <>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
                 <h2 style={{ ...sectionTitle, marginBottom: 0 }}>Kullanıcılar</h2>
-                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>{tenants.length} kayıt</span>
+                <span style={{ fontSize: 12, color: "rgba(0,0,0,0.3)" }}>{tenants.length} kayıt</span>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -581,8 +581,8 @@ export default function SuperAdminClient() {
                   const sm = smStatusConfig[t.subMerchantStatus] || smStatusConfig.NOT_STARTED;
                   return (
                     <div key={t.id} style={{
-                      background: t.isFrozen ? "rgba(56,189,248,0.03)" : "rgba(255,255,255,0.02)",
-                      border: `1px solid ${t.isFrozen ? "rgba(56,189,248,0.15)" : "rgba(255,255,255,0.06)"}`,
+                      background: t.isFrozen ? "rgba(56,189,248,0.03)" : "rgba(0,0,0,0.02)",
+                      border: `1px solid ${t.isFrozen ? "rgba(56,189,248,0.15)" : "rgba(0,0,0,0.06)"}`,
                       padding: "16px 20px",
                     }}>
                       {/* Üst satır: İsim + Plan + Aksiyonlar */}
@@ -593,12 +593,12 @@ export default function SuperAdminClient() {
                             {t.isFrozen && <Snowflake size={14} style={{ color: "#38bdf8" }} />}
                             {isExpired && <AlertTriangle size={14} style={{ color: "#f87171" }} />}
                           </div>
-                          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", display: "flex", gap: 12, flexWrap: "wrap" }}>
+                          <div style={{ fontSize: 12, color: "rgba(0,0,0,0.4)", display: "flex", gap: 12, flexWrap: "wrap" }}>
                             <span>{t.slug}.{domain}</span>
                             <span>{t.ownerEmail}</span>
                           </div>
                         </div>
-                        <div style={{ display: "flex", gap: 16, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
+                        <div style={{ display: "flex", gap: 16, fontSize: 12, color: "rgba(0,0,0,0.5)" }}>
                           <span>{t.reservationCount} rez</span>
                           <span>{t.userCount} üye</span>
                           <span>{t.packageCount} paket</span>
@@ -610,7 +610,7 @@ export default function SuperAdminClient() {
                             textTransform: "uppercase", letterSpacing: "0.05em"
                           }}>{t.plan}</span>
                           {daysLeft !== null && (
-                            <span style={{ fontSize: 11, color: isExpired ? "#f87171" : "rgba(255,255,255,0.3)" }}>
+                            <span style={{ fontSize: 11, color: isExpired ? "#f87171" : "rgba(0,0,0,0.3)" }}>
                               {isExpired ? "Süresi doldu" : `${daysLeft}g`}
                             </span>
                           )}
@@ -637,12 +637,12 @@ export default function SuperAdminClient() {
                       {/* Alt satır: Komisyon + Sub-Merchant Durumu */}
                       <div style={{
                         display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center",
-                        paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.04)",
+                        paddingTop: 12, borderTop: "1px solid rgba(0,0,0,0.04)",
                       }}>
                         {/* Komisyon Oranı */}
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <Percent size={13} style={{ color: "rgba(255,255,255,0.35)" }} />
-                          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap" }}>Komisyon:</span>
+                          <Percent size={13} style={{ color: "rgba(0,0,0,0.35)" }} />
+                          <span style={{ fontSize: 11, color: "rgba(0,0,0,0.4)", whiteSpace: "nowrap" }}>Komisyon:</span>
                           <input
                             type="number"
                             defaultValue={t.commissionRate ?? 5}
@@ -654,12 +654,12 @@ export default function SuperAdminClient() {
                             onKeyDown={e => { if (e.key === "Enter") e.target.blur(); }}
                             disabled={actionLoading === t.id}
                             style={{
-                              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                              color: "#fff", padding: "4px 8px", width: 56, fontSize: 13, fontWeight: 700,
+                              background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.1)",
+                              color: "#1a1a1a", padding: "4px 8px", width: 56, fontSize: 13, fontWeight: 700,
                               textAlign: "center", outline: "none",
                             }}
                           />
-                          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>%</span>
+                          <span style={{ fontSize: 12, color: "rgba(0,0,0,0.3)" }}>%</span>
                         </div>
 
                         {/* Sub-Merchant Durumu */}
@@ -677,7 +677,7 @@ export default function SuperAdminClient() {
                           </span>
                           <button
                             onClick={() => setInfoModal(t)}
-                            style={{ ...smallBtn, color: "#fff", background: "rgba(255,255,255,0.1)", padding: "4px 8px" }}
+                            style={{ ...smallBtn, color: "#1a1a1a", background: "rgba(0,0,0,0.1)", padding: "4px 8px" }}
                             title="Bilgileri İncele"
                           >
                             <Eye size={13} />
@@ -708,19 +708,19 @@ export default function SuperAdminClient() {
                       {/* Abonelik & Ödeme Bilgileri */}
                       <div style={{
                         display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center",
-                        paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.04)",
-                        fontSize: 11, color: "rgba(255,255,255,0.35)",
+                        paddingTop: 10, borderTop: "1px solid rgba(0,0,0,0.04)",
+                        fontSize: 11, color: "rgba(0,0,0,0.35)",
                       }}>
                         <span title="Son Ödeme">💳 {t.lastPaymentAt ? new Date(t.lastPaymentAt).toLocaleDateString("tr-TR") : "—"}</span>
                         <span title="Sonraki Ödeme">📅 {t.nextPaymentAt ? new Date(t.nextPaymentAt).toLocaleDateString("tr-TR") : "—"}</span>
-                        <span title="Kart Durumu" style={{ color: t.paytrCtoken ? "#4ade80" : "rgba(255,255,255,0.2)" }}>{t.paytrCtoken ? "🔒 Kart Kayıtlı" : "Kart Yok"}</span>
-                        <span title="IBAN" style={{ marginLeft: "auto", fontFamily: "monospace", fontSize: 10, color: "rgba(255,255,255,0.2)" }}>{t.iban ? `TR••${t.iban.slice(-4)}` : "IBAN Yok"}</span>
+                        <span title="Kart Durumu" style={{ color: t.paytrCtoken ? "#4ade80" : "rgba(0,0,0,0.2)" }}>{t.paytrCtoken ? "🔒 Kart Kayıtlı" : "Kart Yok"}</span>
+                        <span title="IBAN" style={{ marginLeft: "auto", fontFamily: "monospace", fontSize: 10, color: "rgba(0,0,0,0.2)" }}>{t.iban ? `TR••${t.iban.slice(-4)}` : "IBAN Yok"}</span>
                       </div>
                     </div>
                   );
                 })}
                 {tenants.length === 0 && (
-                  <div style={{ textAlign: "center", padding: 48, color: "rgba(255,255,255,0.3)", fontSize: 14 }}>Henüz kullanıcı yok.</div>
+                  <div style={{ textAlign: "center", padding: 48, color: "rgba(0,0,0,0.3)", fontSize: 14 }}>Henüz kullanıcı yok.</div>
                 )}
               </div>
             </>
@@ -736,7 +736,7 @@ export default function SuperAdminClient() {
           display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 24
         }} onClick={() => setInfoModal(null)}>
           <div style={{
-            background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0,
+            background: "#ffffff", border: "1px solid rgba(0,0,0,0.1)", borderRadius: 0,
             width: "100%", maxWidth: 600, padding: 24, maxHeight: "90vh", overflowY: "auto"
           }} onClick={e => e.stopPropagation()}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
@@ -748,14 +748,14 @@ export default function SuperAdminClient() {
                 <button onClick={() => handleImpersonate(infoModal.id)} style={{ ...smallBtn, color: "#4ade80", background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.2)", padding: "6px 14px", fontSize: 11, fontWeight: 700, gap: 6, display: "flex", alignItems: "center" }}>
                   <ExternalLink size={12} /> Admin Panele Gir
                 </button>
-                <button onClick={() => setInfoModal(null)} style={{ background: "transparent", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={20} /></button>
+                <button onClick={() => setInfoModal(null)} style={{ background: "transparent", border: "none", color: "rgba(0,0,0,0.5)", cursor: "pointer" }}><X size={20} /></button>
               </div>
             </div>
             
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               {/* GENEL & İLETİŞİM — Tümü Düzenlenebilir */}
               <div>
-                <h4 style={{ margin: "0 0 12px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 8 }}>GENEL & İLETİŞİM</h4>
+                <h4 style={{ margin: "0 0 12px", fontSize: 13, fontWeight: 700, color: "rgba(0,0,0,0.5)", borderBottom: "1px solid rgba(0,0,0,0.1)", paddingBottom: 8 }}>GENEL & İLETİŞİM</h4>
                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                   {[
                     { field: "businessName", label: "İşletme Adı", value: infoModal.businessName },
@@ -765,30 +765,30 @@ export default function SuperAdminClient() {
                     { field: "businessType", label: "İşletme Türü", value: infoModal.businessType },
                     { field: "customDomain", label: "Özel Domain", value: infoModal.customDomain },
                   ].map((item) => (
-                    <div key={item.field} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 14px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                    <div key={item.field} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 14px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)" }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 1 }}>{item.label}</div>
-                        <div style={{ fontSize: 13, color: "#fff", fontWeight: 500, wordBreak: "break-all" }}>{item.value || "—"}</div>
+                        <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", marginBottom: 1 }}>{item.label}</div>
+                        <div style={{ fontSize: 13, color: "#1a1a1a", fontWeight: 500, wordBreak: "break-all" }}>{item.value || "—"}</div>
                       </div>
-                      <button onClick={() => editField(infoModal.id, item.field, item.label, item.value)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.2)", cursor: "pointer", padding: 4, fontSize: 14 }} title="Düzenle">✏️</button>
+                      <button onClick={() => editField(infoModal.id, item.field, item.label, item.value)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.2)", cursor: "pointer", padding: 4, fontSize: 14 }} title="Düzenle">✏️</button>
                     </div>
                   ))}
                   {/* Slug — özel gösterim */}
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 14px", background: "rgba(139,92,246,0.04)", border: "1px solid rgba(139,92,246,0.1)" }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 1 }}>Site Adresi (Slug)</div>
-                      <div style={{ fontSize: 13, color: "#fff", fontWeight: 500, fontFamily: "monospace" }}>
-                        <span style={{ color: "#8b5cf6" }}>{infoModal.slug}</span><span style={{ color: "rgba(255,255,255,0.25)" }}>.{domain}</span>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", marginBottom: 1 }}>Site Adresi (Slug)</div>
+                      <div style={{ fontSize: 13, color: "#1a1a1a", fontWeight: 500, fontFamily: "monospace" }}>
+                        <span style={{ color: "#8b5cf6" }}>{infoModal.slug}</span><span style={{ color: "rgba(0,0,0,0.25)" }}>.{domain}</span>
                       </div>
                     </div>
-                    <button onClick={() => editField(infoModal.id, "slug", "Slug", infoModal.slug)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.2)", cursor: "pointer", padding: 4, fontSize: 14 }} title="Düzenle">✏️</button>
+                    <button onClick={() => editField(infoModal.id, "slug", "Slug", infoModal.slug)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.2)", cursor: "pointer", padding: 4, fontSize: 14 }} title="Düzenle">✏️</button>
                   </div>
                 </div>
               </div>
 
               {/* ABONELİK & DURUM */}
               <div>
-                <h4 style={{ margin: "0 0 12px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 8 }}>ABONELİK & DURUM</h4>
+                <h4 style={{ margin: "0 0 12px", fontSize: 13, fontWeight: 700, color: "rgba(0,0,0,0.5)", borderBottom: "1px solid rgba(0,0,0,0.1)", paddingBottom: 8 }}>ABONELİK & DURUM</h4>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
                   {[
                     { label: "Mevcut Plan", value: infoModal.plan?.toUpperCase() },
@@ -798,9 +798,9 @@ export default function SuperAdminClient() {
                     { label: "Kayıt Tarihi", value: new Date(infoModal.createdAt).toLocaleDateString() },
                     { label: "Durum", value: infoModal.isActive ? (infoModal.isFrozen ? "Dondurulmuş" : "Aktif") : "Pasif" },
                   ].map((item, i) => (
-                    <div key={i} style={{ padding: "8px 14px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                      <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 1 }}>{item.label}</div>
-                      <div style={{ fontSize: 13, color: "#fff", fontWeight: 500 }}>{item.value}</div>
+                    <div key={i} style={{ padding: "8px 14px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)" }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", marginBottom: 1 }}>{item.label}</div>
+                      <div style={{ fontSize: 13, color: "#1a1a1a", fontWeight: 500 }}>{item.value}</div>
                     </div>
                   ))}
                 </div>
@@ -808,7 +808,7 @@ export default function SuperAdminClient() {
 
               {/* Ticari Bilgiler */}
               <div>
-                <h4 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 8 }}>TİCARİ & VERGİ BİLGİLERİ</h4>
+                <h4 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 700, color: "rgba(0,0,0,0.5)", borderBottom: "1px solid rgba(0,0,0,0.1)", paddingBottom: 8 }}>TİCARİ & VERGİ BİLGİLERİ</h4>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                   {[
                     { label: "Resmi Ünvan", value: infoModal.legalName || "-" },
@@ -821,8 +821,8 @@ export default function SuperAdminClient() {
                     { label: "Resmi Adres", value: infoModal.legalAddress || "-", fullWidth: true },
                   ].map((item, i) => (
                     <div key={i} style={{ display: "flex", flexDirection: "column", gap: 4, gridColumn: item.fullWidth ? "1 / -1" : "auto" }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" }}>{item.label}</span>
-                      <span style={{ fontSize: 14, color: "#fff", fontWeight: 500 }}>{item.value}</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase" }}>{item.label}</span>
+                      <span style={{ fontSize: 14, color: "#1a1a1a", fontWeight: 500 }}>{item.value}</span>
                     </div>
                   ))}
                 </div>
@@ -853,20 +853,20 @@ export default function SuperAdminClient() {
 }
 
 const iconBtn = {
-  background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)",
-  color: "rgba(255,255,255,0.5)", padding: 8, cursor: "pointer",
+  background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)",
+  color: "rgba(0,0,0,0.5)", padding: 8, cursor: "pointer",
   display: "flex", alignItems: "center", justifyContent: "center"
 };
 const smallBtn = {
-  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-  color: "rgba(255,255,255,0.5)", padding: "6px 10px", cursor: "pointer",
+  background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)",
+  color: "rgba(0,0,0,0.5)", padding: "6px 10px", cursor: "pointer",
   fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center",
   textDecoration: "none"
 };
 const cardStyle = {
-  background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+  background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)",
   padding: "16px 18px"
 };
 const sectionTitle = {
-  fontSize: 16, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 20, color: "#fff"
+  fontSize: 16, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 20, color: "#1a1a1a"
 };

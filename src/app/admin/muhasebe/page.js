@@ -120,7 +120,7 @@ export default async function MuhasebePage() {
   const monthNames = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
   const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale / EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online Ödeme" };
   const methodIcons = { CASH: "💵", BANK_TRANSFER: "🏦", CREDIT_CARD: "💳", ONLINE: "🌐" };
-  const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(255,255,255,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(255,255,255,0.6)" };
+  const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(0,0,0,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(255,255,255,0.6)" };
   const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan" };
   const catColors = { DIS_CEKIM: "#f59e0b", DUGUN: "#fb7185", NISAN: "#67e8f9" };
 
@@ -175,16 +175,16 @@ export default async function MuhasebePage() {
   }
 
   return (
-    <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
+    <div style={{ color: "#1a1a1a", maxWidth: "100%", overflowX: "hidden" }}>
       {/* Header */}
       <div style={{ marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
-          <div style={{ width: 36, height: 36, borderRadius: 0, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <PiggyBank size={18} style={{ color: "#fff" }} />
+          <div style={{ width: 36, height: 36, borderRadius: 0, background: "rgba(0,0,0,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <PiggyBank size={18} style={{ color: "#1a1a1a" }} />
           </div>
           <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", margin: 0 }}>Muhasebe</h1>
         </div>
-        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.75rem", margin: 0 }}>Cüzdan, kazançlar ve ödeme takibi</p>
+        <p style={{ color: "rgba(0,0,0,0.55)", fontSize: "0.75rem", margin: 0 }}>Cüzdan, kazançlar ve ödeme takibi</p>
       </div>
 
       {/* ═══ CÜZDAN BÖLÜMÜ ═══ */}
@@ -194,76 +194,76 @@ export default async function MuhasebePage() {
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
           <Wallet size={16} style={{ color: "#22c55e" }} />
           <span style={{ fontSize: "0.7rem", fontWeight: 800, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.1em" }}>Cüzdanım</span>
-          <span style={{ fontSize: "0.55rem", fontWeight: 600, color: "rgba(255,255,255,0.3)", marginLeft: "auto", padding: "2px 8px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>%{commissionRate} komisyon</span>
+          <span style={{ fontSize: "0.55rem", fontWeight: 600, color: "rgba(0,0,0,0.3)", marginLeft: "auto", padding: "2px 8px", background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)" }}>%{commissionRate} komisyon</span>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16 }}>
           {/* Net Kazanç */}
           <div>
-            <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>NET KAZANÇ (Online)</div>
+            <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.4)", marginBottom: 4 }}>NET KAZANÇ (Online)</div>
             <div style={{ fontSize: "2rem", fontWeight: 900, color: "#22c55e", lineHeight: 1 }}>{fmtDecimal(walletBalance)}<span style={{ fontSize: "0.9rem", opacity: 0.7 }}>₺</span></div>
-            <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.35)", marginTop: 4 }}>Komisyon düşüldükten sonra</div>
+            <div style={{ fontSize: "0.55rem", color: "rgba(0,0,0,0.35)", marginTop: 4 }}>Komisyon düşüldükten sonra</div>
           </div>
 
           {/* Brüt Online */}
           <div>
-            <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>BRÜT ONLİNE GELİR</div>
-            <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "#fff" }}>{fmtDecimal(onlineTotal)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
-            <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.35)", marginTop: 4 }}>{onlinePayments.length} online işlem</div>
+            <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.4)", marginBottom: 4 }}>BRÜT ONLİNE GELİR</div>
+            <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "#1a1a1a" }}>{fmtDecimal(onlineTotal)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
+            <div style={{ fontSize: "0.55rem", color: "rgba(0,0,0,0.35)", marginTop: 4 }}>{onlinePayments.length} online işlem</div>
           </div>
 
           {/* Platform Komisyonu */}
           <div>
-            <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>PLATFORM KOMİSYONU</div>
+            <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.4)", marginBottom: 4 }}>PLATFORM KOMİSYONU</div>
             <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "#f87171" }}>-{fmtDecimal(platformCommission)}<span style={{ fontSize: "0.8rem", opacity: 0.7 }}>₺</span></div>
-            <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.35)", marginTop: 4 }}>%{commissionRate} kesinti</div>
+            <div style={{ fontSize: "0.55rem", color: "rgba(0,0,0,0.35)", marginTop: 4 }}>%{commissionRate} kesinti</div>
           </div>
 
         </div>
 
         {/* Sonraki Ödeme */}
-        <div style={{ marginTop: 20, padding: "14px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+        <div style={{ marginTop: 20, padding: "14px 16px", background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Calendar size={14} style={{ color: "rgba(255,255,255,0.5)" }} />
+            <Calendar size={14} style={{ color: "rgba(0,0,0,0.5)" }} />
             <div>
               <div style={{ fontSize: "0.7rem", fontWeight: 800 }}>Sonraki Ödeme</div>
-              <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.4)" }}>{nextPayoutDate.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}</div>
+              <div style={{ fontSize: "0.55rem", color: "rgba(0,0,0,0.4)" }}>{nextPayoutDate.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}</div>
             </div>
           </div>
           <div style={{ textAlign: "right" }}>
             <div style={{ fontSize: "1rem", fontWeight: 900, color: "#22c55e" }}>{fmtDecimal(thisMonthNet)}<span style={{ fontSize: "0.7rem", opacity: 0.7 }}>₺</span></div>
-            <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)" }}>{daysUntilPayout} gün kaldı · bu ayki net</div>
+            <div style={{ fontSize: "0.5rem", color: "rgba(0,0,0,0.35)" }}>{daysUntilPayout} gün kaldı · bu ayki net</div>
           </div>
         </div>
       </div>
 
       {/* ═══ ÖDEME TAKVİMİ ═══ */}
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px", marginBottom: "1.5rem" }}>
+      <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: "18px", marginBottom: "1.5rem" }}>
         <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
-          <Calendar size={13} style={{ color: "rgba(255,255,255,0.5)" }} />
+          <Calendar size={13} style={{ color: "rgba(0,0,0,0.5)" }} />
           Ödeme Takvimi (Son 6 Ay)
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {payoutSchedule.map((p, i) => (
-            <div key={i} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "6px 12px", padding: "10px 12px", background: i === 0 ? "rgba(34,197,94,0.06)" : "rgba(255,255,255,0.02)", border: `1px solid ${i === 0 ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.05)"}` }}>
+            <div key={i} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "6px 12px", padding: "10px 12px", background: i === 0 ? "rgba(34,197,94,0.06)" : "rgba(0,0,0,0.02)", border: `1px solid ${i === 0 ? "rgba(34,197,94,0.15)" : "rgba(0,0,0,0.05)"}` }}>
               <div style={{ minWidth: 100 }}>
                 <div style={{ fontSize: "0.75rem", fontWeight: 700 }}>{p.label}</div>
-                <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)" }}>{p.count} işlem</div>
+                <div style={{ fontSize: "0.5rem", color: "rgba(0,0,0,0.35)" }}>{p.count} işlem</div>
               </div>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
                 <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)" }}>Brüt</div>
+                  <div style={{ fontSize: "0.5rem", color: "rgba(0,0,0,0.35)" }}>Brüt</div>
                   <div style={{ fontSize: "0.7rem", fontWeight: 700 }}>{fmt(p.gross)}₺</div>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)" }}>Komisyon</div>
+                  <div style={{ fontSize: "0.5rem", color: "rgba(0,0,0,0.35)" }}>Komisyon</div>
                   <div style={{ fontSize: "0.7rem", fontWeight: 700, color: "#f87171" }}>-{fmt(p.commission)}₺</div>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.35)" }}>Net</div>
+                  <div style={{ fontSize: "0.5rem", color: "rgba(0,0,0,0.35)" }}>Net</div>
                   <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "#22c55e" }}>{fmt(p.net)}₺</div>
                 </div>
-                <div style={{ fontSize: "0.55rem", fontWeight: 700, padding: "2px 8px", background: p.isPast ? "rgba(255,255,255,0.05)" : "rgba(34,197,94,0.1)", color: p.isPast ? "rgba(255,255,255,0.4)" : "#22c55e", border: `1px solid ${p.isPast ? "rgba(255,255,255,0.08)" : "rgba(34,197,94,0.2)"}` }}>
+                <div style={{ fontSize: "0.55rem", fontWeight: 700, padding: "2px 8px", background: p.isPast ? "rgba(0,0,0,0.05)" : "rgba(34,197,94,0.1)", color: p.isPast ? "rgba(0,0,0,0.4)" : "#22c55e", border: `1px solid ${p.isPast ? "rgba(0,0,0,0.08)" : "rgba(34,197,94,0.2)"}` }}>
                   {i === 0 ? "Aktif" : "Tamamlandı"}
                 </div>
               </div>
@@ -276,22 +276,22 @@ export default async function MuhasebePage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "10px", marginBottom: "1.5rem" }}>
         
         {/* Toplam Gelir */}
-        <div style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0.4) 100%)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 0, padding: "18px" }}>
-          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
+        <div style={{ background: "linear-gradient(145deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.4) 100%)", border: "1px solid rgba(0,0,0,0.12)", borderRadius: 0, padding: "18px" }}>
+          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
             <TrendingUp size={10} /> Toplam Gelir
           </div>
-          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#fff" }}>{fmt(totalCashIn)}<span style={{ fontSize: "0.8rem", opacity: 0.7 }}>₺</span></div>
-          <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", marginTop: 4 }}>{validPayments.length} ödeme işlemi</div>
+          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#1a1a1a" }}>{fmt(totalCashIn)}<span style={{ fontSize: "0.8rem", opacity: 0.7 }}>₺</span></div>
+          <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.4)", marginTop: 4 }}>{validPayments.length} ödeme işlemi</div>
         </div>
 
         {/* Bu Ay */}
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
-          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
+        <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: "18px" }}>
+          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
             {monthNames[currentMonth]} Geliri
           </div>
-          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#fff" }}>{fmt(thisMonthTotal)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
+          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#1a1a1a" }}>{fmt(thisMonthTotal)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
           {monthChange !== 0 && (
-            <div style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 4, fontSize: "0.6rem", fontWeight: 800, color: monthChange > 0 ? "#fff" : "rgba(255,255,255,0.5)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 4, fontSize: "0.6rem", fontWeight: 800, color: monthChange > 0 ? "#fff" : "rgba(0,0,0,0.5)" }}>
               {monthChange > 0 ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
               %{Math.abs(monthChange)} {monthChange > 0 ? "artış" : "azalış"} · geçen aya göre
             </div>
@@ -299,21 +299,21 @@ export default async function MuhasebePage() {
         </div>
 
         {/* Tahsil Edilecek */}
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, padding: "18px" }}>
-          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
+        <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.1)", borderRadius: 0, padding: "18px" }}>
+          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
             <Receipt size={10} /> Tahsil Edilecek
           </div>
           <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "rgba(255,255,255,0.7)" }}>{fmt(totalOutstanding)}<span style={{ fontSize: "0.8rem", opacity: 0.7 }}>₺</span></div>
-          <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", marginTop: 4 }}>{reservationBalances.length} açık rezervasyon</div>
+          <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.4)", marginTop: 4 }}>{reservationBalances.length} açık rezervasyon</div>
         </div>
 
         {/* Beklenen Toplam */}
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
-          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
+        <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: "18px" }}>
+          <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
             Aktif Toplam Tutar
           </div>
-          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#fff" }}>{fmt(totalExpected)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
-          <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.4)", marginTop: 4 }}>Aktif rezervasyonlar toplamı</div>
+          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#1a1a1a" }}>{fmt(totalExpected)}<span style={{ fontSize: "0.8rem", opacity: 0.5 }}>₺</span></div>
+          <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.4)", marginTop: 4 }}>Aktif rezervasyonlar toplamı</div>
         </div>
       </div>
 
@@ -321,9 +321,9 @@ export default async function MuhasebePage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "10px", marginBottom: "1.5rem" }}>
         
         {/* Aylık Gelir Grafiği */}
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
+        <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: "18px" }}>
           <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
-            <Calendar size={13} style={{ color: "rgba(255,255,255,0.5)" }} />
+            <Calendar size={13} style={{ color: "rgba(0,0,0,0.5)" }} />
             Aylık Gelir — {currentYear}
           </div>
           <div style={{ display: "flex", alignItems: "flex-end", gap: 4, height: 120 }}>
@@ -332,7 +332,7 @@ export default async function MuhasebePage() {
               const isCurrentMonth = i === currentMonth;
               return (
                 <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                  <div style={{ fontSize: "0.5rem", fontWeight: 800, color: m.total > 0 ? "#fff" : "rgba(255,255,255,0.2)" }}>
+                  <div style={{ fontSize: "0.5rem", fontWeight: 800, color: m.total > 0 ? "#fff" : "rgba(0,0,0,0.2)" }}>
                     {m.total > 0 ? `${fmt(m.total / 1000)}K` : ""}
                   </div>
                   <div style={{ 
@@ -340,13 +340,13 @@ export default async function MuhasebePage() {
                     height: `${Math.max(h, 2)}%`, minHeight: 3,
                     background: isCurrentMonth 
                       ? "linear-gradient(180deg, #fff, #22c55e)" 
-                      : m.total > 0 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.04)",
+                      : m.total > 0 ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.04)",
                     transition: "height 0.5s ease",
                     boxShadow: isCurrentMonth ? "0 0 12px rgba(74,222,128,0.3)" : "none"
                   }} />
                   <div style={{ 
                     fontSize: "0.5rem", fontWeight: 700, 
-                    color: isCurrentMonth ? "#fff" : "rgba(255,255,255,0.3)" 
+                    color: isCurrentMonth ? "#fff" : "rgba(0,0,0,0.3)" 
                   }}>
                     {monthNames[i].substring(0, 3)}
                   </div>
@@ -357,9 +357,9 @@ export default async function MuhasebePage() {
         </div>
 
         {/* Ödeme Yöntemi Dağılımı */}
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
+        <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: "18px" }}>
           <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
-            <Wallet size={13} style={{ color: "rgba(255,255,255,0.5)" }} />
+            <Wallet size={13} style={{ color: "rgba(0,0,0,0.5)" }} />
             Ödeme Yöntemi Dağılımı
           </div>
           
@@ -384,12 +384,12 @@ export default async function MuhasebePage() {
                       <span style={{ fontSize: "0.7rem", fontWeight: 900, color: methodColors[method] }}>{fmt(amount)}₺</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <div style={{ flex: 1, height: 4, borderRadius: 0, background: "rgba(255,255,255,0.06)" }}>
+                      <div style={{ flex: 1, height: 4, borderRadius: 0, background: "rgba(0,0,0,0.06)" }}>
                         <div style={{ height: "100%", borderRadius: 0, background: methodColors[method], width: `${pct}%`, transition: "width 0.5s" }} />
                       </div>
-                      <span style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", width: 28, textAlign: "right" }}>%{pct}</span>
+                      <span style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.35)", width: 28, textAlign: "right" }}>%{pct}</span>
                     </div>
-                    <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.3)", marginTop: 2 }}>{byMethodCount[method]} işlem</div>
+                    <div style={{ fontSize: "0.55rem", color: "rgba(0,0,0,0.3)", marginTop: 2 }}>{byMethodCount[method]} işlem</div>
                   </div>
                 </div>
               );
@@ -402,7 +402,7 @@ export default async function MuhasebePage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "10px", marginBottom: "1.5rem" }}>
 
         {/* Kategoriye Göre Gelir */}
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
+        <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: "18px" }}>
           <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 16 }}>Hizmet Kategorisine Göre</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {Object.entries(byCategory).sort((a, b) => b[1] - a[1]).map(([cat, amount]) => {
@@ -418,83 +418,83 @@ export default async function MuhasebePage() {
                     </div>
                     <span style={{ fontSize: "0.75rem", fontWeight: 900, color }}>{fmt(amount)}₺</span>
                   </div>
-                  <div style={{ height: 6, borderRadius: 0, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                  <div style={{ height: 6, borderRadius: 0, background: "rgba(0,0,0,0.06)", overflow: "hidden" }}>
                     <div style={{ height: "100%", borderRadius: 0, background: `linear-gradient(90deg, ${color}, ${color}88)`, width: `${pct}%`, transition: "width 0.5s" }} />
                   </div>
                 </div>
               );
             })}
             {Object.keys(byCategory).length === 0 && (
-              <div style={{ textAlign: "center", padding: "20px", color: "rgba(255,255,255,0.3)", fontSize: "0.7rem" }}>Veri yok</div>
+              <div style={{ textAlign: "center", padding: "20px", color: "rgba(0,0,0,0.3)", fontSize: "0.7rem" }}>Veri yok</div>
             )}
           </div>
         </div>
 
         {/* Açık Bakiyeler */}
-        <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, padding: "18px" }}>
+        <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, padding: "18px" }}>
           <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 4, color: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", gap: 6 }}>
             <Receipt size={13} />
             Açık Bakiyeler
           </div>
-          <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.4)", marginBottom: 14 }}>Ödenmemiş kalan tutarlar</div>
+          <div style={{ fontSize: "0.55rem", color: "rgba(0,0,0,0.4)", marginBottom: 14 }}>Ödenmemiş kalan tutarlar</div>
           
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {reservationBalances.slice(0, 10).map(r => {
               const paidPct = r.total > 0 ? (r.paid / r.total) * 100 : 0;
               return (
-                <div key={r.id} style={{ padding: "10px 12px", borderRadius: 0, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div key={r.id} style={{ padding: "10px 12px", borderRadius: 0, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
                     <div style={{ minWidth: 0 }}>
                       <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {r.brideName}{isPhotographer && r.groomName ? ` & ${r.groomName}` : ''}
                       </div>
-                      <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.4)" }}>
+                      <div style={{ fontSize: "0.55rem", color: "rgba(0,0,0,0.4)" }}>
                         {new Date(r.eventDate).toLocaleDateString("tr-TR")} · {r.packages?.map(p => p.name).join(', ')}
                       </div>
                     </div>
                     <div style={{ textAlign: "right", flexShrink: 0, marginLeft: 8 }}>
                       <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "rgba(255,255,255,0.7)" }}>{fmt(r.remaining)}₺</div>
-                      <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.3)" }}>/ {fmt(r.total)}₺</div>
+                      <div style={{ fontSize: "0.5rem", color: "rgba(0,0,0,0.3)" }}>/ {fmt(r.total)}₺</div>
                     </div>
                   </div>
-                  <div style={{ height: 4, borderRadius: 0, background: "rgba(255,255,255,0.06)" }}>
+                  <div style={{ height: 4, borderRadius: 0, background: "rgba(0,0,0,0.06)" }}>
                     <div style={{ height: "100%", borderRadius: 0, background: paidPct >= 100 ? "#fff" : "linear-gradient(90deg, #fff, rgba(255,255,255,0.7))", width: `${Math.min(paidPct, 100)}%` }} />
                   </div>
-                  <div style={{ fontSize: "0.5rem", color: "rgba(255,255,255,0.3)", marginTop: 3, textAlign: "right" }}>%{Math.round(paidPct)} ödendi</div>
+                  <div style={{ fontSize: "0.5rem", color: "rgba(0,0,0,0.3)", marginTop: 3, textAlign: "right" }}>%{Math.round(paidPct)} ödendi</div>
                 </div>
               );
             })}
             {reservationBalances.length === 0 && (
-              <div style={{ textAlign: "center", padding: "20px", color: "rgba(255,255,255,0.3)", fontSize: "0.7rem" }}>Tüm bakiyeler ödenmiş 🎉</div>
+              <div style={{ textAlign: "center", padding: "20px", color: "rgba(0,0,0,0.3)", fontSize: "0.7rem" }}>Tüm bakiyeler ödenmiş 🎉</div>
             )}
           </div>
         </div>
       </div>
 
       {/* ═══ TÜM ÖDEME GEÇMİŞİ ═══ */}
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "18px" }}>
+      <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: "18px" }}>
         <div style={{ fontSize: "0.7rem", fontWeight: 900, marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
-          <Banknote size={13} style={{ color: "rgba(255,255,255,0.5)" }} />
+          <Banknote size={13} style={{ color: "rgba(0,0,0,0.5)" }} />
           Son 20 Ödeme
         </div>
         
         {/* Table Header */}
-        <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", marginBottom: 4 }} />
+        <div style={{ borderBottom: "1px solid rgba(0,0,0,0.06)", marginBottom: 4 }} />
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           {recentPayments.map((p, i) => (
             <div key={p.id} style={{ 
               display: "flex", flexWrap: "wrap", gap: "4px 12px", alignItems: "center", justifyContent: "space-between",
               padding: "10px 8px", 
-              borderBottom: i < recentPayments.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none",
+              borderBottom: i < recentPayments.length - 1 ? "1px solid rgba(0,0,0,0.04)" : "none",
             }}>
               <div style={{ minWidth: 0, flex: "1 1 120px" }}>
                 <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {p.reservation?.brideName || "—"}
                 </div>
-                {p.note && <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.note}</div>}
+                {p.note && <div style={{ fontSize: "0.55rem", color: "rgba(0,0,0,0.3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.note}</div>}
               </div>
-              <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.5)", flexShrink: 0 }}>
+              <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.5)", flexShrink: 0 }}>
                 {new Date(p.createdAt).toLocaleDateString("tr-TR", { day: "numeric", month: "short" })}
               </div>
               <span style={{ 
@@ -504,13 +504,13 @@ export default async function MuhasebePage() {
               }}>
                 {methodLabels[p.method] || p.method}
               </span>
-              <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "#fff", flexShrink: 0 }}>
+              <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "#1a1a1a", flexShrink: 0 }}>
                 +{fmt(p.amount)}₺
               </div>
             </div>
           ))}
           {recentPayments.length === 0 && (
-            <div style={{ textAlign: "center", padding: "30px", color: "rgba(255,255,255,0.3)", fontSize: "0.7rem" }}>Henüz ödeme kaydı yok</div>
+            <div style={{ textAlign: "center", padding: "30px", color: "rgba(0,0,0,0.3)", fontSize: "0.7rem" }}>Henüz ödeme kaydı yok</div>
           )}
         </div>
       </div>

@@ -124,7 +124,7 @@ export default async function RootLayout({ children }) {
   if (isPlatform) {
     return (
       <html lang="tr" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-        <body style={{ margin: 0, background: "#000", color: "#fff", fontFamily: "var(--font-geist-sans), system-ui, sans-serif" }}>
+        <body style={{ margin: 0, background: "#ffffff", color: "#1a1a1a", fontFamily: "var(--font-geist-sans), system-ui, sans-serif" }}>
           <PwaRegister />
           <PageTracker />
           {children}
@@ -191,8 +191,8 @@ export default async function RootLayout({ children }) {
         "--bg": palette.bg,
         "--bg-card": palette.card || palette.bg,
         "--text": palette.text,
-        "--text-muted": palette.muted || "rgba(255,255,255,0.45)",
-        "--border": palette.border || "rgba(255,255,255,0.08)",
+        "--text-muted": palette.muted || "rgba(0,0,0,0.45)",
+        "--border": palette.border || "rgba(0,0,0,0.08)",
         "--accent": usingSectorTexture ? palette.accent : (accentColor || palette.accent || "#ffffff"),
         "--btn-bg": palette.buttonBg || palette.text,
         "--btn-text": palette.buttonText || palette.bg,

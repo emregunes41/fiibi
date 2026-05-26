@@ -84,38 +84,38 @@ export default function SetupWizard({ config }) {
   const SectorIcon = sectorIcons[businessType] || Store;
 
   const stepStyle = {
-    background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
+    background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)",
     padding: "32px 28px", maxWidth: 520, width: "100%", margin: "0 auto",
   };
 
   const inp = {
     width: "100%", boxSizing: "border-box",
-    background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
-    borderRadius: 0, padding: "14px 16px", fontSize: 14, color: "#fff",
+    background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.12)",
+    borderRadius: 0, padding: "14px 16px", fontSize: 14, color: "#1a1a1a",
     outline: "none", marginBottom: 14, transition: "border-color 0.2s",
   };
 
   const label = {
     display: "flex", alignItems: "center", gap: 6,
-    fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)",
+    fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.5)",
     textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6,
   };
 
   const btnPrimary = {
-    flex: 2, padding: "14px", background: "#fff", color: "#000", border: "none",
+    flex: 2, padding: "14px", background: "#1a1a1a", color: "#1a1a1a", border: "none",
     fontSize: 13, fontWeight: 800, cursor: "pointer", display: "flex",
     alignItems: "center", justifyContent: "center", gap: 8, transition: "all 0.2s",
   };
 
   const btnSecondary = {
-    flex: 1, padding: "14px", background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)",
+    flex: 1, padding: "14px", background: "rgba(0,0,0,0.06)", color: "rgba(0,0,0,0.5)",
     border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s",
   };
 
   const skipBtn = {
     position: "fixed", top: 24, right: 24,
-    padding: "8px 16px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
-    color: "rgba(255,255,255,0.4)", fontSize: 12, fontWeight: 700, cursor: "pointer",
+    padding: "8px 16px", background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.1)",
+    color: "rgba(0,0,0,0.4)", fontSize: 12, fontWeight: 700, cursor: "pointer",
     display: "flex", alignItems: "center", gap: 6, transition: "all 0.2s", zIndex: 100,
   };
 
@@ -123,8 +123,8 @@ export default function SetupWizard({ config }) {
     <div style={{ minHeight: "80vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, position: "relative" }}>
       {/* GEÇ button — always visible */}
       <button type="button" onClick={handleSkip} disabled={saving} style={skipBtn}
-        onMouseEnter={e => { e.target.style.color = "#fff"; e.target.style.borderColor = "rgba(255,255,255,0.3)"; }}
-        onMouseLeave={e => { e.target.style.color = "rgba(255,255,255,0.4)"; e.target.style.borderColor = "rgba(255,255,255,0.1)"; }}
+        onMouseEnter={e => { e.target.style.color = "#fff"; e.target.style.borderColor = "rgba(0,0,0,0.3)"; }}
+        onMouseLeave={e => { e.target.style.color = "rgba(0,0,0,0.4)"; e.target.style.borderColor = "rgba(0,0,0,0.1)"; }}
       >
         <SkipForward size={13} /> {saving ? "..." : "GEÇ"}
       </button>
@@ -135,11 +135,11 @@ export default function SetupWizard({ config }) {
           {Array.from({ length: totalSteps }, (_, i) => (
             <div key={i} style={{
               width: i + 1 <= step ? 48 : 32, height: 3,
-              background: i + 1 <= step ? "#fff" : "rgba(255,255,255,0.08)",
+              background: i + 1 <= step ? "#fff" : "rgba(0,0,0,0.08)",
               transition: "all 0.4s ease",
             }} />
           ))}
-          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", marginLeft: 8, fontWeight: 700 }}>
+          <span style={{ fontSize: 10, color: "rgba(0,0,0,0.25)", marginLeft: 8, fontWeight: 700 }}>
             {step}/{totalSteps}
           </span>
         </div>
@@ -150,7 +150,7 @@ export default function SetupWizard({ config }) {
         <div style={{ textAlign: "center", maxWidth: 520, animation: "fadeIn 0.5s ease" }}>
           <div style={{
             width: 72, height: 72, margin: "0 auto 24px", display: "flex", alignItems: "center", justifyContent: "center",
-            background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+            background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.1)",
           }}>
             <SectorIcon size={32} style={{ color: "rgba(255,255,255,0.6)" }} />
           </div>
@@ -158,7 +158,7 @@ export default function SetupWizard({ config }) {
           <h1 style={{ fontSize: "clamp(1.4rem, 5vw, 2rem)", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>
             fiibi'ye Hoş Geldiniz! 🎉
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 14, lineHeight: 1.7, marginBottom: 32, maxWidth: 400, margin: "0 auto 32px" }}>
+          <p style={{ color: "rgba(0,0,0,0.45)", fontSize: 14, lineHeight: 1.7, marginBottom: 32, maxWidth: 400, margin: "0 auto 32px" }}>
             Birkaç adımda işletmenizi online'a taşıyalım.
             Müşterileriniz sizin markanızla karşılaşacak.
           </p>
@@ -172,22 +172,22 @@ export default function SetupWizard({ config }) {
               { icon: <Globe size={16} />, title: "Sosyal Medya", desc: "Instagram, WhatsApp" },
             ].map((f, i) => (
               <div key={i} style={{
-                padding: "14px 16px", background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.06)",
+                padding: "14px 16px", background: "rgba(0,0,0,0.03)",
+                border: "1px solid rgba(0,0,0,0.06)",
               }}>
-                <div style={{ color: "rgba(255,255,255,0.4)", marginBottom: 8 }}>{f.icon}</div>
+                <div style={{ color: "rgba(0,0,0,0.4)", marginBottom: 8 }}>{f.icon}</div>
                 <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{f.title}</div>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{f.desc}</div>
+                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.3)" }}>{f.desc}</div>
               </div>
             ))}
           </div>
 
           {tenantSlug && (
             <div style={{
-              padding: "10px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-              marginBottom: 24, fontSize: 12, color: "rgba(255,255,255,0.5)",
+              padding: "10px 16px", background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)",
+              marginBottom: 24, fontSize: 12, color: "rgba(0,0,0,0.5)",
             }}>
-              Siteniz: <span style={{ color: "#fff", fontWeight: 700 }}>{tenantSlug}.fiibi.co</span>
+              Siteniz: <span style={{ color: "#1a1a1a", fontWeight: 700 }}>{tenantSlug}.fiibi.co</span>
             </div>
           )}
 
@@ -197,7 +197,7 @@ export default function SetupWizard({ config }) {
             Kuruluma Başla <ArrowRight size={16} />
           </button>
 
-          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginTop: 16 }}>
+          <p style={{ fontSize: 11, color: "rgba(0,0,0,0.25)", marginTop: 16 }}>
             Tüm ayarları daha sonra "Ayarlar" sekmesinden değiştirebilirsiniz.
           </p>
         </div>
@@ -207,9 +207,9 @@ export default function SetupWizard({ config }) {
       {step === 1 && (
         <div style={stepStyle}>
           <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <Store size={24} style={{ color: "rgba(255,255,255,0.5)", marginBottom: 10 }} />
+            <Store size={24} style={{ color: "rgba(0,0,0,0.5)", marginBottom: 10 }} />
             <h2 style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 4 }}>İşletme Bilgileri</h2>
-            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 12 }}>Müşterilerinizin sizi bulmasını kolaylaştırın.</p>
+            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12 }}>Müşterilerinizin sizi bulmasını kolaylaştırın.</p>
           </div>
 
           <label style={label}><Store size={11} /> İşletme Adı *</label>
@@ -240,9 +240,9 @@ export default function SetupWizard({ config }) {
       {step === 2 && (
         <div style={stepStyle}>
           <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <Palette size={24} style={{ color: "rgba(255,255,255,0.5)", marginBottom: 10 }} />
+            <Palette size={24} style={{ color: "rgba(0,0,0,0.5)", marginBottom: 10 }} />
             <h2 style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 4 }}>Görsel Kimlik</h2>
-            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 12 }}>Markanızı yansıtan logo ve renk seçin.</p>
+            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12 }}>Markanızı yansıtan logo ve renk seçin.</p>
           </div>
 
           {/* Logo Upload */}
@@ -250,19 +250,19 @@ export default function SetupWizard({ config }) {
           <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
             {form.logoUrl ? (
               <div style={{
-                width: 64, height: 64, border: "1px solid rgba(255,255,255,0.1)",
+                width: 64, height: 64, border: "1px solid rgba(0,0,0,0.1)",
                 display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden",
-                background: "rgba(255,255,255,0.04)",
+                background: "rgba(0,0,0,0.04)",
               }}>
                 <img src={form.logoUrl} alt="Logo" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
               </div>
             ) : (
               <div style={{
-                width: 64, height: 64, border: "1px dashed rgba(255,255,255,0.12)",
+                width: 64, height: 64, border: "1px dashed rgba(0,0,0,0.12)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                background: "rgba(255,255,255,0.02)",
+                background: "rgba(0,0,0,0.02)",
               }}>
-                <Upload size={20} style={{ color: "rgba(255,255,255,0.15)" }} />
+                <Upload size={20} style={{ color: "rgba(0,0,0,0.15)" }} />
               </div>
             )}
             <div style={{ flex: 1 }}>
@@ -279,8 +279,8 @@ export default function SetupWizard({ config }) {
               >
                 {({ open }) => (
                   <button type="button" onClick={() => open()} style={{
-                    padding: "10px 20px", background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.12)",
+                    padding: "10px 20px", background: "rgba(0,0,0,0.06)",
+                    border: "1px solid rgba(0,0,0,0.12)",
                     color: "rgba(255,255,255,0.6)", fontSize: 12, fontWeight: 700, cursor: "pointer",
                     width: "100%",
                   }}>
@@ -288,7 +288,7 @@ export default function SetupWizard({ config }) {
                   </button>
                 )}
               </CldUploadWidget>
-              <p style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", marginTop: 6 }}>PNG/SVG önerilir · Şeffaf arka plan idealdir</p>
+              <p style={{ fontSize: 10, color: "rgba(0,0,0,0.25)", marginTop: 6 }}>PNG/SVG önerilir · Şeffaf arka plan idealdir</p>
             </div>
           </div>
 
@@ -326,9 +326,9 @@ export default function SetupWizard({ config }) {
       {step === 3 && (
         <div style={stepStyle}>
           <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <Globe size={24} style={{ color: "rgba(255,255,255,0.5)", marginBottom: 10 }} />
+            <Globe size={24} style={{ color: "rgba(0,0,0,0.5)", marginBottom: 10 }} />
             <h2 style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 4 }}>Sayfa & Sosyal Medya</h2>
-            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 12 }}>Ziyaretçilerinizi karşılayan ilk izlenim.</p>
+            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12 }}>Ziyaretçilerinizi karşılayan ilk izlenim.</p>
           </div>
 
           <label style={label}><Type size={11} /> Ana Başlık *</label>
@@ -347,7 +347,7 @@ export default function SetupWizard({ config }) {
             placeholder={bt.heroSub || "Kısa tanıtım cümlesi"}
           />
 
-          <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "8px 0 18px" }} />
+          <div style={{ height: 1, background: "rgba(0,0,0,0.06)", margin: "8px 0 18px" }} />
 
           <label style={label}><Instagram size={11} /> Instagram</label>
           <input type="text" value={form.instagram} onChange={e => setForm({ ...form, instagram: e.target.value })} style={inp} placeholder="@kullanici_adi" />
@@ -375,7 +375,7 @@ export default function SetupWizard({ config }) {
               <Check size={26} style={{ color: "#22c55e" }} />
             </div>
             <h2 style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 4 }}>Hazırsınız! 🎉</h2>
-            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 12 }}>Son bir göz atın, sorun yoksa tamamlayalım.</p>
+            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12 }}>Son bir göz atın, sorun yoksa tamamlayalım.</p>
           </div>
 
           {/* Summary */}
@@ -392,13 +392,13 @@ export default function SetupWizard({ config }) {
             ].map((item, i) => (
               <div key={i} style={{
                 display: "flex", justifyContent: "space-between", alignItems: "center",
-                padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)",
+                padding: "10px 0", borderBottom: "1px solid rgba(0,0,0,0.04)",
               }}>
-                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", fontWeight: 600 }}>{item.label}</span>
+                <span style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", fontWeight: 600 }}>{item.label}</span>
                 <span style={{
                   fontSize: 12, fontWeight: 700, maxWidth: 280,
                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                  color: item.value ? "#fff" : "rgba(255,255,255,0.15)",
+                  color: item.value ? "#fff" : "rgba(0,0,0,0.15)",
                 }}>
                   {item.value || "—"}
                 </span>
@@ -408,12 +408,12 @@ export default function SetupWizard({ config }) {
             {/* Color + Logo preview */}
             <div style={{
               display: "flex", alignItems: "center", justifyContent: "space-between",
-              padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)",
+              padding: "10px 0", borderBottom: "1px solid rgba(0,0,0,0.04)",
             }}>
-              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", fontWeight: 600 }}>Marka Rengi</span>
+              <span style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", fontWeight: 600 }}>Marka Rengi</span>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div style={{ width: 18, height: 18, background: form.accentColor, border: "1px solid rgba(255,255,255,0.2)" }} />
-                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", fontFamily: "monospace" }}>{form.accentColor}</span>
+                <div style={{ width: 18, height: 18, background: form.accentColor, border: "1px solid rgba(0,0,0,0.2)" }} />
+                <span style={{ fontSize: 11, color: "rgba(0,0,0,0.5)", fontFamily: "monospace" }}>{form.accentColor}</span>
               </div>
             </div>
             {form.logoUrl && (
@@ -421,7 +421,7 @@ export default function SetupWizard({ config }) {
                 display: "flex", alignItems: "center", justifyContent: "space-between",
                 padding: "10px 0",
               }}>
-                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", fontWeight: 600 }}>Logo</span>
+                <span style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", fontWeight: 600 }}>Logo</span>
                 <img src={form.logoUrl} alt="Logo" style={{ height: 28, maxWidth: 100, objectFit: "contain" }} />
               </div>
             )}
@@ -429,8 +429,8 @@ export default function SetupWizard({ config }) {
 
           {/* Info box */}
           <div style={{
-            padding: "12px 16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
-            marginBottom: 20, fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: 1.6,
+            padding: "12px 16px", background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)",
+            marginBottom: 20, fontSize: 11, color: "rgba(0,0,0,0.35)", lineHeight: 1.6,
           }}>
             💡 Tüm bu ayarları daha sonra <strong style={{ color: "rgba(255,255,255,0.6)" }}>Ayarlar</strong> sekmesinden istediğiniz zaman güncelleyebilirsiniz.
           </div>
@@ -452,7 +452,7 @@ export default function SetupWizard({ config }) {
           to { opacity: 1; transform: translateY(0); }
         }
         input:focus, textarea:focus {
-          border-color: rgba(255,255,255,0.25) !important;
+          border-color: rgba(0,0,0,0.25) !important;
         }
       `}</style>
     </div>

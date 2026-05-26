@@ -305,8 +305,8 @@ export default async function ProfilePage() {
                               <div key={step.id} style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, textAlign: "center", flex: 1 }}>
                                 <div style={{
                                   width: 26, height: 26, borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, transition: "all 0.3s",
-                                  ...(isCompleted ? { background: "#fff", color: "#000" } :
-                                    isCurrent ? { background: "#fff", color: "#000", boxShadow: "0 0 12px rgba(0,0,0,0.25)" } :
+                                  ...(isCompleted ? { background: "#1a1a1a", color: "#1a1a1a" } :
+                                    isCurrent ? { background: "#1a1a1a", color: "#1a1a1a", boxShadow: "0 0 12px rgba(0,0,0,0.25)" } :
                                     { background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.3)" })
                                 }}>
                                   {isCompleted ? "✓" : (idx + 1)}
@@ -330,7 +330,7 @@ export default async function ProfilePage() {
                             <h5 style={{ fontWeight: 700, color: "var(--text, #1a1a1a)", fontSize: 13 }}>Fotoğraflarınız Hazır! 🎉</h5>
                             <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 11 }}>Albüme gidecek fotoğrafları seçebilirsiniz.</p>
                           </div>
-                          <Link href="/profile/gallery" style={{ background: "#fff", color: "#000", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap" }}>
+                          <Link href="/profile/gallery" style={{ background: "#1a1a1a", color: "#1a1a1a", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap" }}>
                             Seçimi Başlat
                           </Link>
                         </div>
@@ -376,7 +376,7 @@ export default async function ProfilePage() {
                             <h5 style={{ fontWeight: 700, color: "var(--text, #1a1a1a)", fontSize: 13 }}>Teslimatınız Hazır! 📸</h5>
                             <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 11 }}>Tüm dosyalarınıza aşağıdaki bağlantıdan ulaşabilirsiniz.</p>
                           </div>
-                          <a href={res.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#fff", color: "#000", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
+                          <a href={res.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#1a1a1a", color: "#1a1a1a", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
                             <ExternalLink size={14} /> Klasöre Git
                           </a>
                         </div>

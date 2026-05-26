@@ -58,7 +58,7 @@ export const TEMPLATES = {
     googleFont: "Montserrat:wght@300;400;500;600;700;800;900",
     preview: {
       bg: "#0d0d0d",
-      card: "rgba(255,255,255,0.04)",
+      card: "rgba(0,0,0,0.04)",
       accent: "#e2e2e2",
       text: "#ffffff",
       radius: 0,

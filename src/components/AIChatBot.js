@@ -224,7 +224,7 @@ export default function AIChatBot() {
                       borderRadius: 0,
                       background: msg.role === "user" 
                         ? "#FEFEFE" 
-                        : "rgba(255, 255, 255, 0.06)",
+                        : "rgba(0, 0, 0, 0.06)",
                       color: msg.role === "user" ? "#010101" : "#FEFEFE",
                       "--force-color": msg.role === "user" ? "#010101" : "#FEFEFE",
                       fontSize: 13,
@@ -232,7 +232,7 @@ export default function AIChatBot() {
                       fontWeight: msg.role === "user" ? 500 : 400,
                       border: msg.role === "user" 
                         ? "none" 
-                        : "1px solid rgba(255, 255, 255, 0.06)",
+                        : "1px solid rgba(0, 0, 0, 0.06)",
                       whiteSpace: "pre-wrap",
                       wordBreak: "break-word",
                     }}>
@@ -251,8 +251,8 @@ export default function AIChatBot() {
                           justifyContent: "space-between",
                           padding: "10px 14px",
                           borderRadius: 0,
-                          background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 100%)",
-                          border: "1px solid rgba(255, 255, 255, 0.15)",
+                          background: "linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.04) 100%)",
+                          border: "1px solid rgba(0, 0, 0, 0.15)",
                           textDecoration: "none",
                           color: "#FEFEFE",
                           cursor: "pointer",
@@ -290,8 +290,8 @@ export default function AIChatBot() {
                   <div style={{
                     padding: "12px 16px",
                     borderRadius: 0,
-                    background: "rgba(255, 255, 255, 0.06)",
-                    border: "1px solid rgba(255, 255, 255, 0.06)",
+                    background: "rgba(0, 0, 0, 0.06)",
+                    border: "1px solid rgba(0, 0, 0, 0.06)",
                     display: "flex",
                     gap: 4,
                   }}>
@@ -337,8 +337,8 @@ export default function AIChatBot() {
                   rows={1}
                   style={{
                     flex: 1,
-                    background: "rgba(255, 255, 255, 0.06)",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    background: "rgba(0, 0, 0, 0.06)",
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
                     borderRadius: 0,
                     padding: "12px 14px",
                     fontSize: 16,
@@ -358,7 +358,7 @@ export default function AIChatBot() {
                     width: 42,
                     height: 42,
                     borderRadius: 0,
-                    background: input.trim() && !isLoading ? "#FEFEFE" : "rgba(255, 255, 255, 0.06)",
+                    background: input.trim() && !isLoading ? "#FEFEFE" : "rgba(0, 0, 0, 0.06)",
                     border: "none",
                     cursor: input.trim() && !isLoading ? "pointer" : "not-allowed",
                     display: "flex",
@@ -368,7 +368,7 @@ export default function AIChatBot() {
                     transition: "all 0.2s",
                   }}
                 >
-                  <Send size={16} style={{ color: input.trim() && !isLoading ? "#010101" : "rgba(255, 255, 255, 0.2)", "--force-color": input.trim() && !isLoading ? "#010101" : "rgba(255, 255, 255, 0.2)" }} />
+                  <Send size={16} style={{ color: input.trim() && !isLoading ? "#010101" : "rgba(0, 0, 0, 0.2)", "--force-color": input.trim() && !isLoading ? "#010101" : "rgba(0, 0, 0, 0.2)" }} />
                 </button>
               </div>
             </div>

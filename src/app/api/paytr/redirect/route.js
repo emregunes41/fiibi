@@ -14,7 +14,7 @@ function generateRedirectHtml(returnTo) {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
           }
           .loader {
-            border: 3px solid rgba(255,255,255,0.1);
+            border: 3px solid rgba(0,0,0,0.1);
             border-top: 3px solid #fff;
             border-radius: 50%;
             width: 30px;

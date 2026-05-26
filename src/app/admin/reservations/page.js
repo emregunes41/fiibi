@@ -13,8 +13,8 @@ import InstallPwaButton from "@/components/InstallPwaButton";
 
 const inp = {
   padding: "0.7rem 0.8rem", borderRadius: 0, fontSize: "0.8rem",
-  border: "1px solid rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.08)",
-  color: "#fff", outline: "none", width: "100%", boxSizing: "border-box",
+  border: "1px solid rgba(0,0,0,0.18)", background: "rgba(0,0,0,0.08)",
+  color: "#1a1a1a", outline: "none", width: "100%", boxSizing: "border-box",
 };
 
 export default function ReservationsPage() {
@@ -153,20 +153,20 @@ export default function ReservationsPage() {
   const statusColor = (s) => {
     if (s === "CONFIRMED") return { bg: "rgba(34,197,94,0.12)", c: "#4ade80", b: "1px solid rgba(34,197,94,0.25)" };
     if (s === "COMPLETED") return { bg: "rgba(16,185,129,0.10)", c: "#6ee7b7", b: "1px solid rgba(16,185,129,0.2)" };
-    if (s === "CANCELLED") return { bg: "rgba(255,255,255,0.04)", c: "rgba(255,255,255,0.4)", b: "1px solid rgba(255,255,255,0.08)" };
+    if (s === "CANCELLED") return { bg: "rgba(0,0,0,0.04)", c: "rgba(0,0,0,0.4)", b: "1px solid rgba(0,0,0,0.08)" };
     if (s === "DELETED") return { bg: "rgba(107,114,128,0.15)", c: "#9ca3af", b: "1px solid rgba(107,114,128,0.3)" };
     return { bg: "rgba(34,197,94,0.06)", c: "rgba(34,197,94,0.7)", b: "1px solid rgba(34,197,94,0.15)" };
   };
 
   return (
-    <div style={{ color: "#fff", maxWidth: "100%", overflowX: "hidden" }}>
+    <div style={{ color: "#1a1a1a", maxWidth: "100%", overflowX: "hidden" }}>
       
-      <div style={{ display: "flex", gap: "24px", marginBottom: "24px", borderBottom: "1px solid rgba(255,255,255,0.1)", overflowX: "auto", scrollbarWidth: "none" }}>
-         <button onClick={() => setActiveTab("reservations")} style={{ background: "none", border: "none", borderBottom: activeTab === "reservations" ? "2px solid #fff" : "2px solid transparent", color: activeTab === "reservations" ? "#fff" : "rgba(255,255,255,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
+      <div style={{ display: "flex", gap: "24px", marginBottom: "24px", borderBottom: "1px solid rgba(0,0,0,0.1)", overflowX: "auto", scrollbarWidth: "none" }}>
+         <button onClick={() => setActiveTab("reservations")} style={{ background: "none", border: "none", borderBottom: activeTab === "reservations" ? "2px solid #fff" : "2px solid transparent", color: activeTab === "reservations" ? "#fff" : "rgba(0,0,0,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
             {terms.appointments} Yönetimi
          </button>
          {siteConfig?.moduleEvents !== false && (
-           <button onClick={() => setActiveTab("events")} style={{ background: "none", border: "none", borderBottom: activeTab === "events" ? "2px solid #fff" : "2px solid transparent", color: activeTab === "events" ? "#fff" : "rgba(255,255,255,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
+           <button onClick={() => setActiveTab("events")} style={{ background: "none", border: "none", borderBottom: activeTab === "events" ? "2px solid #fff" : "2px solid transparent", color: activeTab === "events" ? "#fff" : "rgba(0,0,0,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
               Grup Dersleri & Etkinlikler
            </button>
          )}
@@ -182,7 +182,7 @@ export default function ReservationsPage() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem", gap: "0.75rem", flexWrap: "wrap" }}>
         <div>
           <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.03em", margin: 0 }}>Rezervasyonlar</h1>
-          <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.75rem", margin: "4px 0 0" }}>{reservations.filter(r => r.status !== "DELETED").length} kayıt</p>
+          <p style={{ color: "rgba(0,0,0,0.45)", fontSize: "0.75rem", margin: "4px 0 0" }}>{reservations.filter(r => r.status !== "DELETED").length} kayıt</p>
         </div>
         <div style={{ display: "flex", gap: "8px" }}>
           <button
@@ -194,8 +194,8 @@ export default function ReservationsPage() {
               setIsIcalModalOpen(true);
             }}
             style={{ 
-              background: "rgba(255,255,255,0.06)", color: "#fff", padding: "0.5rem 1rem", 
-              borderRadius: 0, border: "1px solid rgba(255,255,255,0.1)", fontWeight: 800, cursor: "pointer",
+              background: "rgba(0,0,0,0.06)", color: "#1a1a1a", padding: "0.5rem 1rem", 
+              borderRadius: 0, border: "1px solid rgba(0,0,0,0.1)", fontWeight: 800, cursor: "pointer",
               display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.7rem",
               transition: "all 0.2s"
             }}
@@ -221,13 +221,13 @@ export default function ReservationsPage() {
       </div>
 
       {/* View Mode Toggle */}
-      <div style={{ display: "flex", gap: "4px", marginBottom: "14px", background: "rgba(255,255,255,0.04)", borderRadius: 0, padding: "4px", width: "fit-content" }}>
+      <div style={{ display: "flex", gap: "4px", marginBottom: "14px", background: "rgba(0,0,0,0.04)", borderRadius: 0, padding: "4px", width: "fit-content" }}>
         <button
           onClick={() => setViewMode("list")}
           style={{
             padding: "7px 14px", borderRadius: 0, border: "none", cursor: "pointer",
-            background: viewMode === "list" ? "rgba(255,255,255,0.12)" : "transparent",
-            color: viewMode === "list" ? "#fff" : "rgba(255,255,255,0.4)",
+            background: viewMode === "list" ? "rgba(0,0,0,0.12)" : "transparent",
+            color: viewMode === "list" ? "#fff" : "rgba(0,0,0,0.4)",
             fontWeight: 700, fontSize: "0.68rem", display: "flex", alignItems: "center", gap: "6px",
             transition: "all 0.2s",
           }}
@@ -238,8 +238,8 @@ export default function ReservationsPage() {
           onClick={() => setViewMode("calendar")}
           style={{
             padding: "7px 14px", borderRadius: 0, border: "none", cursor: "pointer",
-            background: viewMode === "calendar" ? "rgba(255,255,255,0.12)" : "transparent",
-            color: viewMode === "calendar" ? "#fff" : "rgba(255,255,255,0.4)",
+            background: viewMode === "calendar" ? "rgba(0,0,0,0.12)" : "transparent",
+            color: viewMode === "calendar" ? "#fff" : "rgba(0,0,0,0.4)",
             fontWeight: 700, fontSize: "0.68rem", display: "flex", alignItems: "center", gap: "6px",
             transition: "all 0.2s",
           }}
@@ -299,14 +299,14 @@ export default function ReservationsPage() {
             {/* Month Nav */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <button onClick={goToday} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, padding: "7px 16px", cursor: "pointer", color: "#fff", fontSize: "0.75rem", fontWeight: 700 }}>Bugün</button>
+                <button onClick={goToday} style={{ background: "rgba(0,0,0,0.08)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 0, padding: "7px 16px", cursor: "pointer", color: "#1a1a1a", fontSize: "0.75rem", fontWeight: 700 }}>Bugün</button>
                 <div style={{ display: "flex", gap: 2 }}>
                   <button onClick={prevMonth} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.6)", display: "flex", padding: 6 }}><ChevronLeft size={20} /></button>
                   <button onClick={nextMonth} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.6)", display: "flex", padding: 6 }}><ChevronRight size={20} /></button>
                 </div>
                 <h2 style={{ fontSize: "1.15rem", fontWeight: 700, margin: 0 }}>{monthNames[calMonth]} {calYear}</h2>
               </div>
-              <button onClick={() => { setQuickEventForm({ venueName: "", phone: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" }); setQuickEventModal(true); }} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 0, padding: "7px 14px", cursor: "pointer", color: "rgba(255,255,255,0.7)", fontSize: "0.7rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 5 }}>
+              <button onClick={() => { setQuickEventForm({ venueName: "", phone: "", eventDate: "", startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" }); setQuickEventModal(true); }} style={{ background: "rgba(0,0,0,0.08)", border: "1px solid rgba(0,0,0,0.12)", borderRadius: 0, padding: "7px 14px", cursor: "pointer", color: "rgba(255,255,255,0.7)", fontSize: "0.7rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 5 }}>
                 <Plus size={14} /> Olay Ekle
               </button>
             </div>
@@ -321,7 +321,7 @@ export default function ReservationsPage() {
             {/* Calendar Grid */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid rgba(0,0,0,0.12)" }}>
               {cells.map((day, idx) => {
-                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 110, borderRight: "1px solid rgba(0,0,0,0.12)", borderBottom: "1px solid rgba(0,0,0,0.12)", background: "rgba(255,255,255,0.015)" }} />;
+                if (day === null) return <div key={`e${idx}`} style={{ minHeight: 110, borderRight: "1px solid rgba(0,0,0,0.12)", borderBottom: "1px solid rgba(0,0,0,0.12)", background: "rgba(0,0,0,0.015)" }} />;
                 const dayRes = resByDay[day] || [];
                 const hasRes = dayRes.length > 0;
                 const todayStyle = isToday(day);
@@ -333,7 +333,7 @@ export default function ReservationsPage() {
                   <div key={day} onClick={(e) => { e.stopPropagation(); setSelectedDay({ day, reservations: dayRes }); setDayPopup(null); setTimeout(() => { const el = document.getElementById('selected-day-panel'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 50); }} style={{
                     minHeight: 110, borderRight: "1px solid rgba(0,0,0,0.12)", borderBottom: "1px solid rgba(0,0,0,0.12)",
                     padding: "4px 5px", cursor: "pointer", position: "relative", overflow: "hidden",
-                    background: isSelected ? "rgba(255,255,255,0.06)" : isDayBlocked ? "rgba(255,60,60,0.04)" : "transparent",
+                    background: isSelected ? "rgba(0,0,0,0.06)" : isDayBlocked ? "rgba(255,60,60,0.04)" : "transparent",
                     transition: "background 0.15s",
                   }}>
                     <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}>
@@ -342,7 +342,7 @@ export default function ReservationsPage() {
                         width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center",
                         borderRadius: "50%",
                         background: todayStyle ? "#4285f4" : "transparent",
-                        color: todayStyle ? "#fff" : isDayBlocked ? "rgba(255,80,80,0.6)" : hasRes ? "#fff" : "rgba(255,255,255,0.4)",
+                        color: todayStyle ? "#fff" : isDayBlocked ? "rgba(255,80,80,0.6)" : hasRes ? "#fff" : "rgba(0,0,0,0.4)",
                       }}>{day}</span>
                     </div>
                     {isDayBlocked && <div style={{ fontSize: "0.48rem", fontWeight: 800, color: "rgba(255,80,80,0.5)", textAlign: "center", marginBottom: 2 }}>KAPALI</div>}
@@ -365,15 +365,15 @@ export default function ReservationsPage() {
 
             {/* Selected Day Panel */}
             {selectedDay && (
-              <div id="selected-day-panel" style={{ marginTop: 16, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.12)" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <div id="selected-day-panel" style={{ marginTop: 16, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                     <div style={{ width: 42, height: 42, background: "#4285f4", borderRadius: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                      <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>{selectedDay.day}</span>
+                      <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "#1a1a1a", lineHeight: 1 }}>{selectedDay.day}</span>
                     </div>
                     <div>
-                      <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#fff" }}>{selectedDay.day} {monthNames[calMonth]} {calYear}</div>
-                      <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)" }}>{selectedDay.reservations.length === 0 ? "Rezervasyon yok" : `${selectedDay.reservations.length} rezervasyon`}</div>
+                      <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#1a1a1a" }}>{selectedDay.day} {monthNames[calMonth]} {calYear}</div>
+                      <div style={{ fontSize: "0.7rem", color: "rgba(0,0,0,0.4)" }}>{selectedDay.reservations.length === 0 ? "Rezervasyon yok" : `${selectedDay.reservations.length} rezervasyon`}</div>
                     </div>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -381,17 +381,17 @@ export default function ReservationsPage() {
                       const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(selectedDay.day).padStart(2,'0')}`;
                       setQuickEventForm({ venueName: "", phone: "", eventDate: dateStr, startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
                       setQuickEventModal(true);
-                    }} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 0, padding: "6px 12px", cursor: "pointer", color: "rgba(255,255,255,0.7)", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                    }} style={{ background: "rgba(0,0,0,0.08)", border: "1px solid rgba(0,0,0,0.12)", borderRadius: 0, padding: "6px 12px", cursor: "pointer", color: "rgba(255,255,255,0.7)", fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
                       <Plus size={12} /> {isPhotographer ? "Olay Ekle" : `${terms.appointment} Ekle`}
                     </button>
                     <button onClick={async () => {
                       const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(selectedDay.day).padStart(2,'0')}`;
                       const res = await toggleBlockedDay(dateStr);
                       if (res.success) setBlockedDays(res.blockedDays);
-                    }} style={{ background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0, padding: "6px 12px", cursor: "pointer", color: (() => { const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(selectedDay.day).padStart(2,'0')}`; return blockedDays.includes(dateStr) ? "rgba(100,255,100,0.8)" : "rgba(255,100,100,0.8)"; })(), fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                    }} style={{ background: "none", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: "6px 12px", cursor: "pointer", color: (() => { const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(selectedDay.day).padStart(2,'0')}`; return blockedDays.includes(dateStr) ? "rgba(100,255,100,0.8)" : "rgba(255,100,100,0.8)"; })(), fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
                       <Ban size={12} /> {(() => { const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(selectedDay.day).padStart(2,'0')}`; return blockedDays.includes(dateStr) ? "Günü Aç" : "Günü Kapat"; })()}
                     </button>
-                    <button onClick={() => setSelectedDay(null)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: 6 }}><X size={18} /></button>
+                    <button onClick={() => setSelectedDay(null)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.4)", cursor: "pointer", padding: 6 }}><X size={18} /></button>
                   </div>
                 </div>
                 {selectedDay.reservations.length === 0 ? (
@@ -407,20 +407,20 @@ export default function ReservationsPage() {
                       const chipColor = r.status === "CONFIRMED" ? "#4285f4" : r.status === "COMPLETED" ? "#34a853" : r.status === "CANCELLED" ? "#5f6368" : "#4285f4";
                       return (
                         <div key={r.id} onClick={() => { setReminderResult(null); setDetailModal({ isOpen: true, data: r }); setSelectedDay(null); }}
-                          style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", borderBottom: "1px solid rgba(255,255,255,0.04)", cursor: "pointer", transition: "background 0.15s" }}
-                          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}
+                          style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", borderBottom: "1px solid rgba(0,0,0,0.04)", cursor: "pointer", transition: "background 0.15s" }}
+                          onMouseEnter={e => e.currentTarget.style.background = "rgba(0,0,0,0.04)"}
                           onMouseLeave={e => e.currentTarget.style.background = "transparent"}
                         >
                           <div style={{ width: 4, height: 40, borderRadius: 2, flexShrink: 0, background: chipColor }} />
                           <div style={{ width: 50, flexShrink: 0, textAlign: "center" }}>
-                            <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "#fff" }}>{r.eventTime || "—"}</div>
+                            <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "#1a1a1a" }}>{r.eventTime || "—"}</div>
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{displayName(r)}</div>
-                            <div style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{[pkgs, venue].filter(Boolean).join(" · ")}</div>
+                            <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1a1a1a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{displayName(r)}</div>
+                            <div style={{ fontSize: "0.68rem", color: "rgba(0,0,0,0.4)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{[pkgs, venue].filter(Boolean).join(" · ")}</div>
                           </div>
                           <span style={{ padding: "3px 8px", fontSize: "0.58rem", fontWeight: 800, textTransform: "uppercase", background: sc.bg, color: sc.c, flexShrink: 0 }}>{statusLabel(r.status)}</span>
-                          <ChevronRight size={16} style={{ color: "rgba(255,255,255,0.2)", flexShrink: 0 }} />
+                          <ChevronRight size={16} style={{ color: "rgba(0,0,0,0.2)", flexShrink: 0 }} />
                         </div>
                       );
                     })}
@@ -437,7 +437,7 @@ export default function ReservationsPage() {
       <>
       {/* Sort & Filter Bar */}
       <div style={{ position: "relative", marginBottom: 10 }}>
-        <Search size={14} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,0.3)", pointerEvents: "none" }} />
+        <Search size={14} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.3)", pointerEvents: "none" }} />
         <input
           type="text"
           placeholder="İsim ile ara..."
@@ -445,16 +445,16 @@ export default function ReservationsPage() {
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: "100%", boxSizing: "border-box", padding: "9px 12px 9px 34px",
-            background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 0, color: "#fff", fontSize: "0.75rem", outline: "none",
+            background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)",
+            borderRadius: 0, color: "#1a1a1a", fontSize: "0.75rem", outline: "none",
             transition: "all 0.2s",
           }}
         />
       </div>
       <div style={{ display: "flex", gap: "6px", marginBottom: "10px", flexWrap: "wrap", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 4, marginRight: 4 }}>
-          <ArrowUpDown size={11} style={{ color: "rgba(255,255,255,0.3)" }} />
-          <span style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Sırala:</span>
+          <ArrowUpDown size={11} style={{ color: "rgba(0,0,0,0.3)" }} />
+          <span style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(0,0,0,0.3)", textTransform: "uppercase" }}>Sırala:</span>
         </div>
         {[
           { key: "newest", label: "En Yeni" },
@@ -467,8 +467,8 @@ export default function ReservationsPage() {
             onClick={() => setSortMode(s.key)}
             style={{
               padding: "5px 10px", borderRadius: 0, border: "none", cursor: "pointer",
-              background: sortMode === s.key ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.04)",
-              color: sortMode === s.key ? "#fff" : "rgba(255,255,255,0.4)",
+              background: sortMode === s.key ? "rgba(0,0,0,0.12)" : "rgba(0,0,0,0.04)",
+              color: sortMode === s.key ? "#fff" : "rgba(0,0,0,0.4)",
               fontWeight: 700, fontSize: "0.6rem", transition: "all 0.15s",
             }}
           >
@@ -476,17 +476,17 @@ export default function ReservationsPage() {
           </button>
         ))}
         
-        <div style={{ width: 1, height: 16, background: "rgba(255,255,255,0.08)", margin: "0 4px" }} />
+        <div style={{ width: 1, height: 16, background: "rgba(0,0,0,0.08)", margin: "0 4px" }} />
         
         <div style={{ display: "flex", alignItems: "center", gap: 4, marginRight: 4 }}>
-          <Filter size={11} style={{ color: "rgba(255,255,255,0.3)" }} />
+          <Filter size={11} style={{ color: "rgba(0,0,0,0.3)" }} />
         </div>
         {[
           { key: "ALL", label: "Tümü", color: null },
-          { key: "PENDING", label: "Bekleyen", color: "rgba(255,255,255,0.5)" },
+          { key: "PENDING", label: "Bekleyen", color: "rgba(0,0,0,0.5)" },
           { key: "CONFIRMED", label: "Onaylı", color: "rgba(255,255,255,0.7)" },
-          { key: "COMPLETED", label: "Tamam", color: "rgba(255,255,255,0.5)" },
-          { key: "CANCELLED", label: "İptal", color: "rgba(255,255,255,0.5)" },
+          { key: "COMPLETED", label: "Tamam", color: "rgba(0,0,0,0.5)" },
+          { key: "CANCELLED", label: "İptal", color: "rgba(0,0,0,0.5)" },
           { key: "DELETED", label: "Çöp Kutusu", color: "#9ca3af" },
         ].map(f => (
           <button
@@ -494,8 +494,8 @@ export default function ReservationsPage() {
             onClick={() => setFilterStatus(f.key)}
             style={{
               padding: "5px 10px", borderRadius: 0, border: "none", cursor: "pointer",
-              background: filterStatus === f.key ? (f.color ? `${f.color}15` : "rgba(255,255,255,0.12)") : "rgba(255,255,255,0.04)",
-              color: filterStatus === f.key ? (f.color || "#fff") : "rgba(255,255,255,0.35)",
+              background: filterStatus === f.key ? (f.color ? `${f.color}15` : "rgba(0,0,0,0.12)") : "rgba(0,0,0,0.04)",
+              color: filterStatus === f.key ? (f.color || "#fff") : "rgba(0,0,0,0.35)",
               fontWeight: 700, fontSize: "0.6rem", transition: "all 0.15s",
             }}
           >
@@ -563,8 +563,8 @@ export default function ReservationsPage() {
           return (
             <div key={res.id} style={{
               padding: "12px 14px", borderRadius: 0,
-              border: "1px solid rgba(255,255,255,0.12)",
-              background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(0,0,0,0.12)",
+              background: "rgba(0,0,0,0.05)",
             }}>
               {/* Row 1: Name + Status */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
@@ -577,15 +577,15 @@ export default function ReservationsPage() {
                 </div>
                 <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
                   {isPhotographer && (res.contractApproved ? (
-                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(74,222,128,0.3)" }}>📝 Sözleşme ✓</span>
+                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.1)", color: "#1a1a1a", border: "1px solid rgba(74,222,128,0.3)" }}>📝 Sözleşme ✓</span>
                   ) : (
-                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.12)" }}>📝 Onay Yok</span>
+                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.5)", border: "1px solid rgba(0,0,0,0.12)" }}>📝 Onay Yok</span>
                   ))}
                   {res.paymentPreference === "CREDIT_CARD" && (
                     <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(245,158,11,0.15)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}>💳 Kart</span>
                   )}
                   {res.paymentPreference === "CASH" && (
-                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(74,222,128,0.3)" }}>💵 Nakit</span>
+                    <span style={{ padding: "3px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.1)", color: "#1a1a1a", border: "1px solid rgba(74,222,128,0.3)" }}>💵 Nakit</span>
                   )}
                   <span style={{
                     padding: "3px 8px", borderRadius: 0, fontSize: "0.6rem", fontWeight: 800,
@@ -603,14 +603,14 @@ export default function ReservationsPage() {
                     onClick={() => toggleSelectionExpand(res.id)}
                     style={{ 
                       padding: "6px 10px", 
-                      background: res.selectionLocked ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.04)", 
-                      border: `1px solid ${res.selectionLocked ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.08)"}`, 
+                      background: res.selectionLocked ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.04)", 
+                      border: `1px solid ${res.selectionLocked ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0.08)"}`, 
                       borderRadius: 0, display: "flex", flexDirection: "column", gap: "6px", 
                       cursor: "pointer", transition: "all 0.2s"
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.65rem", color: res.selectionLocked ? "#fff" : "rgba(255,255,255,0.5)", fontWeight: 700 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.65rem", color: res.selectionLocked ? "#fff" : "rgba(0,0,0,0.5)", fontWeight: 700 }}>
                         <Edit2 size={10} /> 
                         {res.selectionLocked 
                           ? "✅ İşleme Alındı" 
@@ -627,7 +627,7 @@ export default function ReservationsPage() {
                           }}
                           style={{
                             padding: "4px 12px", borderRadius: 0, border: "none",
-                            background: "rgba(255,255,255,0.5)", color: "#fff", fontSize: "0.62rem", fontWeight: 700,
+                            background: "rgba(0,0,0,0.5)", color: "#1a1a1a", fontSize: "0.62rem", fontWeight: 700,
                             cursor: "pointer", whiteSpace: "nowrap",
                           }}
                         >
@@ -637,11 +637,11 @@ export default function ReservationsPage() {
                     </div>
                     
                     {expandedSelections.includes(res.id) ? (
-                      <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.5, wordBreak: "break-all", background: "rgba(0,0,0,0.2)", padding: "10px", borderRadius: 0, border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.5, wordBreak: "break-all", background: "rgba(0,0,0,0.2)", padding: "10px", borderRadius: 0, border: "1px solid rgba(0,0,0,0.05)" }}>
                         {res.selectedPhotos}
                       </div>
                     ) : (
-                      <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                      <div style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.4)", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
                         {res.selectedPhotos}
                       </div>
                     )}
@@ -650,13 +650,13 @@ export default function ReservationsPage() {
               )}
               {/* Album Model Display */}
               {res.albumModel && (
-                <div style={{ marginBottom: "8px", padding: "6px 10px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 0, display: "flex", alignItems: "center", gap: "8px" }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 0, overflow: "hidden", background: "#000", flexShrink: 0 }}>
+                <div style={{ marginBottom: "8px", padding: "6px 10px", background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.03)", borderRadius: 0, display: "flex", alignItems: "center", gap: "8px" }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 0, overflow: "hidden", background: "#ffffff", flexShrink: 0 }}>
                     <img src={res.albumModel.imageUrl} alt="Album" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
                   <div>
-                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase" }}>Albüm Seçimi</div>
-                    <div style={{ fontSize: "0.75rem", color: "#fff", fontWeight: 600 }}>{res.albumModel.name}</div>
+                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.5)", textTransform: "uppercase" }}>Albüm Seçimi</div>
+                    <div style={{ fontSize: "0.75rem", color: "#1a1a1a", fontWeight: 600 }}>{res.albumModel.name}</div>
                   </div>
                 </div>
               )}
@@ -669,15 +669,15 @@ export default function ReservationsPage() {
                 <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {res.packages.map(p => p.name).join(" + ")}
                 </span>
-                <span style={{ fontWeight: 800, color: "#fff" }}>
+                <span style={{ fontWeight: 800, color: "#1a1a1a" }}>
                   {res.totalAmount || "0"} TL
-                  {res.selectedAddons?.length > 0 && <span style={{ fontWeight: 400, color: "rgba(255,255,255,0.3)", marginLeft: "4px" }}>+{res.selectedAddons.length}</span>}
+                  {res.selectedAddons?.length > 0 && <span style={{ fontWeight: 400, color: "rgba(0,0,0,0.3)", marginLeft: "4px" }}>+{res.selectedAddons.length}</span>}
                 </span>
                 {(() => {
                   const ps = res.paymentStatus;
-                  if (ps === "PAID") return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", color: "#fff", padding: "2px 6px", borderRadius: 0 }}>ÖDENDİ</span>;
-                  if (ps === "PARTIAL") return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", padding: "2px 6px", borderRadius: 0 }}>KISMİ</span>;
-                  return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", padding: "2px 6px", borderRadius: 0 }}>ÖDENMEDİ</span>;
+                  if (ps === "PAID") return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.08)", color: "#1a1a1a", padding: "2px 6px", borderRadius: 0 }}>ÖDENDİ</span>;
+                  if (ps === "PARTIAL") return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.06)", color: "rgba(255,255,255,0.7)", padding: "2px 6px", borderRadius: 0 }}>KISMİ</span>;
+                  return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(0,0,0,0.05)", color: "rgba(0,0,0,0.4)", padding: "2px 6px", borderRadius: 0 }}>ÖDENMEDİ</span>;
                 })()}
               </div>
 
@@ -690,7 +690,7 @@ export default function ReservationsPage() {
                     <>
                       <a href={`tel:${res.bridePhone.replace(/\s+/g, '')}`} 
                         onClick={(e) => e.stopPropagation()}
-                        style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, color: "#fff", textDecoration: "none", fontSize: "0.75rem", fontWeight: 700 }}>
+                        style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px", background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.1)", borderRadius: 6, color: "#1a1a1a", textDecoration: "none", fontSize: "0.75rem", fontWeight: 700 }}>
                         <Phone size={14} /> Ara
                       </a>
                       <a href={`https://wa.me/${res.bridePhone.replace(/[^0-9]/g, '')}`} 
@@ -710,7 +710,7 @@ export default function ReservationsPage() {
                       <button 
                         onClick={(e) => { e.stopPropagation(); handleStatusChange(res.id, "PENDING"); }}
                         style={{
-                          flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+                          flex: 1, background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.1)",
                           color: "rgba(255,255,255,0.7)", padding: "8px", borderRadius: 4, fontSize: "0.7rem",
                           cursor: "pointer", fontWeight: 700
                         }}
@@ -736,21 +736,21 @@ export default function ReservationsPage() {
                         onChange={(e) => handleStatusChange(res.id, e.target.value)}
                         style={{
                           flex: 1.5, padding: "8px", borderRadius: 4, fontSize: "0.75rem", fontWeight: 700,
-                          border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)",
-                          color: "#fff", outline: "none", colorScheme: "dark",
+                          border: "1px solid rgba(0,0,0,0.08)", background: "rgba(0,0,0,0.04)",
+                          color: "#1a1a1a", outline: "none", colorScheme: "dark",
                         }}
                       >
-                        <option value="PENDING" style={{color:"#fff", background:"#222"}}>⏳ Bekleyen</option>
-                        <option value="CONFIRMED" style={{color:"#fff", background:"#222"}}>✅ Onayla</option>
-                        <option value="COMPLETED" style={{color:"#fff", background:"#222"}}>🎉 Tamamlandı</option>
-                        <option value="CANCELLED" style={{color:"#fff", background:"#222"}}>❌ İptal Et</option>
+                        <option value="PENDING" style={{color: "#1a1a1a", background:"#222"}}>⏳ Bekleyen</option>
+                        <option value="CONFIRMED" style={{color: "#1a1a1a", background:"#222"}}>✅ Onayla</option>
+                        <option value="COMPLETED" style={{color: "#1a1a1a", background:"#222"}}>🎉 Tamamlandı</option>
+                        <option value="CANCELLED" style={{color: "#1a1a1a", background:"#222"}}>❌ İptal Et</option>
                       </select>
                       
                       <button 
                         onClick={(e) => { e.stopPropagation(); setReminderResult(null); setDetailModal({ isOpen: true, data: res }); }}
                         style={{
-                          flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)",
-                          color: "#fff", padding: "8px", borderRadius: 4,
+                          flex: 1, background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.08)",
+                          color: "#1a1a1a", padding: "8px", borderRadius: 4,
                           cursor: "pointer", display: "flex", alignItems: "center", gap: 6, justifyContent: "center",
                           fontSize: "0.75rem", fontWeight: 700
                         }}
@@ -776,8 +776,8 @@ export default function ReservationsPage() {
                       <button 
                         onClick={(e) => { e.stopPropagation(); handleDeleteReservation(res.id, res.brideName); }}
                         style={{
-                          width: 40, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-                          color: "rgba(255,255,255,0.5)", padding: "8px", borderRadius: 4,
+                          width: 40, background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.1)",
+                          color: "rgba(0,0,0,0.5)", padding: "8px", borderRadius: 4,
                           cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
                         }}
                         title="Çöpe Taşı"
@@ -792,7 +792,7 @@ export default function ReservationsPage() {
           );
         })}
         {reservations.length === 0 && (
-          <div style={{ padding: "3rem", textAlign: "center", color: "rgba(255,255,255,0.2)", fontSize: "0.8rem" }}>
+          <div style={{ padding: "3rem", textAlign: "center", color: "rgba(0,0,0,0.2)", fontSize: "0.8rem" }}>
             Henüz kayıt yok.
           </div>
         )}
@@ -803,7 +803,7 @@ export default function ReservationsPage() {
         position: "fixed", bottom: "24px", right: "24px", width: "56px", height: "56px",
         background: "#22c55e", color: "#000", borderRadius: "50%", display: "flex",
         alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-        zIndex: 90, border: "2px solid rgba(255,255,255,0.2)"
+        zIndex: 90, border: "2px solid rgba(0,0,0,0.2)"
       }}>
         <Plus size={24} strokeWidth={2.5} />
       </Link>
@@ -814,27 +814,27 @@ export default function ReservationsPage() {
       {/* ── New Reservation Modal ── */}
       {isModalOpen && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div className="admin-modal-content" style={{ border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "420px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
+          <div className="admin-modal-content" style={{ border: "1px solid rgba(0,0,0,0.15)", borderRadius: 0, width: "100%", maxWidth: "420px", padding: "1.25rem", position: "relative", margin: "2rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>Yeni Rezervasyon</h2>
-              <button onClick={() => setIsModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={18} /></button>
+              <button onClick={() => setIsModalOpen(false)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.5)", cursor: "pointer" }}><X size={18} /></button>
             </div>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
 
               {/* Mekan / Detay */}
               <div>
-                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{isPhotographer ? "Mekan Adı" : "Detay / Not"}</div>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{isPhotographer ? "Mekan Adı" : "Detay / Not"}</div>
                 <input placeholder={isPhotographer ? "Opsiyonel: Salon adı, konum vb." : "Opsiyonel not"} style={inp} value={formData.venueName} onChange={(e) => setFormData({...formData, venueName: e.target.value})} />
               </div>
 
               {/* Online Görüşme Linki */}
               <div>
-                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Online Görüşme Linki</div>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Online Görüşme Linki</div>
                 <input placeholder="Örn: https://zoom.us/j/... veya Google Meet linki" style={inp} value={formData.meetingLink} onChange={(e) => setFormData({...formData, meetingLink: e.target.value})} />
               </div>
 
               {/* İletişim Bilgileri */}
-              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "-4px" }}>İletişim Bilgileri</div>
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "-4px" }}>İletişim Bilgileri</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                 <input placeholder={isPhotographer ? "Gelin Adı *" : `${terms.client} Adı *`} required style={inp} value={formData.brideName} onChange={(e) => setFormData({...formData, brideName: e.target.value})} />
                 <input placeholder={isPhotographer ? "Damat Adı *" : "İkinci Kişi Adı"} required={isPhotographer} style={inp} value={formData.groomName} onChange={(e) => setFormData({...formData, groomName: e.target.value})} />
@@ -846,11 +846,11 @@ export default function ReservationsPage() {
               <input placeholder={isPhotographer ? "Gelin E-posta *" : `${terms.client} E-posta *`} type="email" required style={inp} value={formData.brideEmail} onChange={(e) => setFormData({...formData, brideEmail: e.target.value})} />
 
               {/* Tarih */}
-              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>{isPhotographer ? "Etkinlik Tarihi" : `${terms.appointment} Tarihi`}</div>
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>{isPhotographer ? "Etkinlik Tarihi" : `${terms.appointment} Tarihi`}</div>
               <input type="date" required style={{ ...inp, colorScheme: "dark" }} value={formData.eventDate} onChange={(e) => setFormData({...formData, eventDate: e.target.value})} />
 
               {/* Paket Seçimi - Detaylı */}
-              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Paket Seçimi</div>
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Paket Seçimi</div>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 {(() => {
                   const catLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart", CUSTOM_DURATION: "Randevu" };
@@ -863,7 +863,7 @@ export default function ReservationsPage() {
                   });
                   return Object.entries(grouped).map(([catName, pkgs]) => (
                     <div key={catName}>
-                      <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.3)", marginBottom: "3px", marginTop: "2px" }}>{catName}</div>
+                      <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(0,0,0,0.3)", marginBottom: "3px", marginTop: "2px" }}>{catName}</div>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
                         {pkgs.map(pkg => {
                           const on = formData.packageIds.includes(pkg.id);
@@ -891,13 +891,13 @@ export default function ReservationsPage() {
                               setFormData({...formData, packageIds: ids, selectedAddons: newAddons, customFieldAnswers: newCFA, totalAmount: total > 0 ? total.toLocaleString("tr-TR") : ""});
                             }} style={{
                               padding: "6px 10px", borderRadius: 0, fontSize: "0.68rem", cursor: "pointer",
-                              border: on ? "1px solid rgba(255,255,255,0.35)" : "1px solid rgba(255,255,255,0.08)",
-                              background: on ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.03)",
-                              color: on ? "#fff" : "rgba(255,255,255,0.55)", fontWeight: on ? 700 : 500,
+                              border: on ? "1px solid rgba(0,0,0,0.35)" : "1px solid rgba(0,0,0,0.08)",
+                              background: on ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.03)",
+                              color: on ? "#fff" : "rgba(0,0,0,0.55)", fontWeight: on ? 700 : 500,
                               display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "2px",
                             }}>
                               <span>{pkg.name}</span>
-                              <span style={{ fontSize: "0.55rem", color: on ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)" }}>
+                              <span style={{ fontSize: "0.55rem", color: on ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.3)" }}>
                                 {pkg.price}₺ · {timeLabels[pkg.timeType] || pkg.timeType}
                               </span>
                             </button>
@@ -942,16 +942,16 @@ export default function ReservationsPage() {
 
                 return (
                   <>
-                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Saat Dilimi</div>
+                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Saat Dilimi</div>
                     <div style={{ display: "grid", gridTemplateColumns: slotPkg.timeType === "WEDDING" ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: "4px" }}>
                       {slots.map(slot => {
                         const sel = formData.eventTime === slot.value;
                         return (
                           <button key={slot.value} type="button" onClick={() => setFormData({...formData, eventTime: slot.value})} style={{
                             padding: "10px 6px", borderRadius: 0,
-                            border: sel ? "2px solid #fff" : "1px solid rgba(255,255,255,0.08)",
-                            background: sel ? "#fff" : "rgba(255,255,255,0.03)",
-                            color: sel ? "#000" : "rgba(255,255,255,0.5)", fontSize: "0.7rem", fontWeight: 600,
+                            border: sel ? "2px solid #fff" : "1px solid rgba(0,0,0,0.08)",
+                            background: sel ? "#fff" : "rgba(0,0,0,0.03)",
+                            color: sel ? "#000" : "rgba(0,0,0,0.5)", fontSize: "0.7rem", fontWeight: 600,
                             cursor: "pointer", transition: "all 0.2s", textAlign: "center",
                           }}>
                             {slot.label}
@@ -966,10 +966,10 @@ export default function ReservationsPage() {
               {/* Custom Field Alanları (seçilen paketlerin özel alanları) */}
               {formData.customFieldAnswers.length > 0 && (
                 <>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>{isPhotographer ? "Çekim Bilgileri" : "Ek Bilgiler"}</div>
+                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>{isPhotographer ? "Çekim Bilgileri" : "Ek Bilgiler"}</div>
                   {formData.customFieldAnswers.map((cfa, idx) => (
                     <div key={idx}>
-                      <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", marginBottom: "3px" }}>
+                      <div style={{ fontSize: "0.58rem", fontWeight: 700, color: "rgba(0,0,0,0.35)", marginBottom: "3px" }}>
                         {cfa.packageName} — {cfa.label} {cfa.required ? "*" : ""}
                       </div>
                       {cfa.type === "dropdown" ? (() => {
@@ -982,11 +982,11 @@ export default function ReservationsPage() {
                               arr[idx] = {...arr[idx], value: e.target.value === "__OTHER__" ? "__OTHER__" : e.target.value};
                               setFormData({...formData, customFieldAnswers: arr});
                             }} style={inp}>
-                              <option value="" style={{ background: "#111" }}>Seçiniz...</option>
+                              <option value="" style={{ background: "#ffffff" }}>Seçiniz...</option>
                               {opts.map((o, oi) => (
-                                <option key={oi} value={o} style={{ background: "#111" }}>{o}</option>
+                                <option key={oi} value={o} style={{ background: "#ffffff" }}>{o}</option>
                               ))}
-                              <option value="__OTHER__" style={{ background: "#111" }}>Diğer...</option>
+                              <option value="__OTHER__" style={{ background: "#ffffff" }}>Diğer...</option>
                             </select>
                             {isOther && (
                               <input placeholder="Lütfen belirtiniz..." value={cfa.value === "__OTHER__" ? "" : cfa.value} onChange={(e) => {
@@ -998,11 +998,11 @@ export default function ReservationsPage() {
                           </>
                         );
                       })() : cfa.type === "checkbox" ? (
-                        <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.72rem", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}>
+                        <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.72rem", color: "rgba(0,0,0,0.5)", cursor: "pointer" }}>
                           <input type="checkbox" checked={cfa.value || false} onChange={(e) => {
                             const arr = [...formData.customFieldAnswers]; arr[idx] = {...arr[idx], value: e.target.checked};
                             setFormData({...formData, customFieldAnswers: arr});
-                          }} style={{ width: "14px", height: "14px", accentColor: "#fff" }} />
+                          }} style={{ width: "14px", height: "14px", accentcolor: "#1a1a1a" }} />
                           {cfa.label}
                         </label>
                       ) : (
@@ -1019,10 +1019,10 @@ export default function ReservationsPage() {
               {/* Ek Hizmetler (seçilen paketlerin addon'ları) */}
               {packages.filter(p => formData.packageIds.includes(p.id) && p.addons?.length > 0).length > 0 && (
                 <>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Ek Hizmetler</div>
+                  <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Ek Hizmetler</div>
                   {packages.filter(p => formData.packageIds.includes(p.id) && p.addons?.length > 0).map(pkg => (
                     <div key={pkg.id}>
-                      <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.3)", marginBottom: "3px" }}>{pkg.name}</div>
+                      <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.3)", marginBottom: "3px" }}>{pkg.name}</div>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
                         {pkg.addons.map((addon, idx) => {
                           const isSelected = formData.selectedAddons.some(a => a.title === addon.title);
@@ -1039,9 +1039,9 @@ export default function ReservationsPage() {
                               setFormData({...formData, selectedAddons: cur, totalAmount: total > 0 ? total.toLocaleString("tr-TR") : ""});
                             }} style={{
                               padding: "5px 10px", borderRadius: 0, fontSize: "0.65rem", cursor: "pointer",
-                              border: isSelected ? "1px solid rgba(255,255,255,0.15)" : "1px solid rgba(255,255,255,0.08)",
-                              background: isSelected ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.03)",
-                              color: isSelected ? "#fff" : "rgba(255,255,255,0.55)", fontWeight: isSelected ? 700 : 500,
+                              border: isSelected ? "1px solid rgba(0,0,0,0.15)" : "1px solid rgba(0,0,0,0.08)",
+                              background: isSelected ? "rgba(0,0,0,0.12)" : "rgba(0,0,0,0.03)",
+                              color: isSelected ? "#fff" : "rgba(0,0,0,0.55)", fontWeight: isSelected ? 700 : 500,
                             }}>
                               + {addon.title} ({addon.price}₺)
                             </button>
@@ -1054,13 +1054,13 @@ export default function ReservationsPage() {
               )}
 
               {/* Fiyat ve Not */}
-              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Fiyat & Not</div>
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Fiyat & Not</div>
               <input placeholder="Toplam Fiyat (TL)" style={inp} value={formData.totalAmount} onChange={(e) => setFormData({...formData, totalAmount: e.target.value})} />
               <textarea placeholder="Notlar (isteğe bağlı)" style={{ ...inp, minHeight: "50px", resize: "none" }} value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})} />
 
               <div style={{ display: "flex", gap: "0.5rem", marginTop: "4px" }}>
-                <button type="button" onClick={() => setIsModalOpen(false)} style={{ flex: 1, padding: "0.7rem", borderRadius: 0, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "rgba(255,255,255,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>
-                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "#fff", color: "#000", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : "KAYDET"}</button>
+                <button type="button" onClick={() => setIsModalOpen(false)} style={{ flex: 1, padding: "0.7rem", borderRadius: 0, border: "1px solid rgba(0,0,0,0.08)", background: "transparent", color: "rgba(0,0,0,0.5)", fontWeight: 700, cursor: "pointer", fontSize: "0.75rem" }}>İPTAL</button>
+                <button type="submit" disabled={isLoading} style={{ flex: 2, padding: "0.7rem", borderRadius: 0, border: "none", background: "#1a1a1a", color: "#1a1a1a", fontWeight: 900, cursor: "pointer", fontSize: "0.75rem" }}>{isLoading ? "..." : "KAYDET"}</button>
               </div>
             </form>
           </div>
@@ -1087,18 +1087,18 @@ export default function ReservationsPage() {
             position: "fixed",
             left: Math.min(dayActionMenu.x, window.innerWidth - 200),
             top: Math.min(dayActionMenu.y, window.innerHeight - 120),
-            border: "1px solid rgba(255,255,255,0.15)",
+            border: "1px solid rgba(0,0,0,0.15)",
             padding: "4px", minWidth: 180, zIndex: 1001,
           }} onClick={(e) => e.stopPropagation()}>
             <button onClick={() => {
               setQuickEventForm({ venueName: "", phone: "", eventDate: dayActionMenu.dateStr, startTime: "", endTime: "", notes: "", totalAmount: "", initialPaymentAmount: "", paymentMethod: "CASH" });
               setQuickEventModal(true);
               setDayActionMenu(null);
-            }} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", color: "#fff", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 8 }}>
-              <Plus size={14} style={{ color: "rgba(255,255,255,0.4)" }} />
+            }} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", color: "#1a1a1a", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 8 }}>
+              <Plus size={14} style={{ color: "rgba(0,0,0,0.4)" }} />
               {isPhotographer ? "Olay Ekle" : `${terms.appointment} Ekle`}
             </button>
-            <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "2px 0" }} />
+            <div style={{ height: 1, background: "rgba(0,0,0,0.08)", margin: "2px 0" }} />
             <button onClick={async () => {
               const res = await toggleBlockedDay(dayActionMenu.dateStr);
               if (res.success) {
@@ -1116,13 +1116,13 @@ export default function ReservationsPage() {
       {/* ── Quick Event Modal ── */}
       {quickEventModal && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "1rem", overflowY: "auto" }}>
-          <div className="admin-modal-content" style={{ border: "1px solid rgba(255,255,255,0.15)", borderRadius: 0, width: "100%", maxWidth: "380px", padding: "1.25rem", position: "relative", margin: "3rem 0" }}>
+          <div className="admin-modal-content" style={{ border: "1px solid rgba(0,0,0,0.15)", borderRadius: 0, width: "100%", maxWidth: "380px", padding: "1.25rem", position: "relative", margin: "3rem 0" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0 }}>
-                <Star size={16} style={{ marginRight: 6, verticalAlign: "middle", color: "rgba(255,255,255,0.5)" }} />
+                <Star size={16} style={{ marginRight: 6, verticalAlign: "middle", color: "rgba(0,0,0,0.5)" }} />
                 {isPhotographer ? "Hızlı Olay Ekle" : `Hızlı ${terms.appointment} Ekle`}
               </h2>
-              <button onClick={() => setQuickEventModal(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={18} /></button>
+              <button onClick={() => setQuickEventModal(false)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.5)", cursor: "pointer" }}><X size={18} /></button>
             </div>
             <form onSubmit={async (e) => {
               e.preventDefault();
@@ -1138,48 +1138,48 @@ export default function ReservationsPage() {
               setQuickEventLoading(false);
             }} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               <div>
-                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>
+                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>
                   {isPhotographer ? "Başlık / Mekan Adı *" : `${terms.client} Adı *`}
                 </label>
                 <input required placeholder={isPhotographer ? "Örn: Mekan Adı" : `Örn: ${terms.client} adı`} style={inp} value={quickEventForm.venueName} onChange={(e) => setQuickEventForm({...quickEventForm, venueName: e.target.value})} />
               </div>
               <div>
-                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Telefon</label>
+                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Telefon</label>
                 <input type="tel" placeholder="05XX XXX XX XX" style={inp} value={quickEventForm.phone} onChange={(e) => setQuickEventForm({...quickEventForm, phone: e.target.value})} />
               </div>
               <div>
-                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Tarih *</label>
+                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Tarih *</label>
                 <input type="date" required style={{ ...inp, colorScheme: "dark" }} value={quickEventForm.eventDate} onChange={(e) => setQuickEventForm({...quickEventForm, eventDate: e.target.value})} />
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                 <div>
-                  <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Başlangıç</label>
+                  <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Başlangıç</label>
                   <input type="time" style={{ ...inp, colorScheme: "dark" }} value={quickEventForm.startTime} onChange={(e) => setQuickEventForm({...quickEventForm, startTime: e.target.value})} />
                 </div>
                 <div>
-                  <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Bitiş</label>
+                  <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Bitiş</label>
                   <input type="time" style={{ ...inp, colorScheme: "dark" }} value={quickEventForm.endTime} onChange={(e) => setQuickEventForm({...quickEventForm, endTime: e.target.value})} />
                 </div>
               </div>
               <div>
-                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Detay / Not</label>
+                <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Detay / Not</label>
                 <textarea placeholder="Opsiyonel notlar..." style={{ ...inp, minHeight: 60, resize: "vertical" }} value={quickEventForm.notes} onChange={(e) => setQuickEventForm({...quickEventForm, notes: e.target.value})} />
               </div>
 
-              <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 12, marginTop: 4 }}>
-                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>💰 Ödeme Bilgileri</div>
+              <div style={{ borderTop: "1px solid rgba(0,0,0,0.08)", paddingTop: 12, marginTop: 4 }}>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>💰 Ödeme Bilgileri</div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                   <div>
-                    <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", display: "block", marginBottom: 3 }}>Toplam Tutar</label>
+                    <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.35)", display: "block", marginBottom: 3 }}>Toplam Tutar</label>
                     <input type="text" placeholder="Örn: 15000" style={inp} value={quickEventForm.totalAmount} onChange={(e) => setQuickEventForm({...quickEventForm, totalAmount: e.target.value})} />
                   </div>
                   <div>
-                    <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", display: "block", marginBottom: 3 }}>Ön Ödeme</label>
+                    <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.35)", display: "block", marginBottom: 3 }}>Ön Ödeme</label>
                     <input type="text" placeholder="Örn: 5000" style={inp} value={quickEventForm.initialPaymentAmount} onChange={(e) => setQuickEventForm({...quickEventForm, initialPaymentAmount: e.target.value})} />
                   </div>
                 </div>
                 <div style={{ marginTop: 8 }}>
-                  <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.35)", display: "block", marginBottom: 3 }}>Ödeme Yöntemi</label>
+                  <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.35)", display: "block", marginBottom: 3 }}>Ödeme Yöntemi</label>
                   <div style={{ display: "flex", gap: 6 }}>
                     {[
                       { v: "CASH", l: "💵 Nakit" },
@@ -1189,8 +1189,8 @@ export default function ReservationsPage() {
                       <button key={m.v} type="button" onClick={() => setQuickEventForm({...quickEventForm, paymentMethod: m.v})}
                         style={{
                           padding: "6px 12px", borderRadius: 0, border: "none", cursor: "pointer",
-                          background: quickEventForm.paymentMethod === m.v ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.05)",
-                          color: quickEventForm.paymentMethod === m.v ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.4)",
+                          background: quickEventForm.paymentMethod === m.v ? "rgba(0,0,0,0.03)" : "rgba(0,0,0,0.05)",
+                          color: quickEventForm.paymentMethod === m.v ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.4)",
                           fontWeight: 700, fontSize: "0.65rem", transition: "all 0.15s",
                         }}
                       >
@@ -1203,7 +1203,7 @@ export default function ReservationsPage() {
 
               <button type="submit" disabled={quickEventLoading} style={{
                 padding: "0.75rem", borderRadius: 0, border: "none",
-                background: "rgba(255,255,255,0.5)", color: "#fff", fontWeight: 800, fontSize: "0.8rem",
+                background: "rgba(0,0,0,0.5)", color: "#1a1a1a", fontWeight: 800, fontSize: "0.8rem",
                 cursor: "pointer", opacity: quickEventLoading ? 0.6 : 1, transition: "all 0.2s",
                 marginTop: 4,
               }}>
@@ -1216,9 +1216,9 @@ export default function ReservationsPage() {
       {/* ── iCal Instructions Modal ── */}
       {isIcalModalOpen && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
-          <div className="admin-modal-content" style={{ border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", width: "100%", maxWidth: "500px", padding: "1.5rem", position: "relative" }}>
-            <button onClick={() => setIsIcalModalOpen(false)} style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer" }}><X size={20} /></button>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "0 0 1rem 0", color: "#fff", display: "flex", alignItems: "center", gap: "8px" }}>
+          <div className="admin-modal-content" style={{ border: "1px solid rgba(0,0,0,0.15)", borderRadius: "8px", width: "100%", maxWidth: "500px", padding: "1.5rem", position: "relative" }}>
+            <button onClick={() => setIsIcalModalOpen(false)} style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: "rgba(0,0,0,0.5)", cursor: "pointer" }}><X size={20} /></button>
+            <h2 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "0 0 1rem 0", color: "#1a1a1a", display: "flex", alignItems: "center", gap: "8px" }}>
               <Calendar size={20} style={{ color: "#22c55e" }} /> Takvim Bağlantısı Kopyalandı!
             </h2>
             <div style={{ background: "rgba(34,197,94,0.1)", borderLeft: "4px solid #22c55e", padding: "12px", borderRadius: "4px", marginBottom: "1.5rem", fontSize: "0.85rem", color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>
@@ -1227,8 +1227,8 @@ export default function ReservationsPage() {
             </div>
             
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <div style={{ background: "rgba(255,255,255,0.03)", padding: "12px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
-                <h3 style={{ fontSize: "0.9rem", color: "#fff", margin: "0 0 8px 0", display: "flex", alignItems: "center", gap: "6px" }}>🍏 iPhone (Apple Takvim) İçin</h3>
+              <div style={{ background: "rgba(0,0,0,0.03)", padding: "12px", borderRadius: "6px", border: "1px solid rgba(0,0,0,0.05)" }}>
+                <h3 style={{ fontSize: "0.9rem", color: "#1a1a1a", margin: "0 0 8px 0", display: "flex", alignItems: "center", gap: "6px" }}>🍏 iPhone (Apple Takvim) İçin</h3>
                 <ol style={{ margin: 0, paddingLeft: "20px", fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.6 }}>
                   <li>Ayarlar (Settings) &gt; Takvim &gt; Hesaplar'a gidin.</li>
                   <li><strong>Hesap Ekle</strong> &gt; <strong>Diğer</strong> &gt; <strong>Abone Olunan Takvim Ekle</strong> seçeneğine dokunun.</li>
@@ -1236,8 +1236,8 @@ export default function ReservationsPage() {
                 </ol>
               </div>
 
-              <div style={{ background: "rgba(255,255,255,0.03)", padding: "12px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
-                <h3 style={{ fontSize: "0.9rem", color: "#fff", margin: "0 0 8px 0", display: "flex", alignItems: "center", gap: "6px" }}>🤖 Google Takvim (Android/PC) İçin</h3>
+              <div style={{ background: "rgba(0,0,0,0.03)", padding: "12px", borderRadius: "6px", border: "1px solid rgba(0,0,0,0.05)" }}>
+                <h3 style={{ fontSize: "0.9rem", color: "#1a1a1a", margin: "0 0 8px 0", display: "flex", alignItems: "center", gap: "6px" }}>🤖 Google Takvim (Android/PC) İçin</h3>
                 <ol style={{ margin: 0, paddingLeft: "20px", fontSize: "0.8rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.6 }}>
                   <li>Bilgisayardan <strong>calendar.google.com</strong> adresine girin.</li>
                   <li>Sol menüde "Diğer takvimler" yanındaki <strong>+ (Artı)</strong> ikonuna tıklayın.</li>

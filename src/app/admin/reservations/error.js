@@ -11,7 +11,7 @@ export default function ReservationsError({ error, reset }) {
   }, [error]);
 
   return (
-    <div style={{ padding: "40px", color: "#fff", maxWidth: 600, margin: "0 auto" }}>
+    <div style={{ padding: "40px", color: "#1a1a1a", maxWidth: 600, margin: "0 auto" }}>
       <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 16 }}>⚠️ Rezervasyonlar Sayfası Hatası</h2>
       <div style={{ 
         background: "rgba(255,0,0,0.1)", 
@@ -27,8 +27,8 @@ export default function ReservationsError({ error, reset }) {
         {errorDetails}
       </div>
       <div style={{ 
-        background: "rgba(255,255,255,0.05)", 
-        border: "1px solid rgba(255,255,255,0.1)", 
+        background: "rgba(0,0,0,0.05)", 
+        border: "1px solid rgba(0,0,0,0.1)", 
         padding: 16, 
         borderRadius: 0, 
         marginBottom: 20,
@@ -42,8 +42,7 @@ export default function ReservationsError({ error, reset }) {
       <button
         onClick={() => reset()}
         style={{
-          background: "#fff",
-          color: "#000",
+          background: "#1a1a1a", color: "#1a1a1a",
           border: "none",
           padding: "12px 24px",
           fontWeight: 700,

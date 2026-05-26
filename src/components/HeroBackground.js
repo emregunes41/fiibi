@@ -38,7 +38,7 @@ export default function HeroBackground({ bgType, bgUrl, bgColor, businessType, f
         <div className="global-video-overlay" style={{
           background: forceDarkMode
             ? "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 100%)"
-            : "linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.4) 100%)",
+            : "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%)",
         }} />
       </>
     );
@@ -65,7 +65,7 @@ export default function HeroBackground({ bgType, bgUrl, bgColor, businessType, f
         <div 
           className="global-video-overlay" 
           style={{ 
-            background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%), radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 80%)",
+            background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.05) 100%), radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.25) 0%, rgba(255, 255, 255, 0) 80%)",
             backdropFilter: "blur(4px) saturate(110%)",
             WebkitBackdropFilter: "blur(4px) saturate(110%)"
           }} 
@@ -87,7 +87,7 @@ export default function HeroBackground({ bgType, bgUrl, bgColor, businessType, f
       <div 
         className="global-video-overlay" 
         style={{ 
-          background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%), radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 80%)",
+          background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.05) 100%), radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.25) 0%, rgba(255, 255, 255, 0) 80%)",
           backdropFilter: "blur(4px) saturate(110%)",
           WebkitBackdropFilter: "blur(4px) saturate(110%)"
         }} 

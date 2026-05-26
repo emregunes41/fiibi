@@ -34,9 +34,9 @@ export default function DeleteUserButton({ userId, userName, role }) {
       disabled={isDeleting || role === "ADMIN"}
       title={role === "ADMIN" ? "Admin silinemez" : "Üyeyi Kalıcı Sil"}
       style={{
-        background: isDeleting ? "rgba(255,255,255,0.1)" : "rgba(239, 68, 68, 0.15)",
+        background: isDeleting ? "rgba(0,0,0,0.1)" : "rgba(239, 68, 68, 0.15)",
         border: `1px solid ${isDeleting ? "transparent" : "rgba(239, 68, 68, 0.3)"}`,
-        color: isDeleting ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.5)",
+        color: isDeleting ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.5)",
         padding: "4px 8px",
         borderRadius: 0,
         fontSize: "0.65rem",

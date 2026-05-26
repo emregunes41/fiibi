@@ -160,7 +160,7 @@ function AdminCartDrawer() {
                   <p style={{ fontSize: 14, color: "rgba(0,0,0,0.5)", lineHeight: 1.7 }}>{submitResult.message}</p>
                   <button onClick={() => { setSubmitResult(null); setShowContact(false); setIsOpen(false); }} style={{
                     marginTop: 24, width: "100%", padding: 14, borderRadius: 0,
-                    background: "#000", color: "#fff", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer",
+                    background: "#ffffff", color: "#1a1a1a", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer",
                   }}>Tamam</button>
                 </div>
               ) : showContact ? (
@@ -297,7 +297,7 @@ function AdminCartDrawer() {
                     <button onClick={clearCart} style={{ flex: 1, padding: 14, borderRadius: 0, border: "1px solid rgba(0,0,0,0.06)", background: "transparent", color: "rgba(0,0,0,0.45)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Temizle</button>
                     <button onClick={() => setShowContact(true)} style={{
                       flex: 2, padding: 14, borderRadius: 0, border: "none",
-                      background: "#000", color: "#fff", fontSize: 13, fontWeight: 700,
+                      background: "#ffffff", color: "#1a1a1a", fontSize: 13, fontWeight: 700,
                       cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                     }}>
                       <ArrowRight size={14} /> Müşteri Bilgileri
@@ -328,10 +328,10 @@ export default function AdminBookingClient({ initialPackages }) {
     <CartProvider>
       <div style={{ maxWidth: 720 }}>
         <div style={{ marginBottom: 40 }}>
-          <h1 style={{ fontSize: "clamp(24px, 3.5vw, 32px)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8, color: "#fff" }}>
+          <h1 style={{ fontSize: "clamp(24px, 3.5vw, 32px)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8, color: "#1a1a1a" }}>
             Manuel Rezervasyon Oluştur
           </h1>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", lineHeight: 1.7 }}>
+          <p style={{ fontSize: 14, color: "rgba(0,0,0,0.45)", lineHeight: 1.7 }}>
             Online rezervasyon akışının aynısını kullanarak müşteri adına rezervasyon oluşturun. Müşteri bilgilerini girerken isteğe bağlı özel indirim tanımlayabilirsiniz.
           </p>
         </div>

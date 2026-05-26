@@ -137,7 +137,7 @@ export default function RegisterPage() {
             <button 
               type="submit" 
               disabled={isLoading || !formData.kvkkAccepted}
-              style={{ width: "100%", background: "#fff", color: "#000", fontWeight: 700, padding: "14px", borderRadius: 0, marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 15, transition: "all 0.2s ease", opacity: (isLoading || !formData.kvkkAccepted) ? 0.5 : 1 }}
+              style={{ width: "100%", background: "#1a1a1a", color: "#1a1a1a", fontWeight: 700, padding: "14px", borderRadius: 0, marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, border: "none", cursor: "pointer", fontSize: 15, transition: "all 0.2s ease", opacity: (isLoading || !formData.kvkkAccepted) ? 0.5 : 1 }}
             >
               {isLoading ? <Loader2 className="animate-spin" size={18} /> : <UserPlus size={18} />}
               Hesap Oluştur

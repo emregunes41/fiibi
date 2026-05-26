@@ -356,7 +356,7 @@ export default function DiscoverSection() {
                     {item.tenant.logoUrl ? (
                       <img src={item.tenant.logoUrl} alt={item.tenant.businessName} style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover" }} />
                     ) : (
-                      <div style={{ width: 32, height: 32, borderRadius: "50%", background: C.orange, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800 }}>
+                      <div style={{ width: 32, height: 32, borderRadius: "50%", background: C.orange, color: "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800 }}>
                         {item.tenant.businessName?.charAt(0) || "?"}
                       </div>
                     )}
@@ -384,7 +384,7 @@ export default function DiscoverSection() {
                     </div>
                     <span style={{
                       background: item.type === "event" ? "#7c3aed" : C.orange,
-                      color: "#fff", padding: "12px 24px", borderRadius: 10, fontSize: 14, fontWeight: 700,
+                      color: "#1a1a1a", padding: "12px 24px", borderRadius: 10, fontSize: 14, fontWeight: 700,
                       display: "inline-flex", alignItems: "center", gap: 6, transition: "transform 0.2s"
                     }}>
                       {item.type === "event" ? "Kayıt Ol" : "Hemen Al"}
@@ -406,7 +406,7 @@ export default function DiscoverSection() {
             </p>
             <button 
               onClick={() => { setSearchQuery(""); setMinPrice(""); setMaxPrice(""); setEventMode("all"); setFilter("all"); setTypeFilter("all"); }}
-              style={{ marginTop: 24, padding: "12px 24px", background: C.black, color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}
+              style={{ marginTop: 24, padding: "12px 24px", background: C.black, color: "#1a1a1a", border: "none", borderRadius: 8, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}
             >
               Filtreleri Temizle
             </button>

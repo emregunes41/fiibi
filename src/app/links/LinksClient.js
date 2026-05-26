@@ -87,7 +87,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
         .link-card::before {
           content: '';
           position: absolute; inset: 0;
-          background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.03) 45%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 55%, transparent 60%);
+          background: linear-gradient(105deg, transparent 40%, rgba(0,0,0,0.03) 45%, rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.03) 55%, transparent 60%);
           transform: translateX(-100%);
           transition: transform 0.6s ease;
         }
@@ -168,16 +168,16 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
             <div style={{
               position: "absolute", inset: -6,
               borderRadius: "50%",
-              border: "1.5px solid rgba(255,255,255,0.08)",
+              border: "1.5px solid rgba(0,0,0,0.08)",
               animation: "pulse-ring 3s ease-in-out infinite",
             }} />
             <div style={{
               width: 88, height: 88,
               borderRadius: "50%", overflow: "hidden",
-              border: "2px solid rgba(255,255,255,0.15)",
-              background: "rgba(255,255,255,0.05)",
+              border: "2px solid rgba(0,0,0,0.15)",
+              background: "rgba(0,0,0,0.05)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(255,255,255,0.05)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(0,0,0,0.05)",
             }}>
               {logoUrl ? (
                 <img src={logoUrl} alt={businessName} style={{
@@ -186,7 +186,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
               ) : (
                 <span style={{
                   fontSize: 32, fontWeight: 800,
-                  background: "linear-gradient(135deg, #fff, rgba(255,255,255,0.5))",
+                  background: "linear-gradient(135deg, #fff, rgba(0,0,0,0.5))",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                 }}>{businessName?.charAt(0)}</span>
               )}
@@ -197,7 +197,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
           <h1 style={{
             fontSize: "clamp(22px, 5vw, 28px)",
             fontWeight: 800,
-            color: "#fff",
+            color: "#1a1a1a",
             textAlign: "center",
             margin: "0 0 6px",
             letterSpacing: "-0.03em",
@@ -210,7 +210,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
           {/* Tagline */}
           {footerTagline && (
             <p style={{
-              fontSize: 14, color: "rgba(255,255,255,0.45)",
+              fontSize: 14, color: "rgba(0,0,0,0.45)",
               textAlign: "center", margin: "0 0 8px",
               maxWidth: 300, lineHeight: 1.5,
               fontWeight: 400,
@@ -223,7 +223,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
           {/* Decorative Divider */}
           <div style={{
             width: 32, height: 2,
-            background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.2), transparent)",
             margin: "16px 0 32px",
             opacity: mounted ? 1 : 0,
             transition: "opacity 0.6s ease 0.3s",
@@ -251,11 +251,11 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                   style={{
                     display: "flex", alignItems: "center", gap: 14,
                     padding: "16px 20px",
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    background: "rgba(0,0,0,0.04)",
+                    border: "1px solid rgba(0,0,0,0.08)",
                     borderRadius: 16,
                     textDecoration: "none",
-                    color: "#fff",
+                    color: "#1a1a1a",
                     cursor: "pointer",
                     transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
                     backdropFilter: "blur(12px)",
@@ -265,14 +265,14 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                     transitionDelay: `${0.3 + idx * 0.07}s`,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.08)";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
+                    e.currentTarget.style.background = "rgba(0,0,0,0.08)";
+                    e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)";
                     e.currentTarget.style.transform = "translateY(-2px)";
                     e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.2)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                    e.currentTarget.style.background = "rgba(0,0,0,0.04)";
+                    e.currentTarget.style.borderColor = "rgba(0,0,0,0.08)";
                     e.currentTarget.style.transform = "translateY(0)";
                     e.currentTarget.style.boxShadow = "none";
                   }}
@@ -297,8 +297,8 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                           ? `linear-gradient(135deg, ${gradientColors})`
                           : isInternal
                             ? "rgba(139,92,246,0.12)"
-                            : "rgba(255,255,255,0.06)",
-                        border: gradientColors ? "none" : "1px solid rgba(255,255,255,0.06)",
+                            : "rgba(0,0,0,0.06)",
+                        border: gradientColors ? "none" : "1px solid rgba(0,0,0,0.06)",
                         color: gradientColors ? "#fff" : isInternal ? "#a78bfa" : "rgba(255,255,255,0.6)",
                       }}>
                         <IconComponent size={18} strokeWidth={2} />
@@ -315,7 +315,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                     }}>{link.title}</span>
                     {isInternal && (
                       <span style={{
-                        fontSize: 11, color: "rgba(255,255,255,0.3)",
+                        fontSize: 11, color: "rgba(0,0,0,0.3)",
                         fontWeight: 500, marginTop: 2, display: "block",
                       }}>Sayfamızda açılır</span>
                     )}
@@ -323,7 +323,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
 
                   {/* Arrow */}
                   <ChevronRight size={16} style={{
-                    color: "rgba(255,255,255,0.2)",
+                    color: "rgba(0,0,0,0.2)",
                     flexShrink: 0,
                     transition: "transform 0.2s, color 0.2s",
                   }} />
@@ -337,10 +337,10 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                 display: "flex", alignItems: "center", justifyContent: "center",
                 gap: 8, padding: "14px 20px", marginTop: 8,
                 background: "transparent",
-                border: "1px dashed rgba(255,255,255,0.1)",
+                border: "1px dashed rgba(0,0,0,0.1)",
                 borderRadius: 16,
                 textDecoration: "none",
-                color: "rgba(255,255,255,0.35)",
+                color: "rgba(0,0,0,0.35)",
                 fontSize: 13, fontWeight: 600,
                 transition: "all 0.3s ease",
                 opacity: mounted ? 1 : 0,
@@ -348,13 +348,13 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                 transitionDelay: `${0.3 + bioLinks.length * 0.07 + 0.1}s`,
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.2)";
                 e.currentTarget.style.color = "rgba(255,255,255,0.6)";
-                e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+                e.currentTarget.style.background = "rgba(0,0,0,0.02)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-                e.currentTarget.style.color = "rgba(255,255,255,0.35)";
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
+                e.currentTarget.style.color = "rgba(0,0,0,0.35)";
                 e.currentTarget.style.background = "transparent";
               }}>
                 Web Sitemizi Ziyaret Edin →
@@ -376,11 +376,11 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
             onMouseLeave={(e) => e.currentTarget.parentElement.style.opacity = "0.3"}>
               <span style={{
                 fontSize: 9, textTransform: "uppercase",
-                letterSpacing: "0.25em", color: "rgba(255,255,255,0.5)",
+                letterSpacing: "0.25em", color: "rgba(0,0,0,0.5)",
                 fontWeight: 500,
               }}>Powered by</span>
               <strong style={{
-                fontSize: 13, color: "#fff",
+                fontSize: 13, color: "#1a1a1a",
                 fontWeight: 900, letterSpacing: "-0.02em",
               }}>fiibi</strong>
             </a>
@@ -419,7 +419,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                 zIndex: 101,
                 display: "flex", flexDirection: "column",
                 overflow: "hidden",
-                borderTop: "1px solid rgba(255,255,255,0.08)",
+                borderTop: "1px solid rgba(0,0,0,0.08)",
                 boxShadow: "0 -20px 60px rgba(0,0,0,0.5)",
                 maxWidth: 640, margin: "0 auto",
               }}
@@ -431,7 +431,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
               }} onClick={() => setActiveModal(null)}>
                 <div style={{
                   width: 36, height: 4,
-                  background: "rgba(255,255,255,0.15)", borderRadius: 2,
+                  background: "rgba(0,0,0,0.15)", borderRadius: 2,
                 }} />
               </div>
 
@@ -439,18 +439,18 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
               <div style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
                 padding: "8px 20px 16px",
-                borderBottom: "1px solid rgba(255,255,255,0.06)",
+                borderBottom: "1px solid rgba(0,0,0,0.06)",
               }}>
                 <h3 style={{
-                  margin: 0, fontSize: 16, fontWeight: 700, color: "#fff",
+                  margin: 0, fontSize: 16, fontWeight: 700, color: "#1a1a1a",
                 }}>{activeModal.title}</h3>
                 <div style={{ display: "flex", gap: 8 }}>
                   <a href={activeModal.url} target="_blank" style={{
                     display: "flex", alignItems: "center", justifyContent: "center",
                     width: 32, height: 32, borderRadius: 8,
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    color: "rgba(255,255,255,0.4)",
+                    background: "rgba(0,0,0,0.05)",
+                    border: "1px solid rgba(0,0,0,0.08)",
+                    color: "rgba(0,0,0,0.4)",
                     textDecoration: "none", transition: "all 0.2s",
                   }}>
                     <ExternalLink size={14} />
@@ -458,9 +458,9 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                   <button onClick={() => setActiveModal(null)} style={{
                     display: "flex", alignItems: "center", justifyContent: "center",
                     width: 32, height: 32, borderRadius: 8,
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    color: "rgba(255,255,255,0.4)",
+                    background: "rgba(0,0,0,0.05)",
+                    border: "1px solid rgba(0,0,0,0.08)",
+                    color: "rgba(0,0,0,0.4)",
                     cursor: "pointer", transition: "all 0.2s",
                   }}>
                     <X size={14} />
@@ -469,7 +469,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
               </div>
 
               {/* Iframe */}
-              <div style={{ flex: 1, width: "100%", position: "relative", background: "#000" }}>
+              <div style={{ flex: 1, width: "100%", position: "relative", background: "#ffffff" }}>
                 <div style={{
                   position: "absolute", inset: 0,
                   display: "flex", alignItems: "center", justifyContent: "center",
@@ -477,8 +477,8 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                 }}>
                   <div style={{
                     width: 20, height: 20,
-                    border: "2px solid rgba(255,255,255,0.1)",
-                    borderTopColor: "rgba(255,255,255,0.4)",
+                    border: "2px solid rgba(0,0,0,0.1)",
+                    borderTopColor: "rgba(0,0,0,0.4)",
                     borderRadius: "50%",
                     animation: "spin 0.8s linear infinite",
                   }} />

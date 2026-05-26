@@ -5,7 +5,7 @@ export default function FailPage() {
   return (
     <div style={{ 
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
-      minHeight: '100vh', padding: '2rem', textAlign: 'center', background: '#000', color: '#fff',
+      minHeight: '100vh', padding: '2rem', textAlign: 'center', background: "#ffffff", color: "#1a1a1a",
       position: 'relative', overflow: 'hidden'
     }}>
       {/* Background Glow */}
@@ -27,7 +27,7 @@ export default function FailPage() {
 
         <div style={{ display: 'flex', gap: '1.5rem' }}>
           <Link href="/#contact" style={{ 
-            textDecoration: 'none', background: 'rgba(0,0,0,0.04)', color: '#fff', 
+            textDecoration: 'none', background: 'rgba(0,0,0,0.04)', color: "#1a1a1a", 
             padding: '1.25rem 2.5rem', borderRadius: 0, fontWeight: 800, fontSize: '1rem',
             border: '1px solid rgba(0,0,0,0.08)', transition: 'all 0.2s',
             display: 'flex', alignItems: 'center', gap: '0.75rem'
@@ -35,7 +35,7 @@ export default function FailPage() {
             <MessageCircle size={18} /> DESTEK AL
           </Link>
           <Link href="/" style={{ 
-            textDecoration: 'none', background: '#fff', color: '#000', 
+            textDecoration: 'none', background: "#1a1a1a", color: "#1a1a1a", 
             padding: '1.25rem 2.5rem', borderRadius: 0, fontWeight: 800, fontSize: '1rem',
             transition: 'transform 0.2s', display: 'flex', alignItems: 'center', gap: '0.75rem'
           }} className="hover:scale-105">
