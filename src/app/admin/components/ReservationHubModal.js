@@ -570,15 +570,12 @@ export default function ReservationHubModal({
                {isPhotographer && r.selectedPhotos && (
                  <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                    <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Müşterinin Seçtiği Fotoğraflar</div>
-                   <div style={{ fontSize: "0.7rem", color: "#fff", background: "rgba(255,255,255,0.04)", padding: "10px", borderRadius: 4, maxHeight: "200px", overflowY: "auto" }}>
-                     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                       {r.selectedPhotos.split(', ').map((name, i) => (
-                         <div key={i} style={{ padding: "4px 8px", background: "rgba(255,255,255,0.03)", borderRadius: 2, display: "flex", gap: "8px", alignItems: "center" }}>
-                           <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.6rem", width: "16px" }}>{i + 1}.</span>
-                           <span style={{ fontWeight: 600 }}>{name}</span>
-                         </div>
-                       ))}
-                     </div>
+                   <div style={{ 
+                     fontSize: "0.75rem", color: "#fff", background: "rgba(255,255,255,0.04)", 
+                     padding: "12px", borderRadius: 4, maxHeight: "200px", overflowY: "auto",
+                     userSelect: "all", cursor: "text", wordBreak: "break-word", lineHeight: 1.6
+                   }}>
+                     {r.selectedPhotos}
                    </div>
                  </div>
                )}

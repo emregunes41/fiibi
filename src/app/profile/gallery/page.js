@@ -7,12 +7,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle, Heart, MessageSquare, X, Maximize2, FolderOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { savePhotoNote } from "../gallery-actions";
+import { getAlbumModels } from "@/app/admin/core-actions";
+import AlbumSelectionForm from "../AlbumSelectionForm";
 
 export default function ClientGalleryPage() {
   const [galleries, setGalleries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [noteModal, setNoteModal] = useState({ isOpen: false, photo: null, note: "" });
+  const [albumModels, setAlbumModels] = useState([]);
+  const [showAlbumSelection, setShowAlbumSelection] = useState(null);
   
   // Lightbox State
   const [lightbox, setLightbox] = useState({ isOpen: false, galleryIndex: 0, photoIndex: 0 });
@@ -24,10 +28,11 @@ export default function ClientGalleryPage() {
     
     if (session?.user) {
       setUser(session.user);
-      const res = await getClientGalleries();
+      const [res, modelsRes] = await Promise.all([getClientGalleries(), getAlbumModels()]);
       if (res.success) {
         setGalleries(res.galleries);
       }
+      if (modelsRes) setAlbumModels(modelsRes);
     }
     setIsLoading(false);
   };
@@ -79,8 +84,9 @@ export default function ClientGalleryPage() {
       setIsLoading(true);
       const names = selectedPhotos.map(p => p.originalName || `IMG_${p.photoNumber}`);
       await completeSelection(gallery.id, gallery.reservationId, user.name, names);
-      alert("Seçimleriniz başarıyla iletildi! Eğer paketinizde albüm varsa şimdi albüm modelinizi seçebilirsiniz.");
-      window.location.href = "/profile";
+      alert("Seçimleriniz başarıyla iletildi! Şimdi albüm modelinizi seçebilirsiniz.");
+      setIsLoading(false);
+      setShowAlbumSelection(gallery.reservationId);
     }
   };
 
@@ -396,6 +402,28 @@ export default function ClientGalleryPage() {
             >
               Kaydet
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ALBÜM SEÇİM MODALI */}
+      {showAlbumSelection && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 10000, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, overflowY: "auto" }}>
+          <div style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.1)", borderRadius: 4, width: "100%", maxWidth: 800, position: "relative", boxShadow: "0 10px 25px rgba(0,0,0,0.2)" }}>
+            <button 
+              onClick={() => window.location.href = "/profile"}
+              style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.05)", border: "none", color: "#000", padding: 8, borderRadius: 4, cursor: "pointer", zIndex: 10 }}
+            >
+              <X size={16} />
+            </button>
+            <div style={{ padding: "10px 20px 20px 20px" }}>
+              <AlbumSelectionForm 
+                reservationId={showAlbumSelection}
+                initialSelectedId=""
+                models={albumModels}
+                isLocked={false}
+              />
+            </div>
           </div>
         </div>
       )}
