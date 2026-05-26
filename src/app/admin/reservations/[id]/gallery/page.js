@@ -14,13 +14,13 @@ export default function GalleryManagementPage() {
   const [gallery, setGallery] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadGallery = async () => {
-    setIsLoading(true);
+  const loadGallery = async (background = false) => {
+    if (!background) setIsLoading(true);
     const res = await getReservationGallery(params.id);
     if (res.success) {
       setGallery(res.gallery);
     }
-    setIsLoading(false);
+    if (!background) setIsLoading(false);
   };
 
   useEffect(() => {
@@ -34,14 +34,14 @@ export default function GalleryManagementPage() {
       const url = result.info.secure_url;
       const originalName = result.info.original_filename;
       await addPhotoToGallery(gallery.id, url, originalName);
-      loadGallery();
+      loadGallery(true); // Arka planda yenile, widget'i kapatma
     }
   };
 
   const handleDelete = async (photoId) => {
     if (confirm("Bu fotoğrafı kalıcı olarak silmek istediğinize emin misiniz?")) {
       await deletePhoto(photoId);
-      loadGallery();
+      loadGallery(true);
     }
   };
 
@@ -53,7 +53,7 @@ export default function GalleryManagementPage() {
       
     if (confirm(confirmMsg)) {
       await toggleGalleryDelivery(gallery.id, isDelivered);
-      loadGallery();
+      loadGallery(true);
     }
   };
 
