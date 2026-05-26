@@ -677,7 +677,11 @@ export default function ReservationsPage() {
                   const ps = res.paymentStatus;
                   if (ps === "PAID") return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.08)", color: "#fff", padding: "2px 6px", borderRadius: 0 }}>ÖDENDİ</span>;
                   if (ps === "PARTIAL") return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", padding: "2px 6px", borderRadius: 0 }}>KISMİ</span>;
-                  return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.05)              {/* Row 3: Phone + Quick Actions */}
+                  return <span style={{ fontSize: "0.55rem", fontWeight: 800, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", padding: "2px 6px", borderRadius: 0 }}>ÖDENMEDİ</span>;
+                })()}
+              </div>
+
+              {/* Row 3: Phone + Quick Actions */}
               <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 12 }}>
                 
                 {/* Mobile Quick Contacts (WhatsApp / Call) */}
