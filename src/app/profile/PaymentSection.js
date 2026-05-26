@@ -160,7 +160,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
             <button
               onClick={startPayment}
               disabled={loading || (paymentMode === "partial" && (!payAmount || parseFloat(payAmount) <= 0 || parseFloat(payAmount) > currentRemaining))}
-              className="force-white-text"
+              className="payment-btn-white"
               style={{
                 width: "100%", padding: 16, borderRadius: 0, border: "none",
                 background: "var(--text, #1a1a1a)",
@@ -207,10 +207,13 @@ export default function PaymentSection({ reservation, compactMode = false, allow
   if (compactMode) {
     return (
       <>
+        <style>{`
+          .payment-btn-white, .payment-btn-white * { color: #ffffff !important; }
+        `}</style>
         {currentRemaining > 0 && (
           <button
             onClick={handlePrimaryPayClick}
-            className="force-white-text"
+            className="payment-btn-white"
             style={{
               width: "100%", padding: 14, borderRadius: 0, border: "none",
               background: "var(--text, #1a1a1a)", fontWeight: 700, fontSize: 14,
@@ -245,9 +248,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
   return (
     <>
       <style>{`
-        .force-white-text, .force-white-text * {
-          color: #ffffff !important;
-        }
+        .payment-btn-white, .payment-btn-white * { color: #ffffff !important; }
       `}</style>
       <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, padding: "20px 24px", overflow: "hidden", position: "relative" }}>
         {/* Summary */}
@@ -390,7 +391,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
           <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 24 }}>
             <button
               onClick={handlePrimaryPayClick}
-              className="force-white-text"
+              className="payment-btn-white"
               style={{
                 width: "100%", padding: 14, borderRadius: 0, border: "none",
                 background: "var(--text, #1a1a1a)", fontWeight: 700, fontSize: 14,
