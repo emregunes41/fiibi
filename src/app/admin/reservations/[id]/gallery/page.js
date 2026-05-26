@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { CldUploadWidget } from "next-cloudinary";
-import { UploadCloud, Image as ImageIcon, Trash2, ArrowLeft, Send, Check, MessageSquare } from "lucide-react";
+import { UploadCloud, Image as ImageIcon, Trash2, ArrowLeft, Send, Check } from "lucide-react";
 import { getReservationGallery, addPhotoToGallery, deletePhoto, toggleGalleryDelivery } from "../../../gallery-actions";
 import Link from "next/link";
 import Image from "next/image";
@@ -59,20 +59,14 @@ export default function GalleryManagementPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-800 rounded-full animate-spin"></div>
-      </div>
+      <div style={{ color: "#fff", padding: "40px", fontSize: "0.8rem", fontWeight: 700 }}>Yükleniyor...</div>
     );
   }
 
   if (!gallery) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <ImageIcon size={32} className="text-gray-300 mb-4" />
-        <h2 className="text-lg font-medium text-gray-900 mb-1">Koleksiyon Bulunamadı</h2>
-        <Link href="/admin/reservations" className="mt-4 text-sm text-gray-500 hover:text-gray-900 transition-colors">
-          &larr; Geri Dön
-        </Link>
+      <div style={{ color: "rgba(255,255,255,0.5)", padding: "40px", fontSize: "0.8rem", fontWeight: 700 }}>
+        Galeri bulunamadı.
       </div>
     );
   }
@@ -80,24 +74,37 @@ export default function GalleryManagementPage() {
   const selectedCount = gallery.photos.filter(p => p.isSelected).length;
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-gray-100 pb-24">
+    <div style={{ color: "#fff", paddingBottom: "100px" }}>
       
-      {/* MINIMAL TOP NAVIGATION */}
-      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-        <div className="max-w-[1600px] mx-auto px-6 h-20 flex items-center justify-between">
-          
-          <div className="flex items-center gap-6">
-            <Link href="/admin/reservations" className="text-gray-400 hover:text-gray-900 transition-colors">
-              <ArrowLeft size={20} strokeWidth={1.5} />
-            </Link>
-            <div className="h-6 w-[1px] bg-gray-200"></div>
-            <div>
-              <h1 className="text-lg font-semibold tracking-tight text-gray-900">Müşteri Galerisi</h1>
-              <p className="text-xs text-gray-500 mt-0.5">ID: {params.id.slice(0, 8)}</p>
-            </div>
-          </div>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "30px" }}>
+        <Link 
+          href="/admin/reservations" 
+          style={{ 
+            padding: "8px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", 
+            borderRadius: 4, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center" 
+          }}
+        >
+          <ArrowLeft size={16} />
+        </Link>
+        <div>
+          <h1 style={{ fontSize: "1.2rem", fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>Galeri Yönetimi</h1>
+          <p style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)", margin: "2px 0 0", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 800 }}>
+            REZERVASYON: {params.id.slice(0, 12)}...
+          </p>
+        </div>
+      </div>
 
-          <div className="flex items-center gap-3">
+      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        
+        {/* Kontrol Paneli */}
+        <div style={{ 
+          display: "flex", flexWrap: "wrap", gap: "10px", 
+          padding: "16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 0 
+        }}>
+          
+          <div style={{ flex: "1 1 300px" }}>
+            <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Fotoğraf Yükle</div>
             <CldUploadWidget 
               uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""} 
               signatureEndpoint="" 
@@ -117,118 +124,112 @@ export default function GalleryManagementPage() {
               {({ open }) => (
                 <button 
                   onClick={() => open()} 
-                  className="px-5 py-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 text-gray-700"
+                  style={{ 
+                    width: "100%", padding: "12px", background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.3)", 
+                    color: "#60a5fa", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    fontSize: "0.75rem", fontWeight: 800
+                  }}
                 >
-                  <UploadCloud size={16} strokeWidth={2} />
-                  Fotoğraf Yükle
+                  <UploadCloud size={16} /> Buraya Tıkla Veya Sürükle (Max 1500)
                 </button>
               )}
             </CldUploadWidget>
+          </div>
 
+          <div style={{ flex: "1 1 300px" }}>
+            <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Müşteri Erişimi</div>
             <button 
               onClick={handleDeliveryToggle}
-              className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
-                gallery.isDelivered 
-                  ? "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100" 
-                  : "bg-gray-900 text-white hover:bg-black"
-              }`}
+              style={{ 
+                width: "100%", padding: "12px", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                fontSize: "0.75rem", fontWeight: 800,
+                background: gallery.isDelivered ? "rgba(74,222,128,0.15)" : "rgba(255,255,255,0.06)",
+                border: gallery.isDelivered ? "1px solid rgba(74,222,128,0.3)" : "1px solid rgba(255,255,255,0.12)",
+                color: gallery.isDelivered ? "#4ade80" : "#fff"
+              }}
             >
-              {gallery.isDelivered ? (
-                <>Yayında <Check size={16} strokeWidth={2} /></>
-              ) : (
-                <>Müşteriye Gönder <Send size={16} strokeWidth={2} /></>
-              )}
+              <Send size={16} /> {gallery.isDelivered ? "Yayında (Erişimi Kapat)" : "Müşteriye Aç (Mail Gönderilir)"}
             </button>
           </div>
 
         </div>
-      </div>
 
-      {/* MAIN CONTENT AREA */}
-      <div className="max-w-[1600px] mx-auto px-6 pt-10">
-        
-        {/* Gallery Stats Header */}
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight mb-2 text-gray-900">
-              Koleksiyon <span className="text-gray-400 font-normal ml-2">{gallery.photos.length} görsel</span>
-            </h2>
-            <p className="text-sm text-gray-500">
-              Müşteriniz bu sayfadaki görseller arasından seçim yapacaktır.
-            </p>
+        {/* Galeri İstatistikleri */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: "10px" }}>
+          <div style={{ fontSize: "0.85rem", fontWeight: 800, display: "flex", alignItems: "center", gap: 8 }}>
+            Koleksiyon ({gallery.photos.length})
           </div>
-          
           {selectedCount > 0 && (
-            <div className="text-right">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-50 border border-gray-200 rounded-full text-xs font-semibold text-gray-700">
-                <Check size={12} className="text-green-600" strokeWidth={3} />
-                Müşteri {selectedCount} adet fotoğraf seçti
-              </div>
+            <div style={{ fontSize: "0.65rem", fontWeight: 800, background: "rgba(74,222,128,0.1)", color: "#4ade80", border: "1px solid rgba(74,222,128,0.2)", padding: "4px 8px", borderRadius: 4 }}>
+              ✅ {selectedCount} Fotoğraf Seçildi
             </div>
           )}
         </div>
 
-        {/* PHOTO GRID */}
+        {/* Fotoğraflar */}
         {gallery.photos.length === 0 ? (
-          <div className="mt-10 py-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/50">
-            <ImageIcon size={40} strokeWidth={1} className="text-gray-300 mb-4" />
-            <h3 className="text-gray-900 font-medium mb-1">Galeri Boş</h3>
-            <p className="text-gray-500 text-sm">Yukarıdaki butonu kullanarak fotoğraf yüklemeye başlayın.</p>
+          <div style={{ padding: "40px 20px", textAlign: "center", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 0 }}>
+            <ImageIcon size={32} style={{ color: "rgba(255,255,255,0.1)", margin: "0 auto 10px" }} />
+            <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>Henüz hiç fotoğraf yüklenmedi.</div>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "10px" }}>
             {gallery.photos.map((photo) => (
-              <div key={photo.id} className="group relative aspect-[4/5] bg-gray-50 overflow-hidden">
+              <div key={photo.id} style={{ 
+                position: "relative", aspectRatio: "1/1", background: "#000", 
+                border: "1px solid rgba(255,255,255,0.1)", borderRadius: 0, overflow: "hidden" 
+              }}>
                 <Image 
                   src={photo.url} 
                   alt={photo.originalName || "Fotoğraf"} 
                   fill 
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 16vw"
+                  style={{ objectFit: "cover", opacity: 0.9 }}
+                  sizes="(max-width: 768px) 50vw, 25vw"
                 />
                 
-                {/* Minimal Dark Overlay on Hover */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-                
-                {/* Delete Button (Top Right) */}
-                <button 
-                  onClick={() => handleDelete(photo.id)}
-                  className="absolute top-2 right-2 p-2 bg-white/10 hover:bg-red-500/90 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200"
-                  title="Kalıcı Olarak Sil"
-                >
-                  <Trash2 size={14} strokeWidth={2} />
-                </button>
-
-                {/* File Name (Bottom Left) */}
-                <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <span className="text-[10px] text-white/80 font-mono tracking-wider truncate block">
+                {/* Üst Bar: İsim & Silme */}
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: "6px", display: "flex", justifyContent: "space-between", alignItems: "flex-start", background: "linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)" }}>
+                  <span style={{ 
+                    background: "rgba(0,0,0,0.6)", padding: "2px 6px", borderRadius: 2, 
+                    fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.8)", 
+                    maxWidth: "70%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", border: "1px solid rgba(255,255,255,0.1)"
+                  }}>
                     {photo.originalName}
                   </span>
+                  <button 
+                    onClick={() => handleDelete(photo.id)}
+                    style={{ 
+                      background: "rgba(239,68,68,0.2)", border: "1px solid rgba(239,68,68,0.4)", color: "#ef4444", 
+                      padding: "4px", borderRadius: 2, cursor: "pointer", display: "flex" 
+                    }}
+                  >
+                    <Trash2 size={12} />
+                  </button>
                 </div>
 
-                {/* Selection & Note Indicators */}
-                {photo.isSelected && (
-                  <div className="absolute top-2 left-2 flex flex-col gap-1.5">
-                    {/* Checkmark */}
-                    <div className="w-6 h-6 rounded-full bg-white shadow-sm flex items-center justify-center">
-                      <Check size={14} className="text-gray-900" strokeWidth={3} />
-                    </div>
+                {/* Alt Bar: Seçim Durumu ve Notlar */}
+                {(photo.isSelected || photo.note) && (
+                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "6px", display: "flex", flexDirection: "column", gap: "4px", background: "linear-gradient(to top, rgba(0,0,0,0.9), transparent)" }}>
+                    {photo.isSelected && (
+                      <span style={{ 
+                        alignSelf: "flex-start", background: "rgba(74,222,128,0.2)", border: "1px solid rgba(74,222,128,0.4)", 
+                        color: "#4ade80", fontSize: "0.55rem", fontWeight: 900, padding: "2px 6px", borderRadius: 2 
+                      }}>
+                        SEÇİLDİ
+                      </span>
+                    )}
+                    {photo.note && (
+                      <div style={{ 
+                        background: "rgba(255,255,255,0.1)", backdropFilter: "blur(4px)", border: "1px solid rgba(255,255,255,0.15)", 
+                        padding: "6px", borderRadius: 2, fontSize: "0.6rem", color: "#fff", fontWeight: 600, lineHeight: 1.4,
+                        maxHeight: "60px", overflowY: "auto"
+                      }}>
+                        <span style={{ color: "rgba(255,255,255,0.4)", fontWeight: 800, display: "block", marginBottom: 2, fontSize: "0.55rem" }}>NOT:</span>
+                        {photo.note}
+                      </div>
+                    )}
                   </div>
                 )}
-
-                {/* Müşteri Notu Görüntüleme */}
-                {photo.note && (
-                  <div className="absolute inset-x-0 bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-100 p-3 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <div className="flex items-center gap-1.5 mb-1 text-gray-400">
-                      <MessageSquare size={10} className="fill-current" />
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">Müşteri Notu</span>
-                    </div>
-                    <p className="text-xs text-gray-900 font-medium leading-snug truncate group-hover:whitespace-normal group-hover:overflow-visible group-hover:max-h-32 overflow-y-auto">
-                      {photo.note}
-                    </p>
-                  </div>
-                )}
-
               </div>
             ))}
           </div>
