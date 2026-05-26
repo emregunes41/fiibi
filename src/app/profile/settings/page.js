@@ -13,7 +13,7 @@ export default async function SettingsPage() {
     <div>
       <div style={{ marginBottom: 32 }}>
         <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>Ayarlar</h3>
-        <p style={{ color: "rgba(0,0,0,0.55)", fontSize: 14 }}>Hesabınızla ilgili tüm tercihleri ve güvenlik ayarlarını yönetin.</p>
+        <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 14 }}>Hesabınızla ilgili tüm tercihleri ve güvenlik ayarlarını yönetin.</p>
       </div>
       <SettingsForm user={user} />
     </div>

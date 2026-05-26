@@ -15,7 +15,7 @@ const inp = {
   padding: "14px 16px", fontSize: "14px", color: "#1a1a1a", outline: "none",
 };
 const lbl = {
-  fontSize: "11px", fontWeight: 700, color: "rgba(0,0,0,0.45)",
+  fontSize: "11px", fontWeight: 700, color: "rgba(0,0,0,0.65)",
   textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "6px", display: "block",
 };
 const btnStyle = (active) => ({
@@ -117,7 +117,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
         <h1 style={{ fontSize: "clamp(24px, 3.5vw, 32px)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8, color: "#1a1a1a" }}>
           Manuel {terms.appointment} Oluştur
         </h1>
-        <p style={{ fontSize: 14, color: "rgba(0,0,0,0.45)", lineHeight: 1.7 }}>
+        <p style={{ fontSize: 14, color: "rgba(0,0,0,0.65)", lineHeight: 1.7 }}>
           Müşteriyle aynı akışı kullanarak müşteri adına {terms.appointment.toLowerCase()} oluşturun.
         </p>
       </div>
@@ -127,7 +127,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
         {[1,2,3].map(s => (
           <div key={s} style={{
             flex: 1, height: "3px",
-            background: step >= s ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.08)",
+            background: step >= s ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0.08)",
             transition: "all 0.3s",
           }} />
         ))}
@@ -155,12 +155,12 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
                           {pkg.name}
                         </div>
                         {pkg.description && (
-                          <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.4)", marginBottom: "6px", lineHeight: 1.5 }}>
+                          <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.65)", marginBottom: "6px", lineHeight: 1.5 }}>
                             {pkg.description}
                           </div>
                         )}
                         {duration && (
-                          <span style={{ fontSize: "11px", color: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center", gap: "4px" }}>
+                          <span style={{ fontSize: "11px", color: "rgba(0,0,0,0.65)", display: "flex", alignItems: "center", gap: "4px" }}>
                             <Clock size={10} /> {duration}
                           </span>
                         )}
@@ -174,7 +174,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
               })}
             </div>
             {initialPackages.length === 0 && (
-              <div style={{ textAlign: "center", padding: "40px", color: "rgba(0,0,0,0.3)", border: "1px dashed rgba(0,0,0,0.1)" }}>
+              <div style={{ textAlign: "center", padding: "40px", color: "rgba(0,0,0,0.65)", border: "1px dashed rgba(0,0,0,0.1)" }}>
                 Henüz {terms.service.toLowerCase()} oluşturulmamış.
               </div>
             )}
@@ -189,13 +189,13 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
         {/* ═══ STEP 2: Tarih & Saat ═══ */}
         {step === 2 && (
           <motion.div key="s2" {...anim}>
-            <button onClick={() => setStep(1)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.4)", cursor: "pointer", fontSize: "13px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "6px" }}>
+            <button onClick={() => setStep(1)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.65)", cursor: "pointer", fontSize: "13px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "6px" }}>
               <ArrowLeft size={14} /> Geri
             </button>
 
             <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", padding: "16px", marginBottom: "24px" }}>
               <div style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a1a" }}>{selectedPkg?.name}</div>
-              <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.4)", marginTop: "4px" }}>
+              <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.65)", marginTop: "4px" }}>
                 {fmt(parseInt(selectedPkg?.price?.replace(/\D/g, "") || "0"))}₺
                 {selectedPkg?.sessionDuration && ` • ${selectedPkg.sessionDuration} dk`}
               </div>
@@ -232,7 +232,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
               <div>
                 <div style={lbl}><Clock size={11} style={{ display: "inline", marginRight: 4 }} /> Saat Seçin</div>
                 {loadingSlots ? (
-                  <div style={{ textAlign: "center", padding: "20px", color: "rgba(0,0,0,0.3)", fontSize: "13px" }}>Müsaitlik kontrol ediliyor...</div>
+                  <div style={{ textAlign: "center", padding: "20px", color: "rgba(0,0,0,0.65)", fontSize: "13px" }}>Müsaitlik kontrol ediliyor...</div>
                 ) : (
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))", gap: "6px" }}>
                     {getTimeSlots().map(slot => {
@@ -267,14 +267,14 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
         {/* ═══ STEP 3: Müşteri Bilgileri & Onay ═══ */}
         {step === 3 && (
           <motion.div key="s3" {...anim}>
-            <button onClick={() => setStep(2)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.4)", cursor: "pointer", fontSize: "13px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "6px" }}>
+            <button onClick={() => setStep(2)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.65)", cursor: "pointer", fontSize: "13px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "6px" }}>
               <ArrowLeft size={14} /> Geri
             </button>
 
             {/* Summary */}
             <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", padding: "16px", marginBottom: "24px" }}>
               <div style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a1a", marginBottom: "8px" }}>{selectedPkg?.name}</div>
-              <div style={{ display: "flex", gap: "16px", fontSize: "12px", color: "rgba(0,0,0,0.4)" }}>
+              <div style={{ display: "flex", gap: "16px", fontSize: "12px", color: "rgba(0,0,0,0.65)" }}>
                 <span><Calendar size={11} style={{ verticalAlign: "middle", marginRight: 4 }} />
                   {new Date(selectedDate).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
                 </span>
@@ -308,7 +308,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
 
             {/* Admin-specific: Discount & Initial Payment */}
             <div style={{ padding: "20px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", marginBottom: "24px" }}>
-              <div style={{ fontSize: "13px", fontWeight: 700, color: "rgba(255,255,255,0.6)", marginBottom: "16px" }}>Admin Ayarları</div>
+              <div style={{ fontSize: "13px", fontWeight: 700, color: "rgba(0,0,0,0.6)", marginBottom: "16px" }}>Admin Ayarları</div>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 <div>
                   <label style={lbl}><Banknote size={10} style={{ display: "inline", marginRight: 4 }} /> Manuel İndirim (TL) - İsteğe Bağlı</label>
@@ -328,10 +328,10 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
               const finalTotal = Math.max(0, price - discountVal);
               return (
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "24px", padding: "16px", background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)" }}>
-                  <span style={{ fontSize: "13px", fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase" }}>Toplam</span>
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase" }}>Toplam</span>
                   <div style={{ textAlign: "right" }}>
-                    {discountVal > 0 && <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.25)", textDecoration: "line-through" }}>{fmt(price)}₺</div>}
-                    <span style={{ fontSize: "22px", fontWeight: 700, color: "#1a1a1a" }}>{fmt(finalTotal)}<span style={{ fontSize: "13px", color: "rgba(0,0,0,0.3)", fontWeight: 400, marginLeft: "2px" }}>₺</span></span>
+                    {discountVal > 0 && <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.65)", textDecoration: "line-through" }}>{fmt(price)}₺</div>}
+                    <span style={{ fontSize: "22px", fontWeight: 700, color: "#1a1a1a" }}>{fmt(finalTotal)}<span style={{ fontSize: "13px", color: "rgba(0,0,0,0.65)", fontWeight: 400, marginLeft: "2px" }}>₺</span></span>
                   </div>
                 </div>
               );
@@ -362,12 +362,12 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
               <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#1a1a1a", marginBottom: "12px" }}>
                 {terms.appointment} Oluşturuldu!
               </h2>
-              <p style={{ fontSize: "14px", color: "rgba(0,0,0,0.5)", lineHeight: 1.7, maxWidth: "400px", margin: "0 auto 24px" }}>
+              <p style={{ fontSize: "14px", color: "rgba(0,0,0,0.65)", lineHeight: 1.7, maxWidth: "400px", margin: "0 auto 24px" }}>
                 Manuel {terms.appointment.toLowerCase()} başarıyla oluşturuldu. Müşteriye e-posta bildirimi gönderildi.
               </p>
               <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", padding: "16px", maxWidth: "340px", margin: "0 auto 24px", textAlign: "left" }}>
-                <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.4)", marginBottom: "6px" }}>{selectedPkg?.name}</div>
-                <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
+                <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.65)", marginBottom: "6px" }}>{selectedPkg?.name}</div>
+                <div style={{ fontSize: "13px", color: "rgba(0,0,0,0.6)" }}>
                   {new Date(selectedDate).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })} — {selectedTime}
                 </div>
               </div>

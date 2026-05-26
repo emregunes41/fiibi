@@ -33,7 +33,7 @@ export default function ReservationsError({ error, reset }) {
         borderRadius: 0, 
         marginBottom: 20,
         fontSize: 13,
-        color: "rgba(255,255,255,0.6)",
+        color: "rgba(0,0,0,0.6)",
         lineHeight: 1.6
       }}>
         <strong>Stack:</strong><br/>

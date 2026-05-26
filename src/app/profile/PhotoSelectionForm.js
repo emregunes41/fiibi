@@ -38,11 +38,11 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 12 }}>
           <div>
             <h5 style={{ fontSize: 13, fontWeight: 700, color: "var(--text, #1a1a1a)", marginBottom: 4 }}>Yaptığınız Seçim</h5>
-            <p style={{ fontSize: 11, color: "rgba(0,0,0,0.45)" }}>Bu numaralar düzenleme için iletildi.</p>
+            <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>Bu numaralar düzenleme için iletildi.</p>
           </div>
           <button 
             onClick={() => setIsEditing(true)}
-            style={{ padding: "6px 12px", borderRadius: 0, background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.45)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}
+            style={{ padding: "6px 12px", borderRadius: 0, background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.65)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}
           >
             <Edit3 size={12} /> Düzenle
           </button>
@@ -58,10 +58,10 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
     <div style={{ marginTop: 24, padding: 24, background: "rgba(0,0,0,0.04)", borderRadius: 0, border: "1px solid rgba(0,0,0,0.06)" }}>
       <div style={{ marginBottom: 16 }}>
         <h5 style={{ fontSize: 14, fontWeight: 700, color: "var(--text, #1a1a1a)", marginBottom: 6 }}>Fotoğraf Seçimi Yapın</h5>
-        <p style={{ fontSize: 12, color: "rgba(0,0,0,0.35)", lineHeight: 1.5 }}>
+        <p style={{ fontSize: 12, color: "rgba(0,0,0,0.65)", lineHeight: 1.5 }}>
           Lütfen Drive üzerinden seçtiğiniz fotoğrafların dosya numaralarını araya virgül koyarak yazınız.
-          <span style={{ display: "block", color: "rgba(0,0,0,0.55)", fontSize: 12, marginTop: 6, fontWeight: 700 }}>⚠️ Toplam 30 adet fotoğraf seçmeniz gerekmektedir.</span>
-          <span style={{ display: "block", color: "rgba(0,0,0,0.4)", fontSize: 11, marginTop: 4 }}>Örn: DSC_0124, DSC_0245, DSC_0567...</span>
+          <span style={{ display: "block", color: "rgba(0,0,0,0.65)", fontSize: 12, marginTop: 6, fontWeight: 700 }}>⚠️ Toplam 30 adet fotoğraf seçmeniz gerekmektedir.</span>
+          <span style={{ display: "block", color: "rgba(0,0,0,0.65)", fontSize: 11, marginTop: 4 }}>Örn: DSC_0124, DSC_0245, DSC_0567...</span>
         </p>
       </div>
 
@@ -83,7 +83,7 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
               <button 
                 type="button"
                 onClick={() => setIsEditing(false)}
-                style={{ background: "transparent", color: "rgba(0,0,0,0.35)", padding: "10px 16px", borderRadius: 0, fontSize: 13, border: "none", cursor: "pointer" }}
+                style={{ background: "transparent", color: "rgba(0,0,0,0.65)", padding: "10px 16px", borderRadius: 0, fontSize: 13, border: "none", cursor: "pointer" }}
               >
                 Vazgeç
               </button>

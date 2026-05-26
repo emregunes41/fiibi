@@ -156,7 +156,7 @@ export default function ClientGalleryPage() {
           </Link>
           <div>
             <h1 style={{ fontSize: "1.2rem", fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>Fotoğraf Galerilerim</h1>
-            <p style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.4)", margin: "2px 0 0", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 800 }}>
+            <p style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.65)", margin: "2px 0 0", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 800 }}>
               SEÇİME HAZIR ALBÜMLER
             </p>
           </div>
@@ -164,9 +164,9 @@ export default function ClientGalleryPage() {
 
         {galleries.length === 0 ? (
           <div style={{ padding: "60px 20px", textAlign: "center", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", borderRadius: 4 }}>
-            <FolderOpen size={32} style={{ color: "rgba(0,0,0,0.2)", margin: "0 auto 10px" }} />
+            <FolderOpen size={32} style={{ color: "rgba(0,0,0,0.65)", margin: "0 auto 10px" }} />
             <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "rgba(0,0,0,0.6)", marginBottom: 4 }}>Henüz Hazır Bir Galeri Yok</div>
-            <div style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.4)" }}>Fotoğraflarınız yüklenip müşteriye açıldığında burada görünecektir.</div>
+            <div style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.65)" }}>Fotoğraflarınız yüklenip müşteriye açıldığında burada görünecektir.</div>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "40px" }}>
@@ -181,18 +181,18 @@ export default function ClientGalleryPage() {
                   <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "20px", borderBottom: "1px solid rgba(0,0,0,0.06)", paddingBottom: "20px", marginBottom: "20px" }}>
                     <div>
                       <h2 style={{ fontSize: "1rem", fontWeight: 800, margin: "0 0 4px", color: "#000" }}>{gallery.reservation.packages.map(p => p.name).join(", ")}</h2>
-                      <div style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.5)", fontWeight: 700 }}>
+                      <div style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.65)", fontWeight: 700 }}>
                         {new Date(gallery.reservation.eventDate).toLocaleDateString("tr-TR")} Çekimi
                       </div>
                     </div>
 
                     <div style={{ display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
                       <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.5)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 2 }}>
+                        <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 2 }}>
                           Seçim Limiti
                         </div>
                         <div style={{ fontSize: "1.2rem", fontWeight: 900, color: "#000" }}>
-                          {selectedCount} <span style={{ color: "rgba(0,0,0,0.3)", fontSize: "0.9rem" }}>/ {gallery.selectionLimit}</span>
+                          {selectedCount} <span style={{ color: "rgba(0,0,0,0.65)", fontSize: "0.9rem" }}>/ {gallery.selectionLimit}</span>
                         </div>
                       </div>
                       
@@ -249,7 +249,7 @@ export default function ClientGalleryPage() {
                           style={{ 
                             position: "absolute", top: 6, left: 6, width: 24, height: 24, borderRadius: 2, 
                             display: "flex", alignItems: "center", justifyContent: "center",
-                            background: photo.isSelected ? "#000" : "rgba(255,255,255,0.7)",
+                            background: photo.isSelected ? "#000" : "rgba(0,0,0,0.7)",
                             color: photo.isSelected ? "#fff" : "rgba(0,0,0,0.5)",
                             border: photo.isSelected ? "none" : "1px solid rgba(0,0,0,0.15)",
                             zIndex: 10
@@ -263,7 +263,7 @@ export default function ClientGalleryPage() {
                           onClick={(e) => { e.stopPropagation(); openLightbox(gIndex, pIndex); }}
                           style={{ 
                             position: "absolute", top: 6, right: 6, width: 24, height: 24, borderRadius: 2, 
-                            background: "rgba(255,255,255,0.7)", border: "1px solid rgba(0,0,0,0.15)", color: "#000",
+                            background: "rgba(0,0,0,0.7)", border: "1px solid rgba(0,0,0,0.15)", color: "#000",
                             display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 10
                           }}
                           title="Büyük Göster"
@@ -277,7 +277,7 @@ export default function ClientGalleryPage() {
                             onClick={(e) => { e.stopPropagation(); setNoteModal({ isOpen: true, photo, note: photo.note || "" }); }}
                             style={{ 
                               position: "absolute", bottom: 6, right: 6, width: 24, height: 24, borderRadius: 2, 
-                              background: photo.note ? "#000" : "rgba(255,255,255,0.7)", border: photo.note ? "none" : "1px solid rgba(0,0,0,0.15)", 
+                              background: photo.note ? "#000" : "rgba(0,0,0,0.7)", border: photo.note ? "none" : "1px solid rgba(0,0,0,0.15)", 
                               color: photo.note ? "#fff" : "#000", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 10
                             }}
                             title="Not Ekle/Düzenle"
@@ -289,11 +289,11 @@ export default function ClientGalleryPage() {
                         {/* Not Görüntüleyici */}
                         {photo.note && (
                           <div style={{ 
-                            position: "absolute", bottom: 6, left: 6, right: 36, background: "rgba(255,255,255,0.9)", backdropFilter: "blur(4px)",
+                            position: "absolute", bottom: 6, left: 6, right: 36, background: "rgba(0,0,0,0.9)", backdropFilter: "blur(4px)",
                             padding: "4px 6px", borderRadius: 2, fontSize: "0.55rem", color: "#000", border: "1px solid rgba(0,0,0,0.1)",
                             whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", pointerEvents: "none"
                           }}>
-                            <span style={{ color: "rgba(0,0,0,0.5)" }}>NOT:</span> {photo.note}
+                            <span style={{ color: "rgba(0,0,0,0.65)" }}>NOT:</span> {photo.note}
                           </div>
                         )}
                       </div>
@@ -360,7 +360,7 @@ export default function ClientGalleryPage() {
                }}
                style={{
                  position: "absolute", bottom: 40, 
-                 background: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#000000" : "rgba(255,255,255,0.9)",
+                 background: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#000000" : "rgba(0,0,0,0.9)",
                  border: "none", padding: "12px 24px", borderRadius: 4, 
                  display: "flex", alignItems: "center", gap: 8, fontSize: "0.9rem", fontWeight: 800, 
                  cursor: galleries[lightbox.galleryIndex].reservation.selectionLocked ? "default" : "pointer",
@@ -386,14 +386,14 @@ export default function ClientGalleryPage() {
           <div style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.1)", borderRadius: 4, width: "100%", maxWidth: 400, padding: 24, position: "relative", boxShadow: "0 10px 25px rgba(0,0,0,0.2)" }}>
             <button 
               onClick={() => setNoteModal({ isOpen: false, photo: null, note: "" })}
-              style={{ position: "absolute", top: 16, right: 16, background: "transparent", border: "none", color: "rgba(0,0,0,0.4)", cursor: "pointer" }}
+              style={{ position: "absolute", top: 16, right: 16, background: "transparent", border: "none", color: "rgba(0,0,0,0.65)", cursor: "pointer" }}
             >
               <X size={16} />
             </button>
             <div style={{ fontSize: "1rem", fontWeight: 800, color: "#000", marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
               <MessageSquare size={16} /> Fotoğraf Notu
             </div>
-            <p style={{ fontSize: "0.75rem", color: "rgba(0,0,0,0.5)", marginBottom: 20 }}>
+            <p style={{ fontSize: "0.75rem", color: "rgba(0,0,0,0.65)", marginBottom: 20 }}>
               Bu fotoğraf için fotoğrafçınıza özel bir not veya revizyon isteği bırakabilirsiniz.
             </p>
             <textarea

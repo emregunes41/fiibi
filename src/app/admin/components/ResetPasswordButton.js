@@ -31,7 +31,7 @@ export default function ResetPasswordButton({ userId }) {
         background: loading ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.08)",
         border: "1px solid rgba(0,0,0,0.08)",
         borderRadius: 0,
-        color: "rgba(0,0,0,0.4)",
+        color: "rgba(0,0,0,0.65)",
         fontSize: "0.55rem",
         padding: "2px 6px",
         cursor: "pointer",

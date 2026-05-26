@@ -123,7 +123,7 @@ export default function SettingsForm({ user }) {
           </div>
           <div>
             <h2 style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.01em", color: "var(--text, #1a1a1a)", marginBottom: 2 }}>Hesap Bilgileri</h2>
-            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12, margin: 0 }}>Temel profil bilgilerinizi güncelleyin.</p>
+            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12, margin: 0 }}>Temel profil bilgilerinizi güncelleyin.</p>
           </div>
         </div>
 
@@ -133,7 +133,7 @@ export default function SettingsForm({ user }) {
         <form onSubmit={handleProfileSubmit} className="flex flex-col gap-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <label style={{ color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Ad Soyad</label>
+              <label style={{ color: "rgba(0,0,0,0.65)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Ad Soyad</label>
               <input 
                 name="name" 
                 defaultValue={user.name} 
@@ -142,18 +142,18 @@ export default function SettingsForm({ user }) {
               />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <label style={{ color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>E-posta</label>
+              <label style={{ color: "rgba(0,0,0,0.65)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>E-posta</label>
               <input 
                 disabled 
                 defaultValue={user.email} 
-                style={{ background: "transparent", border: "1px dashed rgba(0,0,0,0.08)", borderRadius: 0, padding: "14px 16px", color: "rgba(0,0,0,0.25)", fontSize: 14, cursor: "not-allowed" }}
+                style={{ background: "transparent", border: "1px dashed rgba(0,0,0,0.08)", borderRadius: 0, padding: "14px 16px", color: "rgba(0,0,0,0.65)", fontSize: 14, cursor: "not-allowed" }}
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <label style={{ color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Telefon</label>
+              <label style={{ color: "rgba(0,0,0,0.65)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Telefon</label>
               <input 
                 name="phone" 
                 defaultValue={user.phone} 
@@ -163,7 +163,7 @@ export default function SettingsForm({ user }) {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <label style={{ color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Yaş</label>
+                <label style={{ color: "rgba(0,0,0,0.65)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Yaş</label>
                 <input 
                   name="age" 
                   type="number"
@@ -172,7 +172,7 @@ export default function SettingsForm({ user }) {
                 />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <label style={{ color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Cinsiyet</label>
+                <label style={{ color: "rgba(0,0,0,0.65)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Cinsiyet</label>
                 <select 
                   name="gender" 
                   defaultValue={user.gender || ""} 
@@ -195,7 +195,7 @@ export default function SettingsForm({ user }) {
                 </span>
               )}
               {saveError && (
-                <span style={{ color: "rgba(0,0,0,0.45)", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ color: "rgba(0,0,0,0.65)", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
                   <AlertCircle size={14} /> {saveError}
                 </span>
               )}
@@ -224,7 +224,7 @@ export default function SettingsForm({ user }) {
           </div>
           <div>
             <h2 style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.01em", color: "var(--text, #1a1a1a)", marginBottom: 2 }}>Şifre Değiştir</h2>
-            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12, margin: 0 }}>Güvenliğiniz için şifrenizi sık sık yenileyin.</p>
+            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12, margin: 0 }}>Güvenliğiniz için şifrenizi sık sık yenileyin.</p>
           </div>
         </div>
 
@@ -234,7 +234,7 @@ export default function SettingsForm({ user }) {
         <form onSubmit={handlePasswordSubmit} className="flex flex-col gap-5">
           
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <label style={{ color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Mevcut Şifre</label>
+            <label style={{ color: "rgba(0,0,0,0.65)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Mevcut Şifre</label>
             <input 
               type="password"
               placeholder="Şu an kullandığınız şifre"
@@ -247,7 +247,7 @@ export default function SettingsForm({ user }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <label style={{ color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Yeni Şifre</label>
+              <label style={{ color: "rgba(0,0,0,0.65)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Yeni Şifre</label>
               <input 
                 type="password"
                 placeholder="En az 6 karakter"
@@ -258,7 +258,7 @@ export default function SettingsForm({ user }) {
               />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <label style={{ color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Yeni Şifre (Tekrar)</label>
+              <label style={{ color: "rgba(0,0,0,0.65)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Yeni Şifre (Tekrar)</label>
               <input 
                 type="password"
                 placeholder="Yeni şifrenizi tekrar girin"
@@ -278,7 +278,7 @@ export default function SettingsForm({ user }) {
                 </span>
               )}
               {pwdStatus === "error" && (
-                <span style={{ color: "rgba(0,0,0,0.45)", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ color: "rgba(0,0,0,0.65)", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
                   <AlertCircle size={14} /> {pwdMessage}
                 </span>
               )}
@@ -306,7 +306,7 @@ export default function SettingsForm({ user }) {
           </div>
           <div>
             <h2 style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.01em", color: "#ef4444", marginBottom: 2 }}>Hesabı Sil</h2>
-            <p style={{ color: "rgba(0,0,0,0.45)", fontSize: 12, margin: 0 }}>Bu işlem geri alınamaz ve tüm verileriniz kalıcı olarak silinir.</p>
+            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12, margin: 0 }}>Bu işlem geri alınamaz ve tüm verileriniz kalıcı olarak silinir.</p>
           </div>
         </div>
 
@@ -314,7 +314,7 @@ export default function SettingsForm({ user }) {
         <div style={{ padding: "24px" }}>
           <form onSubmit={handleDeleteAccount} className="flex flex-col gap-5">
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <label style={{ color: "rgba(0,0,0,0.45)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Onay İçin Şifrenizi Girin</label>
+              <label style={{ color: "rgba(0,0,0,0.65)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Onay İçin Şifrenizi Girin</label>
               <input 
                 type="password"
                 placeholder="Hesap şifreniz"

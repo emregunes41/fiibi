@@ -35,10 +35,10 @@ export default function AlbumSelectionForm({ reservationId, initialSelectedId, m
   return (
     <div style={{ marginTop: 24, background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.02)", borderRadius: 0, padding: 24 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-        <Book size={20} style={{ color: "rgba(0,0,0,0.45)" }} />
+        <Book size={20} style={{ color: "rgba(0,0,0,0.65)" }} />
         <h4 style={{ fontSize: 18, fontWeight: 800, color: "var(--text, #1a1a1a)" }}>Albüm Modeli Seçimi</h4>
       </div>
-      <p style={{ color: "rgba(0,0,0,0.45)", fontSize: 14, marginBottom: 24, lineHeight: 1.5 }}>
+      <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 14, marginBottom: 24, lineHeight: 1.5 }}>
         Fotoğraf seçiminiz tamamlandı! Şimdi baskı için istediğiniz albüm modelini aşağıdan seçebilirsiniz.
       </p>
 
@@ -80,7 +80,7 @@ export default function AlbumSelectionForm({ reservationId, initialSelectedId, m
             <div style={{ padding: 12 }}>
               <h5 style={{ fontSize: 14, fontWeight: 700, margin: 0, color: "var(--text, #1a1a1a)" }}>{model.name}</h5>
               {model.description && (
-                <p style={{ fontSize: 11, color: "rgba(0,0,0,0.45)", margin: 0, marginTop: 4, lineHeight: 1.4 }}>
+                <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", margin: 0, marginTop: 4, lineHeight: 1.4 }}>
                   {model.description}
                 </p>
               )}
@@ -97,10 +97,10 @@ export default function AlbumSelectionForm({ reservationId, initialSelectedId, m
 
       {isLocked ? (
         <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 16px", background: "rgba(0,0,0,0.04)", borderRadius: 0 }}>
-          <CheckCircle size={18} style={{ color: "rgba(0,0,0,0.35)" }} />
+          <CheckCircle size={18} style={{ color: "rgba(0,0,0,0.65)" }} />
           <div>
-            <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(0,0,0,0.55)" }}>Albüm modeli seçiminiz kilitlendi.</span>
-            <div style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", marginTop: 2 }}>{selectedModelInfo?.name} modeli üretilecek. Değişiklik için lütfen bizimle iletişime geçin.</div>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(0,0,0,0.65)" }}>Albüm modeli seçiminiz kilitlendi.</span>
+            <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", marginTop: 2 }}>{selectedModelInfo?.name} modeli üretilecek. Değişiklik için lütfen bizimle iletişime geçin.</div>
           </div>
         </div>
       ) : (

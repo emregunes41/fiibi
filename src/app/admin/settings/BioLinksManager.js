@@ -44,7 +44,7 @@ const LINK_TEMPLATES = [
   ]},
   // Diğer
   { category: "Diğer", items: [
-    { icon: "link", title: "Özel Link", placeholder: "https://...", color: "rgba(0,0,0,0.4)", gradient: "linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.03))", emoji: "🔗" },
+    { icon: "link", title: "Özel Link", placeholder: "https://...", color: "rgba(0,0,0,0.65)", gradient: "linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.03))", emoji: "🔗" },
   ]},
 ];
 
@@ -184,16 +184,16 @@ export default function BioLinksManager({ initialLinks }) {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
         <div>
           <h2 style={{ fontSize: 16, fontWeight: 800, color: "#1a1a1a", margin: "0 0 4px", display: "flex", alignItems: "center", gap: 8 }}>
-            <Link2 size={18} style={{ color: "rgba(0,0,0,0.5)" }} />
+            <Link2 size={18} style={{ color: "rgba(0,0,0,0.65)" }} />
             Bio Linkleri
           </h2>
-          <p style={{ fontSize: 12, color: "rgba(0,0,0,0.35)", margin: 0 }}>
+          <p style={{ fontSize: 12, color: "rgba(0,0,0,0.65)", margin: 0 }}>
             Instagram bio'nuza ekleyeceğiniz link sayfanızı yönetin.
           </p>
         </div>
         <a href="/links" target="_blank" rel="noopener noreferrer" style={{
           display: "flex", alignItems: "center", gap: 6,
-          fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.5)",
+          fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.65)",
           background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)",
           padding: "8px 14px", textDecoration: "none",
           transition: "all 0.2s",
@@ -223,7 +223,7 @@ export default function BioLinksManager({ initialLinks }) {
                   </span>
                 </div>
                 <button onClick={resetForm} style={{
-                  background: "none", border: "none", color: "rgba(0,0,0,0.3)",
+                  background: "none", border: "none", color: "rgba(0,0,0,0.65)",
                   cursor: "pointer", padding: 4,
                 }}>
                   <X size={16} />
@@ -233,7 +233,7 @@ export default function BioLinksManager({ initialLinks }) {
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {/* Başlık */}
                 <div>
-                  <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
+                  <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
                     Buton Başlığı
                   </label>
                   <input
@@ -252,7 +252,7 @@ export default function BioLinksManager({ initialLinks }) {
                 {/* URL (sadece external) */}
                 {formData.type === "external" && (
                   <div>
-                    <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
+                    <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
                       Link (URL)
                     </label>
                     <input
@@ -274,7 +274,7 @@ export default function BioLinksManager({ initialLinks }) {
                   <div style={{
                     display: "flex", alignItems: "center", gap: 8,
                     padding: "10px 14px", background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.12)",
-                    fontSize: 12, color: "rgba(0,0,0,0.5)",
+                    fontSize: 12, color: "rgba(0,0,0,0.65)",
                   }}>
                     <span style={{ fontSize: 14 }}>ℹ️</span>
                     Bu link sistem içinden otomatik açılacak, URL gerekmez.
@@ -286,7 +286,7 @@ export default function BioLinksManager({ initialLinks }) {
               <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 16 }}>
                 <button onClick={resetForm} style={{
                   padding: "8px 16px", fontSize: 12, fontWeight: 600,
-                  background: "none", border: "none", color: "rgba(0,0,0,0.4)",
+                  background: "none", border: "none", color: "rgba(0,0,0,0.65)",
                   cursor: "pointer",
                 }}>İptal</button>
                 <button onClick={handleSave} disabled={loading} style={{
@@ -327,7 +327,7 @@ export default function BioLinksManager({ initialLinks }) {
                               }}
                             >
                               {/* Drag Handle */}
-                              <div {...provided.dragHandleProps} style={{ color: "rgba(0,0,0,0.15)", cursor: "grab", padding: 2, flexShrink: 0 }}>
+                              <div {...provided.dragHandleProps} style={{ color: "rgba(0,0,0,0.65)", cursor: "grab", padding: 2, flexShrink: 0 }}>
                                 <GripVertical size={16} />
                               </div>
 
@@ -353,7 +353,7 @@ export default function BioLinksManager({ initialLinks }) {
                                   )}
                                 </div>
                                 {link.type === "external" && link.url && (
-                                  <div style={{ fontSize: 11, color: "rgba(0,0,0,0.25)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "monospace" }}>{link.url}</div>
+                                  <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "monospace" }}>{link.url}</div>
                                 )}
                               </div>
 
@@ -368,7 +368,7 @@ export default function BioLinksManager({ initialLinks }) {
                                 </button>
                                 <button onClick={() => startEdit(link)} title="Düzenle" style={{
                                   background: "none", border: "none", cursor: "pointer", padding: 6,
-                                  color: "rgba(0,0,0,0.3)", transition: "color 0.2s",
+                                  color: "rgba(0,0,0,0.65)", transition: "color 0.2s",
                                 }}>
                                   <Edit2 size={14} />
                                 </button>
@@ -394,22 +394,22 @@ export default function BioLinksManager({ initialLinks }) {
               textAlign: "center", padding: "40px 20px",
               background: "rgba(0,0,0,0.02)", border: "1px dashed rgba(0,0,0,0.08)",
             }}>
-              <Link2 size={28} style={{ color: "rgba(0,0,0,0.12)", margin: "0 auto 10px", display: "block" }} />
-              <div style={{ fontSize: 13, fontWeight: 600, color: "rgba(0,0,0,0.4)", marginBottom: 4 }}>Henüz link eklemediniz</div>
-              <div style={{ fontSize: 12, color: "rgba(0,0,0,0.25)" }}>Sağ taraftaki şablonlardan birini seçerek başlayın →</div>
+              <Link2 size={28} style={{ color: "rgba(0,0,0,0.65)", margin: "0 auto 10px", display: "block" }} />
+              <div style={{ fontSize: 13, fontWeight: 600, color: "rgba(0,0,0,0.65)", marginBottom: 4 }}>Henüz link eklemediniz</div>
+              <div style={{ fontSize: 12, color: "rgba(0,0,0,0.65)" }}>Sağ taraftaki şablonlardan birini seçerek başlayın →</div>
             </div>
           ) : null}
         </div>
 
         {/* SAĞ: Şablon Seçici */}
         <div style={{ width: 240, flexShrink: 0 }} className="w-full md:w-60">
-          <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12, paddingLeft: 2 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12, paddingLeft: 2 }}>
             + Link Ekle
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {LINK_TEMPLATES.map(cat => (
               <div key={cat.category}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.2)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6, paddingLeft: 2 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6, paddingLeft: 2 }}>
                   {cat.category}
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -435,7 +435,7 @@ export default function BioLinksManager({ initialLinks }) {
                           color: isSelected ? "#a78bfa" : "rgba(0,0,0,0.55)",
                           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1,
                         }}>{tpl.title}</span>
-                        <Plus size={12} style={{ color: "rgba(0,0,0,0.15)", flexShrink: 0 }} />
+                        <Plus size={12} style={{ color: "rgba(0,0,0,0.65)", flexShrink: 0 }} />
                       </button>
                     );
                   })}

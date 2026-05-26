@@ -69,7 +69,7 @@ export default function AdminLogin() {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {error && (
-            <div style={{ background: 'rgba(0,0,0,0.06)', color: 'rgba(255,255,255,0.6)', padding: '0.75rem', borderRadius: 0, fontSize: '0.85rem', textAlign: 'center' }}>
+            <div style={{ background: 'rgba(0,0,0,0.06)', color: 'rgba(0,0,0,0.6)', padding: '0.75rem', borderRadius: 0, fontSize: '0.85rem', textAlign: 'center' }}>
               {error}
             </div>
           )}

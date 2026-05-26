@@ -91,13 +91,13 @@ export default function OrdersPage() {
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px", flexWrap: "wrap", gap: "16px" }}>
         <div>
-          <p style={{ color: "rgba(0,0,0,0.5)", margin: 0, fontSize: "0.95rem" }}>Mağazanızdan verilen fiziki ve dijital ürün siparişleri.</p>
+          <p style={{ color: "rgba(0,0,0,0.65)", margin: 0, fontSize: "0.95rem" }}>Mağazanızdan verilen fiziki ve dijital ürün siparişleri.</p>
         </div>
       </div>
 
       <div style={{ display: "flex", gap: "16px", marginBottom: "24px", flexWrap: "wrap" }}>
         <div style={{ position: "relative", flex: 1, minWidth: "250px" }}>
-          <Search size={16} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.4)" }} />
+          <Search size={16} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.65)" }} />
           <input 
             type="text" 
             placeholder="Müşteri Ara (isim, e-posta, telefon)..." 
@@ -128,12 +128,12 @@ export default function OrdersPage() {
       </div>
 
       {isLoading ? (
-        <div style={{ textAlign: "center", padding: "64px", color: "rgba(0,0,0,0.5)" }}>Yükleniyor...</div>
+        <div style={{ textAlign: "center", padding: "64px", color: "rgba(0,0,0,0.65)" }}>Yükleniyor...</div>
       ) : filteredOrders.length === 0 ? (
         <div style={{ textAlign: "center", padding: "64px", background: "rgba(0,0,0,0.02)", border: "1px dashed rgba(0,0,0,0.1)" }}>
-          <Package size={48} style={{ color: "rgba(0,0,0,0.1)", margin: "0 auto 16px" }} />
+          <Package size={48} style={{ color: "rgba(0,0,0,0.65)", margin: "0 auto 16px" }} />
           <h3 style={{ margin: "0 0 8px" }}>Sipariş Bulunamadı</h3>
-          <p style={{ color: "rgba(0,0,0,0.4)", margin: 0, fontSize: "14px" }}>Şu anda herhangi bir sipariş kaydı yok.</p>
+          <p style={{ color: "rgba(0,0,0,0.65)", margin: 0, fontSize: "14px" }}>Şu anda herhangi bir sipariş kaydı yok.</p>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -160,11 +160,11 @@ export default function OrdersPage() {
                       width: 40, height: 40, borderRadius: "8px", 
                       background: "rgba(0,0,0,0.05)", display: "flex", alignItems: "center", justifyContent: "center" 
                     }}>
-                      <Box size={20} color="rgba(255,255,255,0.7)" />
+                      <Box size={20} color="rgba(0,0,0,0.7)" />
                     </div>
                     <div>
                       <div style={{ fontSize: "16px", fontWeight: 700 }}>{order.brideName}</div>
-                      <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", gap: "6px" }}>
+                      <div style={{ fontSize: "12px", color: "rgba(0,0,0,0.65)", display: "flex", alignItems: "center", gap: "6px" }}>
                         <Clock size={12} /> {dateStr}
                         <span style={{ padding: "2px 6px", background: "rgba(0,0,0,0.05)", borderRadius: "20px", fontSize: "10px" }}>
                           {order.paymentStatus === "PAID" ? "ÖDENDİ" : "BEKLİYOR"}
@@ -176,7 +176,7 @@ export default function OrdersPage() {
                                       order.status === "SHIPPED" ? "rgba(16, 185, 129, 0.2)" : "rgba(0,0,0,0.1)",
                           color: order.status === "PENDING" ? "#f59e0b" : 
                                  order.status === "CONFIRMED" ? "#3b82f6" : 
-                                 order.status === "SHIPPED" ? "#10b981" : "rgba(255,255,255,0.7)"
+                                 order.status === "SHIPPED" ? "#10b981" : "rgba(0,0,0,0.7)"
                         }}>
                           {order.status === "PENDING" ? "ONAY BEKLİYOR" : 
                            order.status === "CONFIRMED" ? "HAZIRLANIYOR" : 
@@ -202,7 +202,7 @@ export default function OrdersPage() {
                 </div>
                 
                 <div style={{ padding: "12px 24px", background: "rgba(0,0,0,0.2)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                   <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", display: "flex", gap: "16px" }}>
+                   <div style={{ fontSize: "13px", color: "rgba(0,0,0,0.6)", display: "flex", gap: "16px" }}>
                      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}><Phone size={14} /> {order.bridePhone}</div>
                      {hasPhysical && <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#60a5fa" }}><Truck size={14} /> Kargo Gönderimi</div>}
                    </div>
@@ -261,7 +261,7 @@ export default function OrdersPage() {
               <div style={{ padding: "24px", maxHeight: "70vh", overflowY: "auto" }}>
                 
                 <div style={{ marginBottom: "24px" }}>
-                  <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "rgba(0,0,0,0.4)", marginBottom: "12px" }}>MÜŞTERİ BİLGİLERİ</div>
+                  <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "rgba(0,0,0,0.65)", marginBottom: "12px" }}>MÜŞTERİ BİLGİLERİ</div>
                   <div style={{ background: "rgba(0,0,0,0.02)", padding: "16px", borderRadius: "8px", border: "1px solid rgba(0,0,0,0.05)", display: "flex", flexDirection: "column", gap: "12px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px" }}><User size={16} color="rgba(0,0,0,0.4)" /> {detailModal.data.brideName}</div>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px" }}><Phone size={16} color="rgba(0,0,0,0.4)" /> {detailModal.data.bridePhone}</div>
@@ -271,7 +271,7 @@ export default function OrdersPage() {
 
                 {detailModal.data.hasPhysical && (
                   <div style={{ marginBottom: "24px" }}>
-                    <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "rgba(0,0,0,0.4)", marginBottom: "12px" }}>KARGO ADRESİ</div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "rgba(0,0,0,0.65)", marginBottom: "12px" }}>KARGO ADRESİ</div>
                     <div style={{ background: "rgba(96,165,250,0.05)", padding: "16px", borderRadius: "8px", border: "1px solid rgba(96,165,250,0.1)", display: "flex", alignItems: "flex-start", gap: "10px" }}>
                       <MapPin size={18} color="#60a5fa" style={{ flexShrink: 0, marginTop: "2px" }} />
                       <div style={{ fontSize: "14px", lineHeight: 1.6 }}>{detailModal.data.shippingAddress || "Adres belirtilmemiş."}</div>
@@ -280,7 +280,7 @@ export default function OrdersPage() {
                 )}
 
                 <div style={{ marginBottom: "24px" }}>
-                  <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "rgba(0,0,0,0.4)", marginBottom: "12px" }}>SİPARİŞ EDİLEN ÜRÜNLER</div>
+                  <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "rgba(0,0,0,0.65)", marginBottom: "12px" }}>SİPARİŞ EDİLEN ÜRÜNLER</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                     {detailModal.data.productList.map((item, idx) => (
                       <div key={idx} style={{ 
@@ -289,11 +289,11 @@ export default function OrdersPage() {
                       }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                           <div style={{ width: 40, height: 40, borderRadius: "6px", background: "rgba(0,0,0,0.4)", overflow: "hidden" }}>
-                            {item.imageUrls?.[0] ? <img src={item.imageUrls[0]} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <Package size={20} style={{ margin: "10px", color: "rgba(0,0,0,0.2)" }} />}
+                            {item.imageUrls?.[0] ? <img src={item.imageUrls[0]} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <Package size={20} style={{ margin: "10px", color: "rgba(0,0,0,0.65)" }} />}
                           </div>
                           <div>
                             <div style={{ fontSize: "14px", fontWeight: 600 }}>{item.name}</div>
-                            <div style={{ fontSize: "11px", color: "rgba(0,0,0,0.4)", marginTop: "4px" }}>
+                            <div style={{ fontSize: "11px", color: "rgba(0,0,0,0.65)", marginTop: "4px" }}>
                               {item.isDigital ? "Dijital Ürün" : "Fiziksel Ürün"} • #{item.id?.substring(0,8) || "000"}
                             </div>
                           </div>
@@ -308,8 +308,8 @@ export default function OrdersPage() {
 
                 {detailModal.data.notes && (
                   <div style={{ marginBottom: "24px" }}>
-                    <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "rgba(0,0,0,0.4)", marginBottom: "12px" }}>SİPARİŞ NOTU</div>
-                    <div style={{ background: "rgba(0,0,0,0.02)", padding: "16px", borderRadius: "8px", border: "1px dashed rgba(0,0,0,0.1)", fontSize: "14px", lineHeight: 1.6, fontStyle: "italic", color: "rgba(255,255,255,0.7)" }}>
+                    <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "rgba(0,0,0,0.65)", marginBottom: "12px" }}>SİPARİŞ NOTU</div>
+                    <div style={{ background: "rgba(0,0,0,0.02)", padding: "16px", borderRadius: "8px", border: "1px dashed rgba(0,0,0,0.1)", fontSize: "14px", lineHeight: 1.6, fontStyle: "italic", color: "rgba(0,0,0,0.7)" }}>
                       "{detailModal.data.notes}"
                     </div>
                   </div>
@@ -336,7 +336,7 @@ export default function OrdersPage() {
 
               <div style={{ padding: "24px" }}>
                 <div style={{ marginBottom: "20px" }}>
-                  <label style={{ display: "block", fontSize: "12px", color: "rgba(0,0,0,0.4)", marginBottom: "8px" }}>Kargo Takip Linki (Opsiyonel)</label>
+                  <label style={{ display: "block", fontSize: "12px", color: "rgba(0,0,0,0.65)", marginBottom: "8px" }}>Kargo Takip Linki (Opsiyonel)</label>
                   <input
                     type="text"
                     value={shippingModal.trackingUrl}
@@ -344,7 +344,7 @@ export default function OrdersPage() {
                     placeholder="https://kargotakip.com/..."
                     style={inp}
                   />
-                  <p style={{ fontSize: "11px", color: "rgba(0,0,0,0.3)", marginTop: "8px" }}>Müşteriniz profil sayfasında bu bağlantıya tıklayarak kargo durumunu öğrenebilecektir.</p>
+                  <p style={{ fontSize: "11px", color: "rgba(0,0,0,0.65)", marginTop: "8px" }}>Müşteriniz profil sayfasında bu bağlantıya tıklayarak kargo durumunu öğrenebilecektir.</p>
                 </div>
 
                 <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px" }}>

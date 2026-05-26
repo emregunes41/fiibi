@@ -50,8 +50,8 @@ export default function DashboardInteractiveLists({
       {isPhotographer && (
       <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: "14px", marginBottom: "10px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
-          <Package size={13} style={{ color: "rgba(255,255,255,0.6)" }} />
-          <span style={{ fontWeight: 900, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)" }}>Yaklaşan Teslimatlar</span>
+          <Package size={13} style={{ color: "rgba(0,0,0,0.6)" }} />
+          <span style={{ fontWeight: 900, fontSize: "0.8rem", color: "rgba(0,0,0,0.6)" }}>Yaklaşan Teslimatlar</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
           {upcomingDeliveries.map((res) => {
@@ -67,19 +67,19 @@ export default function DashboardInteractiveLists({
                   <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                     <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.brideName}{isPhotographer && res.groomName ? ` & ${res.groomName}` : ''}</div>
                   </div>
-                  <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.5)" }}>
+                  <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.65)" }}>
                     {new Date(res.eventDate).toLocaleDateString("tr-TR")} → {new Date(res.deliveryDate).toLocaleDateString("tr-TR")}
                   </div>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2px", flexShrink: 0 }}>
                   <span style={{ fontSize: "0.6rem", fontWeight: 900, color: info.color }}>{info.text}</span>
-                  <span style={{ fontSize: "0.55rem", color: "rgba(0,0,0,0.5)" }}>{statusMap[res.workflowStatus] || res.workflowStatus}</span>
+                  <span style={{ fontSize: "0.55rem", color: "rgba(0,0,0,0.65)" }}>{statusMap[res.workflowStatus] || res.workflowStatus}</span>
                 </div>
               </div>
             );
           })}
           {upcomingDeliveries.length === 0 && (
-            <div style={{ padding: "1.5rem", textAlign: "center", color: "rgba(0,0,0,0.4)", fontSize: "0.7rem" }}>Yaklaşan teslimat yok 🎉</div>
+            <div style={{ padding: "1.5rem", textAlign: "center", color: "rgba(0,0,0,0.65)", fontSize: "0.7rem" }}>Yaklaşan teslimat yok 🎉</div>
           )}
         </div>
       </div>
@@ -91,8 +91,8 @@ export default function DashboardInteractiveLists({
         {/* Yaklaşan Çekimler */}
         <div style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: "14px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
-            <Calendar size={13} style={{ color: "rgba(255,255,255,0.6)" }} />
-            <span style={{ fontWeight: 900, fontSize: "0.8rem", color: "rgba(255,255,255,0.6)" }}>{terms.upcoming || "Yaklaşan Etkinlikler"}</span>
+            <Calendar size={13} style={{ color: "rgba(0,0,0,0.6)" }} />
+            <span style={{ fontWeight: 900, fontSize: "0.8rem", color: "rgba(0,0,0,0.6)" }}>{terms.upcoming || "Yaklaşan Etkinlikler"}</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             {upcomingShoots.map((res) => {
@@ -105,7 +105,7 @@ export default function DashboardInteractiveLists({
                 >
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontSize: "0.75rem", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{res.brideName}{isPhotographer && res.groomName ? ` & ${res.groomName}` : ''}</div>
-                    <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.5)" }}>
+                    <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.65)" }}>
                       {new Date(res.eventDate).toLocaleDateString("tr-TR", { day: "numeric", month: "long", weekday: "short" })}
                       {res.eventTime ? ` · ${res.eventTime}` : ''}
                     </div>
@@ -115,7 +115,7 @@ export default function DashboardInteractiveLists({
               );
             })}
             {upcomingShoots.length === 0 && (
-              <div style={{ padding: "1.5rem", textAlign: "center", color: "rgba(0,0,0,0.4)", fontSize: "0.7rem" }}>Yaklaşan {terms.appointment?.toLowerCase() || "randevu"} yok</div>
+              <div style={{ padding: "1.5rem", textAlign: "center", color: "rgba(0,0,0,0.65)", fontSize: "0.7rem" }}>Yaklaşan {terms.appointment?.toLowerCase() || "randevu"} yok</div>
             )}
           </div>
         </div>
@@ -124,7 +124,7 @@ export default function DashboardInteractiveLists({
         <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: "14px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
             <span style={{ fontWeight: 900, fontSize: "0.8rem" }}>Son {terms.appointments || "Kayıtlar"}</span>
-            <a href="/admin/reservations" style={{ color: "rgba(0,0,0,0.4)", fontSize: "0.6rem", fontWeight: 800, textDecoration: "none", display: "flex", alignItems: "center", gap: "2px" }}>
+            <a href="/admin/reservations" style={{ color: "rgba(0,0,0,0.65)", fontSize: "0.6rem", fontWeight: 800, textDecoration: "none", display: "flex", alignItems: "center", gap: "2px" }}>
               TÜMÜ <ChevronRight size={10} />
             </a>
           </div>
@@ -137,17 +137,17 @@ export default function DashboardInteractiveLists({
               >
                 <div>
                   <div style={{ fontSize: "0.75rem", fontWeight: 700 }}>{res.brideName}</div>
-                  <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.5)" }}>{new Date(res.eventDate).toLocaleDateString("tr-TR")}</div>
+                  <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.65)" }}>{new Date(res.eventDate).toLocaleDateString("tr-TR")}</div>
                 </div>
                 <span style={{
                   padding: "2px 6px", borderRadius: 0, fontSize: "0.55rem", fontWeight: 800,
                   background: res.status === "CONFIRMED" ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.05)",
-                  color: res.status === "CONFIRMED" ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.4)",
+                  color: res.status === "CONFIRMED" ? "rgba(0,0,0,0.7)" : "rgba(0,0,0,0.65)",
                 }}>{res.status === "CONFIRMED" ? "ONAYLI" : "BEKLEMEDE"}</span>
               </div>
             ))}
             {recentReservations.length === 0 && (
-              <div style={{ padding: "1.5rem", textAlign: "center", color: "rgba(0,0,0,0.4)", fontSize: "0.7rem" }}>Kayıt yok</div>
+              <div style={{ padding: "1.5rem", textAlign: "center", color: "rgba(0,0,0,0.65)", fontSize: "0.7rem" }}>Kayıt yok</div>
             )}
           </div>
         </div>

@@ -21,14 +21,14 @@ export default function ThemePreviewCard({ template, selected, onClick, business
   const btnRadius = t.buttonStyle === "pill" ? 99 : (t.buttonStyle === "rounded" ? 8 : t.radius);
   const isOutline = t.buttonStyle === "outline";
   const isDark = p.bg.startsWith("#0") || p.bg.startsWith("#1") || p.bg === "#0d0d0d";
-  const mutedText = isDark ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.4)";
-  const borderColor = isDark ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.06)";
+  const mutedText = isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)";
+  const borderColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
 
   return (
     <button onClick={onClick} className="theme-preview-card" style={{
       padding: 0, cursor: "pointer", textAlign: "left", overflow: "hidden",
       transition: "all 0.2s", width: "100%",
-      border: selected ? "2px solid #f97316" : "1px solid rgba(0,0,0,0.1)",
+      border: selected ? "2px solid #f97316" : "1px solid rgba(255,255,255,0.1)",
       background: "transparent", position: "relative",
     }}>
       {/* Gerçekçi Mini Site */}
@@ -46,7 +46,7 @@ export default function ThemePreviewCard({ template, selected, onClick, business
         <div style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
           padding: "8px 12px",
-          background: t.navStyle === "solid" ? (isDark ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.02)") : "transparent",
+          background: t.navStyle === "solid" ? (isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.02)") : "transparent",
           borderBottom: t.navStyle === "solid" ? `1px solid ${borderColor}` : "none",
         }}>
           <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: "-0.02em", color: p.accent }}>
@@ -117,9 +117,9 @@ export default function ThemePreviewCard({ template, selected, onClick, business
                 padding: "8px 8px 6px",
                 borderRadius: t.radius,
                 background: t.cardStyle === "glass"
-                  ? (isDark ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.02)")
+                  ? (isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.02)")
                   : (t.cardStyle === "colorful"
-                    ? (isDark ? "rgba(0,0,0,0.06)" : (i === 0 ? "#f0f4ff" : "#fef3e7"))
+                    ? (isDark ? "rgba(255,255,255,0.06)" : (i === 0 ? "#f0f4ff" : "#fef3e7"))
                     : p.card),
                 border: t.cardStyle === "bordered" ? `1px solid ${borderColor}` : (t.cardStyle === "flat" ? `1px solid ${borderColor}` : "none"),
                 boxShadow: t.cardStyle === "elevated" ? "0 2px 8px rgba(0,0,0,0.06)" : "none",
@@ -149,8 +149,8 @@ export default function ThemePreviewCard({ template, selected, onClick, business
 
       <div className="theme-preview-label" style={{
         padding: "10px 14px",
-        borderTop: "1px solid rgba(0,0,0,0.06)",
-        background: selected ? "rgba(0,0,0,0.04)" : "transparent",
+        borderTop: "1px solid rgba(255,255,255,0.06)",
+        background: selected ? "rgba(255,255,255,0.04)" : "transparent",
       }}>
         <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>
           {t.emoji} {t.name} {selected && "✓"}

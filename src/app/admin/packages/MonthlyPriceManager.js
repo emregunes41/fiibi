@@ -79,12 +79,12 @@ export default function MonthlyPriceManager() {
       {/* Header Compact */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", gap: "10px", flexWrap: "wrap" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <Percent size={16} style={{ color: "rgba(0,0,0,0.5)" }} />
+          <Percent size={16} style={{ color: "rgba(0,0,0,0.65)" }} />
           <h2 style={{ fontSize: "0.9rem", fontWeight: 900, margin: 0 }}>Aylık Oranlar</h2>
           {message && (
             <span style={{ 
               fontSize: "0.65rem", 
-              color: message.type === "success" ? "#fff" : "rgba(255,255,255,0.6)",
+              color: message.type === "success" ? "#fff" : "rgba(0,0,0,0.6)",
               fontWeight: 700,
               marginLeft: "10px"
             }}>
@@ -111,9 +111,9 @@ export default function MonthlyPriceManager() {
           </div>
           
           <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "rgba(0,0,0,0.05)", padding: "2px 8px", borderRadius: 0, border: "1px solid rgba(0,0,0,0.08)" }}>
-            <button onClick={() => setSelectedYear(y => y - 1)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.5)", cursor: "pointer", display: "flex" }}><ChevronLeft size={12} /></button>
+            <button onClick={() => setSelectedYear(y => y - 1)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.65)", cursor: "pointer", display: "flex" }}><ChevronLeft size={12} /></button>
             <span style={{ fontSize: "0.7rem", fontWeight: 800, width: "30px", textAlign: "center" }}>{selectedYear}</span>
-            <button onClick={() => setSelectedYear(y => y + 1)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.5)", cursor: "pointer", display: "flex" }}><ChevronRight size={12} /></button>
+            <button onClick={() => setSelectedYear(y => y + 1)} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.65)", cursor: "pointer", display: "flex" }}><ChevronRight size={12} /></button>
           </div>
         </div>
       </div>
@@ -134,7 +134,7 @@ export default function MonthlyPriceManager() {
               border: "1px solid rgba(0,0,0,0.08)",
               position: "relative"
             }}>
-              <label style={{ display: "block", fontSize: "0.55rem", textTransform: "uppercase", color: "rgba(0,0,0,0.45)", fontWeight: 900, marginBottom: "4px" }}>{month}</label>
+              <label style={{ display: "block", fontSize: "0.55rem", textTransform: "uppercase", color: "rgba(0,0,0,0.65)", fontWeight: 900, marginBottom: "4px" }}>{month}</label>
               <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
                 <input
                   type="number"
@@ -148,7 +148,7 @@ export default function MonthlyPriceManager() {
                     fontSize: "0.85rem", fontWeight: 800, outline: "none", padding: "2px 0"
                   }}
                 />
-                <span style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.4)", marginLeft: "2px" }}>%</span>
+                <span style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.65)", marginLeft: "2px" }}>%</span>
               </div>
             </div>
           );

@@ -59,7 +59,7 @@ export default function ProfileLayoutClient({ user, children }) {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.45)" }}>{getInitials(user?.name)}</span>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)" }}>{getInitials(user?.name)}</span>
               </div>
               <span className="hidden sm:block" style={{ fontSize: 12, fontWeight: 600, color: "rgba(0,0,0,0.65)" }}>{user?.name}</span>
             </div>

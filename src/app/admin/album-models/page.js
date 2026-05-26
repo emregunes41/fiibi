@@ -14,7 +14,7 @@ const inp = {
   fontSize: "0.8rem", boxSizing: "border-box",
 };
 
-const lbl = { display: "block", fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", marginBottom: "5px", letterSpacing: "0.04em" };
+const lbl = { display: "block", fontSize: "0.65rem", fontWeight: 800, color: "rgba(0,0,0,0.6)", textTransform: "uppercase", marginBottom: "5px", letterSpacing: "0.04em" };
 
 const emptyForm = { name: "", imageUrl: "", description: "" };
 
@@ -99,7 +99,7 @@ export default function AlbumModelsPage() {
       ].filter(Boolean)} />
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-        <p style={{ color: "rgba(0,0,0,0.45)", fontSize: "0.85rem", margin: 0 }}>
+        <p style={{ color: "rgba(0,0,0,0.65)", fontSize: "0.85rem", margin: 0 }}>
           Müşterilerin seçebileceği albüm tasarımlarını yönetin
         </p>
         <button 
@@ -127,21 +127,21 @@ export default function AlbumModelsPage() {
             </div>
             
             <div style={{ padding: "1.2rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Albüm Tasarımı</div>
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Albüm Tasarımı</div>
               <h3 style={{ fontSize: "1.1rem", fontWeight: 800, margin: 0, color: "#1a1a1a" }}>{model.name}</h3>
               {model.description && (
-                <p style={{ fontSize: "0.75rem", color: "rgba(0,0,0,0.5)", margin: 0, marginTop: "0.3rem", lineHeight: 1.5 }}>
+                <p style={{ fontSize: "0.75rem", color: "rgba(0,0,0,0.65)", margin: 0, marginTop: "0.3rem", lineHeight: 1.5 }}>
                   {model.description}
                 </p>
               )}
               {deleteMessage?.id === model.id && (
-                <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", marginTop: "0.5rem", fontWeight: 600 }}>{deleteMessage.text}</div>
+                <div style={{ fontSize: "0.7rem", color: "rgba(0,0,0,0.6)", marginTop: "0.5rem", fontWeight: 600 }}>{deleteMessage.text}</div>
               )}
             </div>
           </div>
         ))}
         {models.length === 0 && (
-          <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "4rem 0", color: "rgba(0,0,0,0.4)" }}>
+          <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "4rem 0", color: "rgba(0,0,0,0.65)" }}>
             <Book size={48} style={{ opacity: 0.2, margin: "0 auto 1rem" }} />
             <p>Henüz albüm modeli eklenmemiş.</p>
           </div>
@@ -151,7 +151,7 @@ export default function AlbumModelsPage() {
       {isModalOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
           <div className="admin-modal-content" style={{ border: "1px solid rgba(0,0,0,0.1)", padding: "2rem", borderRadius: 0, width: "100%", maxWidth: "450px", maxHeight: "90vh", overflowY: "auto", position: "relative" }}>
-            <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", color: "rgba(0,0,0,0.5)", cursor: "pointer" }}>
+            <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", color: "rgba(0,0,0,0.65)", cursor: "pointer" }}>
               <X size={20} />
             </button>
             
@@ -190,7 +190,7 @@ export default function AlbumModelsPage() {
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1rem" }}>
-                <button type="button" onClick={() => setIsModalOpen(false)} style={{ background: "transparent", color: "rgba(255,255,255,0.6)", border: "none", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", padding: "0.5rem 1rem" }}>İptal</button>
+                <button type="button" onClick={() => setIsModalOpen(false)} style={{ background: "transparent", color: "rgba(0,0,0,0.6)", border: "none", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", padding: "0.5rem 1rem" }}>İptal</button>
                 <button type="submit" disabled={isLoading} style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isLoading ? 0.7 : 1 }}>
                   {isLoading ? "Ekleniyor..." : "Ekle"}
                 </button>

@@ -110,9 +110,9 @@ export default async function AdminDashboard() {
     const diffTime = new Date(date).getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     if (diffDays < 0) return { text: `${Math.abs(diffDays)} GÜN GECİKTİ`, color: "#ef4444", bg: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)" };
-    if (diffDays === 0) return { text: "BUGÜN", color: "rgba(0,0,0,0.5)" };
-    if (diffDays <= 3) return { text: `${diffDays} GÜN KALDI`, color: "rgba(0,0,0,0.5)" };
-    return { text: `${diffDays} GÜN KALDI`, color: "rgba(255,255,255,0.6)" };
+    if (diffDays === 0) return { text: "BUGÜN", color: "rgba(0,0,0,0.65)" };
+    if (diffDays <= 3) return { text: `${diffDays} GÜN KALDI`, color: "rgba(0,0,0,0.65)" };
+    return { text: `${diffDays} GÜN KALDI`, color: "rgba(0,0,0,0.6)" };
   };
 
   const monthNames = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
@@ -122,7 +122,7 @@ export default async function AdminDashboard() {
       <div style={{ marginBottom: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontSize: "clamp(1.2rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: "4px" }}>Genel Bakış</h1>
-          <p style={{ color: "rgba(0,0,0,0.55)", fontSize: "0.75rem" }}>Yönetim Paneli · {monthNames[now.getMonth()]} {now.getFullYear()}</p>
+          <p style={{ color: "rgba(0,0,0,0.65)", fontSize: "0.75rem" }}>Yönetim Paneli · {monthNames[now.getMonth()]} {now.getFullYear()}</p>
         </div>
         <div>
           <InstallPwaButton />
@@ -136,7 +136,7 @@ export default async function AdminDashboard() {
             <AlertCircle size={20} color="#ef4444" style={{ flexShrink: 0 }} />
             <div>
               <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a", marginBottom: 2 }}>ALT ÜYE İŞYERİ KAYDINIZI TAMAMLAYIN</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Online ödeme (kredi kartı) alabilmeniz için vergi levhanızı yükleyip başvurunuzu tamamlamanız gerekmektedir.</div>
+              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.6)" }}>Online ödeme (kredi kartı) alabilmeniz için vergi levhanızı yükleyip başvurunuzu tamamlamanız gerekmektedir.</div>
             </div>
           </div>
           <Link href="/admin/settings?tab=sistem&subTab=odeme" style={{ padding: "8px 16px", background: "#ef4444", color: "#1a1a1a", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Başvuru Yap</Link>
@@ -147,7 +147,7 @@ export default async function AdminDashboard() {
             <AlertCircle size={20} color="#ef4444" style={{ flexShrink: 0 }} />
             <div>
               <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a", marginBottom: 2 }}>SANAL POS BAŞVURUNUZ REDDEDİLDİ</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Bilgilerinizi güncelleyerek tekrar başvuru yapabilirsiniz.</div>
+              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.6)" }}>Bilgilerinizi güncelleyerek tekrar başvuru yapabilirsiniz.</div>
             </div>
           </div>
           <Link href="/admin/settings?tab=sistem&subTab=odeme" style={{ padding: "8px 16px", background: "#ef4444", color: "#1a1a1a", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Tekrar Başvur</Link>
@@ -157,7 +157,7 @@ export default async function AdminDashboard() {
           <Clock size={20} color="#38bdf8" style={{ flexShrink: 0 }} />
           <div>
             <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a", marginBottom: 2 }}>SANAL POS BAŞVURUNUZ İNCELENİYOR</div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Sanal POS (Alt Üye İşyeri) başvurunuz onaylandıktan sonra kredi kartı ile online ödeme almaya başlayabileceksiniz.</div>
+            <div style={{ fontSize: 11, color: "rgba(0,0,0,0.6)" }}>Sanal POS (Alt Üye İşyeri) başvurunuz onaylandıktan sonra kredi kartı ile online ödeme almaya başlayabileceksiniz.</div>
           </div>
         </div>
       ) : null}
@@ -169,7 +169,7 @@ export default async function AdminDashboard() {
             <AlertCircle size={20} color="#f59e0b" style={{ flexShrink: 0 }} />
             <div>
               <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a", marginBottom: 2 }}>ALAN ADINIZI (DOMAIN) BAĞLAYIN</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Müşterilerinize daha profesyonel görünmek için kendi alan adınızı sisteme entegre edin.</div>
+              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.6)" }}>Müşterilerinize daha profesyonel görünmek için kendi alan adınızı sisteme entegre edin.</div>
             </div>
           </div>
           <Link href="/admin/settings?tab=genel&subTab=domain" style={{ padding: "8px 16px", background: "rgba(0,0,0,0.1)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Domain Bağla</Link>
@@ -183,7 +183,7 @@ export default async function AdminDashboard() {
             <AlertCircle size={20} color="#22c55e" style={{ flexShrink: 0 }} />
             <div>
               <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a", marginBottom: 2 }}>WHATSAPP NUMARANIZI EKLEYİN</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Sitenizdeki ziyaretçilerin size anında ulaşabilmesi için WhatsApp iletişim numaranızı eklemelisiniz.</div>
+              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.6)" }}>Sitenizdeki ziyaretçilerin size anında ulaşabilmesi için WhatsApp iletişim numaranızı eklemelisiniz.</div>
             </div>
           </div>
           <Link href="/admin/settings?tab=tasarim&subTab=iletisim" style={{ padding: "8px 16px", background: "rgba(0,0,0,0.1)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>Numara Ekle</Link>
@@ -197,7 +197,7 @@ export default async function AdminDashboard() {
             <Package size={20} color="#a855f7" style={{ flexShrink: 0 }} />
             <div>
               <div style={{ fontSize: 13, fontWeight: 800, color: "#1a1a1a", marginBottom: 2 }}>İLK İÇERİĞİNİZİ OLUŞTURUN</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>Sitenizde henüz hiç {terms.service} bulunmuyor. Satışa başlamak için hemen ekleyin.</div>
+              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.6)" }}>Sitenizde henüz hiç {terms.service} bulunmuyor. Satışa başlamak için hemen ekleyin.</div>
             </div>
           </div>
           <Link href="/admin/packages" style={{ padding: "8px 16px", background: "rgba(0,0,0,0.1)", border: "1px solid rgba(0,0,0,0.2)", color: "#1a1a1a", fontSize: 11, fontWeight: 800, textDecoration: "none", whiteSpace: "nowrap" }}>{terms.service} Ekle</Link>
@@ -207,21 +207,21 @@ export default async function AdminDashboard() {
       {/* Stats Grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "8px", marginBottom: "1.5rem" }}>
         <div style={{ background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)", padding: "12px", borderRadius: 0 }}>
-          <div style={{ color: "rgba(0,0,0,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
+          <div style={{ color: "rgba(0,0,0,0.65)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
             <Package size={11} /> {terms.service}
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalPackages}</div>
         </div>
 
         <div style={{ background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)", padding: "12px", borderRadius: 0 }}>
-          <div style={{ color: "rgba(0,0,0,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
+          <div style={{ color: "rgba(0,0,0,0.65)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
             <Calendar size={11} /> {terms.appointment}
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalReservations}</div>
         </div>
 
         <div style={{ background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)", padding: "12px", borderRadius: 0 }}>
-          <div style={{ color: "rgba(0,0,0,0.55)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
+          <div style={{ color: "rgba(0,0,0,0.65)", fontSize: "0.6rem", fontWeight: 800, marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", textTransform: "uppercase" }}>
             <Users size={11} /> {terms.client}
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{totalMembers}</div>

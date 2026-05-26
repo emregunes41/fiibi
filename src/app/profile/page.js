@@ -60,7 +60,7 @@ export default async function ProfilePage() {
       <section>
         <div style={{ marginBottom: 20 }}>
           <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>{terms.appointments + "\u0131m"}</h3>
-          <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 14 }}>Geçmiş ve gelecek tüm {terms.appointment.toLowerCase()} kayıtlarınız</p>
+          <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 14 }}>Geçmiş ve gelecek tüm {terms.appointment.toLowerCase()} kayıtlarınız</p>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
@@ -69,8 +69,8 @@ export default async function ProfilePage() {
             if (appointments.length === 0) {
               return (
                 <div style={{ background: "rgba(0,0,0,0.02)", borderRadius: 0, border: "1px solid rgba(0,0,0,0.05)", padding: "48px 24px", textAlign: "center" }}>
-                  <Calendar size={36} style={{ color: "rgba(0,0,0,0.15)", margin: "0 auto 12px" }} />
-                  <p style={{ color: "rgba(0,0,0,0.45)", fontSize: 14, marginBottom: 12 }}>Henüz bir {terms.appointment.toLowerCase()} kaydınız bulunmuyor.</p>
+                  <Calendar size={36} style={{ color: "rgba(0,0,0,0.65)", margin: "0 auto 12px" }} />
+                  <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 14, marginBottom: 12 }}>Henüz bir {terms.appointment.toLowerCase()} kaydınız bulunmuyor.</p>
                   <Link href="/booking" style={{ color: "var(--text, #1a1a1a)", fontSize: 14, fontWeight: 600, textDecoration: "none" }}>
                     {terms.services}i İncele →
                   </Link>
@@ -132,7 +132,7 @@ export default async function ProfilePage() {
                     <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(0,0,0,0.05)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
                       <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
                         <div style={{ width: 44, height: 44, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          <Package size={18} style={{ color: "rgba(0,0,0,0.45)" }} />
+                          <Package size={18} style={{ color: "rgba(0,0,0,0.65)" }} />
                         </div>
                         <div>
                           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
@@ -149,7 +149,7 @@ export default async function ProfilePage() {
                               {res.status === "CONFIRMED" ? "Onaylı" : "Bekliyor"}
                             </span>
                           </div>
-                          <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 12, display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+                          <div style={{ color: "rgba(0,0,0,0.65)", fontSize: 12, display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
                             <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Calendar size={12} /> {new Date(res.eventDate).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                             {res.packages.length > 0 && <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Package size={12} /> {res.packages.length} Paket</span>}
                           </div>
@@ -159,7 +159,7 @@ export default async function ProfilePage() {
                       {/* Delivery Countdown - uses max across all reservations */}
                       {maxDeliveryDate && currentStepIdx < 5 && currentStepIdx >= 0 && (
                         <div style={{ background: "rgba(0,0,0,0.02)", padding: "10px 16px", borderRadius: 0, textAlign: "right", border: "1px solid rgba(0,0,0,0.05)" }}>
-                          <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Tahmini Teslim</p>
+                          <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Tahmini Teslim</p>
                           <p style={{ fontSize: 14, fontWeight: 700 }}>{maxDeliveryDate.toLocaleDateString("tr-TR", { day: 'numeric', month: 'short' })}</p>
                           {maxDaysLeft > 0 && <p style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.65)" }}>{maxDaysLeft} gün kaldı</p>}
                         </div>
@@ -169,7 +169,7 @@ export default async function ProfilePage() {
                     {/* Package List - only show if packages exist */}
                     {res.packages.length > 0 && (
                     <div style={{ padding: "16px 24px", borderBottom: "1px solid rgba(0,0,0,0.05)" }}>
-                      <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 10 }}>Paket Detayları ({res.packages.length})</p>
+                      <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 10 }}>Paket Detayları ({res.packages.length})</p>
                       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                         {res.packages.map((pkg, pkgIdx) => {
                           const categoryLabels = { DIS_CEKIM: "Dış Çekim", DUGUN: "Düğün", NISAN: "Nişan", STANDARD: "Standart", CUSTOM_DURATION: "Randevu" };
@@ -182,14 +182,14 @@ export default async function ProfilePage() {
                               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
                                 <div>
                                   <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text, #1a1a1a)", marginBottom: 2 }}>{pkgIdx + 1}. {pkg.name}</div>
-                                  {pkg.description && <div style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", lineHeight: 1.4 }}>{pkg.description}</div>}
+                                  {pkg.description && <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", lineHeight: 1.4 }}>{pkg.description}</div>}
                                 </div>
                                 <div style={{ fontSize: 14, fontWeight: 800, color: "var(--text, #1a1a1a)", flexShrink: 0, marginLeft: 12 }}>{pkg.price}₺</div>
                               </div>
                               <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 6 }}>
-                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(0,0,0,0.05)", color: "rgba(0,0,0,0.45)", padding: "2px 8px", borderRadius: 0 }}>{categoryLabels[pkg.category] || pkg.category}</span>
-                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(0,0,0,0.05)", color: "rgba(0,0,0,0.45)", padding: "2px 8px", borderRadius: 0 }}>{timeLabels[pkg.timeType] || pkg.timeType}</span>
-                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(0,0,0,0.04)", color: "rgba(0,0,0,0.4)", padding: "2px 8px", borderRadius: 0 }}>{pkg.deliveryTimeDays || 14} gün içinde teslim</span>
+                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(0,0,0,0.05)", color: "rgba(0,0,0,0.65)", padding: "2px 8px", borderRadius: 0 }}>{categoryLabels[pkg.category] || pkg.category}</span>
+                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(0,0,0,0.05)", color: "rgba(0,0,0,0.65)", padding: "2px 8px", borderRadius: 0 }}>{timeLabels[pkg.timeType] || pkg.timeType}</span>
+                                <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(0,0,0,0.04)", color: "rgba(0,0,0,0.65)", padding: "2px 8px", borderRadius: 0 }}>{pkg.deliveryTimeDays || 14} gün içinde teslim</span>
                                 {pkg.postSelectionDays > 0 && (
                                   <span style={{ fontSize: 10, fontWeight: 700, background: "rgba(0,0,0,0.03)", color: "rgba(0,0,0,0.65)", padding: "2px 8px", borderRadius: 0 }}>+{pkg.postSelectionDays} gün seçim süresi</span>
                                 )}
@@ -202,18 +202,18 @@ export default async function ProfilePage() {
                               {pkg.features && pkg.features.length > 0 && (
                                 <div style={{ display: "flex", flexWrap: "wrap", gap: "3px 10px", paddingTop: 6, borderTop: "1px solid rgba(0,0,0,0.03)" }}>
                                   {pkg.features.map((f, i) => (
-                                    <span key={i} style={{ fontSize: 11, color: "rgba(0,0,0,0.35)" }}>• {f}</span>
+                                    <span key={i} style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>• {f}</span>
                                   ))}
                                 </div>
                               )}
                               {/* Package-specific custom field answers (mekan, düğün yeri vb.) */}
                               {pkgFields.length > 0 && (
                                 <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(0,0,0,0.03)" }}>
-                                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.25)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Çekim Bilgileri</div>
+                                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Çekim Bilgileri</div>
                                   <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                                     {pkgFields.map((answer, i) => (
                                       <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12 }}>
-                                        <span style={{ color: "rgba(0,0,0,0.4)", fontWeight: 600 }}>{answer.label}</span>
+                                        <span style={{ color: "rgba(0,0,0,0.65)", fontWeight: 600 }}>{answer.label}</span>
                                         <span style={{ color: "var(--text, #1a1a1a)", fontWeight: 700 }}>
                                           {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
                                         </span>
@@ -225,12 +225,12 @@ export default async function ProfilePage() {
                               {/* Package-specific addons */}
                               {pkgAddons.length > 0 && (
                                 <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(0,0,0,0.03)" }}>
-                                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.25)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Ek Hizmetler</div>
+                                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Ek Hizmetler</div>
                                   <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                                     {pkgAddons.map((addon, i) => (
                                       <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12 }}>
                                         <span style={{ color: "var(--text, #1a1a1a)", fontWeight: 600 }}>+ {addon.title}</span>
-                                        <span style={{ color: "rgba(0,0,0,0.45)", fontWeight: 700 }}>{addon.price}₺</span>
+                                        <span style={{ color: "rgba(0,0,0,0.65)", fontWeight: 700 }}>{addon.price}₺</span>
                                       </div>
                                     ))}
                                   </div>
@@ -249,10 +249,10 @@ export default async function ProfilePage() {
                           <div style={{ marginTop: 10, padding: "10px 14px", background: "rgba(0,0,0,0.02)", borderRadius: 0, border: "1px solid rgba(0,0,0,0.03)" }}>
                             {unmatchedFields.length > 0 && (
                               <>
-                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.25)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Çekim Bilgileri</div>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>Çekim Bilgileri</div>
                                 {unmatchedFields.map((answer, i) => (
                                   <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12, marginBottom: 3 }}>
-                                    <span style={{ color: "rgba(0,0,0,0.4)", fontWeight: 600 }}>{answer.label}</span>
+                                    <span style={{ color: "rgba(0,0,0,0.65)", fontWeight: 600 }}>{answer.label}</span>
                                     <span style={{ color: "var(--text, #1a1a1a)", fontWeight: 700 }}>
                                       {answer.type === "checkbox" ? (answer.value ? "✅ Evet" : "❌ Hayır") : (answer.value || "—")}
                                     </span>
@@ -262,11 +262,11 @@ export default async function ProfilePage() {
                             )}
                             {unmatchedAddons.length > 0 && (
                               <>
-                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.25)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6, marginTop: unmatchedFields.length > 0 ? 8 : 0 }}>Ek Hizmetler</div>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6, marginTop: unmatchedFields.length > 0 ? 8 : 0 }}>Ek Hizmetler</div>
                                 {unmatchedAddons.map((addon, i) => (
                                   <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12, marginBottom: 3 }}>
                                     <span style={{ color: "var(--text, #1a1a1a)", fontWeight: 600 }}>+ {addon.title}</span>
-                                    <span style={{ color: "rgba(0,0,0,0.45)", fontWeight: 700 }}>{addon.price}₺</span>
+                                    <span style={{ color: "rgba(0,0,0,0.65)", fontWeight: 700 }}>{addon.price}₺</span>
                                   </div>
                                 ))}
                               </>
@@ -289,7 +289,7 @@ export default async function ProfilePage() {
                     {/* Workflow Progress — only for photographers */}
                     {features.workflow && (
                     <div style={{ padding: "20px 24px" }}>
-                      <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 20 }}>İşlem Gidişatı</p>
+                      <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 20 }}>İşlem Gidişatı</p>
                       
                       <div style={{ paddingBottom: 16, overflowX: "auto" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", position: "relative", minWidth: 420 }}>
@@ -307,7 +307,7 @@ export default async function ProfilePage() {
                                   width: 26, height: 26, borderRadius: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, transition: "all 0.3s",
                                   ...(isCompleted ? { background: "#1a1a1a", color: "#1a1a1a" } :
                                     isCurrent ? { background: "#1a1a1a", color: "#1a1a1a", boxShadow: "0 0 12px rgba(0,0,0,0.25)" } :
-                                    { background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.3)" })
+                                    { background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.65)" })
                                 }}>
                                   {isCompleted ? "✓" : (idx + 1)}
                                 </div>
@@ -315,7 +315,7 @@ export default async function ProfilePage() {
                                   <p style={{ fontSize: 11, fontWeight: 600, color: isCurrent ? "#fff" : isCompleted ? "rgba(0,0,0,0.65)" : "rgba(0,0,0,0.3)" }}>
                                     {step.title}
                                   </p>
-                                  <p style={{ fontSize: 9, color: "rgba(0,0,0,0.2)", maxWidth: 90 }}>{step.desc}</p>
+                                  <p style={{ fontSize: 9, color: "rgba(0,0,0,0.65)", maxWidth: 90 }}>{step.desc}</p>
                                 </div>
                               </div>
                             );
@@ -328,7 +328,7 @@ export default async function ProfilePage() {
                         <div style={{ marginTop: 12, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
                           <div>
                             <h5 style={{ fontWeight: 700, color: "var(--text, #1a1a1a)", fontSize: 13 }}>Fotoğraflarınız Hazır! 🎉</h5>
-                            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 11 }}>Albüme gidecek fotoğrafları seçebilirsiniz.</p>
+                            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 11 }}>Albüme gidecek fotoğrafları seçebilirsiniz.</p>
                           </div>
                           <Link href="/profile/gallery" style={{ background: "#1a1a1a", color: "#1a1a1a", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap" }}>
                             Seçimi Başlat
@@ -346,7 +346,7 @@ export default async function ProfilePage() {
                                 <CheckCircle size={16} style={{ color: "var(--text, #1a1a1a)" }} />
                                 <span style={{ fontWeight: 700, fontSize: 13, color: "var(--text, #1a1a1a)" }}>Seçiminiz İşleme Alındı</span>
                               </div>
-                              <p style={{ color: "rgba(0,0,0,0.35)", fontSize: 11, marginTop: 6 }}>Fotoğraf seçiminiz onaylanmıştır ve hazırlık aşamasına geçilmiştir.</p>
+                              <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 11, marginTop: 6 }}>Fotoğraf seçiminiz onaylanmıştır ve hazırlık aşamasına geçilmiştir.</p>
                             </div>
                           );
                         }
@@ -374,7 +374,7 @@ export default async function ProfilePage() {
                         <div style={{ marginTop: 16, background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", borderRadius: 0, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
                           <div>
                             <h5 style={{ fontWeight: 700, color: "var(--text, #1a1a1a)", fontSize: 13 }}>Teslimatınız Hazır! 📸</h5>
-                            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 11 }}>Tüm dosyalarınıza aşağıdaki bağlantıdan ulaşabilirsiniz.</p>
+                            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 11 }}>Tüm dosyalarınıza aşağıdaki bağlantıdan ulaşabilirsiniz.</p>
                           </div>
                           <a href={res.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#1a1a1a", color: "#1a1a1a", padding: "8px 18px", borderRadius: 0, fontWeight: 700, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
                             <ExternalLink size={14} /> Klasöre Git
@@ -389,11 +389,11 @@ export default async function ProfilePage() {
                       <div style={{ padding: "20px 24px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                           <div style={{ width: 32, height: 32, background: res.status === "CONFIRMED" ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.03)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            {res.status === "CONFIRMED" ? <CheckCircle size={16} style={{ color: "var(--text, #1a1a1a)" }} /> : <Clock size={16} style={{ color: "rgba(0,0,0,0.35)" }} />}
+                            {res.status === "CONFIRMED" ? <CheckCircle size={16} style={{ color: "var(--text, #1a1a1a)" }} /> : <Clock size={16} style={{ color: "rgba(0,0,0,0.65)" }} />}
                           </div>
                           <div>
                             <p style={{ fontWeight: 700, fontSize: 13 }}>{res.status === "CONFIRMED" ? `${terms.appointment} Onayl\u0131` : "Onay Bekleniyor"}</p>
-                            <p style={{ fontSize: 11, color: "rgba(0,0,0,0.35)" }}>{new Date(res.eventDate).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                            <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>{new Date(res.eventDate).toLocaleDateString("tr-TR", { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                           </div>
                         </div>
                       </div>
@@ -417,7 +417,7 @@ export default async function ProfilePage() {
           <section>
             <div style={{ marginBottom: 20 }}>
               <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 6 }}>Kargo & Siparişlerim</h3>
-              <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 14 }}>Satın aldığınız ürünlerin paketleme ve kargo durumları</p>
+              <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 14 }}>Satın aldığınız ürünlerin paketleme ve kargo durumları</p>
             </div>
             
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
@@ -458,7 +458,7 @@ export default async function ProfilePage() {
                               {dateStr}
                             </span>
                           </div>
-                          <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 12 }}>Sipariş No: #{order.id.split('-')[0].toUpperCase()}</div>
+                          <div style={{ color: "rgba(0,0,0,0.65)", fontSize: 12 }}>Sipariş No: #{order.id.split('-')[0].toUpperCase()}</div>
                         </div>
                       </div>
                     </div>
@@ -480,7 +480,7 @@ export default async function ProfilePage() {
                                   <div style={{
                                     width: 28, height: 28, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, transition: "all 0.3s",
                                     ...(isCompleted ? { background: "#60a5fa", color: "#000", boxShadow: "0 0 12px rgba(96,165,250,0.4)" } :
-                                      { background: "var(--bg, #fff)", border: "2px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.25)" })
+                                      { background: "var(--bg, #fff)", border: "2px solid rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.65)" })
                                   }}>
                                     {isCompleted ? <CheckCircle size={14} /> : (idx + 1)}
                                   </div>
@@ -507,7 +507,7 @@ export default async function ProfilePage() {
                         <div style={{ background: "rgba(96,165,250,0.1)", border: "1px solid rgba(96,165,250,0.2)", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
                           <div>
                             <h5 style={{ fontWeight: 700, color: "#60a5fa", fontSize: 13, marginBottom: "4px" }}>Paketiniz Yola Çıktı!</h5>
-                            <p style={{ color: "rgba(0,0,0,0.55)", fontSize: 12 }}>Aşağıdaki bağlantıyı kullanarak kargo durumunuzu sorgulayabilirsiniz.</p>
+                            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12 }}>Aşağıdaki bağlantıyı kullanarak kargo durumunuzu sorgulayabilirsiniz.</p>
                           </div>
                           <a href={order.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ background: "#60a5fa", color: "#000", padding: "10px 20px", fontWeight: 800, fontSize: 13, textDecoration: "none", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 8 }}>
                             Kargo Takip Sayfası
@@ -518,7 +518,7 @@ export default async function ProfilePage() {
 
                     {/* Products Content Log */}
                     <div style={{ padding: "16px 24px", borderTop: "1px solid rgba(0,0,0,0.03)" }}>
-                      <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.25)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Sipariş Edilen Ürünler</p>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Sipariş Edilen Ürünler</p>
                       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                         {productList.map((prod, pIdx) => (
                           <div key={pIdx} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13, background: "rgba(0,0,0,0.02)", padding: "12px", border: "1px solid rgba(0,0,0,0.02)" }}>
@@ -526,7 +526,7 @@ export default async function ProfilePage() {
                               {prod.isDigital ? <FileText size={16} color="rgba(0,0,0,0.35)" /> : <Package size={16} color="rgba(0,0,0,0.35)" />}
                               <span style={{ color: "var(--text, #1a1a1a)", fontWeight: 600 }}>{prod.name}</span>
                             </div>
-                            <span style={{ color: "rgba(0,0,0,0.45)", fontWeight: 700 }}>{prod.purchasedPrice ?? prod.price}₺</span>
+                            <span style={{ color: "rgba(0,0,0,0.65)", fontWeight: 700 }}>{prod.purchasedPrice ?? prod.price}₺</span>
                           </div>
                         ))}
                       </div>
@@ -583,7 +583,7 @@ export default async function ProfilePage() {
             <section style={{ marginTop: 16 }}>
               <div style={{ marginBottom: 16 }}>
                 <h3 style={{ fontSize: 18, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 4 }}>Ödeme Durumu</h3>
-                <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 13 }}>Tüm rezervasyonlarınızın toplam ödeme özeti</p>
+                <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 13 }}>Tüm rezervasyonlarınızın toplam ödeme özeti</p>
               </div>
 
               <PaymentSection reservation={unifiedReservation} compactMode={false} allowPaymentMethodChange={siteConfig?.allowPaymentMethodChange || false} />

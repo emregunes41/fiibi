@@ -29,7 +29,7 @@ const inputStyle = {
   outline: "none", boxSizing: "border-box",
 };
 const labelStyle = {
-  fontSize: "11px", color: "rgba(0,0,0,0.5)", fontWeight: 600,
+  fontSize: "11px", color: "rgba(0,0,0,0.65)", fontWeight: 600,
   display: "block", marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.1em",
 };
 
@@ -137,7 +137,7 @@ function AdminCartDrawer() {
                 <div style={{ fontSize: "16px", fontWeight: 700, color: "#000" }}>
                   {submitResult ? (submitResult.success ? "✅ Tamamlandı" : "❌ Hata") : showContact ? "Müşteri Bilgileri" : "Admin Sepeti"}
                 </div>
-                <div style={{ fontSize: "11px", color: "rgba(0,0,0,0.4)" }}>
+                <div style={{ fontSize: "11px", color: "rgba(0,0,0,0.65)" }}>
                   {submitResult ? "" : showContact ? "Bilgileri doldurun ve kaydedin" : `${itemCount} paket`}
                 </div>
               </div>
@@ -157,7 +157,7 @@ function AdminCartDrawer() {
                   <div style={{ fontSize: 22, fontWeight: 800, color: submitResult.success ? "rgba(0,0,0,0.7)" : "rgba(0,0,0,0.5)", marginBottom: 12 }}>
                     {submitResult.success ? "Rezervasyon Oluşturuldu!" : "Hata"}
                   </div>
-                  <p style={{ fontSize: 14, color: "rgba(0,0,0,0.5)", lineHeight: 1.7 }}>{submitResult.message}</p>
+                  <p style={{ fontSize: 14, color: "rgba(0,0,0,0.65)", lineHeight: 1.7 }}>{submitResult.message}</p>
                   <button onClick={() => { setSubmitResult(null); setShowContact(false); setIsOpen(false); }} style={{
                     marginTop: 24, width: "100%", padding: 14, borderRadius: 0,
                     background: "#ffffff", color: "#1a1a1a", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer",
@@ -196,7 +196,7 @@ function AdminCartDrawer() {
               ) : (
                 /* Cart Items */
                 items.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(0,0,0,0.3)" }}>
+                  <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(0,0,0,0.65)" }}>
                     <ShoppingBag size={40} style={{ margin: "0 auto 16px", opacity: 0.5 }} />
                     <p style={{ fontSize: 14 }}>Sepet boş — sol taraftan paket ekleyin</p>
                   </div>
@@ -213,7 +213,7 @@ function AdminCartDrawer() {
                             <div style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: meta.color, display: "flex", alignItems: "center", gap: 4 }}>
                               <Icon size={10} /> {meta.label}
                             </div>
-                            <button onClick={() => removeItem(item.pkg.id)} style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, padding: 6, cursor: "pointer", color: "rgba(0,0,0,0.4)" }}>
+                            <button onClick={() => removeItem(item.pkg.id)} style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, padding: 6, cursor: "pointer", color: "rgba(0,0,0,0.65)" }}>
                               <Trash2 size={12} />
                             </button>
                           </div>
@@ -236,7 +236,7 @@ function AdminCartDrawer() {
                               {item.details.customFieldAnswers?.filter(a => a.value !== "" && a.value !== false).length > 0 && (
                                 <div style={{ marginTop: 4, paddingTop: 4, borderTop: "1px solid rgba(0,0,0,0.05)" }}>
                                   {item.details.customFieldAnswers.filter(a => a.value !== "" && a.value !== false).map((a, i) => (
-                                    <div key={i} style={{ fontSize: 11, color: "rgba(0,0,0,0.4)", marginBottom: 2 }}>
+                                    <div key={i} style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", marginBottom: 2 }}>
                                       <span style={{ fontWeight: 600 }}>{a.label}:</span> {a.type === "checkbox" ? "✓" : a.value}
                                     </div>
                                   ))}
@@ -247,7 +247,7 @@ function AdminCartDrawer() {
                           {item.addons.length > 0 && (
                             <div style={{ marginBottom: 8 }}>
                               {item.addons.map((a, i) => (
-                                <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "rgba(0,0,0,0.4)", marginBottom: 3 }}>
+                                <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "rgba(0,0,0,0.65)", marginBottom: 3 }}>
                                   <span>+ {a.title}</span><span>{a.price}₺</span>
                                 </div>
                               ))}
@@ -255,7 +255,7 @@ function AdminCartDrawer() {
                           )}
                           <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline", gap: 4 }}>
                             <span style={{ fontSize: 16, fontWeight: 700, color: "#000" }}>{fmt(pkgPrice + addonPrice)}</span>
-                            <span style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>₺</span>
+                            <span style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>₺</span>
                           </div>
                         </div>
                       );
@@ -283,18 +283,18 @@ function AdminCartDrawer() {
                 )}
                 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(0,0,0,0.4)" }}>TOPLAM</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(0,0,0,0.65)" }}>TOPLAM</div>
                   <div style={{ textAlign: "right" }}>
                     {showContact && Number(manualDiscount) > 0 && (
-                      <div style={{ fontSize: 13, color: "rgba(0,0,0,0.3)", textDecoration: "line-through", marginBottom: 2 }}>{fmt(cartTotal())} ₺</div>
+                      <div style={{ fontSize: 13, color: "rgba(0,0,0,0.65)", textDecoration: "line-through", marginBottom: 2 }}>{fmt(cartTotal())} ₺</div>
                     )}
                     <span style={{ fontSize: 24, fontWeight: 700, color: "#000" }}>{fmt(Math.max(0, cartTotal() - (Number(manualDiscount) || 0)))}</span>
-                    <span style={{ fontSize: 13, color: "rgba(0,0,0,0.45)", fontWeight: 400, marginLeft: 2 }}>₺</span>
+                    <span style={{ fontSize: 13, color: "rgba(0,0,0,0.65)", fontWeight: 400, marginLeft: 2 }}>₺</span>
                   </div>
                 </div>
                 {!showContact ? (
                   <div style={{ display: "flex", gap: 10 }}>
-                    <button onClick={clearCart} style={{ flex: 1, padding: 14, borderRadius: 0, border: "1px solid rgba(0,0,0,0.06)", background: "transparent", color: "rgba(0,0,0,0.45)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Temizle</button>
+                    <button onClick={clearCart} style={{ flex: 1, padding: 14, borderRadius: 0, border: "1px solid rgba(0,0,0,0.06)", background: "transparent", color: "rgba(0,0,0,0.65)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Temizle</button>
                     <button onClick={() => setShowContact(true)} style={{
                       flex: 2, padding: 14, borderRadius: 0, border: "none",
                       background: "#ffffff", color: "#1a1a1a", fontSize: 13, fontWeight: 700,
@@ -331,7 +331,7 @@ export default function AdminBookingClient({ initialPackages }) {
           <h1 style={{ fontSize: "clamp(24px, 3.5vw, 32px)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 8, color: "#1a1a1a" }}>
             Manuel Rezervasyon Oluştur
           </h1>
-          <p style={{ fontSize: 14, color: "rgba(0,0,0,0.45)", lineHeight: 1.7 }}>
+          <p style={{ fontSize: 14, color: "rgba(0,0,0,0.65)", lineHeight: 1.7 }}>
             Online rezervasyon akışının aynısını kullanarak müşteri adına rezervasyon oluşturun. Müşteri bilgilerini girerken isteğe bağlı özel indirim tanımlayabilirsiniz.
           </p>
         </div>

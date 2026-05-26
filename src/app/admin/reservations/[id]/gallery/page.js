@@ -65,7 +65,7 @@ export default function GalleryManagementPage() {
 
   if (!gallery) {
     return (
-      <div style={{ color: "rgba(0,0,0,0.5)", padding: "40px", fontSize: "0.8rem", fontWeight: 700 }}>
+      <div style={{ color: "rgba(0,0,0,0.65)", padding: "40px", fontSize: "0.8rem", fontWeight: 700 }}>
         Galeri bulunamadı.
       </div>
     );
@@ -89,7 +89,7 @@ export default function GalleryManagementPage() {
         </Link>
         <div>
           <h1 style={{ fontSize: "1.2rem", fontWeight: 900, margin: 0, letterSpacing: "-0.02em" }}>Galeri Yönetimi</h1>
-          <p style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.4)", margin: "2px 0 0", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 800 }}>
+          <p style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.65)", margin: "2px 0 0", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 800 }}>
             REZERVASYON: {params.id.slice(0, 12)}...
           </p>
         </div>
@@ -104,7 +104,7 @@ export default function GalleryManagementPage() {
         }}>
           
           <div style={{ flex: "1 1 300px" }}>
-            <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Fotoğraf Yükle</div>
+            <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Fotoğraf Yükle</div>
             <CldUploadWidget 
               uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""} 
               signatureEndpoint="" 
@@ -137,7 +137,7 @@ export default function GalleryManagementPage() {
           </div>
 
           <div style={{ flex: "1 1 300px" }}>
-            <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Müşteri Erişimi</div>
+            <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Müşteri Erişimi</div>
             <button 
               onClick={handleDeliveryToggle}
               style={{ 
@@ -169,8 +169,8 @@ export default function GalleryManagementPage() {
         {/* Fotoğraflar */}
         {gallery.photos.length === 0 ? (
           <div style={{ padding: "40px 20px", textAlign: "center", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)", borderRadius: 0 }}>
-            <ImageIcon size={32} style={{ color: "rgba(0,0,0,0.1)", margin: "0 auto 10px" }} />
-            <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "rgba(0,0,0,0.4)" }}>Henüz hiç fotoğraf yüklenmedi.</div>
+            <ImageIcon size={32} style={{ color: "rgba(0,0,0,0.65)", margin: "0 auto 10px" }} />
+            <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "rgba(0,0,0,0.65)" }}>Henüz hiç fotoğraf yüklenmedi.</div>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "10px" }}>
@@ -191,7 +191,7 @@ export default function GalleryManagementPage() {
                 <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: "6px", display: "flex", justifyContent: "space-between", alignItems: "flex-start", background: "linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)" }}>
                   <span style={{ 
                     background: "rgba(0,0,0,0.6)", padding: "2px 6px", borderRadius: 2, 
-                    fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.8)", 
+                    fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.8)", 
                     maxWidth: "70%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", border: "1px solid rgba(0,0,0,0.1)"
                   }}>
                     {photo.originalName}
@@ -224,7 +224,7 @@ export default function GalleryManagementPage() {
                         padding: "6px", borderRadius: 2, fontSize: "0.6rem", color: "#1a1a1a", fontWeight: 600, lineHeight: 1.4,
                         maxHeight: "60px", overflowY: "auto"
                       }}>
-                        <span style={{ color: "rgba(0,0,0,0.4)", fontWeight: 800, display: "block", marginBottom: 2, fontSize: "0.55rem" }}>NOT:</span>
+                        <span style={{ color: "rgba(0,0,0,0.65)", fontWeight: 800, display: "block", marginBottom: 2, fontSize: "0.55rem" }}>NOT:</span>
                         {photo.note}
                       </div>
                     )}

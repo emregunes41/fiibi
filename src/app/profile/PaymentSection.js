@@ -91,12 +91,12 @@ export default function PaymentSection({ reservation, compactMode = false, allow
           <div style={{ padding: 28 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
               <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "var(--text, #1a1a1a)" }}>Ödeme Tutarı Belirle</h3>
-              <button onClick={() => { setShowPayModal(false); setIframeToken(null); }} style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: 6, cursor: "pointer", color: "rgba(0,0,0,0.4)" }}>
+              <button onClick={() => { setShowPayModal(false); setIframeToken(null); }} style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: 6, cursor: "pointer", color: "rgba(0,0,0,0.65)" }}>
                 <X size={16} />
               </button>
             </div>
 
-            <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 13, marginBottom: 20 }}>
+            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 13, marginBottom: 20 }}>
               Kalan bakiye: <strong style={{ color: "var(--text, #1a1a1a)" }}>{currentRemaining.toLocaleString('tr-TR')}₺</strong>
             </p>
 
@@ -113,7 +113,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  {paymentMode === "full" ? <CheckCircle2 size={20} style={{ color: "var(--text, #1a1a1a)" }} /> : <Circle size={20} style={{ color: "rgba(0,0,0,0.2)" }} />}
+                  {paymentMode === "full" ? <CheckCircle2 size={20} style={{ color: "var(--text, #1a1a1a)" }} /> : <Circle size={20} style={{ color: "rgba(0,0,0,0.65)" }} />}
                   <span style={{ fontSize: 15, fontWeight: 600, color: "var(--text, #1a1a1a)" }}>Tamamını Öde</span>
                 </div>
                 <span style={{ fontSize: 15, fontWeight: 800, color: "var(--text, #1a1a1a)" }}>{currentRemaining.toLocaleString('tr-TR')}₺</span>
@@ -131,7 +131,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  {paymentMode === "partial" ? <CheckCircle2 size={20} style={{ color: "var(--text, #1a1a1a)" }} /> : <Circle size={20} style={{ color: "rgba(0,0,0,0.2)" }} />}
+                  {paymentMode === "partial" ? <CheckCircle2 size={20} style={{ color: "var(--text, #1a1a1a)" }} /> : <Circle size={20} style={{ color: "rgba(0,0,0,0.65)" }} />}
                   <span style={{ fontSize: 15, fontWeight: 600, color: "var(--text, #1a1a1a)" }}>Farklı Tutar Gir</span>
                 </div>
               </button>
@@ -151,7 +151,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
                     }}
                   />
                   {parseFloat(payAmount) > currentRemaining && (
-                    <div style={{ color: "rgba(0,0,0,0.5)", fontSize: 12, marginTop: 8 }}>Belirtilen tutar kalan bakiyeden ({currentRemaining}₺) fazla olamaz.</div>
+                    <div style={{ color: "rgba(0,0,0,0.65)", fontSize: 12, marginTop: 8 }}>Belirtilen tutar kalan bakiyeden ({currentRemaining}₺) fazla olamaz.</div>
                   )}
                 </div>
               )}
@@ -182,7 +182,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
               <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: "var(--text, #1a1a1a)" }}>Kredi Kartı ile Öde</h3>
-              <button onClick={() => { setShowPayModal(false); setIframeToken(null); }} style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: 6, cursor: "pointer", color: "rgba(0,0,0,0.4)" }}>
+              <button onClick={() => { setShowPayModal(false); setIframeToken(null); }} style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, padding: 6, cursor: "pointer", color: "rgba(0,0,0,0.65)" }}>
                 <X size={16} />
               </button>
             </div>
@@ -237,7 +237,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
           <CreditCard size={16} style={{ color: "var(--text, #1a1a1a)" }} />
           <span style={{ fontWeight: 700, fontSize: 14, color: "var(--text, #1a1a1a)" }}>✅ Ödeme Tamamlandı</span>
         </div>
-        <div style={{ fontSize: 12, color: "rgba(0,0,0,0.45)" }}>
+        <div style={{ fontSize: 12, color: "rgba(0,0,0,0.65)" }}>
           Toplam {totalPaid.toLocaleString('tr-TR')}₺ ödendi · {payments.length} işlem
         </div>
       </div>
@@ -252,21 +252,21 @@ export default function PaymentSection({ reservation, compactMode = false, allow
       <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, padding: "20px 24px", overflow: "hidden", position: "relative" }}>
         {/* Summary */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-          <Banknote size={16} style={{ color: "rgba(0,0,0,0.5)" }} />
+          <Banknote size={16} style={{ color: "rgba(0,0,0,0.65)" }} />
           <span style={{ fontWeight: 700, fontSize: 14, color: "var(--text, #1a1a1a)" }}>Ödeme Durumu</span>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(90px, 1fr))", gap: 12, marginBottom: 14 }}>
           <div style={{ textAlign: "center", background: "rgba(0,0,0,0.02)", borderRadius: 0, padding: "10px 6px" }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Toplam</div>
+            <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Toplam</div>
             <div style={{ fontSize: 16, fontWeight: 800, color: "var(--text, #1a1a1a)" }}>{currentTotalAmount.toLocaleString('tr-TR')}₺</div>
           </div>
           <div style={{ textAlign: "center", background: "rgba(0,0,0,0.04)", borderRadius: 0, padding: "10px 6px" }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Ödenen</div>
+            <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Ödenen</div>
             <div style={{ fontSize: 16, fontWeight: 800, color: "#22c55e" }}>{totalPaid.toLocaleString('tr-TR')}₺</div>
           </div>
           <div style={{ textAlign: "center", background: "rgba(0,0,0,0.02)", border: "none", borderRadius: 0, padding: "10px 6px" }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Kalan</div>
+            <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Kalan</div>
             <div style={{ fontSize: 16, fontWeight: 800, color: "var(--text, #1a1a1a)" }}>{currentRemaining.toLocaleString('tr-TR')}₺</div>
           </div>
         </div>
@@ -275,7 +275,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
         <div style={{ height: 6, borderRadius: 0, background: "rgba(0,0,0,0.06)", overflow: "hidden", marginBottom: 6 }}>
           <div style={{ height: "100%", borderRadius: 0, background: pct > 0 ? "linear-gradient(90deg, var(--text, #1a1a1a), rgba(0,0,0,0.5))" : "transparent", width: `${pct}%`, transition: "width 0.5s ease" }} />
         </div>
-        <div style={{ textAlign: "center", fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.35)", marginBottom: 16 }}>
+        <div style={{ textAlign: "center", fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.65)", marginBottom: 16 }}>
           %{Math.round(pct)} ödendi
         </div>
 
@@ -323,11 +323,11 @@ export default function PaymentSection({ reservation, compactMode = false, allow
           const getLogIcon = (type) => {
             switch (type) {
               case "ADD_PAYMENT": return <CreditCard size={12} style={{ color: "var(--text, #1a1a1a)" }} />;
-              case "DELETE_PAYMENT": return <X size={12} style={{ color: "rgba(0,0,0,0.4)" }} />;
-              case "CARD_CONVERSION": return <CreditCard size={12} style={{ color: "rgba(0,0,0,0.5)" }} />;
-              case "EXTRA_FEE": return <AlertTriangle size={12} style={{ color: "rgba(0,0,0,0.4)" }} />;
-              case "CASH_REVERSION": return <Banknote size={12} style={{ color: "rgba(0,0,0,0.5)" }} />;
-              default: return <Circle size={12} style={{ color: "rgba(0,0,0,0.3)" }} />;
+              case "DELETE_PAYMENT": return <X size={12} style={{ color: "rgba(0,0,0,0.65)" }} />;
+              case "CARD_CONVERSION": return <CreditCard size={12} style={{ color: "rgba(0,0,0,0.65)" }} />;
+              case "EXTRA_FEE": return <AlertTriangle size={12} style={{ color: "rgba(0,0,0,0.65)" }} />;
+              case "CASH_REVERSION": return <Banknote size={12} style={{ color: "rgba(0,0,0,0.65)" }} />;
+              default: return <Circle size={12} style={{ color: "rgba(0,0,0,0.65)" }} />;
             }
           };
 
@@ -335,7 +335,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
 
           return (
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", marginBottom: 12 }}>Hesap Hareketleri</div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 12 }}>Hesap Hareketleri</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8, position: "relative" }}>
                 <div style={{ position: "absolute", left: 15, top: 10, bottom: 10, width: 2, background: "rgba(0,0,0,0.05)", zIndex: 0 }} />
                 {limitedTimeline.map((log) => {
@@ -353,18 +353,18 @@ export default function PaymentSection({ reservation, compactMode = false, allow
                           <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text, #1a1a1a)", lineHeight: 1.4 }}>{log.description}</span>
                           <span style={{ fontSize: 12, fontWeight: 800, color: isPositive ? "#22c55e" : (isNegative ? "rgba(0,0,0,0.4)" : "var(--text, #1a1a1a)"), whiteSpace: "nowrap", marginLeft: 12 }}>{amtDisplay}</span>
                         </div>
-                        <span style={{ fontSize: 10, color: "rgba(0,0,0,0.3)", fontWeight: 500 }}>
+                        <span style={{ fontSize: 10, color: "rgba(0,0,0,0.65)", fontWeight: 500 }}>
                           {new Date(log.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })} · {new Date(log.date).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
                         </span>
                         <div style={{ display: "flex", gap: 8, marginTop: 6, paddingTop: 6, borderTop: "1px dashed rgba(0,0,0,0.06)", flexWrap: "wrap" }}>
-                          <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.4)" }}>
-                            <span style={{ color: "rgba(0,0,0,0.25)" }}>TOPLAM:</span> {Math.round(log._dynamicTotal || 0).toLocaleString('tr-TR')}₺
+                          <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(0,0,0,0.65)" }}>
+                            <span style={{ color: "rgba(0,0,0,0.65)" }}>TOPLAM:</span> {Math.round(log._dynamicTotal || 0).toLocaleString('tr-TR')}₺
                           </div>
                           <div style={{ fontSize: 9, fontWeight: 700, color: "#22c55e" }}>
-                            <span style={{ color: "rgba(0,0,0,0.4)" }}>ÖDENEN:</span> {Math.round(log._dynamicPaid || 0).toLocaleString('tr-TR')}₺
+                            <span style={{ color: "rgba(0,0,0,0.65)" }}>ÖDENEN:</span> {Math.round(log._dynamicPaid || 0).toLocaleString('tr-TR')}₺
                           </div>
                           <div style={{ fontSize: 9, fontWeight: 700, color: "var(--text, #1a1a1a)" }}>
-                            <span style={{ color: "rgba(0,0,0,0.35)" }}>KALAN:</span> {Math.max(0, Math.round((log._dynamicTotal || 0) - (log._dynamicPaid || 0))).toLocaleString('tr-TR')}₺
+                            <span style={{ color: "rgba(0,0,0,0.65)" }}>KALAN:</span> {Math.max(0, Math.round((log._dynamicTotal || 0) - (log._dynamicPaid || 0))).toLocaleString('tr-TR')}₺
                           </div>
                         </div>
                       </div>
@@ -376,7 +376,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
               {!showAllLogs && displayTimeline.length > 4 && (
                 <button
                   onClick={() => setShowAllLogs(true)}
-                  style={{ width: "100%", background: "transparent", border: "1px solid rgba(0,0,0,0.1)", color: "rgba(0,0,0,0.5)", padding: "8px", borderRadius: 0, fontSize: 12, fontWeight: 600, cursor: "pointer", marginTop: 12, transition: "all 0.2s" }}
+                  style={{ width: "100%", background: "transparent", border: "1px solid rgba(0,0,0,0.1)", color: "rgba(0,0,0,0.65)", padding: "8px", borderRadius: 0, fontSize: 12, fontWeight: 600, cursor: "pointer", marginTop: 12, transition: "all 0.2s" }}
                 >
                   Tüm Ödeme Geçmişini Gör ({displayTimeline.length - 4} Daha)
                 </button>

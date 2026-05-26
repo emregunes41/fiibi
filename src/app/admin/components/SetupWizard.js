@@ -97,7 +97,7 @@ export default function SetupWizard({ config }) {
 
   const label = {
     display: "flex", alignItems: "center", gap: 6,
-    fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.5)",
+    fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)",
     textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6,
   };
 
@@ -108,14 +108,14 @@ export default function SetupWizard({ config }) {
   };
 
   const btnSecondary = {
-    flex: 1, padding: "14px", background: "rgba(0,0,0,0.06)", color: "rgba(0,0,0,0.5)",
+    flex: 1, padding: "14px", background: "rgba(0,0,0,0.06)", color: "rgba(0,0,0,0.65)",
     border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s",
   };
 
   const skipBtn = {
     position: "fixed", top: 24, right: 24,
     padding: "8px 16px", background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.1)",
-    color: "rgba(0,0,0,0.4)", fontSize: 12, fontWeight: 700, cursor: "pointer",
+    color: "rgba(0,0,0,0.65)", fontSize: 12, fontWeight: 700, cursor: "pointer",
     display: "flex", alignItems: "center", gap: 6, transition: "all 0.2s", zIndex: 100,
   };
 
@@ -139,7 +139,7 @@ export default function SetupWizard({ config }) {
               transition: "all 0.4s ease",
             }} />
           ))}
-          <span style={{ fontSize: 10, color: "rgba(0,0,0,0.25)", marginLeft: 8, fontWeight: 700 }}>
+          <span style={{ fontSize: 10, color: "rgba(0,0,0,0.65)", marginLeft: 8, fontWeight: 700 }}>
             {step}/{totalSteps}
           </span>
         </div>
@@ -152,13 +152,13 @@ export default function SetupWizard({ config }) {
             width: 72, height: 72, margin: "0 auto 24px", display: "flex", alignItems: "center", justifyContent: "center",
             background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.1)",
           }}>
-            <SectorIcon size={32} style={{ color: "rgba(255,255,255,0.6)" }} />
+            <SectorIcon size={32} style={{ color: "rgba(0,0,0,0.6)" }} />
           </div>
 
           <h1 style={{ fontSize: "clamp(1.4rem, 5vw, 2rem)", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: 8 }}>
             fiibi'ye Hoş Geldiniz! 🎉
           </h1>
-          <p style={{ color: "rgba(0,0,0,0.45)", fontSize: 14, lineHeight: 1.7, marginBottom: 32, maxWidth: 400, margin: "0 auto 32px" }}>
+          <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 14, lineHeight: 1.7, marginBottom: 32, maxWidth: 400, margin: "0 auto 32px" }}>
             Birkaç adımda işletmenizi online'a taşıyalım.
             Müşterileriniz sizin markanızla karşılaşacak.
           </p>
@@ -175,9 +175,9 @@ export default function SetupWizard({ config }) {
                 padding: "14px 16px", background: "rgba(0,0,0,0.03)",
                 border: "1px solid rgba(0,0,0,0.06)",
               }}>
-                <div style={{ color: "rgba(0,0,0,0.4)", marginBottom: 8 }}>{f.icon}</div>
+                <div style={{ color: "rgba(0,0,0,0.65)", marginBottom: 8 }}>{f.icon}</div>
                 <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{f.title}</div>
-                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.3)" }}>{f.desc}</div>
+                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>{f.desc}</div>
               </div>
             ))}
           </div>
@@ -185,7 +185,7 @@ export default function SetupWizard({ config }) {
           {tenantSlug && (
             <div style={{
               padding: "10px 16px", background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)",
-              marginBottom: 24, fontSize: 12, color: "rgba(0,0,0,0.5)",
+              marginBottom: 24, fontSize: 12, color: "rgba(0,0,0,0.65)",
             }}>
               Siteniz: <span style={{ color: "#1a1a1a", fontWeight: 700 }}>{tenantSlug}.fiibi.co</span>
             </div>
@@ -197,7 +197,7 @@ export default function SetupWizard({ config }) {
             Kuruluma Başla <ArrowRight size={16} />
           </button>
 
-          <p style={{ fontSize: 11, color: "rgba(0,0,0,0.25)", marginTop: 16 }}>
+          <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", marginTop: 16 }}>
             Tüm ayarları daha sonra "Ayarlar" sekmesinden değiştirebilirsiniz.
           </p>
         </div>
@@ -207,9 +207,9 @@ export default function SetupWizard({ config }) {
       {step === 1 && (
         <div style={stepStyle}>
           <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <Store size={24} style={{ color: "rgba(0,0,0,0.5)", marginBottom: 10 }} />
+            <Store size={24} style={{ color: "rgba(0,0,0,0.65)", marginBottom: 10 }} />
             <h2 style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 4 }}>İşletme Bilgileri</h2>
-            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12 }}>Müşterilerinizin sizi bulmasını kolaylaştırın.</p>
+            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12 }}>Müşterilerinizin sizi bulmasını kolaylaştırın.</p>
           </div>
 
           <label style={label}><Store size={11} /> İşletme Adı *</label>
@@ -240,9 +240,9 @@ export default function SetupWizard({ config }) {
       {step === 2 && (
         <div style={stepStyle}>
           <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <Palette size={24} style={{ color: "rgba(0,0,0,0.5)", marginBottom: 10 }} />
+            <Palette size={24} style={{ color: "rgba(0,0,0,0.65)", marginBottom: 10 }} />
             <h2 style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 4 }}>Görsel Kimlik</h2>
-            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12 }}>Markanızı yansıtan logo ve renk seçin.</p>
+            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12 }}>Markanızı yansıtan logo ve renk seçin.</p>
           </div>
 
           {/* Logo Upload */}
@@ -262,7 +262,7 @@ export default function SetupWizard({ config }) {
                 display: "flex", alignItems: "center", justifyContent: "center",
                 background: "rgba(0,0,0,0.02)",
               }}>
-                <Upload size={20} style={{ color: "rgba(0,0,0,0.15)" }} />
+                <Upload size={20} style={{ color: "rgba(0,0,0,0.65)" }} />
               </div>
             )}
             <div style={{ flex: 1 }}>
@@ -281,14 +281,14 @@ export default function SetupWizard({ config }) {
                   <button type="button" onClick={() => open()} style={{
                     padding: "10px 20px", background: "rgba(0,0,0,0.06)",
                     border: "1px solid rgba(0,0,0,0.12)",
-                    color: "rgba(255,255,255,0.6)", fontSize: 12, fontWeight: 700, cursor: "pointer",
+                    color: "rgba(0,0,0,0.6)", fontSize: 12, fontWeight: 700, cursor: "pointer",
                     width: "100%",
                   }}>
                     {form.logoUrl ? "Değiştir" : "Logo Yükle"}
                   </button>
                 )}
               </CldUploadWidget>
-              <p style={{ fontSize: 10, color: "rgba(0,0,0,0.25)", marginTop: 6 }}>PNG/SVG önerilir · Şeffaf arka plan idealdir</p>
+              <p style={{ fontSize: 10, color: "rgba(0,0,0,0.65)", marginTop: 6 }}>PNG/SVG önerilir · Şeffaf arka plan idealdir</p>
             </div>
           </div>
 
@@ -326,9 +326,9 @@ export default function SetupWizard({ config }) {
       {step === 3 && (
         <div style={stepStyle}>
           <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <Globe size={24} style={{ color: "rgba(0,0,0,0.5)", marginBottom: 10 }} />
+            <Globe size={24} style={{ color: "rgba(0,0,0,0.65)", marginBottom: 10 }} />
             <h2 style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 4 }}>Sayfa & Sosyal Medya</h2>
-            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12 }}>Ziyaretçilerinizi karşılayan ilk izlenim.</p>
+            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12 }}>Ziyaretçilerinizi karşılayan ilk izlenim.</p>
           </div>
 
           <label style={label}><Type size={11} /> Ana Başlık *</label>
@@ -375,7 +375,7 @@ export default function SetupWizard({ config }) {
               <Check size={26} style={{ color: "#22c55e" }} />
             </div>
             <h2 style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 4 }}>Hazırsınız! 🎉</h2>
-            <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12 }}>Son bir göz atın, sorun yoksa tamamlayalım.</p>
+            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12 }}>Son bir göz atın, sorun yoksa tamamlayalım.</p>
           </div>
 
           {/* Summary */}
@@ -394,7 +394,7 @@ export default function SetupWizard({ config }) {
                 display: "flex", justifyContent: "space-between", alignItems: "center",
                 padding: "10px 0", borderBottom: "1px solid rgba(0,0,0,0.04)",
               }}>
-                <span style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", fontWeight: 600 }}>{item.label}</span>
+                <span style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", fontWeight: 600 }}>{item.label}</span>
                 <span style={{
                   fontSize: 12, fontWeight: 700, maxWidth: 280,
                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
@@ -410,10 +410,10 @@ export default function SetupWizard({ config }) {
               display: "flex", alignItems: "center", justifyContent: "space-between",
               padding: "10px 0", borderBottom: "1px solid rgba(0,0,0,0.04)",
             }}>
-              <span style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", fontWeight: 600 }}>Marka Rengi</span>
+              <span style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", fontWeight: 600 }}>Marka Rengi</span>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <div style={{ width: 18, height: 18, background: form.accentColor, border: "1px solid rgba(0,0,0,0.2)" }} />
-                <span style={{ fontSize: 11, color: "rgba(0,0,0,0.5)", fontFamily: "monospace" }}>{form.accentColor}</span>
+                <span style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", fontFamily: "monospace" }}>{form.accentColor}</span>
               </div>
             </div>
             {form.logoUrl && (
@@ -421,7 +421,7 @@ export default function SetupWizard({ config }) {
                 display: "flex", alignItems: "center", justifyContent: "space-between",
                 padding: "10px 0",
               }}>
-                <span style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", fontWeight: 600 }}>Logo</span>
+                <span style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", fontWeight: 600 }}>Logo</span>
                 <img src={form.logoUrl} alt="Logo" style={{ height: 28, maxWidth: 100, objectFit: "contain" }} />
               </div>
             )}
@@ -430,9 +430,9 @@ export default function SetupWizard({ config }) {
           {/* Info box */}
           <div style={{
             padding: "12px 16px", background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)",
-            marginBottom: 20, fontSize: 11, color: "rgba(0,0,0,0.35)", lineHeight: 1.6,
+            marginBottom: 20, fontSize: 11, color: "rgba(0,0,0,0.65)", lineHeight: 1.6,
           }}>
-            💡 Tüm bu ayarları daha sonra <strong style={{ color: "rgba(255,255,255,0.6)" }}>Ayarlar</strong> sekmesinden istediğiniz zaman güncelleyebilirsiniz.
+            💡 Tüm bu ayarları daha sonra <strong style={{ color: "rgba(0,0,0,0.6)" }}>Ayarlar</strong> sekmesinden istediğiniz zaman güncelleyebilirsiniz.
           </div>
 
           <div style={{ display: "flex", gap: 8 }}>

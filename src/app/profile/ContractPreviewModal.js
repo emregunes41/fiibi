@@ -33,10 +33,10 @@ export default function ContractPreviewModal({ customText, businessName = "İşl
                 </div>
                 <div>
                   <h3 style={{ fontSize: 18, fontWeight: 700, color: "var(--text, #1a1a1a)", margin: 0 }}>Hizmet Sözleşmesi</h3>
-                  <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12, margin: 0 }}>Profesyonel Fotoğrafçılık</p>
+                  <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12, margin: 0 }}>Profesyonel Fotoğrafçılık</p>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} style={{ background: "rgba(0,0,0,0.04)", border: "none", color: "rgba(0,0,0,0.55)", padding: 8, borderRadius: 0, cursor: "pointer", display: "flex" }} className="hover:bg-white/10 hover:text-white">
+              <button onClick={() => setIsOpen(false)} style={{ background: "rgba(0,0,0,0.04)", border: "none", color: "rgba(0,0,0,0.65)", padding: 8, borderRadius: 0, cursor: "pointer", display: "flex" }} className="hover:bg-white/10 hover:text-white">
                 <X size={20} />
               </button>
             </div>

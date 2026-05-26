@@ -165,7 +165,7 @@ export default function SubscriptionPage() {
               <div style={{ fontSize: 13, fontWeight: 700 }}>
                 {plan === "trial" ? "Deneme Süresi" : "Basic Plan"}: <span style={{ color: daysLeft <= 3 ? "#ff6464" : pd.color }}>{daysLeft} gün kaldı</span>
               </div>
-              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.35)" }}>
+              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>
                 {plan === "trial" ? "Süre dolmadan bir plan seçin." : "Süreniz dolmadan yenileyebilirsiniz."}
               </div>
             </div>
@@ -181,7 +181,7 @@ export default function SubscriptionPage() {
           <Crown size={18} style={{ color: "#f59e0b" }} />
           <div>
             <div style={{ fontSize: 13, fontWeight: 700, color: "#f59e0b" }}>Pro Plan Aktif</div>
-            <div style={{ fontSize: 11, color: "rgba(0,0,0,0.35)" }}>
+            <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>
               {expiresAt ? `Bitiş: ${expiresAt.toLocaleDateString("tr-TR")}` : "Tüm özelliklere erişiminiz var."}
             </div>
           </div>
@@ -244,8 +244,8 @@ export default function SubscriptionPage() {
                 <span style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.03em" }}>
                   {p.price.toLocaleString("tr-TR")}
                 </span>
-                <span style={{ fontSize: 14, color: "rgba(0,0,0,0.4)", marginLeft: 4 }}>₺</span>
-                <span style={{ fontSize: 12, color: "rgba(0,0,0,0.3)", marginLeft: 6 }}>{p.periodLabel}</span>
+                <span style={{ fontSize: 14, color: "rgba(0,0,0,0.65)", marginLeft: 4 }}>₺</span>
+                <span style={{ fontSize: 12, color: "rgba(0,0,0,0.65)", marginLeft: 6 }}>{p.periodLabel}</span>
               </div>
 
               {/* Monthly equivalent */}
@@ -270,7 +270,7 @@ export default function SubscriptionPage() {
               {/* Features */}
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 8 }}>
                 {p.features.map((f, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(0,0,0,0.55)" }}>
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(0,0,0,0.65)" }}>
                     <Check size={13} style={{ color: p.color, flexShrink: 0 }} />
                     {f}
                   </div>
@@ -305,7 +305,7 @@ export default function SubscriptionPage() {
           onClick={() => setShowComparison(!showComparison)}
           style={{
             background: "none", border: "1px solid rgba(0,0,0,0.1)",
-            color: "rgba(0,0,0,0.5)", padding: "10px 24px", fontSize: 12,
+            color: "rgba(0,0,0,0.65)", padding: "10px 24px", fontSize: 12,
             fontWeight: 700, cursor: "pointer", transition: "all 0.2s",
           }}
         >
@@ -318,7 +318,7 @@ export default function SubscriptionPage() {
         <div style={{ marginTop: 20, background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", overflow: "hidden" }}>
           {/* Header */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 100px 100px", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-            <div style={{ padding: "12px 16px", fontSize: 11, fontWeight: 800, color: "rgba(0,0,0,0.3)", textTransform: "uppercase" }}>Özellik</div>
+            <div style={{ padding: "12px 16px", fontSize: 11, fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase" }}>Özellik</div>
             <div style={{ padding: "12px 8px", fontSize: 11, fontWeight: 800, color: "#8b5cf6", textTransform: "uppercase", textAlign: "center" }}>Basic</div>
             <div style={{ padding: "12px 8px", fontSize: 11, fontWeight: 800, color: "#f59e0b", textTransform: "uppercase", textAlign: "center" }}>Pro</div>
           </div>
@@ -328,16 +328,16 @@ export default function SubscriptionPage() {
               display: "grid", gridTemplateColumns: "1fr 100px 100px",
               borderBottom: i < PLAN_COMPARISON.length - 1 ? "1px solid rgba(0,0,0,0.04)" : "none",
             }}>
-              <div style={{ padding: "10px 16px", fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{row.feature}</div>
+              <div style={{ padding: "10px 16px", fontSize: 12, color: "rgba(0,0,0,0.6)" }}>{row.feature}</div>
               <div style={{ padding: "10px 8px", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {row.basic === true ? <Check size={14} style={{ color: "#8b5cf6" }} /> :
-                 row.basic === false ? <X size={14} style={{ color: "rgba(0,0,0,0.15)" }} /> :
-                 <span style={{ fontSize: 11, color: "rgba(0,0,0,0.5)" }}>{row.basic}</span>}
+                 row.basic === false ? <X size={14} style={{ color: "rgba(0,0,0,0.65)" }} /> :
+                 <span style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>{row.basic}</span>}
               </div>
               <div style={{ padding: "10px 8px", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {row.pro === true ? <Check size={14} style={{ color: "#f59e0b" }} /> :
-                 row.pro === false ? <X size={14} style={{ color: "rgba(0,0,0,0.15)" }} /> :
-                 <span style={{ fontSize: 11, color: "rgba(0,0,0,0.5)" }}>{row.pro}</span>}
+                 row.pro === false ? <X size={14} style={{ color: "rgba(0,0,0,0.65)" }} /> :
+                 <span style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>{row.pro}</span>}
               </div>
             </div>
           ))}
@@ -345,7 +345,7 @@ export default function SubscriptionPage() {
       )}
 
       {/* Info */}
-      <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(0,0,0,0.2)", fontSize: 11, lineHeight: 1.6 }}>
+      <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(0,0,0,0.65)", fontSize: 11, lineHeight: 1.6 }}>
         Tüm planlar KDV dahildir. Tüm planlar 7 gün ücretsiz deneme ile başlar.<br />
         Ödeme işlemleri güvenli altyapı üzerinden gerçekleşir. İptal ve iade koşulları için destek ile iletişime geçin.
       </div>
@@ -357,12 +357,12 @@ export default function SubscriptionPage() {
             <div style={{ width: 36, height: 36, background: "rgba(0,0,0,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>🎁</div>
             <div>
               <h3 style={{ fontSize: 14, fontWeight: 800, margin: 0 }}>Arkadaşını Getir</h3>
-              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", margin: 0 }}>Her başarılı kayıt için ek süre kazanın.</p>
+              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", margin: 0 }}>Her başarılı kayıt için ek süre kazanın.</p>
             </div>
           </div>
           <div style={{ background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.1)", padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
             <div>
-              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", marginBottom: 4 }}>Referans Kodunuz</div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Referans Kodunuz</div>
               <div style={{ fontSize: 18, fontWeight: 900, letterSpacing: "0.1em" }}>{tenantInfo.referralCode}</div>
             </div>
             <button
@@ -373,7 +373,7 @@ export default function SubscriptionPage() {
             </button>
           </div>
           {tenantInfo.referralCount > 0 && (
-            <div style={{ fontSize: 12, color: "rgba(0,0,0,0.4)" }}>
+            <div style={{ fontSize: 12, color: "rgba(0,0,0,0.65)" }}>
               Şu ana kadar <strong style={{ color: "#1a1a1a" }}>{tenantInfo.referralCount}</strong> kişi sizin referansınızla katıldı.
             </div>
           )}

@@ -68,12 +68,12 @@ function AdminLayoutInner({ children }) {
   const sidebarContent = (
     <>
       <div style={{ fontWeight: 900, fontSize: "1.75rem", letterSpacing: "-0.04em", marginBottom: "3.5rem", paddingLeft: "0.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span>{brandName}<span style={{ color: "rgba(0,0,0,0.3)", fontSize: "1.1rem" }}>.{terms.brandSuffix}</span></span>
+        <span>{brandName}<span style={{ color: "rgba(0,0,0,0.65)", fontSize: "1.1rem" }}>.{terms.brandSuffix}</span></span>
         {/* Close button only on mobile */}
         <button
           onClick={() => setSidebarOpen(false)}
           className="md:hidden"
-          style={{ background: "none", border: "none", color: "rgba(0,0,0,0.4)", cursor: "pointer", padding: "4px" }}
+          style={{ background: "none", border: "none", color: "rgba(0,0,0,0.65)", cursor: "pointer", padding: "4px" }}
         >
           <X size={20} />
         </button>
@@ -95,7 +95,7 @@ function AdminLayoutInner({ children }) {
             <Plus size={18} strokeWidth={2.5} />
             İçerik Ekle
           </div>
-          <ChevronRight size={16} style={{ transform: quickAddOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s", color: "rgba(0,0,0,0.4)" }} />
+          <ChevronRight size={16} style={{ transform: quickAddOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s", color: "rgba(0,0,0,0.65)" }} />
         </button>
 
         {quickAddOpen && (
@@ -166,7 +166,7 @@ function AdminLayoutInner({ children }) {
             <Palette size={18} strokeWidth={2.5} />
             Tasarım & Düzen
           </div>
-          <ChevronRight size={16} style={{ transform: designMenuOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s", color: "rgba(0,0,0,0.4)" }} />
+          <ChevronRight size={16} style={{ transform: designMenuOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s", color: "rgba(0,0,0,0.65)" }} />
         </button>
 
         {designMenuOpen && (
@@ -275,7 +275,7 @@ function AdminLayoutInner({ children }) {
             <Menu size={22} />
           </button>
           <span style={{ fontWeight: 800, fontSize: "0.9rem", letterSpacing: "-0.02em" }}>
-            {brandName}<span style={{ color: "rgba(0,0,0,0.35)", fontWeight: 400 }}>.{bt?.terms?.brandSuffix || "panel"}</span>
+            {brandName}<span style={{ color: "rgba(0,0,0,0.65)", fontWeight: 400 }}>.{bt?.terms?.brandSuffix || "panel"}</span>
           </span>
           <div style={{ width: "30px" }} /> {/* spacer */}
         </div>

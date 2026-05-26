@@ -19,7 +19,7 @@ const inp = {
   fontSize: "0.8rem", boxSizing: "border-box",
 };
 
-const lbl = { display: "block", fontSize: "0.65rem", fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", marginBottom: "5px", letterSpacing: "0.04em" };
+const lbl = { display: "block", fontSize: "0.65rem", fontWeight: 800, color: "rgba(0,0,0,0.6)", textTransform: "uppercase", marginBottom: "5px", letterSpacing: "0.04em" };
 
 export default function PortfolioAdminPage() {
   const { session: adminSession } = useAdminSession();
@@ -91,7 +91,7 @@ export default function PortfolioAdminPage() {
 
   if (isLoading) {
     return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh", color: "rgba(0,0,0,0.4)" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh", color: "rgba(0,0,0,0.65)" }}>
         <RefreshCw size={20} style={{ marginRight: 8, animation: "spin 1s linear infinite" }} /> Yükleniyor...
       </div>
     );
@@ -112,7 +112,7 @@ export default function PortfolioAdminPage() {
             </button>
             <div>
               <h1 style={{ fontSize: "1.8rem", fontWeight: 900, margin: 0 }}>{activeCategory.name}</h1>
-              <p style={{ color: "rgba(0,0,0,0.5)", fontSize: "0.85rem", marginTop: 4 }}>
+              <p style={{ color: "rgba(0,0,0,0.65)", fontSize: "0.85rem", marginTop: 4 }}>
                 {activeCategory.photos?.length || 0} görsel
               </p>
             </div>
@@ -179,10 +179,10 @@ export default function PortfolioAdminPage() {
 
         {/* Photos Grid */}
         {activeCategory.photos?.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "5rem 0", color: "rgba(0,0,0,0.4)" }}>
+          <div style={{ textAlign: "center", padding: "5rem 0", color: "rgba(0,0,0,0.65)" }}>
             <UploadCloud size={48} style={{ opacity: 0.2, margin: "0 auto 1rem" }} />
             <p style={{ marginBottom: 8, fontWeight: 600 }}>Bu konseptte henüz görsel yok.</p>
-            <p style={{ fontSize: "0.75rem", color: "rgba(0,0,0,0.3)" }}>Yukarıdaki butona tıklayarak fotoğraf yükleyebilirsiniz.</p>
+            <p style={{ fontSize: "0.75rem", color: "rgba(0,0,0,0.65)" }}>Yukarıdaki butona tıklayarak fotoğraf yükleyebilirsiniz.</p>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "0.8rem" }}>
@@ -212,7 +212,7 @@ export default function PortfolioAdminPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
         <div>
           <h1 style={{ fontSize: "1.8rem", fontWeight: 900, margin: 0 }}>Portfolyo</h1>
-          <p style={{ color: "rgba(0,0,0,0.5)", fontSize: "0.85rem", marginTop: 4 }}>
+          <p style={{ color: "rgba(0,0,0,0.65)", fontSize: "0.85rem", marginTop: 4 }}>
             Anasayfadaki galeri fotoğraflarınızı konseptlere göre yönetin
           </p>
         </div>
@@ -225,7 +225,7 @@ export default function PortfolioAdminPage() {
       </div>
 
       {errorMsg && (
-        <div style={{ padding: "10px 14px", background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, color: "rgba(255,255,255,0.6)", fontSize: "0.75rem", fontWeight: 700, marginBottom: "1rem" }}>
+        <div style={{ padding: "10px 14px", background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 0, color: "rgba(0,0,0,0.6)", fontSize: "0.75rem", fontWeight: 700, marginBottom: "1rem" }}>
           {errorMsg}
         </div>
       )}
@@ -245,7 +245,7 @@ export default function PortfolioAdminPage() {
               {category.photos?.[0] ? (
                 <img src={thumbnailUrl(category.photos[0].url)} alt={category.name} style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.75 }} />
               ) : (
-                <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "rgba(0,0,0,0.1)" }}>
+                <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "rgba(0,0,0,0.65)" }}>
                   <ImageIcon size={40} />
                   <span style={{ fontSize: "0.6rem", fontWeight: 800, marginTop: 8, textTransform: "uppercase", letterSpacing: "0.1em" }}>Boş</span>
                 </div>
@@ -262,11 +262,11 @@ export default function PortfolioAdminPage() {
 
             {/* Info */}
             <div style={{ padding: "1.2rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Konsept</div>
+              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Konsept</div>
               <h3 style={{ fontSize: "1.1rem", fontWeight: 800, margin: 0, color: "#1a1a1a" }}>{category.name}</h3>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.3rem" }}>
-                <ImageIcon size={12} style={{ color: "rgba(0,0,0,0.3)" }} />
-                <span style={{ fontSize: "0.7rem", color: "rgba(0,0,0,0.4)", fontWeight: 600 }}>
+                <ImageIcon size={12} style={{ color: "rgba(0,0,0,0.65)" }} />
+                <span style={{ fontSize: "0.7rem", color: "rgba(0,0,0,0.65)", fontWeight: 600 }}>
                   {category.photos?.length || 0} görsel
                 </span>
               </div>
@@ -275,7 +275,7 @@ export default function PortfolioAdminPage() {
         ))}
 
         {categories.length === 0 && (
-          <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "4rem 0", color: "rgba(0,0,0,0.4)" }}>
+          <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "4rem 0", color: "rgba(0,0,0,0.65)" }}>
             <Folder size={48} style={{ opacity: 0.2, margin: "0 auto 1rem" }} />
             <p>Henüz portfolyo konsepti eklenmemiş.</p>
           </div>
@@ -286,7 +286,7 @@ export default function PortfolioAdminPage() {
       {isModalOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
           <div className="admin-modal-content" style={{ border: "1px solid rgba(0,0,0,0.1)", padding: "2rem", borderRadius: 0, width: "100%", maxWidth: "400px", position: "relative" }}>
-            <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", color: "rgba(0,0,0,0.5)", cursor: "pointer" }}>
+            <button onClick={() => setIsModalOpen(false)} style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", color: "rgba(0,0,0,0.65)", cursor: "pointer" }}>
               <X size={20} />
             </button>
 
@@ -306,7 +306,7 @@ export default function PortfolioAdminPage() {
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "0.5rem" }}>
-                <button type="button" onClick={() => setIsModalOpen(false)} style={{ background: "transparent", color: "rgba(255,255,255,0.6)", border: "none", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", padding: "0.5rem 1rem" }}>İptal</button>
+                <button type="button" onClick={() => setIsModalOpen(false)} style={{ background: "transparent", color: "rgba(0,0,0,0.6)", border: "none", fontWeight: 700, cursor: "pointer", fontSize: "0.8rem", padding: "0.5rem 1rem" }}>İptal</button>
                 <button type="submit" disabled={isCreating} style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", padding: "0.8rem 1.5rem", borderRadius: 0, fontWeight: 800, fontSize: "0.8rem", cursor: "pointer", opacity: isCreating ? 0.7 : 1 }}>
                   {isCreating ? "Oluşturuluyor..." : "Oluştur"}
                 </button>

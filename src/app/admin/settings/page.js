@@ -34,7 +34,7 @@ const inp = {
 const inpIcon = { ...inp, paddingLeft: 44 };
 
 const label = {
-  display: "block", fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.5)",
+  display: "block", fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)",
   textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, paddingLeft: 2,
 };
 
@@ -50,11 +50,11 @@ const sectionHeader = (Icon, title, desc) => (
       border: "1px solid rgba(0,0,0,0.08)", display: "flex", alignItems: "center",
       justifyContent: "center", flexShrink: 0,
     }}>
-      <Icon size={16} style={{ color: "rgba(255,255,255,0.6)" }} />
+      <Icon size={16} style={{ color: "rgba(0,0,0,0.6)" }} />
     </div>
     <div>
       <h2 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", margin: "0 0 4px", letterSpacing: "0.01em" }}>{title}</h2>
-      <p style={{ fontSize: 13, color: "rgba(0,0,0,0.5)", margin: 0, lineHeight: 1.4 }}>{desc}</p>
+      <p style={{ fontSize: 13, color: "rgba(0,0,0,0.65)", margin: 0, lineHeight: 1.4 }}>{desc}</p>
     </div>
   </div>
 );
@@ -240,16 +240,16 @@ export default function SettingsPage() {
 
   if (loading) return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh" }}>
-      <Loader2 size={24} style={{ color: "rgba(0,0,0,0.3)", animation: "spin 1s linear infinite" }} />
+      <Loader2 size={24} style={{ color: "rgba(0,0,0,0.65)", animation: "spin 1s linear infinite" }} />
     </div>
   );
 
   if (!config) return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh", padding: 24 }}>
       <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.1)", borderRadius: 0, padding: "40px 32px", textAlign: "center", maxWidth: 360 }}>
-        <AlertCircle size={32} style={{ color: "rgba(0,0,0,0.4)", margin: "0 auto 12px" }} />
+        <AlertCircle size={32} style={{ color: "rgba(0,0,0,0.65)", margin: "0 auto 12px" }} />
         <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Bağlantı Kesildi</h2>
-        <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 13, marginBottom: 20 }}>Ayarları yükleyemiyoruz.</p>
+        <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 13, marginBottom: 20 }}>Ayarları yükleyemiyoruz.</p>
         <button onClick={() => window.location.reload()} style={{ background: "#1a1a1a", color: "#1a1a1a", border: "none", borderRadius: 0, padding: "10px 24px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
           Yenile
         </button>
@@ -309,7 +309,7 @@ export default function SettingsPage() {
                   onClick={() => setSubTab(st.id)}
                   style={{
                     background: subTab === st.id ? "#fff" : "rgba(0,0,0,0.06)",
-                    color: subTab === st.id ? "#000" : "rgba(255,255,255,0.6)",
+                    color: subTab === st.id ? "#000" : "rgba(0,0,0,0.6)",
                     border: "none", borderRadius: 0, padding: "6px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap"
                   }}
                 >{st.label}</button>
@@ -342,7 +342,7 @@ export default function SettingsPage() {
               />
               <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", marginBottom: 4 }}>Hizmetler & Randevu Sistemi</div>
-                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.4)" }}>Hizmet/paket tanımlayarak müşterilerinizden rezervasyon almanızı sağlar.</div>
+                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.65)" }}>Hizmet/paket tanımlayarak müşterilerinizden rezervasyon almanızı sağlar.</div>
               </div>
             </label>
 
@@ -357,7 +357,7 @@ export default function SettingsPage() {
               />
               <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", marginBottom: 4 }}>Etkinlikler & Bilet Satışı</div>
-                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.4)" }}>Atölye, seminer veya grup dersleri tanımlayıp bilet satmanızı sağlar.</div>
+                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.65)" }}>Atölye, seminer veya grup dersleri tanımlayıp bilet satmanızı sağlar.</div>
               </div>
             </label>
           </div>
@@ -370,7 +370,7 @@ export default function SettingsPage() {
           <div style={{ marginBottom: 16 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
               <label style={label}>Hero Ana Başlık</label>
-              <span style={{ fontSize: 9, color: "rgba(0,0,0,0.25)", fontStyle: "italic" }}>Alt satır için Enter</span>
+              <span style={{ fontSize: 9, color: "rgba(0,0,0,0.65)", fontStyle: "italic" }}>Alt satır için Enter</span>
             </div>
             <textarea
               value={config.heroTitle}
@@ -397,8 +397,8 @@ export default function SettingsPage() {
         {/* 2. Preview Card */}
         {activeTab === "tasarim" && subTab === "hero" && <div style={{ ...sectionCard, background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-            <Layout size={13} style={{ color: "rgba(0,0,0,0.35)" }} />
-            <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Canlı Önizleme</span>
+            <Layout size={13} style={{ color: "rgba(0,0,0,0.65)" }} />
+            <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Canlı Önizleme</span>
           </div>
           <div style={{
             background: "#ffffff", borderRadius: 0, border: "1px solid rgba(0,0,0,0.06)",
@@ -407,7 +407,7 @@ export default function SettingsPage() {
             {/* Glow */}
             <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 200, height: 200, background: "rgba(0,0,0,0.04)", borderRadius: 0, filter: "blur(60px)", pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1 }}>
-              <span style={{ display: "block", fontSize: 8, textTransform: "uppercase", letterSpacing: "0.4em", color: "rgba(0,0,0,0.35)", marginBottom: 10 }}>
+              <span style={{ display: "block", fontSize: 8, textTransform: "uppercase", letterSpacing: "0.4em", color: "rgba(0,0,0,0.65)", marginBottom: 10 }}>
                 {config.heroSubtitle || bt.heroSub || ""}
               </span>
               <h1 style={{ fontSize: 22, fontFamily: "Georgia, serif", color: "#1a1a1a", lineHeight: 1.4, margin: "0 0 14px", whiteSpace: "pre-line" }}>
@@ -416,7 +416,7 @@ export default function SettingsPage() {
               <div style={{ width: 40, height: 1, background: "rgba(0,0,0,0.2)", margin: "0 auto" }} />
             </div>
           </div>
-          <p style={{ fontSize: 11, color: "rgba(0,0,0,0.3)", marginTop: 12, fontStyle: "italic", lineHeight: 1.5 }}>
+          <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", marginTop: 12, fontStyle: "italic", lineHeight: 1.5 }}>
             * Başlıktaki enter tuşu anasayfada tasarımın dengeli durmasını sağlar.
           </p>
         </div>}
@@ -444,7 +444,7 @@ export default function SettingsPage() {
                   style={{
                     width: "100%", padding: "20px", borderRadius: 0, cursor: "pointer",
                     border: "2px dashed rgba(0,0,0,0.12)", background: "rgba(0,0,0,0.02)",
-                    color: "rgba(0,0,0,0.5)", fontSize: 13, fontWeight: 700,
+                    color: "rgba(0,0,0,0.65)", fontSize: 13, fontWeight: 700,
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
                     transition: "all 0.2s",
                   }}
@@ -485,7 +485,7 @@ export default function SettingsPage() {
               />
               <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
                 <button type="button" onClick={() => { setPendingBannerUrl(""); setPendingMediaType("image"); setBannerForm({ title: "", subtitle: "", link: "" }); }}
-                  style={{ background: "none", border: "none", color: "rgba(0,0,0,0.4)", cursor: "pointer", fontSize: 12, fontWeight: 700 }}
+                  style={{ background: "none", border: "none", color: "rgba(0,0,0,0.65)", cursor: "pointer", fontSize: 12, fontWeight: 700 }}
                 >İptal</button>
                 <button type="button"
                   disabled={bannerUploading}
@@ -537,7 +537,7 @@ export default function SettingsPage() {
                         {b.title || "(Başlıksız)"}
                       </span>
                     </div>
-                    <div style={{ fontSize: 10, color: "rgba(0,0,0,0.35)" }}>
+                    <div style={{ fontSize: 10, color: "rgba(0,0,0,0.65)" }}>
                       Sıra: {idx + 1} {b.subtitle && `· ${b.subtitle}`}
                     </div>
                   </div>
@@ -550,7 +550,7 @@ export default function SettingsPage() {
                         await reorderBanners(ids);
                         setBanners(await getBanners());
                       }}
-                      style={{ background: "none", border: "none", cursor: idx === 0 ? "not-allowed" : "pointer", padding: 4, color: "rgba(0,0,0,0.3)", opacity: idx === 0 ? 0.3 : 1 }}
+                      style={{ background: "none", border: "none", cursor: idx === 0 ? "not-allowed" : "pointer", padding: 4, color: "rgba(0,0,0,0.65)", opacity: idx === 0 ? 0.3 : 1 }}
                     ><ArrowUp size={14} /></button>
                     {/* Move down */}
                     <button type="button" disabled={idx === banners.length - 1}
@@ -560,7 +560,7 @@ export default function SettingsPage() {
                         await reorderBanners(ids);
                         setBanners(await getBanners());
                       }}
-                      style={{ background: "none", border: "none", cursor: idx === banners.length - 1 ? "not-allowed" : "pointer", padding: 4, color: "rgba(0,0,0,0.3)", opacity: idx === banners.length - 1 ? 0.3 : 1 }}
+                      style={{ background: "none", border: "none", cursor: idx === banners.length - 1 ? "not-allowed" : "pointer", padding: 4, color: "rgba(0,0,0,0.65)", opacity: idx === banners.length - 1 ? 0.3 : 1 }}
                     ><ArrowDown size={14} /></button>
                     {/* Toggle active */}
                     <button type="button"
@@ -578,14 +578,14 @@ export default function SettingsPage() {
                           setBanners(await getBanners());
                         }
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.4)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.65)" }}
                     ><Trash2 size={14} /></button>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(0,0,0,0.25)", fontSize: 12 }}>
+            <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(0,0,0,0.65)", fontSize: 12 }}>
               Henüz banner eklenmemiş.
             </div>
           )}
@@ -614,7 +614,7 @@ export default function SettingsPage() {
               <Sparkles size={16} style={{ color: "#8b5cf6" }} />
               <div>
                 <div style={{ fontSize: 12, fontWeight: 700, color: "#8b5cf6" }}>Pro Özelliği</div>
-                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>Arka plan özelleştirme Pro plana dahildir. <a href="/admin/subscription" style={{ color: "#8b5cf6", textDecoration: "underline" }}>Planı Yükselt</a></div>
+                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>Arka plan özelleştirme Pro plana dahildir. <a href="/admin/subscription" style={{ color: "#8b5cf6", textDecoration: "underline" }}>Planı Yükselt</a></div>
               </div>
             </div>
           )}
@@ -654,7 +654,7 @@ export default function SettingsPage() {
             <div style={{ marginBottom: 16 }}>
               <label style={label}>{config.heroBgType === "video" ? "Video Dosyası" : "Fotoğraf"} Yükle</label>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <Upload size={16} style={{ color: "rgba(0,0,0,0.4)", flexShrink: 0 }} />
+                <Upload size={16} style={{ color: "rgba(0,0,0,0.65)", flexShrink: 0 }} />
                 <input
                   type="file"
                   accept={config.heroBgType === "video" ? "video/*" : "image/*"}
@@ -695,9 +695,9 @@ export default function SettingsPage() {
                   style={{ ...inp, cursor: "pointer", flex: 1 }}
                 />
               </div>
-              {uploadingBg && <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", marginTop: 6 }}>Yükleniyor... (büyük dosyalar biraz sürebilir)</p>}
+              {uploadingBg && <p style={{ fontSize: 11, color: "rgba(0,0,0,0.7)", marginTop: 6 }}>Yükleniyor... (büyük dosyalar biraz sürebilir)</p>}
               {config.heroBgUrl && (
-                <div style={{ marginTop: 8, fontSize: 11, color: "rgba(0,0,0,0.4)" }}>
+                <div style={{ marginTop: 8, fontSize: 11, color: "rgba(0,0,0,0.65)" }}>
                   Mevcut: <span style={{ color: "#1a1a1a" }}>{config.heroBgUrl.length > 60 ? config.heroBgUrl.slice(0, 60) + "..." : config.heroBgUrl}</span>
                 </div>
               )}
@@ -748,7 +748,7 @@ export default function SettingsPage() {
             <div>
               <label style={label}>İletişim No</label>
               <div style={{ position: "relative" }}>
-                <Phone size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.3)", pointerEvents: "none" }} />
+                <Phone size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.65)", pointerEvents: "none" }} />
                 <input
                   type="text"
                   value={config.phone}
@@ -762,7 +762,7 @@ export default function SettingsPage() {
             <div>
               <label style={label}>E-Posta</label>
               <div style={{ position: "relative" }}>
-                <Mail size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.3)", pointerEvents: "none" }} />
+                <Mail size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.65)", pointerEvents: "none" }} />
                 <input
                   type="email"
                   value={config.email}
@@ -779,7 +779,7 @@ export default function SettingsPage() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(0,0,0,0.06)", paddingBottom: 16 }}>
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a", marginBottom: 4 }}>Tüm İletişim Bölümünü Göster</div>
-                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>Anasayfanın en altındaki tüm iletişim ve bağlantılar kutusunu açar/kapatır.</div>
+                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>Anasayfanın en altındaki tüm iletişim ve bağlantılar kutusunu açar/kapatır.</div>
               </div>
               <div onClick={() => setConfig({ ...config, showContactOnHome: !config.showContactOnHome })} style={{ width: 44, height: 24, borderRadius: 12, background: config.showContactOnHome !== false ? "var(--accent)" : "rgba(0,0,0,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s", flexShrink: 0 }}>
                 <div style={{ width: 18, height: 18, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showContactOnHome !== false ? 23 : 3, boxShadow: "0 1px 3px rgba(0,0,0,0.3)" }} />
@@ -789,19 +789,19 @@ export default function SettingsPage() {
             {config.showContactOnHome !== false && (
               <div style={{ display: "flex", flexDirection: "column", gap: 12, paddingLeft: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>Telefon Numarasını Göster</div>
+                  <div style={{ fontSize: 13, color: "rgba(0,0,0,0.7)" }}>Telefon Numarasını Göster</div>
                   <div onClick={() => setConfig({ ...config, showPhoneOnHome: !config.showPhoneOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showPhoneOnHome !== false ? "var(--accent)" : "rgba(0,0,0,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
                     <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showPhoneOnHome !== false ? 19 : 3 }} />
                   </div>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>E-Posta Adresini Göster</div>
+                  <div style={{ fontSize: 13, color: "rgba(0,0,0,0.7)" }}>E-Posta Adresini Göster</div>
                   <div onClick={() => setConfig({ ...config, showEmailOnHome: !config.showEmailOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showEmailOnHome !== false ? "var(--accent)" : "rgba(0,0,0,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
                     <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showEmailOnHome !== false ? 19 : 3 }} />
                   </div>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>Fiziksel Adresi Göster</div>
+                  <div style={{ fontSize: 13, color: "rgba(0,0,0,0.7)" }}>Fiziksel Adresi Göster</div>
                   <div onClick={() => setConfig({ ...config, showAddressOnHome: !config.showAddressOnHome })} style={{ width: 36, height: 20, borderRadius: 10, background: config.showAddressOnHome !== false ? "var(--accent)" : "rgba(0,0,0,0.1)", position: "relative", cursor: "pointer", transition: "all 0.3s" }}>
                     <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, transition: "all 0.3s", left: config.showAddressOnHome !== false ? 19 : 3 }} />
                   </div>
@@ -819,7 +819,7 @@ export default function SettingsPage() {
             <div>
               <label style={label}>Instagram</label>
               <div style={{ display: "flex" }}>
-                <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.1)", borderRight: "none", padding: "0 10px", display: "flex", alignItems: "center", fontSize: 12, color: "rgba(0,0,0,0.3)", whiteSpace: "nowrap" }}>
+                <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.1)", borderRight: "none", padding: "0 10px", display: "flex", alignItems: "center", fontSize: 12, color: "rgba(0,0,0,0.65)", whiteSpace: "nowrap" }}>
                   <Instagram size={12} style={{ marginRight: 6, opacity: 0.5 }} />instagram.com/
                 </div>
                 <input
@@ -838,7 +838,7 @@ export default function SettingsPage() {
             <div>
               <label style={label}>WhatsApp</label>
               <div style={{ display: "flex" }}>
-                <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.1)", borderRight: "none", padding: "0 10px", display: "flex", alignItems: "center", fontSize: 12, color: "rgba(0,0,0,0.3)", whiteSpace: "nowrap" }}>
+                <div style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.1)", borderRight: "none", padding: "0 10px", display: "flex", alignItems: "center", fontSize: 12, color: "rgba(0,0,0,0.65)", whiteSpace: "nowrap" }}>
                   <MessageCircle size={12} style={{ marginRight: 6, opacity: 0.5 }} />+90
                 </div>
                 <input
@@ -860,7 +860,7 @@ export default function SettingsPage() {
           <div style={{ marginTop: 12 }}>
             <label style={label}>Google Maps Yol Tarifi Linki</label>
             <div style={{ position: "relative" }}>
-              <MapPin size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.3)", pointerEvents: "none" }} />
+              <MapPin size={14} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.65)", pointerEvents: "none" }} />
               <input
                 type="text"
                 value={config.googleMapsUrl || ""}
@@ -903,7 +903,7 @@ export default function SettingsPage() {
                   }} />
                 </div>
               </div>
-              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", margin: 0 }}>
+              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", margin: 0 }}>
                 Resend API ile e-posta bildirimleri
               </p>
             </div>
@@ -941,7 +941,7 @@ export default function SettingsPage() {
                   </div>
                 )}
               </div>
-              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", margin: 0 }}>
+              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", margin: 0 }}>
                 {isPro ? "Netgsm API ile SMS bildirimleri" : "SMS bildirimleri Pro plana dahildir. Aktif etmek için planınızı yükseltin."}
               </p>
             </div>
@@ -956,8 +956,8 @@ export default function SettingsPage() {
               borderRadius: 0, padding: 20, marginBottom: 12,
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                <Phone size={13} style={{ color: "rgba(0,0,0,0.35)" }} />
-                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Netgsm API (SMS)</span>
+                <Phone size={13} style={{ color: "rgba(0,0,0,0.65)" }} />
+                <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Netgsm API (SMS)</span>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
                 <div>
@@ -982,8 +982,8 @@ export default function SettingsPage() {
                   />
                 </div>
               </div>
-              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.3)", marginTop: 10, lineHeight: 1.6 }}>
-                📖 <a href="https://www.netgsm.com.tr" target="_blank" rel="noopener" style={{ color: "rgba(0,0,0,0.5)", textDecoration: "underline" }}>netgsm.com.tr</a> → Ayarlar → API Bilgileri bölümünden alabilirsiniz.
+              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", marginTop: 10, lineHeight: 1.6 }}>
+                📖 <a href="https://www.netgsm.com.tr" target="_blank" rel="noopener" style={{ color: "rgba(0,0,0,0.65)", textDecoration: "underline" }}>netgsm.com.tr</a> → Ayarlar → API Bilgileri bölümünden alabilirsiniz.
               </p>
             </div>
           )}
@@ -994,7 +994,7 @@ export default function SettingsPage() {
               background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)",
               borderRadius: 0, padding: 16, marginBottom: 12,
             }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>
                 📱 SMS Test
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
@@ -1046,7 +1046,7 @@ export default function SettingsPage() {
 
           {/* Bildirim Tercihleri - Checkbox'lı */}
           <div style={{ marginTop: 8 }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Bildirim Tercihleri</p>
+            <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Bildirim Tercihleri</p>
             {[
               { key: "notifyReservation", icon: "📅", text: "Randevu onayı", desc: "Randevu oluşturulduğunda" },
               { key: "notifyPayment", icon: "💰", text: "Ödeme alındı", desc: "Ödeme başarılı olduğunda" },
@@ -1080,12 +1080,12 @@ export default function SettingsPage() {
 
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: config[item.key] ? "#fff" : "rgba(0,0,0,0.4)", transition: "all 0.2s" }}>{item.text}</div>
-                  <div style={{ fontSize: 10, color: "rgba(0,0,0,0.3)" }}>{item.desc}</div>
+                  <div style={{ fontSize: 10, color: "rgba(0,0,0,0.65)" }}>{item.desc}</div>
                 </div>
 
                 <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
                   {config.emailEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(0,0,0,0.1)", color: "#1a1a1a", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>EMAIL</span>}
-                  {config.smsEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.5)", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>SMS</span>}
+                  {config.smsEnabled && config[item.key] && <span style={{ fontSize: 8, background: "rgba(0,0,0,0.08)", color: "rgba(0,0,0,0.65)", padding: "2px 6px", borderRadius: 0, fontWeight: 700 }}>SMS</span>}
                 </div>
               </div>
             ))}
@@ -1234,13 +1234,13 @@ export default function SettingsPage() {
               <Plus size={14} />
               {dcLoading ? "Oluşturuluyor..." : "İndirim Kodu Ekle"}
             </button>
-            {dcMessage && <div style={{ fontSize: 12, fontWeight: 600, color: dcMessage.includes("✅") ? "#fff" : "rgba(255,255,255,0.6)" }}>{dcMessage}</div>}
+            {dcMessage && <div style={{ fontSize: 12, fontWeight: 600, color: dcMessage.includes("✅") ? "#fff" : "rgba(0,0,0,0.6)" }}>{dcMessage}</div>}
           </div>
 
           {/* Existing codes */}
           {discountCodes.length > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Mevcut Kodlar ({discountCodes.length})</div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Mevcut Kodlar ({discountCodes.length})</div>
               {discountCodes.map((dc) => (
                 <div key={dc.id} style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
@@ -1260,7 +1260,7 @@ export default function SettingsPage() {
                         %{dc.discountPercent} İndirim
                       </span>
                     </div>
-                    <div style={{ fontSize: 11, color: "rgba(0,0,0,0.35)" }}>
+                    <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>
                       {dc.description && <span>{dc.description} · </span>}
                       Kullanım: {dc.usedCount}{dc.maxUses > 0 ? `/${dc.maxUses}` : " (Sınırsız)"}
                     </div>
@@ -1285,7 +1285,7 @@ export default function SettingsPage() {
                           setDiscountCodes(await getDiscountCodes());
                         }
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "rgba(0,0,0,0.4)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "rgba(0,0,0,0.65)" }}
                     >
                       <Trash2 size={14} />
                     </button>
@@ -1305,7 +1305,7 @@ export default function SettingsPage() {
               <Sparkles size={16} style={{ color: "#8b5cf6" }} />
               <div>
                 <div style={{ fontSize: 12, fontWeight: 700, color: "#8b5cf6" }}>Pro Özelliği</div>
-                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>AI Chatbot Pro plana dahildir. <a href="/admin/subscription" style={{ color: "#8b5cf6", textDecoration: "underline" }}>Planı Yükselt</a></div>
+                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>AI Chatbot Pro plana dahildir. <a href="/admin/subscription" style={{ color: "#8b5cf6", textDecoration: "underline" }}>Planı Yükselt</a></div>
               </div>
             </div>
           )}
@@ -1337,7 +1337,7 @@ export default function SettingsPage() {
                 }} />
               </div>
             </div>
-            <p style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", margin: 0 }}>
+            <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", margin: 0 }}>
               Anasayfada AI sohbet asistanını göster/gizle
             </p>
           </div>
@@ -1379,11 +1379,11 @@ export default function SettingsPage() {
 • Her zaman "siz" diye hitap et
 • Samimi ama profesyonel ol`}
               />
-              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.3)", marginTop: 10, lineHeight: 1.8 }}>
-                💡 <strong style={{ color: "rgba(0,0,0,0.5)" }}>Nasıl çalışır:</strong> Buraya yazdığın her şey AI'ın "beynine" eklenir. Paket bilgileri ve iletişim bilgileri zaten otomatik olarak AI'a verilir — sen sadece davranışını, üslubunu ve özel kurallarını belirle.
+              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", marginTop: 10, lineHeight: 1.8 }}>
+                💡 <strong style={{ color: "rgba(0,0,0,0.65)" }}>Nasıl çalışır:</strong> Buraya yazdığın her şey AI'ın "beynine" eklenir. Paket bilgileri ve iletişim bilgileri zaten otomatik olarak AI'a verilir — sen sadece davranışını, üslubunu ve özel kurallarını belirle.
               </p>
               <div style={{ marginTop: 14, padding: "14px 16px", borderRadius: 0, background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>Otomatik bilinen bilgiler</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>Otomatik bilinen bilgiler</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {[
                     "📦 Tüm paketler & fiyatlar",
@@ -1391,7 +1391,7 @@ export default function SettingsPage() {
                     "💵 Nakit/kart seçenekleri",
                     "🗓️ Rezervasyon yönlendirmesi",
                   ].map((item, i) => (
-                    <span key={i} style={{ fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 0, background: "rgba(0,0,0,0.04)", color: "rgba(0,0,0,0.5)", border: "1px solid rgba(0,0,0,0.06)" }}>{item}</span>
+                    <span key={i} style={{ fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 0, background: "rgba(0,0,0,0.04)", color: "rgba(0,0,0,0.65)", border: "1px solid rgba(0,0,0,0.06)" }}>{item}</span>
                   ))}
                 </div>
               </div>
@@ -1456,9 +1456,9 @@ export default function SettingsPage() {
               <div style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>🏠</div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 12, fontWeight: 700 }}>Hero Bölümü</div>
-                <div style={{ fontSize: 10, color: "rgba(0,0,0,0.35)" }}>Sabit · Her zaman en üstte</div>
+                <div style={{ fontSize: 10, color: "rgba(0,0,0,0.65)" }}>Sabit · Her zaman en üstte</div>
               </div>
-              <div style={{ fontSize: 10, color: "rgba(0,0,0,0.2)", fontWeight: 700 }}>SABİT</div>
+              <div style={{ fontSize: 10, color: "rgba(0,0,0,0.65)", fontWeight: 700 }}>SABİT</div>
             </div>
 
             {/* Orderable sections */}
@@ -1476,7 +1476,7 @@ export default function SettingsPage() {
                     <div style={{
                       width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center",
                       background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.1)",
-                      fontSize: 11, fontWeight: 800, color: "rgba(0,0,0,0.5)",
+                      fontSize: 11, fontWeight: 800, color: "rgba(0,0,0,0.65)",
                     }}>
                       {idx + 1}
                     </div>
@@ -1487,7 +1487,7 @@ export default function SettingsPage() {
                     {/* Info */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>{meta.label}</div>
-                      <div style={{ fontSize: 10, color: "rgba(0,0,0,0.35)", marginTop: 1 }}>{meta.desc}</div>
+                      <div style={{ fontSize: 10, color: "rgba(0,0,0,0.65)", marginTop: 1 }}>{meta.desc}</div>
                     </div>
 
                     {/* Move buttons */}
@@ -1497,7 +1497,7 @@ export default function SettingsPage() {
                         background: idx === 0 ? "none" : "rgba(0,0,0,0.06)",
                         border: idx === 0 ? "1px solid rgba(0,0,0,0.04)" : "1px solid rgba(0,0,0,0.1)",
                         cursor: idx === 0 ? "not-allowed" : "pointer",
-                        color: idx === 0 ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.6)",
+                        color: idx === 0 ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.6)",
                         transition: "all 0.15s",
                       }}>
                         <ArrowUp size={14} />
@@ -1507,7 +1507,7 @@ export default function SettingsPage() {
                         background: idx === currentOrder.length - 1 ? "none" : "rgba(0,0,0,0.06)",
                         border: idx === currentOrder.length - 1 ? "1px solid rgba(0,0,0,0.04)" : "1px solid rgba(0,0,0,0.1)",
                         cursor: idx === currentOrder.length - 1 ? "not-allowed" : "pointer",
-                        color: idx === currentOrder.length - 1 ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.6)",
+                        color: idx === currentOrder.length - 1 ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.6)",
                         transition: "all 0.15s",
                       }}>
                         <ArrowDown size={14} />
@@ -1526,20 +1526,20 @@ export default function SettingsPage() {
               <div style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>📍</div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 12, fontWeight: 700 }}>Footer & İletişim</div>
-                <div style={{ fontSize: 10, color: "rgba(0,0,0,0.35)" }}>Sabit · Her zaman en altta</div>
+                <div style={{ fontSize: 10, color: "rgba(0,0,0,0.65)" }}>Sabit · Her zaman en altta</div>
               </div>
-              <div style={{ fontSize: 10, color: "rgba(0,0,0,0.2)", fontWeight: 700 }}>SABİT</div>
+              <div style={{ fontSize: 10, color: "rgba(0,0,0,0.65)", fontWeight: 700 }}>SABİT</div>
             </div>
 
             {/* Reset button */}
             <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.25)", margin: 0 }}>
+              <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", margin: 0 }}>
                 💡 Yukarı/aşağı oklarla bölüm sırasını değiştirin. Değişiklikler otomatik kaydedilir.
               </p>
               <button type="button" onClick={resetOrder} style={{
                 padding: "8px 16px", background: "rgba(0,0,0,0.04)",
                 border: "1px solid rgba(0,0,0,0.08)",
-                color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 700,
+                color: "rgba(0,0,0,0.65)", fontSize: 11, fontWeight: 700,
                 cursor: "pointer", whiteSpace: "nowrap",
               }}>
                 Sıfırla
@@ -1563,12 +1563,12 @@ export default function SettingsPage() {
                     {cb.imageUrls.slice(0, 3).map((url, i) => (
                       <img key={i} src={url} alt="" style={{ width: 40, height: 40, objectFit: "cover" }} />
                     ))}
-                    {cb.imageUrls.length > 3 && <span style={{ fontSize: 10, color: "rgba(0,0,0,0.3)", alignSelf: "center" }}>+{cb.imageUrls.length - 3}</span>}
+                    {cb.imageUrls.length > 3 && <span style={{ fontSize: 10, color: "rgba(0,0,0,0.65)", alignSelf: "center" }}>+{cb.imageUrls.length - 3}</span>}
                   </div>
                 )}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a", marginBottom: 2 }}>{cb.title || "(Başlıksız)"}</div>
-                  <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cb.description || ""} — {cb.imageUrls?.length || 0} görsel</div>
+                  <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cb.description || ""} — {cb.imageUrls?.length || 0} görsel</div>
                 </div>
                 <button onClick={async () => {
                   if (!confirm("Bu bloğu silmek istediğinize emin misiniz?")) return;
@@ -1608,7 +1608,7 @@ export default function SettingsPage() {
               }}
             >
               {({ open }) => (
-                <button type="button" onClick={() => open()} style={{ ...inp, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: "rgba(0,0,0,0.5)" }}>
+                <button type="button" onClick={() => open()} style={{ ...inp, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: "rgba(0,0,0,0.65)" }}>
                   <UploadCloud size={14} />
                   Görsel Ekle
                 </button>
@@ -1697,7 +1697,7 @@ export default function SettingsPage() {
                       ) : (
                         <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
                           <div style={{ fontSize: 28, opacity: 0.2 }}>🎬</div>
-                          <div style={{ fontSize: 10, color: "rgba(0,0,0,0.2)" }}>Fotoğraf veya video ekle</div>
+                          <div style={{ fontSize: 10, color: "rgba(0,0,0,0.65)" }}>Fotoğraf veya video ekle</div>
                         </div>
                       )}
                       {/* Silme butonu */}
@@ -1732,7 +1732,7 @@ export default function SettingsPage() {
                           </button>
                         )}
                       </CldUploadWidget>
-                      <div style={{ fontSize: 9, color: "rgba(0,0,0,0.2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <div style={{ fontSize: 9, color: "rgba(0,0,0,0.65)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {reelObj.url}
                       </div>
                     </div>
@@ -1740,13 +1740,13 @@ export default function SettingsPage() {
                 );
               })}
             </div>
-            <div style={{ fontSize: 11, color: "rgba(0,0,0,0.25)", marginTop: 12 }}>{config.instagramReels.length}/6 reel eklendi</div>
+            <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", marginTop: 12 }}>{config.instagramReels.length}/6 reel eklendi</div>
           </>
         ) : (
           <div style={{ padding: "40px 20px", textAlign: "center", background: "rgba(0,0,0,0.02)", border: "1px dashed rgba(0,0,0,0.08)" }}>
             <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.3 }}>📱</div>
-            <div style={{ fontSize: 13, color: "rgba(0,0,0,0.3)", marginBottom: 4 }}>Henüz reel eklenmedi</div>
-            <div style={{ fontSize: 11, color: "rgba(0,0,0,0.15)" }}>Instagram reel URL'sini yukarıdaki alana yapıştırıp ekleyin</div>
+            <div style={{ fontSize: 13, color: "rgba(0,0,0,0.65)", marginBottom: 4 }}>Henüz reel eklenmedi</div>
+            <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>Instagram reel URL'sini yukarıdaki alana yapıştırıp ekleyin</div>
           </div>
         )}
       </div>}
@@ -1809,7 +1809,7 @@ export default function SettingsPage() {
                       {({ open }) => (
                         <button type="button" onClick={() => open()} style={{
                           padding: "4px 10px", borderRadius: 0, border: "1px solid rgba(0,0,0,0.12)",
-                          background: "rgba(0,0,0,0.05)", color: "rgba(255,255,255,0.6)",
+                          background: "rgba(0,0,0,0.05)", color: "rgba(0,0,0,0.6)",
                           fontSize: 11, fontWeight: 700, cursor: "pointer",
                           display: "flex", alignItems: "center", gap: 4,
                         }}>
@@ -1825,7 +1825,7 @@ export default function SettingsPage() {
                           setPortfolioCategories((await getPortfolioCategories())?.categories || []);
                         }
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.3)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.65)" }}
                     ><Trash2 size={14} /></button>
                   </div>
                 </div>
@@ -1851,7 +1851,7 @@ export default function SettingsPage() {
                     ))}
                   </div>
                 ) : (
-                  <div style={{ textAlign: "center", padding: 16, color: "rgba(0,0,0,0.25)", fontSize: 11 }}>
+                  <div style={{ textAlign: "center", padding: 16, color: "rgba(0,0,0,0.65)", fontSize: 11 }}>
                     Henüz fotoğraf yok. Yüklemek için yukarıdaki butonu kullanın.
                   </div>
                 )}
@@ -1859,7 +1859,7 @@ export default function SettingsPage() {
             ))}
           </div>
         ) : (
-          <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(0,0,0,0.25)", fontSize: 12 }}>
+          <div style={{ textAlign: "center", padding: "24px 0", color: "rgba(0,0,0,0.65)", fontSize: 12 }}>
             Henüz portfolyo kategorisi eklenmemiş.
           </div>
         )}
@@ -1881,7 +1881,7 @@ export default function SettingsPage() {
                 </div>
               ) : (
                 <div style={{ width: 64, height: 64, border: "1px dashed rgba(0,0,0,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <ImageIcon size={20} style={{ color: "rgba(0,0,0,0.2)" }} />
+                  <ImageIcon size={20} style={{ color: "rgba(0,0,0,0.65)" }} />
                 </div>
               )}
               <CldUploadWidget
@@ -1892,7 +1892,7 @@ export default function SettingsPage() {
                 {({ open }) => (
                   <button type="button" onClick={() => open()} style={{
                     padding: "8px 16px", background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.12)",
-                    color: "rgba(255,255,255,0.6)", fontSize: 12, fontWeight: 700, cursor: "pointer", borderRadius: 0,
+                    color: "rgba(0,0,0,0.6)", fontSize: 12, fontWeight: 700, cursor: "pointer", borderRadius: 0,
                     display: "flex", alignItems: "center", gap: 6
                   }}>
                     <Upload size={13} /> Yükle
@@ -1901,7 +1901,7 @@ export default function SettingsPage() {
               </CldUploadWidget>
               {config.logoUrl && (
                 <button type="button" onClick={() => setConfig({ ...config, logoUrl: "" })} style={{
-                  padding: "8px", background: "none", border: "none", color: "rgba(0,0,0,0.3)", cursor: "pointer"
+                  padding: "8px", background: "none", border: "none", color: "rgba(0,0,0,0.65)", cursor: "pointer"
                 }}>
                   <Trash2 size={14} />
                 </button>
@@ -1937,7 +1937,7 @@ export default function SettingsPage() {
         {activeTab === "sistem" && subTab === "odeme" && <div style={sectionCard}>
           {sectionHeader(Banknote, "Ödeme Ayarları", "Müşterilerinizden online ödeme almak için pazaryeri kaydınızı tamamlayın.")}
 
-          <div style={{ padding: "20px", textAlign: "center", color: "rgba(0,0,0,0.4)", fontSize: 13 }}>
+          <div style={{ padding: "20px", textAlign: "center", color: "rgba(0,0,0,0.65)", fontSize: 13 }}>
             Platformumuz, online ödemeler (Kredi Kartı) ve Nakit / Havale ödemelerini otomatik olarak yönetir.
             Kredi kartı ile ödeme alabilmek için lütfen aşağıdaki "Alt Üye İşyeri Kaydı" işlemini tamamlayın. Onaylandığında kredi kartı ödemeleri otomatik olarak aktifleşecektir.
           </div>
@@ -1961,7 +1961,7 @@ export default function SettingsPage() {
               />
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a" }}>Müşterilerin Ödeme Yöntemi Değiştirmesine İzin Ver</div>
-                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.5)", marginTop: 2 }}>Aktif edilirse, "Nakit" olarak seçilmiş bir ödemeyi müşteri kendisi +%15 farkla "Kredi Kartı" seçeneğine çevirebilir.</div>
+                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.65)", marginTop: 2 }}>Aktif edilirse, "Nakit" olarak seçilmiş bir ödemeyi müşteri kendisi +%15 farkla "Kredi Kartı" seçeneğine çevirebilir.</div>
               </div>
             </label>
           </div>
@@ -1987,7 +1987,7 @@ export default function SettingsPage() {
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>
                   {smStatus === "APPROVED" ? "✅ Onaylandı" : smStatus === "REJECTED" ? "❌ Reddedildi" : "⏳ İnceleniyor"}
                 </div>
-                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>
+                <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>
                   {smStatus === "APPROVED"
                     ? "Alt üye işyeri kaydınız onaylandı. Kredi kartı ödemesi alabilirsiniz."
                     : smStatus === "REJECTED"
@@ -2005,12 +2005,12 @@ export default function SettingsPage() {
             border: "1px solid rgba(0,0,0,0.08)",
             display: "flex", alignItems: "center", gap: 12,
           }}>
-            <CreditCard size={18} style={{ color: "rgba(0,0,0,0.5)" }} />
+            <CreditCard size={18} style={{ color: "rgba(0,0,0,0.65)" }} />
             <div>
               <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>
                 Platform Komisyonu: %{smCommission}
               </div>
-              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.4)" }}>
+              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>
                 Her başarılı kredi kartı ödemesinden platform %{smCommission} komisyon keser, kalan tutarı IBAN hesabınıza aktarır.
               </div>
             </div>
@@ -2030,7 +2030,7 @@ export default function SettingsPage() {
                     borderRadius: 0,
                   }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: smForm.legalType === lt.value ? "#fff" : "rgba(0,0,0,0.5)" }}>{lt.label}</div>
-                  <div style={{ fontSize: 10, color: "rgba(0,0,0,0.3)", marginTop: 2 }}>{lt.description}</div>
+                  <div style={{ fontSize: 10, color: "rgba(0,0,0,0.65)", marginTop: 2 }}>{lt.description}</div>
                 </button>
               ))}
             </div>
@@ -2153,10 +2153,10 @@ export default function SettingsPage() {
               <div style={{ fontSize: 13, fontWeight: 700, color: smForm.sellerAgreementAccepted ? "#fff" : "rgba(0,0,0,0.5)", marginBottom: 4 }}>
                 Satıcı Hizmet Sözleşmesini okudum ve kabul ediyorum *
               </div>
-              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", lineHeight: 1.6 }}>
-                <a href="/sozlesme" target="_blank" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "underline" }}>Satıcı Hizmet Sözleşmesi</a>,{" "}
-                <a href="/sozlesme" target="_blank" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "underline" }}>KVKK Aydınlatma Metni</a> ve{" "}
-                <a href="/sozlesme" target="_blank" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "underline" }}>Mesafeli Satış Sözleşmesi</a> şartlarını kabul ediyorum.
+              <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", lineHeight: 1.6 }}>
+                <a href="/sozlesme" target="_blank" style={{ color: "rgba(0,0,0,0.6)", textDecoration: "underline" }}>Satıcı Hizmet Sözleşmesi</a>,{" "}
+                <a href="/sozlesme" target="_blank" style={{ color: "rgba(0,0,0,0.6)", textDecoration: "underline" }}>KVKK Aydınlatma Metni</a> ve{" "}
+                <a href="/sozlesme" target="_blank" style={{ color: "rgba(0,0,0,0.6)", textDecoration: "underline" }}>Mesafeli Satış Sözleşmesi</a> şartlarını kabul ediyorum.
               </div>
             </div>
           </div>
@@ -2235,7 +2235,7 @@ export default function SettingsPage() {
                     <Lock size={26} strokeWidth={2.5} />
                   </div>
                   <h4 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.02em" }}>Pro Plana Özel</h4>
-                  <p style={{ margin: 0, fontSize: 13, color: "rgba(0,0,0,0.5)", lineHeight: 1.6 }}>
+                  <p style={{ margin: 0, fontSize: 13, color: "rgba(0,0,0,0.65)", lineHeight: 1.6 }}>
                     Sitenize özel alan adı (domain) bağlamak için planınızı Pro'ya yükseltin.
                   </p>
                   <div style={{ marginTop: 12, background: "#1a1a1a", color: "#1a1a1a", padding: "12px 24px", borderRadius: 8, fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", gap: 8, transition: "transform 0.2s" }}>
@@ -2249,7 +2249,7 @@ export default function SettingsPage() {
             <div style={{ opacity: !planLimits.customDomain ? 0.4 : 1, pointerEvents: !planLimits.customDomain ? "none" : "auto", userSelect: !planLimits.customDomain ? "none" : "auto", filter: !planLimits.customDomain ? "grayscale(100%)" : "none" }}>
               <div style={{ marginBottom: 32, padding: "24px", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.1)" }}>
             <h3 style={{ fontSize: 16, margin: "0 0 8px 0", color: "var(--text)" }}>Yeni Domain Satın Al (Sıfır Ayar)</h3>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: "0 0 16px 0", lineHeight: 1.5 }}>
+            <p style={{ fontSize: 13, color: "rgba(0,0,0,0.6)", margin: "0 0 16px 0", lineHeight: 1.5 }}>
               Sistemimiz üzerinden doğrudan domain satın alabilirsiniz. DNS, SSL veya yönlendirme ayarlarına gerek kalmadan saniyeler içinde domaininiz yayına girer.
             </p>
             <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
@@ -2290,7 +2290,7 @@ export default function SettingsPage() {
                           <p style={{ margin: "0 0 4px 0", color: item.available ? "#22c55e" : "#ef4444", fontWeight: "bold", fontSize: 14 }}>
                             {item.available ? `✅ ${item.domain} Müsait!` : `❌ ${item.domain} Alınmış`}
                           </p>
-                          {item.available && <p style={{ margin: 0, color: "rgba(255,255,255,0.7)", fontSize: 12 }}>Yıllık Yenileme Ücreti Dahil Fiyat</p>}
+                          {item.available && <p style={{ margin: 0, color: "rgba(0,0,0,0.7)", fontSize: 12 }}>Yıllık Yenileme Ücreti Dahil Fiyat</p>}
                           {item.error && <p style={{ margin: 0, color: "#ef4444", fontSize: 12 }}>{item.error}</p>}
                         </div>
                         {item.available && (
@@ -2346,7 +2346,7 @@ export default function SettingsPage() {
 
           <div style={{ marginBottom: 32 }}>
             <h3 style={{ fontSize: 16, margin: "0 0 8px 0", color: "var(--text)" }}>Zaten bir domainim var (Gelişmiş)</h3>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: "0 0 16px 0", lineHeight: 1.5 }}>
+            <p style={{ fontSize: 13, color: "rgba(0,0,0,0.6)", margin: "0 0 16px 0", lineHeight: 1.5 }}>
               Daha önceden sahip olduğunuz bir domaininiz varsa buraya girebilirsiniz. DNS ayarlarını yapmanız gerekecektir.
             </p>
             <input
@@ -2416,10 +2416,10 @@ export default function SettingsPage() {
             )}
             {!domainForm.purchasedDomain && (
               <div style={{ padding: "16px", background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.1)", marginTop: 16 }}>
-                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", margin: "0 0 8px 0", lineHeight: 1.5 }}>
+                <p style={{ fontSize: 12, color: "rgba(0,0,0,0.6)", margin: "0 0 8px 0", lineHeight: 1.5 }}>
                   Lütfen alan adınızı kaydetmeden önce <strong>Domain (DNS) Panelinizden</strong> sistemimize yönlendirme yaptığınızdan emin olun:
                 </p>
-                <ul style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", margin: 0, paddingLeft: 16, lineHeight: 1.6 }}>
+                <ul style={{ fontSize: 12, color: "rgba(0,0,0,0.8)", margin: 0, paddingLeft: 16, lineHeight: 1.6 }}>
                   <li>A Kaydı (A Record): <strong>76.76.21.21</strong></li>
                   <li>veya CNAME (www için): <strong>cname.vercel-dns.com</strong></li>
                 </ul>
@@ -2455,7 +2455,7 @@ export default function SettingsPage() {
             padding: "12px 16px", borderRadius: 0, display: "flex", alignItems: "center", gap: 10, marginBottom: 16,
             background: isError ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.04)",
             border: `1px solid ${isError ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.1)"}`,
-            color: isError ? "rgba(255,255,255,0.6)" : "#fff",
+            color: isError ? "rgba(0,0,0,0.6)" : "#fff",
           }}>
             {isError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
             <span style={{ fontSize: 12, fontWeight: 700 }}>{message}</span>

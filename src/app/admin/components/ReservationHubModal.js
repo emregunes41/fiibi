@@ -142,7 +142,7 @@ export default function ReservationHubModal({
     value ? (
       <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 0", borderBottom: "1px solid rgba(0,0,0,0.04)" }}>
         <Icon size={12} style={{ color: color || "rgba(0,0,0,0.35)", flexShrink: 0 }} />
-        <span style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.4)", minWidth: 70, flexShrink: 0 }}>{label}</span>
+        <span style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.65)", minWidth: 70, flexShrink: 0 }}>{label}</span>
         <span style={{ fontSize: "0.75rem", color: "#1a1a1a", fontWeight: 600, wordBreak: "break-word" }}>{value}</span>
       </div>
     ) : null
@@ -163,7 +163,7 @@ export default function ReservationHubModal({
         <div style={{ padding: "16px", borderBottom: "1px solid rgba(0,0,0,0.1)", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
           <div style={{ minWidth: 0 }}>
             <h2 style={{ fontSize: "1rem", fontWeight: 900, margin: 0 }}>Rezervasyon Detayı</h2>
-            <p style={{ color: "rgba(0,0,0,0.45)", fontSize: "0.65rem", margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>ID: {r.id.slice(0, 12)}...</p>
+            <p style={{ color: "rgba(0,0,0,0.65)", fontSize: "0.65rem", margin: "3px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>ID: {r.id.slice(0, 12)}...</p>
           </div>
           <div className="detail-header-actions">
             {!isEditMode && (
@@ -197,7 +197,7 @@ export default function ReservationHubModal({
                  {isLoading ? "Kaydediliyor..." : "Kaydet"}
                </button>
             )}
-            <button onClick={onClose} style={{ background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.1)", color: "rgba(0,0,0,0.5)", padding: "6px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
+            <button onClick={onClose} style={{ background: "rgba(0,0,0,0.05)", border: "1px solid rgba(0,0,0,0.1)", color: "rgba(0,0,0,0.65)", padding: "6px", borderRadius: 0, cursor: "pointer", display: "flex" }}>
               <X size={14} />
             </button>
           </div>
@@ -209,68 +209,68 @@ export default function ReservationHubModal({
           <div style={{ paddingBottom: isEditMode ? 20 : 0 }}>
             {isEditMode ? (
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 2px" }}>Bilgileri Düzenle</div>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 2px" }}>Bilgileri Düzenle</div>
                 
                 <div>
-                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>{isPhotographer ? "Gelin Adı" : `${terms?.client || "Müşteri"} Adı`}</div>
+                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>{isPhotographer ? "Gelin Adı" : `${terms?.client || "Müşteri"} Adı`}</div>
                   <input style={inp} value={formData.brideName} onChange={(e) => setFormData({...formData, brideName: e.target.value})} />
                 </div>
                 {isPhotographer && (
                   <div>
-                    <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Damat Adı</div>
+                    <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Damat Adı</div>
                     <input style={inp} value={formData.groomName} onChange={(e) => setFormData({...formData, groomName: e.target.value})} />
                   </div>
                 )}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
                   <div>
-                    <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Telefon 1</div>
+                    <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Telefon 1</div>
                     <input style={inp} value={formData.bridePhone} onChange={(e) => setFormData({...formData, bridePhone: e.target.value})} />
                   </div>
                   {isPhotographer && (
                     <div>
-                      <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Telefon 2</div>
+                      <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Telefon 2</div>
                       <input style={inp} value={formData.groomPhone} onChange={(e) => setFormData({...formData, groomPhone: e.target.value})} />
                     </div>
                   )}
                 </div>
                 <div>
-                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>E-posta</div>
+                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>E-posta</div>
                   <input style={inp} value={formData.brideEmail} onChange={(e) => setFormData({...formData, brideEmail: e.target.value})} />
                 </div>
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginTop: 4 }}>
                   <div>
-                    <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Tarih</div>
+                    <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Tarih</div>
                     <input type="date" style={{...inp, colorScheme: "dark"}} value={formData.eventDate} onChange={(e) => setFormData({...formData, eventDate: e.target.value})} />
                   </div>
                   <div>
-                    <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Saat</div>
+                    <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Saat</div>
                     <input type="time" style={{...inp, colorScheme: "dark"}} value={formData.eventTime} onChange={(e) => setFormData({...formData, eventTime: e.target.value})} />
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Mekan Adı / Konum</div>
+                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Mekan Adı / Konum</div>
                   <input style={inp} value={formData.venueName} onChange={(e) => setFormData({...formData, venueName: e.target.value})} />
                 </div>
 
                 <div>
-                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Online Görüşme Linki</div>
+                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Online Görüşme Linki</div>
                   <input style={inp} placeholder="https://..." value={formData.meetingLink || ""} onChange={(e) => setFormData({...formData, meetingLink: e.target.value})} />
                 </div>
 
                 <div>
-                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Notlar</div>
+                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Notlar</div>
                   <textarea style={{...inp, minHeight: 60, resize: "vertical"}} value={formData.notes || ""} onChange={(e) => setFormData({...formData, notes: e.target.value})} />
                 </div>
 
                 {/* Paket Düzenleme */}
                 <div style={{ marginTop: 6 }}>
-                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
+                  <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
                     <Package size={10} /> Paketler
                   </div>
                   {allPackages.length === 0 ? (
-                    <div style={{ fontSize: "0.7rem", color: "rgba(0,0,0,0.3)", padding: "8px 0" }}>Yükleniyor...</div>
+                    <div style={{ fontSize: "0.7rem", color: "rgba(0,0,0,0.65)", padding: "8px 0" }}>Yükleniyor...</div>
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                       {allPackages.filter(p => p.isActive).map(pkg => {
@@ -289,8 +289,8 @@ export default function ReservationHubModal({
                             <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
                               <span style={{ fontSize: "0.85rem", flexShrink: 0 }}>{isSelected ? "☑" : "☐"}</span>
                               <div style={{ minWidth: 0 }}>
-                                <div style={{ fontSize: "0.72rem", fontWeight: 700, color: isSelected ? "#fff" : "rgba(255,255,255,0.6)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pkg.name}</div>
-                                <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.35)" }}>{pkg.description?.slice(0, 50)}{pkg.description?.length > 50 ? "..." : ""}</div>
+                                <div style={{ fontSize: "0.72rem", fontWeight: 700, color: isSelected ? "#fff" : "rgba(0,0,0,0.6)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pkg.name}</div>
+                                <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.65)" }}>{pkg.description?.slice(0, 50)}{pkg.description?.length > 50 ? "..." : ""}</div>
                               </div>
                             </div>
                             <span style={{ fontSize: "0.75rem", fontWeight: 800, color: isSelected ? "#4ade80" : "rgba(0,0,0,0.5)", flexShrink: 0, marginLeft: 8 }}>{pkg.price}₺</span>
@@ -300,7 +300,7 @@ export default function ReservationHubModal({
                     </div>
                   )}
                   <div style={{ marginTop: 8 }}>
-                    <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", marginBottom: 4 }}>Toplam Tutar (₺)</div>
+                    <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Toplam Tutar (₺)</div>
                     <input style={inp} type="text" value={formData.totalAmount || ""} onChange={(e) => setFormData({...formData, totalAmount: e.target.value})} placeholder="0" />
                   </div>
                 </div>
@@ -314,7 +314,7 @@ export default function ReservationHubModal({
               // ── GÖRÜNTÜLEME MODU ──
               <>
                 {/* İletişim */}
-                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 2px" }}>İletişim</div>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 2px" }}>İletişim</div>
                 <DetailRow icon={User} label={isPhotographer ? "Gelin" : (terms?.client || "Müşteri")} value={r.brideName} color="#4ade80" />
                 <DetailRow icon={Phone} label={isPhotographer ? "Gelin Telefon" : "Telefon"} value={r.bridePhone} color="#4ade80" />
                 <DetailRow icon={Mail} label={isPhotographer ? "Gelin E-posta" : "E-posta"} value={r.brideEmail} color="#4ade80" />
@@ -322,7 +322,7 @@ export default function ReservationHubModal({
                 {isPhotographer && <DetailRow icon={Phone} label="Damat Telefon" value={r.groomPhone} color="rgba(0,0,0,0.5)" />}
 
                 {/* Etkinlik / Randevu */}
-                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 2px" }}>{isPhotographer ? "Etkinlik" : (terms?.appointment || "Randevu")}</div>
+                <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 2px" }}>{isPhotographer ? "Etkinlik" : (terms?.appointment || "Randevu")}</div>
                 <DetailRow icon={Calendar} label="Tarih" value={r.eventDate ? new Date(r.eventDate).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' }) : "-"} />
                 <DetailRow icon={Clock} label="Saat" value={r.eventTime} />
                 <DetailRow icon={CreditCard} label="Toplam Tutar" value={r.totalAmount ? `${r.totalAmount} TL` : null} />
@@ -330,19 +330,19 @@ export default function ReservationHubModal({
                 {r.venueName && <DetailRow icon={ExternalLink} label="Mekan / Konum" value={r.venueName} />}
                 {r.meetingLink && (
                    <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "6px 0", borderBottom: "1px solid rgba(0,0,0,0.04)" }}>
-                     <ExternalLink size={12} style={{ color: "rgba(0,0,0,0.35)", flexShrink: 0 }} />
-                     <span style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.4)", minWidth: 70, flexShrink: 0 }}>Online Görüşme</span>
+                     <ExternalLink size={12} style={{ color: "rgba(0,0,0,0.65)", flexShrink: 0 }} />
+                     <span style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.65)", minWidth: 70, flexShrink: 0 }}>Online Görüşme</span>
                      <a href={r.meetingLink} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.75rem", color: "#60a5fa", fontWeight: 600, wordBreak: "break-word", textDecoration: "none" }}>Bağlantıya Git ↗</a>
                    </div>
                 )}
                 {isPhotographer && (
                 <div style={{ display: "flex", alignItems: "center", padding: "8px 0", gap: 10, borderBottom: "1px solid rgba(0,0,0,0.04)" }}>
                   <FileText size={13} style={{ color: r.contractApproved ? "#fff" : "rgba(0,0,0,0.5)", flexShrink: 0 }} />
-                  <span style={{ fontSize: "0.72rem", color: "rgba(0,0,0,0.5)", minWidth: 110 }}>Sözleşme</span>
+                  <span style={{ fontSize: "0.72rem", color: "rgba(0,0,0,0.65)", minWidth: 110 }}>Sözleşme</span>
                   {r.contractApproved ? (
                     <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#1a1a1a" }}>✅ Onaylandı</span>
                   ) : (
-                    <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "rgba(0,0,0,0.5)" }}>⚠️ Henüz Onaylanmadı</span>
+                    <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "rgba(0,0,0,0.65)" }}>⚠️ Henüz Onaylanmadı</span>
                   )}
                 </div>
                 )}
@@ -354,7 +354,7 @@ export default function ReservationHubModal({
           {/* ── SAĞ KOLON: Paketler + Ödeme + İş Akışı ── */}
           <div style={{ paddingLeft: "10px" }}>
              {/* ── Paketler ── */}
-             <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 4px" }}>Paketler ({r.packages?.length || 0})</div>
+             <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 0 4px" }}>Paketler ({r.packages?.length || 0})</div>
              {r.packages && r.packages.length > 0 ? (
                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                  {r.packages.map((pkg, pkgIdx) => {
@@ -369,7 +369,7 @@ export default function ReservationHubModal({
                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                          <div>
                            <div style={{ fontWeight: 700, fontSize: "0.88rem", marginBottom: 2 }}>{pkgIdx + 1}. {pkg.name}</div>
-                           <div style={{ fontSize: "0.68rem", color: "rgba(0,0,0,0.45)", lineHeight: 1.4 }}>{pkg.description}</div>
+                           <div style={{ fontSize: "0.68rem", color: "rgba(0,0,0,0.65)", lineHeight: 1.4 }}>{pkg.description}</div>
                          </div>
                          <div style={{ fontSize: "0.9rem", fontWeight: 800, color: "#1a1a1a", flexShrink: 0, marginLeft: 12 }}>{pkg.price}₺</div>
                        </div>
@@ -384,7 +384,7 @@ export default function ReservationHubModal({
                               if (isEditMode) {
                                 return (
                                   <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }}>
-                                    <span style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.5)", fontWeight: 700, minWidth: 80, flexShrink: 0 }}>{answer.label}</span>
+                                    <span style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.65)", fontWeight: 700, minWidth: 80, flexShrink: 0 }}>{answer.label}</span>
                                     {answer.type === "checkbox" ? (
                                       <label style={{ display: "flex", alignItems: "center", gap: 4, cursor: "pointer" }}>
                                         <input type="checkbox" checked={!!currentVal}
@@ -412,7 +412,7 @@ export default function ReservationHubModal({
                               }
                               return (
                                 <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
-                                  <span style={{ fontSize: "0.72rem", color: "rgba(0,0,0,0.45)", fontWeight: 600 }}>{answer.label}</span>
+                                  <span style={{ fontSize: "0.72rem", color: "rgba(0,0,0,0.65)", fontWeight: 600 }}>{answer.label}</span>
                                   <span style={{ fontSize: "0.78rem", color: "#1a1a1a", fontWeight: 700 }}>
                                     {answer.type === "checkbox" ? (currentVal ? "✅ Evet" : "❌ Hayır") : (currentVal || "—")}
                                   </span>
@@ -423,11 +423,11 @@ export default function ReservationHubModal({
                         )}
                        {pkgAddons.length > 0 && (
                          <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(0,0,0,0.05)" }}>
-                           <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.35)", textTransform: "uppercase", marginBottom: 4 }}>Ek Hizmetler</div>
+                           <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Ek Hizmetler</div>
                            {pkgAddons.map((addon, i) => (
                              <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
                                <span style={{ fontSize: "0.72rem", color: "#1a1a1a", fontWeight: 600 }}>+ {addon.title}</span>
-                               <span style={{ fontSize: "0.72rem", color: "rgba(0,0,0,0.5)", fontWeight: 700 }}>{addon.price}₺</span>
+                               <span style={{ fontSize: "0.72rem", color: "rgba(0,0,0,0.65)", fontWeight: 700 }}>{addon.price}₺</span>
                              </div>
                            ))}
                          </div>
@@ -437,7 +437,7 @@ export default function ReservationHubModal({
                  })}
                </div>
              ) : (
-               <p style={{ fontSize: "0.75rem", color: "rgba(0,0,0,0.3)" }}>Paket seçilmemiş</p>
+               <p style={{ fontSize: "0.75rem", color: "rgba(0,0,0,0.65)" }}>Paket seçilmemiş</p>
              )}
 
              {/* ── Ödeme Takibi ── */}
@@ -449,32 +449,32 @@ export default function ReservationHubModal({
                 const remaining = Math.max(0, totalAmount - totalPaid);
                 const isPaid = totalPaid >= totalAmount && totalAmount > 0;
                 const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale/EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online" };
-                const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(0,0,0,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(255,255,255,0.6)" };
+                const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(0,0,0,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(0,0,0,0.6)" };
 
                 return (
                   <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", marginTop: "20px" }}>
                     <div style={{ padding: "12px 14px", borderBottom: "1px solid rgba(0,0,0,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <div>
-                        <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em" }}>ÖZET ({isPaid ? "Tahsil Edildi" : "Açık"})</div>
+                        <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em" }}>ÖZET ({isPaid ? "Tahsil Edildi" : "Açık"})</div>
                         <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 2 }}>
-                          <span style={{ fontSize: "1.2rem", fontWeight: 900, color: remaining > 0 ? "#fff" : "#4ade80" }}>{remaining > 0 ? remaining : 0} ₺ <span style={{ fontSize: "0.7rem", color: "rgba(0,0,0,0.4)" }}>kaldı</span></span>
+                          <span style={{ fontSize: "1.2rem", fontWeight: 900, color: remaining > 0 ? "#fff" : "#4ade80" }}>{remaining > 0 ? remaining : 0} ₺ <span style={{ fontSize: "0.7rem", color: "rgba(0,0,0,0.65)" }}>kaldı</span></span>
                         </div>
                       </div>
                       <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.4)" }}>Toplam: {totalAmount > 0 ? totalAmount : "Belirtilmedi"}</div>
-                        <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.4)" }}>Ödenen: {totalPaid}</div>
+                        <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.65)" }}>Toplam: {totalAmount > 0 ? totalAmount : "Belirtilmedi"}</div>
+                        <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.65)" }}>Ödenen: {totalPaid}</div>
                       </div>
                     </div>
 
                     <div style={{ padding: "12px 14px", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-                      <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Ödemeler ({payments.length})</div>
-                      {payments.length === 0 && <div style={{ fontSize: "0.72rem", color: "rgba(0,0,0,0.3)" }}>Henüz ödeme yok.</div>}
+                      <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Ödemeler ({payments.length})</div>
+                      {payments.length === 0 && <div style={{ fontSize: "0.72rem", color: "rgba(0,0,0,0.65)" }}>Henüz ödeme yok.</div>}
                       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                         {payments.map(p => (
                           <div key={p.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 8px", background: "rgba(0,0,0,0.03)", borderRadius: 0 }}>
                             <div>
                               <div style={{ fontSize: "0.75rem", fontWeight: 700 }}>{p.amount} ₺</div>
-                              <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.4)" }}>{new Date(p.createdAt).toLocaleDateString('tr-TR')} · {p.note || "-"}</div>
+                              <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.65)" }}>{new Date(p.createdAt).toLocaleDateString('tr-TR')} · {p.note || "-"}</div>
                             </div>
                             <span style={{ fontSize: "0.6rem", fontWeight: 800, padding: "2px 6px", background: "rgba(0,0,0,0.08)", color: methodColors[p.paymentMethod] }}>{methodLabels[p.paymentMethod]}</span>
                           </div>
@@ -483,7 +483,7 @@ export default function ReservationHubModal({
                     </div>
 
                     <form onSubmit={handleAddPayment} style={{ padding: "12px 14px", background: "rgba(0,0,0,0.2)" }}>
-                      <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>+ Yeni Ödeme Ekle</div>
+                      <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>+ Yeni Ödeme Ekle</div>
                       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "6px" }}>
                         <input required type="number" placeholder="Tutar ₺" style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem", minWidth: 80}} value={paymentForm.amount} onChange={(e) => setPaymentForm({...paymentForm, amount: e.target.value})} />
                         <select style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem", minWidth: 80, colorScheme: "dark"}} value={paymentForm.method} onChange={(e) => setPaymentForm({...paymentForm, method: e.target.value})}>
@@ -494,7 +494,7 @@ export default function ReservationHubModal({
                       </div>
                       <div style={{ display: "flex", gap: "6px" }}>
                         <input placeholder="Not (Opsiyonel)" style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem"}} value={paymentForm.note} onChange={(e) => setPaymentForm({...paymentForm, note: e.target.value})} />
-                        <button disabled={paymentLoading} type="submit" style={{ padding: "0 14px", border: "none", background: "rgba(255,255,255,0.9)", color: "#000", fontWeight: 800, cursor: "pointer", fontSize: "0.75rem" }}>
+                        <button disabled={paymentLoading} type="submit" style={{ padding: "0 14px", border: "none", background: "rgba(0,0,0,0.9)", color: "#000", fontWeight: 800, cursor: "pointer", fontSize: "0.75rem" }}>
                           {paymentLoading ? "..." : "Ekle"}
                         </button>
                       </div>
@@ -507,7 +507,7 @@ export default function ReservationHubModal({
              <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)", paddingTop: 14, marginTop: 14, display: "flex", flexDirection: "column", gap: 10 }}>
                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "flex-end" }}>
                  <div style={{ flex: 1, minWidth: 120 }}>
-                   <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", display: "block", marginBottom: 3 }}>Aşama Değiştir</label>
+                   <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", display: "block", marginBottom: 3 }}>Aşama Değiştir</label>
                    <select
                      value={r.workflowStatus || "PENDING"}
                      onChange={async (e) => {
@@ -527,7 +527,7 @@ export default function ReservationHubModal({
                  </div>
                  <div style={{ flex: 2, minWidth: 200, display: "flex", gap: "6px" }}>
                    <div style={{ flex: 1 }}>
-                     <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", display: "block", marginBottom: 3 }}>Teslimat Linki (Drive, vs.)</label>
+                     <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", display: "block", marginBottom: 3 }}>Teslimat Linki (Drive, vs.)</label>
                      <input 
                        type="url" 
                        placeholder="https://" 
@@ -544,7 +544,7 @@ export default function ReservationHubModal({
                      />
                    </div>
                    {r.deliveryLink && (
-                     <a href={r.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.08)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 0, padding: "0 10px", color: "rgba(255,255,255,0.7)", textDecoration: "none", alignSelf: "flex-end", height: "30px", marginBottom: "1px" }} title="Linki Aç">
+                     <a href={r.deliveryLink} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.08)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 0, padding: "0 10px", color: "rgba(0,0,0,0.7)", textDecoration: "none", alignSelf: "flex-end", height: "30px", marginBottom: "1px" }} title="Linki Aç">
                        <ExternalLink size={12} />
                      </a>
                    )}
@@ -553,7 +553,7 @@ export default function ReservationHubModal({
                
                {r.deliveryDate && (
                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
-                   <span style={{ fontSize: "0.68rem", color: "rgba(0,0,0,0.5)" }}>Teslim Tarihi</span>
+                   <span style={{ fontSize: "0.68rem", color: "rgba(0,0,0,0.65)" }}>Teslim Tarihi</span>
                    <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "#1a1a1a" }}>{new Date(r.deliveryDate).toLocaleDateString('tr-TR')}</span>
                  </div>
                )}
@@ -569,7 +569,7 @@ export default function ReservationHubModal({
 
                {isPhotographer && r.selectedPhotos && (
                  <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
-                   <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Müşterinin Seçtiği Fotoğraflar</div>
+                   <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Müşterinin Seçtiği Fotoğraflar</div>
                    <div style={{ 
                      fontSize: "0.75rem", color: "#1a1a1a", background: "rgba(0,0,0,0.04)", 
                      padding: "12px", borderRadius: 4, maxHeight: "200px", overflowY: "auto",
@@ -582,14 +582,14 @@ export default function ReservationHubModal({
 
                {isPhotographer && r.albumModelId && r.albumModel && (
                  <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
-                   <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Müşterinin Seçtiği Albüm Modeli</div>
+                   <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Müşterinin Seçtiği Albüm Modeli</div>
                    <div style={{ display: "flex", gap: "12px", background: "rgba(0,0,0,0.04)", padding: "10px", borderRadius: 4, alignItems: "center", border: "1px solid rgba(0,0,0,0.05)" }}>
                      {r.albumModel.imageUrl && (
                        <img src={r.albumModel.imageUrl} alt={r.albumModel.name} style={{ width: 48, height: 48, objectFit: "cover", borderRadius: 4 }} />
                      )}
                      <div>
                        <div style={{ fontSize: "0.8rem", fontWeight: 800, color: "#1a1a1a" }}>{r.albumModel.name}</div>
-                       {r.albumModel.description && <div style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.5)", marginTop: 2 }}>{r.albumModel.description}</div>}
+                       {r.albumModel.description && <div style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.65)", marginTop: 2 }}>{r.albumModel.description}</div>}
                      </div>
                    </div>
                  </div>
@@ -597,7 +597,7 @@ export default function ReservationHubModal({
              </div>
              
              {/* Hatırlatmalar */}
-             <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 4px", marginTop: 10 }}>Hatırlatma & İşlemler</div>
+             <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 4px", marginTop: 10 }}>Hatırlatma & İşlemler</div>
              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {isPhotographer && (r.selectionLocked || r.selectedPhotos || r.albumModelId) && (
                   <button
@@ -667,7 +667,7 @@ export default function ReservationHubModal({
           </div>{/* SAĞ KOLON SONU */}
 
           {/* ── FULL WIDTH: Meta ── */}
-          <div className="detail-full" style={{ paddingTop: 10, marginTop: 14, borderTop: "1px solid rgba(0,0,0,0.06)", display: "flex", justifyContent: "space-between", fontSize: "0.6rem", color: "rgba(0,0,0,0.25)" }}>
+          <div className="detail-full" style={{ paddingTop: 10, marginTop: 14, borderTop: "1px solid rgba(0,0,0,0.06)", display: "flex", justifyContent: "space-between", fontSize: "0.6rem", color: "rgba(0,0,0,0.65)" }}>
              <span>Oluşturulma: {new Date(r.createdAt).toLocaleDateString('tr-TR')}</span>
              <span>Güncelleme: {new Date(r.updatedAt).toLocaleDateString('tr-TR')}</span>
           </div>
