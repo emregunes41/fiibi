@@ -342,8 +342,16 @@ export default function ClientGalleryPage() {
                quality={90}
              />
              
-             {/* Lightbox Seçim Butonu */}
+             <style>{`
+               button.lightbox-selected-btn, button.lightbox-selected-btn span, button.lightbox-selected-btn svg {
+                 color: #ffffff !important;
+               }
+               button.lightbox-unselected-btn, button.lightbox-unselected-btn span, button.lightbox-unselected-btn svg {
+                 color: #000000 !important;
+               }
+             `}</style>
              <button 
+               className={galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "lightbox-selected-btn" : "lightbox-unselected-btn"}
                onClick={(e) => {
                  e.stopPropagation();
                  if (!galleries[lightbox.galleryIndex].reservation.selectionLocked) {
@@ -352,16 +360,15 @@ export default function ClientGalleryPage() {
                }}
                style={{
                  position: "absolute", bottom: 40, 
-                 background: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#000" : "rgba(255,255,255,0.9)",
-                 color: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#ffffff !important" : "#000000 !important", 
+                 background: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#000000" : "rgba(255,255,255,0.9)",
                  border: "none", padding: "12px 24px", borderRadius: 4, 
                  display: "flex", alignItems: "center", gap: 8, fontSize: "0.9rem", fontWeight: 800, 
                  cursor: galleries[lightbox.galleryIndex].reservation.selectionLocked ? "default" : "pointer",
                  boxShadow: "0 4px 12px rgba(0,0,0,0.2)", zIndex: 10002
                }}
              >
-               <Heart size={18} fill={galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "currentColor" : "none"} style={{ color: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#ffffff" : "#000000" }} /> 
-               <span style={{ color: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#ffffff" : "#000000" }}>
+               <Heart size={18} fill={galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "currentColor" : "none"} /> 
+               <span>
                  {galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "Seçildi" : "Bu Fotoğrafı Seç"}
                </span>
              </button>

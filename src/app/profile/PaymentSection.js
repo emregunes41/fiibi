@@ -160,10 +160,10 @@ export default function PaymentSection({ reservation, compactMode = false, allow
             <button
               onClick={startPayment}
               disabled={loading || (paymentMode === "partial" && (!payAmount || parseFloat(payAmount) <= 0 || parseFloat(payAmount) > currentRemaining))}
-              className="payment-btn-white"
+              className="fiibi-solid-btn"
               style={{
-                width: "100%", padding: 16, borderRadius: 0, border: "none",
-                background: "var(--text, #1a1a1a)",
+                width: "100%", padding: 16, borderRadius: 0,
+
 
                 fontWeight: 700, fontSize: 15, cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
@@ -208,15 +208,14 @@ export default function PaymentSection({ reservation, compactMode = false, allow
     return (
       <>
         <style>{`
-          .payment-btn-white, .payment-btn-white * { color: #ffffff !important; }
+          .fiibi-solid-btn, .fiibi-solid-btn * { background-color: #000000 !important; color: #ffffff !important; border: none !important; }
         `}</style>
         {currentRemaining > 0 && (
           <button
             onClick={handlePrimaryPayClick}
-            className="payment-btn-white"
+            className="fiibi-solid-btn"
             style={{
-              width: "100%", padding: 14, borderRadius: 0, border: "none",
-              background: "var(--text, #1a1a1a)", fontWeight: 700, fontSize: 14,
+              width: "100%", padding: 14, borderRadius: 0,
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
               transition: "all 0.2s",
             }}
@@ -248,7 +247,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
   return (
     <>
       <style>{`
-        .payment-btn-white, .payment-btn-white * { color: #ffffff !important; }
+        .fiibi-solid-btn, .fiibi-solid-btn * { background-color: #000000 !important; color: #ffffff !important; border: none !important; }
       `}</style>
       <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, padding: "20px 24px", overflow: "hidden", position: "relative" }}>
         {/* Summary */}
@@ -391,10 +390,9 @@ export default function PaymentSection({ reservation, compactMode = false, allow
           <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 24 }}>
             <button
               onClick={handlePrimaryPayClick}
-              className="payment-btn-white"
+              className="fiibi-solid-btn"
               style={{
-                width: "100%", padding: 14, borderRadius: 0, border: "none",
-                background: "var(--text, #1a1a1a)", fontWeight: 700, fontSize: 14,
+                width: "100%", padding: 14, borderRadius: 0,
                 cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                 transition: "all 0.2s",
               }}
