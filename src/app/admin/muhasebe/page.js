@@ -263,7 +263,7 @@ export default async function MuhasebePage() {
                   <div style={{ fontSize: "0.5rem", color: "rgba(0,0,0,0.65)" }}>Net</div>
                   <div style={{ fontSize: "0.8rem", fontWeight: 900, color: "#22c55e" }}>{fmt(p.net)}₺</div>
                 </div>
-                <div style={{ fontSize: "0.55rem", fontWeight: 700, padding: "2px 8px", background: p.isPast ? "rgba(0,0,0,0.05)" : "rgba(34,197,94,0.1)", color: p.isPast ? "rgba(0,0,0,0.4)" : "#22c55e", border: `1px solid ${p.isPast ? "rgba(0,0,0,0.08)" : "rgba(34,197,94,0.2)"}` }}>
+                <div style={{ fontSize: "0.55rem", fontWeight: 700, padding: "2px 8px", background: p.isPast ? "rgba(0,0,0,0.05)" : "rgba(34,197,94,0.1)", color: p.isPast ? "rgba(0,0,0,0.55)" : "#22c55e", border: `1px solid ${p.isPast ? "rgba(0,0,0,0.08)" : "rgba(34,197,94,0.2)"}` }}>
                   {i === 0 ? "Aktif" : "Tamamlandı"}
                 </div>
               </div>

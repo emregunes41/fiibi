@@ -13,7 +13,7 @@ export default function SuspendedPage() {
         <h1 style={{ color: "var(--text, #1a1a1a)", fontSize: 20, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 12 }}>
           Sayfa Bulunamadı
         </h1>
-        <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 14, lineHeight: 1.7, margin: 0 }}>
+        <p style={{ color: "rgba(0,0,0,0.55)", fontSize: 14, lineHeight: 1.7, margin: 0 }}>
           Aradığınız sayfa mevcut değil veya kaldırılmış olabilir.
         </p>
       </div>

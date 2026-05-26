@@ -144,29 +144,29 @@ export default function EventsSection({ events }) {
                       {new Date(selectedEvent.date).toLocaleDateString("tr-TR", { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
-                  <button onClick={closeDialog} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.45)", cursor: "pointer" }}><X size={20} /></button>
+                  <button onClick={closeDialog} style={{ background: "none", border: "none", color: "rgba(0,0,0,0.55)", cursor: "pointer" }}><X size={20} /></button>
                 </div>
                 
                 <form onSubmit={handleRegister} style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
                   {errorMsg && <div style={{ background: "rgba(239, 68, 68, 0.1)", color: "#ef4444", padding: "12px 16px", borderRadius: "var(--radius)", fontSize: 12, fontWeight: 600 }}>{errorMsg}</div>}
                   
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", marginBottom: 6 }}>Ad Soyad</label>
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.55)", textTransform: "uppercase", marginBottom: 6 }}>Ad Soyad</label>
                     <input required autoFocus type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: "100%", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", color: "var(--text, #1a1a1a)", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: Ayşe Yılmaz" />
                   </div>
                   
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", marginBottom: 6 }}>Telefon Numarası</label>
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.55)", textTransform: "uppercase", marginBottom: 6 }}>Telefon Numarası</label>
                     <input required type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} style={{ width: "100%", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", color: "var(--text, #1a1a1a)", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: 05xx xxx xx xx" />
                   </div>
                   
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", marginBottom: 6 }}>E-Posta</label>
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.55)", textTransform: "uppercase", marginBottom: 6 }}>E-Posta</label>
                     <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} style={{ width: "100%", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", color: "var(--text, #1a1a1a)", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: ayse@domain.com" />
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", marginBottom: 6 }}>Sosyal Medya (Instagram / TikTok)</label>
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(0,0,0,0.55)", textTransform: "uppercase", marginBottom: 6 }}>Sosyal Medya (Instagram / TikTok)</label>
                     <input type="text" value={formData.socialMedia} onChange={e => setFormData({...formData, socialMedia: e.target.value})} style={{ width: "100%", background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", color: "var(--text, #1a1a1a)", padding: "14px 16px", borderRadius: "var(--radius)", fontSize: 14 }} placeholder="Örn: @kullaniciadi" />
                   </div>
 

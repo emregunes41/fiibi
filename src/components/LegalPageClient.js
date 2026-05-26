@@ -12,7 +12,7 @@ export default function LegalPageClient({ title, content }) {
     <div style={{ minHeight: "100vh", background: "var(--bg, #fff)", color: "var(--text, #1a1a1a)", padding: "60px 24px" }}>
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
 
-        <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(0,0,0,0.45)", textDecoration: "none", marginBottom: 32, fontSize: 14, fontWeight: 500, transition: "color 0.2s" }}>
+        <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(0,0,0,0.55)", textDecoration: "none", marginBottom: 32, fontSize: 14, fontWeight: 500, transition: "color 0.2s" }}>
           <ArrowLeft size={16} /> Ana Sayfaya Dön
         </Link>
 
@@ -48,10 +48,10 @@ export default function LegalPageClient({ title, content }) {
           padding: "20px 0", marginBottom: 60,
           borderTop: "1px solid rgba(0,0,0,0.05)",
         }}>
-          <Link href="/gizlilik-politikasi" style={{ color: "rgba(0,0,0,0.35)", fontSize: 12, textDecoration: "none" }}>Gizlilik Politikası</Link>
-          <Link href="/cerez-politikasi" style={{ color: "rgba(0,0,0,0.35)", fontSize: 12, textDecoration: "none" }}>Çerez Politikası</Link>
-          <Link href="/kullanim-sartlari" style={{ color: "rgba(0,0,0,0.35)", fontSize: 12, textDecoration: "none" }}>Kullanım Şartları</Link>
-          <Link href="/sozlesme" style={{ color: "rgba(0,0,0,0.35)", fontSize: 12, textDecoration: "none" }}>Yasal Sözleşmeler</Link>
+          <Link href="/gizlilik-politikasi" style={{ color: "rgba(0,0,0,0.55)", fontSize: 12, textDecoration: "none" }}>Gizlilik Politikası</Link>
+          <Link href="/cerez-politikasi" style={{ color: "rgba(0,0,0,0.55)", fontSize: 12, textDecoration: "none" }}>Çerez Politikası</Link>
+          <Link href="/kullanim-sartlari" style={{ color: "rgba(0,0,0,0.55)", fontSize: 12, textDecoration: "none" }}>Kullanım Şartları</Link>
+          <Link href="/sozlesme" style={{ color: "rgba(0,0,0,0.55)", fontSize: 12, textDecoration: "none" }}>Yasal Sözleşmeler</Link>
         </div>
       </div>
     </div>

@@ -77,7 +77,7 @@ export default function PhotoSelectionForm({ reservationId, initialSelection }) 
         />
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          {message && <span style={{ fontSize: 12, color: message.includes("Hata") ? "rgba(0,0,0,0.55)" : "#fff", fontWeight: 600 }}>{message}</span>}
+          {message && <span style={{ fontSize: 12, color: message.includes("Hata") ? "#ef4444" : "#22c55e", fontWeight: 600 }}>{message}</span>}
           <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
             {initialSelection && (
               <button 

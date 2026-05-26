@@ -284,7 +284,7 @@ export default function SettingsPage() {
                 <button key={tab.id} onClick={() => { setActiveTab(tab.id); if (SUB_TABS[tab.id]) setSubTab(SUB_TABS[tab.id][0].id); }} type="button" style={{
                   display: "flex", alignItems: "center", gap: 10,
                   padding: "12px 16px", fontSize: 13, fontWeight: isActive ? 700 : 500,
-                  color: isActive ? "#fff" : "rgba(0,0,0,0.5)",
+                  color: isActive ? "#1a1a1a" : "rgba(0,0,0,0.5)",
                   background: isActive ? "rgba(0,0,0,0.06)" : "transparent", 
                   border: "none", borderRadius: 0,
                   cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap", textAlign: "left"
@@ -568,7 +568,7 @@ export default function SettingsPage() {
                         await updateBanner(b.id, { isActive: !b.isActive });
                         setBanners(await getBanners());
                       }}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: b.isActive ? "#fff" : "rgba(0,0,0,0.25)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: b.isActive ? "#1a1a1a" : "rgba(0,0,0,0.25)" }}
                     >{b.isActive ? <Eye size={14} /> : <EyeOff size={14} />}</button>
                     {/* Delete */}
                     <button type="button"
@@ -888,8 +888,8 @@ export default function SettingsPage() {
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Mail size={16} style={{ color: config.emailEnabled ? "#fff" : "rgba(0,0,0,0.3)" }} />
-                  <span style={{ fontSize: 13, fontWeight: 800, color: config.emailEnabled ? "#fff" : "rgba(0,0,0,0.5)" }}>E-Posta</span>
+                  <Mail size={16} style={{ color: config.emailEnabled ? "#1a1a1a" : "rgba(0,0,0,0.3)" }} />
+                  <span style={{ fontSize: 13, fontWeight: 800, color: config.emailEnabled ? "#1a1a1a" : "rgba(0,0,0,0.5)" }}>E-Posta</span>
                 </div>
                 <div style={{
                   width: 40, height: 22, borderRadius: 0, position: "relative",
@@ -919,8 +919,8 @@ export default function SettingsPage() {
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Phone size={16} style={{ color: config.smsEnabled ? "#fff" : "rgba(0,0,0,0.3)" }} />
-                  <span style={{ fontSize: 13, fontWeight: 800, color: config.smsEnabled ? "#fff" : "rgba(0,0,0,0.5)" }}>SMS</span>
+                  <Phone size={16} style={{ color: config.smsEnabled ? "#1a1a1a" : "rgba(0,0,0,0.3)" }} />
+                  <span style={{ fontSize: 13, fontWeight: 800, color: config.smsEnabled ? "#1a1a1a" : "rgba(0,0,0,0.5)" }}>SMS</span>
                   {!isPro && (
                     <Link href="/admin/subscription" style={{ fontSize: 9, fontWeight: 800, color: "#8b5cf6", background: "rgba(139,92,246,0.15)", padding: "4px 8px", textDecoration: "none", borderRadius: 4, display: "flex", alignItems: "center", gap: 4 }} onClick={(e) => e.stopPropagation()}>
                        PRO Özellik — Planı Yükselt
@@ -1079,7 +1079,7 @@ export default function SettingsPage() {
                 <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
 
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: config[item.key] ? "#fff" : "rgba(0,0,0,0.4)", transition: "all 0.2s" }}>{item.text}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: config[item.key] ? "#1a1a1a" : "rgba(0,0,0,0.4)", transition: "all 0.2s" }}>{item.text}</div>
                   <div style={{ fontSize: 10, color: "rgba(0,0,0,0.65)" }}>{item.desc}</div>
                 </div>
 
@@ -1234,7 +1234,7 @@ export default function SettingsPage() {
               <Plus size={14} />
               {dcLoading ? "Oluşturuluyor..." : "İndirim Kodu Ekle"}
             </button>
-            {dcMessage && <div style={{ fontSize: 12, fontWeight: 600, color: dcMessage.includes("✅") ? "#fff" : "rgba(0,0,0,0.6)" }}>{dcMessage}</div>}
+            {dcMessage && <div style={{ fontSize: 12, fontWeight: 600, color: dcMessage.includes("✅") ? "#22c55e" : "rgba(0,0,0,0.6)" }}>{dcMessage}</div>}
           </div>
 
           {/* Existing codes */}
@@ -1255,7 +1255,7 @@ export default function SettingsPage() {
                       <span style={{
                         fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 0,
                         background: dc.isActive ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.06)",
-                        color: dc.isActive ? "#fff" : "rgba(0,0,0,0.3)",
+                        color: dc.isActive ? "#1a1a1a" : "rgba(0,0,0,0.3)",
                       }}>
                         %{dc.discountPercent} İndirim
                       </span>
@@ -1273,7 +1273,7 @@ export default function SettingsPage() {
                         setDiscountCodes(await getDiscountCodes());
                       }}
                       title={dc.isActive ? "Pasifleştir" : "Aktifleştir"}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: dc.isActive ? "#fff" : "rgba(0,0,0,0.25)" }}
+                      style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: dc.isActive ? "#1a1a1a" : "rgba(0,0,0,0.25)" }}
                     >
                       <Power size={14} />
                     </button>
@@ -1322,8 +1322,8 @@ export default function SettingsPage() {
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Bot size={16} style={{ color: config.chatbotEnabled ? "#fff" : "rgba(0,0,0,0.3)" }} />
-                <span style={{ fontSize: 13, fontWeight: 800, color: config.chatbotEnabled ? "#fff" : "rgba(0,0,0,0.5)" }}>Chatbot Aktif</span>
+                <Bot size={16} style={{ color: config.chatbotEnabled ? "#1a1a1a" : "rgba(0,0,0,0.3)" }} />
+                <span style={{ fontSize: 13, fontWeight: 800, color: config.chatbotEnabled ? "#1a1a1a" : "rgba(0,0,0,0.5)" }}>Chatbot Aktif</span>
               </div>
               <div style={{
                 width: 40, height: 22, borderRadius: 0, position: "relative",
@@ -2029,7 +2029,7 @@ export default function SettingsPage() {
                     border: smForm.legalType === lt.value ? "1px solid rgba(0,0,0,0.3)" : "1px solid rgba(0,0,0,0.08)",
                     borderRadius: 0,
                   }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: smForm.legalType === lt.value ? "#fff" : "rgba(0,0,0,0.5)" }}>{lt.label}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: smForm.legalType ? "#1a1a1a" : "rgba(0,0,0,0.5)" }}>{lt.label}</div>
                   <div style={{ fontSize: 10, color: "rgba(0,0,0,0.65)", marginTop: 2 }}>{lt.description}</div>
                 </button>
               ))}
@@ -2150,7 +2150,7 @@ export default function SettingsPage() {
               {smForm.sellerAgreementAccepted && <CheckCircle2 size={14} style={{ color: "#000" }} />}
             </div>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: smForm.sellerAgreementAccepted ? "#fff" : "rgba(0,0,0,0.5)", marginBottom: 4 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: smForm.sellerAgreementAccepted ? "#1a1a1a" : "rgba(0,0,0,0.5)", marginBottom: 4 }}>
                 Satıcı Hizmet Sözleşmesini okudum ve kabul ediyorum *
               </div>
               <div style={{ fontSize: 11, color: "rgba(0,0,0,0.65)", lineHeight: 1.6 }}>
@@ -2455,7 +2455,7 @@ export default function SettingsPage() {
             padding: "12px 16px", borderRadius: 0, display: "flex", alignItems: "center", gap: 10, marginBottom: 16,
             background: isError ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.04)",
             border: `1px solid ${isError ? "rgba(0,0,0,0.08)" : "rgba(0,0,0,0.1)"}`,
-            color: isError ? "rgba(0,0,0,0.6)" : "#fff",
+            color: isError ? "rgba(0,0,0,0.6)" : "#ffffff",
           }}>
             {isError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
             <span style={{ fontSize: 12, fontWeight: 700 }}>{message}</span>

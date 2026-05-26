@@ -153,7 +153,7 @@ export default function ReservationsPage() {
   const statusColor = (s) => {
     if (s === "CONFIRMED") return { bg: "rgba(34,197,94,0.12)", c: "#4ade80", b: "1px solid rgba(34,197,94,0.25)" };
     if (s === "COMPLETED") return { bg: "rgba(16,185,129,0.10)", c: "#6ee7b7", b: "1px solid rgba(16,185,129,0.2)" };
-    if (s === "CANCELLED") return { bg: "rgba(0,0,0,0.04)", c: "rgba(0,0,0,0.4)", b: "1px solid rgba(0,0,0,0.08)" };
+    if (s === "CANCELLED") return { bg: "rgba(0,0,0,0.04)", c: "rgba(0,0,0,0.55)", b: "1px solid rgba(0,0,0,0.08)" };
     if (s === "DELETED") return { bg: "rgba(107,114,128,0.15)", c: "#9ca3af", b: "1px solid rgba(107,114,128,0.3)" };
     return { bg: "rgba(34,197,94,0.06)", c: "rgba(34,197,94,0.7)", b: "1px solid rgba(34,197,94,0.15)" };
   };
@@ -162,11 +162,11 @@ export default function ReservationsPage() {
     <div style={{ color: "#1a1a1a", maxWidth: "100%", overflowX: "hidden" }}>
       
       <div style={{ display: "flex", gap: "24px", marginBottom: "24px", borderBottom: "1px solid rgba(0,0,0,0.1)", overflowX: "auto", scrollbarWidth: "none" }}>
-         <button onClick={() => setActiveTab("reservations")} style={{ background: "none", border: "none", borderBottom: activeTab === "reservations" ? "2px solid #fff" : "2px solid transparent", color: activeTab === "reservations" ? "#fff" : "rgba(0,0,0,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
+         <button onClick={() => setActiveTab("reservations")} style={{ background: "none", border: "none", borderBottom: activeTab === "reservations" ? "2px solid #1a1a1a" : "2px solid transparent", color: activeTab === "reservations" ? "#1a1a1a" : "rgba(0,0,0,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
             {terms.appointments} Yönetimi
          </button>
          {siteConfig?.moduleEvents !== false && (
-           <button onClick={() => setActiveTab("events")} style={{ background: "none", border: "none", borderBottom: activeTab === "events" ? "2px solid #fff" : "2px solid transparent", color: activeTab === "events" ? "#fff" : "rgba(0,0,0,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
+           <button onClick={() => setActiveTab("events")} style={{ background: "none", border: "none", borderBottom: activeTab === "events" ? "2px solid #1a1a1a" : "2px solid transparent", color: activeTab === "events" ? "#1a1a1a" : "rgba(0,0,0,0.5)", fontWeight: 800, padding: "12px 0", cursor: "pointer", fontSize: "14px", whiteSpace: "nowrap" }}>
               Grup Dersleri & Etkinlikler
            </button>
          )}
@@ -227,7 +227,7 @@ export default function ReservationsPage() {
           style={{
             padding: "7px 14px", borderRadius: 0, border: "none", cursor: "pointer",
             background: viewMode === "list" ? "rgba(0,0,0,0.12)" : "transparent",
-            color: viewMode === "list" ? "#fff" : "rgba(0,0,0,0.4)",
+            color: viewMode === "list" ? "#1a1a1a" : "rgba(0,0,0,0.4)",
             fontWeight: 700, fontSize: "0.68rem", display: "flex", alignItems: "center", gap: "6px",
             transition: "all 0.2s",
           }}
@@ -239,7 +239,7 @@ export default function ReservationsPage() {
           style={{
             padding: "7px 14px", borderRadius: 0, border: "none", cursor: "pointer",
             background: viewMode === "calendar" ? "rgba(0,0,0,0.12)" : "transparent",
-            color: viewMode === "calendar" ? "#fff" : "rgba(0,0,0,0.4)",
+            color: viewMode === "calendar" ? "#1a1a1a" : "rgba(0,0,0,0.4)",
             fontWeight: 700, fontSize: "0.68rem", display: "flex", alignItems: "center", gap: "6px",
             transition: "all 0.2s",
           }}
@@ -342,7 +342,7 @@ export default function ReservationsPage() {
                         width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center",
                         borderRadius: "50%",
                         background: todayStyle ? "#4285f4" : "transparent",
-                        color: todayStyle ? "#fff" : isDayBlocked ? "rgba(255,80,80,0.6)" : hasRes ? "#fff" : "rgba(0,0,0,0.4)",
+                        color: todayStyle ? "#ffffff" : isDayBlocked ? "rgba(255,80,80,0.6)" : hasRes ? "#fff" : "rgba(0,0,0,0.4)",
                       }}>{day}</span>
                     </div>
                     {isDayBlocked && <div style={{ fontSize: "0.48rem", fontWeight: 800, color: "rgba(255,80,80,0.5)", textAlign: "center", marginBottom: 2 }}>KAPALI</div>}
@@ -468,7 +468,7 @@ export default function ReservationsPage() {
             style={{
               padding: "5px 10px", borderRadius: 0, border: "none", cursor: "pointer",
               background: sortMode === s.key ? "rgba(0,0,0,0.12)" : "rgba(0,0,0,0.04)",
-              color: sortMode === s.key ? "#fff" : "rgba(0,0,0,0.4)",
+              color: sortMode === s.key ? "#1a1a1a" : "rgba(0,0,0,0.4)",
               fontWeight: 700, fontSize: "0.6rem", transition: "all 0.15s",
             }}
           >
@@ -495,7 +495,7 @@ export default function ReservationsPage() {
             style={{
               padding: "5px 10px", borderRadius: 0, border: "none", cursor: "pointer",
               background: filterStatus === f.key ? (f.color ? `${f.color}15` : "rgba(0,0,0,0.12)") : "rgba(0,0,0,0.04)",
-              color: filterStatus === f.key ? (f.color || "#fff") : "rgba(0,0,0,0.35)",
+              color: filterStatus === f.key ? (f.color || "#1a1a1a") : "rgba(0,0,0,0.35)",
               fontWeight: 700, fontSize: "0.6rem", transition: "all 0.15s",
             }}
           >
@@ -610,7 +610,7 @@ export default function ReservationsPage() {
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.65rem", color: res.selectionLocked ? "#fff" : "rgba(0,0,0,0.5)", fontWeight: 700 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.65rem", color: res.selectionLocked ? "#1a1a1a" : "rgba(0,0,0,0.5)", fontWeight: 700 }}>
                         <Edit2 size={10} /> 
                         {res.selectionLocked 
                           ? "✅ İşleme Alındı" 
@@ -893,7 +893,7 @@ export default function ReservationsPage() {
                               padding: "6px 10px", borderRadius: 0, fontSize: "0.68rem", cursor: "pointer",
                               border: on ? "1px solid rgba(0,0,0,0.35)" : "1px solid rgba(0,0,0,0.08)",
                               background: on ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.03)",
-                              color: on ? "#fff" : "rgba(0,0,0,0.55)", fontWeight: on ? 700 : 500,
+                              color: on ? "#1a1a1a" : "rgba(0,0,0,0.55)", fontWeight: on ? 700 : 500,
                               display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "2px",
                             }}>
                               <span>{pkg.name}</span>

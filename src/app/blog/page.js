@@ -51,8 +51,8 @@ export default async function BlogPage() {
 
         {posts.length === 0 ? (
           <div style={{ padding: 60, textAlign: "center", background: "rgba(0,0,0,0.02)", border: "1px dashed rgba(0,0,0,0.1)", borderRadius: "var(--radius, 12px)" }}>
-            <FileText size={48} style={{ color: "rgba(0,0,0,0.2)", margin: "0 auto 16px" }} />
-            <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 16 }}>Henüz yayınlanmış bir yazı bulunmuyor.</p>
+            <FileText size={48} style={{ color: "rgba(0,0,0,0.6)", margin: "0 auto 16px" }} />
+            <p style={{ color: "rgba(0,0,0,0.6)", fontSize: 16 }}>Henüz yayınlanmış bir yazı bulunmuyor.</p>
           </div>
         ) : (
           <div style={{ display: "grid", gap: 32 }}>
@@ -73,7 +73,7 @@ export default async function BlogPage() {
                   )}
 
                   <div style={{ padding: "32px 24px" }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(0,0,0,0.4)", marginBottom: 12, display: "flex", gap: 12 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(0,0,0,0.55)", marginBottom: 12, display: "flex", gap: 12 }}>
                       <span style={{ display: "flex", alignItems: "center", gap: 6 }} suppressHydrationWarning>
                         <Calendar size={14} /> {new Date(post.publishedAt).toLocaleDateString("tr-TR")}
                       </span>

@@ -49,7 +49,7 @@ export default async function SinglePostPage({ params }) {
           </Link>
         </div>
 
-        <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(0,0,0,0.4)", marginBottom: 16, display: "flex", gap: 12 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(0,0,0,0.55)", marginBottom: 16, display: "flex", gap: 12 }}>
           <span style={{ display: "flex", alignItems: "center", gap: 6 }} suppressHydrationWarning>
             <Calendar size={14} /> {new Date(post.publishedAt).toLocaleDateString("tr-TR")}
           </span>

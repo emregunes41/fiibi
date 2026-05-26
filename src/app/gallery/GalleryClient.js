@@ -135,7 +135,7 @@ function StoryViewer({ photos, initialIndex, categoryName, onClose }) {
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <span style={{ color: "var(--text, #1a1a1a)", fontSize: "14px", fontWeight: 700 }}>{categoryName}</span>
-          <span style={{ color: "rgba(0,0,0,0.4)", fontSize: "12px", fontFamily: "monospace" }}>
+          <span style={{ color: "rgba(0,0,0,0.55)", fontSize: "12px", fontFamily: "monospace" }}>
             {currentIndex + 1}/{photos.length}
           </span>
         </div>
@@ -259,7 +259,7 @@ export default function GalleryClient({ categories }) {
         }}
       >
         <div style={{ marginBottom: "3rem", textAlign: "center" }}>
-          <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.3)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>GALERİ</div>
+          <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(0,0,0,0.6)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 12 }}>GALERİ</div>
           <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", margin: "0 0 8px 0" }}>
             Portfolyo
           </h2>

@@ -90,7 +90,7 @@ export default function AlbumSelectionForm({ reservationId, initialSelectedId, m
       </div>
 
       {message && (
-        <div style={{ marginBottom: 16, padding: "12px 16px", borderRadius: 0, fontSize: 13, fontWeight: 600, background: message.type === "success" ? "rgba(0,0,0,0.05)" : "rgba(248,113,113,0.1)", color: message.type === "success" ? "#fff" : "rgba(0,0,0,0.55)" }}>
+        <div style={{ marginBottom: 16, padding: "12px 16px", borderRadius: 0, fontSize: 13, fontWeight: 600, background: message.type === "success" ? "rgba(0,0,0,0.05)" : "rgba(248,113,113,0.1)", color: message.type === "success" ? "#22c55e" : "rgba(0,0,0,0.55)" }}>
           {message.text}
         </div>
       )}

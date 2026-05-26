@@ -79,7 +79,7 @@ export default function LoginPage() {
               {/* Login Form */}
               <div style={{ textAlign: "center", marginBottom: 32 }}>
                 <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 8 }}>Giriş Yap</h1>
-                <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 14 }}>Hesabınıza giriş yapın</p>
+                <p style={{ color: "rgba(0,0,0,0.6)", fontSize: 14 }}>Hesabınıza giriş yapın</p>
               </div>
 
               <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -90,9 +90,9 @@ export default function LoginPage() {
                 )}
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
+                  <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.55)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
                   <div style={{ position: "relative" }}>
-                    <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.35)", pointerEvents: "none" }} />
+                    <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.55)", pointerEvents: "none" }} />
                     <input 
                       type="email" 
                       required 
@@ -108,11 +108,11 @@ export default function LoginPage() {
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: 4, paddingRight: 4 }}>
-                    <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Şifre</label>
-                    <button type="button" onClick={() => { setShowReset(true); setResetEmail(email); }} style={{ fontSize: 11, color: "rgba(0,0,0,0.4)", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Şifremi unuttum</button>
+                    <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.55)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Şifre</label>
+                    <button type="button" onClick={() => { setShowReset(true); setResetEmail(email); }} style={{ fontSize: 11, color: "rgba(0,0,0,0.55)", background: "none", border: "none", cursor: "pointer", padding: 0 }}>Şifremi unuttum</button>
                   </div>
                   <div style={{ position: "relative" }}>
-                    <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.35)", pointerEvents: "none" }} />
+                    <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.55)", pointerEvents: "none" }} />
                     <input 
                       type="password" 
                       required 
@@ -137,7 +137,7 @@ export default function LoginPage() {
               </form>
 
               <div style={{ textAlign: "center", marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(0,0,0,0.08)" }}>
-                <p style={{ fontSize: 14, color: "rgba(0,0,0,0.5)" }}>
+                <p style={{ fontSize: 14, color: "rgba(0,0,0,0.6)" }}>
                   Hesabınız yok mu?{" "}
                   <Link href="/register" style={{ color: "var(--text, #1a1a1a)", fontWeight: 600, textDecoration: "none" }}>
                     Kayıt Ol
@@ -149,11 +149,11 @@ export default function LoginPage() {
             <>
               {/* Reset Password Form */}
               <div style={{ marginBottom: 24 }}>
-                <button onClick={() => { setShowReset(false); setResetMessage(""); setResetError(""); }} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "rgba(0,0,0,0.45)", cursor: "pointer", padding: 0, fontSize: 12, marginBottom: 20 }}>
+                <button onClick={() => { setShowReset(false); setResetMessage(""); setResetError(""); }} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: "rgba(0,0,0,0.55)", cursor: "pointer", padding: 0, fontSize: 12, marginBottom: 20 }}>
                   <ArrowLeft size={14} /> Geri Dön
                 </button>
                 <h1 style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 8 }}>Şifre Sıfırlama</h1>
-                <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 13, lineHeight: 1.5 }}>E-posta adresinizi girin, yeni şifreniz e-posta ile gönderilecek.</p>
+                <p style={{ color: "rgba(0,0,0,0.6)", fontSize: 13, lineHeight: 1.5 }}>E-posta adresinizi girin, yeni şifreniz e-posta ile gönderilecek.</p>
               </div>
 
               {resetMessage && (
@@ -171,9 +171,9 @@ export default function LoginPage() {
               {!resetMessage && (
                 <form onSubmit={handleReset} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
+                    <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.55)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
                     <div style={{ position: "relative" }}>
-                      <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.35)", pointerEvents: "none" }} />
+                      <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.55)", pointerEvents: "none" }} />
                       <input 
                         type="email" 
                         required 

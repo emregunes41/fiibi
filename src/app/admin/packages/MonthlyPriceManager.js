@@ -84,7 +84,7 @@ export default function MonthlyPriceManager() {
           {message && (
             <span style={{ 
               fontSize: "0.65rem", 
-              color: message.type === "success" ? "#fff" : "rgba(0,0,0,0.6)",
+              color: message.type === "success" ? "#22c55e" : "rgba(0,0,0,0.6)",
               fontWeight: 700,
               marginLeft: "10px"
             }}>

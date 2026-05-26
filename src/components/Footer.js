@@ -7,23 +7,23 @@ import { useLanguage } from "@/components/LanguageContext";
 export default function Footer({ businessName = "Studio", phone = "", email = "", address = "", instagram = "", footerTagline = "" }) {
   const { t } = useLanguage();
   return (
-    <footer className="relative z-10 bg-black/80 backdrop-blur-xl border-t border-white/10 py-16 px-6 mt-20">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+    <footer style={{ position: "relative", zIndex: 10, background: "#1a1a1a", borderTop: "1px solid rgba(255,255,255,0.1)", padding: "64px 24px 32px", marginTop: 80 }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 48 }}>
         
         {/* Brand */}
-        <div className="col-span-1 md:col-span-1">
-          <div className="font-black text-2xl tracking-tighter text-white mb-6">{businessName}.</div>
-          <p className="text-white/50 text-sm leading-relaxed mb-8">
+        <div>
+          <div style={{ fontWeight: 900, fontSize: 24, letterSpacing: "-0.04em", color: "#ffffff", marginBottom: 24 }}>{businessName}.</div>
+          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.6, marginBottom: 32 }}>
             {footerTagline || "Profesyonel hizmet anlayışıyla yanınızdayız."}
           </p>
-          <div className="flex gap-4">
+          <div style={{ display: "flex", gap: 16 }}>
             {instagram && (
-              <a href={instagram.startsWith("http") ? instagram : `https://instagram.com/${instagram}`} target="_blank" rel="noopener" className="p-2 rounded-none bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all">
+              <a href={instagram.startsWith("http") ? instagram : `https://instagram.com/${instagram}`} target="_blank" rel="noopener" style={{ padding: 8, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.7)", textDecoration: "none", transition: "all 0.2s" }}>
                 <Instagram size={20} />
               </a>
             )}
             {email && (
-              <a href={`mailto:${email}`} className="p-2 rounded-none bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all">
+              <a href={`mailto:${email}`} style={{ padding: 8, background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.7)", textDecoration: "none", transition: "all 0.2s" }}>
                 <Mail size={20} />
               </a>
             )}
@@ -32,34 +32,34 @@ export default function Footer({ businessName = "Studio", phone = "", email = ""
 
         {/* Links */}
         <div>
-          <h4 className="text-white font-bold mb-6">{t.footer.quickLinks}</h4>
-          <ul className="list-none flex flex-col gap-4">
-            <li><Link href="/" className="text-white/50 hover:text-white text-sm no-underline transition-colors">{t.nav.home}</Link></li>
-            <li><Link href="/#packages" className="text-white/50 hover:text-white text-sm no-underline transition-colors">{t.nav.packages}</Link></li>
-            <li><Link href="/#about" className="text-white/50 hover:text-white text-sm no-underline transition-colors">{t.footer.about}</Link></li>
-            <li><Link href="/#contact" className="text-white/50 hover:text-white text-sm no-underline transition-colors">{t.nav.contact}</Link></li>
+          <h4 style={{ color: "#ffffff", fontWeight: 700, marginBottom: 24 }}>{t.footer.quickLinks}</h4>
+          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 16, padding: 0, margin: 0 }}>
+            <li><Link href="/" style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, textDecoration: "none", transition: "color 0.2s" }}>{t.nav.home}</Link></li>
+            <li><Link href="/#packages" style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, textDecoration: "none", transition: "color 0.2s" }}>{t.nav.packages}</Link></li>
+            <li><Link href="/#about" style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, textDecoration: "none", transition: "color 0.2s" }}>{t.footer.about}</Link></li>
+            <li><Link href="/#contact" style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, textDecoration: "none", transition: "color 0.2s" }}>{t.nav.contact}</Link></li>
           </ul>
         </div>
 
         {/* Contact info */}
         <div>
-          <h4 className="text-white font-bold mb-6">{t.footer.contactInfo}</h4>
-          <ul className="list-none flex flex-col gap-4">
+          <h4 style={{ color: "#ffffff", fontWeight: 700, marginBottom: 24 }}>{t.footer.contactInfo}</h4>
+          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 16, padding: 0, margin: 0 }}>
             {address && (
-              <li className="flex items-start gap-3 text-white/50 text-sm">
-                <MapPin size={18} className="text-white shrink-0" />
+              <li style={{ display: "flex", alignItems: "flex-start", gap: 12, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
+                <MapPin size={18} style={{ color: "#ffffff", flexShrink: 0 }} />
                 <span>{address}</span>
               </li>
             )}
             {phone && (
-              <li className="flex items-center gap-3 text-white/50 text-sm">
-                <Phone size={18} className="text-white shrink-0" />
+              <li style={{ display: "flex", alignItems: "center", gap: 12, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
+                <Phone size={18} style={{ color: "#ffffff", flexShrink: 0 }} />
                 <span>{phone}</span>
               </li>
             )}
             {email && (
-              <li className="flex items-center gap-3 text-white/50 text-sm">
-                <Mail size={18} className="text-white shrink-0" />
+              <li style={{ display: "flex", alignItems: "center", gap: 12, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
+                <Mail size={18} style={{ color: "#ffffff", flexShrink: 0 }} />
                 <span>{email}</span>
               </li>
             )}
@@ -68,15 +68,15 @@ export default function Footer({ businessName = "Studio", phone = "", email = ""
 
         {/* Newsletter */}
         <div>
-          <h4 className="text-white font-bold mb-6">{t.footer.newsletter}</h4>
-          <p className="text-white/50 text-sm mb-4">{t.footer.newsletterDesc}</p>
-          <div className="flex gap-2">
+          <h4 style={{ color: "#ffffff", fontWeight: 700, marginBottom: 24 }}>{t.footer.newsletter}</h4>
+          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 16 }}>{t.footer.newsletterDesc}</p>
+          <div style={{ display: "flex", gap: 8 }}>
             <input 
               type="email" 
               placeholder={t.footer.emailPlaceholder}
-              className="bg-white/5 border border-white/10 rounded-none px-4 py-2 text-sm text-white w-full focus:outline-none focus:border-white/30"
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", padding: "8px 16px", fontSize: 14, color: "#ffffff", width: "100%", outline: "none" }}
             />
-            <button className="bg-white text-black font-bold px-4 py-2 rounded-none text-sm hover:bg-white/90 transition-all">
+            <button style={{ background: "#ffffff", color: "#1a1a1a", fontWeight: 700, padding: "8px 16px", fontSize: 14, border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>
               {t.footer.join}
             </button>
           </div>
@@ -85,20 +85,20 @@ export default function Footer({ businessName = "Studio", phone = "", email = ""
       </div>
 
       
-      <div className="max-w-7xl mx-auto mt-16 flex flex-col items-center gap-4 opacity-50">
-        <div className="text-[10px] font-bold text-white/50 tracking-[0.15em] uppercase">Güvenli Ödeme Altyapısı</div>
-        <div className="flex items-center justify-center gap-6 flex-wrap opacity-80">
-          <img src="/assets/iyzico_footer.svg" alt="iyzico Korumalı Alışveriş" className="h-6" />
-          <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" className="text-sm font-black text-white tracking-tighter opacity-60 hover:opacity-100 transition-opacity no-underline">PayTR</a>
+      <div style={{ maxWidth: 1280, margin: "64px auto 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 16, opacity: 0.5 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)", letterSpacing: "0.15em", textTransform: "uppercase" }}>Güvenli Ödeme Altyapısı</div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 24, flexWrap: "wrap", opacity: 0.8 }}>
+          <img src="/assets/iyzico_footer.svg" alt="iyzico Korumalı Alışveriş" style={{ height: 24 }} />
+          <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, fontWeight: 900, color: "#ffffff", letterSpacing: "-0.5px", opacity: 0.6, textDecoration: "none" }}>PayTR</a>
         </div>
-        <p className="text-[10px] text-white/30 text-center max-w-md leading-relaxed mt-1">
+        <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", textAlign: "center", maxWidth: 420, lineHeight: 1.6, margin: 0 }}>
           Bu internet sitesindeki ödeme hizmetleri{" "}
-          <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white/60 underline transition-colors">PAYTR Ödeme ve Elektronik Para Kuruluşu A.Ş.</a>
+          <a href="https://www.paytr.com" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.4)", textDecoration: "underline" }}>PAYTR Ödeme ve Elektronik Para Kuruluşu A.Ş.</a>
           {" "}tarafından sağlanmaktadır.
         </p>
       </div>
 
-      <div className="max-w-7xl mx-auto border-t border-white/5 mt-8 pt-8 text-center text-white/30 text-xs">
+      <div style={{ maxWidth: 1280, margin: "0 auto", borderTop: "1px solid rgba(255,255,255,0.05)", marginTop: 32, paddingTop: 32, textAlign: "center", color: "rgba(255,255,255,0.3)", fontSize: 12 }}>
                 © {new Date().getFullYear()} {businessName}. {t.footer.rights}
       </div>
     </footer>

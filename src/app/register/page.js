@@ -59,7 +59,7 @@ export default function RegisterPage() {
         <div style={{ background: "rgba(0,0,0,0.04)", backdropFilter: "blur(40px)", borderRadius: 0, border: "1px solid rgba(0,0,0,0.08)", padding: "40px 36px", boxShadow: "0 40px 100px rgba(0,0,0,0.5)" }}>
           <div style={{ textAlign: "center", marginBottom: 32 }}>
             <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 8 }}>Hesap Oluştur</h1>
-            <p style={{ color: "rgba(0,0,0,0.35)", fontSize: 14 }}>Hesap oluşturun</p>
+            <p style={{ color: "rgba(0,0,0,0.55)", fontSize: 14 }}>Hesap oluşturun</p>
           </div>
 
           <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -70,9 +70,9 @@ export default function RegisterPage() {
             )}
 
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>Ad Soyad</label>
+              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.55)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>Ad Soyad</label>
               <div style={{ position: "relative" }}>
-                <User size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.4)", pointerEvents: "none" }} />
+                <User size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.55)", pointerEvents: "none" }} />
                 <input 
                   type="text" 
                   required 
@@ -87,9 +87,9 @@ export default function RegisterPage() {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
+              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.55)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>E-posta</label>
               <div style={{ position: "relative" }}>
-                <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.4)", pointerEvents: "none" }} />
+                <Mail size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.55)", pointerEvents: "none" }} />
                 <input 
                   type="email" 
                   required 
@@ -104,9 +104,9 @@ export default function RegisterPage() {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>Şifre</label>
+              <label style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.55)", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: 4 }}>Şifre</label>
               <div style={{ position: "relative" }}>
-                <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.4)", pointerEvents: "none" }} />
+                <Lock size={18} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(0,0,0,0.55)", pointerEvents: "none" }} />
                 <input 
                   type="password" 
                   required 
@@ -145,7 +145,7 @@ export default function RegisterPage() {
           </form>
 
           <div style={{ textAlign: "center", marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(0,0,0,0.08)" }}>
-            <p style={{ fontSize: 14, color: "rgba(0,0,0,0.35)" }}>
+            <p style={{ fontSize: 14, color: "rgba(0,0,0,0.55)" }}>
               Zaten hesabınız var mı?{" "}
               <Link href="/login" style={{ color: "var(--text, #1a1a1a)", fontWeight: 600, textDecoration: "none" }}>
                 Giriş Yap

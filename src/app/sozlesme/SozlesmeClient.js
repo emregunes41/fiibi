@@ -35,7 +35,7 @@ export default function SozlesmeClient({ tenant, config }) {
     <div style={{ minHeight: "100vh", background: "#ffffff", color: "var(--text, #1a1a1a)", padding: "60px 24px" }}>
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         
-        <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(0,0,0,0.45)", textDecoration: "none", marginBottom: 32, fontSize: 14, fontWeight: 500, transition: "color 0.2s" }}>
+        <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(0,0,0,0.55)", textDecoration: "none", marginBottom: 32, fontSize: 14, fontWeight: 500, transition: "color 0.2s" }}>
           <ArrowLeft size={16} /> Ana Sayfaya Dön
         </Link>
         
@@ -45,7 +45,7 @@ export default function SozlesmeClient({ tenant, config }) {
           </div>
           <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>Yasal Sözleşmeler</h1>
         </div>
-        <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 15, marginBottom: 32, marginLeft: 64 }}>
+        <p style={{ color: "rgba(0,0,0,0.55)", fontSize: 15, marginBottom: 32, marginLeft: 64 }}>
           {PLATFORM.name} platform kullanım koşulları ve yasal metinler
         </p>
 
@@ -66,7 +66,7 @@ export default function SozlesmeClient({ tenant, config }) {
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   padding: "12px 20px", fontSize: 12, fontWeight: isActive ? 800 : 500,
-                  color: isActive ? "#fff" : "rgba(0,0,0,0.35)",
+                  color: isActive ? "#1a1a1a" : "rgba(0,0,0,0.35)",
                   background: "none", border: "none",
                   borderBottom: isActive ? "2px solid #fff" : "2px solid transparent",
                   cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap",
@@ -103,7 +103,7 @@ export default function SozlesmeClient({ tenant, config }) {
               <h2 style={{ fontSize: 16, fontWeight: 800, color: "var(--text, #1a1a1a)", margin: "0 0 2px" }}>
                 {currentTab?.label}
               </h2>
-              <p style={{ fontSize: 12, color: "rgba(0,0,0,0.3)", margin: 0 }}>
+              <p style={{ fontSize: 12, color: "rgba(0,0,0,0.6)", margin: 0 }}>
                 {currentTab?.desc}
               </p>
             </div>
@@ -129,8 +129,8 @@ export default function SozlesmeClient({ tenant, config }) {
           marginBottom: 60,
           display: "flex", alignItems: "center", gap: 12,
         }}>
-          <Shield size={16} style={{ color: "rgba(0,0,0,0.25)", flexShrink: 0 }} />
-          <p style={{ margin: 0, color: "rgba(0,0,0,0.35)", fontSize: 12, lineHeight: 1.6 }}>
+          <Shield size={16} style={{ color: "rgba(0,0,0,0.6)", flexShrink: 0 }} />
+          <p style={{ margin: 0, color: "rgba(0,0,0,0.55)", fontSize: 12, lineHeight: 1.6 }}>
             Bu sayfadaki yasal metinler, hizmet veren işletme tarafından düzenlenmiştir. Altyapı: {PLATFORM.name} ({PLATFORM.legalName}).
             Sorularınız için <strong style={{ color: "rgba(0,0,0,0.55)" }}>{PLATFORM.supportEmail}</strong> adresine yazabilirsiniz.
           </p>

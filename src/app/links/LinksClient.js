@@ -210,7 +210,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
           {/* Tagline */}
           {footerTagline && (
             <p style={{
-              fontSize: 14, color: "rgba(0,0,0,0.45)",
+              fontSize: 14, color: "rgba(0,0,0,0.55)",
               textAlign: "center", margin: "0 0 8px",
               maxWidth: 300, lineHeight: 1.5,
               fontWeight: 400,
@@ -315,7 +315,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                     }}>{link.title}</span>
                     {isInternal && (
                       <span style={{
-                        fontSize: 11, color: "rgba(0,0,0,0.3)",
+                        fontSize: 11, color: "rgba(0,0,0,0.6)",
                         fontWeight: 500, marginTop: 2, display: "block",
                       }}>Sayfamızda açılır</span>
                     )}
@@ -323,7 +323,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
 
                   {/* Arrow */}
                   <ChevronRight size={16} style={{
-                    color: "rgba(0,0,0,0.2)",
+                    color: "rgba(0,0,0,0.6)",
                     flexShrink: 0,
                     transition: "transform 0.2s, color 0.2s",
                   }} />
@@ -340,7 +340,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                 border: "1px dashed rgba(0,0,0,0.1)",
                 borderRadius: 16,
                 textDecoration: "none",
-                color: "rgba(0,0,0,0.35)",
+                color: "rgba(0,0,0,0.55)",
                 fontSize: 13, fontWeight: 600,
                 transition: "all 0.3s ease",
                 opacity: mounted ? 1 : 0,
@@ -376,7 +376,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
             onMouseLeave={(e) => e.currentTarget.parentElement.style.opacity = "0.3"}>
               <span style={{
                 fontSize: 9, textTransform: "uppercase",
-                letterSpacing: "0.25em", color: "rgba(0,0,0,0.5)",
+                letterSpacing: "0.25em", color: "rgba(0,0,0,0.6)",
                 fontWeight: 500,
               }}>Powered by</span>
               <strong style={{
@@ -450,7 +450,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                     width: 32, height: 32, borderRadius: 8,
                     background: "rgba(0,0,0,0.05)",
                     border: "1px solid rgba(0,0,0,0.08)",
-                    color: "rgba(0,0,0,0.4)",
+                    color: "rgba(0,0,0,0.55)",
                     textDecoration: "none", transition: "all 0.2s",
                   }}>
                     <ExternalLink size={14} />
@@ -460,7 +460,7 @@ export default function LinksClient({ bioLinks, businessName, logoUrl, bgType, b
                     width: 32, height: 32, borderRadius: 8,
                     background: "rgba(0,0,0,0.05)",
                     border: "1px solid rgba(0,0,0,0.08)",
-                    color: "rgba(0,0,0,0.4)",
+                    color: "rgba(0,0,0,0.55)",
                     cursor: "pointer", transition: "all 0.2s",
                   }}>
                     <X size={14} />

@@ -312,7 +312,7 @@ export default async function ProfilePage() {
                                   {isCompleted ? "✓" : (idx + 1)}
                                 </div>
                                 <div>
-                                  <p style={{ fontSize: 11, fontWeight: 600, color: isCurrent ? "#fff" : isCompleted ? "rgba(0,0,0,0.65)" : "rgba(0,0,0,0.3)" }}>
+                                  <p style={{ fontSize: 11, fontWeight: 600, color: isCurrent ? "#ffffff" : isCompleted ? "rgba(0,0,0,0.65)" : "rgba(0,0,0,0.3)" }}>
                                     {step.title}
                                   </p>
                                   <p style={{ fontSize: 9, color: "rgba(0,0,0,0.65)", maxWidth: 90 }}>{step.desc}</p>
@@ -485,7 +485,7 @@ export default async function ProfilePage() {
                                     {isCompleted ? <CheckCircle size={14} /> : (idx + 1)}
                                   </div>
                                   <div>
-                                    <p style={{ fontSize: 12, fontWeight: isCurrent ? 700 : 600, color: isCompleted ? "#fff" : "rgba(0,0,0,0.25)" }}>
+                                    <p style={{ fontSize: 12, fontWeight: isCurrent ? 700 : 600, color: isCompleted ? "#1a1a1a" : "rgba(0,0,0,0.25)" }}>
                                       {step.title}
                                     </p>
                                   </div>

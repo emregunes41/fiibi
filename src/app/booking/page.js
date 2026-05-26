@@ -48,7 +48,7 @@ export default async function BookingPage() {
             style={{
               display: "inline-block",
               fontSize: "13px",
-              color: "rgba(0,0,0,0.4)",
+              color: "rgba(0,0,0,0.55)",
               textDecoration: "none",
               marginBottom: "40px",
               transition: "color 0.2s",
@@ -71,7 +71,7 @@ export default async function BookingPage() {
           <p
             style={{
               fontSize: "15px",
-              color: "rgba(0,0,0,0.5)",
+              color: "rgba(0,0,0,0.6)",
               lineHeight: 1.7,
               maxWidth: "480px",
             }}

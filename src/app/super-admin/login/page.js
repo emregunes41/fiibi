@@ -38,7 +38,7 @@ export default function SuperAdminLoginPage() {
           <h1 style={{ color: "#1a1a1a", fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 4 }}>
             Platform Yönetimi
           </h1>
-          <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 13 }}>Super Admin erişimi</p>
+          <p style={{ color: "rgba(0,0,0,0.55)", fontSize: 13 }}>Super Admin erişimi</p>
         </div>
 
         <form onSubmit={handleSubmit} style={{

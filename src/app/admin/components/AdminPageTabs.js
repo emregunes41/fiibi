@@ -23,7 +23,7 @@ export default function AdminPageTabs({ tabs }) {
               padding: "8px 16px", 
               fontSize: "0.85rem", 
               fontWeight: isActive ? 800 : 500,
-              color: isActive ? "#fff" : "rgba(0,0,0,0.4)",
+              color: isActive ? "#1a1a1a" : "rgba(0,0,0,0.4)",
               background: isActive ? "rgba(0,0,0,0.05)" : "transparent", 
               border: isActive ? "1px solid rgba(0,0,0,0.1)" : "1px solid transparent",
               borderRadius: 0,
