@@ -185,14 +185,6 @@ export default function ReservationHubModal({
               <button onClick={enterEditMode} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
                 <Edit2 size={11} /> Düzenle
               </button>
-              {isPhotographer && (
-                <button 
-                  onClick={() => window.location.href = `/admin/reservations/${r.id}/gallery`} 
-                  style={{ background: "rgba(168,85,247,0.15)", border: "1px solid rgba(168,85,247,0.3)", color: "#c084fc", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}
-                >
-                  <Images size={11} /> Galeri
-                </button>
-              )}
               {onDelete && (
                 <button onClick={() => onDelete(r.id, r.brideName)} style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#ef4444", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
                   <Trash2 size={11} /> Sil
@@ -564,6 +556,15 @@ export default function ReservationHubModal({
                    <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.5)" }}>Teslim Tarihi</span>
                    <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "#fff" }}>{new Date(r.deliveryDate).toLocaleDateString('tr-TR')}</span>
                  </div>
+               )}
+               
+               {isPhotographer && (
+                 <button 
+                   onClick={() => window.location.href = `/admin/reservations/${r.id}/gallery`} 
+                   style={{ background: "rgba(168,85,247,0.15)", border: "1px solid rgba(168,85,247,0.3)", color: "#c084fc", padding: "8px 12px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", fontSize: "0.75rem", fontWeight: 800, width: "100%", marginTop: "10px" }}
+                 >
+                   <Images size={14} /> Sistemi Kullanarak Fotoğraf Gönder (Galeri)
+                 </button>
                )}
              </div>
              
