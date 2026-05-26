@@ -160,9 +160,11 @@ export default function PaymentSection({ reservation, compactMode = false, allow
             <button
               onClick={startPayment}
               disabled={loading || (paymentMode === "partial" && (!payAmount || parseFloat(payAmount) <= 0 || parseFloat(payAmount) > currentRemaining))}
+              className="force-white-text"
               style={{
                 width: "100%", padding: 16, borderRadius: 0, border: "none",
-                background: "var(--text, #1a1a1a)", color: "var(--bg, #fff)",
+                background: "var(--text, #1a1a1a)",
+
                 fontWeight: 700, fontSize: 15, cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                 opacity: loading || (paymentMode === "partial" && (!payAmount || parseFloat(payAmount) <= 0 || parseFloat(payAmount) > currentRemaining)) ? 0.5 : 1
@@ -208,9 +210,10 @@ export default function PaymentSection({ reservation, compactMode = false, allow
         {currentRemaining > 0 && (
           <button
             onClick={handlePrimaryPayClick}
+            className="force-white-text"
             style={{
               width: "100%", padding: 14, borderRadius: 0, border: "none",
-              background: "var(--text, #1a1a1a)", color: "#ffffff", fontWeight: 700, fontSize: 14,
+              background: "var(--text, #1a1a1a)", fontWeight: 700, fontSize: 14,
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
               transition: "all 0.2s",
             }}
@@ -241,6 +244,11 @@ export default function PaymentSection({ reservation, compactMode = false, allow
 
   return (
     <>
+      <style>{`
+        .force-white-text, .force-white-text * {
+          color: #ffffff !important;
+        }
+      `}</style>
       <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 0, padding: "20px 24px", overflow: "hidden", position: "relative" }}>
         {/* Summary */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
@@ -382,9 +390,10 @@ export default function PaymentSection({ reservation, compactMode = false, allow
           <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 24 }}>
             <button
               onClick={handlePrimaryPayClick}
+              className="force-white-text"
               style={{
                 width: "100%", padding: 14, borderRadius: 0, border: "none",
-                background: "var(--text, #1a1a1a)", color: "#ffffff", fontWeight: 700, fontSize: 14,
+                background: "var(--text, #1a1a1a)", fontWeight: 700, fontSize: 14,
                 cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                 transition: "all 0.2s",
               }}
