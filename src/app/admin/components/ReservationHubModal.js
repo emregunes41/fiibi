@@ -599,7 +599,7 @@ export default function ReservationHubModal({
              {/* Hatırlatmalar */}
              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 4px", marginTop: 10 }}>Hatırlatma & İşlemler</div>
              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {isPhotographer && r.selectionLocked && (
+                {isPhotographer && (r.selectionLocked || r.selectedPhotos || r.albumModelId) && (
                   <button
                     disabled={isLoading}
                     onClick={async () => {
