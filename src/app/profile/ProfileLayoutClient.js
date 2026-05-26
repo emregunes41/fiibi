@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, Settings, LogOut } from "lucide-react";
+import { Calendar, Settings, LogOut, Image as ImageIcon } from "lucide-react";
 import { logoutUser } from "../user-actions";
 
 export default function ProfileLayoutClient({ user, children }) {
