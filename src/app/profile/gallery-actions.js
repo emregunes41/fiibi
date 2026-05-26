@@ -46,6 +46,10 @@ export async function togglePhotoSelection(photoId, isSelected) {
       return { error: "Yetkisiz islem!" };
     }
 
+    if (photo.gallery.reservation.selectionLocked) {
+      return { error: "Seçimler kilitlenmiştir. Değişiklik yapılamaz." };
+    }
+
     await prisma.photo.update({
       where: { id: photoId },
       data: { isSelected }

@@ -54,6 +54,11 @@ export default function ClientGalleryPage() {
   }, [lightbox]);
 
   const handleToggle = async (photo, gallery) => {
+    if (gallery.reservation?.selectionLocked) {
+      alert("Seçimler kilitlenmiştir. Değişiklik yapılamaz.");
+      return;
+    }
+
     const selectedCount = gallery.photos.filter(p => p.isSelected).length;
     if (!photo.isSelected && selectedCount >= gallery.selectionLimit) {
       alert(`Maksimum seçim limitine (${gallery.selectionLimit}) ulaştınız.`);
