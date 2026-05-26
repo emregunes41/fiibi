@@ -121,6 +121,7 @@ model PhotographyPackage {
   workingDays    Json?          // [0,1,2,3,4,5,6] — 0=Pazar, 1=Pazartesi...
   deliveryTimeDays Int           @default(14)
   postSelectionDays Int          @default(0)
+  selectionLimit Int             @default(50)
   meetingLink  String?
   showInDiscovery Boolean  @default(false)   // Keşfet sayfasında göster
   isActive     Boolean       @default(true)

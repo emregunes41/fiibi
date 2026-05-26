@@ -79,7 +79,7 @@ const emptyFormBase = {
   name: "", description: "", price: "", features: "", 
   category: "STANDARD", timeType: "CUSTOM_DURATION", maxCapacity: "1", 
   sessionDuration: "30",
-  addons: [], customFields: [], deliveryTimeDays: "14", postSelectionDays: "0", availableSlots: [], meetingLink: "",
+  addons: [], customFields: [], deliveryTimeDays: "14", postSelectionDays: "0", selectionLimit: "50", availableSlots: [], meetingLink: "",
   workingDays: [1, 2, 3, 4, 5], // Varsayılan: Pazartesi-Cuma
   showInDiscovery: false,
 };
@@ -136,6 +136,7 @@ export default function PackagesPage() {
       addons: pkg.addons || [], customFields: pkg.customFields || [], 
       deliveryTimeDays: pkg.deliveryTimeDays?.toString() || "14",
       postSelectionDays: pkg.postSelectionDays?.toString() || "0",
+      selectionLimit: pkg.selectionLimit?.toString() || "50",
       meetingLink: pkg.meetingLink || "",
       availableSlots: pkg.availableSlots || [],
       workingDays: pkg.workingDays || [1, 2, 3, 4, 5],
@@ -624,10 +625,11 @@ export default function PackagesPage() {
                 )}
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: features.galleryDelivery ? "1fr 1fr 1fr 1fr" : "1fr 1fr", gap: "0.6rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: features.galleryDelivery ? "1fr 1fr 1fr 1fr 1fr" : "1fr 1fr", gap: "0.6rem" }}>
                 <div><div style={lbl}>Fiyat</div><input type="text" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} required style={inp} placeholder="15.000" /></div>
                 <div><div style={lbl}>Kapasite</div><input type="number" value={formData.maxCapacity} onChange={(e) => setFormData({...formData, maxCapacity: e.target.value})} required style={inp} /></div>
                 {features.galleryDelivery && <div><div style={lbl}>Teslim (Gün)</div><input type="number" value={formData.deliveryTimeDays} onChange={(e) => setFormData({...formData, deliveryTimeDays: e.target.value})} required style={inp} placeholder="7" /></div>}
+                {features.galleryDelivery && <div><div style={lbl}>Seçim Limit</div><input type="number" value={formData.selectionLimit} onChange={(e) => setFormData({...formData, selectionLimit: e.target.value})} style={inp} placeholder="50" /></div>}
                 {features.galleryDelivery && <div><div style={lbl}>Seçim Sonrası (Gün)</div><input type="number" value={formData.postSelectionDays} onChange={(e) => setFormData({...formData, postSelectionDays: e.target.value})} style={inp} placeholder="28" /></div>}
               </div>
 

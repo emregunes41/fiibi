@@ -15,8 +15,14 @@ export async function getReservationGallery(reservationId) {
     });
 
     if (!gallery) {
+      const res = await prisma.reservation.findUnique({
+        where: { id: reservationId },
+        include: { packages: true }
+      });
+      const limit = res?.packages?.reduce((sum, pkg) => sum + (pkg.selectionLimit || 50), 0) || 50;
+
       gallery = await prisma.photoGallery.create({
-        data: { reservationId },
+        data: { reservationId, selectionLimit: limit },
         include: { photos: true }
       });
     }

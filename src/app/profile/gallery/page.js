@@ -79,7 +79,7 @@ export default function ClientGalleryPage() {
       setIsLoading(true);
       const names = selectedPhotos.map(p => p.originalName || `IMG_${p.photoNumber}`);
       await completeSelection(gallery.id, gallery.reservationId, user.name, names);
-      alert("Seçimleriniz başarıyla iletildi!");
+      alert("Seçimleriniz başarıyla iletildi! Eğer paketinizde albüm varsa şimdi albüm modelinizi seçebilirsiniz.");
       window.location.href = "/profile";
     }
   };
@@ -191,11 +191,14 @@ export default function ClientGalleryPage() {
                           style={{ 
                             padding: "10px 16px", borderRadius: 4, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
                             fontSize: "0.75rem", fontWeight: 800, border: "none",
-                            background: selectedCount > 0 ? "#000" : "rgba(0,0,0,0.06)",
-                            color: selectedCount > 0 ? "#fff" : "rgba(0,0,0,0.4)"
+                            background: selectedCount > 0 ? "#2563eb" : "rgba(0,0,0,0.06)",
+                            color: selectedCount > 0 ? "#ffffff" : "rgba(0,0,0,0.4)"
                           }}
                         >
-                          {selectedCount > 0 ? "Seçimleri Gönder" : "Seçim Yapılmadı"} <CheckCircle size={14} />
+                          <span style={{ color: selectedCount > 0 ? "#ffffff" : "inherit" }}>
+                            {selectedCount > 0 ? "Seçimleri Gönder" : "Seçim Yapılmadı"}
+                          </span> 
+                          <CheckCircle size={14} style={{ color: selectedCount > 0 ? "#ffffff" : "inherit" }} />
                         </button>
                       ) : (
                         <div style={{ 
@@ -327,6 +330,30 @@ export default function ClientGalleryPage() {
                style={{ objectFit: "contain" }}
                quality={90}
              />
+             
+             {/* Lightbox Seçim Butonu */}
+             <button 
+               onClick={(e) => {
+                 e.stopPropagation();
+                 if (!galleries[lightbox.galleryIndex].reservation.selectionLocked) {
+                   handleToggle(galleries[lightbox.galleryIndex].photos[lightbox.photoIndex], galleries[lightbox.galleryIndex]);
+                 }
+               }}
+               style={{
+                 position: "absolute", bottom: 40, 
+                 background: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#000" : "rgba(255,255,255,0.9)",
+                 color: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#fff" : "#000", 
+                 border: "none", padding: "12px 24px", borderRadius: 4, 
+                 display: "flex", alignItems: "center", gap: 8, fontSize: "0.9rem", fontWeight: 800, 
+                 cursor: galleries[lightbox.galleryIndex].reservation.selectionLocked ? "default" : "pointer",
+                 boxShadow: "0 4px 12px rgba(0,0,0,0.2)", zIndex: 10002
+               }}
+             >
+               <Heart size={18} fill={galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "currentColor" : "none"} /> 
+               <span style={{ color: galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "#fff" : "#000" }}>
+                 {galleries[lightbox.galleryIndex].photos[lightbox.photoIndex].isSelected ? "Seçildi" : "Bu Fotoğrafı Seç"}
+               </span>
+             </button>
           </div>
 
           <div style={{ position: "absolute", bottom: 20, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.6)", padding: "6px 14px", borderRadius: 4, color: "#fff", fontSize: "0.75rem", fontWeight: 700 }}>

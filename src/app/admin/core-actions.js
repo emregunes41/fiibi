@@ -296,7 +296,7 @@ export async function createPackage(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, meetingLink, customFields, availableSlots, workingDays, showInDiscovery } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, selectionLimit, meetingLink, customFields, availableSlots, workingDays, showInDiscovery } = data;
     const tenantId = await getTenantId();
     await prisma.photographyPackage.create({
       data: {
@@ -308,6 +308,7 @@ export async function createPackage(data) {
         maxCapacity: parseInt(maxCapacity) || 1,
         deliveryTimeDays: parseInt(deliveryTimeDays) || 14,
         postSelectionDays: parseInt(postSelectionDays) || 0,
+        selectionLimit: parseInt(selectionLimit) || 50,
         meetingLink: meetingLink || null,
         features: Array.isArray(features) ? features : features.split(',').map(f => f.trim()).filter(f => f !== ""),
         addons: addons || [],
@@ -333,7 +334,7 @@ export async function updatePackage(id, data) {
     const tenantId = await getTenantId();
     const existing = await prisma.photographyPackage.findFirst({ where: { id, tenantId } });
     if (!existing) return { error: "Paket bulunamadı." };
-    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, meetingLink, customFields, availableSlots, workingDays, showInDiscovery } = data;
+    const { name, description, price, features, category, timeType, maxCapacity, addons, deliveryTimeDays, postSelectionDays, selectionLimit, meetingLink, customFields, availableSlots, workingDays, showInDiscovery } = data;
     await prisma.photographyPackage.update({
       where: { id },
       data: {
@@ -345,6 +346,7 @@ export async function updatePackage(id, data) {
         maxCapacity: parseInt(maxCapacity),
         deliveryTimeDays: parseInt(deliveryTimeDays) || 14,
         postSelectionDays: parseInt(postSelectionDays) || 0,
+        selectionLimit: parseInt(selectionLimit) || 50,
         meetingLink: meetingLink || null,
         features: Array.isArray(features) ? features : features.split(',').map(f => f.trim()).filter(f => f !== ""),
         addons,
