@@ -579,6 +579,21 @@ export default function ReservationHubModal({
                    </div>
                  </div>
                )}
+
+               {isPhotographer && r.albumModelId && r.albumModel && (
+                 <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                   <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Müşterinin Seçtiği Albüm Modeli</div>
+                   <div style={{ display: "flex", gap: "12px", background: "rgba(255,255,255,0.04)", padding: "10px", borderRadius: 4, alignItems: "center", border: "1px solid rgba(255,255,255,0.05)" }}>
+                     {r.albumModel.imageUrl && (
+                       <img src={r.albumModel.imageUrl} alt={r.albumModel.name} style={{ width: 48, height: 48, objectFit: "cover", borderRadius: 4 }} />
+                     )}
+                     <div>
+                       <div style={{ fontSize: "0.8rem", fontWeight: 800, color: "#fff" }}>{r.albumModel.name}</div>
+                       {r.albumModel.description && <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.5)", marginTop: 2 }}>{r.albumModel.description}</div>}
+                     </div>
+                   </div>
+                 </div>
+               )}
              </div>
              
              {/* Hatırlatmalar */}
