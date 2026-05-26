@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X, Edit2, User, Phone, Mail, Calendar, Clock, CreditCard, FileText, ExternalLink, Trash2, Package, Images } from "lucide-react";
-import { updateReservationStatus, updateReservationWorkflow, addPayment, updateReservation, getPackages } from "../core-actions";
+import { updateReservationStatus, updateReservationWorkflow, addPayment, updateReservation, getPackages, unlockReservationSelection } from "../core-actions";
 import { sendContractReminder, resendCredentials } from "../reminder-actions";
 
 const inp = {
@@ -599,6 +599,30 @@ export default function ReservationHubModal({
              {/* Hatırlatmalar */}
              <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em", padding: "12px 0 4px", marginTop: 10 }}>Hatırlatma & İşlemler</div>
              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {isPhotographer && r.selectionLocked && (
+                  <button
+                    disabled={isLoading}
+                    onClick={async () => {
+                      if (!confirm("Müşterinin fotoğraf ve albüm seçimleri tamamen sıfırlanacak ve kilidi açılacaktır. Emin misiniz?")) return;
+                      setIsLoading(true);
+                      const res = await unlockReservationSelection(r.id);
+                      if (res.success) {
+                        setData(prev => ({ ...prev, selectionLocked: false, selectedPhotos: null, albumModelId: null, workflowStatus: "SELECTION_PENDING" }));
+                        if(onUpdate) onUpdate();
+                      } else {
+                        alert("Hata: " + res.error);
+                      }
+                      setIsLoading(false);
+                    }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 8, padding: "8px 12px",
+                      background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#ef4444", fontSize: "0.72rem", fontWeight: 700, cursor: isLoading ? "not-allowed" : "pointer", textAlign: "left",
+                    }}
+                  >
+                    <Edit2 size={12} style={{ flexShrink: 0 }} />
+                    <div style={{flex: 1}}>Fotoğraf / Albüm Seçimini Sıfırla</div>
+                  </button>
+                )}
                 {isPhotographer && !r.contractApproved && (
                   <button
                     disabled={reminderLoading === "contract"}

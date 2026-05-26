@@ -251,6 +251,40 @@ export async function deleteAlbumModel(id) {
   }
 }
 
+export async function unlockReservationSelection(reservationId) {
+  try {
+    const tenantId = await getTenantId();
+    const reservation = await prisma.reservation.findFirst({ where: { id: reservationId, tenantId } });
+    if (!reservation) return { error: "Rezervasyon bulunamadı." };
+    
+    await prisma.reservation.update({
+      where: { id: reservationId },
+      data: { 
+        selectionLocked: false,
+        workflowStatus: "SELECTION_PENDING", // geri al
+        selectedPhotos: null, // sıfırla
+        albumModelId: null // albümü de sıfırla
+      }
+    });
+
+    // Fotoğrafların isSelected durumlarını da sıfırla
+    const galleries = await prisma.photoGallery.findMany({ where: { reservationId } });
+    for (const gal of galleries) {
+      await prisma.photo.updateMany({
+        where: { galleryId: gal.id },
+        data: { isSelected: false }
+      });
+    }
+
+    revalidatePath('/admin/dashboard');
+    revalidatePath('/profile');
+    revalidatePath('/profile/gallery');
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
 export async function selectAlbumModel(reservationId, albumModelId) {
   try {
     const tenantId = await getTenantId();

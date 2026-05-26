@@ -210,7 +210,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
             onClick={handlePrimaryPayClick}
             style={{
               width: "100%", padding: 14, borderRadius: 0, border: "none",
-              background: "var(--text, #1a1a1a)", color: "var(--bg, #fff)", fontWeight: 700, fontSize: 14,
+              background: "var(--text, #1a1a1a)", color: "#ffffff", fontWeight: 700, fontSize: 14,
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
               transition: "all 0.2s",
             }}
@@ -384,7 +384,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
               onClick={handlePrimaryPayClick}
               style={{
                 width: "100%", padding: 14, borderRadius: 0, border: "none",
-                background: "var(--text, #1a1a1a)", color: "var(--bg, #fff)", fontWeight: 700, fontSize: 14,
+                background: "var(--text, #1a1a1a)", color: "#ffffff", fontWeight: 700, fontSize: 14,
                 cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                 transition: "all 0.2s",
               }}
