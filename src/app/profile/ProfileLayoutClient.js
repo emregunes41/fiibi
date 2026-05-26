@@ -15,22 +15,23 @@ export default function ProfileLayoutClient({ user, children }) {
 
   const navItems = [
     { name: "Rezervasyonlarım", href: "/profile", icon: Calendar, exact: true },
+    { name: "Fotoğraflarım", href: "/profile/gallery", icon: ImageIcon, exact: false },
     { name: "Ayarlar", href: "/profile/settings", icon: Settings, exact: false },
   ];
 
   return (
     <div style={{ minHeight: "100vh", position: "relative", zIndex: 40, paddingTop: 80 }}>
-      {/* Semi-transparent dark overlay behind content */}
+      {/* Semi-transparent LIGHT overlay behind content */}
       <div style={{
         position: "fixed", inset: 0, zIndex: -1,
-        background: "rgba(0,0,0,0.45)",
+        background: "rgba(255,255,255,0.85)",
         backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
       }} />
 
       {/* Sub Navigation Bar */}
       <div style={{
         position: "sticky", top: 80, zIndex: 50,
-        background: "rgba(0,0,0,0.3)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+        background: "rgba(255,255,255,0.7)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
         borderBottom: "1px solid rgba(0,0,0,0.06)",
         padding: "0 16px",
       }}>
@@ -43,8 +44,8 @@ export default function ProfileLayoutClient({ user, children }) {
                 <Link key={item.name} href={item.href} style={{
                   textDecoration: "none", display: "flex", alignItems: "center", gap: 6,
                   padding: "6px 14px", borderRadius: 6, fontSize: "0.75rem", fontWeight: isActive ? 700 : 500,
-                  color: isActive ? "#fff" : "rgba(0,0,0,0.45)",
-                  background: isActive ? "rgba(0,0,0,0.08)" : "transparent",
+                  color: isActive ? "#000" : "rgba(0,0,0,0.45)",
+                  background: isActive ? "rgba(0,0,0,0.06)" : "transparent",
                   transition: "all 0.2s",
                 }}>
                   <item.icon size={13} />
@@ -66,7 +67,7 @@ export default function ProfileLayoutClient({ user, children }) {
               <button type="submit" style={{
                 display: "flex", alignItems: "center", gap: 5, padding: "6px 12px",
                 background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)",
-                borderRadius: 6, color: "rgba(0,0,0,0.4)", fontSize: 11, fontWeight: 600,
+                borderRadius: 6, color: "rgba(0,0,0,0.6)", fontSize: 11, fontWeight: 600,
                 cursor: "pointer", transition: "all 0.2s",
               }}>
                 <LogOut size={12} /> Çıkış
