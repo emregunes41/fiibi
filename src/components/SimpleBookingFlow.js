@@ -232,7 +232,7 @@ export default function SimpleBookingFlow({ initialPackages, blockedDays = [], p
                   setSelectedDate(val);
                   setSelectedTime("");
                 }}
-                style={{ ...inp, colorScheme: "dark" }}
+                style={{ ...inp, colorScheme: "light" }}
               />
               {selectedDate && selectedPkg && (() => {
                 const wd = selectedPkg.workingDays || [1, 2, 3, 4, 5];

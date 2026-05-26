@@ -737,13 +737,13 @@ export default function ReservationsPage() {
                         style={{
                           flex: 1.5, padding: "8px", borderRadius: 4, fontSize: "0.75rem", fontWeight: 700,
                           border: "1px solid rgba(0,0,0,0.08)", background: "rgba(0,0,0,0.04)",
-                          color: "#1a1a1a", outline: "none", colorScheme: "dark",
+                          color: "#1a1a1a", outline: "none", colorScheme: "light",
                         }}
                       >
-                        <option value="PENDING" style={{color: "#1a1a1a", background:"#222"}}>⏳ Bekleyen</option>
-                        <option value="CONFIRMED" style={{color: "#1a1a1a", background:"#222"}}>✅ Onayla</option>
-                        <option value="COMPLETED" style={{color: "#1a1a1a", background:"#222"}}>🎉 Tamamlandı</option>
-                        <option value="CANCELLED" style={{color: "#1a1a1a", background:"#222"}}>❌ İptal Et</option>
+                        <option value="PENDING" style={{color: "#1a1a1a", background: "#ffffff"}}>⏳ Bekleyen</option>
+                        <option value="CONFIRMED" style={{color: "#1a1a1a", background: "#ffffff"}}>✅ Onayla</option>
+                        <option value="COMPLETED" style={{color: "#1a1a1a", background: "#ffffff"}}>🎉 Tamamlandı</option>
+                        <option value="CANCELLED" style={{color: "#1a1a1a", background: "#ffffff"}}>❌ İptal Et</option>
                       </select>
                       
                       <button 
@@ -847,7 +847,7 @@ export default function ReservationsPage() {
 
               {/* Tarih */}
               <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>{isPhotographer ? "Etkinlik Tarihi" : `${terms.appointment} Tarihi`}</div>
-              <input type="date" required style={{ ...inp, colorScheme: "dark" }} value={formData.eventDate} onChange={(e) => setFormData({...formData, eventDate: e.target.value})} />
+              <input type="date" required style={{ ...inp, colorScheme: "light" }} value={formData.eventDate} onChange={(e) => setFormData({...formData, eventDate: e.target.value})} />
 
               {/* Paket Seçimi - Detaylı */}
               <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: "4px", marginBottom: "-4px" }}>Paket Seçimi</div>
@@ -1149,16 +1149,16 @@ export default function ReservationsPage() {
               </div>
               <div>
                 <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Tarih *</label>
-                <input type="date" required style={{ ...inp, colorScheme: "dark" }} value={quickEventForm.eventDate} onChange={(e) => setQuickEventForm({...quickEventForm, eventDate: e.target.value})} />
+                <input type="date" required style={{ ...inp, colorScheme: "light" }} value={quickEventForm.eventDate} onChange={(e) => setQuickEventForm({...quickEventForm, eventDate: e.target.value})} />
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                 <div>
                   <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Başlangıç</label>
-                  <input type="time" style={{ ...inp, colorScheme: "dark" }} value={quickEventForm.startTime} onChange={(e) => setQuickEventForm({...quickEventForm, startTime: e.target.value})} />
+                  <input type="time" style={{ ...inp, colorScheme: "light" }} value={quickEventForm.startTime} onChange={(e) => setQuickEventForm({...quickEventForm, startTime: e.target.value})} />
                 </div>
                 <div>
                   <label style={{ fontSize: "0.6rem", fontWeight: 700, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 4 }}>Bitiş</label>
-                  <input type="time" style={{ ...inp, colorScheme: "dark" }} value={quickEventForm.endTime} onChange={(e) => setQuickEventForm({...quickEventForm, endTime: e.target.value})} />
+                  <input type="time" style={{ ...inp, colorScheme: "light" }} value={quickEventForm.endTime} onChange={(e) => setQuickEventForm({...quickEventForm, endTime: e.target.value})} />
                 </div>
               </div>
               <div>

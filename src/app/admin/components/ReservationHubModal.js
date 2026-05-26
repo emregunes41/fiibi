@@ -149,11 +149,11 @@ export default function ReservationHubModal({
   );
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "0", overflowY: "auto" }}>
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(10px)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 1000, padding: "0", overflowY: "auto" }}>
       <style>{`
         .detail-modal-body { display: flex; flex-direction: column; gap: 0; }
         @media (min-width: 700px) { .detail-modal-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; } .detail-modal-body > .detail-full { grid-column: 1 / -1; } }
-        .detail-modal-container { width: 100%; max-width: 780px; background: #111; border: 1px solid rgba(0,0,0,0.15); border-radius: 0; overflow: hidden; max-height: 100vh; overflow-y: auto; margin: 0; }
+        .detail-modal-container { width: 100%; max-width: 780px; background: #ffffff; border: 1px solid rgba(0,0,0,0.12); border-radius: 0; overflow: hidden; max-height: 100vh; overflow-y: auto; margin: 0; color: #1a1a1a; }
         @media (min-width: 700px) { .detail-modal-container { margin: 2rem auto; max-height: 90vh; } }
         .detail-header-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
       `}</style>
@@ -174,13 +174,13 @@ export default function ReservationHubModal({
                 style={{
                   padding: "4px 10px", borderRadius: 0, fontSize: "0.65rem", fontWeight: 800, textTransform: "uppercase",
                   background: sc.bg, color: sc.c, border: sc.b, outline: "none", cursor: "pointer",
-                  WebkitAppearance: "none", appearance: "none", colorScheme: "dark"
+                  WebkitAppearance: "none", appearance: "none", colorScheme: "light"
                 }}
               >
-                <option value="PENDING" style={{color: "#1a1a1a", background:"#222"}}>Bekleyen</option>
-                <option value="CONFIRMED" style={{color: "#1a1a1a", background:"#222"}}>Onaylı</option>
-                <option value="COMPLETED" style={{color: "#1a1a1a", background:"#222"}}>Tamamlandı</option>
-                <option value="CANCELLED" style={{color: "#1a1a1a", background:"#222"}}>İptal</option>
+                <option value="PENDING" style={{color: "#1a1a1a", background:"#ffffff"}}>Bekleyen</option>
+                <option value="CONFIRMED" style={{color: "#1a1a1a", background:"#ffffff"}}>Onaylı</option>
+                <option value="COMPLETED" style={{color: "#1a1a1a", background:"#ffffff"}}>Tamamlandı</option>
+                <option value="CANCELLED" style={{color: "#1a1a1a", background:"#ffffff"}}>İptal</option>
               </select>
               <button onClick={enterEditMode} style={{ background: "rgba(0,0,0,0.06)", border: "1px solid rgba(0,0,0,0.1)", color: "#1a1a1a", padding: "6px 10px", borderRadius: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.6rem", fontWeight: 700 }}>
                 <Edit2 size={11} /> Düzenle
@@ -241,11 +241,11 @@ export default function ReservationHubModal({
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginTop: 4 }}>
                   <div>
                     <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Tarih</div>
-                    <input type="date" style={{...inp, colorScheme: "dark"}} value={formData.eventDate} onChange={(e) => setFormData({...formData, eventDate: e.target.value})} />
+                    <input type="date" style={{...inp, colorScheme: "light"}} value={formData.eventDate} onChange={(e) => setFormData({...formData, eventDate: e.target.value})} />
                   </div>
                   <div>
                     <div style={{ fontSize: "0.55rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", marginBottom: 4 }}>Saat</div>
-                    <input type="time" style={{...inp, colorScheme: "dark"}} value={formData.eventTime} onChange={(e) => setFormData({...formData, eventTime: e.target.value})} />
+                    <input type="time" style={{...inp, colorScheme: "light"}} value={formData.eventTime} onChange={(e) => setFormData({...formData, eventTime: e.target.value})} />
                   </div>
                 </div>
 
@@ -289,7 +289,7 @@ export default function ReservationHubModal({
                             <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
                               <span style={{ fontSize: "0.85rem", flexShrink: 0 }}>{isSelected ? "☑" : "☐"}</span>
                               <div style={{ minWidth: 0 }}>
-                                <div style={{ fontSize: "0.72rem", fontWeight: 700, color: isSelected ? "#fff" : "rgba(0,0,0,0.6)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pkg.name}</div>
+                                <div style={{ fontSize: "0.72rem", fontWeight: 700, color: isSelected ? "#22c55e" : "rgba(0,0,0,0.7)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pkg.name}</div>
                                 <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.65)" }}>{pkg.description?.slice(0, 50)}{pkg.description?.length > 50 ? "..." : ""}</div>
                               </div>
                             </div>
@@ -337,7 +337,7 @@ export default function ReservationHubModal({
                 )}
                 {isPhotographer && (
                 <div style={{ display: "flex", alignItems: "center", padding: "8px 0", gap: 10, borderBottom: "1px solid rgba(0,0,0,0.04)" }}>
-                  <FileText size={13} style={{ color: r.contractApproved ? "#fff" : "rgba(0,0,0,0.5)", flexShrink: 0 }} />
+                  <FileText size={13} style={{ color: r.contractApproved ? "#22c55e" : "rgba(0,0,0,0.5)", flexShrink: 0 }} />
                   <span style={{ fontSize: "0.72rem", color: "rgba(0,0,0,0.65)", minWidth: 110 }}>Sözleşme</span>
                   {r.contractApproved ? (
                     <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#1a1a1a" }}>✅ Onaylandı</span>
@@ -449,7 +449,7 @@ export default function ReservationHubModal({
                 const remaining = Math.max(0, totalAmount - totalPaid);
                 const isPaid = totalPaid >= totalAmount && totalAmount > 0;
                 const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale/EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online" };
-                const methodColors = { CASH: "#fff", BANK_TRANSFER: "rgba(0,0,0,0.5)", CREDIT_CARD: "#f59e0b", ONLINE: "rgba(0,0,0,0.6)" };
+                const methodColors = { CASH: "#1a1a1a", BANK_TRANSFER: "#3b82f6", CREDIT_CARD: "#f59e0b", ONLINE: "#8b5cf6" };
 
                 return (
                   <div style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.08)", marginTop: "20px" }}>
@@ -457,7 +457,7 @@ export default function ReservationHubModal({
                       <div>
                         <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em" }}>ÖZET ({isPaid ? "Tahsil Edildi" : "Açık"})</div>
                         <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 2 }}>
-                          <span style={{ fontSize: "1.2rem", fontWeight: 900, color: remaining > 0 ? "#fff" : "#4ade80" }}>{remaining > 0 ? remaining : 0} ₺ <span style={{ fontSize: "0.7rem", color: "rgba(0,0,0,0.65)" }}>kaldı</span></span>
+                          <span style={{ fontSize: "1.2rem", fontWeight: 900, color: remaining > 0 ? "#ef4444" : "#22c55e" }}>{remaining > 0 ? remaining : 0} ₺ <span style={{ fontSize: "0.7rem", color: "rgba(0,0,0,0.65)" }}>kaldı</span></span>
                         </div>
                       </div>
                       <div style={{ textAlign: "right" }}>
@@ -482,11 +482,11 @@ export default function ReservationHubModal({
                       </div>
                     </div>
 
-                    <form onSubmit={handleAddPayment} style={{ padding: "12px 14px", background: "rgba(0,0,0,0.2)" }}>
+                    <form onSubmit={handleAddPayment} style={{ padding: "12px 14px", background: "rgba(0,0,0,0.03)" }}>
                       <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>+ Yeni Ödeme Ekle</div>
                       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "6px" }}>
                         <input required type="number" placeholder="Tutar ₺" style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem", minWidth: 80}} value={paymentForm.amount} onChange={(e) => setPaymentForm({...paymentForm, amount: e.target.value})} />
-                        <select style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem", minWidth: 80, colorScheme: "dark"}} value={paymentForm.method} onChange={(e) => setPaymentForm({...paymentForm, method: e.target.value})}>
+                        <select style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem", minWidth: 80, colorScheme: "light"}} value={paymentForm.method} onChange={(e) => setPaymentForm({...paymentForm, method: e.target.value})}>
                           <option value="CASH">Nakit</option>
                           <option value="BANK_TRANSFER">Havale/EFT</option>
                           {paymentMode !== "cash" && <option value="CREDIT_CARD">Kart</option>}
@@ -494,7 +494,7 @@ export default function ReservationHubModal({
                       </div>
                       <div style={{ display: "flex", gap: "6px" }}>
                         <input placeholder="Not (Opsiyonel)" style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem"}} value={paymentForm.note} onChange={(e) => setPaymentForm({...paymentForm, note: e.target.value})} />
-                        <button disabled={paymentLoading} type="submit" style={{ padding: "0 14px", border: "none", background: "rgba(0,0,0,0.9)", color: "#000", fontWeight: 800, cursor: "pointer", fontSize: "0.75rem" }}>
+                        <button disabled={paymentLoading} type="submit" style={{ padding: "0 14px", border: "none", background: "#1a1a1a", color: "#ffffff", fontWeight: 800, cursor: "pointer", fontSize: "0.75rem" }}>
                           {paymentLoading ? "..." : "Ekle"}
                         </button>
                       </div>
@@ -516,13 +516,13 @@ export default function ReservationHubModal({
                        setData(prev => ({ ...prev, workflowStatus: newWfStatus }));
                        if(onUpdate) onUpdate();
                      }}
-                     style={{ ...inp, fontSize: "0.72rem", padding: "6px", colorScheme: "dark" }}
+                     style={{ ...inp, fontSize: "0.72rem", padding: "6px", colorScheme: "light" }}
                    >
-                     <option value="PENDING" style={{color: "#1a1a1a", background:"#222"}}>Çekim Bekleniyor</option>
-                     <option value="EDITING" style={{color: "#1a1a1a", background:"#222"}}>Düzenleniyor (İşleniyor)</option>
-                     <option value="SELECTION_PENDING" style={{color: "#1a1a1a", background:"#222"}}>Müşteri Seçimi Bekleniyor</option>
-                     <option value="PREPARING" style={{color: "#1a1a1a", background:"#222"}}>Proje Hazırlanıyor</option>
-                     <option value="COMPLETED" style={{color: "#1a1a1a", background:"#222"}}>İşlem Tamamlandı</option>
+                     <option value="PENDING" style={{color: "#1a1a1a", background:"#ffffff"}}>Çekim Bekleniyor</option>
+                     <option value="EDITING" style={{color: "#1a1a1a", background:"#ffffff"}}>Düzenleniyor (İşleniyor)</option>
+                     <option value="SELECTION_PENDING" style={{color: "#1a1a1a", background:"#ffffff"}}>Müşteri Seçimi Bekleniyor</option>
+                     <option value="PREPARING" style={{color: "#1a1a1a", background:"#ffffff"}}>Proje Hazırlanıyor</option>
+                     <option value="COMPLETED" style={{color: "#1a1a1a", background:"#ffffff"}}>İşlem Tamamlandı</option>
                    </select>
                  </div>
                  <div style={{ flex: 2, minWidth: 200, display: "flex", gap: "6px" }}>

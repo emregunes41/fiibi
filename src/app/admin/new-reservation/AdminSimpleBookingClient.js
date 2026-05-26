@@ -207,7 +207,7 @@ export default function AdminSimpleBookingClient({ initialPackages, blockedDays 
               <input
                 type="date" value={selectedDate} min={today}
                 onChange={(e) => { setSelectedDate(e.target.value); setSelectedTime(""); }}
-                style={{ ...inp, colorScheme: "dark" }}
+                style={{ ...inp, colorScheme: "light" }}
               />
               {selectedDate && selectedPkg && (() => {
                 const wd = selectedPkg.workingDays || [1, 2, 3, 4, 5];
