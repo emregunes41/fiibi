@@ -70,6 +70,11 @@ const infoRow = (label, value) => `
  */
 export async function notifyAdminNewReservation(reservation) {
   try {
+    // Her zaman DB'ye kaydet
+    const dateStr = new Date(reservation.eventDate).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+    await saveNotification(`📋 Yeni Rezervasyon: ${reservation.brideName}${reservation.groomName ? ` & ${reservation.groomName}` : ''} — ${dateStr} — ${reservation.totalAmount || 0}₺`, "RESERVATION");
+
+    // E-posta bildirimi (ayar açıksa)
     const settings = await getNotificationSettings();
     if (!settings.notifyReservation) return;
 
@@ -87,10 +92,6 @@ export async function notifyAdminNewReservation(reservation) {
     `;
 
     await sendEmailWithResend(settings, await getAdminEmail(), "📋 Yeni Rezervasyon Talebi!", await emailWrapper("Yeni Rezervasyon Talebi", content));
-    
-    // DB'ye kaydet
-    const dateStr = new Date(reservation.eventDate).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
-    await saveNotification(`📋 Yeni Rezervasyon: ${reservation.brideName}${reservation.groomName ? ` & ${reservation.groomName}` : ''} — ${dateStr} — ${reservation.totalAmount || 0}₺`, "RESERVATION");
   } catch (err) {
     console.error("Admin notification error (new reservation):", err);
   }
@@ -101,6 +102,11 @@ export async function notifyAdminNewReservation(reservation) {
  */
 export async function notifyAdminPaymentReceived({ brideName, bridePhone, amount, method, totalAmount, totalPaid, remaining }) {
   try {
+    // Her zaman DB'ye kaydet (e-posta ayarından bağımsız)
+    const methodLabels2 = { CASH: "Nakit", BANK_TRANSFER: "Havale", CREDIT_CARD: "Kart", ONLINE: "Online" };
+    await saveNotification(`💰 Ödeme: ${brideName} — +${amount.toLocaleString('tr-TR')}₺ (${methodLabels2[method] || method})${remaining <= 0 ? ' ✅ Tam ödendi!' : ` — Kalan: ${remaining.toLocaleString('tr-TR')}₺`}`, "PAYMENT");
+
+    // E-posta bildirimi (ayar açıksa)
     const settings = await getNotificationSettings();
     if (!settings.notifyPayment) return;
 
@@ -123,10 +129,6 @@ export async function notifyAdminPaymentReceived({ brideName, bridePhone, amount
 
     const emoji = remaining <= 0 ? "🎉" : "💵";
     await sendEmailWithResend(settings, await getAdminEmail(), `${emoji} Ödeme Alındı: ${brideName} (+${amount.toLocaleString('tr-TR')}₺)`, await emailWrapper("Ödeme Bilgisi", content));
-    
-    // DB'ye kaydet
-    const methodLabels2 = { CASH: "Nakit", BANK_TRANSFER: "Havale", CREDIT_CARD: "Kart", ONLINE: "Online" };
-    await saveNotification(`💰 Ödeme: ${brideName} — +${amount.toLocaleString('tr-TR')}₺ (${methodLabels2[method] || method})${remaining <= 0 ? ' ✅ Tam ödendi!' : ` — Kalan: ${remaining.toLocaleString('tr-TR')}₺`}`, "PAYMENT");
   } catch (err) {
     console.error("Admin notification error (payment):", err);
   }
@@ -137,6 +139,9 @@ export async function notifyAdminPaymentReceived({ brideName, bridePhone, amount
  */
 export async function notifyAdminContractApproved({ brideName, bridePhone, brideEmail, eventDate }) {
   try {
+    // Her zaman DB'ye kaydet
+    await saveNotification(`📝 Sözleşme Onayı: ${brideName} sözleşmeyi onayladı ✅`, "CONTRACT");
+
     const settings = await getNotificationSettings();
     const content = `
       <p style="color: #555; font-size: 14px; line-height: 1.6;">Müşteri hizmet sözleşmesini onayladı! ✅</p>
@@ -149,9 +154,6 @@ export async function notifyAdminContractApproved({ brideName, bridePhone, bride
       </table>
     `;
     await sendEmailWithResend(settings, await getAdminEmail(), `📝 Sözleşme Onaylandı: ${brideName}`, await emailWrapper("Sözleşme Onayı", content));
-    
-    // DB'ye kaydet
-    await saveNotification(`📝 Sözleşme Onayı: ${brideName} sözleşmeyi onayladı ✅`, "CONTRACT");
   } catch (err) {
     console.error("Admin notification error (contract):", err);
   }
@@ -162,6 +164,9 @@ export async function notifyAdminContractApproved({ brideName, bridePhone, bride
  */
 export async function notifyAdminPhotoSelectionSubmitted({ brideName, bridePhone, selectedCount, reservationId }) {
   try {
+    // Her zaman DB'ye kaydet
+    await saveNotification(`📷 Fotoğraf Seçimi: ${brideName} ${selectedCount} fotoğraf seçti`, "PHOTO_SELECTION");
+
     const settings = await getNotificationSettings();
     const content = `
       <p style="color: #555; font-size: 14px; line-height: 1.6;">Müşteri fotoğraf seçimini tamamladı!</p>
@@ -175,9 +180,6 @@ export async function notifyAdminPhotoSelectionSubmitted({ brideName, bridePhone
       </table>
     `;
     await sendEmailWithResend(settings, await getAdminEmail(), `📷 Fotoğraf Seçimi: ${brideName} (${selectedCount} fotoğraf)`, await emailWrapper("Fotoğraf Seçimi Tamamlandı", content));
-    
-    // DB'ye kaydet
-    await saveNotification(`📷 Fotoğraf Seçimi: ${brideName} ${selectedCount} fotoğraf seçti`, "PHOTO_SELECTION");
   } catch (err) {
     console.error("Admin notification error (photo selection):", err);
   }
@@ -188,6 +190,9 @@ export async function notifyAdminPhotoSelectionSubmitted({ brideName, bridePhone
  */
 export async function notifyAdminAlbumSelected({ brideName, bridePhone, modelName }) {
   try {
+    // Her zaman DB'ye kaydet
+    await saveNotification(`📒 Albüm Seçimi: ${brideName} → ${modelName}`, "ALBUM");
+
     const settings = await getNotificationSettings();
     const content = `
       <p style="color: #555; font-size: 14px; line-height: 1.6;">Müşteri albüm modelini seçti.</p>
@@ -198,9 +203,6 @@ export async function notifyAdminAlbumSelected({ brideName, bridePhone, modelNam
       </table>
     `;
     await sendEmailWithResend(settings, await getAdminEmail(), `📒 Albüm Seçimi: ${brideName} → ${modelName}`, await emailWrapper("Albüm Modeli Seçildi", content));
-    
-    // DB'ye kaydet
-    await saveNotification(`📒 Albüm Seçimi: ${brideName} → ${modelName}`, "ALBUM");
   } catch (err) {
     console.error("Admin notification error (album):", err);
   }
@@ -211,8 +213,12 @@ export async function notifyAdminAlbumSelected({ brideName, bridePhone, modelNam
  */
 export async function notifyAdminPaymentPreferenceChanged({ brideName, bridePhone, newPreference, totalAmount }) {
   try {
-    const settings = await getNotificationSettings();
     const isCard = newPreference === "CREDIT_CARD";
+    
+    // Her zaman DB'ye kaydet
+    await saveNotification(`💳 Ödeme Tercihi: ${brideName} ${isCard ? 'kredi kartına geçti' : 'nakite döndü'}`, "PAYMENT_PREF");
+
+    const settings = await getNotificationSettings();
     const content = `
       <p style="color: #555; font-size: 14px; line-height: 1.6;">Müşteri ödeme tercihini değiştirdi.</p>
       <div style="background: ${isCard ? '#fef3c7' : '#f0fdf4'}; border-left: 4px solid ${isCard ? '#f59e0b' : '#4ade80'}; padding: 16px 20px; border-radius: 6px; margin: 16px 0;">
@@ -228,9 +234,6 @@ export async function notifyAdminPaymentPreferenceChanged({ brideName, bridePhon
       ${!isCard ? '<p style="color:#666;font-size:13px;">Müşteriye IBAN bilgilerinizi iletmek için WhatsApp üzerinden iletişime geçebilirsiniz.</p>' : ''}
     `;
     await sendEmailWithResend(settings, await getAdminEmail(), `${isCard ? '💳' : '💵'} ${brideName}: ${isCard ? 'Karta Geçiş' : 'Nakite Dönüş'}`, await emailWrapper("Ödeme Tercihi Değişikliği", content));
-    
-    // DB'ye kaydet
-    await saveNotification(`💳 Ödeme Tercihi: ${brideName} ${isCard ? 'kredi kartına geçti' : 'nakite döndü'}`, "PAYMENT_PREF");
   } catch (err) {
     console.error("Admin notification error (preference change):", err);
   }
