@@ -1137,7 +1137,7 @@ export async function updateSiteConfig(data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const { heroTitle, heroTitleColor, heroTitleFont, heroSubtitle, address, phone, email, instagram, instagramReels, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions, showContactOnHome, showPhoneOnHome, showEmailOnHome, showAddressOnHome, businessName, logoUrl, faviconUrl, footerTagline, seoTitle, seoDescription, accentColor, fontFamily, siteTheme, siteTemplate, forceDarkMode, paymentMode, allowPaymentMethodChange, distanceSalesContractText, preliminaryInfoText, kvkkText, setupCompleted, sectionOrder, moduleReservations, moduleStore, moduleEvents } = data;
+    const { heroTitle, heroTitleColor, heroTitleFont, heroSubtitle, address, phone, email, instagram, instagramReels, whatsapp, cashPromoText, heroBgType, heroBgUrl, heroBgColor, contractText, emailEnabled, smsEnabled, resendApiKey, netgsmUsercode, netgsmPassword, netgsmMsgHeader, notifyReservation, notifyPayment, notifyReminder, notifyPhotosReady, googleMapsUrl, chatbotEnabled, chatbotInstructions, showContactOnHome, showPhoneOnHome, showEmailOnHome, showAddressOnHome, businessName, logoUrl, faviconUrl, footerTagline, seoTitle, seoDescription, accentColor, fontFamily, siteTheme, siteTemplate, forceDarkMode, paymentMode, allowPaymentMethodChange, distanceSalesContractText, preliminaryInfoText, kvkkText, setupCompleted, sectionOrder, moduleReservations, moduleStore, moduleEvents, bookingPaused, bookingPausedMessage } = data;
 
     // Tenant-aware: mevcut tenant'ın settings ID'sini bul
     let tenant = await getCurrentTenant();
@@ -1223,6 +1223,8 @@ export async function updateSiteConfig(data) {
         ...(moduleStore !== undefined ? { moduleStore } : {}),
         ...(moduleEvents !== undefined ? { moduleEvents } : {}),
         ...(instagramReels !== undefined ? { instagramReels: Array.isArray(instagramReels) ? instagramReels : [] } : {}),
+        ...(bookingPaused !== undefined ? { bookingPaused } : {}),
+        ...(bookingPausedMessage !== undefined ? { bookingPausedMessage } : {}),
       }
     });
     revalidatePath('/', 'layout');

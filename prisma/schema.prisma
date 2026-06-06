@@ -469,6 +469,10 @@ model GlobalSettings {
   moduleStore        Boolean @default(true)
   moduleEvents       Boolean @default(true)
 
+  // Rezervasyon/sipariş almayı durdurma
+  bookingPaused      Boolean @default(false)
+  bookingPausedMessage String @default("Şu anda rezervasyon/sipariş kabul etmiyoruz. Lütfen daha sonra tekrar deneyiniz.")
+
   // Kapalı günler (randevu alınamaz)
   blockedDays     Json     @default("[]")   // ["2026-04-15", "2026-04-20"]
 

@@ -29,6 +29,35 @@ export default async function BookingPage() {
 
 
 
+
+  // Booking paused kontrolü
+  if (siteConfig?.bookingPaused) {
+    const pauseMessage = siteConfig.bookingPausedMessage || "Şu anda rezervasyon/sipariş kabul etmiyoruz. Lütfen daha sonra tekrar deneyiniz.";
+    return (
+      <main style={{ minHeight: "100vh", background: "transparent", paddingTop: "160px", paddingBottom: "100px", paddingLeft: "24px", paddingRight: "24px" }}>
+        <div style={{ maxWidth: "520px", margin: "0 auto", textAlign: "center" }}>
+          <Link href="/" style={{ display: "inline-block", fontSize: "13px", color: "rgba(0,0,0,0.55)", textDecoration: "none", marginBottom: "40px", transition: "color 0.2s" }}>
+            ← Ana Sayfa
+          </Link>
+          <div style={{ padding: "48px 32px", background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+            <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(239,68,68,0.1)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 28 }}>
+              ⏸️
+            </div>
+            <h1 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.3, marginBottom: "16px", color: "#1a1a1a" }}>
+              {terms.appointment} Şu An Kapalı
+            </h1>
+            <p style={{ fontSize: 14, color: "rgba(0,0,0,0.6)", lineHeight: 1.7, marginBottom: "32px" }}>
+              {pauseMessage}
+            </p>
+            <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 28px", background: "#1a1a1a", color: "#ffffff", textDecoration: "none", fontWeight: 700, fontSize: 13, transition: "opacity 0.2s" }}>
+              Ana Sayfaya Dön
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main
       style={{
