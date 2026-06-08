@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { cookies, headers } from "next/headers";
 import bcrypt from "bcryptjs";
 import { checkRateLimit, resetRateLimit } from "@/lib/rate-limit";
+import { signToken, verifyAuth } from "@/lib/auth";
 
 const SUPER_ADMIN_SECRET = process.env.SUPER_ADMIN_SECRET;
 
@@ -37,8 +38,11 @@ export async function superAdminLogin(password) {
   // Başarılı — rate limit sıfırla
   await resetRateLimit(rateLimitKey);
 
+  // Generate signed JWT for super admin session
+  const token = await signToken({ role: "super_admin", iat: Date.now() });
+
   const cookieStore = await cookies();
-  cookieStore.set("super_admin", "true", {
+  cookieStore.set("super_admin", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -53,7 +57,14 @@ export async function superAdminLogin(password) {
  */
 export async function isSuperAdmin() {
   const cookieStore = await cookies();
-  return cookieStore.get("super_admin")?.value === "true";
+  const token = cookieStore.get("super_admin")?.value;
+  if (!token) return false;
+  try {
+    const decoded = await verifyAuth(token);
+    return decoded.role === "super_admin";
+  } catch {
+    return false;
+  }
 }
 
 /**

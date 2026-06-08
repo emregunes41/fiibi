@@ -6,10 +6,10 @@ import { createPaytrToken, generateMerchantOid } from "@/lib/paytr";
 export async function GET(req) {
   try {
     // Güvenlik Kontrolü (Cron'u sadece yetkili servis tetikleyebilir)
-    // const authHeader = req.headers.get('authorization');
-    // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    //   return new Response('Unauthorized', { status: 401 });
-    // }
+    const authHeader = req.headers.get('authorization');
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      return new Response('Unauthorized', { status: 401 });
+    }
 
     console.log("CRON: Abonelik tahsilat süreci başlatıldı.");
 

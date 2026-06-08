@@ -6,6 +6,30 @@ import { notFound } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
+/**
+ * Simple HTML sanitizer that strips dangerous elements and attributes.
+ * Removes: script, iframe, object, embed, form tags
+ * Removes: on* event handler attributes (onclick, onerror, etc.)
+ * Removes: javascript: URLs in href/src/action attributes
+ */
+function sanitizeHtml(html) {
+  if (!html) return "";
+  let sanitized = html;
+  // Remove script, iframe, object, embed, form tags and their contents
+  sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+  sanitized = sanitized.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "");
+  sanitized = sanitized.replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, "");
+  sanitized = sanitized.replace(/<embed\b[^>]*\/?>/gi, "");
+  sanitized = sanitized.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, "");
+  // Remove any remaining opening tags for dangerous elements (self-closing, unclosed)
+  sanitized = sanitized.replace(/<\/?(script|iframe|object|embed|form)\b[^>]*>/gi, "");
+  // Remove on* event handler attributes (onclick, onerror, onload, etc.)
+  sanitized = sanitized.replace(/\s+on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "");
+  // Remove javascript: URLs in href, src, action attributes
+  sanitized = sanitized.replace(/(href|src|action)\s*=\s*(?:"javascript:[^"]*"|'javascript:[^']*')/gi, '$1=""');
+  return sanitized;
+}
+
 export async function generateMetadata({ params }) {
   const tenant = await getCurrentTenant();
   if (!tenant) return {};
@@ -68,7 +92,7 @@ export default async function SinglePostPage({ params }) {
         <div 
           style={{ fontSize: "1.1rem", lineHeight: 1.8, color: "rgba(0,0,0,0.8)" }}
           className="blog-content"
-          dangerouslySetInnerHTML={{ __html: post.content }} 
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} 
         />
       </article>
 

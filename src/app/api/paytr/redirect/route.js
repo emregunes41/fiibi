@@ -1,6 +1,24 @@
 import { NextResponse } from "next/server";
 
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function sanitizeReturnTo(returnTo) {
+  // Only allow relative paths starting with /
+  if (!returnTo || typeof returnTo !== "string" || !returnTo.startsWith("/") || returnTo.startsWith("//")) {
+    return "/profile";
+  }
+  return returnTo;
+}
+
 function generateRedirectHtml(returnTo) {
+  const safeReturnTo = escapeHtml(sanitizeReturnTo(returnTo));
   return `
     <!DOCTYPE html>
     <html lang="tr">
@@ -31,9 +49,9 @@ function generateRedirectHtml(returnTo) {
         <script>
           // Eğer iframe içindeyse (PayTR iframe'i gibi), ana pencereyi (top) yönlendirir.
           try {
-            window.top.location.href = "${returnTo}";
+            window.top.location.href = "${safeReturnTo}";
           } catch (e) {
-            window.location.href = "${returnTo}";
+            window.location.href = "${safeReturnTo}";
           }
         </script>
       </body>

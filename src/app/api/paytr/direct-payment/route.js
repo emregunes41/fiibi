@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { createPaytrToken, generateMerchantOid } from "@/lib/paytr";
+import { verifyAuth } from "@/lib/auth";
+import { cookies } from "next/headers";
 
 /**
  * PayTR Direkt API — 1. Adım
@@ -9,11 +11,32 @@ import { createPaytrToken, generateMerchantOid } from "@/lib/paytr";
  */
 export async function POST(request) {
   try {
+    // Admin authentication
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get("admin_token")?.value;
+    if (!adminToken) {
+      return NextResponse.json({ error: "Yetkisiz erişim" }, { status: 401 });
+    }
+    let session;
+    try {
+      session = await verifyAuth(adminToken);
+    } catch {
+      return NextResponse.json({ error: "Geçersiz oturum" }, { status: 401 });
+    }
+    if (!session?.adminId) {
+      return NextResponse.json({ error: "Yetkisiz erişim" }, { status: 401 });
+    }
+
     const body = await request.json();
     const { tenantId } = body;
 
     if (!tenantId) {
       return NextResponse.json({ error: "tenantId gerekli" }, { status: 400 });
+    }
+
+    // Verify admin belongs to this tenant
+    if (session.tenantId !== tenantId) {
+      return NextResponse.json({ error: "Bu tenant için yetkiniz yok" }, { status: 403 });
     }
 
     const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });

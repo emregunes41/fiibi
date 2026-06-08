@@ -54,8 +54,15 @@ export async function proxy(req) {
   
   // ─── SUPER ADMIN AUTH ──────────────────────────────────────
   if (pathname.startsWith("/super-admin") && !pathname.startsWith("/super-admin/login")) {
-    const superAdmin = req.cookies.get("super_admin")?.value;
-    if (superAdmin !== "true") {
+    const superAdminToken = req.cookies.get("super_admin")?.value;
+    let isSuperAdmin = false;
+    if (superAdminToken) {
+      try {
+        const decoded = await verifyAuth(superAdminToken);
+        isSuperAdmin = decoded.role === "super_admin";
+      } catch {}
+    }
+    if (!isSuperAdmin) {
       return NextResponse.redirect(new URL("/super-admin/login", req.url));
     }
     return response;

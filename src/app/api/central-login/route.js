@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { signAutoLoginToken } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+import { checkRateLimit, resetRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req) {
   try {
@@ -11,6 +12,24 @@ export async function POST(req) {
 
     if (!identifier || !password) {
       return NextResponse.json({ error: "Lütfen bilgilerinizi girin." }, { status: 400 });
+    }
+
+    // Rate limiting — IP + identifier bazlı
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rateLimitKey = `central_login:${ip}:${identifier}`;
+    
+    const rateCheck = await checkRateLimit(rateLimitKey, {
+      maxAttempts: 5,
+      windowMs: 15 * 60 * 1000,       // 15 dakika
+      blockDurationMs: 15 * 60 * 1000, // 15 dakika engelleme
+    });
+
+    if (!rateCheck.allowed) {
+      const minutes = Math.ceil(rateCheck.retryAfterSec / 60);
+      return NextResponse.json(
+        { error: `Çok fazla başarısız deneme. ${minutes} dakika sonra tekrar deneyin.` },
+        { status: 429 }
+      );
     }
 
     // 1. Tenant'ı bul — e-posta, telefon veya username ile
@@ -73,6 +92,9 @@ export async function POST(req) {
     if (!isValid) {
       return NextResponse.json({ error: "Bilgiler hatalı." }, { status: 401 });
     }
+
+    // Başarılı giriş — rate limit sıfırla
+    await resetRateLimit(rateLimitKey);
 
     // Auto-login token oluştur (60 saniye geçerli — URL'de taşınacağı için kısa ömürlü)
     const token = await signAutoLoginToken({

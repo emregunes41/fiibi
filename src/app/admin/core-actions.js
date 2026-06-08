@@ -51,6 +51,8 @@ export async function checkUploadQuota() {
  * Başarılı upload sonrası depolama kullanımını güncelle (MB)
  */
 export async function trackUploadSize(fileSizeBytes) {
+  const auth = await requireAdmin();
+  if (auth?.error) return;
   const tenant = await getCurrentTenant();
   if (!tenant) return;
   const fileSizeMB = (fileSizeBytes || 0) / (1024 * 1024);
@@ -209,6 +211,11 @@ export async function deleteUser(userId) {
   if (auth?.error) return auth;
   
   try {
+    // Verify user belongs to current tenant
+    const tenantId = await getTenantId();
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user || user.tenantId !== tenantId) return { error: "Kullanıcı bulunamadı." };
+
     // SİSTEM GÜVENLİĞİ: Muhasebe ve sipariş geçmişinin bozulmaması için
     // silinen kullanıcının mevcut rezervasyonlarının user bağlantısını koparıyoruz.
     // Bu sayede rezervasyonlar sistemde 'anonim' olarak kalmaya devam eder, faturalar silinmez.
@@ -252,6 +259,8 @@ export async function deleteAlbumModel(id) {
 }
 
 export async function unlockReservationSelection(reservationId) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const tenantId = await getTenantId();
     const reservation = await prisma.reservation.findFirst({ where: { id: reservationId, tenantId } });
@@ -286,6 +295,8 @@ export async function unlockReservationSelection(reservationId) {
 }
 
 export async function selectAlbumModel(reservationId, albumModelId) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
     const tenantId = await getTenantId();
     const reservation = await prisma.reservation.findFirst({ where: { id: reservationId, tenantId } });
@@ -572,18 +583,6 @@ export async function savePendingReservation(data) {
     const paymentMode = siteConfig?.paymentMode || "cash";
     const paymentPref = data.paymentPreference || (paymentMode === "cash" ? "CASH" : paymentMode === "card" ? "CREDIT_CARD" : "CASH");
 
-    // ── SUNUCU TARAFI MÜSAİTLİK KONTROLÜ ──
-    // Çift rezervasyonu önlemek için kayıt öncesi kontrol
-    for (const pkg of packagesData) {
-      const avail = await checkAvailability(data.date, pkg.id, data.time || null);
-      if (avail?.error) {
-        return { error: avail.error };
-      }
-      if (avail && avail.available === false) {
-        return { error: `Seçilen tarih/saat dolu. Lütfen başka bir zaman dilimi seçin. (${pkg.name})` };
-      }
-    }
-
     const maxDays = packagesData.reduce((max, pkg) => Math.max(max, pkg.deliveryTimeDays || 14), 0);
     const eventDateObj = new Date(data.date);
     const deliveryDateObj = new Date(eventDateObj);
@@ -614,37 +613,52 @@ export async function savePendingReservation(data) {
       }
     }
 
-    const reservation = await prisma.reservation.create({
-      data: {
-        ...(userId ? { user: { connect: { id: userId } } } : {}),
-        brideName: data.brideName,
-        bridePhone: data.bridePhone,
-        brideEmail: data.brideEmail,
-        groomName: data.groomName,
-        groomPhone: data.groomPhone,
-        groomEmail: data.groomEmail,
-        eventDate: eventDateObj,
-        eventTime: data.time,
-        ...(data.packageIds?.length > 0 ? {
-          packages: {
-            connect: data.packageIds.map(id => ({ id }))
-          }
-        } : {}),
-        orderType: data.orderType || "SERVICE",
-        shippingAddress: data.shippingAddress || null,
-        purchasedProducts: data.purchasedProducts || [],
-        notes: data.notes,
-        totalAmount: data.totalAmount,
-        paidAmount: data.paidAmount,
-        selectedAddons: data.selectedAddons || [],
-        customFieldAnswers: data.customFieldAnswers || [],
-        status: (paymentPref === "CREDIT_CARD" || paymentPref === "CARD" || paymentPref === "ONLINE") ? "DRAFT" : "PENDING",
-        paymentStatus: "UNPAID",
-        paymentPreference: paymentPref,
-        workflowStatus: "PENDING",
-        deliveryDate: deliveryDateObj,
-        tenant: { connect: { id: tenantId } },
+    // ── SUNUCU TARAFI MÜSAİTLİK KONTROLÜ + RESERVATION OLUŞTURMA ──
+    // Race condition'ı önlemek için availability check ve create'i transaction içinde yap
+    const reservation = await prisma.$transaction(async (tx) => {
+      // Çift rezervasyonu önlemek için kayıt öncesi kontrol (transaction içinde)
+      for (const pkg of packagesData) {
+        const avail = await checkAvailability(data.date, pkg.id, data.time || null);
+        if (avail?.error) {
+          throw new Error(avail.error);
+        }
+        if (avail && avail.available === false) {
+          throw new Error(`Seçilen tarih/saat dolu. Lütfen başka bir zaman dilimi seçin. (${pkg.name})`);
+        }
       }
+
+      return await tx.reservation.create({
+        data: {
+          ...(userId ? { user: { connect: { id: userId } } } : {}),
+          brideName: data.brideName,
+          bridePhone: data.bridePhone,
+          brideEmail: data.brideEmail,
+          groomName: data.groomName,
+          groomPhone: data.groomPhone,
+          groomEmail: data.groomEmail,
+          eventDate: eventDateObj,
+          eventTime: data.time,
+          ...(data.packageIds?.length > 0 ? {
+            packages: {
+              connect: data.packageIds.map(id => ({ id }))
+            }
+          } : {}),
+          orderType: data.orderType || "SERVICE",
+          shippingAddress: data.shippingAddress || null,
+          purchasedProducts: data.purchasedProducts || [],
+          notes: data.notes,
+          totalAmount: data.totalAmount,
+          paidAmount: data.paidAmount,
+          selectedAddons: data.selectedAddons || [],
+          customFieldAnswers: data.customFieldAnswers || [],
+          status: (paymentPref === "CREDIT_CARD" || paymentPref === "CARD" || paymentPref === "ONLINE") ? "DRAFT" : "PENDING",
+          paymentStatus: "UNPAID",
+          paymentPreference: paymentPref,
+          workflowStatus: "PENDING",
+          deliveryDate: deliveryDateObj,
+          tenant: { connect: { id: tenantId } },
+        }
+      });
     });
 
     if (reservation.status !== "DRAFT") {
@@ -867,6 +881,9 @@ export async function updateReservationStatus(id, status) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
+    const tenantId = await getTenantId();
+    const existing = await prisma.reservation.findFirst({ where: { id, tenantId } });
+    if (!existing) return { error: "Rezervasyon bulunamadı." };
     await prisma.reservation.update({
       where: { id },
       data: { status }
@@ -884,6 +901,9 @@ export async function updateOrderShipping(id, status, trackingUrl) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
+    const tenantId = await getTenantId();
+    const existing = await prisma.reservation.findFirst({ where: { id, tenantId } });
+    if (!existing) return { error: "Sipariş bulunamadı." };
     const data = { status };
     if (trackingUrl !== undefined) {
       data.deliveryLink = trackingUrl;
@@ -904,6 +924,9 @@ export async function updateReservationWorkflow(id, data) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
+    const tenantId = await getTenantId();
+    const existing = await prisma.reservation.findFirst({ where: { id, tenantId } });
+    if (!existing) return { error: "Rezervasyon bulunamadı." };
     const { workflowStatus, deliveryLink } = data;
     const reservation = await prisma.reservation.update({
       where: { id },
@@ -927,7 +950,12 @@ export async function updateReservationWorkflow(id, data) {
 }
 
 export async function lockSelection(reservationId) {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
   try {
+    const tenantId = await getTenantId();
+    const existing = await prisma.reservation.findFirst({ where: { id: reservationId, tenantId } });
+    if (!existing) return { error: "Rezervasyon bulunamadı." };
     await prisma.reservation.update({
       where: { id: reservationId },
       data: { 
@@ -1324,6 +1352,11 @@ export async function resetUserPassword(userId, newPassword) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
+    // Verify user belongs to current tenant
+    const tenantId = await getTenantId();
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user || user.tenantId !== tenantId) return { error: "Kullanıcı bulunamadı." };
+
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await prisma.user.update({
       where: { id: userId },
@@ -1442,13 +1475,17 @@ export async function deletePayment(paymentId) {
     const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
     if (!payment) return { error: "Ödeme bulunamadı." };
 
+    // Verify the reservation (and thus the payment) belongs to current tenant
+    const tenantId = await getTenantId();
+    const reservation = await prisma.reservation.findFirst({ where: { id: payment.reservationId, tenantId } });
+    if (!reservation) return { error: "Rezervasyon bulunamadı." };
+
     await prisma.payment.delete({ where: { id: paymentId } });
 
     // Recalculate
     const payments = await prisma.payment.findMany({ where: { reservationId: payment.reservationId } });
     const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
 
-    const reservation = await prisma.reservation.findUnique({ where: { id: payment.reservationId } });
     const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
 
     let paymentStatus = "UNPAID";
@@ -1482,7 +1519,8 @@ export async function convertToCreditCardPermanent(reservationId, newTotalStr) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const r = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    const tenantId = await getTenantId();
+    const r = await prisma.reservation.findFirst({ where: { id: reservationId, tenantId } });
     if (!r) throw new Error("Reservation not found");
     
     const numericNewTotal = parseFloat(newTotalStr.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
@@ -1510,7 +1548,8 @@ export async function addReservationExtraFee(reservationId, amount, note) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const r = await prisma.reservation.findUnique({ where: { id: reservationId } });
+    const tenantId = await getTenantId();
+    const r = await prisma.reservation.findFirst({ where: { id: reservationId, tenantId } });
     if (!r) throw new Error("Reservation not found");
 
     const currentTotal = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
@@ -1562,8 +1601,9 @@ export async function revertToCashPayment(reservationId) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const r = await prisma.reservation.findUnique({ 
-        where: { id: reservationId },
+    const tenantId = await getTenantId();
+    const r = await prisma.reservation.findFirst({ 
+        where: { id: reservationId, tenantId },
         include: { payments: true }
     });
     if (!r) throw new Error("Reservation not found");
@@ -1669,6 +1709,9 @@ export async function deleteDiscountCode(id) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
+    const tenantId = await getTenantId();
+    const existing = await prisma.discountCode.findFirst({ where: { id, tenantId } });
+    if (!existing) return { error: "İndirim kodu bulunamadı." };
     await prisma.discountCode.delete({ where: { id } });
     revalidatePath('/admin/settings');
     return { success: true };
@@ -1682,7 +1725,8 @@ export async function toggleDiscountCode(id) {
   const auth = await requireAdmin();
   if (auth?.error) return auth;
   try {
-    const dc = await prisma.discountCode.findUnique({ where: { id } });
+    const tenantId = await getTenantId();
+    const dc = await prisma.discountCode.findFirst({ where: { id, tenantId } });
     if (!dc) return { error: "Bulunamadı." };
     await prisma.discountCode.update({ where: { id }, data: { isActive: !dc.isActive } });
     revalidatePath('/admin/settings');
@@ -1706,6 +1750,11 @@ export async function validateDiscountCode(code) {
 
 export async function incrementDiscountCodeUsage(code) {
   try {
+    // Verify the discount code belongs to the current tenant
+    const tenantId = await getTenantId();
+    const dc = await prisma.discountCode.findUnique({ where: { code: code.toUpperCase() } });
+    if (!dc || dc.tenantId !== tenantId) return { error: "Geçersiz indirim kodu." };
+
     await prisma.discountCode.update({
       where: { code: code.toUpperCase() },
       data: { usedCount: { increment: 1 } },

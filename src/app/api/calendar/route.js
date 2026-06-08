@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { verifyAuth } from "@/lib/auth";
+import { cookies } from "next/headers";
 
 // iCal format helper function
 function generateICS(reservations, businessName) {
@@ -89,7 +91,7 @@ function generateICS(reservations, businessName) {
 
     if (res.notes) {
       descLines.push(`-- NOTLAR --`);
-      // Gerçek satır sonlarını ve \n stringlerini iCal satır sonuna çevir, boşlukları temizle
+      // Gerçek satır sonlarını ve \\n stringlerini iCal satır sonuna çevir, boşlukları temizle
       const safeNotes = res.notes.replace(/(?:\\\\n)+/g, '\\n').replace(/(?:\r\n|\n|\r)+/gm, '\\n').trim();
       descLines.push(safeNotes);
     }
@@ -119,6 +121,25 @@ export async function GET(req) {
 
     if (!tenantId) {
       return new NextResponse("Missing tenant ID", { status: 400 });
+    }
+
+    // Authentication: require admin JWT token
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get("admin_token")?.value;
+    if (!adminToken) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    let payload;
+    try {
+      payload = await verifyAuth(adminToken);
+    } catch {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    // Verify the admin belongs to the requested tenant
+    if (payload.tenantId !== tenantId) {
+      return new NextResponse("Forbidden", { status: 403 });
     }
 
     const tenant = await prisma.tenant.findUnique({
