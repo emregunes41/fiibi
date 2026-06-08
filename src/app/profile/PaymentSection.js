@@ -21,6 +21,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
   const [iframeToken, setIframeToken] = useState(null);
   const [loading, setLoading] = useState(false);
   const [paymentPaused, setPaymentPaused] = useState(false);
+  const [error, setError] = useState(null);
 
   const originalTotalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
   const payments = reservation.payments || [];
@@ -54,6 +55,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
     const finalAmount = paymentMode === "full" ? currentRemaining : parseFloat(payAmount);
     if (isNaN(finalAmount) || finalAmount <= 0) return;
     if (loading) return;
+    setError(null);
     setLoading(true);
     try {
       const oid = `${reservation.id}X${Date.now()}`;
@@ -79,10 +81,10 @@ export default function PaymentSection({ reservation, compactMode = false, allow
       } else if (data.token) {
         setIframeToken(`https://fiibi.co/api/paytr/iframe/${data.token}`);
       } else {
-        alert("Ödeme başlatılamadı: " + (data.error || "Bilinmeyen hata"));
+        setError("Ödeme başlatılamadı: " + (data.error || "Bilinmeyen hata"));
       }
     } catch (err) {
-      alert("Bir hata oluştu: " + err.message);
+      setError("Bir hata oluştu: " + err.message);
     }
     setLoading(false);
   };
@@ -163,6 +165,13 @@ export default function PaymentSection({ reservation, compactMode = false, allow
                 </div>
               )}
             </div>
+
+            {error && (
+              <div style={{ padding: "12px 16px", marginBottom: 16, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 0, display: "flex", alignItems: "center", gap: 10 }}>
+                <AlertTriangle size={16} style={{ color: "#ef4444", flexShrink: 0 }} />
+                <span style={{ fontSize: 13, color: "#ef4444", lineHeight: 1.4 }}>{error}</span>
+              </div>
+            )}
 
             <button
               onClick={startPayment}

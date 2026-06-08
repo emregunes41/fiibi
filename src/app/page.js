@@ -192,7 +192,7 @@ export default async function HomePage() {
                   {isVideo ? (
                     <video src={reel.coverUrl} autoPlay muted loop playsInline style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                   ) : (
-                    <img src={reel.coverUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <Image src={reel.coverUrl} alt="" fill style={{ objectFit: "cover", display: "block" }} loading="lazy" />
                   )}
                   {/* Subtle dark gradient at bottom */}
                   <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "40%", background: "linear-gradient(to top, rgba(0,0,0,0.5), transparent)", zIndex: 1 }} />
@@ -283,7 +283,7 @@ export default async function HomePage() {
               <Link key={post.id} href={`/blog/${post.slug}`} style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", overflow: "hidden", textDecoration: "none", color: "var(--text)", display: "flex", flexDirection: "column", transition: "transform 0.3s, border-color 0.3s", width: "100%", maxWidth: "350px", flex: "1 1 300px" }} className="hover:border-white/20 hover:-translate-y-1">
                 {post.imageUrl ? (
                   <div style={{ width: "100%", height: 200, overflow: "hidden" }}>
-                    <img src={post.imageUrl} alt={post.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <Image src={post.imageUrl} alt={post.title} width={350} height={200} style={{ width: "100%", height: "100%", objectFit: "cover" }} loading="lazy" />
                   </div>
                 ) : (
                   <div style={{ width: "100%", height: 200, background: "rgba(0,0,0,0.02)", display: "flex", alignItems: "center", justifyContent: "center" }}>

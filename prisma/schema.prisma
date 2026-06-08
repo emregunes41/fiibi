@@ -182,6 +182,9 @@ model Reservation {
   payments       Payment[]
 
   @@index([tenantId])
+  @@index([userId])
+  @@index([tenantId, status, eventDate])
+  @@index([tenantId, eventDate])
 }
 
 // ─── ETKİNLİK (Grup Dersi / Seminer) ────────────────────────────────
@@ -236,6 +239,8 @@ model Payment {
   note          String?
   createdAt     DateTime    @default(now())
   reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@index([reservationId])
 }
 
 // ─── KULLANICI (Müşteri) ──────────────────────────────────────────
@@ -262,6 +267,7 @@ model User {
   sessions      Session[]
 
   @@index([tenantId])
+  @@index([email, tenantId])
 }
 
 // ─── SATIN ALMA ───────────────────────────────────────────────────

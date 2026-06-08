@@ -1,5 +1,7 @@
 "use server";
 
+import { cache } from 'react';
+
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
@@ -1076,7 +1078,7 @@ export async function getSlotAvailability(date, categoryValue) {
 
 // --- SITE CONFIG ACTIONS ---
 
-export async function getSiteConfig() {
+async function _getSiteConfig() {
   try {
     // Tenant-aware: önce mevcut tenant'ın ayarlarını bul
     let tenant = await getCurrentTenant();
@@ -1159,6 +1161,8 @@ export async function getSiteConfig() {
     };
   }
 }
+
+export const getSiteConfig = cache(_getSiteConfig);
 
 export async function updateSiteConfig(data) {
   

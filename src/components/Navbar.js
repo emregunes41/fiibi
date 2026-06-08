@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { User, UserCircle, Menu, X as CloseIcon, ShoppingBag } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -107,7 +108,7 @@ export default function Navbar({ businessName = "Studio", logoUrl = null }) {
                 className="group-hover:scale-105"
               >
                 {logoUrl ? (
-                  <img src={logoUrl} alt={businessName} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%", display: "block" }} />
+                  <Image src={logoUrl} alt={businessName} width={64} height={64} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%", display: "block" }} priority />
                 ) : (
                   businessName?.charAt(0)?.toUpperCase() || "S"
                 )}

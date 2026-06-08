@@ -3,6 +3,7 @@ import OpenAI from "openai";
 import { getCurrentTenant, getTenantSiteConfig } from "@/lib/tenant";
 import { prisma } from "@/lib/prisma";
 import { hasFeature } from "@/lib/plan-limits";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 let openai;
 function getOpenAI() {
@@ -59,6 +60,22 @@ ${customInstructions}
 
 export async function POST(request) {
   try {
+    // Rate limiting — IP-based
+    const forwarded = request.headers.get("x-forwarded-for");
+    const realIp = request.headers.get("x-real-ip");
+    const ip = forwarded?.split(",")[0]?.trim() || realIp || "unknown";
+    const rateLimitResult = await checkRateLimit(`chat:${ip}`, {
+      maxAttempts: 10,
+      windowMs: 60000,
+      blockDurationMs: 60000,
+    });
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: "Çok fazla istek gönderdiniz. Lütfen biraz bekleyin.", retryAfterSec: rateLimitResult.retryAfterSec },
+        { status: 429 }
+      );
+    }
+
     const { messages } = await request.json();
     
     if (!messages || !Array.isArray(messages)) {
