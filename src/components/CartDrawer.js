@@ -63,6 +63,8 @@ export default function CartDrawer() {
   const [contractAccepted, setContractAccepted] = useState(false);
   const [showUpsell, setShowUpsell] = useState(false);
   const [allPackages, setAllPackages] = useState([]);
+  const [paymentPaused, setPaymentPaused] = useState(false);
+  const [paymentPausedMessage, setPaymentPausedMessage] = useState("");
 
 
   // Discount code state
@@ -75,6 +77,10 @@ export default function CartDrawer() {
   useEffect(() => {
     getSiteConfig().then(cfg => {
       if (cfg?.contractText) setContractText(cfg.contractText);
+      if (cfg?.bookingPaused) {
+        setPaymentPaused(true);
+        setPaymentPausedMessage(cfg.bookingPausedMessage || "Şu anda online ödeme kabul edemiyoruz. Kaydınız alınmıştır, en kısa sürede sizinle iletişime geçeceğiz.");
+      }
     });
     getPackages().then(pkgs => setAllPackages(pkgs || []));
 
@@ -235,6 +241,23 @@ export default function CartDrawer() {
       selectedAddons: allAddons,
       customFieldAnswers: allCustomFieldAnswers,
     };
+  };
+
+  // Ödeme kapalıyken kayıt oluştur (ödeme almadan)
+  const handleNoPayCheckout = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    const data = buildReservationData(effectiveTotal);
+    data.paymentPreference = "CASH";
+    data.notes = (data.notes ? data.notes + "\n" : "") + "[BİLGİ] Online ödeme kapalıyken oluşturuldu — ödeme alınmadı.";
+    const result = await savePendingReservation(data);
+    setIsSubmitting(false);
+    if (result.success) {
+      setSubmitResult({ success: true, type: "no_payment", message: paymentPausedMessage });
+      clearCart();
+    } else {
+      setSubmitResult({ success: false, message: "Bir hata oluştu: " + (result.error || "Bilinmeyen hata") });
+    }
   };
 
   const handleCashCheckout = async () => {
@@ -890,6 +913,94 @@ export default function CartDrawer() {
                 {/* ── CHECKOUT STEP 2: PAYMENT METHOD ── */}
                 {checkoutMode && !submitResult && checkoutStep === "payment_method" && (
                   <motion.div key="checkout-payment" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
+
+                    {/* ── ÖDEME KAPALI MODU ── */}
+                    {paymentPaused ? (
+                      <div>
+                        <div style={{
+                          padding: "32px 24px", textAlign: "center", marginBottom: 20,
+                          background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.2)",
+                        }}>
+                          <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(251,191,36,0.12)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontSize: 26 }}>
+                            ⏸️
+                          </div>
+                          <div style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", marginBottom: 8 }}>
+                            Online Ödeme Şu An Kapalı
+                          </div>
+                          <p style={{ fontSize: 13, color: "rgba(0,0,0,0.6)", lineHeight: 1.7, margin: 0 }}>
+                            {paymentPausedMessage}
+                          </p>
+                        </div>
+
+                        <div style={{
+                          padding: "16px", marginBottom: 16,
+                          background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)",
+                        }}>
+                          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(0,0,0,0.5)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>Sipariş Özeti</div>
+                          {items.map((item) => {
+                            const rawPrice = item.price ?? item.pkg?.price;
+                            let p = 0;
+                            if (typeof rawPrice === 'number') p = rawPrice;
+                            else if (typeof rawPrice === 'string') p = parseInt(rawPrice.replace(/\D/g, "")) || 0;
+                            const ad = (item.addons || []).reduce((s, a) => s + (parseInt(a.price) || 0), 0);
+                            return (
+                              <div key={item.pkg.id} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 6 }}>
+                                <span style={{ color: "rgba(0,0,0,0.6)" }}>{item.pkg.name}</span>
+                                <span style={{ color: "#000", fontWeight: 600 }}>{fmt(p + ad)}₺</span>
+                              </div>
+                            );
+                          })}
+                          <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)", marginTop: 10, paddingTop: 10, display: "flex", justifyContent: "space-between" }}>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(0,0,0,0.5)", textTransform: "uppercase" }}>Toplam</span>
+                            <span style={{ fontSize: 18, fontWeight: 700, color: "#000" }}>{fmt(effectiveTotal)}₺</span>
+                          </div>
+                        </div>
+
+                        {/* Sözleşme onayı */}
+                        <div style={{ marginBottom: 16 }}>
+                          <div
+                            onClick={() => setContractAccepted(!contractAccepted)}
+                            style={{
+                              display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer",
+                              padding: "14px", background: contractAccepted ? "rgba(0,0,0,0.04)" : "rgba(0,0,0,0.02)",
+                              border: `1px solid ${contractAccepted ? "rgba(0,0,0,0.12)" : "rgba(0,0,0,0.08)"}`,
+                              transition: "all 0.2s",
+                            }}
+                          >
+                            <div style={{
+                              width: 20, height: 20, flexShrink: 0, marginTop: 1,
+                              border: `2px solid ${contractAccepted ? "#000" : "rgba(0,0,0,0.25)"}`,
+                              background: contractAccepted ? "#1a1a1a" : "transparent",
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                              transition: "all 0.2s",
+                            }}>
+                              {contractAccepted && <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                            </div>
+                            <span style={{ fontSize: 12, color: contractAccepted ? "#000" : "rgba(0,0,0,0.5)", lineHeight: 1.5 }}>
+                              <a href="/sozlesme?tab=hizmet" target="_blank" style={{ color: "rgba(0,0,0,0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>Hizmet Sözleşmesi</a>'ni ve <a href="/sozlesme?tab=kvkk" target="_blank" style={{ color: "rgba(0,0,0,0.8)", textDecoration: "underline" }} onClick={(e) => e.stopPropagation()}>KVKK Aydınlatma Metni</a>'ni okudum ve kabul ediyorum. *
+                            </span>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={handleNoPayCheckout}
+                          disabled={isSubmitting || !contractAccepted}
+                          style={{
+                            width: "100%", padding: "16px", border: "none",
+                            background: contractAccepted ? "#1a1a1a" : "rgba(0,0,0,0.04)",
+                            color: contractAccepted ? "#fff" : "rgba(0,0,0,0.15)",
+                            fontSize: 14, fontWeight: 700,
+                            cursor: contractAccepted ? "pointer" : "not-allowed",
+                            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                            transition: "all 0.2s",
+                          }}
+                        >
+                          {isSubmitting ? "Kaydediliyor..." : "Kaydımı Oluştur"}
+                        </button>
+                      </div>
+                    ) : (
+                      /* ── NORMAL ÖDEME MODU ── */
+                      <div>
                     <div style={{ marginBottom: 24 }}>
                       <p style={{ fontSize: 13, color: "rgba(0, 0, 0, 0.5)", lineHeight: 1.6, margin: 0 }}>
                         Siparişinizi tamamlamak için güvenli online ödeme adımına geçebilirsiniz.
@@ -955,6 +1066,8 @@ export default function CartDrawer() {
                     {isSubmitting && (
                       <div style={{ textAlign: "center", marginTop: 20, color: "rgba(0, 0, 0, 0.5)", fontSize: 13, fontWeight: 600 }}>
                         İşleniyor...
+                      </div>
+                    )}
                       </div>
                     )}
                   </motion.div>
@@ -1139,7 +1252,7 @@ export default function CartDrawer() {
                       transition: "all 0.2s",
                     }}
                   >
-                    <ArrowRight size={14} /> Devam Et — Ödeme Yöntemi
+                    <ArrowRight size={14} /> {paymentPaused ? "Devam Et" : "Devam Et — Ödeme Yöntemi"}
                   </button>
                 ) : null}
               </div>

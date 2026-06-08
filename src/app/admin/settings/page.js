@@ -362,17 +362,17 @@ export default function SettingsPage() {
             </label>
           </div>
 
-          {/* Booking Pause Control */}
+          {/* Payment Pause Control */}
           <div style={{ marginTop: 24, padding: "20px", background: config.bookingPaused ? "rgba(239,68,68,0.06)" : "rgba(0,0,0,0.02)", border: `1px solid ${config.bookingPaused ? "rgba(239,68,68,0.2)" : "rgba(0,0,0,0.06)"}`, transition: "all 0.3s" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: config.bookingPaused ? 16 : 0 }}>
               <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: config.bookingPaused ? "#ef4444" : "#1a1a1a", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-                  <Power size={16} /> Rezervasyonları / Siparişleri Durdur
+                  <Power size={16} /> Online Ödemeyi Kapat
                 </div>
                 <div style={{ fontSize: 12, color: "rgba(0,0,0,0.65)" }}>
                   {config.bookingPaused 
-                    ? "⚠️ Websiteniz şu anda yeni rezervasyon/sipariş KABUL ETMİYOR. Müşteriler rezervasyon sayfasında uyarı mesajı görecek."
-                    : "Açtığınızda websiteniz yeni rezervasyon/sipariş almayı durdurur."
+                    ? "⚠️ Online ödeme KAPALI. Müşteriler rezervasyon/sipariş oluşturabilir ama ödeme adımında bilgilendirme mesajı görecek. Kayıtlar yine alınır ve size bildirim gelir."
+                    : "Açtığınızda müşteriler ödeme yapamaz ama rezervasyon/sipariş kaydı oluşturulur. Size bildirim gelir, ödemeyi siz yönetirsiniz."
                   }
                 </div>
               </div>
@@ -400,7 +400,7 @@ export default function SettingsPage() {
                   value={config.bookingPausedMessage || ""}
                   onChange={(e) => setConfig({ ...config, bookingPausedMessage: e.target.value })}
                   style={{ ...inp, minHeight: 80, resize: "vertical", lineHeight: 1.5 }}
-                  placeholder="Şu anda rezervasyon/sipariş kabul etmiyoruz. Lütfen daha sonra tekrar deneyiniz."
+                  placeholder="Şu anda online ödeme kabul edemiyoruz. Kaydınız alınmıştır, en kısa sürede sizinle iletişime geçeceğiz."
                 />
               </div>
             )}
