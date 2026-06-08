@@ -27,7 +27,7 @@ const inputStyle = {
   border: "1px solid rgba(0, 0, 0, 0.15)",
   borderRadius: 0,
   padding: "14px 16px",
-  fontSize: "13px",
+  fontSize: "16px",
   color: "#000000",
   outline: "none",
   boxSizing: "border-box",
@@ -94,6 +94,26 @@ export default function CartDrawer() {
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
   }, []);
+
+  // Body scroll lock — drawer açıkken arka plan kaymasını engelle
+  useEffect(() => {
+    if (isOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [isOpen]);
 
   const passwordsMatch = contactForm.password && contactForm.password.length >= 6 && contactForm.password === contactForm.passwordConfirm;
 
@@ -435,7 +455,7 @@ export default function CartDrawer() {
             </div>
 
             {/* Scrollable content */}
-            <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
+            <div style={{ flex: 1, overflowY: "auto", padding: "20px", WebkitOverflowScrolling: "touch", overscrollBehavior: "contain" }}>
               <AnimatePresence mode="wait">
 
                 {/* ── CART VIEW ── */}

@@ -11,6 +11,15 @@ import { getPalette } from "@/lib/palettes";
 import { getTemplate } from "@/lib/templates";
 import { PLATFORM } from "@/lib/constants";
 
+// Viewport — iOS zoom'u engellemek için maximum-scale=1
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+};
+
 // Dark mode kaldırıldı — bu id'ler varsa light'a fallback
 const PALETTES_DARK = ["dark", "slate", "coffee", "ocean", "forest", "wine", "midnight", "charcoal"];
 

@@ -188,3 +188,56 @@ h1, h2, h3, h4, .font-serif, .font-jakarta {
 button {
   cursor: pointer;
 }
+
+/* ─────── MOBILE INPUT FIXES ─────── */
+
+/* iOS auto-zoom engelleme — 16px altında font-size olunca Safari zoom yapıyor */
+@media screen and (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important;
+    -webkit-text-size-adjust: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
+/* Tüm input/textarea — touch optimize */
+input, textarea, select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+}
+
+/* iOS rubber-band bounce engelle — fixed modallarda */
+@supports (-webkit-touch-callout: none) {
+  body.drawer-open {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+  }
+}
+
+/* Smooth scroll — input focus'ta kayma yerine yumuşak geçiş */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fixed overlay — keyboard açıldığında stable kalması için */
+@media screen and (max-width: 768px) {
+  .cart-drawer-overlay {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+}
+
+/* Input focus outline — mobil dokunma feedback */
+@media screen and (max-width: 768px) {
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+}

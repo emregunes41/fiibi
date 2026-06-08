@@ -113,7 +113,7 @@ const S = {
     border: "1px solid rgba(0,0,0,0.1)",
     borderRadius: 0,
     padding: "14px 16px",
-    fontSize: "14px",
+    fontSize: "16px",
     color: "var(--text, #1a1a1a)",
     outline: "none",
     transition: "border-color 0.2s",
