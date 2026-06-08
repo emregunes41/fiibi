@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CreditCard, Banknote, X, AlertTriangle, CheckCircle2, Circle } from "lucide-react";
+import { CreditCard, Banknote, X, AlertTriangle, CheckCircle2, Circle, Info } from "lucide-react";
+import { getSiteConfig } from "@/app/admin/core-actions";
 
 const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale/EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online" };
 
@@ -19,6 +20,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
   const [payAmount, setPayAmount] = useState("");
   const [iframeToken, setIframeToken] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [paymentPaused, setPaymentPaused] = useState(false);
 
   const originalTotalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
   const payments = reservation.payments || [];
@@ -40,6 +42,11 @@ export default function PaymentSection({ reservation, compactMode = false, allow
       }
     };
     window.addEventListener('message', handleMessage);
+    
+    getSiteConfig().then(cfg => {
+      if (cfg?.bookingPaused) setPaymentPaused(true);
+    });
+    
     return () => window.removeEventListener('message', handleMessage);
   }, [paymentMode, currentRemaining]);
 
@@ -210,7 +217,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
         <style>{`
           .fiibi-solid-btn, .fiibi-solid-btn * { background-color: #000000 !important; color: #ffffff !important; border: none !important; }
         `}</style>
-        {currentRemaining > 0 && (
+        {currentRemaining > 0 && !paymentPaused && (
           <button
             onClick={handlePrimaryPayClick}
             className="fiibi-solid-btn"
@@ -223,6 +230,12 @@ export default function PaymentSection({ reservation, compactMode = false, allow
             <CreditCard size={16} />
             Ödeme Yap
           </button>
+        )}
+        {currentRemaining > 0 && paymentPaused && (
+          <div style={{ padding: "12px 16px", background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.15)", display: "flex", alignItems: "center", gap: 10 }}>
+            <Info size={16} style={{ color: "rgba(0,0,0,0.5)", flexShrink: 0 }} />
+            <span style={{ fontSize: 12, color: "rgba(0,0,0,0.6)", lineHeight: 1.5 }}>Online ödeme şu anda kapalıdır. Ödeme için ekibimizle iletişime geçiniz.</span>
+          </div>
         )}
         {renderConversionConfirmModal()}
         {renderModal()}
@@ -386,7 +399,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
         })()}
 
         {/* Action Buttons */}
-        {currentRemaining > 0 && (
+        {currentRemaining > 0 && !paymentPaused && (
           <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 24 }}>
             <button
               onClick={handlePrimaryPayClick}
@@ -400,6 +413,12 @@ export default function PaymentSection({ reservation, compactMode = false, allow
               <CreditCard size={16} />
               Ödeme Yap
             </button>
+          </div>
+        )}
+        {currentRemaining > 0 && paymentPaused && (
+          <div style={{ marginTop: 24, padding: "14px 16px", background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.15)", display: "flex", alignItems: "center", gap: 10 }}>
+            <Info size={16} style={{ color: "rgba(0,0,0,0.5)", flexShrink: 0 }} />
+            <span style={{ fontSize: 12, color: "rgba(0,0,0,0.6)", lineHeight: 1.5 }}>Online ödeme şu anda kapalıdır. Ödeme için ekibimizle iletişime geçiniz.</span>
           </div>
         )}
       </div>

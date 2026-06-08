@@ -253,7 +253,7 @@ export default function CartDrawer() {
     const result = await savePendingReservation(data);
     setIsSubmitting(false);
     if (result.success) {
-      setSubmitResult({ success: true, type: "no_payment", message: paymentPausedMessage });
+      setSubmitResult({ success: true, type: "no_payment", message: "Rezervasyon bilgileriniz alındı. Ekibimiz en kısa sürede sizinle iletişime geçecek." });
       clearCart();
     } else {
       setSubmitResult({ success: false, message: "Bir hata oluştu: " + (result.error || "Bilinmeyen hata") });
@@ -1127,7 +1127,7 @@ export default function CartDrawer() {
                         color: submitResult.success ? "rgba(0, 0, 0,0.7)" : "rgba(0, 0, 0,0.5)",
                         marginBottom: "12px",
                       }}>
-                        {submitResult.success ? textSuccessTitle : "Hata"}
+                      {submitResult.success ? (submitResult.type === "no_payment" ? "Kaydınız Alındı!" : textSuccessTitle) : "Hata"}
                       </div>
                       <p style={{ fontSize: "14px", color: "rgba(0, 0, 0, 0.5)", lineHeight: 1.7, maxWidth: 320, margin: "0 auto 24px" }}>
                         {submitResult.message}
@@ -1150,6 +1150,15 @@ export default function CartDrawer() {
                             <strong style={{ color: "#000000" }}>Profilinizden</strong> rezervasyon durumunuzu takip edebilir, ödeme geçmişinizi görebilir ve tüm süreci yönetebilirsiniz.
                           </span>
                         </div>
+
+                        {submitResult.type === "no_payment" && (
+                          <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.15)", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                            <Phone size={18} style={{ color: "#000000", flexShrink: 0, marginTop: 2 }} />
+                            <span style={{ fontSize: 13, color: "rgba(0, 0, 0, 0.55)", lineHeight: 1.6 }}>
+                              Online ödeme şu anda kapalıdır. Ekibimiz en kısa sürede sizinle <strong style={{ color: "#000000" }}>iletişime geçecek</strong> ve ödeme detaylarını paylaşacak.
+                            </span>
+                          </div>
+                        )}
 
                         {submitResult.type === "cash" && (
                           <div style={{ padding: "14px 16px", borderRadius: 0, background: "rgba(0, 0, 0, 0.04)", border: "1px solid rgba(0, 0, 0, 0.08)", display: "flex", alignItems: "flex-start", gap: 12 }}>
