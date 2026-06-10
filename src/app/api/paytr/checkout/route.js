@@ -139,6 +139,6 @@ export async function POST(req) {
 
   } catch (error) {
     console.error("PayTR Checkout Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "İşlem başarısız" }, { status: 500 });
   }
 }

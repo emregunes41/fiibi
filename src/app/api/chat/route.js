@@ -125,6 +125,6 @@ export async function POST(request) {
 
   } catch (error) {
     console.error("Chat API Error:", error);
-    return NextResponse.json({ error: "Bir hata oluştu: " + error.message }, { status: 500 });
+    return NextResponse.json({ error: "Bir hata oluştu" }, { status: 500 });
   }
 }

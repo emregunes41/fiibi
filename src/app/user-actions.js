@@ -42,7 +42,7 @@ export async function registerUser(data) {
     });
 
     // Create token
-    const token = await signToken({ userId: user.id, email: user.email, role: user.role });
+    const token = await signToken({ userId: user.id, email: user.email, role: user.role, tenantId: user.tenantId });
 
     // Set cookie
     const cookieStore = await cookies();
@@ -87,7 +87,7 @@ export async function loginUser(email, password) {
     // Başarılı — rate limit sıfırla
     await resetRateLimit(rateLimitKey);
 
-    const token = await signToken({ userId: user.id, email: user.email, role: user.role });
+    const token = await signToken({ userId: user.id, email: user.email, role: user.role, tenantId: user.tenantId });
 
     const cookieStore = await cookies();
     cookieStore.set("auth_token", token, {

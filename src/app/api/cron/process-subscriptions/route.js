@@ -167,6 +167,6 @@ export async function GET(req) {
 
   } catch (error) {
     console.error("CRON Genel Hata:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
   }
 }

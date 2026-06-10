@@ -158,6 +158,6 @@ export async function POST(req) {
 
   } catch (error) {
     console.error("[PLATFORM TRANSFER ERROR]", error);
-    return NextResponse.json({ error: error.message || "Sunucu hatası" }, { status: 500 });
+    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
   }
 }

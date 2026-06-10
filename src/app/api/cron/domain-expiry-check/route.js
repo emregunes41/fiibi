@@ -87,7 +87,7 @@ export async function GET(request) {
     return NextResponse.json({ success: true, timestamp: now.toISOString(), ...results });
   } catch (error) {
     console.error("Domain expiry check cron error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
   }
 }
 

@@ -172,6 +172,6 @@ export async function GET(request) {
 
   } catch (error) {
     console.error("[AUTO TRANSFER CRON ERROR]", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
   }
 }

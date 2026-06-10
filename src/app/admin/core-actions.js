@@ -37,12 +37,29 @@ async function getTenantId() {
 }
 
 /**
+ * Centralized parser for totalAmount (stored as String in Turkish locale format).
+ * Handles: "1.500,00" -> 1500.00, "1500" -> 1500, "45.000₺" -> 45000, etc.
+ */
+function parseTotalAmount(val) {
+  if (typeof val === 'number') return val;
+  if (!val) return 0;
+  // Handle Turkish format: "1.500,00" -> 1500.00 and "1500" -> 1500
+  const str = String(val).trim();
+  // If contains comma as decimal separator (Turkish format like "1.500,00")
+  if (str.includes(',')) {
+    return parseFloat(str.replace(/\./g, '').replace(',', '.')) || 0;
+  }
+  // Plain number or already decimal-dot format
+  return parseFloat(str.replace(/[^0-9.-]/g, '')) || 0;
+}
+
+/**
  * Client bileşenler için yükleme kotası kontrolü
  * CldUploadWidget kullanmadan önce çağrılır
  */
 export async function checkUploadQuota() {
   const tenant = await getCurrentTenant();
-  if (!tenant) return { allowed: true, limitMB: 10000, usedMB: 0, remainingMB: 10000 };
+  if (!tenant) return { allowed: false, limitMB: 0, usedMB: 0, remainingMB: 0 };
   
   const settings = await prisma.globalSettings.findFirst({ where: { tenantId: tenant.id }, select: { storageUsedMB: true } });
   const usedMB = Math.round((settings?.storageUsedMB || 0) * 100) / 100;
@@ -763,7 +780,7 @@ export async function createManualReservation(data) {
     }
 
     const numericInitialPayment = Number(initialPaymentAmount) || 0;
-    const numericTotal = Number(totalAmount.replace(/\D/g, '')) || 0;
+    const numericTotal = parseTotalAmount(totalAmount);
     
     let paymentStatus = "UNPAID";
     if (numericInitialPayment > 0) {
@@ -1402,7 +1419,7 @@ export async function addPayment(reservationId, data) {
 
     // Get reservation to check totalAmount
     const reservation = await prisma.reservation.findUnique({ where: { id: reservationId }, include: { packages: true } });
-    const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
+    const totalAmount = parseTotalAmount(reservation.totalAmount);
 
     // Determine payment status
     let paymentStatus = "UNPAID";
@@ -1490,7 +1507,7 @@ export async function deletePayment(paymentId) {
     const payments = await prisma.payment.findMany({ where: { reservationId: payment.reservationId } });
     const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
 
-    const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
+    const totalAmount = parseTotalAmount(reservation.totalAmount);
 
     let paymentStatus = "UNPAID";
     if (totalPaid >= totalAmount && totalAmount > 0) {
@@ -1527,8 +1544,8 @@ export async function convertToCreditCardPermanent(reservationId, newTotalStr) {
     const r = await prisma.reservation.findFirst({ where: { id: reservationId, tenantId } });
     if (!r) throw new Error("Reservation not found");
     
-    const numericNewTotal = parseFloat(newTotalStr.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
-    const existingPaidAmount = parseFloat((r.paidAmount || '0').toString().replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, ''));
+    const numericNewTotal = parseTotalAmount(newTotalStr);
+    const existingPaidAmount = parseTotalAmount(r.paidAmount);
     await prisma.reservation.update({
       where: { id: reservationId },
       data: {
@@ -1556,7 +1573,7 @@ export async function addReservationExtraFee(reservationId, amount, note) {
     const r = await prisma.reservation.findFirst({ where: { id: reservationId, tenantId } });
     if (!r) throw new Error("Reservation not found");
 
-    const currentTotal = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
+    const currentTotal = parseTotalAmount(r.totalAmount);
     let addAmount = parseFloat(amount || "0");
     
     // Auto-apply %15 if the client is permanently on CREDIT_CARD mode, since the input is strictly cash based
@@ -1587,8 +1604,8 @@ export async function addReservationExtraFee(reservationId, amount, note) {
         notes: newNotes,
         selectedAddons: currentAddons,
         paymentLogs: r.paymentLogs 
-          ? [...r.paymentLogs, { id: Date.now().toString(), date: new Date().toISOString(), type: "EXTRA_FEE", amount: `+ ${addAmount.toLocaleString('tr-TR')}₺`, description: `Ekstra hizmet/fiyat eklendi: ${note}`, totalSnapshot: (currentTotal + addAmount), paidSnapshot: parseFloat((r.paidAmount || '0').toString().replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '')) }] 
-          : [{ id: Date.now().toString(), date: new Date().toISOString(), type: "EXTRA_FEE", amount: `+ ${addAmount.toLocaleString('tr-TR')}₺`, description: `Ekstra hizmet/fiyat eklendi: ${note}`, totalSnapshot: (currentTotal + addAmount), paidSnapshot: parseFloat((r.paidAmount || '0').toString().replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '')) }]
+          ? [...r.paymentLogs, { id: Date.now().toString(), date: new Date().toISOString(), type: "EXTRA_FEE", amount: `+ ${addAmount.toLocaleString('tr-TR')}₺`, description: `Ekstra hizmet/fiyat eklendi: ${note}`, totalSnapshot: (currentTotal + addAmount), paidSnapshot: parseTotalAmount(r.paidAmount) }] 
+          : [{ id: Date.now().toString(), date: new Date().toISOString(), type: "EXTRA_FEE", amount: `+ ${addAmount.toLocaleString('tr-TR')}₺`, description: `Ekstra hizmet/fiyat eklendi: ${note}`, totalSnapshot: (currentTotal + addAmount), paidSnapshot: parseTotalAmount(r.paidAmount) }]
       }
     });
 
@@ -1617,7 +1634,7 @@ export async function revertToCashPayment(reservationId) {
        return { success: true };
     }
 
-    const currentTotal = parseFloat(r.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
+    const currentTotal = parseTotalAmount(r.totalAmount);
     
     const payments = r.payments || [];
     const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
@@ -1781,7 +1798,7 @@ export async function createQuickEvent(data) {
     const eventTime = startTime && endTime ? `${startTime}-${endTime}` : startTime || null;
 
     const numericInitialPayment = Number(initialPaymentAmount) || 0;
-    const numericTotal = Number(String(totalAmount).replace(/\D/g, '')) || 0;
+    const numericTotal = parseTotalAmount(totalAmount);
 
     let paymentStatus = "UNPAID";
     if (numericInitialPayment > 0) {

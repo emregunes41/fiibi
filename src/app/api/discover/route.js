@@ -135,6 +135,6 @@ export async function GET(req) {
     });
   } catch (err) {
     console.error("Discover API error:", err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ error: "Bir hata oluştu" }, { status: 500 });
   }
 }

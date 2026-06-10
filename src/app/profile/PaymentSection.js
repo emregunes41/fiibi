@@ -6,6 +6,16 @@ import { getSiteConfig } from "@/app/admin/core-actions";
 
 const methodLabels = { CASH: "Nakit", BANK_TRANSFER: "Havale/EFT", CREDIT_CARD: "Kredi Kartı", ONLINE: "Online" };
 
+function parseTotalAmount(val) {
+  if (typeof val === 'number') return val;
+  if (!val) return 0;
+  const str = String(val).trim();
+  if (str.includes(',')) {
+    return parseFloat(str.replace(/\./g, '').replace(',', '.')) || 0;
+  }
+  return parseFloat(str.replace(/[^0-9.-]/g, '')) || 0;
+}
+
 export default function PaymentSection({ reservation, compactMode = false, allowPaymentMethodChange = false }) {
   const [showPayModal, setShowPayModal] = useState(false);
   const [showConversionConfirm, setShowConversionConfirm] = useState(false);
@@ -23,7 +33,7 @@ export default function PaymentSection({ reservation, compactMode = false, allow
   const [paymentPaused, setPaymentPaused] = useState(false);
   const [error, setError] = useState(null);
 
-  const originalTotalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
+  const originalTotalAmount = parseTotalAmount(reservation.totalAmount);
   const payments = reservation.payments || [];
   const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
   const currentRemaining = Math.max(0, originalTotalAmount - totalPaid);

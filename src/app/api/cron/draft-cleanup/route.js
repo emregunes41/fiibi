@@ -49,6 +49,6 @@ export async function GET(req) {
 
   } catch (error) {
     console.error("Cron Draft Cleanup Hatası:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
   }
 }

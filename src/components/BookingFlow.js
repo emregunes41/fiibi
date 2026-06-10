@@ -354,9 +354,52 @@ export default function BookingFlow({ initialPackages, isAdmin = false }) {
   // Wait for businessType to load before rendering
   if (step === null) {
     return (
-      <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(0,0,0,0.5)" }}>
-        <div style={{ width: 24, height: 24, border: "2px solid rgba(0,0,0,0.08)", borderTopColor: "rgba(0,0,0,0.45)", borderRadius: "50%", margin: "0 auto 16px", animation: "spin 0.8s linear infinite" }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <div style={{ width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
+        <style>{`@keyframes bookingPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }`}</style>
+        {/* Step bar skeleton */}
+        <div style={{ display: "flex", gap: "8px", marginBottom: "48px" }}>
+          {[1, 2, 3].map(i => (
+            <div key={i} style={{
+              flex: 1, height: "44px", borderRadius: 0,
+              background: i === 1 ? "rgba(0,0,0,0.06)" : "rgba(0,0,0,0.02)",
+              animation: "bookingPulse 1.5s ease-in-out infinite",
+            }} />
+          ))}
+        </div>
+        {/* Section label skeleton */}
+        <div style={{
+          width: "90px", height: "12px", borderRadius: 0,
+          background: "rgba(0,0,0,0.08)", marginBottom: "16px",
+          animation: "bookingPulse 1.5s ease-in-out infinite",
+        }} />
+        {/* Package card skeletons */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
+          {[1, 2, 3].map(i => (
+            <div key={i} style={{
+              padding: "20px", borderRadius: 0,
+              border: "1px solid rgba(0,0,0,0.06)",
+              background: "rgba(0,0,0,0.015)",
+              animation: "bookingPulse 1.5s ease-in-out infinite",
+              animationDelay: `${i * 0.15}s`,
+            }}>
+              {/* Icon placeholder */}
+              <div style={{
+                width: "40px", height: "40px", borderRadius: 0,
+                background: "rgba(0,0,0,0.05)", marginBottom: "12px",
+              }} />
+              {/* Title placeholder */}
+              <div style={{
+                width: "70%", height: "15px", borderRadius: 0,
+                background: "rgba(0,0,0,0.07)", marginBottom: "8px",
+              }} />
+              {/* Description placeholder */}
+              <div style={{
+                width: "90%", height: "10px", borderRadius: 0,
+                background: "rgba(0,0,0,0.04)",
+              }} />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

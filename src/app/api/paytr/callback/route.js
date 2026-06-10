@@ -6,6 +6,20 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+/**
+ * Centralized parser for totalAmount (stored as String in Turkish locale format).
+ * Handles: "1.500,00" -> 1500.00, "1500" -> 1500, "45.000₺" -> 45000, etc.
+ */
+function parseTotalAmount(val) {
+  if (typeof val === 'number') return val;
+  if (!val) return 0;
+  const str = String(val).trim();
+  if (str.includes(',')) {
+    return parseFloat(str.replace(/\./g, '').replace(',', '.')) || 0;
+  }
+  return parseFloat(str.replace(/[^0-9.-]/g, '')) || 0;
+}
+
 // PayTR sometimes sends GET pings to test the endpoint
 export async function GET() {
   return new Response("OK", {
@@ -122,7 +136,7 @@ export async function POST(req) {
       const payments = await prisma.payment.findMany({ where: { reservationId: reservationId } });
       const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
 
-      const totalAmount = parseFloat(reservation.totalAmount?.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '') || '0');
+      const totalAmount = parseTotalAmount(reservation.totalAmount);
 
       let paymentStatus = "UNPAID";
       if (totalPaid >= totalAmount && totalAmount > 0) {

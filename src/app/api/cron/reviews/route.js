@@ -90,6 +90,6 @@ export async function GET(req) {
     return NextResponse.json({ success: true, sent: sentCount });
   } catch (error) {
     console.error("Review Cron Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
   }
 }

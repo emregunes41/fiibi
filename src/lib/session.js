@@ -44,5 +44,8 @@ export async function requireUser() {
   if (!session) {
     return { error: "Bu işlemi gerçekleştirmek için giriş yapmalısınız.", statusCode: 401 };
   }
+  if (!session.tenantId) {
+    return { error: "Geçersiz oturum: tenant bilgisi eksik.", statusCode: 403 };
+  }
   return { success: true, session };
 }

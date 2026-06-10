@@ -136,6 +136,6 @@ export async function GET(req) {
     return NextResponse.json({ success: true, reminders: results.length, details: results });
   } catch (error) {
     console.error("Cron Reminder Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
   }
 }
