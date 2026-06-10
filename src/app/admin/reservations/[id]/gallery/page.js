@@ -107,7 +107,6 @@ export default function GalleryManagementPage() {
             <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Fotoğraf Yükle</div>
             <CldUploadWidget 
               uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""} 
-              signatureEndpoint="" 
               onSuccess={handleUploadSuccess}
               options={{ 
                 multiple: true, 
