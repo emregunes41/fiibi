@@ -8,18 +8,21 @@ import {
   BarChart, Database, Cloud, Mail, HardDrive, Image, Zap,
   DollarSign, Save, LayoutDashboard, Percent, CheckCircle2, XCircle, Clock, Key, Eye, X, FileText, Phone, Globe, Calendar,
   Wallet, TrendingUp, ArrowUpRight, ArrowDownRight, Banknote, Receipt, PiggyBank, ChevronDown, ChevronUp, Filter,
+  Send, CircleDot, Ban, ArrowRight,
 } from "lucide-react";
 import {
   getAllTenants, getPlatformStats, toggleTenantFreeze,
   changeTenantPlan, deleteTenant, superAdminLogout,
   getPlatformPricing, updatePlatformPricing,
   updateTenantCommission, updateSubMerchantStatus, resetTenantAdminPassword,
-  updateTenantField, impersonateTenant, getAccountingData
+  updateTenantField, impersonateTenant, getAccountingData,
+  getTransferTrackingData, triggerManualTransfer
 } from "@/app/actions/super-admin";
 import { getCloudinaryUsage, getDbUsage, getResendUsage, getVercelUsage } from "@/app/actions/platform-usage";
 
 const TABS = [
   { id: "overview", label: "Genel Bakış", icon: LayoutDashboard },
+  { id: "transfers", label: "Hak Ediş", icon: Send },
   { id: "accounting", label: "Muhasebe", icon: Wallet },
   { id: "usage", label: "Kaynak Kullanımı", icon: BarChart },
   { id: "pricing", label: "Fiyatlandırma", icon: DollarSign },
@@ -44,6 +47,9 @@ export default function SuperAdminClient() {
   const [accountingLoading, setAccountingLoading] = useState(false);
   const [accountingSort, setAccountingSort] = useState({ field: "totalSales", dir: "desc" });
   const [accountingFilter, setAccountingFilter] = useState("all"); // all, overdue, active, frozen
+  const [transfers, setTransfers] = useState(null);
+  const [transfersLoading, setTransfersLoading] = useState(false);
+  const [transferFilter, setTransferFilter] = useState("all"); // all, pending, sent, completed, blocked
   const router = useRouter();
 
   const domain = process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "localhost:3000";
@@ -81,10 +87,35 @@ export default function SuperAdminClient() {
     setAccountingLoading(false);
   }
 
+  async function loadTransfers() {
+    setTransfersLoading(true);
+    try {
+      const data = await getTransferTrackingData();
+      if (data && !data.error) setTransfers(data);
+    } catch (err) { console.error("transfers error:", err); }
+    setTransfersLoading(false);
+  }
+
+  async function handleManualTransfer(reservationId) {
+    if (!confirm("Bu sipariş için satıcıya transfer talimatı göndermek istediğinize emin misiniz?")) return;
+    setActionLoading(reservationId);
+    const res = await triggerManualTransfer(reservationId);
+    if (res.error || res.status === "error") {
+      alert(`Transfer hatası: ${res.error || res.errorMessage}`);
+    } else {
+      alert(`Transfer başarılı! Ref: ${res.reference || res.transId}`);
+    }
+    await loadTransfers();
+    setActionLoading(null);
+  }
+
   // Load accounting when tab switches to it
   useEffect(() => {
     if (tab === "accounting" && !accounting && !accountingLoading) {
       loadAccounting();
+    }
+    if (tab === "transfers" && !transfers && !transfersLoading) {
+      loadTransfers();
     }
   }, [tab]);
 
@@ -723,6 +754,183 @@ export default function SuperAdminClient() {
                   <div style={{ textAlign: "center", padding: 48, color: "rgba(0,0,0,0.6)", fontSize: 14 }}>Henüz kullanıcı yok.</div>
                 )}
               </div>
+            </>
+          )}
+
+          {/* ─── TAB: Hak Ediş ─── */}
+          {tab === "transfers" && (
+            <>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+                <h2 style={{ ...sectionTitle, marginBottom: 0 }}>Hak Ediş / Transfer Takip</h2>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <button onClick={loadTransfers} disabled={transfersLoading} style={{ ...smallBtn, gap: 6 }}>
+                    <RefreshCw size={13} style={transfersLoading ? { animation: "spin 1s linear infinite" } : {}} /> Yenile
+                  </button>
+                </div>
+              </div>
+
+              {/* Filtreler */}
+              <div style={{ display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }}>
+                {[
+                  { id: "all", label: "Tümü" },
+                  { id: "pending", label: "⏳ Transfer Bekleyen" },
+                  { id: "sent", label: "📤 Gönderildi" },
+                  { id: "completed", label: "✅ Tamamlandı" },
+                  { id: "blocked", label: "🚫 Engelli" },
+                ].map((f) => (
+                  <button
+                    key={f.id}
+                    onClick={() => setTransferFilter(f.id)}
+                    style={{
+                      padding: "6px 14px", fontSize: 12, fontWeight: transferFilter === f.id ? 700 : 500,
+                      border: transferFilter === f.id ? "1px solid rgba(139,92,246,0.4)" : "1px solid rgba(0,0,0,0.08)",
+                      background: transferFilter === f.id ? "rgba(139,92,246,0.08)" : "rgba(0,0,0,0.02)",
+                      color: transferFilter === f.id ? "#7c3aed" : "rgba(0,0,0,0.6)",
+                      cursor: "pointer", transition: "all 0.15s",
+                    }}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+
+              {transfersLoading && !transfers ? (
+                <div style={{ textAlign: "center", padding: 60, color: "rgba(0,0,0,0.4)" }}>Yükleniyor...</div>
+              ) : !transfers || transfers.length === 0 ? (
+                <div style={{ textAlign: "center", padding: 60, color: "rgba(0,0,0,0.4)", fontSize: 14 }}>Henüz ödeme yapılmış sipariş yok.</div>
+              ) : (
+                <>
+                  {/* Özet Kartları */}
+                  {(() => {
+                    const total = transfers.length;
+                    const pending = transfers.filter(t => t.transferStatus === "NOT_SENT" && t.blockers.length === 0 && t.paymentStatus === "PAID").length;
+                    const sent = transfers.filter(t => t.transferStatus === "SENT").length;
+                    const completed = transfers.filter(t => t.transferStatus === "COMPLETED").length;
+                    const blocked = transfers.filter(t => t.blockers.length > 0 && t.transferStatus === "NOT_SENT").length;
+                    const totalSeller = transfers.reduce((s, t) => s + (t.sellerAmount || 0), 0);
+                    const totalCommission = transfers.reduce((s, t) => s + (t.commission || 0), 0);
+                    return (
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 10, marginBottom: 20 }}>
+                        {[
+                          { label: "Toplam İşlem", value: total, color: "#6366f1" },
+                          { label: "Transfer Bekleyen", value: pending, color: "#f59e0b" },
+                          { label: "Gönderildi", value: sent, color: "#3b82f6" },
+                          { label: "Tamamlandı", value: completed, color: "#10b981" },
+                          { label: "Engelli", value: blocked, color: "#ef4444" },
+                          { label: "Satıcı Payı", value: `${totalSeller.toLocaleString("tr-TR")}₺`, color: "#8b5cf6" },
+                          { label: "Komisyon", value: `${totalCommission.toLocaleString("tr-TR")}₺`, color: "#06b6d4" },
+                        ].map((s, i) => (
+                          <div key={i} style={cardStyle}>
+                            <div style={{ fontSize: 10, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>{s.label}</div>
+                            <div style={{ fontSize: 20, fontWeight: 800, color: s.color }}>{s.value}</div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
+
+                  {/* Transfer Listesi */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    {transfers
+                      .filter((t) => {
+                        if (transferFilter === "pending") return t.transferStatus === "NOT_SENT" && t.blockers.length === 0 && t.paymentStatus === "PAID";
+                        if (transferFilter === "sent") return t.transferStatus === "SENT";
+                        if (transferFilter === "completed") return t.transferStatus === "COMPLETED";
+                        if (transferFilter === "blocked") return t.blockers.length > 0 && t.transferStatus === "NOT_SENT";
+                        return true;
+                      })
+                      .map((t) => {
+                        const statusConfig = {
+                          NOT_SENT: { label: "Bekliyor", color: "#f59e0b", bg: "rgba(245,158,11,0.08)", icon: Clock },
+                          SENT: { label: "Gönderildi", color: "#3b82f6", bg: "rgba(59,130,246,0.08)", icon: Send },
+                          COMPLETED: { label: "Tamamlandı", color: "#10b981", bg: "rgba(16,185,129,0.08)", icon: CheckCircle2 },
+                        };
+                        const sc = t.blockers.length > 0 && t.transferStatus === "NOT_SENT"
+                          ? { label: "Engelli", color: "#ef4444", bg: "rgba(239,68,68,0.08)", icon: Ban }
+                          : statusConfig[t.transferStatus] || statusConfig.NOT_SENT;
+                        const StatusIcon = sc.icon;
+
+                        return (
+                          <div key={t.id} style={{
+                            background: "rgba(0,0,0,0.01)",
+                            border: `1px solid rgba(0,0,0,0.06)`,
+                            padding: "14px 18px",
+                          }}>
+                            {/* Üst Satır */}
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 20px", alignItems: "center", marginBottom: 10 }}>
+                              {/* Müşteri + Stüdyo */}
+                              <div style={{ flex: "1 1 200px", minWidth: 180 }}>
+                                <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>{t.brideName}</div>
+                                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.45)" }}>
+                                  {t.tenant?.businessName || "—"} <span style={{ opacity: 0.5 }}>({t.tenant?.slug})</span>
+                                </div>
+                              </div>
+
+                              {/* Tutar Breakdown */}
+                              <div style={{ display: "flex", gap: 16, fontSize: 12 }}>
+                                <div style={{ textAlign: "center" }}>
+                                  <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 10, marginBottom: 2 }}>TOPLAM</div>
+                                  <div style={{ fontWeight: 800, color: "#1a1a1a" }}>{t.totalAmount.toLocaleString("tr-TR")}₺</div>
+                                </div>
+                                <div style={{ textAlign: "center" }}>
+                                  <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 10, marginBottom: 2 }}>KOMİSYON</div>
+                                  <div style={{ fontWeight: 700, color: "#06b6d4" }}>{t.commission.toLocaleString("tr-TR")}₺ <span style={{ fontSize: 10, opacity: 0.6 }}>(%{t.tenant?.commissionRate})</span></div>
+                                </div>
+                                <div style={{ textAlign: "center" }}>
+                                  <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 10, marginBottom: 2 }}>SATICI PAYI</div>
+                                  <div style={{ fontWeight: 800, color: "#8b5cf6" }}>{t.sellerAmount.toLocaleString("tr-TR")}₺</div>
+                                </div>
+                              </div>
+
+                              {/* Durum Badge */}
+                              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                <span style={{
+                                  background: sc.bg, border: `1px solid ${sc.color}33`,
+                                  color: sc.color, padding: "4px 12px", fontSize: 11, fontWeight: 700,
+                                  display: "flex", alignItems: "center", gap: 5,
+                                }}>
+                                  <StatusIcon size={12} /> {sc.label}
+                                </span>
+
+                                {/* Manuel Transfer Butonu */}
+                                {t.canTransfer && (
+                                  <button
+                                    onClick={() => handleManualTransfer(t.id)}
+                                    disabled={actionLoading === t.id}
+                                    style={{
+                                      ...smallBtn, color: "#10b981", fontWeight: 700,
+                                      padding: "6px 14px", gap: 6,
+                                      border: "1px solid rgba(16,185,129,0.3)",
+                                      background: "rgba(16,185,129,0.06)",
+                                    }}
+                                  >
+                                    <Send size={13} /> Gönder
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Alt Satır: Detaylar */}
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 16px", fontSize: 11, color: "rgba(0,0,0,0.4)", borderTop: "1px solid rgba(0,0,0,0.04)", paddingTop: 8 }}>
+                              <span>📅 Ödeme: {t.paymentDate ? new Date(t.paymentDate).toLocaleDateString("tr-TR") : "—"}</span>
+                              <span>💳 Durum: {t.paymentStatus}</span>
+                              {t.transferLog && (
+                                <>
+                                  <span>🔑 Ref: {t.transferLog.reference || t.transferLog.transId}</span>
+                                  <span>📤 Gönderim: {new Date(t.transferLog.date).toLocaleDateString("tr-TR")}</span>
+                                  {t.transferLog.completed && <span>✅ Ulaştı: {new Date(t.transferLog.completedAt).toLocaleDateString("tr-TR")}</span>}
+                                </>
+                              )}
+                              {t.blockers.length > 0 && (
+                                <span style={{ color: "#ef4444", fontWeight: 600 }}>⚠️ {t.blockers.join(" · ")}</span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

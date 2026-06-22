@@ -680,3 +680,129 @@ export async function getAccountingData() {
   };
 }
 
+/**
+ * Hak Ediş / Transfer Takip verileri
+ */
+export async function getTransferTrackingData() {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  const reservations = await prisma.reservation.findMany({
+    where: {
+      paymentStatus: { in: ["PAID", "PARTIAL"] },
+      tenantId: { not: null },
+    },
+    include: {
+      tenant: {
+        select: {
+          id: true,
+          slug: true,
+          businessName: true,
+          legalName: true,
+          iban: true,
+          commissionRate: true,
+          subMerchantStatus: true,
+        },
+      },
+      payments: {
+        where: { method: "ONLINE" },
+        orderBy: { createdAt: "desc" },
+        take: 1,
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return reservations.map((r) => {
+    const logs = r.paymentLogs || [];
+    const transferLog = logs.find((l) => l.type === "PLATFORM_TRANSFER");
+    const onlinePayment = r.payments[0];
+
+    // Ödeme tarihini bul
+    const paymentDate = onlinePayment?.createdAt || null;
+    // Aynı gün mü?
+    const isToday = paymentDate
+      ? new Date(paymentDate).toDateString() === new Date().toDateString()
+      : false;
+
+    // Transfer durumu
+    let transferStatus = "NOT_SENT"; // Transfer gönderilmedi
+    if (transferLog) {
+      transferStatus = transferLog.transferCompleted
+        ? "COMPLETED"   // Para satıcıya ulaştı
+        : "SENT";       // Transfer talimatı gönderildi, bekleniyor
+    }
+
+    // Engeller
+    const blockers = [];
+    if (!r.tenant?.iban) blockers.push("IBAN eksik");
+    if (!r.tenant?.legalName) blockers.push("Ünvan eksik");
+    if (r.tenant?.subMerchantStatus !== "APPROVED") blockers.push("Satıcı onaysız");
+    if (!onlinePayment) blockers.push("Online ödeme yok");
+    if (isToday) blockers.push("Aynı gün (yarını bekle)");
+
+    // Tutar parse
+    const totalAmountTL = (() => {
+      const val = r.totalAmount;
+      if (typeof val === "number") return val;
+      if (!val) return 0;
+      const str = String(val).trim();
+      if (str.includes(",")) return parseFloat(str.replace(/\./g, "").replace(",", ".")) || 0;
+      return parseFloat(str.replace(/[^0-9.-]/g, "")) || 0;
+    })();
+
+    const commissionRate = r.tenant?.commissionRate || 6;
+    const commission = Math.round(totalAmountTL * commissionRate) / 100;
+    const sellerAmount = Math.round((totalAmountTL - commission) * 100) / 100;
+
+    return {
+      id: r.id,
+      brideName: r.brideName || "İsimsiz",
+      totalAmount: totalAmountTL,
+      paymentStatus: r.paymentStatus,
+      createdAt: r.createdAt,
+      paymentDate,
+      transferStatus,
+      transferLog: transferLog
+        ? {
+            transId: transferLog.transId,
+            reference: transferLog.reference,
+            date: transferLog.date,
+            completed: !!transferLog.transferCompleted,
+            completedAt: transferLog.completedAt,
+          }
+        : null,
+      tenant: r.tenant
+        ? {
+            slug: r.tenant.slug,
+            businessName: r.tenant.businessName,
+            legalName: r.tenant.legalName,
+            commissionRate,
+          }
+        : null,
+      commission,
+      sellerAmount,
+      blockers,
+      canTransfer: blockers.length === 0 && transferStatus === "NOT_SENT" && r.paymentStatus === "PAID",
+    };
+  });
+}
+
+/**
+ * Manuel transfer tetikle
+ */
+export async function triggerManualTransfer(reservationId) {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://fiibi.co";
+    const res = await fetch(`${baseUrl}/api/paytr/platform-transfer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reservationId }),
+    });
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    return { error: error.message };
+  }
+}
