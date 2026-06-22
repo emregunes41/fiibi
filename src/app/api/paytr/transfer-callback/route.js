@@ -61,20 +61,29 @@ export async function POST(req) {
 
     console.log(`[TRANSFER CALLBACK] Tamamlanan transferler:`, completedTransIds);
 
-    // Her bir trans_id için: TRF_{tenantId}_{reservationId}_{timestamp}
+    // Her bir trans_id için: paymentLogs'ta eşleşen rezervasyonu bul
     for (const transId of completedTransIds) {
       try {
-        const parts = transId.split("_");
-        if (parts.length >= 3 && parts[0] === "TRF") {
-          const reservationId = parts[2];
+        // paymentLogs JSON içinde transId'yi ara
+        const reservation = await prisma.reservation.findFirst({
+          where: {
+            paymentLogs: { path: "$[*].transId", string_contains: transId }
+          }
+        }).catch(() => null);
 
-          const reservation = await prisma.reservation.findUnique({
-            where: { id: reservationId },
-          });
+        // Fallback: Eski format (TRF_tenant_reservation_ts) desteği
+        let fallbackReservation = reservation;
+        if (!fallbackReservation && transId.includes("_")) {
+          const parts = transId.split("_");
+          if (parts.length >= 3) {
+            fallbackReservation = await prisma.reservation.findUnique({ where: { id: parts[2] } });
+          }
+        }
 
-          if (reservation) {
+        const targetReservation = reservation || fallbackReservation;
+        if (targetReservation) {
             // paymentLogs'taki ilgili transfer kaydını güncelle
-            const updatedLogs = (reservation.paymentLogs || []).map((log) => {
+            const updatedLogs = (targetReservation.paymentLogs || []).map((log) => {
               if (log.transId === transId) {
                 return { ...log, transferCompleted: true, completedAt: new Date().toISOString() };
               }
@@ -82,12 +91,11 @@ export async function POST(req) {
             });
 
             await prisma.reservation.update({
-              where: { id: reservationId },
+              where: { id: targetReservation.id },
               data: { paymentLogs: updatedLogs },
             });
 
-            console.log(`[TRANSFER CALLBACK] ✅ Transfer tamamlandı: ${transId} → Reservation: ${reservationId}`);
-          }
+            console.log(`[TRANSFER CALLBACK] ✅ Transfer tamamlandı: ${transId} → Reservation: ${targetReservation.id}`);
         }
       } catch (innerError) {
         console.error(`[TRANSFER CALLBACK] Error processing transId ${transId}:`, innerError);

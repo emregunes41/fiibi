@@ -91,10 +91,13 @@ export function verifyTransferCallbackHash({ transIds, hash }) {
 
 /**
  * Benzersiz transfer ID oluştur
- * Format: TRF_{tenantId}_{reservationId}_{timestamp}
+ * PayTR kuralı: Alfanumerik, özel karakter yok, en fazla 60 karakter
+ * Format: TRF{tenantId kısa}{reservationId kısa}{timestamp}
  */
 export function generateTransferId(tenantId, reservationId) {
-  return `TRF_${tenantId}_${reservationId}_${Date.now()}`;
+  const tId = String(tenantId).replace(/[^a-zA-Z0-9]/g, "").slice(-8);
+  const rId = String(reservationId).replace(/[^a-zA-Z0-9]/g, "").slice(-12);
+  return `TRF${tId}${rId}${Date.now()}`;
 }
 
 /**
