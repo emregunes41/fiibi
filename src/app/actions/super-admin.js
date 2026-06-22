@@ -712,7 +712,9 @@ export async function getTransferTrackingData() {
     orderBy: { createdAt: "desc" },
   });
 
-  return reservations.map((r) => {
+  return reservations
+    .filter((r) => r.payments.length > 0) // Online ödemesi olmayanları çıkar
+    .map((r) => {
     const logs = r.paymentLogs || [];
     const transferLog = logs.find((l) => l.type === "PLATFORM_TRANSFER");
     const onlinePayment = r.payments[0];
