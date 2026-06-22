@@ -2228,8 +2228,12 @@ export default function SettingsPage() {
               setSmError(false);
               const res = await updateSubMerchantInfo(smForm);
               if (res.success) {
-                setSmMessage("Başvurunuz alındı. İnceleme sonucu size bildirilecek.");
-                setSmStatus("PENDING");
+                if (res.pending) {
+                  setSmMessage(res.message || "Değişiklik talebiniz onaya gönderildi.");
+                } else {
+                  setSmMessage("Başvurunuz alındı. İnceleme sonucu size bildirilecek.");
+                  setSmStatus("PENDING");
+                }
                 setTimeout(() => setSmMessage(""), 5000);
               } else {
                 setSmMessage(res.error || "Bir hata oluştu.");

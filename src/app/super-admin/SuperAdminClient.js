@@ -16,7 +16,8 @@ import {
   getPlatformPricing, updatePlatformPricing,
   updateTenantCommission, updateSubMerchantStatus, resetTenantAdminPassword,
   updateTenantField, impersonateTenant, getAccountingData,
-  getTransferTrackingData, triggerManualTransfer
+  getTransferTrackingData, triggerManualTransfer,
+  getPendingCommercialChanges, approveCommercialChanges, rejectCommercialChanges
 } from "@/app/actions/super-admin";
 import { getCloudinaryUsage, getDbUsage, getResendUsage, getVercelUsage } from "@/app/actions/platform-usage";
 
@@ -50,6 +51,7 @@ export default function SuperAdminClient() {
   const [transfers, setTransfers] = useState(null);
   const [transfersLoading, setTransfersLoading] = useState(false);
   const [transferFilter, setTransferFilter] = useState("all"); // all, pending, sent, completed, blocked
+  const [pendingChanges, setPendingChanges] = useState([]);
   const router = useRouter();
 
   const domain = process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "localhost:3000";
@@ -76,6 +78,11 @@ export default function SuperAdminClient() {
       if (pr && !pr.error) setPricing(pr);
     } catch (err) { console.error("loadData error:", err); }
     setLoading(false);
+    // Bekleyen ticari değişiklik taleplerini yükle
+    try {
+      const pc = await getPendingCommercialChanges();
+      if (pc && !pc.error) setPendingChanges(pc);
+    } catch (e) { console.error("pending changes error:", e); }
   }
 
   async function loadAccounting() {
@@ -256,6 +263,70 @@ export default function SuperAdminClient() {
           {tab === "overview" && (
             <>
               <h2 style={sectionTitle}>Platform Özeti</h2>
+
+              {/* Bekleyen Ticari Değişiklik Talepleri */}
+              {pendingChanges.length > 0 && (
+                <div style={{ marginBottom: 24, padding: "16px 20px", background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                    <AlertTriangle size={16} style={{ color: "#f59e0b" }} />
+                    <span style={{ fontSize: 14, fontWeight: 800, color: "#b45309" }}>
+                      {pendingChanges.length} Ticari Bilgi Değişiklik Talebi Bekliyor
+                    </span>
+                  </div>
+                  {pendingChanges.map((t) => {
+                    const changes = t.pendingChanges?.changes || {};
+                    return (
+                      <div key={t.id} style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)", padding: "14px 18px", marginBottom: 8 }}>
+                        <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 8 }}>
+                          {t.businessName || t.slug}
+                          <span style={{ fontSize: 11, color: "rgba(0,0,0,0.4)", marginLeft: 8 }}>
+                            {t.pendingChanges?.requestedAt ? new Date(t.pendingChanges.requestedAt).toLocaleString("tr-TR") : ""}
+                          </span>
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 12 }}>
+                          {Object.entries(changes).map(([key, val]) => (
+                            <div key={key} style={{ display: "flex", gap: 12, fontSize: 13, alignItems: "center", flexWrap: "wrap" }}>
+                              <span style={{ fontWeight: 600, minWidth: 100, color: "rgba(0,0,0,0.6)" }}>{val.label}:</span>
+                              <span style={{ color: "#ef4444", textDecoration: "line-through", fontSize: 12 }}>{val.old || "—"}</span>
+                              <ArrowRight size={12} style={{ color: "rgba(0,0,0,0.3)" }} />
+                              <span style={{ color: "#10b981", fontWeight: 700 }}>{val.new || "—"}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <button
+                            onClick={async () => {
+                              if (!confirm(`${t.businessName || t.slug} için değişiklikleri onayla?`)) return;
+                              setActionLoading(t.id);
+                              await approveCommercialChanges(t.id);
+                              setPendingChanges((prev) => prev.filter((p) => p.id !== t.id));
+                              await loadData();
+                              setActionLoading(null);
+                            }}
+                            disabled={actionLoading === t.id}
+                            style={{ padding: "8px 20px", background: "#4ade80", color: "#000", border: "none", fontWeight: 700, cursor: "pointer", fontSize: 12, display: "flex", alignItems: "center", gap: 6 }}
+                          >
+                            <CheckCircle2 size={14} /> Onayla
+                          </button>
+                          <button
+                            onClick={async () => {
+                              if (!confirm(`${t.businessName || t.slug} için değişiklikleri reddet?`)) return;
+                              setActionLoading(t.id);
+                              await rejectCommercialChanges(t.id);
+                              setPendingChanges((prev) => prev.filter((p) => p.id !== t.id));
+                              setActionLoading(null);
+                            }}
+                            disabled={actionLoading === t.id}
+                            style={{ padding: "8px 20px", background: "rgba(248,113,113,0.1)", color: "#f87171", border: "1px solid rgba(248,113,113,0.3)", fontWeight: 700, cursor: "pointer", fontSize: 12, display: "flex", alignItems: "center", gap: 6 }}
+                          >
+                            <XCircle size={14} /> Reddet
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
 
               {stats && (
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12, marginBottom: 32 }}>

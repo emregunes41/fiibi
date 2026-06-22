@@ -819,3 +819,66 @@ export async function triggerManualTransfer(reservationId) {
     return { error: error.message };
   }
 }
+
+/**
+ * Bekleyen ticari bilgi değişiklik taleplerini getir
+ */
+export async function getPendingCommercialChanges() {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  const tenants = await prisma.tenant.findMany({
+    where: { pendingCommercialChanges: { not: null } },
+    select: {
+      id: true, slug: true, businessName: true, legalName: true,
+      legalType: true, taxId: true, taxOffice: true, iban: true,
+      legalAddress: true, taxPlateUrl: true, pendingCommercialChanges: true,
+    },
+  });
+
+  return tenants.map((t) => ({
+    ...t,
+    pendingChanges: t.pendingCommercialChanges,
+  }));
+}
+
+/**
+ * Ticari bilgi değişiklik talebini onayla
+ */
+export async function approveCommercialChanges(tenantId) {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  const tenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
+  if (!tenant || !tenant.pendingCommercialChanges) {
+    return { error: "Bekleyen değişiklik bulunamadı." };
+  }
+
+  const { changes } = tenant.pendingCommercialChanges;
+  const updateData = {};
+  for (const [key, val] of Object.entries(changes)) {
+    updateData[key] = val.new;
+  }
+
+  await prisma.tenant.update({
+    where: { id: tenantId },
+    data: {
+      ...updateData,
+      pendingCommercialChanges: null, // Talebi temizle
+    },
+  });
+
+  return { success: true };
+}
+
+/**
+ * Ticari bilgi değişiklik talebini reddet
+ */
+export async function rejectCommercialChanges(tenantId) {
+  if (!(await isSuperAdmin())) return { error: "Yetkisiz" };
+
+  await prisma.tenant.update({
+    where: { id: tenantId },
+    data: { pendingCommercialChanges: null },
+  });
+
+  return { success: true };
+}

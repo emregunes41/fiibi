@@ -1345,24 +1345,64 @@ export async function updateSubMerchantInfo(data) {
       return { error: "Geçersiz TCKN/VKN. 10 veya 11 haneli olmalıdır." };
     }
 
+    // Mevcut tenant bilgilerini kontrol et
+    const currentTenant = await prisma.tenant.findUnique({ where: { id: tenantId } });
+
+    const newData = {
+      legalName: legalName.trim(),
+      legalType: legalType || "personal",
+      taxId: cleanTaxId,
+      taxOffice: taxOffice?.trim() || null,
+      iban: cleanIBAN,
+      legalAddress: legalAddress?.trim() || null,
+      taxPlateUrl: taxPlateUrl?.trim() || null,
+    };
+
+    // İlk kayıt veya henüz onaylanmamışsa → direkt kaydet
+    if (!currentTenant.legalName || currentTenant.subMerchantStatus === "NOT_STARTED" || currentTenant.subMerchantStatus === "REJECTED") {
+      await prisma.tenant.update({
+        where: { id: tenantId },
+        data: {
+          ...newData,
+          sellerAgreementAccepted: true,
+          sellerAgreementDate: new Date(),
+          subMerchantStatus: "PENDING",
+        }
+      });
+      revalidatePath('/admin/settings');
+      return { success: true };
+    }
+
+    // Zaten PENDING veya APPROVED ise → değişiklikleri onaya gönder
+    // Hangi alanlar değişmiş kontrol et
+    const changes = {};
+    const fieldLabels = {
+      legalName: "Resmi Ünvan", legalType: "Şirket Tipi", taxId: "TCKN/VKN",
+      taxOffice: "Vergi Dairesi", iban: "IBAN", legalAddress: "Resmi Adres", taxPlateUrl: "Vergi Levhası",
+    };
+    for (const [key, val] of Object.entries(newData)) {
+      if (String(val || "") !== String(currentTenant[key] || "")) {
+        changes[key] = { old: currentTenant[key], new: val, label: fieldLabels[key] || key };
+      }
+    }
+
+    if (Object.keys(changes).length === 0) {
+      return { error: "Herhangi bir değişiklik yapılmadı." };
+    }
+
     await prisma.tenant.update({
       where: { id: tenantId },
       data: {
-        legalName: legalName.trim(),
-        legalType: legalType || "personal",
-        taxId: cleanTaxId,
-        taxOffice: taxOffice?.trim() || null,
-        iban: cleanIBAN,
-        legalAddress: legalAddress?.trim() || null,
-        taxPlateUrl: taxPlateUrl?.trim() || null,
-        sellerAgreementAccepted: true,
-        sellerAgreementDate: new Date(),
-        subMerchantStatus: "PENDING",
-      }
+        pendingCommercialChanges: {
+          requestedAt: new Date().toISOString(),
+          requestedBy: currentTenant.businessName || currentTenant.slug,
+          changes,
+        },
+      },
     });
 
     revalidatePath('/admin/settings');
-    return { success: true };
+    return { success: true, pending: true, message: "Değişiklik talebiniz Super Admin onayına gönderildi." };
   } catch (error) {
     console.error("Update Sub-Merchant Info Error:", error);
     return { error: error.message };
