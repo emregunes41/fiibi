@@ -740,14 +740,17 @@ export async function getTransferTrackingData() {
     if (!onlinePayment) blockers.push("Online ödeme yok");
     if (isToday) blockers.push("Aynı gün (yarını bekle)");
 
-    // Tutar parse
+    // Tutar parse — Türk formatı: "23.000,50₺" → 23000.50, "23.000₺" → 23000
     const totalAmountTL = (() => {
       const val = r.totalAmount;
       if (typeof val === "number") return val;
       if (!val) return 0;
-      const str = String(val).trim();
-      if (str.includes(",")) return parseFloat(str.replace(/\./g, "").replace(",", ".")) || 0;
-      return parseFloat(str.replace(/[^0-9.-]/g, "")) || 0;
+      // Önce ₺, boşluk gibi karakterleri temizle
+      let str = String(val).trim().replace(/[₺\s]/g, "");
+      // Türk formatı: noktalar binlik ayracı, virgül ondalık ayracı
+      // Önce noktaları kaldır (binlik), sonra virgülü noktaya çevir (ondalık)
+      str = str.replace(/\./g, "").replace(",", ".");
+      return parseFloat(str) || 0;
     })();
 
     const commissionRate = r.tenant?.commissionRate || 6;
