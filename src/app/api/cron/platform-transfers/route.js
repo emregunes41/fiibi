@@ -98,19 +98,17 @@ export async function GET(request) {
           continue;
         }
 
-        // Tutarları hesapla
-        const totalAmountTL = parseFloat(
-          reservation.totalAmount?.replace(/\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "") || "0"
-        );
-        const totalAmountKurus = Math.round(totalAmountTL * 100);
+        // Tutarları hesapla — ONLINE ÖDEME TUTARI baz alınır
+        const onlineAmountTL = onlinePayment.amount; // TL cinsinden sayı
+        const onlineAmountKurus = Math.round(onlineAmountTL * 100);
 
-        if (totalAmountKurus <= 0) {
+        if (onlineAmountKurus <= 0) {
           results.skipped++;
           continue;
         }
 
         const commissionRate = tenant.commissionRate || 6;
-        const { submerchantAmount } = calculateTransferAmounts(totalAmountKurus, commissionRate);
+        const { submerchantAmount } = calculateTransferAmounts(onlineAmountKurus, commissionRate);
 
         // Transfer ID oluştur
         const transId = generateTransferId(tenant.id, reservation.id);
@@ -120,7 +118,7 @@ export async function GET(request) {
           merchantOid,
           transId,
           submerchantAmount: submerchantAmount,
-          totalAmount: totalAmountKurus,
+          totalAmount: onlineAmountKurus,
           transferName: tenant.legalName,
           transferIban: tenant.iban,
         });

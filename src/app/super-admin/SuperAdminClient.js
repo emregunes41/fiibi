@@ -808,17 +808,19 @@ export default function SuperAdminClient() {
                     const completed = transfers.filter(t => t.transferStatus === "COMPLETED").length;
                     const blocked = transfers.filter(t => t.blockers.length > 0 && t.transferStatus === "NOT_SENT").length;
                     const totalSeller = transfers.reduce((s, t) => s + (t.sellerAmount || 0), 0);
-                    const totalCommission = transfers.reduce((s, t) => s + (t.commission || 0), 0);
+                    const totalPaytrFee = transfers.reduce((s, t) => s + (t.paytrFee || 0), 0);
+                    const totalFiibiFee = transfers.reduce((s, t) => s + (t.fiibiFee || 0), 0);
+                    const totalOnline = transfers.reduce((s, t) => s + (t.onlineAmount || 0), 0);
                     return (
                       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 10, marginBottom: 20 }}>
                         {[
-                          { label: "Toplam İşlem", value: total, color: "#6366f1" },
+                          { label: "Online Ödeme", value: `${totalOnline.toLocaleString("tr-TR")}₺`, color: "#6366f1" },
                           { label: "Transfer Bekleyen", value: pending, color: "#f59e0b" },
                           { label: "Gönderildi", value: sent, color: "#3b82f6" },
                           { label: "Tamamlandı", value: completed, color: "#10b981" },
-                          { label: "Engelli", value: blocked, color: "#ef4444" },
+                          { label: "PayTR Payı", value: `${totalPaytrFee.toLocaleString("tr-TR")}₺`, color: "#ef4444" },
+                          { label: "Fiibi Net", value: `${totalFiibiFee.toLocaleString("tr-TR")}₺`, color: "#06b6d4" },
                           { label: "Satıcı Payı", value: `${totalSeller.toLocaleString("tr-TR")}₺`, color: "#8b5cf6" },
-                          { label: "Komisyon", value: `${totalCommission.toLocaleString("tr-TR")}₺`, color: "#06b6d4" },
                         ].map((s, i) => (
                           <div key={i} style={cardStyle}>
                             <div style={{ fontSize: 10, color: "rgba(0,0,0,0.45)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>{s.label}</div>
@@ -867,18 +869,26 @@ export default function SuperAdminClient() {
                               </div>
 
                               {/* Tutar Breakdown */}
-                              <div style={{ display: "flex", gap: 16, fontSize: 12 }}>
+                              <div style={{ display: "flex", gap: 12, fontSize: 12, flexWrap: "wrap" }}>
                                 <div style={{ textAlign: "center" }}>
-                                  <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 10, marginBottom: 2 }}>TOPLAM</div>
-                                  <div style={{ fontWeight: 800, color: "#1a1a1a" }}>{t.totalAmount.toLocaleString("tr-TR")}₺</div>
+                                  <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 10, marginBottom: 2 }}>ONLİNE ÖDEME</div>
+                                  <div style={{ fontWeight: 800, color: "#1a1a1a" }}>{(t.onlineAmount || 0).toLocaleString("tr-TR")}₺</div>
                                 </div>
                                 <div style={{ textAlign: "center" }}>
-                                  <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 10, marginBottom: 2 }}>KOMİSYON</div>
-                                  <div style={{ fontWeight: 700, color: "#06b6d4" }}>{t.commission.toLocaleString("tr-TR")}₺ <span style={{ fontSize: 10, opacity: 0.6 }}>(%{t.tenant?.commissionRate})</span></div>
+                                  <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 10, marginBottom: 2 }}>KOMİSYON (%{t.tenant?.commissionRate})</div>
+                                  <div style={{ fontWeight: 700, color: "#f59e0b" }}>{(t.totalCommission || 0).toLocaleString("tr-TR")}₺</div>
+                                </div>
+                                <div style={{ textAlign: "center" }}>
+                                  <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 10, marginBottom: 2 }}>PayTR (%3.99)</div>
+                                  <div style={{ fontWeight: 600, color: "#ef4444" }}>{(t.paytrFee || 0).toLocaleString("tr-TR")}₺</div>
+                                </div>
+                                <div style={{ textAlign: "center" }}>
+                                  <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 10, marginBottom: 2 }}>FİİBİ NET</div>
+                                  <div style={{ fontWeight: 700, color: "#06b6d4" }}>{(t.fiibiFee || 0).toLocaleString("tr-TR")}₺</div>
                                 </div>
                                 <div style={{ textAlign: "center" }}>
                                   <div style={{ color: "rgba(0,0,0,0.4)", fontSize: 10, marginBottom: 2 }}>SATICI PAYI</div>
-                                  <div style={{ fontWeight: 800, color: "#8b5cf6" }}>{t.sellerAmount.toLocaleString("tr-TR")}₺</div>
+                                  <div style={{ fontWeight: 800, color: "#8b5cf6" }}>{(t.sellerAmount || 0).toLocaleString("tr-TR")}₺</div>
                                 </div>
                               </div>
 

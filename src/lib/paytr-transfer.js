@@ -101,29 +101,38 @@ export function generateTransferId(tenantId, reservationId) {
 }
 
 /**
- * Komisyon hesaplama
- * Toplam tutardan platform komisyonunu düşerek satıcıya aktarılacak tutarı hesaplar.
- * Stopaj (%1) dahil edilir.
+ * Komisyon hesaplama — PayTR Pazaryeri Modeli
  *
- * @param {number} totalAmountKurus - Toplam tutar (kuruş)
- * @param {number} commissionRate   - Platform komisyon oranı (%)
- * @param {number} stopajRate       - Stopaj oranı (%, default: 1)
- * @returns {{ submerchantAmount: number, platformAmount: number, stopajAmount: number }}
+ * Online ödeme tutarı üzerinden hesaplama yapılır (elden alınan kısım hariç).
+ *
+ * Örnek: 23.000₺ online ödeme, %6 komisyon, %3.99 PayTR:
+ *   - Toplam komisyon: 23.000 * %6 = 1.380₺
+ *   - PayTR payı: 23.000 * %3.99 = 917,70₺ (PayTR platform komisyonundan keser)
+ *   - Fiibi net payı: 1.380 - 917,70 = 462,30₺
+ *   - Satıcıya gidecek: 23.000 - 1.380 = 21.620₺
+ *
+ * @param {number} onlineAmountKurus - Online ödeme tutarı (kuruş cinsinden)
+ * @param {number} commissionRate    - Toplam platform komisyon oranı (%, örn: 6)
+ * @param {number} paytrFeeRate      - PayTR komisyon oranı (%, default: 3.99)
+ * @returns {{ submerchantAmount, totalCommission, paytrFee, fiibiFee }}
  */
-export function calculateTransferAmounts(totalAmountKurus, commissionRate, stopajRate = 1) {
-  // Platform komisyonu
-  const platformAmount = Math.round(totalAmountKurus * commissionRate / 100);
+export function calculateTransferAmounts(onlineAmountKurus, commissionRate, paytrFeeRate = 3.99) {
+  // Toplam platform komisyonu (Fiibi belirlediği oran)
+  const totalCommission = Math.round(onlineAmountKurus * commissionRate / 100);
 
-  // Stopaj: KDV ve vergiler hariç net satış tutarı üzerinden %1
-  // Basitleştirilmiş hesap: toplam üzerinden %1
-  const stopajAmount = Math.round(totalAmountKurus * stopajRate / 100);
+  // PayTR'ın payı — toplam tutardan kesilir, platform komisyonunun içinden çıkar
+  const paytrFee = Math.round(onlineAmountKurus * paytrFeeRate / 100);
 
-  // Satıcıya aktarılacak tutar = toplam - komisyon - stopaj
-  const submerchantAmount = totalAmountKurus - platformAmount - stopajAmount;
+  // Fiibi'nin net kazancı = Toplam komisyon - PayTR payı
+  const fiibiFee = Math.max(0, totalCommission - paytrFee);
+
+  // Satıcıya aktarılacak tutar = Online ödeme - Toplam komisyon
+  const submerchantAmount = onlineAmountKurus - totalCommission;
 
   return {
     submerchantAmount: Math.max(0, submerchantAmount),
-    platformAmount,
-    stopajAmount,
+    totalCommission,
+    paytrFee,
+    fiibiFee,
   };
 }

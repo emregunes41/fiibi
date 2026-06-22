@@ -740,27 +740,33 @@ export async function getTransferTrackingData() {
     if (!onlinePayment) blockers.push("Online ödeme yok");
     if (isToday) blockers.push("Aynı gün (yarını bekle)");
 
-    // Tutar parse — Türk formatı: "23.000,50₺" → 23000.50, "23.000₺" → 23000
-    const totalAmountTL = (() => {
+    // Online ödeme tutarı (transfer bu tutar üzerinden yapılır)
+    const onlineAmountTL = onlinePayment ? onlinePayment.amount : 0;
+
+    // Toplam rezervasyon tutarı (referans için)
+    const totalReservationTL = (() => {
       const val = r.totalAmount;
       if (typeof val === "number") return val;
       if (!val) return 0;
-      // Önce ₺, boşluk gibi karakterleri temizle
       let str = String(val).trim().replace(/[₺\s]/g, "");
-      // Türk formatı: noktalar binlik ayracı, virgül ondalık ayracı
-      // Önce noktaları kaldır (binlik), sonra virgülü noktaya çevir (ondalık)
       str = str.replace(/\./g, "").replace(",", ".");
       return parseFloat(str) || 0;
     })();
 
     const commissionRate = r.tenant?.commissionRate || 6;
-    const commission = Math.round(totalAmountTL * commissionRate) / 100;
-    const sellerAmount = Math.round((totalAmountTL - commission) * 100) / 100;
+    const paytrFeeRate = 3.99;
+
+    // Komisyon hesaplama — online ödeme tutarı üzerinden
+    const totalCommission = Math.round(onlineAmountTL * commissionRate) / 100;
+    const paytrFee = Math.round(onlineAmountTL * paytrFeeRate) / 100;
+    const fiibiFee = Math.max(0, Math.round((totalCommission - paytrFee) * 100) / 100);
+    const sellerAmount = Math.round((onlineAmountTL - totalCommission) * 100) / 100;
 
     return {
       id: r.id,
       brideName: r.brideName || "İsimsiz",
-      totalAmount: totalAmountTL,
+      totalReservation: totalReservationTL,
+      onlineAmount: onlineAmountTL,
       paymentStatus: r.paymentStatus,
       createdAt: r.createdAt,
       paymentDate,
@@ -782,7 +788,9 @@ export async function getTransferTrackingData() {
             commissionRate,
           }
         : null,
-      commission,
+      totalCommission,
+      paytrFee,
+      fiibiFee,
       sellerAmount,
       blockers,
       canTransfer: blockers.length === 0 && transferStatus === "NOT_SENT" && r.paymentStatus === "PAID",
