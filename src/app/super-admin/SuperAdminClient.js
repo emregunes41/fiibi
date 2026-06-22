@@ -1029,17 +1029,32 @@ export default function SuperAdminClient() {
                 <h4 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 700, color: "rgba(0,0,0,0.6)", borderBottom: "1px solid rgba(0,0,0,0.1)", paddingBottom: 8 }}>TİCARİ & VERGİ BİLGİLERİ</h4>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                   {[
-                    { label: "Resmi Ünvan", value: infoModal.legalName || "-" },
+                    { label: "Resmi Ünvan", value: infoModal.legalName || "-", field: "legalName" },
                     { label: "Şirket Tipi", value: infoModal.legalType === "personal" ? "Bireysel" : infoModal.legalType === "sole_proprietorship" ? "Şahıs Şirketi" : infoModal.legalType === "limited" ? "Limited" : infoModal.legalType === "joint_stock" ? "Anonim" : infoModal.legalType },
-                    { label: "TCKN / VKN", value: infoModal.taxId || "-" },
-                    { label: "Vergi Dairesi", value: infoModal.taxOffice || "-" },
-                    { label: "IBAN", value: infoModal.iban || "-" },
+                    { label: "TCKN / VKN", value: infoModal.taxId || "-", field: "taxId" },
+                    { label: "Vergi Dairesi", value: infoModal.taxOffice || "-", field: "taxOffice" },
+                    { label: "IBAN", value: infoModal.iban || "-", field: "iban" },
                     { label: "Vergi Levhası", value: infoModal.taxPlateUrl ? <a href={infoModal.taxPlateUrl} target="_blank" rel="noopener noreferrer" style={{ color: "#38bdf8", textDecoration: "underline" }}>Görüntüle</a> : "Yüklenmedi" },
                     { label: "Sözleşme Onayı", value: infoModal.sellerAgreementAccepted ? `Onaylandı (${new Date(infoModal.sellerAgreementDate).toLocaleDateString()})` : "Onaylanmadı" },
-                    { label: "Resmi Adres", value: infoModal.legalAddress || "-", fullWidth: true },
+                    { label: "Resmi Adres", value: infoModal.legalAddress || "-", field: "legalAddress", fullWidth: true },
                   ].map((item, i) => (
-                    <div key={i} style={{ display: "flex", flexDirection: "column", gap: 4, gridColumn: item.fullWidth ? "1 / -1" : "auto" }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.55)", textTransform: "uppercase" }}>{item.label}</span>
+                    <div
+                      key={i}
+                      onClick={() => item.field && editField(infoModal.id, item.field, item.label, infoModal[item.field])}
+                      style={{
+                        display: "flex", flexDirection: "column", gap: 4,
+                        gridColumn: item.fullWidth ? "1 / -1" : "auto",
+                        cursor: item.field ? "pointer" : "default",
+                        padding: "8px 10px",
+                        borderRadius: 6,
+                        transition: "background 0.15s",
+                        ...(item.field ? { background: "rgba(0,0,0,0.01)", border: "1px dashed rgba(0,0,0,0.08)" } : {}),
+                      }}
+                      title={item.field ? "Tıklayarak düzenle" : ""}
+                    >
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(0,0,0,0.55)", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 4 }}>
+                        {item.label} {item.field && <span style={{ fontSize: 9, color: "rgba(0,0,0,0.3)" }}>✏️</span>}
+                      </span>
                       <span style={{ fontSize: 14, color: "#1a1a1a", fontWeight: 500 }}>{item.value}</span>
                     </div>
                   ))}
