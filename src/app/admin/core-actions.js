@@ -1294,16 +1294,7 @@ export async function getCalendarToken() {
     const tenantId = await getTenantId();
     if (!tenantId) return { error: "Tenant bulunamadı." };
 
-    const tenant = await prisma.tenant.findUnique({
-      where: { id: tenantId },
-      select: { calendarToken: true },
-    });
-
-    // Eğer token varsa döndür, yoksa oluştur
-    if (tenant?.calendarToken) {
-      return { token: tenant.calendarToken };
-    }
-
+    // Her seferinde yeni token oluştur — Google Cache'i kırmak için
     const crypto = await import("crypto");
     const token = crypto.randomBytes(32).toString("hex");
 
