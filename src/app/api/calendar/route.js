@@ -74,41 +74,61 @@ function generateICS(reservations, businessName) {
     }
     const remaining = Math.max(0, tNum - pNum);
 
-    // Açıklama
+    // Durum etiketi
+    const statusLabel = {
+      PENDING: "⏳ Bekliyor", CONFIRMED: "✅ Onaylı",
+      COMPLETED: "✔️ Tamamlandı", CANCELLED: "❌ İptal",
+    }[res.status] || res.status;
+
+    // Temiz açıklama oluştur
     let descLines = [];
-    if (packageNames) descLines.push(`Paket: ${packageNames}`);
 
+    if (packageNames) descLines.push(`📦 ${packageNames}`);
+
+    // Mekan / özel alan bilgileri
     if (res.customFieldAnswers && Array.isArray(res.customFieldAnswers)) {
-      res.customFieldAnswers.forEach((ans) => {
-        if (ans.type !== "_hidden" && ans.label && ans.value) {
+      const relevantAnswers = res.customFieldAnswers.filter(
+        (ans) => ans.type !== "_hidden" && ans.label && ans.value && !ans.label.startsWith("_")
+      );
+      if (relevantAnswers.length > 0) {
+        relevantAnswers.forEach((ans) => {
           descLines.push(`${ans.label}: ${ans.value}`);
-        }
-      });
+        });
+      }
     } else if (res.venueName) {
-      descLines.push(`Mekan: ${res.venueName}`);
+      descLines.push(`📍 ${res.venueName}`);
     }
 
-    descLines.push(
-      "-- İLETİŞİM --",
-      `Tel 1: ${res.bridePhone || "-"}`
-    );
-    if (res.groomPhone) descLines.push(`Tel 2: ${res.groomPhone}`);
-    if (res.brideEmail) descLines.push(`E-posta: ${res.brideEmail}`);
+    descLines.push(""); // Boş satır
 
-    descLines.push(
-      "-- FİNANS --",
-      `Toplam: ${tNum.toLocaleString("tr-TR")} TL`,
-      `Ödenen: ${pNum.toLocaleString("tr-TR")} TL`,
-      `Kalan: ${remaining.toLocaleString("tr-TR")} TL`,
-      `Durum: ${res.status}`
-    );
+    // İletişim
+    if (res.bridePhone) descLines.push(`📞 ${res.bridePhone}`);
+    if (res.groomPhone) descLines.push(`📞 ${res.groomPhone}`);
+    if (res.brideEmail) descLines.push(`✉️ ${res.brideEmail}`);
 
+    descLines.push(""); // Boş satır
+
+    // Finans — kısa ve net
+    descLines.push(`💰 ${tNum.toLocaleString("tr-TR")} TL`);
+    if (pNum > 0) {
+      descLines.push(`✅ Ödenen: ${pNum.toLocaleString("tr-TR")} TL`);
+      if (remaining > 0) {
+        descLines.push(`⚠️ Kalan: ${remaining.toLocaleString("tr-TR")} TL`);
+      }
+    }
+
+    descLines.push(`${statusLabel}`);
+
+    // Notlar
     if (res.notes) {
-      descLines.push("-- NOTLAR --");
-      descLines.push(res.notes.replace(/\r?\n/g, " ").trim());
+      descLines.push("");
+      descLines.push(`📝 ${res.notes.replace(/\r?\n/g, " ").trim()}`);
     }
 
-    const description = escapeIcal(descLines.join("\\n"));
+    // iCal DESCRIPTION'da newline = \n (literal backslash + n)
+    const description = descLines
+      .map((line) => escapeIcal(line))
+      .join("\\n");
 
     ics.push(
       "BEGIN:VEVENT",
