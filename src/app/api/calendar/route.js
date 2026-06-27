@@ -77,99 +77,79 @@ function generateICS(reservations, businessName) {
     const remaining = Math.max(0, tNum - pNum);
 
     // Durum etiketi
-    const statusLabel = {
-      PENDING: "⏳ Bekliyor", CONFIRMED: "✅ Onaylı",
-      COMPLETED: "✔️ Tamamlandı", CANCELLED: "❌ İptal",
-    }[res.status] || res.status;
+    const statusMap = {
+      PENDING: "Bekliyor", CONFIRMED: "Onaylı",
+      COMPLETED: "Tamamlandı", CANCELLED: "İptal",
+    };
+    const statusText = statusMap[res.status] || res.status;
 
-    // Temiz açıklama oluştur
-    let descLines = [];
-
-    if (packageNames) descLines.push(`📦 ${packageNames}`);
-
-    // Mekan / özel alan bilgileri
+    // Mekan bilgisi — LOCATION property olarak (Google haritada gösterir)
+    let location = "";
     if (res.customFieldAnswers && Array.isArray(res.customFieldAnswers)) {
-      const relevantAnswers = res.customFieldAnswers.filter(
-        (ans) => ans.type !== "_hidden" && ans.label && ans.value && !ans.label.startsWith("_")
+      const venueLabels = ["mekan","konum","salon","yer","adres","lokasyon","düğün salonu","nerede","alanı","alan"];
+      const venueField = res.customFieldAnswers.find(
+        (a) => a.value && venueLabels.some((l) => a.label?.toLowerCase().includes(l))
       );
-      if (relevantAnswers.length > 0) {
-        relevantAnswers.forEach((ans) => {
-          descLines.push(`${ans.label}: ${ans.value}`);
-        });
-      }
-    } else if (res.venueName) {
-      descLines.push(`📍 ${res.venueName}`);
+      if (venueField?.value) location = venueField.value;
     }
+    if (!location && res.venueName) location = res.venueName;
 
-    descLines.push(""); // Boş satır
+    // DESCRIPTION — kısa ve okunabilir, tek satır formatı
+    const parts = [];
+    if (packageNames) parts.push(`Paket: ${packageNames}`);
+
+    // Özel alan bilgileri (mekan hariç — o LOCATION'da)
+    if (res.customFieldAnswers && Array.isArray(res.customFieldAnswers)) {
+      res.customFieldAnswers
+        .filter((a) => a.type !== "_hidden" && a.label && a.value && !a.label.startsWith("_"))
+        .filter((a) => {
+          const lbl = a.label.toLowerCase();
+          const venueLabels = ["mekan","konum","salon","yer","adres","lokasyon","düğün salonu","nerede","alanı","alan"];
+          return !venueLabels.some((v) => lbl.includes(v));
+        })
+        .forEach((a) => parts.push(`${a.label}: ${a.value}`));
+    }
 
     // İletişim
-    if (res.bridePhone) descLines.push(`📞 ${res.bridePhone}`);
-    if (res.groomPhone) descLines.push(`📞 ${res.groomPhone}`);
-    if (res.brideEmail) descLines.push(`✉️ ${res.brideEmail}`);
+    const contacts = [];
+    if (res.bridePhone) contacts.push(res.bridePhone);
+    if (res.groomPhone) contacts.push(res.groomPhone);
+    if (res.brideEmail) contacts.push(res.brideEmail);
+    if (contacts.length > 0) parts.push(`İletişim: ${contacts.join(" / ")}`);
 
-    descLines.push(""); // Boş satır
+    // Finans
+    const finParts = [`Toplam: ${tNum.toLocaleString("tr-TR")} TL`];
+    if (pNum > 0) finParts.push(`Ödenen: ${pNum.toLocaleString("tr-TR")} TL`);
+    if (remaining > 0) finParts.push(`Kalan: ${remaining.toLocaleString("tr-TR")} TL`);
+    parts.push(finParts.join(" • "));
 
-    // Finans — kısa ve net
-    descLines.push(`💰 ${tNum.toLocaleString("tr-TR")} TL`);
-    if (pNum > 0) {
-      descLines.push(`✅ Ödenen: ${pNum.toLocaleString("tr-TR")} TL`);
-      if (remaining > 0) {
-        descLines.push(`⚠️ Kalan: ${remaining.toLocaleString("tr-TR")} TL`);
-      }
-    }
+    parts.push(`Durum: ${statusText}`);
 
-    descLines.push(`${statusLabel}`);
-
-    // Notlar
     if (res.notes) {
-      descLines.push("");
-      descLines.push(`📝 ${res.notes.replace(/\r?\n/g, " ").trim()}`);
+      parts.push(`Not: ${res.notes.replace(/\r?\n/g, " ").trim()}`);
     }
 
-    // Açıklama metnini oluştur — \n iCal'de satır sonu demek
-    const description = "DESCRIPTION:" + descLines.join("\\n");
+    const description = parts.join(" | ");
 
-    // UID'ye versiyon ekle — Google Cache'i kırmak için
-    const uid = `res-${res.id}-v3@fiibi.co`;
+    // UID — v4 cache kırma
+    const uid = `res-${res.id}-v4@fiibi.co`;
 
-    const event = [
+    ics.push(
       "BEGIN:VEVENT",
       `UID:${uid}`,
       `DTSTAMP:${stamp}`,
       `DTSTART;TZID=Europe/Istanbul:${startDateString}`,
       `DTEND;TZID=Europe/Istanbul:${endDateString}`,
       `SUMMARY:${summary}`,
-      description,
+      `DESCRIPTION:${description}`,
+      ...(location ? [`LOCATION:${location}`] : []),
       `STATUS:${res.status === "CONFIRMED" ? "CONFIRMED" : res.status === "CANCELLED" ? "CANCELLED" : "TENTATIVE"}`,
-      "END:VEVENT",
-    ];
-
-    // Her satırı 75 byte'a göre katla (RFC 5545)
-    event.forEach((line) => {
-      ics.push(...foldLine(line));
-    });
+      "END:VEVENT"
+    );
   });
 
   ics.push("END:VCALENDAR");
   return ics.join("\r\n");
-}
-
-/**
- * RFC 5545 line folding — satırları 75 byte sınırına göre katlar
- * Devam satırları CRLF + boşluk ile başlar
- */
-function foldLine(line) {
-  if (line.length <= 75) return [line];
-  const result = [];
-  result.push(line.substring(0, 75));
-  let remaining = line.substring(75);
-  while (remaining.length > 0) {
-    // Devam satırı: boşluk + max 74 karakter
-    result.push(" " + remaining.substring(0, 74));
-    remaining = remaining.substring(74);
-  }
-  return result;
 }
 
 function parseTotalAmount(val) {
