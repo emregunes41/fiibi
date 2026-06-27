@@ -1285,6 +1285,40 @@ export async function updateSiteConfig(data) {
   }
 }
 
+// --- CALENDAR TOKEN ---
+
+export async function getCalendarToken() {
+  const auth = await requireAdmin();
+  if (auth?.error) return auth;
+  try {
+    const tenantId = await getTenantId();
+    if (!tenantId) return { error: "Tenant bulunamadı." };
+
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: tenantId },
+      select: { calendarToken: true },
+    });
+
+    // Eğer token varsa döndür, yoksa oluştur
+    if (tenant?.calendarToken) {
+      return { token: tenant.calendarToken };
+    }
+
+    const crypto = await import("crypto");
+    const token = crypto.randomBytes(32).toString("hex");
+
+    await prisma.tenant.update({
+      where: { id: tenantId },
+      data: { calendarToken: token },
+    });
+
+    return { token };
+  } catch (error) {
+    console.error("Get Calendar Token Error:", error);
+    return { error: error.message };
+  }
+}
+
 // --- SUB-MERCHANT (ALT ÜYE İŞYERİ) ACTIONS ---
 
 export async function getSubMerchantInfo() {

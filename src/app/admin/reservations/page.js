@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Calendar, Phone, Settings2, X, Edit2, Eye, Mail, User, Package, Clock, FileText, CreditCard, ChevronDown, ChevronUp, Instagram, ExternalLink, Trash2, Banknote, DollarSign, List, CalendarDays, ChevronLeft, ChevronRight, ArrowUpDown, Filter, Search, Star, Ban, Images } from "lucide-react";
-import { getReservations, getPackages, createManualReservation, updateReservation, updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment, softDeleteReservation, hardDeleteReservation, createQuickEvent, getBlockedDays, toggleBlockedDay, getSiteConfig } from "../core-actions";
+import { getReservations, getPackages, createManualReservation, updateReservation, updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment, softDeleteReservation, hardDeleteReservation, createQuickEvent, getBlockedDays, toggleBlockedDay, getSiteConfig, getCalendarToken } from "../core-actions";
 import { sendContractReminder, resendCredentials } from "../reminder-actions";
 import { getBusinessType } from "@/lib/business-types";
 import { useAdminSession } from "../AdminSessionContext";
@@ -186,12 +186,16 @@ export default function ReservationsPage() {
         </div>
         <div style={{ display: "flex", gap: "8px" }}>
           <button
-            onClick={() => {
-              const tid = adminSession?.tenant?.id || siteConfig?._tenant?.id;
-              if (!tid) return alert("Hata: Tenant bulunamadı.");
-              const url = `${window.location.origin}/api/calendar?t=${tid}&cb=${Date.now()}`;
-              navigator.clipboard.writeText(url);
-              setIsIcalModalOpen(true);
+            onClick={async () => {
+              try {
+                const res = await getCalendarToken();
+                if (res.error) return alert("Hata: " + res.error);
+                const url = `${window.location.origin}/api/calendar?token=${res.token}`;
+                navigator.clipboard.writeText(url);
+                setIsIcalModalOpen(true);
+              } catch (e) {
+                alert("Token oluşturulamadı.");
+              }
             }}
             style={{ 
               background: "rgba(0,0,0,0.06)", color: "#1a1a1a", padding: "0.5rem 1rem", 

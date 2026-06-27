@@ -1,9 +1,18 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifyAuth } from "@/lib/auth";
-import { cookies } from "next/headers";
+import crypto from "crypto";
 
-// iCal format helper function
+/**
+ * iCal Calendar Feed
+ *
+ * Google/Apple Takvim bu URL'yi periyodik olarak çeker.
+ * Auth: URL'deki ?token= parametresi ile (cookie kullanılamaz çünkü
+ * Google'ın sunucuları bizim siteye giriş yapamaz).
+ *
+ * URL formatı: /api/calendar?token=XXXXX
+ */
+
+// iCal format helper
 function generateICS(reservations, businessName) {
   let ics = [
     "BEGIN:VCALENDAR",
@@ -11,61 +20,66 @@ function generateICS(reservations, businessName) {
     "PRODID:-//Fiibi//SaaS Platform//TR",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    `X-WR-CALNAME:${businessName} Rezervasyonları`,
+    `X-WR-CALNAME:${escapeIcal(businessName)} Rezervasyonları`,
     "X-WR-TIMEZONE:Europe/Istanbul",
+    // Timezone definition for correct display
+    "BEGIN:VTIMEZONE",
+    "TZID:Europe/Istanbul",
+    "BEGIN:STANDARD",
+    "DTSTART:19700101T000000",
+    "TZOFFSETFROM:+0300",
+    "TZOFFSETTO:+0300",
+    "TZNAME:TRT",
+    "END:STANDARD",
+    "END:VTIMEZONE",
   ];
 
-  reservations.forEach(res => {
-    // Basic date parsing assuming eventDate is stored at midnight UTC or local time
+  reservations.forEach((res) => {
     if (!res.eventDate) return;
-    
+
     const date = new Date(res.eventDate);
     const startYear = date.getFullYear();
     const startMonth = String(date.getMonth() + 1).padStart(2, "0");
     const startDay = String(date.getDate()).padStart(2, "0");
-    
-    // Default to 10:00 AM if no time, else parse time (e.g. "14:00")
+
+    // Saat bilgisi parse
     let startHours = "10";
     let startMinutes = "00";
-    
+
     if (res.eventTime && res.eventTime.includes(":")) {
       [startHours, startMinutes] = res.eventTime.split(":");
     }
-    
-    const startDateString = `${startYear}${startMonth}${startDay}T${startHours}${startMinutes}00`;
-    
-    // End time (assume 2 hours later for simplicity, or 23:59 if full day)
-    let endHours = String(parseInt(startHours) + 2).padStart(2, "0");
-    const endDateString = `${startYear}${startMonth}${startDay}T${endHours}${startMinutes}00`;
+
+    const startDateString = `${startYear}${startMonth}${startDay}T${startHours.padStart(2, "0")}${startMinutes.padStart(2, "0")}00`;
+
+    // Bitiş saati (varsayılan 2 saat sonra)
+    let endH = parseInt(startHours) + 2;
+    if (endH > 23) endH = 23;
+    const endDateString = `${startYear}${startMonth}${startDay}T${String(endH).padStart(2, "0")}${startMinutes.padStart(2, "0")}00`;
 
     const now = new Date();
-    const stamp = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}T${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}00Z`;
+    const stamp = `${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, "0")}${String(now.getUTCDate()).padStart(2, "0")}T${String(now.getUTCHours()).padStart(2, "0")}${String(now.getUTCMinutes()).padStart(2, "0")}${String(now.getUTCSeconds()).padStart(2, "0")}Z`;
 
-    // Construct event details
-    const summary = `${res.brideName} & ${res.groomName || "Rezervasyon"}`;
-    const packageNames = res.packages && res.packages.length > 0 ? res.packages.map(p => p.name).join(", ") : "Bilinmiyor";
-    
-    // Finansal hesaplamalar
-    const totalAmountStr = res.totalAmount || "0";
-    const tNum = parseFloat(totalAmountStr.replace(/\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "")) || 0;
-    
+    // Etkinlik başlığı
+    const summary = `${res.brideName}${res.groomName ? ` & ${res.groomName}` : ""}`;
+    const packageNames = res.packages?.length > 0 ? res.packages.map((p) => p.name).join(", ") : "";
+
+    // Finansal hesaplama
+    const tNum = parseTotalAmount(res.totalAmount);
     let pNum = 0;
-    if (res.payments && res.payments.length > 0) {
+    if (res.payments?.length > 0) {
       pNum = res.payments.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
     } else {
-      const paidAmountStr = res.paidAmount || "0";
-      pNum = parseFloat(paidAmountStr.replace(/\./g, "").replace(",", ".").replace(/[^0-9.-]/g, "")) || 0;
+      pNum = parseTotalAmount(res.paidAmount);
     }
-    
     const remaining = Math.max(0, tNum - pNum);
 
-    // Açıklama satırları
-    let descLines = [
-      `Paket: ${packageNames}`,
-    ];
+    // Açıklama
+    let descLines = [];
+    if (packageNames) descLines.push(`Paket: ${packageNames}`);
 
     if (res.customFieldAnswers && Array.isArray(res.customFieldAnswers)) {
-      res.customFieldAnswers.forEach(ans => {
+      res.customFieldAnswers.forEach((ans) => {
         if (ans.type !== "_hidden" && ans.label && ans.value) {
           descLines.push(`${ans.label}: ${ans.value}`);
         }
@@ -75,37 +89,36 @@ function generateICS(reservations, businessName) {
     }
 
     descLines.push(
-      `-- İLETİŞİM --`,
-      `Tel 1: ${res.bridePhone || "-"}`,
+      "-- İLETİŞİM --",
+      `Tel 1: ${res.bridePhone || "-"}`
     );
     if (res.groomPhone) descLines.push(`Tel 2: ${res.groomPhone}`);
     if (res.brideEmail) descLines.push(`E-posta: ${res.brideEmail}`);
 
     descLines.push(
-      `-- FİNANS --`,
-      `Toplam: ${totalAmountStr} TL`,
-      `Ödenen: ${pNum.toLocaleString('tr-TR')} TL`,
-      `Kalan: ${remaining.toLocaleString('tr-TR')} TL`,
+      "-- FİNANS --",
+      `Toplam: ${tNum.toLocaleString("tr-TR")} TL`,
+      `Ödenen: ${pNum.toLocaleString("tr-TR")} TL`,
+      `Kalan: ${remaining.toLocaleString("tr-TR")} TL`,
       `Durum: ${res.status}`
     );
 
     if (res.notes) {
-      descLines.push(`-- NOTLAR --`);
-      // Gerçek satır sonlarını ve \\n stringlerini iCal satır sonuna çevir, boşlukları temizle
-      const safeNotes = res.notes.replace(/(?:\\\\n)+/g, '\\n').replace(/(?:\r\n|\n|\r)+/gm, '\\n').trim();
-      descLines.push(safeNotes);
+      descLines.push("-- NOTLAR --");
+      descLines.push(res.notes.replace(/\r?\n/g, " ").trim());
     }
 
-    const description = descLines.join('\\n').replace(/(?:\r\n|\n|\r)+/gm, '\\n');
-    
+    const description = escapeIcal(descLines.join("\\n"));
+
     ics.push(
       "BEGIN:VEVENT",
       `UID:res-${res.id}@fiibi.co`,
       `DTSTAMP:${stamp}`,
-      `DTSTART:${startDateString}`,
-      `DTEND:${endDateString}`,
-      `SUMMARY:${summary}`,
+      `DTSTART;TZID=Europe/Istanbul:${startDateString}`,
+      `DTEND;TZID=Europe/Istanbul:${endDateString}`,
+      `SUMMARY:${escapeIcal(summary)}`,
       `DESCRIPTION:${description}`,
+      `STATUS:${res.status === "CONFIRMED" ? "CONFIRMED" : res.status === "CANCELLED" ? "CANCELLED" : "TENTATIVE"}`,
       "END:VEVENT"
     );
   });
@@ -114,52 +127,52 @@ function generateICS(reservations, businessName) {
   return ics.join("\r\n");
 }
 
+function escapeIcal(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/\\/g, "\\\\")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,");
+}
+
+function parseTotalAmount(val) {
+  if (typeof val === "number") return val;
+  if (!val) return 0;
+  let str = String(val).trim().replace(/[₺\s]/g, "");
+  str = str.replace(/\./g, "").replace(",", ".");
+  return parseFloat(str) || 0;
+}
+
+export const dynamic = "force-dynamic";
+
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
-    const tenantId = searchParams.get("t");
+    const token = searchParams.get("token");
 
-    if (!tenantId) {
-      return new NextResponse("Missing tenant ID", { status: 400 });
+    if (!token || token.length < 16) {
+      return new NextResponse("Geçersiz veya eksik token.", { status: 401 });
     }
 
-    // Authentication: require admin JWT token
-    const cookieStore = await cookies();
-    const adminToken = cookieStore.get("admin_token")?.value;
-    if (!adminToken) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    let payload;
-    try {
-      payload = await verifyAuth(adminToken);
-    } catch {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    // Verify the admin belongs to the requested tenant
-    if (payload.tenantId !== tenantId) {
-      return new NextResponse("Forbidden", { status: 403 });
-    }
-
+    // Token ile tenant'ı bul
     const tenant = await prisma.tenant.findUnique({
-      where: { id: tenantId }
+      where: { calendarToken: token },
     });
 
     if (!tenant) {
-      return new NextResponse("Tenant not found", { status: 404 });
+      return new NextResponse("Geçersiz token.", { status: 401 });
     }
 
-    // Get all approved/pending reservations (ignore rejected/cancelled)
+    // Tüm aktif rezervasyonları çek
     const reservations = await prisma.reservation.findMany({
       where: {
-        tenantId,
-        status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] }
+        tenantId: tenant.id,
+        status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] },
       },
       include: {
         packages: true,
-        payments: true
-      }
+        payments: true,
+      },
     });
 
     const icsContent = generateICS(reservations, tenant.businessName);
@@ -171,7 +184,6 @@ export async function GET(req) {
         "Cache-Control": "no-cache, no-store, must-revalidate",
       },
     });
-
   } catch (error) {
     console.error("Calendar export error:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
