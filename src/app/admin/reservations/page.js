@@ -1217,32 +1217,31 @@ export default function ReservationsPage() {
           </div>
         </div>
       )}
-      {/* ── iCal Instructions Modal ── */}
       {isIcalModalOpen && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
-          <div className="admin-modal-content" style={{ border: "1px solid rgba(0,0,0,0.15)", borderRadius: "8px", width: "100%", maxWidth: "500px", padding: "1.5rem", position: "relative" }}>
-            <button onClick={() => setIsIcalModalOpen(false)} style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: "rgba(0,0,0,0.65)", cursor: "pointer" }}><X size={20} /></button>
+          <div style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.12)", borderRadius: "8px", width: "100%", maxWidth: "500px", padding: "1.5rem", position: "relative", color: "#1a1a1a" }}>
+            <button onClick={() => setIsIcalModalOpen(false)} style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: "#999", cursor: "pointer" }}><X size={20} /></button>
             <h2 style={{ fontSize: "1.2rem", fontWeight: 800, margin: "0 0 1rem 0", color: "#1a1a1a", display: "flex", alignItems: "center", gap: "8px" }}>
               <Calendar size={20} style={{ color: "#22c55e" }} /> Takvim Bağlantısı Kopyalandı!
             </h2>
-            <div style={{ background: "rgba(34,197,94,0.1)", borderLeft: "4px solid #22c55e", padding: "12px", borderRadius: "4px", marginBottom: "1.5rem", fontSize: "0.85rem", color: "rgba(0,0,0,0.8)", lineHeight: 1.5 }}>
+            <div style={{ background: "rgba(34,197,94,0.08)", borderLeft: "4px solid #22c55e", padding: "12px", borderRadius: "4px", marginBottom: "1.5rem", fontSize: "0.85rem", color: "#333", lineHeight: 1.5 }}>
               Size özel gizli iCal bağlantısı panoya <strong>kopyalandı</strong>.<br/>
               Aşağıdaki adımları takip ederek telefonunuza ekleyebilirsiniz:
             </div>
             
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <div style={{ background: "rgba(0,0,0,0.03)", padding: "12px", borderRadius: "6px", border: "1px solid rgba(0,0,0,0.05)" }}>
+              <div style={{ background: "#f8f8f8", padding: "12px", borderRadius: "6px", border: "1px solid #eee" }}>
                 <h3 style={{ fontSize: "0.9rem", color: "#1a1a1a", margin: "0 0 8px 0", display: "flex", alignItems: "center", gap: "6px" }}>🍏 iPhone (Apple Takvim) İçin</h3>
-                <ol style={{ margin: 0, paddingLeft: "20px", fontSize: "0.8rem", color: "rgba(0,0,0,0.6)", lineHeight: 1.6 }}>
+                <ol style={{ margin: 0, paddingLeft: "20px", fontSize: "0.8rem", color: "#555", lineHeight: 1.6 }}>
                   <li>Ayarlar (Settings) &gt; Takvim &gt; Hesaplar'a gidin.</li>
                   <li><strong>Hesap Ekle</strong> &gt; <strong>Diğer</strong> &gt; <strong>Abone Olunan Takvim Ekle</strong> seçeneğine dokunun.</li>
                   <li>Kopyaladığınız linki yapıştırın ve Sonraki'ye basarak kaydedin.</li>
                 </ol>
               </div>
 
-              <div style={{ background: "rgba(0,0,0,0.03)", padding: "12px", borderRadius: "6px", border: "1px solid rgba(0,0,0,0.05)" }}>
+              <div style={{ background: "#f8f8f8", padding: "12px", borderRadius: "6px", border: "1px solid #eee" }}>
                 <h3 style={{ fontSize: "0.9rem", color: "#1a1a1a", margin: "0 0 8px 0", display: "flex", alignItems: "center", gap: "6px" }}>🤖 Google Takvim (Android/PC) İçin</h3>
-                <ol style={{ margin: 0, paddingLeft: "20px", fontSize: "0.8rem", color: "rgba(0,0,0,0.6)", lineHeight: 1.6 }}>
+                <ol style={{ margin: 0, paddingLeft: "20px", fontSize: "0.8rem", color: "#555", lineHeight: 1.6 }}>
                   <li>Bilgisayardan <strong>calendar.google.com</strong> adresine girin.</li>
                   <li>Sol menüde "Diğer takvimler" yanındaki <strong>+ (Artı)</strong> ikonuna tıklayın.</li>
                   <li><strong>URL ile ekle</strong> seçeneğine tıklayın.</li>
