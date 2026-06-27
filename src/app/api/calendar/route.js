@@ -127,24 +127,49 @@ function generateICS(reservations, businessName) {
       descLines.push(`📝 ${res.notes.replace(/\r?\n/g, " ").trim()}`);
     }
 
-    // iCal DESCRIPTION — Google Calendar uyumlu
-    const description = descLines.join("\\n");
+    // Açıklama metnini oluştur — \n iCal'de satır sonu demek
+    const description = "DESCRIPTION:" + descLines.join("\\n");
 
-    ics.push(
+    // UID'ye versiyon ekle — Google Cache'i kırmak için
+    const uid = `res-${res.id}-v3@fiibi.co`;
+
+    const event = [
       "BEGIN:VEVENT",
-      `UID:res-${res.id}@fiibi.co`,
+      `UID:${uid}`,
       `DTSTAMP:${stamp}`,
       `DTSTART;TZID=Europe/Istanbul:${startDateString}`,
       `DTEND;TZID=Europe/Istanbul:${endDateString}`,
       `SUMMARY:${summary}`,
-      `DESCRIPTION:${description}`,
+      description,
       `STATUS:${res.status === "CONFIRMED" ? "CONFIRMED" : res.status === "CANCELLED" ? "CANCELLED" : "TENTATIVE"}`,
-      "END:VEVENT"
-    );
+      "END:VEVENT",
+    ];
+
+    // Her satırı 75 byte'a göre katla (RFC 5545)
+    event.forEach((line) => {
+      ics.push(...foldLine(line));
+    });
   });
 
   ics.push("END:VCALENDAR");
   return ics.join("\r\n");
+}
+
+/**
+ * RFC 5545 line folding — satırları 75 byte sınırına göre katlar
+ * Devam satırları CRLF + boşluk ile başlar
+ */
+function foldLine(line) {
+  if (line.length <= 75) return [line];
+  const result = [];
+  result.push(line.substring(0, 75));
+  let remaining = line.substring(75);
+  while (remaining.length > 0) {
+    // Devam satırı: boşluk + max 74 karakter
+    result.push(" " + remaining.substring(0, 74));
+    remaining = remaining.substring(74);
+  }
+  return result;
 }
 
 function parseTotalAmount(val) {
