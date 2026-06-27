@@ -21,6 +21,8 @@ function generateICS(reservations, businessName) {
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     `X-WR-CALNAME:${escapeIcal(businessName)} Rezervasyonları`,
+    "REFRESH-INTERVAL;VALUE=DURATION:PT10M",
+    "X-PUBLISHED-TTL:PT10M",
     "X-WR-TIMEZONE:Europe/Istanbul",
     // Timezone definition for correct display
     "BEGIN:VTIMEZONE",
