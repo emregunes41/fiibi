@@ -136,7 +136,7 @@ function generateICS(reservations, businessName) {
       parts.push(`Not: ${res.notes.replace(/\r?\n/g, " ").trim()}`);
     }
 
-    const description = parts.join(" | ");
+    const description = parts.join("\\n");
 
     // UID — v4 cache kırma
     const uid = `res-${res.id}-v5@fiibi.co`;
