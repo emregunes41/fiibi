@@ -98,16 +98,23 @@ function generateICS(reservations, businessName) {
     const parts = [];
     if (packageNames) parts.push(`Paket: ${packageNames}`);
 
-    // Özel alan bilgileri (mekan hariç — o LOCATION'da)
+    // Özel alan bilgileri (mekan, tarih, saat hariç — bunlar zaten iCal property'lerinde)
     if (res.customFieldAnswers && Array.isArray(res.customFieldAnswers)) {
+      const skipLabels = ["mekan","konum","salon","yer","adres","lokasyon","düğün salonu","nerede","alanı","alan","tarih","saat","zaman","dilim","date","time"];
+      const seen = new Set();
       res.customFieldAnswers
         .filter((a) => a.type !== "_hidden" && a.label && a.value && !a.label.startsWith("_"))
         .filter((a) => {
           const lbl = a.label.toLowerCase();
-          const venueLabels = ["mekan","konum","salon","yer","adres","lokasyon","düğün salonu","nerede","alanı","alan"];
-          return !venueLabels.some((v) => lbl.includes(v));
+          return !skipLabels.some((v) => lbl.includes(v));
         })
-        .forEach((a) => parts.push(`${a.label}: ${a.value}`));
+        .forEach((a) => {
+          const key = `${a.label}:${a.value}`;
+          if (!seen.has(key)) {
+            seen.add(key);
+            parts.push(`${a.label}: ${a.value}`);
+          }
+        });
     }
 
     // İletişim
@@ -132,7 +139,7 @@ function generateICS(reservations, businessName) {
     const description = parts.join(" | ");
 
     // UID — v4 cache kırma
-    const uid = `res-${res.id}-v4@fiibi.co`;
+    const uid = `res-${res.id}-v5@fiibi.co`;
 
     ics.push(
       "BEGIN:VEVENT",
