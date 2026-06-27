@@ -20,7 +20,7 @@ function generateICS(reservations, businessName) {
     "PRODID:-//Fiibi//SaaS Platform//TR",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    `X-WR-CALNAME:${escapeIcal(businessName)} Rezervasyonları`,
+    `X-WR-CALNAME:${businessName} Rezervasyonları`,
     "REFRESH-INTERVAL;VALUE=DURATION:PT10M",
     "X-PUBLISHED-TTL:PT10M",
     "X-WR-TIMEZONE:Europe/Istanbul",
@@ -127,10 +127,8 @@ function generateICS(reservations, businessName) {
       descLines.push(`📝 ${res.notes.replace(/\r?\n/g, " ").trim()}`);
     }
 
-    // iCal DESCRIPTION'da newline = \n (literal backslash + n)
-    const description = descLines
-      .map((line) => escapeIcal(line))
-      .join("\\n");
+    // iCal DESCRIPTION — Google Calendar uyumlu
+    const description = descLines.join("\\n");
 
     ics.push(
       "BEGIN:VEVENT",
@@ -138,7 +136,7 @@ function generateICS(reservations, businessName) {
       `DTSTAMP:${stamp}`,
       `DTSTART;TZID=Europe/Istanbul:${startDateString}`,
       `DTEND;TZID=Europe/Istanbul:${endDateString}`,
-      `SUMMARY:${escapeIcal(summary)}`,
+      `SUMMARY:${summary}`,
       `DESCRIPTION:${description}`,
       `STATUS:${res.status === "CONFIRMED" ? "CONFIRMED" : res.status === "CANCELLED" ? "CANCELLED" : "TENTATIVE"}`,
       "END:VEVENT"
@@ -147,14 +145,6 @@ function generateICS(reservations, businessName) {
 
   ics.push("END:VCALENDAR");
   return ics.join("\r\n");
-}
-
-function escapeIcal(str) {
-  if (!str) return "";
-  return String(str)
-    .replace(/\\/g, "\\\\")
-    .replace(/;/g, "\\;")
-    .replace(/,/g, "\\,");
 }
 
 function parseTotalAmount(val) {
