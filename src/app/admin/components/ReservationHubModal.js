@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X, Edit2, User, Phone, Mail, Calendar, Clock, CreditCard, FileText, ExternalLink, Trash2, Package, Images } from "lucide-react";
-import { updateReservationStatus, updateReservationWorkflow, addPayment, updateReservation, getPackages, unlockReservationSelection } from "../core-actions";
+import { updateReservationStatus, updateReservationWorkflow, addPayment, deletePayment, updateReservation, getPackages, unlockReservationSelection } from "../core-actions";
 import { sendContractReminder, resendCredentials } from "../reminder-actions";
 
 const inp = {
@@ -472,11 +472,28 @@ export default function ReservationHubModal({
                       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                         {payments.map(p => (
                           <div key={p.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 8px", background: "rgba(0,0,0,0.03)", borderRadius: 0 }}>
-                            <div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{ fontSize: "0.75rem", fontWeight: 700 }}>{p.amount} ₺</div>
                               <div style={{ fontSize: "0.6rem", color: "rgba(0,0,0,0.65)" }}>{new Date(p.createdAt).toLocaleDateString('tr-TR')} · {p.note || "-"}</div>
                             </div>
-                            <span style={{ fontSize: "0.6rem", fontWeight: 800, padding: "2px 6px", background: "rgba(0,0,0,0.08)", color: methodColors[p.paymentMethod] }}>{methodLabels[p.paymentMethod]}</span>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                              <span style={{ fontSize: "0.6rem", fontWeight: 800, padding: "2px 6px", background: "rgba(0,0,0,0.08)", color: methodColors[p.paymentMethod] }}>{methodLabels[p.paymentMethod]}</span>
+                              <button
+                                onClick={async () => {
+                                  if (!confirm(`${p.amount} ₺ tutarındaki ödemeyi silmek istediğinize emin misiniz?`)) return;
+                                  const res = await deletePayment(p.id);
+                                  if (res.success) {
+                                    if (onUpdate) onUpdate();
+                                  } else {
+                                    alert("Silinemedi: " + res.error);
+                                  }
+                                }}
+                                style={{ background: "none", border: "none", color: "rgba(239,68,68,0.6)", cursor: "pointer", padding: "2px", display: "flex", alignItems: "center" }}
+                                title="Ödemeyi Sil"
+                              >
+                                <Trash2 size={12} />
+                              </button>
+                            </div>
                           </div>
                         ))}
                       </div>
