@@ -122,7 +122,7 @@ export default function ReservationHubModal({
     e.preventDefault();
     setPaymentLoading(true);
     const res = await addPayment(r.id, {
-      amount: parseFloat(paymentForm.amount),
+      amount: parseInt(paymentForm.amount, 10),
       method: paymentForm.method,
       note: paymentForm.note
     });
@@ -502,7 +502,7 @@ export default function ReservationHubModal({
                     <form onSubmit={handleAddPayment} style={{ padding: "12px 14px", background: "rgba(0,0,0,0.03)" }}>
                       <div style={{ fontSize: "0.6rem", fontWeight: 800, color: "rgba(0,0,0,0.65)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>+ Yeni Ödeme Ekle</div>
                       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "6px" }}>
-                        <input required type="number" placeholder="Tutar ₺" style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem", minWidth: 80}} value={paymentForm.amount} onChange={(e) => setPaymentForm({...paymentForm, amount: e.target.value})} />
+                        <input required type="text" inputMode="numeric" pattern="[0-9]*" placeholder="Tutar ₺" style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem", minWidth: 80}} value={paymentForm.amount} onChange={(e) => { const v = e.target.value.replace(/[^0-9]/g, ""); setPaymentForm({...paymentForm, amount: v}); }} />
                         <select style={{...inp, flex: 1, padding: "6px", fontSize: "0.75rem", minWidth: 80, colorScheme: "light"}} value={paymentForm.method} onChange={(e) => setPaymentForm({...paymentForm, method: e.target.value})}>
                           <option value="CASH">Nakit</option>
                           <option value="BANK_TRANSFER">Havale/EFT</option>

@@ -1175,11 +1175,11 @@ export default function ReservationsPage() {
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                   <div>
                     <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.65)", display: "block", marginBottom: 3 }}>Toplam Tutar</label>
-                    <input type="text" placeholder="Örn: 15000" style={inp} value={quickEventForm.totalAmount} onChange={(e) => setQuickEventForm({...quickEventForm, totalAmount: e.target.value})} />
+                    <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="Örn: 15000" style={inp} value={quickEventForm.totalAmount} onChange={(e) => { const v = e.target.value.replace(/[^0-9]/g, ""); setQuickEventForm({...quickEventForm, totalAmount: v}); }} />
                   </div>
                   <div>
                     <label style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(0,0,0,0.65)", display: "block", marginBottom: 3 }}>Ön Ödeme</label>
-                    <input type="text" placeholder="Örn: 5000" style={inp} value={quickEventForm.initialPaymentAmount} onChange={(e) => setQuickEventForm({...quickEventForm, initialPaymentAmount: e.target.value})} />
+                    <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="Örn: 5000" style={inp} value={quickEventForm.initialPaymentAmount} onChange={(e) => { const v = e.target.value.replace(/[^0-9]/g, ""); setQuickEventForm({...quickEventForm, initialPaymentAmount: v}); }} />
                   </div>
                 </div>
                 <div style={{ marginTop: 8 }}>
